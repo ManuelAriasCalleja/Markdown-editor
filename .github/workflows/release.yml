@@ -54,11 +54,14 @@ jobs:
           chmod +x linuxdeploy-*.AppImage
 
       - name: Build AppImage
-        env:
-          QMAKE: ${{ env.Qt6_DIR }}/bin/qmake6
-          # Lleva al plugin qt al directorio de plugins QPA correcto:
-          QML_SOURCES_PATHS: ${{ github.workspace }}
         run: |
+          # linuxdeploy-plugin-qt busca `qmake` por PATH; en Qt 6 el binario
+          # se llama `qmake6`, así que le pasamos la ruta explícitamente.
+          # QT_ROOT_DIR lo exporta install-qt-action al instalar Qt. (Tiene
+          # que asignarse aquí, en el shell, no en un bloque env: arriba —
+          # los `${{ env.* }}` se evalúan antes de que el action ejecute).
+          export QMAKE="$QT_ROOT_DIR/bin/qmake6"
+
           VERSION="${GITHUB_REF_NAME#v}"
           ./linuxdeploy-x86_64.AppImage \
             --appimage-extract-and-run \
