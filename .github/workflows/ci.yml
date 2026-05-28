@@ -23,7 +23,6 @@ jobs:
         with:
           version: '6.8.2'
           cache: true
-          modules: 'qttools'
 
       # Dependencias del sistema que Qt necesita en runtime (OpenGL para los
       # widgets compuestos, libxkbcommon para teclado, fontconfig para

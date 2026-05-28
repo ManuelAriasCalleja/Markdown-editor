@@ -23,7 +23,6 @@ jobs:
         with:
           version: '6.8.2'
           cache: true
-          modules: 'qttools'
 
       - name: Install system dependencies
         run: |
@@ -90,7 +89,6 @@ jobs:
         with:
           version: '6.8.2'
           cache: true
-          modules: 'qttools'
           arch: 'win64_msvc2022_64'
 
       - name: Configure & build
@@ -130,7 +128,6 @@ jobs:
         with:
           version: '6.8.2'
           cache: true
-          modules: 'qttools'
 
       # CMAKE_OSX_ARCHITECTURES="arm64;x86_64" produce un binario universal
       # que corre tanto en Apple Silicon como en Intel. Requiere que Qt esté
