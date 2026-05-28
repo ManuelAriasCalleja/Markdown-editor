@@ -1,0 +1,34 @@
+# Directorios de compilación
+build/
+build-*/
+cmake-build-*/
+
+# Archivos de CMake generados
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile
+compile_commands.json
+
+# Archivos de Qt generados
+*.moc
+moc_*.cpp
+qrc_*.cpp
+ui_*.h
+
+# IDE
+.vscode/
+.idea/
+*.user
+
+# Qt lupdate (cache temporal de las herramientas de traducción)
+.lupdate/
+
+# macOS / Windows finos
+.DS_Store
+Thumbs.db
+
+# Notas internas y archivos de prueba que no se publican
+CLAUDE.md
+posibles-mejoras.md
+test-formulas.md

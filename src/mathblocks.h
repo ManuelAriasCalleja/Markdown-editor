@@ -1,0 +1,136 @@
+#ifndef MATHBLOCKS_H
+#define MATHBLOCKS_H
+
+#include <QList>
+#include <QString>
+#include <QTextCharFormat>
+#include <QTextFormat>
+
+class QTextDocument;
+
+// Soporte de fórmulas TeX en el documento. El problema raíz es que
+// QTextDocument::setMarkdown() no entiende `$...$`/`$$...$$` y reinterpreta los
+// caracteres especiales (p. ej. `_` como cursiva) dentro de la fórmula, lo que
+// rompe el round-trip. La solución sin dependencias externas es envolver cada
+// fórmula en una valla de inline-code antes de pasársela a Qt (`$x_1$` →
+// `` `$x_1$` ``) y desenvolverla al serializar.
+//
+// El módulo es puro (sin GUI ni estado): solo manipula cadenas.
+//
+// Limitación de v1: solo se reconocen fórmulas que abren y cierran en la misma
+// línea. `$$ ... $$` que cruza párrafos no se detecta.
+namespace mdmath {
+
+// Una fórmula encontrada en el Markdown fuente.
+struct Span {
+    int start;        // índice del primer '$' en el texto
+    int length;       // longitud total, delimitadores incluidos
+    bool block;       // true si era $$...$$, false si $...$
+    QString content;  // TeX sin delimitadores (puede ir vacío)
+};
+
+// Encuentra todas las fórmulas inline ($...$) y bloque ($$...$$) en `text`,
+// saltando regiones donde Markdown no las interpretaría (bloques de código con
+// vallas ``` y spans de código en línea con `).
+QList<Span> findMath(const QString &text);
+
+// Envuelve cada fórmula de `markdown` en una valla de inline-code de dobles
+// comillas invertidas: `$x$` → `` ``$x$`` ``. Así setMarkdown() la conserva
+// verbatim como código en línea, sin reinterpretar `_`/`*`/`[`.
+QString protectMath(const QString &markdown);
+
+// Inversa de protectMath: en la salida de toMarkdown(), quita las comillas
+// invertidas a los spans cuyo contenido tiene forma `$...$` o `$$...$$`. El
+// resto del Markdown se respeta tal cual. (Sigue exportada por compatibilidad
+// con el primer diseño; la serialización canónica de documentos usa centinelas
+// — ver replaceMathWithSentinels/restoreMathFromSentinels — porque
+// QTextDocument::toMarkdown() escapa los `\` dentro del inline-code.)
+QString unprotectMath(const QString &markdown);
+
+// Traduce una expresión TeX a una aproximación en Unicode legible. Cubre lo
+// más común con tablas estáticas: letras griegas, símbolos/operadores
+// frecuentes, super/subíndices (los caracteres que el repertorio Unicode sí
+// tiene) y `\frac{a}{b}` → "(a)/(b)". Lo que no sepa traducir lo deja literal.
+// No es un render TeX: para fórmulas complicadas el resultado será aproximado.
+QString texToUnicode(const QString &tex);
+
+// Sustituye en `markdown` cada fórmula encontrada por su versión Unicode (los
+// delimitadores `$` no se emiten). Se usa al exportar a HTML/ODF, formatos que
+// no tienen un equivalente a TeX. LaTeX, en cambio, emite las fórmulas tal
+// cual (no usa esta función).
+QString replaceMathWithUnicode(const QString &markdown);
+
+// Propiedades custom del QTextCharFormat con las que se marcan los fragmentos
+// de fórmula dentro del QTextDocument. El texto visible del fragmento es la
+// aproximación Unicode (texToUnicode); el TeX original se preserva aquí para
+// la serialización fiel y para reabrir el diálogo de edición.
+constexpr int IsMathProperty    = QTextFormat::UserProperty + 1;
+constexpr int MathTexProperty   = QTextFormat::UserProperty + 2;
+constexpr int MathBlockProperty = QTextFormat::UserProperty + 3;
+
+// Char-format base para los fragmentos de una fórmula: cursiva (señal
+// visual) + las tres propiedades de math. Cada «run» de la fórmula (texto
+// normal, súper, subíndice) lo extiende añadiendo su alineación vertical.
+QTextCharFormat mathCharFormat(const QString &tex, bool block);
+
+// Un trozo (run) de la renderización de una fórmula en el QTextDocument.
+// Una fórmula es una secuencia consecutiva de runs que comparten el mismo
+// MathTex; los runs de súper/subíndice llevan AlignSuperScript/AlignSubScript
+// para que Qt los pinte elevados/bajados y a menor tamaño, igual que un
+// editor tipográfico hace con «x²». Esto rinde cualquier carácter, incluidos
+// los que no tienen forma en el repertorio Unicode de scripts (∞, letras
+// griegas, comandos compuestos...).
+struct MathRun {
+    QString text;
+    QTextCharFormat fmt;
+};
+
+// Convierte una expresión TeX en una secuencia de runs, partiendo del
+// `baseFmt` (que debe traer IsMath/MathTex/MathBlock). Los argumentos de
+// `^`/`_` se aplanan internamente con `texToUnicode` antes de envolverse en un
+// único run con vertical-align — bastante para super/sub a un nivel; los
+// scripts anidados se aproximan combinando glifos Unicode dentro del run
+// elevado.
+QList<MathRun> renderTexAsRuns(const QString &tex, const QTextCharFormat &baseFmt);
+
+// Busca en el documento los fragmentos de inline-code cuyo contenido tiene
+// forma `$tex$` o `$$tex$$` (los que dejó `protectMath` + `setMarkdown` al
+// cargar) y los sustituye por fragmentos «renderizados»: texto Unicode visible
+// + mathCharFormat con el TeX en propiedad. Es idempotente: si vuelve a
+// llamarse no toca los que ya están renderizados.
+void renderMathInDocument(QTextDocument *doc);
+
+// Inversa de renderMathInDocument: encuentra los fragmentos marcados con
+// IsMathProperty y los reemplaza por inline-code de texto `$tex$`/`$$tex$$`.
+// Se usa sobre un clon del documento antes de serializar (toMarkdown no sabe
+// nada de las propiedades custom; sí sabe emitir inline-code).
+void unrenderMathInDocument(QTextDocument *doc);
+
+// Devuelve los límites [start, end) de cada grupo de fragmentos consecutivos
+// con IsMathProperty del documento (una fórmula completa = un grupo, aunque
+// se haya renderizado como varios runs). Útil para que la UI pueda expandir
+// una selección al grupo entero antes de operaciones destructivas (paste,
+// delete) y no romper la fórmula a mitad.
+QList<QPair<int, int>> mathGroupBounds(QTextDocument *doc);
+
+// Tabla de fórmulas extraídas en el orden en el que aparecen en el documento:
+// cada entrada lleva el TeX y si es bloque ($$...$$) o inline ($...$).
+struct MathSentinelTable {
+    QList<QPair<QString, bool>> entries;
+};
+
+// En `doc` (que el llamador clonó), sustituye cada fragmento de fórmula por un
+// par de caracteres centinela del área de uso privado (PUA) Unicode + el índice
+// de la entrada en decimal. Los centinelas son texto plano sin formato: Qt no
+// los escapa al pasar por toMarkdown(), a diferencia de los `\` dentro de
+// inline-code. La tabla devuelta permite reconstruir luego los `$tex$`.
+MathSentinelTable replaceMathWithSentinels(QTextDocument *doc);
+
+// Sustituye en `markdown` cada centinela `<PUA-OPEN><n><PUA-CLOSE>` por la
+// fórmula original `$tex$` o `$$tex$$` que indique la tabla.
+QString restoreMathFromSentinels(const QString &markdown,
+                                 const MathSentinelTable &table);
+
+} // namespace mdmath
+
+#endif // MATHBLOCKS_H

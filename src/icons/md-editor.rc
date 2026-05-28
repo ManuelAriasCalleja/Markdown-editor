@@ -1,0 +1,4 @@
+// Recurso de icono para el ejecutable de Windows. El identificador numérico 1
+// (el más bajo) hace que el Explorador lo use como icono del .exe. La ruta es
+// relativa a este .rc (md-editor.ico está en el mismo directorio).
+1 ICON "md-editor.ico"

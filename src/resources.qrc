@@ -1,0 +1,19 @@
+<RCC>
+    <qresource prefix="/icons">
+        <file alias="md-editor.svg">icons/md-editor.svg</file>
+        <file alias="md-editor-16.png">icons/md-editor-16.png</file>
+        <file alias="md-editor-24.png">icons/md-editor-24.png</file>
+        <file alias="md-editor-32.png">icons/md-editor-32.png</file>
+        <file alias="md-editor-48.png">icons/md-editor-48.png</file>
+        <file alias="md-editor-64.png">icons/md-editor-64.png</file>
+        <file alias="md-editor-128.png">icons/md-editor-128.png</file>
+        <file alias="md-editor-256.png">icons/md-editor-256.png</file>
+        <file alias="manuel-arias-calleja.jpg">icons/manuel-arias-calleja.jpg</file>
+    </qresource>
+    <qresource prefix="/help">
+        <file alias="help-app.md">help/help-app.md</file>
+        <file alias="help-markdown.md">help/help-markdown.md</file>
+        <file alias="help-app_en.md">help/help-app_en.md</file>
+        <file alias="help-markdown_en.md">help/help-markdown_en.md</file>
+    </qresource>
+</RCC>
