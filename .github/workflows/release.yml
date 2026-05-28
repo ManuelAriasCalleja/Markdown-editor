@@ -1,0 +1,184 @@
+# Release: al hacer `git tag v1.2.3 && git push --tags` compila para
+# Linux/Windows/macOS en paralelo, empaqueta los tres artefactos y los publica
+# como una Release de GitHub con notas autogeneradas a partir de los commits.
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+jobs:
+  # -----------------------------------------------------------------
+  # Linux → AppImage (ejecutable único, sin instalación)
+  # -----------------------------------------------------------------
+  build-linux:
+    name: Linux (AppImage)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v4
+        with:
+          version: '6.8.2'
+          cache: true
+          modules: 'qttools'
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libgl1-mesa-dev libxkbcommon-x11-0 libfontconfig1 \
+            libfuse2 file
+
+      - name: Configure & build
+        run: |
+          cmake -S . -B build \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_INSTALL_PREFIX=/usr
+          cmake --build build --parallel
+
+      # `cmake --install` con DESTDIR=AppDir produce un árbol /usr/{bin,share}
+      # listo para linuxdeploy. Las reglas install() del CMakeLists ya copian
+      # el binario, el .desktop y los iconos hicolor.
+      - name: Stage install tree
+        run: DESTDIR="$PWD/AppDir" cmake --install build
+
+      # linuxdeploy + plugin-qt empaqueta el AppDir junto con las dependencias
+      # de Qt y produce el .AppImage. `--appimage-extract-and-run` evita el
+      # requisito de FUSE en algunos runners.
+      - name: Download linuxdeploy
+        run: |
+          wget -q https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage
+          wget -q https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-x86_64.AppImage
+          chmod +x linuxdeploy-*.AppImage
+
+      - name: Build AppImage
+        env:
+          QMAKE: ${{ env.Qt6_DIR }}/bin/qmake6
+          # Lleva al plugin qt al directorio de plugins QPA correcto:
+          QML_SOURCES_PATHS: ${{ github.workspace }}
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          ./linuxdeploy-x86_64.AppImage \
+            --appimage-extract-and-run \
+            --appdir=AppDir \
+            --output appimage \
+            --plugin qt \
+            --desktop-file=AppDir/usr/share/applications/md-editor.desktop
+          # linuxdeploy genera md-editor-x86_64.AppImage; lo renombramos con
+          # versión para que la página de releases muestre nombres claros.
+          mv md-editor-*.AppImage "md-editor-${VERSION}-x86_64.AppImage"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: linux
+          path: md-editor-*-x86_64.AppImage
+
+  # -----------------------------------------------------------------
+  # Windows → ZIP portable (sin instalador, sin firma)
+  # -----------------------------------------------------------------
+  build-windows:
+    name: Windows (ZIP portable)
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v4
+        with:
+          version: '6.8.2'
+          cache: true
+          modules: 'qttools'
+          arch: 'win64_msvc2022_64'
+
+      - name: Configure & build
+        shell: pwsh
+        run: |
+          cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+          cmake --build build --config Release --parallel
+
+      # windeployqt copia las DLL de Qt, los plugins de QPA, los .qm de
+      # traducción y el resto de runtime junto al .exe. El ZIP resultante es
+      # auto-contenido: descomprimes y ejecutas.
+      - name: Package as portable ZIP
+        shell: pwsh
+        run: |
+          $version = $env:GITHUB_REF_NAME.TrimStart('v')
+          New-Item -ItemType Directory -Force -Path dist | Out-Null
+          Copy-Item build/Release/md-editor.exe dist/
+          & windeployqt.exe --release --no-system-d3d-compiler --no-opengl-sw dist/md-editor.exe
+          Compress-Archive -Path dist/* -DestinationPath "md-editor-$version-windows-x64.zip"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: windows
+          path: md-editor-*-windows-x64.zip
+
+  # -----------------------------------------------------------------
+  # macOS → DMG universal (arm64 + x86_64, sin firma)
+  # -----------------------------------------------------------------
+  build-macos:
+    name: macOS (DMG universal)
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v4
+        with:
+          version: '6.8.2'
+          cache: true
+          modules: 'qttools'
+
+      # CMAKE_OSX_ARCHITECTURES="arm64;x86_64" produce un binario universal
+      # que corre tanto en Apple Silicon como en Intel. Requiere que Qt esté
+      # también compilado universal — los binarios oficiales de Qt 6.5+ lo son.
+      - name: Configure & build (universal)
+        run: |
+          cmake -S . -B build \
+            -DCMAKE_BUILD_TYPE=Release \
+            "-DCMAKE_OSX_ARCHITECTURES=arm64;x86_64"
+          cmake --build build --parallel
+
+      # macdeployqt copia los frameworks de Qt dentro del .app y crea un .dmg
+      # con un fondo y la flecha hacia /Applications. Sin firma: el usuario
+      # verá un warning de Gatekeeper la primera vez (Ctrl+clic → Abrir).
+      - name: Package as DMG
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          cd build
+          macdeployqt md-editor.app -dmg
+          mv md-editor.dmg "../md-editor-${VERSION}-macos-universal.dmg"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: macos
+          path: md-editor-*-macos-universal.dmg
+
+  # -----------------------------------------------------------------
+  # Publica la Release con los tres artefactos
+  # -----------------------------------------------------------------
+  publish:
+    name: Publish release
+    needs: [build-linux, build-windows, build-macos]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write  # necesario para crear el Release en este repo
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          # Notas autogeneradas a partir de los commits desde el tag anterior.
+          generate_release_notes: true
+          # Marca como prerelease los tags con sufijo (-alpha, -rc, etc.).
+          prerelease: ${{ contains(github.ref_name, '-') }}
+          files: |
+            artifacts/linux/*
+            artifacts/windows/*
+            artifacts/macos/*

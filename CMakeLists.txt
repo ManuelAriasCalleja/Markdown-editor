@@ -144,6 +144,16 @@ install(TARGETS md-editor
 if(UNIX AND NOT APPLE)
     install(FILES md-editor.desktop
         DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/applications)
+    # Iconos hicolor PNG (varios tamaños) + SVG escalable. Necesarios para que
+    # el lanzador del escritorio y los empaquetadores tipo AppImage encuentren
+    # un icono asociado a la aplicación.
+    foreach(size 16 24 32 48 64 128 256)
+        install(FILES src/icons/md-editor-${size}.png
+            DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/icons/hicolor/${size}x${size}/apps
+            RENAME md-editor.png)
+    endforeach()
+    install(FILES src/icons/md-editor.svg
+        DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/icons/hicolor/scalable/apps)
 endif()
 
 # En Windows/macOS, empaqueta las DLL/frameworks de Qt junto a la app con

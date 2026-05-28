@@ -1,0 +1,51 @@
+# Continuous integration: compila y ejecuta los tests en Linux con cada push a
+# main y cada pull request. Es la red de seguridad rápida — el release.yml
+# luego se encarga de construir para Linux/Windows/macOS al hacer un tag.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build-test:
+    name: Build & Test (Linux)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Qt 6.8.2 (la misma versión con la que está desarrollado el proyecto).
+      # `cache: true` reusa la instalación entre runs del mismo runner image.
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v4
+        with:
+          version: '6.8.2'
+          cache: true
+          modules: 'qttools'
+
+      # Dependencias del sistema que Qt necesita en runtime (OpenGL para los
+      # widgets compuestos, libxkbcommon para teclado, fontconfig para
+      # texto). El runner ya trae compilador y CMake.
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libgl1-mesa-dev libxkbcommon-x11-0 libfontconfig1 libdbus-1-3 \
+            libegl1 libxcb-cursor0 libxcb-icccm4 libxcb-image0 libxcb-keysyms1 \
+            libxcb-randr0 libxcb-render-util0 libxcb-shape0 libxcb-sync1 \
+            libxcb-xfixes0 libxcb-xinerama0 libxcb-xkb1 libxkbcommon0
+
+      - name: Configure
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+
+      - name: Build
+        run: cmake --build build --parallel
+
+      # Las pruebas usan QApplication: corren con QT_QPA_PLATFORM=offscreen
+      # (CMake ya lo fija en cada test, pero lo replicamos por si acaso).
+      - name: Test
+        run: ctest --test-dir build --output-on-failure
+        env:
+          QT_QPA_PLATFORM: offscreen
