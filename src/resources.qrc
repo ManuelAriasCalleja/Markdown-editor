@@ -15,5 +15,19 @@
         <file alias="help-markdown.md">help/help-markdown.md</file>
         <file alias="help-app_en.md">help/help-app_en.md</file>
         <file alias="help-markdown_en.md">help/help-markdown_en.md</file>
+        <file alias="help-app_de.md">help/help-app_de.md</file>
+        <file alias="help-markdown_de.md">help/help-markdown_de.md</file>
+        <file alias="help-app_fr.md">help/help-app_fr.md</file>
+        <file alias="help-markdown_fr.md">help/help-markdown_fr.md</file>
+        <file alias="help-app_it.md">help/help-app_it.md</file>
+        <file alias="help-markdown_it.md">help/help-markdown_it.md</file>
+        <file alias="help-app_pt.md">help/help-app_pt.md</file>
+        <file alias="help-markdown_pt.md">help/help-markdown_pt.md</file>
+        <file alias="help-app_pl.md">help/help-app_pl.md</file>
+        <file alias="help-markdown_pl.md">help/help-markdown_pl.md</file>
+        <file alias="help-app_nl.md">help/help-app_nl.md</file>
+        <file alias="help-markdown_nl.md">help/help-markdown_nl.md</file>
+        <file alias="help-app_ro.md">help/help-app_ro.md</file>
+        <file alias="help-markdown_ro.md">help/help-markdown_ro.md</file>
     </qresource>
 </RCC>

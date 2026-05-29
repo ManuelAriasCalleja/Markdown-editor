@@ -12,16 +12,26 @@
 
 namespace {
 
-// Indica si el idioma activo de la interfaz es el español, para escoger qué
-// archivo de ayuda mostrar. Se replica la resolución de main.cpp: si el
-// usuario ha elegido un idioma, ese; si no, el del sistema. El resto de
-// idiomas reciben la versión en inglés (no se traduce el manual a los ocho
-// idiomas de la UI).
-bool helpInSpanish()
+// Sufijo del archivo de ayuda según el idioma activo de la interfaz. Se replica
+// la resolución de main.cpp: si el usuario ha elegido un idioma, ese; si no, el
+// del sistema. El español es la base (sufijo vacío: `help-app.md`); el resto de
+// idiomas con manual traducido llevan su sufijo (`help-app_de.md`, …); cualquier
+// idioma sin manual cae al inglés.
+QString helpSuffix()
 {
     const QString pref = AppSettings::language();
     const QLocale locale = pref.isEmpty() ? QLocale::system() : QLocale(pref);
-    return locale.language() == QLocale::Spanish;
+    switch (locale.language()) {
+    case QLocale::Spanish:    return QString();
+    case QLocale::German:     return QStringLiteral("_de");
+    case QLocale::French:     return QStringLiteral("_fr");
+    case QLocale::Italian:    return QStringLiteral("_it");
+    case QLocale::Portuguese: return QStringLiteral("_pt");
+    case QLocale::Polish:     return QStringLiteral("_pl");
+    case QLocale::Dutch:      return QStringLiteral("_nl");
+    case QLocale::Romanian:   return QStringLiteral("_ro");
+    default:                  return QStringLiteral("_en");
+    }
 }
 
 } // namespace
@@ -48,12 +58,11 @@ HelpDialog::HelpDialog(QWidget *parent)
     layout->addWidget(m_index);
     layout->addWidget(m_viewer, 1);
 
-    const QString suffix = helpInSpanish() ? QStringLiteral(".md")
-                                           : QStringLiteral("_en.md");
+    const QString suffix = helpSuffix();  // "", "_de", …, "_en"
     connect(m_index, &QListWidget::currentRowChanged, this, [this, suffix](int row) {
         const QString page = row == 1 ? QStringLiteral("help-markdown")
                                       : QStringLiteral("help-app");
-        loadPage(QStringLiteral(":/help/") + page + suffix);
+        loadPage(QStringLiteral(":/help/") + page + suffix + QStringLiteral(".md"));
     });
     m_index->setCurrentRow(0);
 }
