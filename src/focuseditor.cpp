@@ -32,15 +32,6 @@ void FocusEditor::setReadingColumnWidth(int width)
     updateColumnMargins();
 }
 
-void FocusEditor::setMarginColor(const QColor &color)
-{
-    if (m_marginColor == color)
-        return;
-    m_marginColor = color;
-    if (m_columnWidth > 0)
-        applyColumnPalette();
-}
-
 void FocusEditor::applyColumnPalette()
 {
     if (m_applyingPalette)
@@ -52,19 +43,12 @@ void FocusEditor::applyColumnPalette()
         // columna (rol Base) y el texto (rol Text) conserven SUS colores —si en
         // su lugar partiéramos de una QPalette por defecto, en el tema claro la
         // página y el texto quedarían con colores ajenos al tema y el texto se
-        // volvería ilegible—. Solo se tiñe el rol Window (las franjas laterales)
-        // con un tono ligeramente más apagado que el de la página, en ambos
-        // temas, para enmarcar sin tapar nada.
+        // volvería ilegible—. Las franjas laterales (rol Window) van en negro
+        // puro en todos los temas, para que todo lo que no sea texto desaparezca.
         setFrameShape(QFrame::NoFrame);
         setAutoFillBackground(true);
         QPalette p = qApp->palette();
-        const QColor base = p.color(QPalette::Base);
-        // Color curado del tema si MainWindow lo fijó; si no, uno derivado del
-        // fondo (un punto más apagado que la página, en ambos temas).
-        const QColor margin = m_marginColor.isValid()
-            ? m_marginColor
-            : (base.lightness() < 128 ? base.darker(135) : base.darker(110));
-        p.setColor(QPalette::Window, margin);
+        p.setColor(QPalette::Window, Qt::black);
         setPalette(p);
     } else {
         // Vuelve al aspecto normal: marco estándar y paleta heredada del tema.

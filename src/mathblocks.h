@@ -93,6 +93,10 @@ struct MathRun {
 // elevado.
 QList<MathRun> renderTexAsRuns(const QString &tex, const QTextCharFormat &baseFmt);
 
+// Envuelve una expresión TeX en sus delimitadores: `$tex$` (inline) o `$$tex$$`
+// (bloque). Centraliza la convención de delimitadores del editor.
+QString wrapTex(const QString &tex, bool block);
+
 // Busca en el documento los fragmentos de inline-code cuyo contenido tiene
 // forma `$tex$` o `$$tex$$` (los que dejó `protectMath` + `setMarkdown` al
 // cargar) y los sustituye por fragmentos «renderizados»: texto Unicode visible

@@ -63,7 +63,6 @@ struct ThemeSpec {
     QColor tooltipText;      // QPalette::ToolTipText
     QColor disabledText;     // QPalette::Disabled (Text/ButtonText)
     QColor border;           // roles Mid/Dark/Light (bordes; clave en alto contraste)
-    QColor margin;           // franjas laterales del modo sin distracciones
 
     SyntaxColors syntax;
 };

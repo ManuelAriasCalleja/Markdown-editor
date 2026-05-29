@@ -128,15 +128,20 @@ void ThemeController::applyWarmth(QPalette &palette, double w) const
                      warm(palette.color(QPalette::AlternateBase)));
 }
 
-void ThemeController::applyTheme(mdtheme::ThemeId id)
+void ThemeController::applyPaletteWithWarmth(mdtheme::ThemeId id)
 {
-    m_current = id;
-
     const double w = currentWarmth();
     m_lastWarmth = w;
     QPalette p = buildPalette(id);
     applyWarmth(p, w);
     qApp->setPalette(p);
+}
+
+void ThemeController::applyTheme(mdtheme::ThemeId id)
+{
+    m_current = id;
+
+    applyPaletteWithWarmth(id);
 
     AppSettings::setThemeKey(mdtheme::keyForId(id));
 
@@ -160,15 +165,10 @@ void ThemeController::setWarmLight(bool on)
 
 void ThemeController::refreshWarmth()
 {
-    const double w = currentWarmth();
-    if (std::abs(w - m_lastWarmth) < 0.02)
+    if (std::abs(currentWarmth() - m_lastWarmth) < 0.02)
         return;  // sin cambio apreciable: no repintamos
-
-    m_lastWarmth = w;
-    QPalette p = buildPalette(m_current);
-    applyWarmth(p, w);
-    qApp->setPalette(p);
     // Solo cambia el fondo; los enlaces y el resaltado no se ven afectados.
+    applyPaletteWithWarmth(m_current);
 }
 
 void ThemeController::recolorLinks()

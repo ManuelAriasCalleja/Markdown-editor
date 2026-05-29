@@ -57,6 +57,9 @@ private:
     static double warmthForTime(const QTime &t);
     // Tiñe Base/AlternateBase de la paleta hacia ámbar con intensidad `w`.
     void applyWarmth(QPalette &palette, double w) const;
+    // Construye la paleta del tema `id`, le aplica el tinte cálido de la hora
+    // actual (recordándolo en m_lastWarmth) y la instala en la aplicación.
+    void applyPaletteWithWarmth(mdtheme::ThemeId id);
     // Recalcula la hora y, si el tinte cambió, reaplica solo la paleta (sin
     // recolorear enlaces). Lo dispara el temporizador.
     void refreshWarmth();

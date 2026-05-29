@@ -2,9 +2,18 @@
 
 #include "appsettings.h"
 #include "blockconstructs.h"
+#include "chromezoom.h"
 #include "codehighlighter.h"
+#include "diskwatcher.h"
+#include "distractionfreecontroller.h"
 #include "documentio.h"
+#include "exportcontroller.h"
 #include "exporters.h"
+#include "filecontroller.h"
+#include "formatcontroller.h"
+#include "formulacontroller.h"
+#include "insertcontroller.h"
+#include "tablecontroller.h"
 #include "findreplacebar.h"
 #include "focuseditor.h"
 #include "helpdialog.h"
@@ -13,40 +22,27 @@
 #include "outlinepanel.h"
 #include "recentfilesmanager.h"
 #include "recoverymanager.h"
+#include "splitviewcontroller.h"
 #include "tableedit.h"
 #include "themecontroller.h"
 
 #include <cmath>
-#include <memory>
 
 #include <QAction>
 #include <QActionGroup>
 #include <QApplication>
-#include <QClipboard>
 #include <QCloseEvent>
 #include <QColor>
-#include <QDateTime>
 #include <QDesktopServices>
-#include <QDialog>
-#include <QComboBox>
-#include <QDialogButtonBox>
-#include <QPlainTextEdit>
-#include <QVBoxLayout>
 #include <QDir>
 #include <QDropEvent>
 #include <QMouseEvent>
 #include <QEvent>
-#include <QFile>
 #include <QFileDialog>
 #include <QFileInfo>
-#include <QFileSystemWatcher>
 #include <QFont>
 #include <QFontMetrics>
-#include <QFormLayout>
-#include <QHBoxLayout>
 #include <QIcon>
-#include <QImage>
-#include <QInputDialog>
 #include <QKeyEvent>
 #include <QKeySequence>
 #include <QPainter>
@@ -57,47 +53,32 @@
 #include <QResizeEvent>
 #include <QToolButton>
 #include <QLabel>
-#include <QLineEdit>
-#include <QLocale>
 #include <QMenu>
 #include <QMenuBar>
 #include <QMessageBox>
 #include <QMimeData>
-#include <QPrintDialog>
-#include <QPrinter>
 #include <QPushButton>
-#include <QShortcut>
 #include <QRegularExpression>
 #include <QSplitter>
 #include <QStatusBar>
-#include <QStringConverter>
 #include <QStringList>
 #include <QTextCharFormat>
 #include <QTextBlock>
 #include <QTextCursor>
-#include <QSpinBox>
 #include <QTextDocument>
-#include <QTextDocumentFragment>
 #include <QTextEdit>
 #include <QTextFragment>
 #include <QTextFrame>
 #include <QTextLength>
 #include <QTextList>
-#include <QTextStream>
 #include <QTextTable>
 #include <QTextTableCell>
-#include <QScrollBar>
 #include <QTimer>
 #include <QToolBar>
 #include <QUrl>
 #include <QWheelEvent>
 
 namespace {
-
-// Ancho de la columna de lectura centrada del modo sin distracciones, y ancho
-// del árbol del esquema cuando acompaña a la columna en ese modo.
-constexpr int kReadingColumn = 960;
-constexpr int kOutlineTreeWidth = 280;
 
 // Devuelve un color de «tinta» (casi negro o casi blanco) que contraste con el
 // fondo dado. La decisión se toma sobre la luminancia relativa WCAG: si el
@@ -244,27 +225,8 @@ MainWindow::MainWindow(QWidget *parent)
     m_editor = new FocusEditor(this);
     m_editor->setAcceptRichText(true);
 
-    // Vista de código Markdown crudo: texto plano monoespaciado. El widget
-    // central es un divisor que puede mostrar el editor WYSIWYG, este, o ambos
-    // lado a lado (vista dividida). WYSIWYG a la izquierda, fuente a la derecha.
-    m_sourceEditor = new FocusEditor(this);
-    m_sourceEditor->setAcceptRichText(false);
-    QFont mono = QFont(QStringLiteral("monospace"));
-    mono.setStyleHint(QFont::Monospace);
-    m_sourceEditor->setFont(mono);
-    m_splitView = new QSplitter(Qt::Horizontal, this);
-    m_splitView->addWidget(m_editor);
-    m_splitView->addWidget(m_sourceEditor);
-    m_splitView->setStretchFactor(0, 1);  // ambos paneles crecen por igual
-    m_splitView->setStretchFactor(1, 1);
-    m_sourceEditor->hide();  // arranca en WYSIWYG
-    setCentralWidget(m_splitView);
-    m_splitView->restoreState(AppSettings::splitterState());  // proporciones previas
-
-    // Tamaños de fuente base (editor WYSIWYG y vista de código), para poder
-    // restaurarlos con "Tamaño normal".
+    // Tamaño de fuente base del editor WYSIWYG, para "Tamaño normal".
     m_baseFontPointSize = m_editor->font().pointSizeF();
-    m_baseSourceFontPointSize = m_sourceEditor->font().pointSizeF();
     // Resaltado de sintaxis de los bloques de código.
     m_highlighter = new CodeBlockHighlighter(m_editor->document());
     // Zoom con Ctrl+rueda del ratón y detección de enlaces bajo el cursor.
@@ -274,30 +236,6 @@ MainWindow::MainWindow(QWidget *parent)
     // renderizadas no se pueden editar tecleando dentro (se editan con doble
     // clic) y Backspace/Delete en su borde borran el grupo entero.
     m_editor->installEventFilter(this);
-    // Enter en el editor de código continúa listas/tareas (en WYSIWYG ya lo hace
-    // QTextEdit de serie). Se filtran las pulsaciones del propio widget.
-    m_sourceEditor->installEventFilter(this);
-
-    // En modo fuente, escribir marca el documento como modificado y actualiza el
-    // contador (el contenido vive en m_sourceEditor hasta que se vuelca).
-    connect(m_sourceEditor, &QTextEdit::textChanged, this, [this] {
-        // Edición real del usuario en el panel de fuente (no un refresco
-        // programático, que va con m_syncing): marca el fuente como la versión
-        // más fresca, en modo fuente o en vista dividida.
-        if (!m_syncing && (m_sourceMode || m_splitMode)) {
-            m_sourceDirty = true;
-            setWindowModified(true);
-            // En vista dividida, mientras el foco está en el fuente, vuelca al
-            // WYSIWYG tras una pausa (debounce). Solo el panel sin foco se toca.
-            if (m_splitMode && m_sourceEditor->hasFocus())
-                m_syncToDocTimer->start();
-        }
-        updateWordCount();
-    });
-    connect(m_sourceEditor, &QTextEdit::cursorPositionChanged,
-            this, &MainWindow::updateWordCount);
-    connect(m_sourceEditor, &QTextEdit::selectionChanged,
-            this, &MainWindow::updateWordCount);
 
     // Colaboradores: E/S del documento y control del tema. Se crean antes del
     // menú porque sus acciones los invocan.
@@ -308,7 +246,7 @@ MainWindow::MainWindow(QWidget *parent)
     // `![](ruta)` en vez de incrustarla (que no sobreviviría al round-trip a
     // Markdown). Solo en el editor WYSIWYG; en la vista de fuente es texto.
     m_editor->setMimeInsertHandler(
-        [this](const QMimeData *src) { return handlePastedImage(src); });
+        [this](const QMimeData *src) { return m_insert->handlePastedImage(src); });
 
     // Barra inferior de buscar/reemplazar (creada antes del menú que la invoca).
     m_findBar = new FindReplaceBar(m_editor, this);
@@ -329,8 +267,10 @@ MainWindow::MainWindow(QWidget *parent)
     // Mostrar/ocultar el esquema (F9) dentro del modo sin distracciones recoloca
     // el bloque centrado.
     connect(m_outline, &QDockWidget::visibilityChanged, this, [this] {
-        if (m_distractionFree)
-            updateDistractionLayout();
+        // m_distraction puede no existir aún si esto se emite durante la
+        // construcción (al acoplar el dock), antes de crear el controlador.
+        if (m_distraction && m_distraction->isActive())
+            m_distraction->updateLayout();
     });
     connect(m_outline, &OutlinePanel::headingActivated, this, [this](int blockNumber) {
         const QTextBlock block = m_editor->document()->findBlockByNumber(blockNumber);
@@ -341,65 +281,97 @@ MainWindow::MainWindow(QWidget *parent)
         m_editor->ensureCursorVisible();
         m_editor->setFocus();
     });
+    // Vista de código fuente / dividida y su sincronización. Posee el editor de
+    // fuente y el QSplitter central; se crea tras el editor WYSIWYG, la barra de
+    // búsqueda, el índice y el tema, de los que depende.
+    m_split = new SplitViewController(m_editor, m_findBar, m_outline, m_theme, this);
+    setCentralWidget(m_split->splitView());
+    // Tamaño de fuente base del editor de fuente, para "Tamaño normal".
+    m_baseSourceFontPointSize = m_split->sourceEditor()->font().pointSizeF();
+    // Enter en el editor de código continúa listas/tareas (en WYSIWYG ya lo hace
+    // QTextEdit de serie). Se filtran las pulsaciones del propio widget.
+    m_split->sourceEditor()->installEventFilter(this);
+    // El panel de fuente actualiza el contador de palabras igual que el WYSIWYG.
+    connect(m_split->sourceEditor(), &QTextEdit::cursorPositionChanged,
+            this, &MainWindow::updateWordCount);
+    connect(m_split->sourceEditor(), &QTextEdit::selectionChanged,
+            this, &MainWindow::updateWordCount);
+    // Refrescos de la ventana que el controlador pide por señal.
+    connect(m_split, &SplitViewController::wordCountShouldUpdate,
+            this, &MainWindow::updateWordCount);
+    connect(m_split, &SplitViewController::formatActionsShouldUpdate,
+            this, [this] { m_format->updateActions(); });
+    connect(m_split, &SplitViewController::documentModified,
+            this, [this] { setWindowModified(true); });
+    // Volcado del fuente: re-render del cuerpo Markdown dejando el modelo al día.
+    m_split->setRenderBody([this](const QString &body) { setBodyMarkdown(body); });
+
+    // Comandos de formato (negrita, encabezados, listas, citas…) y sincronización
+    // de sus acciones con el formato bajo el cursor.
+    m_format = new FormatController(m_editor, m_highlighter, this);
+    connect(m_format, &FormatController::statusMessage,
+            statusBar(), &QStatusBar::showMessage);
+
+    // Edición de tablas (contextual: solo con el cursor dentro de una tabla).
+    m_table = new TableController(m_editor, m_split, m_documentIo, this);
+    connect(m_split, &SplitViewController::tableActionsShouldUpdate,
+            m_table, &TableController::updateActions);
+    connect(m_table, &TableController::modifiedChanged,
+            this, &QWidget::setWindowModified);
+    // Tras refrescar el formato, refresca también las acciones de tabla.
+    connect(m_format, &FormatController::actionsUpdated,
+            m_table, &TableController::updateActions);
+
+    // Inserción y edición de fórmulas TeX + protección del teclado/pegado.
+    m_formula = new FormulaController(m_editor, this);
+    connect(m_formula, &FormulaController::statusMessage,
+            statusBar(), &QStatusBar::showMessage);
+
+    // Comandos de inserción (enlaces, imágenes, tablas, regla horizontal).
+    m_insert = new InsertController(m_editor, m_documentIo, this);
+    connect(m_insert, &InsertController::formatActionsShouldRefresh,
+            m_format, &FormatController::updateActions);
+    connect(m_insert, &InsertController::tableInserted, this, &MainWindow::styleTables);
+
+    // Exportación e impresión (PDF/HTML/ODF/LaTeX). Sus mensajes van a la barra
+    // de estado.
+    m_export = new ExportController(m_editor, m_documentIo, m_split, this);
+    connect(m_export, &ExportController::statusMessage,
+            statusBar(), &QStatusBar::showMessage);
+
     // El índice se reconstruye al editar, con un pequeño retardo para no rehacer
     // el árbol en cada pulsación. En modo fuente no se toca (el contenido vive
-    // como texto plano, no en la estructura del documento).
+    // como texto plano, no en la estructura del documento). La sincronización
+    // WYSIWYG→fuente de la vista dividida la lleva el propio m_split.
     m_outlineTimer = new QTimer(this);
     m_outlineTimer->setSingleShot(true);
     m_outlineTimer->setInterval(300);
     connect(m_outlineTimer, &QTimer::timeout, this, [this] {
-        if (!m_sourceMode)
+        if (!m_split->sourceMode())
             m_outline->rebuild(m_editor->document());
     });
     connect(m_editor->document(), &QTextDocument::contentsChanged, this, [this] {
-        if (!m_sourceMode)
+        if (!m_split->sourceMode())
             m_outlineTimer->start();
-        // En vista dividida, mientras el foco está en el WYSIWYG, refresca el
-        // panel de fuente tras una pausa. m_syncing distingue los cambios del
-        // usuario de los provocados por la propia sincronización (anti-bucle).
-        if (m_splitMode && !m_syncing && !m_sourceEditor->hasFocus())
-            m_syncToSourceTimer->start();
     });
 
-    // Temporizadores de debounce de la vista dividida (~250 ms): refrescan el
-    // panel SIN foco con lo editado en el otro. Ver syncSourceFromDocument /
-    // syncDocumentFromSource.
-    m_syncToSourceTimer = new QTimer(this);
-    m_syncToSourceTimer->setSingleShot(true);
-    m_syncToSourceTimer->setInterval(250);
-    connect(m_syncToSourceTimer, &QTimer::timeout, this, [this] {
-        if (!m_sourceEditor->hasFocus())  // si el foco saltó al fuente, no lo pisamos
-            syncSourceFromDocument();
-    });
-    m_syncToDocTimer = new QTimer(this);
-    m_syncToDocTimer->setSingleShot(true);
-    m_syncToDocTimer->setInterval(250);
-    connect(m_syncToDocTimer, &QTimer::timeout, this, &MainWindow::syncDocumentFromSource);
-
-    // Al cambiar el foco entre los dos paneles, vacía de inmediato el sync
-    // pendiente para que el panel al que llegas esté al día.
-    connect(qApp, &QApplication::focusChanged, this,
-            [this](QWidget *old, QWidget *now) {
-        flushPendingSync(old);
-        // Solo reaccionamos al pasar el foco a uno de los dos editores (no a
-        // menús, diálogos o la barra de búsqueda).
-        if (m_splitMode && (now == m_editor || now == m_sourceEditor))
-            updateActionsForFocus();
-    });
-
-    // Autoguardado para recuperación ante fallos: escribe un borrador cada pocos
-    // segundos mientras haya cambios sin guardar. m_autosaveDirty evita reescribir
-    // el borrador si nada cambió desde el último volcado.
+    // Operaciones de archivo (nuevo/abrir/guardar/recuperar) y autoguardado del
+    // borrador. DocumentIo y RecoveryManager siguen siendo de MainWindow (con su
+    // cableado de señales) y se le inyectan.
     m_recovery = new RecoveryManager(this);
-    m_autosaveTimer = new QTimer(this);
-    m_autosaveTimer->setInterval(5000);
-    connect(m_autosaveTimer, &QTimer::timeout, this, &MainWindow::autosaveDraft);
-    // El temporizador se arranca al final de startSession (tras decidir una
-    // posible recuperación): si corriera ya durante el diálogo de recuperación,
-    // con el documento aún vacío, borraría el borrador antes de recuperarlo.
-    const auto markDirty = [this] { m_autosaveDirty = true; };
-    connect(m_editor, &QTextEdit::textChanged, this, markDirty);
-    connect(m_sourceEditor, &QTextEdit::textChanged, this, markDirty);
+    m_file = new FileController(m_editor, m_documentIo, m_split, m_recovery, this);
+    m_file->setRenderBody([this](const QString &body) { setBodyMarkdown(body); });
+    connect(m_file, &FileController::statusMessage,
+            statusBar(), &QStatusBar::showMessage);
+    connect(m_file, &FileController::windowModifiedChanged,
+            this, &QWidget::setWindowModified);
+    connect(m_file, &FileController::loadFailed, this, [this](const QString &path) {
+        if (m_recentFiles)
+            m_recentFiles->removeFile(path);  // ya no accesible: quitar de recientes
+    });
+    // Escribir en cualquiera de los dos editores marca el borrador como pendiente.
+    connect(m_editor, &QTextEdit::textChanged, m_file, &FileController::markDirty);
+    connect(m_split->sourceEditor(), &QTextEdit::textChanged, m_file, &FileController::markDirty);
 
     // El nivel de zoom hay que conocerlo ANTES de crear los menús: Qt 6.8 con
     // plataforma gtk3 cachea las anchuras de las QAction en la primera medición
@@ -432,12 +404,15 @@ MainWindow::MainWindow(QWidget *parent)
         if (!a->shortcut().isEmpty())
             addAction(a);
 
-    // ESC sale del modo sin distracciones. Solo se activa dentro del modo para
-    // no interferir con otros usos de ESC (p. ej. cerrar la barra de búsqueda).
-    m_escShortcut = new QShortcut(QKeySequence(Qt::Key_Escape), this);
-    m_escShortcut->setEnabled(false);
-    connect(m_escShortcut, &QShortcut::activated, this,
-            [this] { m_distractionAction->setChecked(false); });
+    // Modo sin distracciones (pantalla completa, columna centrada). Se crea tras
+    // la barra de formato, que oculta/muestra. La acción del menú (F11) lo conmuta
+    // y se mantiene marcada según el estado (p. ej. al salir con ESC).
+    m_distraction = new DistractionFreeController(
+        this, m_editor, m_split, m_outline, m_formatToolBar, m_findBar, this);
+    connect(m_distractionAction, &QAction::toggled,
+            m_distraction, &DistractionFreeController::setActive);
+    connect(m_distraction, &DistractionFreeController::activeChanged,
+            m_distractionAction, &QAction::setChecked);
 
     // Contador de palabras/caracteres, anclado a la derecha de la barra de estado.
     m_countLabel = new QLabel(this);
@@ -445,9 +420,9 @@ MainWindow::MainWindow(QWidget *parent)
 
     // Los botones de formato reflejan en todo momento lo que hay bajo el cursor.
     connect(m_editor, &QTextEdit::currentCharFormatChanged,
-            this, &MainWindow::updateFormatActions);
+            this, [this] { m_format->updateActions(); });
     connect(m_editor, &QTextEdit::cursorPositionChanged,
-            this, &MainWindow::updateFormatActions);
+            this, [this] { m_format->updateActions(); });
     // Marca el título con '*' cuando el contenido difiere del guardado. Se
     // recalcula en cada cambio de contenido (DocumentIo compara con su línea
     // base, así que el artefacto de trazado de QTextEdit no lo ensucia).
@@ -463,18 +438,16 @@ MainWindow::MainWindow(QWidget *parent)
             this, &MainWindow::onCurrentFileChanged);
 
     // Vigilancia de cambios externos del archivo abierto (editar con git u otra
-    // herramienta). El aviso se agrupa con un pequeño retardo para sortear los
-    // guardados atómicos (escribir-temporal-y-renombrar), que disparan varios
-    // eventos y dejan el archivo un instante inexistente.
-    m_fileWatcher = new QFileSystemWatcher(this);
-    connect(m_fileWatcher, &QFileSystemWatcher::fileChanged,
-            this, &MainWindow::onWatchedFileChanged);
-    m_diskCheckTimer = new QTimer(this);
-    m_diskCheckTimer->setSingleShot(true);
-    m_diskCheckTimer->setInterval(300);
-    connect(m_diskCheckTimer, &QTimer::timeout, this, &MainWindow::checkDiskChange);
+    // herramienta). El watcher solo señala; la reacción (recargar o preguntar) la
+    // decide MainWindow porque toca los editores y puede abrir un diálogo.
+    m_diskWatcher = new DiskWatcher(this);
     connect(m_documentIo, &DocumentIo::currentFileChanged,
-            this, &MainWindow::watchCurrentFile);
+            m_diskWatcher, &DiskWatcher::watch);
+    connect(m_diskWatcher, &DiskWatcher::externalChange,
+            this, &MainWindow::onDiskExternalChange);
+    connect(m_diskWatcher, &DiskWatcher::vanished, this, [this] {
+        statusBar()->showMessage(tr("El archivo se eliminó o movió en disco."), 6000);
+    });
     connect(m_documentIo, &DocumentIo::documentLoaded,
             m_theme, &ThemeController::recolorLinks);
     // Al cargar un documento, el índice se reconstruye de inmediato (sin esperar
@@ -506,7 +479,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     statusBar()->showMessage(
         tr("Editor Markdown WYSIWYG — escribe y da formato con la barra superior"));
-    updateFormatActions();
+    m_format->updateActions();
     updateWordCount();
 
     // Restaura el tema elegido en la sesión anterior (la señal themeChanged
@@ -517,55 +490,73 @@ MainWindow::MainWindow(QWidget *parent)
 
 void MainWindow::createMenusAndActions()
 {
-    // --- Menú Archivo ---
+    createFileMenu();
+    createEditMenu();
+    createFormatActions();
+    createInsertMenu();
+    createTableMenu();
+    createViewMenu();
+    createHelpMenu();
+
+    // Entrega al controlador de la vista dividida las acciones recién creadas: las
+    // de modo (que conmuta y mantiene marcadas) y las válidas solo en WYSIWYG (que
+    // deshabilita en modo fuente).
+    m_split->setModeActions(m_sourceModeAction, m_splitAction);
+    m_split->setWysiwygActions(m_wysiwygActions);
+}
+
+void MainWindow::createFileMenu()
+{
     QMenu *fileMenu = menuBar()->addMenu(tr("&Archivo"));
 
     QAction *newAction = fileMenu->addAction(tr("&Nuevo"));
     newAction->setShortcut(QKeySequence::New);
-    connect(newAction, &QAction::triggered, this, &MainWindow::newFile);
+    connect(newAction, &QAction::triggered, m_file, &FileController::newFile);
 
     QAction *openAction = fileMenu->addAction(tr("&Abrir..."));
     openAction->setShortcut(QKeySequence::Open);
-    connect(openAction, &QAction::triggered, this, &MainWindow::openFileDialog);
+    connect(openAction, &QAction::triggered, m_file, &FileController::openFileDialog);
 
     QMenu *recentMenu = fileMenu->addMenu(tr("Abrir &recientes"));
     m_recentFiles = new RecentFilesManager(recentMenu, this);
     connect(m_recentFiles, &RecentFilesManager::fileOpenRequested,
-            this, &MainWindow::openFile);
+            m_file, &FileController::openFile);
 
     QAction *saveAction = fileMenu->addAction(tr("&Guardar"));
     saveAction->setShortcut(QKeySequence::Save);
-    connect(saveAction, &QAction::triggered, this, &MainWindow::save);
+    connect(saveAction, &QAction::triggered, m_file, &FileController::save);
 
     QAction *saveAsAction = fileMenu->addAction(tr("Guardar &como..."));
     saveAsAction->setShortcut(QKeySequence::SaveAs);
-    connect(saveAsAction, &QAction::triggered, this, &MainWindow::saveAs);
+    connect(saveAsAction, &QAction::triggered, m_file, &FileController::saveAs);
 
     fileMenu->addSeparator();
 
     QMenu *exportMenu = fileMenu->addMenu(tr("&Exportar"));
     QAction *exportPdfAction = exportMenu->addAction(tr("A PDF..."));
-    connect(exportPdfAction, &QAction::triggered, this, &MainWindow::exportPdf);
+    connect(exportPdfAction, &QAction::triggered, m_export, &ExportController::exportPdf);
     QAction *exportHtmlAction = exportMenu->addAction(tr("A HTML..."));
-    connect(exportHtmlAction, &QAction::triggered, this, &MainWindow::exportHtml);
+    connect(exportHtmlAction, &QAction::triggered, m_export, &ExportController::exportHtml);
     QAction *exportOdfAction = exportMenu->addAction(tr("A ODF (ODT)..."));
-    connect(exportOdfAction, &QAction::triggered, this, &MainWindow::exportOdf);
+    connect(exportOdfAction, &QAction::triggered, m_export, &ExportController::exportOdf);
     QAction *exportLatexAction = exportMenu->addAction(tr("A LaTeX..."));
-    connect(exportLatexAction, &QAction::triggered, this, &MainWindow::exportLatex);
+    connect(exportLatexAction, &QAction::triggered, m_export, &ExportController::exportLatex);
 
     fileMenu->addSeparator();
 
     QAction *printAction = fileMenu->addAction(tr("&Imprimir..."));
     printAction->setShortcut(QKeySequence::Print);
-    connect(printAction, &QAction::triggered, this, &MainWindow::print);
+    connect(printAction, &QAction::triggered, m_export, &ExportController::print);
 
     fileMenu->addSeparator();
 
     QAction *quitAction = fileMenu->addAction(tr("&Salir"));
     quitAction->setShortcut(QKeySequence::Quit);
     connect(quitAction, &QAction::triggered, this, &QWidget::close);
+}
 
-    // --- Menú Editar ---
+void MainWindow::createEditMenu()
+{
     QMenu *editMenu = menuBar()->addMenu(tr("&Editar"));
 
     QAction *undoAction = editMenu->addAction(tr("Deshacer"));
@@ -585,7 +576,10 @@ void MainWindow::createMenusAndActions()
     QAction *replaceAction = editMenu->addAction(tr("Reemplazar..."));
     replaceAction->setShortcut(QKeySequence::Replace);                 // Ctrl+H
     connect(replaceAction, &QAction::triggered, m_findBar, &FindReplaceBar::showReplace);
+}
 
+void MainWindow::createFormatActions()
+{
     // --- Acciones de formato (compartidas por el menú y la barra) ---
     // Tabla de descriptores: todas son checkable y solo difieren en texto, atajo
     // y la acción a ejecutar. El tooltip se compone del texto más el atajo en su
@@ -593,7 +587,7 @@ void MainWindow::createMenusAndActions()
     // atajo: así no hay que traducirlo a mano ni puede desincronizarse.
     using Mutator = std::function<void(QTextCharFormat &, const QTextCharFormat &)>;
     const auto charToggle = [this](Mutator m) {
-        return [this, m = std::move(m)] { toggleCharFormat(m); };
+        return [this, m = std::move(m)] { m_format->toggleCharFormat(m); };
     };
 
     struct FormatActionDef {
@@ -633,29 +627,29 @@ void MainWindow::createMenusAndActions()
          }),
          tr("Código en línea")},
         {&m_linkAction, tr("Enlace"), QKeySequence(Qt::CTRL | Qt::Key_K),
-         [this] { insertLink(); }, tr("Insertar o editar enlace")},
+         [this] { m_insert->insertLink(); }, tr("Insertar o editar enlace")},
         {&m_quoteAction, tr("❝ Cita"), QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_Q),
-         [this] { toggleBlockquote(); }, tr("Convertir en cita")},
+         [this] { m_format->toggleBlockquote(); }, tr("Convertir en cita")},
         {&m_codeBlockAction, tr("Bloque"), QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_K),
-         [this] { toggleCodeBlock(); }, tr("Bloque de código")},
+         [this] { m_format->toggleCodeBlock(); }, tr("Bloque de código")},
         {&m_h1Action, tr("H1"), QKeySequence(Qt::CTRL | Qt::Key_1),
-         [this] { applyHeading(1); }},
+         [this] { m_format->applyHeading(1); }},
         {&m_h2Action, tr("H2"), QKeySequence(Qt::CTRL | Qt::Key_2),
-         [this] { applyHeading(2); }},
+         [this] { m_format->applyHeading(2); }},
         {&m_h3Action, tr("H3"), QKeySequence(Qt::CTRL | Qt::Key_3),
-         [this] { applyHeading(3); }},
+         [this] { m_format->applyHeading(3); }},
         {&m_h4Action, tr("H4"), QKeySequence(Qt::CTRL | Qt::Key_4),
-         [this] { applyHeading(4); }},
+         [this] { m_format->applyHeading(4); }},
         {&m_h5Action, tr("H5"), QKeySequence(Qt::CTRL | Qt::Key_5),
-         [this] { applyHeading(5); }},
+         [this] { m_format->applyHeading(5); }},
         {&m_h6Action, tr("H6"), QKeySequence(Qt::CTRL | Qt::Key_6),
-         [this] { applyHeading(6); }},
+         [this] { m_format->applyHeading(6); }},
         {&m_bulletAction, tr("Lista de viñetas"), QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_U),
-         [this] { applyList(QTextListFormat::ListDisc); }},
+         [this] { m_format->applyList(QTextListFormat::ListDisc); }},
         {&m_numberedAction, tr("Lista numerada"), QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_O),
-         [this] { applyList(QTextListFormat::ListDecimal); }},
+         [this] { m_format->applyList(QTextListFormat::ListDecimal); }},
         {&m_taskAction, tr("Lista de tareas"), QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_T),
-         [this] { toggleTaskItem(); }},
+         [this] { m_format->toggleTaskItem(); }},
     };
 
     for (const FormatActionDef &d : defs) {
@@ -695,12 +689,12 @@ void MainWindow::createMenusAndActions()
 
     m_indentAction = formatMenu->addAction(tr("Aumentar sangría"));
     m_indentAction->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_BracketRight));
-    connect(m_indentAction, &QAction::triggered, this, &MainWindow::indentList);
+    connect(m_indentAction, &QAction::triggered, m_format, &FormatController::indentList);
     m_wysiwygActions.append(m_indentAction);
 
     m_outdentAction = formatMenu->addAction(tr("Disminuir sangría"));
     m_outdentAction->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_BracketLeft));
-    connect(m_outdentAction, &QAction::triggered, this, &MainWindow::outdentList);
+    connect(m_outdentAction, &QAction::triggered, m_format, &FormatController::outdentList);
     m_wysiwygActions.append(m_outdentAction);
 
     formatMenu->addSeparator();
@@ -709,73 +703,88 @@ void MainWindow::createMenusAndActions()
 
     m_langAction = formatMenu->addAction(tr("Lenguaje del bloque..."));
     m_langAction->setToolTip(tr("Fija el lenguaje del bloque de código (resaltado)"));
-    connect(m_langAction, &QAction::triggered, this, &MainWindow::setCodeLanguage);
+    connect(m_langAction, &QAction::triggered, m_format, &FormatController::setCodeLanguage);
     m_wysiwygActions.append(m_langAction);
 
-    // --- Menú Insertar ---
+    // Entrega a FormatController las acciones que sincroniza con el formato bajo
+    // el cursor (las comparten este menú y la barra de botones).
+    m_format->setActions({
+        m_boldAction, m_italicAction, m_underlineAction, m_strikeAction, m_codeAction,
+        m_linkAction, m_quoteAction, m_codeBlockAction, m_langAction,
+        m_h1Action, m_h2Action, m_h3Action, m_h4Action, m_h5Action, m_h6Action,
+        m_bulletAction, m_numberedAction, m_taskAction, m_indentAction, m_outdentAction});
+}
+
+void MainWindow::createInsertMenu()
+{
     QMenu *insertMenu = menuBar()->addMenu(tr("&Insertar"));
 
     QAction *insLink = insertMenu->addAction(tr("Enlace..."));
-    connect(insLink, &QAction::triggered, this, &MainWindow::insertLink);
+    connect(insLink, &QAction::triggered, m_insert, &InsertController::insertLink);
 
     QAction *insImage = insertMenu->addAction(tr("Imagen..."));
-    connect(insImage, &QAction::triggered, this, &MainWindow::insertImage);
+    connect(insImage, &QAction::triggered, m_insert, &InsertController::insertImage);
 
     QAction *insPasteImage = insertMenu->addAction(tr("Pegar imagen"));
     insPasteImage->setToolTip(tr("Guarda la imagen del portapapeles y la inserta"));
-    connect(insPasteImage, &QAction::triggered, this, &MainWindow::pasteImageFromClipboard);
+    connect(insPasteImage, &QAction::triggered, m_insert, &InsertController::pasteImageFromClipboard);
 
     QAction *insTable = insertMenu->addAction(tr("Tabla..."));
-    connect(insTable, &QAction::triggered, this, &MainWindow::insertTable);
+    connect(insTable, &QAction::triggered, m_insert, &InsertController::insertTable);
 
     QAction *insRule = insertMenu->addAction(tr("Regla horizontal"));
-    connect(insRule, &QAction::triggered, this, &MainWindow::insertHorizontalRule);
+    connect(insRule, &QAction::triggered, m_insert, &InsertController::insertHorizontalRule);
 
     QAction *insFormula = insertMenu->addAction(tr("Fórmula..."));
     insFormula->setShortcut(QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_F));
     insFormula->setToolTip(
         insFormula->text() + QStringLiteral(" (%1)").arg(
             insFormula->shortcut().toString(QKeySequence::NativeText)));
-    connect(insFormula, &QAction::triggered, this, &MainWindow::insertFormula);
+    connect(insFormula, &QAction::triggered, m_formula, &FormulaController::insertFormula);
 
     // Insertar tampoco aplica en la vista de fuente.
     m_wysiwygActions << insLink << insImage << insPasteImage << insTable << insRule << insFormula;
+}
 
+void MainWindow::createTableMenu()
+{
     // --- Menú Tabla (operaciones sobre la tabla bajo el cursor) ---
     // Sus acciones se habilitan solo cuando el cursor está dentro de una tabla
     // (ver updateTableActions), de ahí que no vayan en m_wysiwygActions.
     QMenu *tableMenu = menuBar()->addMenu(tr("&Tabla"));
 
     QAction *aRowAbove = tableMenu->addAction(tr("Insertar fila encima"));
-    connect(aRowAbove, &QAction::triggered, this, [this] { tableInsertRow(false); });
+    connect(aRowAbove, &QAction::triggered, this, [this] { m_table->insertRow(false); });
     QAction *aRowBelow = tableMenu->addAction(tr("Insertar fila debajo"));
-    connect(aRowBelow, &QAction::triggered, this, [this] { tableInsertRow(true); });
+    connect(aRowBelow, &QAction::triggered, this, [this] { m_table->insertRow(true); });
     QAction *aColLeft = tableMenu->addAction(tr("Insertar columna a la izquierda"));
-    connect(aColLeft, &QAction::triggered, this, [this] { tableInsertColumn(false); });
+    connect(aColLeft, &QAction::triggered, this, [this] { m_table->insertColumn(false); });
     QAction *aColRight = tableMenu->addAction(tr("Insertar columna a la derecha"));
-    connect(aColRight, &QAction::triggered, this, [this] { tableInsertColumn(true); });
+    connect(aColRight, &QAction::triggered, this, [this] { m_table->insertColumn(true); });
 
     tableMenu->addSeparator();
     QAction *aDelRow = tableMenu->addAction(tr("Eliminar fila"));
-    connect(aDelRow, &QAction::triggered, this, &MainWindow::tableDeleteRow);
+    connect(aDelRow, &QAction::triggered, m_table, &TableController::deleteRow);
     QAction *aDelCol = tableMenu->addAction(tr("Eliminar columna"));
-    connect(aDelCol, &QAction::triggered, this, &MainWindow::tableDeleteColumn);
+    connect(aDelCol, &QAction::triggered, m_table, &TableController::deleteColumn);
 
     tableMenu->addSeparator();
     QMenu *alignMenu = tableMenu->addMenu(tr("Alinear columna"));
     QAction *aLeft = alignMenu->addAction(tr("Izquierda"));
-    connect(aLeft, &QAction::triggered, this, [this] { tableAlignColumn(Qt::AlignLeft); });
+    connect(aLeft, &QAction::triggered, this, [this] { m_table->alignColumn(Qt::AlignLeft); });
     QAction *aCenter = alignMenu->addAction(tr("Centrar"));
-    connect(aCenter, &QAction::triggered, this, [this] { tableAlignColumn(Qt::AlignHCenter); });
+    connect(aCenter, &QAction::triggered, this, [this] { m_table->alignColumn(Qt::AlignHCenter); });
     QAction *aRight = alignMenu->addAction(tr("Derecha"));
-    connect(aRight, &QAction::triggered, this, [this] { tableAlignColumn(Qt::AlignRight); });
+    connect(aRight, &QAction::triggered, this, [this] { m_table->alignColumn(Qt::AlignRight); });
 
-    m_tableActions << aRowAbove << aRowBelow << aColLeft << aColRight
-                   << aDelRow << aDelCol << alignMenu->menuAction()
-                   << aLeft << aCenter << aRight;
-    updateTableActions();  // estado inicial (sin tabla bajo el cursor)
+    m_table->setActions({aRowAbove, aRowBelow, aColLeft, aColRight,
+                         aDelRow, aDelCol, alignMenu->menuAction(),
+                         aLeft, aCenter, aRight});
+    m_table->updateActions();  // estado inicial (sin tabla bajo el cursor)
+}
 
-    // --- Menú Ver (vista, zoom y tema) ---
+void MainWindow::createViewMenu()
+{
     QMenu *viewMenu = menuBar()->addMenu(tr("&Ver"));
 
     m_sourceModeAction = viewMenu->addAction(tr("Código fuente Markdown"));
@@ -784,23 +793,26 @@ void MainWindow::createMenusAndActions()
     m_sourceModeAction->setToolTip(
         m_sourceModeAction->text() + QStringLiteral(" (%1)").arg(
             m_sourceModeAction->shortcut().toString(QKeySequence::NativeText)));
-    connect(m_sourceModeAction, &QAction::toggled, this, &MainWindow::toggleSourceMode);
+    connect(m_sourceModeAction, &QAction::toggled, m_split, &SplitViewController::toggleSourceMode);
 
     m_splitAction = viewMenu->addAction(tr("Vista dividida"));
     m_splitAction->setCheckable(true);
-    m_splitAction->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_Backslash));
+    // Ctrl+Shift+D (no Ctrl+\\: en teclados español/ISO la «\» exige AltGr y el
+    // atajo resulta imposible de pulsar). «D» de «Dividida».
+    m_splitAction->setShortcut(QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_D));
     m_splitAction->setToolTip(
         tr("Editar WYSIWYG y código fuente a la vez, lado a lado") +
         QStringLiteral(" (%1)").arg(
             m_splitAction->shortcut().toString(QKeySequence::NativeText)));
-    connect(m_splitAction, &QAction::toggled, this, &MainWindow::toggleSplitView);
+    connect(m_splitAction, &QAction::toggled, m_split, &SplitViewController::toggleSplitView);
 
     m_distractionAction = viewMenu->addAction(tr("Sin distracciones"));
     m_distractionAction->setCheckable(true);
     m_distractionAction->setShortcut(QKeySequence(Qt::Key_F11));
     m_distractionAction->setToolTip(
         tr("Pantalla completa, sin barras, con el texto centrado (ESC o F11 para salir)"));
-    connect(m_distractionAction, &QAction::toggled, this, &MainWindow::toggleDistractionFree);
+    // La conexión con el controlador se hace en el ctor (m_distraction se crea
+    // después de los menús, tras la barra de formato que oculta/muestra).
 
     // Esquema (índice): toggleViewAction muestra/oculta el dock y mantiene su
     // marca sincronizada con la visibilidad del panel automáticamente.
@@ -864,10 +876,6 @@ void MainWindow::createMenusAndActions()
         if (QAction *action = m_themeActions.value(id))
             action->setChecked(true);
         updateToolBarIcons();  // los iconos generados siguen el color del tema
-        // Franjas del modo sin distracciones: color curado del tema.
-        const QColor margin = mdtheme::specFor(id).margin;
-        m_editor->setMarginColor(margin);
-        m_sourceEditor->setMarginColor(margin);
     });
 
     themeMenu->addSeparator();
@@ -909,8 +917,10 @@ void MainWindow::createMenusAndActions()
         connect(action, &QAction::triggered, this,
                 [this, code = lang.code] { setLanguage(code); });
     }
+}
 
-    // --- Menú Ayuda ---
+void MainWindow::createHelpMenu()
+{
     QMenu *helpMenu = menuBar()->addMenu(tr("A&yuda"));
     QAction *manualAction = helpMenu->addAction(tr("&Manual"));
     manualAction->setShortcut(QKeySequence::HelpContents);  // F1 en Linux/Windows
@@ -1059,93 +1069,6 @@ void MainWindow::updateWordCount()
     m_countLabel->setText(count);
 }
 
-// ---------------------------------------------------------------------------
-// Formato de caracteres (negrita, cursiva, tachado, código)
-// ---------------------------------------------------------------------------
-
-void MainWindow::mergeCharFormatOnSelection(const QTextCharFormat &format)
-{
-    QTextCursor cursor = m_editor->textCursor();
-    // Sin selección, se aplica a la palabra bajo el cursor; además se fija el
-    // formato de inserción para que el texto que se escriba a continuación
-    // herede el formato.
-    if (!cursor.hasSelection())
-        cursor.select(QTextCursor::WordUnderCursor);
-    cursor.mergeCharFormat(format);
-    m_editor->mergeCurrentCharFormat(format);
-    m_editor->setFocus();
-    updateFormatActions();
-}
-
-void MainWindow::toggleCharFormat(
-    const std::function<void(QTextCharFormat &, const QTextCharFormat &)> &mutate)
-{
-    QTextCharFormat fmt;
-    mutate(fmt, m_editor->currentCharFormat());
-    mergeCharFormatOnSelection(fmt);
-}
-
-// ---------------------------------------------------------------------------
-// Formato de bloque (encabezados y listas)
-// ---------------------------------------------------------------------------
-
-void MainWindow::applyHeading(int level)
-{
-    QTextCursor cursor = m_editor->textCursor();
-    const int current = cursor.blockFormat().headingLevel();
-    const int target = (current == level) ? 0 : level;  // volver a pulsar = quitar
-
-    cursor.beginEditBlock();
-
-    // El nivel de encabezado es lo que exporta toMarkdown() como '#'.
-    QTextBlockFormat bf;
-    bf.setHeadingLevel(target);
-    cursor.mergeBlockFormat(bf);
-
-    // Para el WYSIWYG hay que aplicar también el tamaño y la negrita: usamos
-    // FontSizeAdjustment = 4 - nivel, igual que hace setMarkdown() de Qt.
-    QTextCharFormat cf;
-    cf.setProperty(QTextFormat::FontSizeAdjustment, target > 0 ? 4 - target : 0);
-    cf.setFontWeight(target > 0 ? QFont::Bold : QFont::Normal);
-
-    QTextCursor blockCursor = cursor;
-    blockCursor.movePosition(QTextCursor::StartOfBlock);
-    blockCursor.movePosition(QTextCursor::EndOfBlock, QTextCursor::KeepAnchor);
-    blockCursor.mergeCharFormat(cf);
-
-    cursor.endEditBlock();
-
-    m_editor->mergeCurrentCharFormat(cf);  // para el texto que se escriba luego
-    m_editor->setFocus();
-    updateFormatActions();
-}
-
-void MainWindow::applyList(QTextListFormat::Style style)
-{
-    QTextCursor cursor = m_editor->textCursor();
-    QTextList *currentList = cursor.currentList();
-
-    cursor.beginEditBlock();
-    if (currentList && currentList->format().style() == style) {
-        // Ya es ese tipo de lista: la quitamos (desligamos el bloque). También
-        // se quita el marcador de tarea, si lo hubiera, para que no quede un
-        // checkbox huérfano fuera de toda lista.
-        QTextBlockFormat bf = cursor.blockFormat();
-        bf.setObjectIndex(-1);
-        bf.setIndent(0);
-        bf.setMarker(QTextBlockFormat::MarkerType::NoMarker);
-        cursor.setBlockFormat(bf);
-    } else {
-        QTextListFormat lf;
-        lf.setStyle(style);
-        cursor.createList(lf);
-    }
-    cursor.endEditBlock();
-
-    m_editor->setFocus();
-    updateFormatActions();
-}
-
 void MainWindow::styleTables()
 {
     QTextDocument *doc = m_editor->document();
@@ -1173,810 +1096,6 @@ void MainWindow::styleTables()
     }
     cursor.endEditBlock();
     doc->setModified(wasModified);
-}
-
-void MainWindow::updateFormatActions()
-{
-    const QTextCharFormat cf = m_editor->currentCharFormat();
-    m_boldAction->setChecked(cf.fontWeight() >= QFont::Bold);
-    m_italicAction->setChecked(cf.fontItalic());
-    m_underlineAction->setChecked(cf.fontUnderline());
-    m_strikeAction->setChecked(cf.fontStrikeOut());
-    m_codeAction->setChecked(cf.fontFixedPitch());
-    m_linkAction->setChecked(cf.isAnchor());
-
-    const QTextCursor cursor = m_editor->textCursor();
-    const int level = cursor.blockFormat().headingLevel();
-    m_h1Action->setChecked(level == 1);
-    m_h2Action->setChecked(level == 2);
-    m_h3Action->setChecked(level == 3);
-    m_h4Action->setChecked(level == 4);
-    m_h5Action->setChecked(level == 5);
-    m_h6Action->setChecked(level == 6);
-
-    // En un encabezado, el formato de carácter (negrita, cursiva, etc.) no
-    // round-trip-ea a Markdown: el `#` ya implica el peso del título y Qt no
-    // serializa cursiva/subrayado dentro de un heading. Para no engañar al
-    // usuario (ni dejarle «quitar» la negrita del título), se deshabilitan.
-    const bool heading = level > 0;
-    for (QAction *a : {m_boldAction, m_italicAction, m_underlineAction,
-                       m_strikeAction, m_codeAction})
-        a->setEnabled(!heading);
-
-    const QTextList *list = cursor.currentList();
-    const QTextListFormat::Style style =
-        list ? list->format().style() : QTextListFormat::ListStyleUndefined;
-    const QTextBlockFormat bf = cursor.blockFormat();
-    const bool isTask = list && bf.marker() != QTextBlockFormat::MarkerType::NoMarker;
-    // Una lista de tareas es internamente una ListDisc con marcador: marca solo
-    // «tareas», no «viñetas». Una viñeta normal (sin marcador) marca solo «viñetas».
-    m_bulletAction->setChecked(style == QTextListFormat::ListDisc && !isTask);
-    m_numberedAction->setChecked(style == QTextListFormat::ListDecimal);
-    m_taskAction->setChecked(isTask);
-
-    // La sangría de lista solo tiene efecto dentro de una lista.
-    m_indentAction->setEnabled(list != nullptr);
-    m_outdentAction->setEnabled(list != nullptr);
-
-    m_quoteAction->setChecked(bf.intProperty(QTextFormat::BlockQuoteLevel) > 0);
-    m_codeBlockAction->setChecked(bf.hasProperty(QTextFormat::BlockCodeFence));
-    // El lenguaje solo se puede fijar con el cursor dentro de un bloque de código.
-    m_langAction->setEnabled(bf.hasProperty(QTextFormat::BlockCodeFence));
-
-    updateTableActions();  // el menú Tabla depende de si el cursor está en una
-}
-
-// ---------------------------------------------------------------------------
-// Citas y bloques de código. La lógica de alternado (reescribir el Markdown del
-// bloque y dejar que el lector de Qt construya la estructura, que sí
-// round-trip-ea) vive en BlockConstruct; aquí solo se invoca.
-// ---------------------------------------------------------------------------
-
-void MainWindow::toggleBlockquote()
-{
-    Blockquote().toggle(m_editor);
-    updateFormatActions();
-}
-
-void MainWindow::toggleCodeBlock()
-{
-    CodeBlock().toggle(m_editor);
-    updateFormatActions();
-}
-
-void MainWindow::setCodeLanguage()
-{
-    QTextCursor cursor = m_editor->textCursor();
-    if (!cursor.blockFormat().hasProperty(QTextFormat::BlockCodeFence)) {
-        statusBar()->showMessage(
-            tr("Coloca el cursor dentro de un bloque de código"), 3000);
-        return;
-    }
-
-    const QString current =
-        cursor.blockFormat().stringProperty(QTextFormat::BlockCodeLanguage);
-
-    const QStringList langs = {QString(), QStringLiteral("cpp"),
-        QStringLiteral("c"), QStringLiteral("python"),
-        QStringLiteral("javascript"), QStringLiteral("typescript"),
-        QStringLiteral("java"), QStringLiteral("go"), QStringLiteral("rust"),
-        QStringLiteral("bash"), QStringLiteral("json"), QStringLiteral("sql"),
-        QStringLiteral("html"), QStringLiteral("css")};
-    const int currentIndex = qMax(0, langs.indexOf(current));
-
-    bool ok = false;
-    const QString lang = QInputDialog::getItem(
-        this, tr("Lenguaje del bloque"),
-        tr("Lenguaje (vacío = ninguno):"), langs, currentIndex,
-        /*editable=*/true, &ok);
-    if (!ok)
-        return;
-
-    // Aplica el lenguaje a todos los bloques contiguos del bloque de código.
-    QTextDocument *doc = m_editor->document();
-    int first = cursor.block().blockNumber();
-    int last = first;
-    while (first > 0 && doc->findBlockByNumber(first - 1).blockFormat()
-                            .hasProperty(QTextFormat::BlockCodeFence))
-        --first;
-    while (last < doc->blockCount() - 1 && doc->findBlockByNumber(last + 1).blockFormat()
-                                               .hasProperty(QTextFormat::BlockCodeFence))
-        ++last;
-
-    QTextCursor edit(doc);
-    edit.beginEditBlock();
-    for (int i = first; i <= last; ++i) {
-        QTextCursor bc(doc->findBlockByNumber(i));
-        QTextBlockFormat add;
-        add.setProperty(QTextFormat::BlockCodeLanguage, lang);
-        bc.mergeBlockFormat(add);
-    }
-    edit.endEditBlock();
-
-    m_highlighter->rehighlight();
-    m_editor->setFocus();
-}
-
-// ---------------------------------------------------------------------------
-// Enlaces, imágenes, tablas, regla horizontal, tareas y sangría
-// ---------------------------------------------------------------------------
-
-namespace {
-
-// Diálogo de dos campos de texto. Con `browseV2`, el segundo campo lleva un
-// botón "..." para elegir un archivo. Devuelve true si el usuario acepta.
-bool twoFieldDialog(QWidget *parent, const QString &title,
-                    const QString &label1, QString &value1,
-                    const QString &label2, QString &value2,
-                    bool browseV2 = false)
-{
-    QDialog dialog(parent);
-    dialog.setWindowTitle(title);
-    auto *form = new QFormLayout(&dialog);
-
-    auto *edit1 = new QLineEdit(value1, &dialog);
-    form->addRow(label1, edit1);
-
-    auto *edit2 = new QLineEdit(value2, &dialog);
-    if (browseV2) {
-        auto *row = new QWidget(&dialog);
-        auto *h = new QHBoxLayout(row);
-        h->setContentsMargins(0, 0, 0, 0);
-        h->addWidget(edit2);
-        auto *browse = new QPushButton(QObject::tr("..."), row);
-        QObject::connect(browse, &QPushButton::clicked, [parent, edit2] {
-            const QString f = QFileDialog::getOpenFileName(
-                parent, QObject::tr("Elegir imagen"), QString(),
-                QObject::tr("Imágenes (*.png *.jpg *.jpeg *.gif *.bmp *.svg);;Todos (*)"));
-            if (!f.isEmpty())
-                edit2->setText(f);
-        });
-        h->addWidget(browse);
-        form->addRow(label2, row);
-    } else {
-        form->addRow(label2, edit2);
-    }
-
-    auto *buttons = new QDialogButtonBox(
-        QDialogButtonBox::Ok | QDialogButtonBox::Cancel, &dialog);
-    form->addRow(buttons);
-    QObject::connect(buttons, &QDialogButtonBox::accepted, &dialog, &QDialog::accept);
-    QObject::connect(buttons, &QDialogButtonBox::rejected, &dialog, &QDialog::reject);
-
-    if (dialog.exec() != QDialog::Accepted)
-        return false;
-    value1 = edit1->text();
-    value2 = edit2->text();
-    return true;
-}
-
-} // namespace
-
-void MainWindow::insertLink()
-{
-    QTextCursor cursor = m_editor->textCursor();
-    const QTextCharFormat current = m_editor->currentCharFormat();
-
-    QString text = cursor.selectedText();
-    QString url = current.isAnchor() ? current.anchorHref() : QString();
-
-    if (!twoFieldDialog(this, tr("Enlace"), tr("Texto:"), text, tr("URL:"), url))
-        return;
-
-    QTextCharFormat fmt;
-    if (url.isEmpty()) {
-        // Sin URL no se crea ningún enlace: se inserta texto plano (un enlace sin
-        // destino, [texto](), no aporta nada y confunde). Si tampoco hay texto,
-        // no hay nada que insertar.
-        if (text.isEmpty())
-            return;
-        fmt.setAnchor(false);
-        fmt.setAnchorHref(QString());
-        fmt.setForeground(palette().color(QPalette::Text));
-        fmt.setFontUnderline(false);
-        cursor.insertText(text, fmt);
-    } else {
-        fmt.setAnchor(true);
-        fmt.setAnchorHref(url);
-        fmt.setForeground(palette().color(QPalette::Link));
-        fmt.setFontUnderline(true);
-        if (text.isEmpty())
-            text = url;
-        // insertText reemplaza la selección si la hay.
-        cursor.insertText(text, fmt);
-    }
-    m_editor->setFocus();
-    updateFormatActions();
-}
-
-void MainWindow::insertImage()
-{
-    QString alt = tr("imagen");
-    QString path;
-    if (!twoFieldDialog(this, tr("Insertar imagen"),
-                        tr("Texto alternativo:"), alt,
-                        tr("Ruta o URL:"), path, /*browseV2=*/true))
-        return;
-    if (path.isEmpty())
-        return;
-
-    // Si el documento está guardado y la imagen es local, usar ruta relativa
-    // para que el Markdown sea portable.
-    const QString currentFile = m_documentIo->currentFile();
-    if (!currentFile.isEmpty() && !path.contains(QLatin1String("://"))) {
-        const QDir docDir(QFileInfo(currentFile).absolutePath());
-        const QString rel = docDir.relativeFilePath(path);
-        if (!rel.startsWith(QLatin1String("..")))
-            path = rel;
-    }
-
-    QTextCursor cursor = m_editor->textCursor();
-    cursor.beginEditBlock();
-    cursor.insertFragment(QTextDocumentFragment::fromMarkdown(
-        QStringLiteral("![%1](%2)").arg(alt, path)));
-    cursor.endEditBlock();
-    m_editor->setFocus();
-}
-
-void MainWindow::pasteImageFromClipboard()
-{
-    const QMimeData *mime = QApplication::clipboard()->mimeData();
-    if (!mime || !handlePastedImage(mime))
-        QMessageBox::information(
-            this, tr("Pegar imagen"),
-            tr("El portapapeles no contiene ninguna imagen."));
-}
-
-bool MainWindow::handlePastedImage(const QMimeData *source)
-{
-    if (!source || !source->hasImage())
-        return false;
-    const QImage image = qvariant_cast<QImage>(source->imageData());
-    if (image.isNull())
-        return false;
-
-    // Texto alternativo de la imagen (puede dejarse vacío). Si se cancela, no se
-    // inserta nada pero el evento se considera gestionado (no incrustar la imagen).
-    bool ok = false;
-    const QString alt = QInputDialog::getText(
-        this, tr("Pegar imagen"), tr("Texto alternativo:"),
-        QLineEdit::Normal, tr("imagen pegada"), &ok);
-    if (!ok)
-        return true;
-
-    // Nombre con marca de tiempo para evitar colisiones; si aun así existe (mismo
-    // segundo), se añade un sufijo incremental.
-    const QString stamp =
-        QDateTime::currentDateTime().toString(QStringLiteral("yyyyMMdd-HHmmss"));
-    const auto fileNameFor = [&stamp](int n) {
-        return n == 0 ? QStringLiteral("imagen-%1.png").arg(stamp)
-                      : QStringLiteral("imagen-%1-%2.png").arg(stamp).arg(n);
-    };
-
-    QString savePath;  // ruta absoluta donde se escribe el PNG
-    QString mdPath;    // lo que va dentro de ![](...)
-
-    const QString currentFile = m_documentIo->currentFile();
-    if (!currentFile.isEmpty()) {
-        // Documento guardado: junto al .md, con ruta relativa para que sea
-        // portable (igual criterio que insertImage()).
-        const QDir dir(QFileInfo(currentFile).absolutePath());
-        int n = 0;
-        do {
-            savePath = dir.filePath(fileNameFor(n++));
-        } while (QFileInfo::exists(savePath));
-        mdPath = dir.relativeFilePath(savePath);
-    } else {
-        // Documento sin guardar: no hay carpeta de referencia; se pide dónde
-        // guardarla y se inserta la ruta elegida.
-        savePath = QFileDialog::getSaveFileName(
-            this, tr("Guardar imagen pegada"),
-            QDir::home().filePath(fileNameFor(0)), tr("Imagen PNG (*.png)"));
-        if (savePath.isEmpty())
-            return true;  // cancelado: gestionado (no incrustar la imagen)
-        mdPath = savePath;
-    }
-
-    if (!image.save(savePath, "PNG")) {
-        QMessageBox::warning(
-            this, tr("Pegar imagen"),
-            tr("No se pudo guardar la imagen en «%1».").arg(savePath));
-        return true;
-    }
-
-    QTextCursor cursor = m_editor->textCursor();
-    cursor.beginEditBlock();
-    cursor.insertFragment(QTextDocumentFragment::fromMarkdown(
-        QStringLiteral("![%1](%2)").arg(alt, mdPath)));
-    cursor.endEditBlock();
-    m_editor->setFocus();
-    return true;
-}
-
-void MainWindow::insertTable()
-{
-    // Un solo diálogo con columnas y filas a la vez (más legible que dos seguidos).
-    QDialog dlg(this);
-    dlg.setWindowTitle(tr("Insertar tabla"));
-    auto *colsSpin = new QSpinBox(&dlg);
-    colsSpin->setRange(1, 20);
-    colsSpin->setValue(2);
-    auto *rowsSpin = new QSpinBox(&dlg);
-    rowsSpin->setRange(1, 100);
-    rowsSpin->setValue(2);
-    auto *form = new QFormLayout;
-    form->addRow(tr("Columnas:"), colsSpin);
-    form->addRow(tr("Filas de datos:"), rowsSpin);
-    auto *buttons = new QDialogButtonBox(
-        QDialogButtonBox::Ok | QDialogButtonBox::Cancel, &dlg);
-    connect(buttons, &QDialogButtonBox::accepted, &dlg, &QDialog::accept);
-    connect(buttons, &QDialogButtonBox::rejected, &dlg, &QDialog::reject);
-    auto *layout = new QVBoxLayout(&dlg);
-    layout->addLayout(form);
-    layout->addWidget(buttons);
-    if (dlg.exec() != QDialog::Accepted)
-        return;
-    const int cols = colsSpin->value();
-    const int rows = rowsSpin->value();
-
-    QString header = QStringLiteral("|");
-    QString separator = QStringLiteral("|");
-    for (int c = 0; c < cols; ++c) {
-        header += QStringLiteral("   |");
-        separator += QStringLiteral("---|");
-    }
-    QString row = QStringLiteral("|");
-    for (int c = 0; c < cols; ++c)
-        row += QStringLiteral("   |");
-
-    QString md = header + QLatin1Char('\n') + separator + QLatin1Char('\n');
-    for (int r = 0; r < rows; ++r)
-        md += row + QLatin1Char('\n');
-
-    QTextCursor cursor = m_editor->textCursor();
-    cursor.beginEditBlock();
-    cursor.insertFragment(QTextDocumentFragment::fromMarkdown(md));
-    cursor.endEditBlock();
-    styleTables();  // que la tabla recién creada muestre sus bordes
-    m_editor->setFocus();
-}
-
-bool MainWindow::askFormula(QString *tex, bool *block,
-                            const QString &initialTex, bool initialBlock)
-{
-    QDialog dlg(this);
-    dlg.setWindowTitle(tr("Insertar fórmula"));
-    auto *form = new QFormLayout;
-    auto *edit = new QPlainTextEdit(&dlg);
-    edit->setPlaceholderText(tr("Expresión TeX, p. ej. E = mc^2"));
-    edit->setMinimumWidth(360);
-    edit->setPlainText(initialTex);
-    auto *combo = new QComboBox(&dlg);
-    combo->addItem(tr("En línea ($...$)"));
-    combo->addItem(tr("Bloque ($$...$$)"));
-    combo->setCurrentIndex(initialBlock ? 1 : 0);
-    // Vista previa en vivo: alimentamos un QTextEdit (no un QLabel) con los
-    // runs que renderTexAsRuns produce, para que los super/subíndices de Qt
-    // se vean tal cual aparecerán en el editor.
-    auto *preview = new QTextEdit(&dlg);
-    preview->setReadOnly(true);
-    preview->setMinimumWidth(360);
-    preview->setMaximumHeight(70);
-    preview->setFrameStyle(QFrame::StyledPanel | QFrame::Sunken);
-    preview->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    preview->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    QFont previewFont = preview->font();
-    previewFont.setPointSizeF(previewFont.pointSizeF() * 1.25);
-    preview->setFont(previewFont);
-    auto updatePreview = [edit, preview] {
-        preview->clear();
-        const QString tex = edit->toPlainText().trimmed();
-        if (tex.isEmpty()) {
-            preview->setPlainText(QStringLiteral("—"));
-            return;
-        }
-        QTextCursor c(preview->document());
-        // El char-format base lleva las propiedades de math (cursiva, etc.);
-        // no importa que el preview no las consuma — solo nos interesan los
-        // runs con AlignSuperScript/SubScript.
-        const QTextCharFormat base = mdmath::mathCharFormat(tex, /*block=*/false);
-        for (const mdmath::MathRun &r : mdmath::renderTexAsRuns(tex, base))
-            c.insertText(r.text, r.fmt);
-    };
-    QObject::connect(edit, &QPlainTextEdit::textChanged, &dlg, updatePreview);
-    updatePreview();
-    form->addRow(tr("TeX:"), edit);
-    form->addRow(tr("Tipo:"), combo);
-    form->addRow(tr("Vista previa:"), preview);
-    auto *buttons = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, &dlg);
-    auto *layout = new QVBoxLayout(&dlg);
-    layout->addLayout(form);
-    layout->addWidget(buttons);
-    connect(buttons, &QDialogButtonBox::accepted, &dlg, &QDialog::accept);
-    connect(buttons, &QDialogButtonBox::rejected, &dlg, &QDialog::reject);
-    if (dlg.exec() != QDialog::Accepted)
-        return false;
-    const QString text = edit->toPlainText().trimmed();
-    if (text.isEmpty())
-        return false;
-    *tex = text;
-    *block = combo->currentIndex() == 1;
-    return true;
-}
-
-void MainWindow::insertFormula()
-{
-    QString tex;
-    bool block = false;
-    if (!askFormula(&tex, &block))
-        return;
-
-    // Inserta la fórmula como una secuencia de runs (varios fragmentos con
-    // super/subíndice de verdad, no solo Unicode). Todos comparten el TeX en
-    // la propiedad MathTex, lo que permite agruparlos al serializar y al
-    // editar con doble clic.
-    const QTextCharFormat base = mdmath::mathCharFormat(tex, block);
-    const QList<mdmath::MathRun> runs = mdmath::renderTexAsRuns(tex, base);
-
-    QTextCursor cursor = m_editor->textCursor();
-    cursor.beginEditBlock();
-    if (block && !cursor.atBlockStart())
-        cursor.insertText(QStringLiteral("\n"));
-    for (const mdmath::MathRun &r : runs)
-        cursor.insertText(r.text, r.fmt);
-    if (block)
-        cursor.insertText(QStringLiteral("\n"), QTextCharFormat());
-    cursor.endEditBlock();
-    // Restaura el formato de inserción para que lo que el usuario teclee a
-    // continuación no herede las propiedades de math.
-    m_editor->setCurrentCharFormat(QTextCharFormat());
-    m_editor->setFocus();
-}
-
-void MainWindow::guardPasteAgainstMath()
-{
-    QTextCursor cursor = m_editor->textCursor();
-    const QList<QPair<int, int>> groups = mdmath::mathGroupBounds(m_editor->document());
-    if (groups.isEmpty())
-        return;
-
-    int newStart = cursor.selectionStart();
-    int newEnd   = cursor.selectionEnd();
-    const bool hadSelection = cursor.hasSelection();
-
-    if (!hadSelection) {
-        // Sin selección: si el cursor está dentro de un grupo (no en su
-        // borde), seleccionamos el grupo entero para que el pegado lo
-        // reemplace en bloque en vez de incrustarse a mitad de fórmula.
-        const int pos = cursor.position();
-        for (const auto &g : groups) {
-            if (pos > g.first && pos < g.second) {
-                newStart = g.first;
-                newEnd = g.second;
-                break;
-            }
-        }
-    } else {
-        // Con selección: extiéndela a los grupos que solape.
-        for (const auto &g : groups) {
-            if (g.second <= newStart || g.first >= newEnd)
-                continue;  // sin solape
-            if (g.first < newStart) newStart = g.first;
-            if (g.second > newEnd)  newEnd = g.second;
-        }
-    }
-
-    if (newStart != cursor.selectionStart() || newEnd != cursor.selectionEnd()) {
-        QTextCursor c = m_editor->textCursor();
-        c.setPosition(newStart);
-        c.setPosition(newEnd, QTextCursor::KeepAnchor);
-        m_editor->setTextCursor(c);
-    }
-}
-
-bool MainWindow::handleMathKeyPress(QKeyEvent *event)
-{
-    QTextCursor cursor = m_editor->textCursor();
-    if (cursor.hasSelection())
-        return false;
-
-    QTextDocument *doc = m_editor->document();
-    const int pos = cursor.position();
-    const int docLen = doc->characterCount() - 1;
-    auto fmtAt = [doc](int p) {
-        QTextCursor c(doc);
-        c.setPosition(p);
-        return c.charFormat();
-    };
-
-    const QTextCharFormat before = pos > 0 ? fmtAt(pos - 1) : QTextCharFormat();
-    const QTextCharFormat after  = pos < docLen ? fmtAt(pos) : QTextCharFormat();
-    const bool mathBefore = before.boolProperty(mdmath::IsMathProperty);
-    const bool mathAfter  = after.boolProperty(mdmath::IsMathProperty);
-
-    if (!mathBefore && !mathAfter)
-        return false;  // sin contacto con math: pasa al editor
-
-    const bool insideMath = mathBefore && mathAfter
-        && before.property(mdmath::MathTexProperty).toString()
-               == after.property(mdmath::MathTexProperty).toString();
-
-    // Expande [start,end) al grupo de fragmentos con el mismo MathTex que toca
-    // en `pivot`. `pivot` apunta al char con IsMath (antes o después del cursor).
-    auto groupBounds = [&](int pivot, int *start, int *end) {
-        const QString tex = fmtAt(pivot).property(mdmath::MathTexProperty).toString();
-        int s = pivot, e = pivot + 1;
-        while (s > 0) {
-            const QTextCharFormat f = fmtAt(s - 1);
-            if (!f.boolProperty(mdmath::IsMathProperty)
-                || f.property(mdmath::MathTexProperty).toString() != tex)
-                break;
-            --s;
-        }
-        while (e < docLen) {
-            const QTextCharFormat f = fmtAt(e);
-            if (!f.boolProperty(mdmath::IsMathProperty)
-                || f.property(mdmath::MathTexProperty).toString() != tex)
-                break;
-            ++e;
-        }
-        *start = s; *end = e;
-    };
-
-    auto removeRange = [&](int start, int end) {
-        QTextCursor c(doc);
-        c.setPosition(start);
-        c.setPosition(end, QTextCursor::KeepAnchor);
-        c.removeSelectedText();
-        m_editor->setCurrentCharFormat(QTextCharFormat());
-    };
-
-    // Backspace tocando el borde derecho (mathBefore): borra el grupo entero.
-    if (event->key() == Qt::Key_Backspace && mathBefore) {
-        int s, e;
-        groupBounds(pos - 1, &s, &e);
-        removeRange(s, e);
-        return true;
-    }
-    // Delete tocando el borde izquierdo (mathAfter): borra el grupo entero.
-    if (event->key() == Qt::Key_Delete && mathAfter) {
-        int s, e;
-        groupBounds(pos, &s, &e);
-        removeRange(s, e);
-        return true;
-    }
-
-    // Tecla imprimible dentro de la fórmula: se ignora y se avisa.
-    if (insideMath && !event->text().isEmpty() && event->text().at(0).isPrint()) {
-        statusBar()->showMessage(
-            tr("Doble clic en la fórmula para editarla (Ctrl+Shift+F para insertar otra)."),
-            3000);
-        return true;
-    }
-
-    // Tecla imprimible en el BORDE de una fórmula (no dentro): si dejáramos que
-    // la insertara el editor, Qt heredaría el formato del carácter contiguo y el
-    // texto nuevo quedaría marcado como parte de la fórmula (mismo color y, peor,
-    // la serialización se lo tragaría, sin aparecer en el fuente). Lo insertamos
-    // nosotros con un formato limpio para que sea texto normal. Se excluyen los
-    // atajos (Ctrl/Alt/Meta), que no son escritura.
-    const bool typing = !event->text().isEmpty() && event->text().at(0).isPrint()
-        && !(event->modifiers() & (Qt::ControlModifier | Qt::AltModifier | Qt::MetaModifier));
-    if (typing) {
-        const QTextCharFormat clean;  // sin IsMath/MathTex ni super/subíndice
-        cursor.insertText(event->text(), clean);
-        m_editor->setTextCursor(cursor);
-        m_editor->setCurrentCharFormat(clean);
-        return true;
-    }
-
-    return false;
-}
-
-bool MainWindow::editFormulaAt(const QPoint &viewportPos)
-{
-    const int pos = m_editor->cursorForPosition(viewportPos).position();
-    // El char-format del carácter justo antes del cursor (o del actual, si está
-    // al inicio del documento) decide si estamos sobre una fórmula.
-    QTextCursor probe(m_editor->document());
-    probe.setPosition(pos > 0 ? pos - 1 : 0);
-    QTextCharFormat cf = probe.charFormat();
-    if (!cf.boolProperty(mdmath::IsMathProperty)) {
-        probe.setPosition(pos);
-        cf = probe.charFormat();
-        if (!cf.boolProperty(mdmath::IsMathProperty))
-            return false;
-    }
-    // Expande hasta cubrir todo el fragmento de la fórmula (los caracteres con
-    // las mismas propiedades IsMath/MathTex).
-    const QString tex = cf.property(mdmath::MathTexProperty).toString();
-    const bool block = cf.boolProperty(mdmath::MathBlockProperty);
-    int start = pos > 0 ? pos - 1 : 0;
-    int end = start + 1;
-    QTextCursor walker(m_editor->document());
-    while (start > 0) {
-        walker.setPosition(start - 1);
-        const QTextCharFormat f = walker.charFormat();
-        if (!f.boolProperty(mdmath::IsMathProperty)
-            || f.property(mdmath::MathTexProperty).toString() != tex)
-            break;
-        --start;
-    }
-    const int docLen = m_editor->document()->characterCount();
-    while (end < docLen - 1) {
-        walker.setPosition(end);
-        const QTextCharFormat f = walker.charFormat();
-        if (!f.boolProperty(mdmath::IsMathProperty)
-            || f.property(mdmath::MathTexProperty).toString() != tex)
-            break;
-        ++end;
-    }
-
-    QString newTex;
-    bool newBlock = block;
-    if (!askFormula(&newTex, &newBlock, tex, block))
-        return true;  // canceló pero atendimos el clic
-
-    const QTextCharFormat base = mdmath::mathCharFormat(newTex, newBlock);
-    const QList<mdmath::MathRun> runs = mdmath::renderTexAsRuns(newTex, base);
-    QTextCursor c(m_editor->document());
-    c.beginEditBlock();
-    c.setPosition(start);
-    c.setPosition(end, QTextCursor::KeepAnchor);
-    c.removeSelectedText();
-    for (const mdmath::MathRun &r : runs)
-        c.insertText(r.text, r.fmt);
-    c.endEditBlock();
-    m_editor->setCurrentCharFormat(QTextCharFormat());
-    return true;
-}
-
-// ---------------------------------------------------------------------------
-// Edición de tablas. Operan sobre el QTextTable bajo el cursor. La alineación se
-// fija en el formato de bloque de todas las celdas de la columna y se preserva
-// al guardar mediante mdtable (toMarkdown de Qt no la emite por sí solo).
-// ---------------------------------------------------------------------------
-
-void MainWindow::tableInsertRow(bool below)
-{
-    QTextCursor cursor = m_editor->textCursor();
-    QTextTable *table = cursor.currentTable();
-    if (!table)
-        return;
-    const QTextTableCell cell = table->cellAt(cursor);
-    table->insertRows(cell.row() + (below ? 1 : 0), 1);
-    m_editor->setFocus();
-}
-
-void MainWindow::tableInsertColumn(bool right)
-{
-    QTextCursor cursor = m_editor->textCursor();
-    QTextTable *table = cursor.currentTable();
-    if (!table)
-        return;
-    const QTextTableCell cell = table->cellAt(cursor);
-    table->insertColumns(cell.column() + (right ? 1 : 0), 1);
-    m_editor->setFocus();
-}
-
-void MainWindow::tableDeleteRow()
-{
-    QTextCursor cursor = m_editor->textCursor();
-    QTextTable *table = cursor.currentTable();
-    if (!table || table->rows() <= 1)  // dejar al menos la fila de cabecera
-        return;
-    table->removeRows(table->cellAt(cursor).row(), 1);
-    m_editor->setFocus();
-}
-
-void MainWindow::tableDeleteColumn()
-{
-    QTextCursor cursor = m_editor->textCursor();
-    QTextTable *table = cursor.currentTable();
-    if (!table || table->columns() <= 1)
-        return;
-    table->removeColumns(table->cellAt(cursor).column(), 1);
-    m_editor->setFocus();
-}
-
-void MainWindow::tableAlignColumn(Qt::Alignment alignment)
-{
-    QTextCursor cursor = m_editor->textCursor();
-    QTextTable *table = cursor.currentTable();
-    if (!table)
-        return;
-    const int col = table->cellAt(cursor).column();
-
-    cursor.beginEditBlock();
-    // Se alinean todas las filas (incluida la cabecera) para que la columna se
-    // vea homogénea y mdtable detecte la alineación de forma fiable.
-    for (int r = 0; r < table->rows(); ++r) {
-        const QTextTableCell c = table->cellAt(r, col);
-        QTextCursor cc = c.firstCursorPosition();
-        cc.setPosition(c.lastCursorPosition().position(), QTextCursor::KeepAnchor);
-        QTextBlockFormat bf;
-        bf.setAlignment(alignment);
-        cc.mergeBlockFormat(bf);
-    }
-    cursor.endEditBlock();
-    // El contenido cambió (la alineación va al Markdown vía mdtable): refresca el
-    // estado de "modificado".
-    setWindowModified(m_documentIo->isModified());
-    m_editor->setFocus();
-}
-
-void MainWindow::updateTableActions()
-{
-    // En vista dividida, las acciones de tabla solo cuando el foco está en el
-    // WYSIWYG (es donde viven las tablas); con el foco en el fuente, inhabilitadas.
-    const bool wysiwygActive = !m_sourceMode && (!m_splitMode || !m_sourceEditor->hasFocus());
-    const bool inTable = wysiwygActive && m_editor->textCursor().currentTable() != nullptr;
-    for (QAction *a : m_tableActions)
-        a->setEnabled(inTable);
-}
-
-void MainWindow::insertHorizontalRule()
-{
-    QTextCursor cursor = m_editor->textCursor();
-    cursor.beginEditBlock();
-    cursor.movePosition(QTextCursor::EndOfBlock);
-    cursor.insertBlock();
-    // La regla horizontal es un bloque con esta propiedad (lo que produce el
-    // lector de Markdown de Qt y exporta como '- - -').
-    QTextBlockFormat hr;
-    hr.setProperty(QTextFormat::BlockTrailingHorizontalRulerWidth,
-                   QTextLength(QTextLength::PercentageLength, 100));
-    cursor.setBlockFormat(hr);
-    // Bloque normal a continuación para seguir escribiendo.
-    cursor.insertBlock(QTextBlockFormat(), QTextCharFormat());
-    cursor.endEditBlock();
-    m_editor->setFocus();
-}
-
-void MainWindow::toggleTaskItem()
-{
-    QTextCursor cursor = m_editor->textCursor();
-    cursor.beginEditBlock();
-    if (!cursor.currentList()) {
-        QTextListFormat lf;
-        lf.setStyle(QTextListFormat::ListDisc);
-        cursor.createList(lf);
-    }
-    QTextBlockFormat bf = cursor.blockFormat();
-    const bool isTask = bf.marker() != QTextBlockFormat::MarkerType::NoMarker;
-    bf.setMarker(isTask ? QTextBlockFormat::MarkerType::NoMarker
-                        : QTextBlockFormat::MarkerType::Unchecked);
-    cursor.setBlockFormat(bf);
-    cursor.endEditBlock();
-    m_editor->setFocus();
-    updateFormatActions();
-}
-
-void MainWindow::indentList()
-{
-    changeListIndent(+1);
-}
-
-void MainWindow::outdentList()
-{
-    changeListIndent(-1);
-}
-
-void MainWindow::changeListIndent(int delta)
-{
-    QTextCursor cursor = m_editor->textCursor();
-    QTextList *list = cursor.currentList();
-    if (!list)
-        return;  // la sangría de lista solo aplica dentro de una lista
-
-    QTextListFormat lf = list->format();
-    const int newIndent = qMax(1, lf.indent() + delta);
-    if (newIndent == lf.indent())
-        return;
-    lf.setIndent(newIndent);
-    cursor.createList(lf);  // crea/ajusta la (sub)lista al nuevo nivel
-    m_editor->setFocus();
-    updateFormatActions();
 }
 
 // ---------------------------------------------------------------------------
@@ -2007,7 +1126,7 @@ void MainWindow::applyZoom()
     m_zoomDelta = qMax(m_zoomDelta, int(1 - m_baseFontPointSize));
 
     QFont f = m_editor->font();
-    f.setPointSizeF(qMax(qreal(1), m_baseFontPointSize + m_zoomDelta));
+    f.setPointSizeF(chromezoom::scaledPointSize(m_baseFontPointSize, m_zoomDelta));
     m_editor->setFont(f);
 
     applyChromeZoom();
@@ -2019,7 +1138,7 @@ void MainWindow::applyMenuFontScale()
     if (m_baseMenuPointSize <= 0)
         return;
     QFont mf = QApplication::font("QMenuBar");
-    mf.setPointSizeF(qMax(qreal(1), m_baseMenuPointSize + m_zoomDelta));
+    mf.setPointSizeF(chromezoom::scaledPointSize(m_baseMenuPointSize, m_zoomDelta));
     // Cambiar la fuente por clase obliga a Qt a recalcular el sizeHint de los
     // popups la próxima vez que se muestren — sin esto, las anchuras de las
     // QAction quedan congeladas al tamaño con el que se construyeron.
@@ -2029,53 +1148,15 @@ void MainWindow::applyMenuFontScale()
 
 void MainWindow::forceMenuWidths()
 {
-    // Qt 6.8 con la plataforma gtk3 cachea las anchuras de las QAction al
-    // primer cálculo, y los cambios de fuente posteriores no las invalidan:
-    // ítems largos como «Insertar columna a la izquierda» o «Acerca de» se
-    // ven elided cuando la fuente del zoom es mayor que la base. Calculamos
-    // a mano el ancho mínimo que necesita cada menú con la QFontMetrics actual
-    // (texto sin el mnemonic `&` + columnas de atajo y flecha de submenú) y se
-    // lo aplicamos como minimumWidth: Qt no puede entonces elidir.
+    // Qt 6.8 con la plataforma gtk3 cachea las anchuras de las QAction al primer
+    // cálculo, y los cambios de fuente posteriores no las invalidan: ítems largos
+    // como «Insertar columna a la izquierda» o «Acerca de» se ven elided cuando la
+    // fuente del zoom es mayor que la base. Le fijamos a cada menú el mínimo que
+    // necesita (calculado en chromezoom::menuMinimumWidth) para que no pueda elidir.
     for (QMenu *menu : findChildren<QMenu *>()) {
-        const QFontMetrics fm(menu->font());
-        int textMax = 0;
-        int shortcutMax = 0;
-        bool anyShortcut = false;
-        bool anySubmenu = false;
-        bool anyCheckable = false;
-        for (const QAction *a : menu->actions()) {
-            if (a->isSeparator())
-                continue;
-            QString t = a->text();
-            t.remove(QLatin1Char('&'));  // mnemonic prefix no se pinta
-            textMax = qMax(textMax, fm.horizontalAdvance(t));
-            const QKeySequence sc = a->shortcut();
-            if (!sc.isEmpty()) {
-                anyShortcut = true;
-                shortcutMax = qMax(
-                    shortcutMax,
-                    fm.horizontalAdvance(sc.toString(QKeySequence::NativeText)));
-            }
-            if (a->menu())
-                anySubmenu = true;
-            if (a->isCheckable())
-                anyCheckable = true;
-        }
-        if (textMax <= 0)
-            continue;
-        // Estimación generosa de paddings/separadores entre columnas. Mejor
-        // pasarse y dejar el menú un pelín más ancho que quedarse corto y
-        // volver al elide: el estilo del SO añade su propio padding encima,
-        // así que el ancho real terminará un poco mayor que este mínimo.
-        const int em = fm.horizontalAdvance(QChar('M'));
-        int width = textMax + em * 3;      // padding lateral + icono opcional
-        if (anyCheckable)
-            width += em * 2;               // columna del indicador de check
-        if (anyShortcut)
-            width += shortcutMax + em * 4; // separación texto–atajo
-        if (anySubmenu)
-            width += em * 2;               // flecha de submenú
-        menu->setMinimumWidth(width);
+        const int width = chromezoom::menuMinimumWidth(*menu);
+        if (width > 0)
+            menu->setMinimumWidth(width);
     }
 }
 
@@ -2088,7 +1169,7 @@ void MainWindow::applyChromeZoom()
         if (!w || base <= 0)
             return;
         QFont f = w->font();
-        f.setPointSizeF(qMax(qreal(1), base + m_zoomDelta));
+        f.setPointSizeF(chromezoom::scaledPointSize(base, m_zoomDelta));
         w->setFont(f);
     };
     // Menús: aplicamos la fuente vía QApplication para que afecte a la
@@ -2106,112 +1187,16 @@ void MainWindow::applyChromeZoom()
     updateToolBarIcons();  // el tamaño de los iconos sigue a la fuente de la barra
     scale(m_findBar, m_baseFindBarPointSize);
     scale(statusBar(), m_baseStatusBarPointSize);
-    scale(m_sourceEditor, m_baseSourceFontPointSize);
+    scale(m_split->sourceEditor(), m_baseSourceFontPointSize);
     scale(m_outline, m_baseOutlinePointSize);
-}
-
-// ---------------------------------------------------------------------------
-// Modo sin distracciones
-// ---------------------------------------------------------------------------
-
-void MainWindow::toggleDistractionFree(bool on)
-{
-    if (on == m_distractionFree)
-        return;
-    m_distractionFree = on;
-
-    if (on) {
-        // El modo sin distracciones es de columna única: salimos de la vista
-        // dividida (si estaba activa) para concentrarse en la escritura.
-        if (m_splitMode)
-            toggleSplitView(false);
-        // Recuerda el estado para restaurarlo al salir (y para persistirlo si
-        // se cierra la app dentro del modo, en vez del estado a pantalla
-        // completa con las barras ocultas).
-        m_wasMaximized = isMaximized();
-        m_findBarWasVisible = m_findBar->isVisible();
-        m_normalOutlineWidth = m_outline->width();  // para restaurar el dock al salir
-        m_preDistractionGeometry = saveGeometry();
-        m_preDistractionState = saveState();
-
-        menuBar()->hide();
-        m_formatToolBar->hide();
-        m_findBar->hide();
-        statusBar()->hide();
-        // El esquema no se oculta: sigue pegado a la izquierda del área visible
-        // (conserva la visibilidad que tuviera al entrar al modo). Su barra de
-        // título sí se oculta: con el dock ensanchado por el relleno izquierdo,
-        // dejarla visible la estiraría hasta el borde de la pantalla.
-        m_outline->setTitleBarWidget(new QWidget(m_outline));
-
-        m_editor->setReadingColumnWidth(kReadingColumn);
-        m_sourceEditor->setReadingColumnWidth(kReadingColumn);
-
-        m_escShortcut->setEnabled(true);
-        showFullScreen();
-    } else {
-        m_escShortcut->setEnabled(false);
-
-        m_editor->setReadingColumnWidth(0);
-        m_sourceEditor->setReadingColumnWidth(0);
-
-        menuBar()->show();
-        m_formatToolBar->show();
-        statusBar()->show();
-        // Devuelve al dock su barra de título nativa.
-        if (QWidget *tb = m_outline->titleBarWidget()) {
-            m_outline->setTitleBarWidget(nullptr);
-            tb->deleteLater();
-        }
-        if (m_findBarWasVisible)
-            m_findBar->show();
-
-        if (m_wasMaximized)
-            showMaximized();
-        else
-            showNormal();
-    }
-    updateDistractionLayout();
 }
 
 void MainWindow::resizeEvent(QResizeEvent *event)
 {
     QMainWindow::resizeEvent(event);
-    if (m_distractionFree)
-        updateDistractionLayout();  // el tamaño en pantalla completa llega aquí
-}
-
-void MainWindow::updateDistractionLayout()
-{
-    // Esquema visible y acoplado: centra el bloque [esquema | columna] en
-    // pantalla. La columna se pega al borde derecho del dock (alineada a la
-    // izquierda) y el dock se ensancha con un relleno izquierdo igual al hueco
-    // que queda a la derecha de la columna, de modo que el conjunto quede
-    // simétrico (franjas oscuras iguales a ambos lados).
-    const bool group = m_distractionFree && m_outline->isVisible()
-                       && !m_outline->isFloating();
-
-    m_editor->setColumnLeftAligned(group);
-    m_sourceEditor->setColumnLeftAligned(group);
-
-    if (!group) {
-        m_outline->setLeftPadding(0);
-        // Al salir del modo, devuelve al dock su ancho previo (resizeDocks lo
-        // había ensanchado para el relleno).
-        if (!m_distractionFree && m_normalOutlineWidth > 0) {
-            resizeDocks({m_outline}, {m_normalOutlineWidth}, Qt::Horizontal);
-            m_normalOutlineWidth = 0;
-        }
-        return;
-    }
-
-    const int total = m_outline->width() + m_splitView->width();  // espacio dock+central
-    const int leftPad = qMax(0, (total - kOutlineTreeWidth - kReadingColumn) / 2);
-    const int dockWidth = leftPad + kOutlineTreeWidth;
-
-    m_outline->setLeftPadding(leftPad);
-    if (m_outline->width() != dockWidth)  // evita reentrar en el layout sin necesidad
-        resizeDocks({m_outline}, {dockWidth}, Qt::Horizontal);
+    // m_distraction puede no existir aún durante la construcción.
+    if (m_distraction && m_distraction->isActive())
+        m_distraction->updateLayout();  // el tamaño en pantalla completa llega aquí
 }
 
 // ---------------------------------------------------------------------------
@@ -2220,385 +1205,21 @@ void MainWindow::updateDistractionLayout()
 
 QTextEdit *MainWindow::activeEditor() const
 {
-    // En fuente a pantalla completa manda el editor de fuente; en vista dividida,
-    // el que tenga el foco; en WYSIWYG, el editor.
-    if (m_sourceMode)
-        return m_sourceEditor;
-    if (m_splitMode && m_sourceEditor->hasFocus())
-        return m_sourceEditor;
-    return m_editor;
+    return m_split->activeEditor();
 }
 
-void MainWindow::updateEditorVisibility()
+void MainWindow::setBodyMarkdown(const QString &body)
 {
-    m_editor->setVisible(!m_sourceMode);                       // oculto solo en fuente-completo
-    m_sourceEditor->setVisible(m_sourceMode || m_splitMode);   // visible en fuente y en dividido
-}
-
-void MainWindow::updateActionsForFocus()
-{
-    if (!m_splitMode)
-        return;  // en los otros modos lo gestiona toggleSourceMode
-    const bool wysiwygFocused = !m_sourceEditor->hasFocus();
-    // El formato/inserción solo tiene sentido sobre el WYSIWYG.
-    for (QAction *a : m_wysiwygActions)
-        a->setEnabled(wysiwygFocused);
-    // La búsqueda actúa sobre el panel donde está el cursor.
-    m_findBar->setEditor(wysiwygFocused ? m_editor : m_sourceEditor);
-    if (wysiwygFocused)
-        updateFormatActions();  // refina habilitado (encabezado, lista, fence…) y marcas
-    else
-        updateTableActions();   // deja las de tabla inhabilitadas con el foco en el fuente
-}
-
-void MainWindow::commitSourceToDocument()
-{
-    // Vuelca los cambios del editor de fuente al documento WYSIWYG, que es el
-    // que se serializa al guardar/exportar. setMarkdown re-renderiza y deja el
-    // modelo al día. Funciona tanto en modo fuente como en vista dividida (el
-    // disparador es m_sourceDirty, no el modo).
-    if (m_sourceDirty) {
-        m_syncing = true;
-        m_editor->setMarkdown(mdmath::protectMath(m_sourceEditor->toPlainText()));
-        mdmath::renderMathInDocument(m_editor->document());
-        styleTables();
-        m_syncing = false;
-        m_sourceDirty = false;
-    }
-}
-
-void MainWindow::toggleSourceMode(bool on)
-{
-    if (on == m_sourceMode)
-        return;
-
-    if (on) {
-        // Fuente a pantalla completa y vista dividida son excluyentes.
-        if (m_splitMode)
-            toggleSplitView(false);
-        // Entrar: vuelca el Markdown actual al editor de fuente (con la alineación
-        // de tablas preservada, igual que al guardar).
-        m_syncing = true;
-        m_sourceEditor->setPlainText(mdtable::documentMarkdown(m_editor->document()));
-        m_syncing = false;
-        m_findBar->setEditor(m_sourceEditor);
-    } else {
-        // Salir: aplica los cambios del fuente y vuelve al WYSIWYG.
-        commitSourceToDocument();
-        m_findBar->setEditor(m_editor);
-        m_theme->recolorLinks();  // los enlaces recargados toman el color del tema
-    }
-    m_sourceMode = on;
-    m_sourceDirty = false;
-    updateEditorVisibility();
-
-    // Las acciones de formato/inserción no aplican al texto plano: se desactivan
-    // (también sus atajos) en modo fuente.
-    for (QAction *a : m_wysiwygActions)
-        a->setEnabled(!on);
-    updateTableActions();  // y las de tabla (en fuente, siempre inhabilitadas)
-
-    // El índice se nutre de la estructura del documento WYSIWYG, no del texto
-    // plano: se deshabilita en modo fuente y se reconstruye al volver (el
-    // contenido pudo cambiar en el editor de fuente).
-    m_outline->setEnabled(!on);
-    if (!on)
-        m_outline->rebuild(m_editor->document());
-
-    if (m_sourceModeAction->isChecked() != on)
-        m_sourceModeAction->setChecked(on);  // mantiene el menú en sincronía
-    activeEditor()->setFocus();
-    updateWordCount();
-}
-
-void MainWindow::toggleSplitView(bool on)
-{
-    if (on == m_splitMode)
-        return;
-
-    if (on) {
-        // Vista dividida y fuente a pantalla completa son excluyentes.
-        if (m_sourceMode)
-            toggleSourceMode(false);
-        // Rellena el panel de fuente con el Markdown actual del documento.
-        m_syncing = true;
-        m_sourceEditor->setPlainText(mdtable::documentMarkdown(m_editor->document()));
-        m_syncing = false;
-        m_sourceDirty = false;
-    } else {
-        // Salir: vuelca cualquier edición pendiente del fuente al documento.
-        commitSourceToDocument();
-        m_theme->recolorLinks();
-    }
-    m_splitMode = on;
-    updateEditorVisibility();
-
-    if (on) {
-        // Si el panel de fuente quedó sin anchura (p. ej. estaba oculto y no había
-        // estado guardado), reparte el espacio a partes iguales.
-        const QList<int> sizes = m_splitView->sizes();
-        if (sizes.size() == 2 && (sizes[0] < 50 || sizes[1] < 50)) {
-            const int half = qMax(1, m_splitView->width() / 2);
-            m_splitView->setSizes({half, half});
-        }
-    } else {
-        // Al volver a WYSIWYG, reactiva el formato (pudo quedar deshabilitado si
-        // el foco estaba en el fuente) y refresca su estado.
-        for (QAction *a : m_wysiwygActions)
-            a->setEnabled(true);
-        m_findBar->setEditor(m_editor);
-        updateFormatActions();
-    }
-
-    if (m_splitAction->isChecked() != on)
-        m_splitAction->setChecked(on);  // mantiene el menú en sincronía
-    m_editor->setFocus();
-    updateWordCount();
-}
-
-void MainWindow::syncSourceFromDocument()
-{
-    // WYSIWYG -> fuente. La guarda de "no pisar el panel con foco" la aplica el
-    // disparador del temporizador; flushPendingSync llama aquí directamente al
-    // salir del WYSIWYG (cuando el foco ya está en el fuente) para dejarlo al día
-    // justo antes de que el usuario lo edite.
-    if (!m_splitMode)
-        return;
-    m_syncing = true;
-    // Preserva cursor/selección y scroll: setPlainText los reinicia, y al cambiar
-    // de panel el usuario espera encontrar el cursor donde lo dejó. Se guarda por
-    // offset y se reajusta (clamp) al nuevo tamaño, porque el round-trip puede
-    // normalizar ligeramente el Markdown.
-    const QTextCursor before = m_sourceEditor->textCursor();
-    const int anchor = before.anchor();
-    const int pos = before.position();
-    const int scroll = m_sourceEditor->verticalScrollBar()->value();
-
-    m_sourceEditor->setPlainText(mdtable::documentMarkdown(m_editor->document()));
-
-    const int last = m_sourceEditor->document()->characterCount() - 1;
-    QTextCursor restored = m_sourceEditor->textCursor();
-    restored.setPosition(qBound(0, anchor, last));
-    restored.setPosition(qBound(0, pos, last),
-                         pos == anchor ? QTextCursor::MoveAnchor : QTextCursor::KeepAnchor);
-    m_sourceEditor->setTextCursor(restored);
-    m_sourceEditor->verticalScrollBar()->setValue(scroll);  // no saltar la vista
-    m_syncing = false;
-    m_sourceDirty = false;  // el fuente acaba de igualarse al documento
-}
-
-void MainWindow::syncDocumentFromSource()
-{
-    // fuente -> WYSIWYG. Solo si seguimos en split y el WYSIWYG no tiene el foco.
-    if (!m_splitMode || m_editor->hasFocus() || !m_sourceDirty)
-        return;
-    const int scroll = m_editor->verticalScrollBar()->value();
-    commitSourceToDocument();  // gestiona m_syncing y re-renderiza
-    m_editor->verticalScrollBar()->setValue(scroll);  // no saltar la vista
-}
-
-void MainWindow::flushPendingSync(QWidget *losingFocus)
-{
-    if (!m_splitMode)
-        return;
-    // Al salir del fuente con un volcado pendiente, aplícalo ya (para que el
-    // WYSIWYG esté al día al llegar). Al salir del WYSIWYG, refresca el fuente.
-    if (losingFocus == m_sourceEditor && m_syncToDocTimer->isActive()) {
-        m_syncToDocTimer->stop();
-        const int scroll = m_editor->verticalScrollBar()->value();
-        commitSourceToDocument();
-        m_editor->verticalScrollBar()->setValue(scroll);
-    } else if (losingFocus == m_editor && m_syncToSourceTimer->isActive()) {
-        m_syncToSourceTimer->stop();
-        syncSourceFromDocument();
-    }
-}
-
-// ---------------------------------------------------------------------------
-// Exportar
-// ---------------------------------------------------------------------------
-
-bool MainWindow::print()
-{
-    commitSourceToDocument();  // en modo fuente, imprime el contenido al día
-    QPrinter printer(QPrinter::HighResolution);
-    QPrintDialog dialog(&printer, this);
-    dialog.setWindowTitle(tr("Imprimir"));
-    if (dialog.exec() != QDialog::Accepted)
-        return false;
-    std::unique_ptr<QTextDocument> flat(
-        mdexport::cloneForExport(m_editor->document()));
-    flat->print(&printer);
-    statusBar()->showMessage(tr("Documento enviado a la impresora."), 4000);
-    return true;
-}
-
-bool MainWindow::exportPdf()
-{
-    commitSourceToDocument();
-    const QString currentFile = m_documentIo->currentFile();
-    const QString suggested = currentFile.isEmpty()
-        ? QDir::homePath() + QStringLiteral("/documento.pdf")
-        : QFileInfo(currentFile).absolutePath() + QLatin1Char('/') +
-              QFileInfo(currentFile).completeBaseName() + QStringLiteral(".pdf");
-
-    QString path = QFileDialog::getSaveFileName(
-        this, tr("Exportar a PDF"), suggested, tr("PDF (*.pdf)"));
-    if (path.isEmpty())
-        return false;
-    if (QFileInfo(path).suffix().isEmpty())
-        path += QStringLiteral(".pdf");
-
-    QPrinter printer(QPrinter::HighResolution);
-    printer.setOutputFormat(QPrinter::PdfFormat);
-    printer.setOutputFileName(path);
-    std::unique_ptr<QTextDocument> flat(
-        mdexport::cloneForExport(m_editor->document()));
-    flat->print(&printer);
-
-    statusBar()->showMessage(tr("Exportado a PDF: %1").arg(path), 4000);
-    return true;
-}
-
-bool MainWindow::exportHtml()
-{
-    commitSourceToDocument();
-    const QString currentFile = m_documentIo->currentFile();
-    const QString suggested = currentFile.isEmpty()
-        ? QDir::homePath() + QStringLiteral("/documento.html")
-        : QFileInfo(currentFile).absolutePath() + QLatin1Char('/') +
-              QFileInfo(currentFile).completeBaseName() + QStringLiteral(".html");
-
-    QString path = QFileDialog::getSaveFileName(
-        this, tr("Exportar a HTML"), suggested, tr("HTML (*.html *.htm)"));
-    if (path.isEmpty())
-        return false;
-    if (QFileInfo(path).suffix().isEmpty())
-        path += QStringLiteral(".html");
-
-    QFile file(path);
-    if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
-        QMessageBox::warning(this, tr("Error"),
-                             tr("No se pudo escribir:\n%1\n\n%2")
-                                 .arg(path, file.errorString()));
-        return false;
-    }
-    QTextStream out(&file);
-    out.setEncoding(QStringConverter::Utf8);
-    std::unique_ptr<QTextDocument> flat(
-        mdexport::cloneForExport(m_editor->document()));
-    out << flat->toHtml();
-    file.close();
-
-    statusBar()->showMessage(tr("Exportado a HTML: %1").arg(path), 4000);
-    return true;
-}
-
-QString MainWindow::exportTitle() const
-{
-    return mdexport::frontMatterValue(m_documentIo->frontMatter(),
-                                      QStringLiteral("title"));
-}
-
-bool MainWindow::chooseExportLanguage(mdexport::Language *out)
-{
-    // Idioma por defecto: `lang`/`language` del front matter; si no, el de la
-    // app; si tampoco, el del sistema.
-    const QString fm = m_documentIo->frontMatter();
-    QString code = mdexport::frontMatterValue(fm, QStringLiteral("lang"));
-    if (code.isEmpty())
-        code = mdexport::frontMatterValue(fm, QStringLiteral("language"));
-    if (code.isEmpty())
-        code = AppSettings::language();
-    if (code.isEmpty())
-        code = QLocale::system().name();  // p. ej. "es_ES"
-    const mdexport::Language def = mdexport::languageForCode(code);
-
-    const QList<mdexport::Language> langs = mdexport::languages();
-    QStringList names;
-    int current = 0;
-    for (int i = 0; i < langs.size(); ++i) {
-        names << langs.at(i).name;
-        if (langs.at(i).code == def.code)
-            current = i;
-    }
-
-    bool ok = false;
-    const QString chosen = QInputDialog::getItem(
-        this, tr("Idioma del documento"), tr("Idioma para la exportación:"),
-        names, current, /*editable=*/false, &ok);
-    if (!ok)
-        return false;
-    *out = langs.at(names.indexOf(chosen));
-    return true;
-}
-
-bool MainWindow::exportOdf()
-{
-    commitSourceToDocument();
-    mdexport::Language language;
-    if (!chooseExportLanguage(&language))
-        return false;
-
-    const QString currentFile = m_documentIo->currentFile();
-    const QString suggested = currentFile.isEmpty()
-        ? QDir::homePath() + QStringLiteral("/documento.odt")
-        : QFileInfo(currentFile).absolutePath() + QLatin1Char('/') +
-              QFileInfo(currentFile).completeBaseName() + QStringLiteral(".odt");
-
-    QString path = QFileDialog::getSaveFileName(
-        this, tr("Exportar a ODF"), suggested, tr("Documento ODF (*.odt)"));
-    if (path.isEmpty())
-        return false;
-    if (QFileInfo(path).suffix().isEmpty())
-        path += QStringLiteral(".odt");
-
-    QString error;
-    std::unique_ptr<QTextDocument> flat(
-        mdexport::cloneForExport(m_editor->document()));
-    if (!mdexport::writeOdf(flat.get(), path, language, exportTitle(), &error)) {
-        QMessageBox::warning(this, tr("Error"),
-                             tr("No se pudo exportar a ODF:\n%1\n\n%2").arg(path, error));
-        return false;
-    }
-    statusBar()->showMessage(tr("Exportado a ODF: %1").arg(path), 4000);
-    return true;
-}
-
-bool MainWindow::exportLatex()
-{
-    commitSourceToDocument();
-    mdexport::Language language;
-    if (!chooseExportLanguage(&language))
-        return false;
-
-    const QString currentFile = m_documentIo->currentFile();
-    const QString suggested = currentFile.isEmpty()
-        ? QDir::homePath() + QStringLiteral("/documento.tex")
-        : QFileInfo(currentFile).absolutePath() + QLatin1Char('/') +
-              QFileInfo(currentFile).completeBaseName() + QStringLiteral(".tex");
-
-    QString path = QFileDialog::getSaveFileName(
-        this, tr("Exportar a LaTeX"), suggested, tr("Documento LaTeX (*.tex)"));
-    if (path.isEmpty())
-        return false;
-    if (QFileInfo(path).suffix().isEmpty())
-        path += QStringLiteral(".tex");
-
-    QFile file(path);
-    if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
-        QMessageBox::warning(this, tr("Error"),
-                             tr("No se pudo escribir:\n%1\n\n%2")
-                                 .arg(path, file.errorString()));
-        return false;
-    }
-    QTextStream out(&file);
-    out.setEncoding(QStringConverter::Utf8);
-    out << mdexport::toLatex(m_editor->document(), language, exportTitle());
-    file.close();
-
-    statusBar()->showMessage(tr("Exportado a LaTeX: %1").arg(path), 4000);
-    return true;
+    // El flag anti-bucle del controlador envuelve la sustitución para que los
+    // contentsChanged que provoca (incluido el de recolorLinks) no realimenten la
+    // sincronización de la vista dividida. Se guarda/restaura por reentrancia.
+    const bool wasSyncing = m_split->beginProgrammaticChange();
+    m_editor->setMarkdown(mdmath::protectMath(body));
+    mdmath::renderMathInDocument(m_editor->document());
+    styleTables();
+    m_theme->recolorLinks();
+    m_outline->rebuild(m_editor->document());
+    m_split->endProgrammaticChange(wasSyncing);
 }
 
 bool MainWindow::eventFilter(QObject *watched, QEvent *event)
@@ -2625,7 +1246,7 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
                     const QString path =
                         drop->mimeData()->urls().constFirst().toLocalFile();
                     if (!path.isEmpty())
-                        openFile(path);
+                        m_file->openFile(path);
                 }
                 drop->acceptProposedAction();
                 return true;
@@ -2655,7 +1276,7 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
         else if (event->type() == QEvent::MouseButtonDblClick) {
             auto *me = static_cast<QMouseEvent *>(event);
             if (me->button() == Qt::LeftButton
-                && editFormulaAt(me->position().toPoint()))
+                && m_formula->editFormulaAt(me->position().toPoint()))
                 return true;
         }
         // Ctrl+clic izquierdo sobre un enlace lo abre en la aplicación externa.
@@ -2679,12 +1300,14 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
         // de math enteros (no a media fórmula). El paste real lo sigue
         // haciendo QTextEdit con la selección ya extendida.
         if (ke->matches(QKeySequence::Paste))
-            guardPasteAgainstMath();
-        if (handleMathKeyPress(ke))
+            m_formula->guardPasteAgainstMath();
+        if (m_formula->handleMathKeyPress(ke))
             return true;
     }
-    // Continuación inteligente de listas en el editor de código fuente.
-    else if (watched == m_sourceEditor && event->type() == QEvent::KeyPress) {
+    // Continuación inteligente de listas en el editor de código fuente. Se
+    // comprueba m_split porque durante su construcción (al reparentar el editor en
+    // el QSplitter) ya llegan eventos aquí, antes de que el puntero esté asignado.
+    else if (m_split && watched == m_split->sourceEditor() && event->type() == QEvent::KeyPress) {
         auto *ke = static_cast<QKeyEvent *>(event);
         const auto mods = ke->modifiers() & ~Qt::KeypadModifier;
         if ((ke->key() == Qt::Key_Return || ke->key() == Qt::Key_Enter)
@@ -2696,7 +1319,8 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 
 bool MainWindow::continueSourceList()
 {
-    QTextCursor cursor = m_sourceEditor->textCursor();
+    QTextEdit *source = m_split->sourceEditor();
+    QTextCursor cursor = source->textCursor();
     if (cursor.hasSelection())
         return false;  // con selección, Enter la reemplaza: comportamiento normal
 
@@ -2717,7 +1341,7 @@ bool MainWindow::continueSourceList()
         cursor.insertText(QLatin1Char('\n') + c.nextPrefix);
     }
     cursor.endEditBlock();
-    m_sourceEditor->setTextCursor(cursor);
+    source->setTextCursor(cursor);
     return true;
 }
 
@@ -2733,176 +1357,6 @@ void MainWindow::openLink(const QString &href)
     QDesktopServices::openUrl(url);
 }
 
-// ---------------------------------------------------------------------------
-// Archivos
-// ---------------------------------------------------------------------------
-
-void MainWindow::newFile()
-{
-    toggleSourceMode(false);  // un documento nuevo se edita en WYSIWYG
-    if (!maybeSave())
-        return;
-    m_documentIo->reset();
-}
-
-void MainWindow::openFileDialog()
-{
-    const QString currentFile = m_documentIo->currentFile();
-    const QString startDir = currentFile.isEmpty()
-        ? QDir::homePath()
-        : QFileInfo(currentFile).absolutePath();
-
-    const QString path = QFileDialog::getOpenFileName(
-        this,
-        tr("Abrir archivo Markdown"),
-        startDir,
-        tr("Archivos Markdown (*.md *.markdown *.mdown *.mkd);;Todos los archivos (*)"));
-
-    if (!path.isEmpty())
-        openFile(path);
-}
-
-void MainWindow::openFile(const QString &path)
-{
-    toggleSourceMode(false);  // el archivo cargado se muestra en WYSIWYG
-    if (!maybeSave())
-        return;
-
-    QString error;
-    if (!m_documentIo->load(path, &error)) {
-        QMessageBox::warning(this, tr("Error"),
-                             tr("No se pudo abrir el archivo:\n%1\n\n%2")
-                                 .arg(path, error));
-        // Si venía de la lista de recientes y ya no es accesible, lo quitamos.
-        if (m_recentFiles)
-            m_recentFiles->removeFile(path);
-        return;
-    }
-    // El front matter se conserva pero no se muestra: avisamos para que no
-    // parezca que se ha perdido.
-    if (m_documentIo->hasFrontMatter())
-        statusBar()->showMessage(tr("%1 — front matter conservado").arg(path));
-    else
-        statusBar()->showMessage(path);
-}
-
-bool MainWindow::save()
-{
-    const QString currentFile = m_documentIo->currentFile();
-    return currentFile.isEmpty() ? saveAs() : writeToFile(currentFile);
-}
-
-bool MainWindow::saveAs()
-{
-    const QString currentFile = m_documentIo->currentFile();
-    QString path = QFileDialog::getSaveFileName(
-        this,
-        tr("Guardar como"),
-        currentFile.isEmpty() ? QDir::homePath() : currentFile,
-        tr("Archivos Markdown (*.md *.markdown);;Todos los archivos (*)"));
-
-    if (path.isEmpty())
-        return false;
-    if (QFileInfo(path).suffix().isEmpty())
-        path += QStringLiteral(".md");
-
-    return writeToFile(path);
-}
-
-bool MainWindow::writeToFile(const QString &path)
-{
-    commitSourceToDocument();  // si estamos en fuente, aplica los cambios primero
-    QString error;
-    if (!m_documentIo->write(path, &error)) {
-        QMessageBox::warning(this, tr("Error"),
-                             tr("No se pudo guardar el archivo:\n%1\n\n%2")
-                                 .arg(path, error));
-        return false;
-    }
-    // Guardado en disco: el borrador de recuperación ya no hace falta.
-    m_recovery->clearDraft();
-    m_autosaveDirty = false;
-    statusBar()->showMessage(tr("Guardado: %1").arg(path), 4000);
-    return true;
-}
-
-bool MainWindow::maybeSave()
-{
-    commitSourceToDocument();  // que isModified vea también los cambios del fuente
-    if (!m_documentIo->isModified())
-        return true;
-
-    const QMessageBox::StandardButton ret = QMessageBox::warning(
-        this, tr("md-editor"),
-        tr("El documento tiene cambios sin guardar.\n¿Quieres guardarlos?"),
-        QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
-
-    switch (ret) {
-    case QMessageBox::Save:
-        return save();
-    case QMessageBox::Cancel:
-        return false;
-    default:
-        return true;  // Discard
-    }
-}
-
-QString MainWindow::currentBody() const
-{
-    // El cuerpo Markdown editable. Si el panel de fuente tiene los cambios más
-    // frescos sin volcar (modo fuente o vista dividida), se toma de él; si no, se
-    // serializa desde el documento WYSIWYG.
-    return m_sourceDirty ? m_sourceEditor->toPlainText()
-                         : mdtable::documentMarkdown(m_editor->document());
-}
-
-void MainWindow::autosaveDraft()
-{
-    if (!m_autosaveDirty)
-        return;  // nada cambió desde el último volcado: no reescribir
-    m_autosaveDirty = false;
-
-    // Hay cambios sin guardar si el documento difiere de lo último guardado, o si
-    // se está editando en modo fuente (cuyos cambios aún no se han volcado).
-    const bool modified = m_documentIo->isModified() || m_sourceDirty;
-    if (modified)
-        m_recovery->saveDraft(m_documentIo->currentFile(), currentBody());
-    else
-        m_recovery->clearDraft();  // el documento coincide con el disco
-}
-
-bool MainWindow::recoverDraft()
-{
-    if (!m_recovery->hasDraft())
-        return false;
-
-    const QString body = m_recovery->draftBody();
-    const QString original = m_recovery->draftOriginalPath();
-
-    if (!original.isEmpty() && QFileInfo::exists(original)) {
-        // Abre el documento guardado (fija ruta, baseUrl y la línea base) y le
-        // superpone el cuerpo del borrador: así queda asociado a su archivo pero
-        // marcado como modificado (el borrador difiere de lo guardado).
-        openFile(original);
-        m_editor->setMarkdown(mdmath::protectMath(body));
-        mdmath::renderMathInDocument(m_editor->document());
-        styleTables();
-    } else {
-        // Sin archivo asociado (o ya no existe): se recupera como sin título.
-        toggleSourceMode(false);
-        m_documentIo->reset();
-        m_editor->setMarkdown(mdmath::protectMath(body));
-        mdmath::renderMathInDocument(m_editor->document());
-        styleTables();
-        m_theme->recolorLinks();
-        m_outline->rebuild(m_editor->document());
-    }
-
-    setWindowModified(m_documentIo->isModified());
-    statusBar()->showMessage(tr("Documento recuperado de la sesión anterior"), 5000);
-    return true;
-}
-
 void MainWindow::startSession(const QString &cmdLineFile)
 {
     // Prioridad: archivo de la línea de comandos > recuperar borrador > reabrir
@@ -2910,7 +1364,7 @@ void MainWindow::startSession(const QString &cmdLineFile)
     // el arranque del autoguardado al final.
     bool recovered = false;
     if (!cmdLineFile.isEmpty()) {
-        openFile(cmdLineFile);
+        m_file->openFile(cmdLineFile);
     } else if (m_recovery->hasDraft()) {
         // ¿Quedó un borrador de un cierre anómalo? Ofrecer recuperarlo.
         const QString original = m_recovery->draftOriginalPath();
@@ -2927,7 +1381,7 @@ void MainWindow::startSession(const QString &cmdLineFile)
         box.addButton(tr("Descartar"), QMessageBox::DestructiveRole);
         box.exec();
         if (box.clickedButton() == recoverBtn)
-            recovered = recoverDraft();
+            recovered = m_file->recoverDraft();
         else
             m_recovery->clearDraft();  // descartado: seguir con el flujo normal
     }
@@ -2936,14 +1390,12 @@ void MainWindow::startSession(const QString &cmdLineFile)
     if (cmdLineFile.isEmpty() && !recovered) {
         const QString last = AppSettings::lastFile();
         if (!last.isEmpty() && QFileInfo::exists(last))
-            openFile(last);
+            m_file->openFile(last);
     }
 
-    // Decidida la sesión inicial, ya es seguro autoguardar borradores. Lo abierto
-    // al arrancar no cuenta como cambio pendiente; el borrador recuperado, en su
-    // caso, ya está en disco y se mantiene hasta que el usuario edite o guarde.
-    m_autosaveDirty = false;
-    m_autosaveTimer->start();
+    // Decidida la sesión inicial, ya es seguro autoguardar borradores (no antes:
+    // correría durante el diálogo de recuperación con el documento aún vacío).
+    m_file->startAutosave();
 }
 
 void MainWindow::onCurrentFileChanged(const QString &path)
@@ -2970,64 +1422,11 @@ void MainWindow::onCurrentFileChanged(const QString &path)
     setWindowTitle(tr("%1[*] — md-editor").arg(shown));
 }
 
-void MainWindow::watchCurrentFile(const QString &path)
+void MainWindow::onDiskExternalChange(const QByteArray &diskBytes)
 {
-    // Deja de vigilar lo anterior y vigila el archivo actual (si lo hay en disco).
-    const QStringList watched = m_fileWatcher->files();
-    if (!watched.isEmpty())
-        m_fileWatcher->removePaths(watched);
-    if (!path.isEmpty() && QFileInfo::exists(path))
-        m_fileWatcher->addPath(path);
-    // La instantánea se pone al día con lo que acabamos de cargar/guardar, de modo
-    // que nuestro propio guardado no se confunda luego con un cambio externo.
-    updateDiskSnapshot();
-}
-
-void MainWindow::updateDiskSnapshot()
-{
-    m_diskSnapshot.clear();
     const QString path = m_documentIo->currentFile();
-    if (path.isEmpty())
-        return;
-    QFile file(path);
-    if (file.open(QIODevice::ReadOnly))
-        m_diskSnapshot = file.readAll();
-}
-
-void MainWindow::onWatchedFileChanged(const QString &path)
-{
-    if (path == m_documentIo->currentFile())
-        m_diskCheckTimer->start();  // (re)arranca el debounce
-}
-
-void MainWindow::checkDiskChange()
-{
-    if (m_diskPromptOpen)
-        return;  // ya hay un diálogo abierto: no apilar otro (exec corre anidado)
-    const QString path = m_documentIo->currentFile();
-    if (path.isEmpty())
-        return;
-
-    // Un guardado atómico recrea el archivo y rompe la vigilancia: hay que volver
-    // a añadirlo si volvió a existir.
-    if (QFileInfo::exists(path) && !m_fileWatcher->files().contains(path))
-        m_fileWatcher->addPath(path);
-
-    if (!QFileInfo::exists(path)) {
-        statusBar()->showMessage(
-            tr("El archivo se eliminó o movió en disco."), 6000);
-        return;
-    }
-
-    QByteArray disk;
-    QFile file(path);
-    if (file.open(QIODevice::ReadOnly))
-        disk = file.readAll();
-    if (disk == m_diskSnapshot)
-        return;  // sin cambios reales (o fue nuestro propio guardado)
-
     const bool locallyModified =
-        m_documentIo->isModified() || m_sourceDirty;
+        m_documentIo->isModified() || m_split->isSourceDirty();
 
     if (!locallyModified) {
         // Sin cambios locales: se recarga sin molestar.
@@ -3048,16 +1447,18 @@ void MainWindow::checkDiskChange()
     QPushButton *keepButton =
         box.addButton(tr("Conservar los míos"), QMessageBox::RejectRole);
     box.setDefaultButton(keepButton);
-    m_diskPromptOpen = true;
+    // Mientras el diálogo modal está abierto, suspende la comprobación (su exec
+    // corre un bucle anidado y el watcher podría volver a dispararse).
+    m_diskWatcher->setSuspended(true);
     box.exec();
-    m_diskPromptOpen = false;
+    m_diskWatcher->setSuspended(false);
 
     if (box.clickedButton() == reloadButton) {
         reloadFromDisk();
     } else {
         // Conserva lo del usuario; recuerda el contenido del disco como referencia
         // para no volver a preguntar por este mismo cambio externo.
-        m_diskSnapshot = disk;
+        m_diskWatcher->setSnapshot(diskBytes);
     }
 }
 
@@ -3080,12 +1481,7 @@ void MainWindow::reloadFromDisk()
     // Si el panel de fuente está visible (modo fuente o vista dividida), su texto
     // plano hay que refrescarlo con lo recargado (load() solo toca el documento
     // WYSIWYG).
-    if (m_sourceMode || m_splitMode) {
-        m_syncing = true;
-        m_sourceEditor->setPlainText(mdtable::documentMarkdown(m_editor->document()));
-        m_syncing = false;
-        m_sourceDirty = false;
-    }
+    m_split->refreshSourceFromDocument();
     QTextEdit *ed = activeEditor();
     QTextCursor cursor = ed->textCursor();
     cursor.setPosition(qMin(caret, ed->document()->characterCount() - 1));
@@ -3094,21 +1490,16 @@ void MainWindow::reloadFromDisk()
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
-    if (maybeSave()) {
+    if (m_file->maybeSave()) {
         // Cierre limpio (guardado o descartado a propósito): sin borrador que
         // recuperar la próxima vez.
         m_recovery->clearDraft();
         // Recuerda tamaño/posición y disposición de barras para la próxima vez.
-        // Si se cierra en modo sin distracciones, se guarda el estado previo a
-        // entrar (ventana normal con sus barras), no la pantalla completa.
-        if (m_distractionFree) {
-            AppSettings::setWindowGeometry(m_preDistractionGeometry);
-            AppSettings::setWindowState(m_preDistractionState);
-        } else {
-            AppSettings::setWindowGeometry(saveGeometry());
-            AppSettings::setWindowState(saveState());
-        }
-        AppSettings::setSplitterState(m_splitView->saveState());
+        // Si se cierra en modo sin distracciones, el controlador devuelve el estado
+        // previo a entrar (ventana normal con sus barras), no la pantalla completa.
+        AppSettings::setWindowGeometry(m_distraction->sessionGeometry());
+        AppSettings::setWindowState(m_distraction->sessionState());
+        AppSettings::setSplitterState(m_split->splitView()->saveState());
         event->accept();
     } else {
         event->ignore();

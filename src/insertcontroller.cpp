@@ -1,0 +1,307 @@
+#include "insertcontroller.h"
+
+#include <QApplication>
+#include <QClipboard>
+#include <QComboBox>
+#include <QCoreApplication>
+#include <QDateTime>
+#include <QDialog>
+#include <QDialogButtonBox>
+#include <QDir>
+#include <QFileDialog>
+#include <QFileInfo>
+#include <QFormLayout>
+#include <QHBoxLayout>
+#include <QImage>
+#include <QInputDialog>
+#include <QLineEdit>
+#include <QMessageBox>
+#include <QMimeData>
+#include <QPalette>
+#include <QPushButton>
+#include <QSpinBox>
+#include <QTextDocumentFragment>
+#include <QTextEdit>
+#include <QVBoxLayout>
+
+#include "documentio.h"
+
+// Los textos visibles de las acciones conservan el contexto de traducción
+// "MainWindow" (QCoreApplication::translate) para no re-hogar las cadenas ya
+// traducidas en los .ts al moverlas desde MainWindow. La excepción es
+// twoFieldDialog, que ya usaba QObject::tr (contexto "QObject"): se conserva tal
+// cual. Ver la nota de i18n en CLAUDE.md.
+
+namespace {
+
+// Diálogo de dos campos de texto. Con `browseV2`, el segundo campo lleva un
+// botón "..." para elegir un archivo. Devuelve true si el usuario acepta.
+bool twoFieldDialog(QWidget *parent, const QString &title,
+                    const QString &label1, QString &value1,
+                    const QString &label2, QString &value2,
+                    bool browseV2 = false)
+{
+    QDialog dialog(parent);
+    dialog.setWindowTitle(title);
+    auto *form = new QFormLayout(&dialog);
+
+    auto *edit1 = new QLineEdit(value1, &dialog);
+    form->addRow(label1, edit1);
+
+    auto *edit2 = new QLineEdit(value2, &dialog);
+    if (browseV2) {
+        auto *row = new QWidget(&dialog);
+        auto *h = new QHBoxLayout(row);
+        h->setContentsMargins(0, 0, 0, 0);
+        h->addWidget(edit2);
+        auto *browse = new QPushButton(QObject::tr("..."), row);
+        QObject::connect(browse, &QPushButton::clicked, [parent, edit2] {
+            const QString f = QFileDialog::getOpenFileName(
+                parent, QObject::tr("Elegir imagen"), QString(),
+                QObject::tr("Imágenes (*.png *.jpg *.jpeg *.gif *.bmp *.svg);;Todos (*)"));
+            if (!f.isEmpty())
+                edit2->setText(f);
+        });
+        h->addWidget(browse);
+        form->addRow(label2, row);
+    } else {
+        form->addRow(label2, edit2);
+    }
+
+    auto *buttons = new QDialogButtonBox(
+        QDialogButtonBox::Ok | QDialogButtonBox::Cancel, &dialog);
+    form->addRow(buttons);
+    QObject::connect(buttons, &QDialogButtonBox::accepted, &dialog, &QDialog::accept);
+    QObject::connect(buttons, &QDialogButtonBox::rejected, &dialog, &QDialog::reject);
+
+    if (dialog.exec() != QDialog::Accepted)
+        return false;
+    value1 = edit1->text();
+    value2 = edit2->text();
+    return true;
+}
+
+}  // namespace
+
+InsertController::InsertController(QTextEdit *editor, DocumentIo *documentIo, QWidget *parent)
+    : QObject(parent)
+    , m_editor(editor)
+    , m_documentIo(documentIo)
+    , m_parent(parent)
+{
+}
+
+void InsertController::insertLink()
+{
+    QTextCursor cursor = m_editor->textCursor();
+    const QTextCharFormat current = m_editor->currentCharFormat();
+
+    QString text = cursor.selectedText();
+    QString url = current.isAnchor() ? current.anchorHref() : QString();
+
+    if (!twoFieldDialog(m_parent, QCoreApplication::translate("MainWindow", "Enlace"),
+                        QCoreApplication::translate("MainWindow", "Texto:"), text,
+                        QCoreApplication::translate("MainWindow", "URL:"), url))
+        return;
+
+    const QPalette pal = m_parent->palette();
+    QTextCharFormat fmt;
+    if (url.isEmpty()) {
+        // Sin URL no se crea ningún enlace: se inserta texto plano (un enlace sin
+        // destino, [texto](), no aporta nada y confunde). Si tampoco hay texto,
+        // no hay nada que insertar.
+        if (text.isEmpty())
+            return;
+        fmt.setAnchor(false);
+        fmt.setAnchorHref(QString());
+        fmt.setForeground(pal.color(QPalette::Text));
+        fmt.setFontUnderline(false);
+        cursor.insertText(text, fmt);
+    } else {
+        fmt.setAnchor(true);
+        fmt.setAnchorHref(url);
+        fmt.setForeground(pal.color(QPalette::Link));
+        fmt.setFontUnderline(true);
+        if (text.isEmpty())
+            text = url;
+        // insertText reemplaza la selección si la hay.
+        cursor.insertText(text, fmt);
+    }
+    m_editor->setFocus();
+    emit formatActionsShouldRefresh();
+}
+
+void InsertController::insertImage()
+{
+    QString alt = QCoreApplication::translate("MainWindow", "imagen");
+    QString path;
+    if (!twoFieldDialog(m_parent, QCoreApplication::translate("MainWindow", "Insertar imagen"),
+                        QCoreApplication::translate("MainWindow", "Texto alternativo:"), alt,
+                        QCoreApplication::translate("MainWindow", "Ruta o URL:"), path,
+                        /*browseV2=*/true))
+        return;
+    if (path.isEmpty())
+        return;
+
+    // Si el documento está guardado y la imagen es local, usar ruta relativa
+    // para que el Markdown sea portable.
+    const QString currentFile = m_documentIo->currentFile();
+    if (!currentFile.isEmpty() && !path.contains(QLatin1String("://"))) {
+        const QDir docDir(QFileInfo(currentFile).absolutePath());
+        const QString rel = docDir.relativeFilePath(path);
+        if (!rel.startsWith(QLatin1String("..")))
+            path = rel;
+    }
+
+    QTextCursor cursor = m_editor->textCursor();
+    cursor.beginEditBlock();
+    cursor.insertFragment(QTextDocumentFragment::fromMarkdown(
+        QStringLiteral("![%1](%2)").arg(alt, path)));
+    cursor.endEditBlock();
+    m_editor->setFocus();
+}
+
+void InsertController::pasteImageFromClipboard()
+{
+    const QMimeData *mime = QApplication::clipboard()->mimeData();
+    if (!mime || !handlePastedImage(mime))
+        QMessageBox::information(
+            m_parent, QCoreApplication::translate("MainWindow", "Pegar imagen"),
+            QCoreApplication::translate("MainWindow",
+                "El portapapeles no contiene ninguna imagen."));
+}
+
+bool InsertController::handlePastedImage(const QMimeData *source)
+{
+    if (!source || !source->hasImage())
+        return false;
+    const QImage image = qvariant_cast<QImage>(source->imageData());
+    if (image.isNull())
+        return false;
+
+    // Texto alternativo de la imagen (puede dejarse vacío). Si se cancela, no se
+    // inserta nada pero el evento se considera gestionado (no incrustar la imagen).
+    bool ok = false;
+    const QString alt = QInputDialog::getText(
+        m_parent, QCoreApplication::translate("MainWindow", "Pegar imagen"),
+        QCoreApplication::translate("MainWindow", "Texto alternativo:"),
+        QLineEdit::Normal, QCoreApplication::translate("MainWindow", "imagen pegada"), &ok);
+    if (!ok)
+        return true;
+
+    // Nombre con marca de tiempo para evitar colisiones; si aun así existe (mismo
+    // segundo), se añade un sufijo incremental.
+    const QString stamp =
+        QDateTime::currentDateTime().toString(QStringLiteral("yyyyMMdd-HHmmss"));
+    const auto fileNameFor = [&stamp](int n) {
+        return n == 0 ? QStringLiteral("imagen-%1.png").arg(stamp)
+                      : QStringLiteral("imagen-%1-%2.png").arg(stamp).arg(n);
+    };
+
+    QString savePath;  // ruta absoluta donde se escribe el PNG
+    QString mdPath;    // lo que va dentro de ![](...)
+
+    const QString currentFile = m_documentIo->currentFile();
+    if (!currentFile.isEmpty()) {
+        // Documento guardado: junto al .md, con ruta relativa para que sea
+        // portable (igual criterio que insertImage()).
+        const QDir dir(QFileInfo(currentFile).absolutePath());
+        int n = 0;
+        do {
+            savePath = dir.filePath(fileNameFor(n++));
+        } while (QFileInfo::exists(savePath));
+        mdPath = dir.relativeFilePath(savePath);
+    } else {
+        // Documento sin guardar: no hay carpeta de referencia; se pide dónde
+        // guardarla y se inserta la ruta elegida.
+        savePath = QFileDialog::getSaveFileName(
+            m_parent, QCoreApplication::translate("MainWindow", "Guardar imagen pegada"),
+            QDir::home().filePath(fileNameFor(0)),
+            QCoreApplication::translate("MainWindow", "Imagen PNG (*.png)"));
+        if (savePath.isEmpty())
+            return true;  // cancelado: gestionado (no incrustar la imagen)
+        mdPath = savePath;
+    }
+
+    if (!image.save(savePath, "PNG")) {
+        QMessageBox::warning(
+            m_parent, QCoreApplication::translate("MainWindow", "Pegar imagen"),
+            QCoreApplication::translate("MainWindow",
+                "No se pudo guardar la imagen en «%1».").arg(savePath));
+        return true;
+    }
+
+    QTextCursor cursor = m_editor->textCursor();
+    cursor.beginEditBlock();
+    cursor.insertFragment(QTextDocumentFragment::fromMarkdown(
+        QStringLiteral("![%1](%2)").arg(alt, mdPath)));
+    cursor.endEditBlock();
+    m_editor->setFocus();
+    return true;
+}
+
+void InsertController::insertTable()
+{
+    // Un solo diálogo con columnas y filas a la vez (más legible que dos seguidos).
+    QDialog dlg(m_parent);
+    dlg.setWindowTitle(QCoreApplication::translate("MainWindow", "Insertar tabla"));
+    auto *colsSpin = new QSpinBox(&dlg);
+    colsSpin->setRange(1, 20);
+    colsSpin->setValue(2);
+    auto *rowsSpin = new QSpinBox(&dlg);
+    rowsSpin->setRange(1, 100);
+    rowsSpin->setValue(2);
+    auto *form = new QFormLayout;
+    form->addRow(QCoreApplication::translate("MainWindow", "Columnas:"), colsSpin);
+    form->addRow(QCoreApplication::translate("MainWindow", "Filas de datos:"), rowsSpin);
+    auto *buttons = new QDialogButtonBox(
+        QDialogButtonBox::Ok | QDialogButtonBox::Cancel, &dlg);
+    connect(buttons, &QDialogButtonBox::accepted, &dlg, &QDialog::accept);
+    connect(buttons, &QDialogButtonBox::rejected, &dlg, &QDialog::reject);
+    auto *layout = new QVBoxLayout(&dlg);
+    layout->addLayout(form);
+    layout->addWidget(buttons);
+    if (dlg.exec() != QDialog::Accepted)
+        return;
+    const int cols = colsSpin->value();
+    const int rows = rowsSpin->value();
+
+    QString header = QStringLiteral("|");
+    QString separator = QStringLiteral("|");
+    for (int c = 0; c < cols; ++c) {
+        header += QStringLiteral("   |");
+        separator += QStringLiteral("---|");
+    }
+    QString row = QStringLiteral("|");
+    for (int c = 0; c < cols; ++c)
+        row += QStringLiteral("   |");
+
+    QString md = header + QLatin1Char('\n') + separator + QLatin1Char('\n');
+    for (int r = 0; r < rows; ++r)
+        md += row + QLatin1Char('\n');
+
+    QTextCursor cursor = m_editor->textCursor();
+    cursor.beginEditBlock();
+    cursor.insertFragment(QTextDocumentFragment::fromMarkdown(md));
+    cursor.endEditBlock();
+    emit tableInserted();  // que la tabla recién creada muestre sus bordes
+    m_editor->setFocus();
+}
+
+void InsertController::insertHorizontalRule()
+{
+    QTextCursor cursor = m_editor->textCursor();
+    cursor.beginEditBlock();
+    cursor.movePosition(QTextCursor::EndOfBlock);
+    cursor.insertBlock();
+    // La regla horizontal es un bloque con esta propiedad (lo que produce el
+    // lector de Markdown de Qt y exporta como '- - -').
+    QTextBlockFormat hr;
+    hr.setProperty(QTextFormat::BlockTrailingHorizontalRulerWidth,
+                   QTextLength(QTextLength::PercentageLength, 100));
+    cursor.setBlockFormat(hr);
+    // Bloque normal a continuación para seguir escribiendo.
+    cursor.insertBlock(QTextBlockFormat(), QTextCharFormat());
+    cursor.endEditBlock();
+    m_editor->setFocus();
+}

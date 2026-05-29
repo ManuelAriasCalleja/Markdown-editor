@@ -135,9 +135,13 @@ visible, stays attached to the central block. ESC or F11 exits.
 
 ## Source view
 
-**View → Source view** toggles between the visual editor and a plain-text
-editor showing the raw Markdown. Changes made in source mode are flushed
-into the document when you return to visual mode.
+**View → Markdown source** (Ctrl+Shift+M) toggles between the visual editor and a
+full-screen plain-text editor showing the raw Markdown. Changes made in source
+mode are flushed into the document when you return to visual mode.
+
+**View → Split view** (Ctrl+Shift+D) shows both side by side: the visual editor
+and the source, kept in sync (what you type in one is reflected in the other). It
+is mutually exclusive with full-screen source mode.
 
 ## Export and print
 
@@ -182,6 +186,7 @@ to recover what you were writing.
 | Heading H1 … H6           | Ctrl+1 … Ctrl+6  |
 | Insert formula            | Ctrl+Shift+F     |
 | Markdown source view      | Ctrl+Shift+M     |
+| Split view                | Ctrl+Shift+D     |
 | Outline                   | F9               |
 | Distraction-free          | F11              |
 | Zoom + / − / Normal       | Ctrl++ / Ctrl+− / Ctrl+0 |

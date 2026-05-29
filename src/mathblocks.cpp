@@ -244,16 +244,13 @@ QString protectMath(const QString &markdown)
     int cur = 0;
     for (const Span &s : spans) {
         out += QStringView{markdown}.mid(cur, s.start - cur);
-        const QString delim = s.block ? QStringLiteral("$$") : QStringLiteral("$");
         QString content = s.content;
         // Codifica saltos para que el inline-code resultante quepa en una
         // sola línea de Markdown (requisito para que setMarkdown lo trate
         // como código en línea).
         content.replace(QLatin1Char('\n'), kNewlinePlaceholder);
         out += QLatin1String("``");
-        out += delim;
-        out += content;
-        out += delim;
+        out += wrapTex(content, s.block);
         out += QLatin1String("``");
         cur = s.start + s.length;
     }
@@ -575,22 +572,107 @@ QString commandToUnicode(const QString &cmd)
 
 } // namespace
 
+// Vuelca el texto acumulado en `buffer` (si lo hay) como un run con `baseFmt` y lo
+// limpia. Sub-paso común de los parsers de renderTexAsRuns.
+static void flushBuffer(QList<MathRun> &runs, QString &buffer, const QTextCharFormat &baseFmt)
+{
+    if (!buffer.isEmpty()) {
+        runs.append({buffer, baseFmt});
+        buffer.clear();
+    }
+}
+
+// \frac{num}{den}. `i` entra apuntando al '{' del numerador y sale tras el '}' del
+// denominador. Numerador y denominador van como sub-runs aparte para que sus
+// super/subíndices internos también se rendericen elevados/bajados. Caso simple
+// (un solo carácter en cada uno): usa el FRACTION SLASH (U+2044), que en fuentes
+// con soporte se pinta como fracción tipográfica.
+static void parseFrac(const QString &tex, int &i, const QTextCharFormat &baseFmt,
+                      QList<MathRun> &runs, QString &buffer)
+{
+    const int n = tex.size();
+    const QString num = readGroup(tex, i);
+    while (i < n && tex.at(i) == QLatin1Char(' ')) ++i;
+    QString den;
+    if (i < n && tex.at(i) == QLatin1Char('{'))
+        den = readGroup(tex, i);
+    if (num.size() == 1 && den.size() == 1
+        && !num.at(0).isSpace() && !den.at(0).isSpace()) {
+        buffer += num + QChar(0x2044) + den;
+    } else {
+        buffer += QLatin1Char('(');
+        flushBuffer(runs, buffer, baseFmt);
+        runs.append(renderTexAsRuns(num, baseFmt));
+        buffer += QStringLiteral(")/(");
+        flushBuffer(runs, buffer, baseFmt);
+        runs.append(renderTexAsRuns(den, baseFmt));
+        buffer += QLatin1Char(')');
+    }
+}
+
+// \sqrt: emite "√" y, si hay grupo en `after`, su argumento recursivo (para que
+// `\sqrt{x^2}` muestre el 2 elevado). `i` es el final del comando y `after` la
+// primera posición tras los espacios. Devuelve la nueva posición a procesar (sin
+// grupo, queda en `i`, dejando los espacios para el bucle, como antes).
+static int parseSqrt(const QString &tex, int i, int after, const QTextCharFormat &baseFmt,
+                     QList<MathRun> &runs, QString &buffer)
+{
+    buffer += QChar(0x221A);
+    const int n = tex.size();
+    if (after < n && tex.at(after) == QLatin1Char('{')) {
+        i = after;
+        const QString arg = readGroup(tex, i);
+        buffer += QLatin1Char('(');
+        flushBuffer(runs, buffer, baseFmt);
+        runs.append(renderTexAsRuns(arg, baseFmt));
+        buffer += QLatin1Char(')');
+    }
+    return i;
+}
+
+// Super/subíndice (`^`/`_`). `i` entra apuntando al argumento (tras el ^/_) y sale
+// tras consumirlo. El argumento se aplana a Unicode (texToUnicode recursivo) para
+// envolverlo en UN solo run con vertical-align: aplanar aquí es lo que mantiene los
+// scripts anidados manejables (el nivel exterior es Qt vertical-align y los
+// interiores usan la versión Unicode super/sub).
+static void parseScript(const QString &tex, int &i, bool sup,
+                        const QTextCharFormat &baseFmt, QList<MathRun> &runs, QString &buffer)
+{
+    const int n = tex.size();
+    QString arg;
+    if (tex.at(i) == QLatin1Char('{')) {
+        arg = texToUnicode(readGroup(tex, i));
+    } else if (tex.at(i) == QLatin1Char('\\')) {
+        ++i;
+        if (i < n && tex.at(i).isLetter()) {
+            arg = commandToUnicode(readCommand(tex, i));
+        } else if (i < n) {
+            arg = QString(tex.at(i));
+            ++i;
+        } else {
+            arg = QStringLiteral("\\");
+        }
+    } else {
+        arg = QString(tex.at(i));
+        ++i;
+    }
+    flushBuffer(runs, buffer, baseFmt);
+    QTextCharFormat f = baseFmt;
+    f.setVerticalAlignment(sup ? QTextCharFormat::AlignSuperScript
+                               : QTextCharFormat::AlignSubScript);
+    runs.append({arg, f});
+}
+
+QString wrapTex(const QString &tex, bool block)
+{
+    const QString delim = block ? QStringLiteral("$$") : QStringLiteral("$");
+    return delim + tex + delim;
+}
+
 QList<MathRun> renderTexAsRuns(const QString &tex, const QTextCharFormat &baseFmt)
 {
     QList<MathRun> runs;
     QString buffer;
-    auto flush = [&] {
-        if (!buffer.isEmpty()) {
-            runs.append({buffer, baseFmt});
-            buffer.clear();
-        }
-    };
-    auto scriptFmt = [&](bool sup) {
-        QTextCharFormat f = baseFmt;
-        f.setVerticalAlignment(sup ? QTextCharFormat::AlignSuperScript
-                                   : QTextCharFormat::AlignSubScript);
-        return f;
-    };
 
     int i = 0;
     const int n = tex.size();
@@ -607,45 +689,14 @@ QList<MathRun> renderTexAsRuns(const QString &tex, const QTextCharFormat &baseFm
             int after = i;
             while (after < n && tex.at(after) == QLatin1Char(' ')) ++after;
 
-            // \frac: numerador y denominador como sub-runs aparte para que sus
-            // super/subíndices internos también se rendericen elevados/bajados.
             if (cmd == QLatin1String("frac") && after < n && tex.at(after) == QLatin1Char('{')) {
                 i = after;
-                const QString num = readGroup(tex, i);
-                while (i < n && tex.at(i) == QLatin1Char(' ')) ++i;
-                QString den;
-                if (i < n && tex.at(i) == QLatin1Char('{'))
-                    den = readGroup(tex, i);
-                // Caso simple: un solo char en num y den → usa el FRACTION
-                // SLASH (U+2044), que en fuentes con soporte se pinta como
-                // fracción tipográfica entre los dos caracteres.
-                if (num.size() == 1 && den.size() == 1
-                    && !num.at(0).isSpace() && !den.at(0).isSpace()) {
-                    buffer += num + QChar(0x2044) + den;
-                } else {
-                    buffer += QLatin1Char('(');
-                    flush();
-                    runs.append(renderTexAsRuns(num, baseFmt));
-                    buffer += QStringLiteral(")/(");
-                    flush();
-                    runs.append(renderTexAsRuns(den, baseFmt));
-                    buffer += QLatin1Char(')');
-                }
+                parseFrac(tex, i, baseFmt, runs, buffer);
                 continue;
             }
 
-            // \sqrt: emite "√" y el argumento (recursivo, para que `√{x^2}` lo
-            // muestre con el 2 elevado).
             if (cmd == QLatin1String("sqrt")) {
-                buffer += QChar(0x221A);
-                if (after < n && tex.at(after) == QLatin1Char('{')) {
-                    i = after;
-                    const QString arg = readGroup(tex, i);
-                    buffer += QLatin1Char('(');
-                    flush();
-                    runs.append(renderTexAsRuns(arg, baseFmt));
-                    buffer += QLatin1Char(')');
-                }
+                i = parseSqrt(tex, i, after, baseFmt, runs, buffer);
                 continue;
             }
 
@@ -671,30 +722,7 @@ QList<MathRun> renderTexAsRuns(const QString &tex, const QTextCharFormat &baseFm
             const bool sup = (c == QLatin1Char('^'));
             ++i;
             if (i >= n) { buffer += c; break; }
-            // Lee el argumento del script y lo aplana a Unicode (texToUnicode
-            // recursivo) para envolverlo en UN solo run con vertical-align.
-            // Aplanar (no recurseAsRuns aquí) es lo que mantiene los scripts
-            // anidados manejables: el nivel exterior es Qt vertical-align y los
-            // interiores usan la versión Unicode super/sub.
-            QString arg;
-            if (tex.at(i) == QLatin1Char('{')) {
-                arg = texToUnicode(readGroup(tex, i));
-            } else if (tex.at(i) == QLatin1Char('\\')) {
-                ++i;
-                if (i < n && tex.at(i).isLetter()) {
-                    arg = commandToUnicode(readCommand(tex, i));
-                } else if (i < n) {
-                    arg = QString(tex.at(i));
-                    ++i;
-                } else {
-                    arg = QStringLiteral("\\");
-                }
-            } else {
-                arg = QString(tex.at(i));
-                ++i;
-            }
-            flush();
-            runs.append({arg, scriptFmt(sup)});
+            parseScript(tex, i, sup, baseFmt, runs, buffer);
             continue;
         }
 
@@ -703,7 +731,7 @@ QList<MathRun> renderTexAsRuns(const QString &tex, const QTextCharFormat &baseFm
         buffer += c;
         ++i;
     }
-    flush();
+    flushBuffer(runs, buffer, baseFmt);
     return runs;
 }
 
@@ -916,8 +944,7 @@ QString restoreMathFromSentinels(const QString &markdown,
             continue;
         out += QStringView{markdown}.mid(last, m.capturedStart() - last);
         const auto &entry = table.entries.at(idx);
-        const QString delim = entry.second ? QStringLiteral("$$") : QStringLiteral("$");
-        out += delim + entry.first + delim;
+        out += wrapTex(entry.first, entry.second);
         last = m.capturedEnd();
     }
     out += QStringView{markdown}.mid(last);
@@ -928,10 +955,9 @@ void unrenderMathInDocument(QTextDocument *doc)
 {
     QList<Repl> repls;
     forEachMathGroup(doc, [&](int start, int end, const QString &tex, bool isBlock) {
-        const QString delim = isBlock ? QStringLiteral("$$") : QStringLiteral("$");
         QTextCharFormat code;
         code.setFontFixedPitch(true);
-        repls.append({start, end, {{delim + tex + delim, code}}});
+        repls.append({start, end, {{wrapTex(tex, isBlock), code}}});
     });
     applyReplacements(doc, repls);
 }

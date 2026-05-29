@@ -1,7 +1,6 @@
 #ifndef FOCUSEDITOR_H
 #define FOCUSEDITOR_H
 
-#include <QColor>
 #include <QTextEdit>
 
 #include <functional>
@@ -24,11 +23,6 @@ public:
 
     // Ancho máximo de la columna de texto en píxeles; 0 = desactivado.
     void setReadingColumnWidth(int width);
-
-    // Color de las franjas laterales (modo sin distracciones). Lo fija MainWindow
-    // con el color curado del tema; si no se fija (color inválido), se deriva del
-    // fondo de la página. Reaplica la paleta si la columna está activa.
-    void setMarginColor(const QColor &color);
 
     // Alinea la columna al borde izquierdo (margen izquierdo 0, todo el sobrante
     // a la derecha) en vez de centrarla. Se usa en el modo sin distracciones para
@@ -61,7 +55,6 @@ private:
     int m_columnWidth = 0;
     bool m_columnLeftAligned = false;  // columna pegada a la izquierda
     bool m_applyingPalette = false;    // evita recursión en changeEvent
-    QColor m_marginColor;              // franjas laterales; inválido = derivar del fondo
 };
 
 #endif // FOCUSEDITOR_H

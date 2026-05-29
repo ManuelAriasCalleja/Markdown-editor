@@ -25,6 +25,26 @@ find_package(Qt6 REQUIRED COMPONENTS Widgets PrintSupport LinguistTools)
 add_library(md-editor-core STATIC
     src/mainwindow.cpp
     src/mainwindow.h
+    src/splitviewcontroller.cpp
+    src/splitviewcontroller.h
+    src/diskwatcher.cpp
+    src/diskwatcher.h
+    src/exportcontroller.cpp
+    src/exportcontroller.h
+    src/filecontroller.cpp
+    src/filecontroller.h
+    src/tablecontroller.cpp
+    src/tablecontroller.h
+    src/formatcontroller.cpp
+    src/formatcontroller.h
+    src/formulacontroller.cpp
+    src/formulacontroller.h
+    src/insertcontroller.cpp
+    src/insertcontroller.h
+    src/distractionfreecontroller.cpp
+    src/distractionfreecontroller.h
+    src/chromezoom.cpp
+    src/chromezoom.h
     src/codehighlighter.cpp
     src/codehighlighter.h
     src/findreplacebar.cpp
@@ -186,7 +206,11 @@ if(Qt6Test_FOUND)
         tst_documentio
         tst_themecontroller
         tst_themespec
-        tst_links)
+        tst_links
+        tst_splitview
+        tst_chromezoom
+        tst_filecontroller
+        tst_formulacontroller)
         add_executable(${test} tests/${test}.cpp)
         target_link_libraries(${test} PRIVATE md-editor-core Qt6::Test)
         add_test(NAME ${test} COMMAND ${test})

@@ -170,8 +170,7 @@ QString inlineLatex(const QTextBlock &block, bool ignoreBold = false)
             if (tex == lastMathTex)
                 continue;  // mismo grupo abierto: ya emitido
             const bool isBlock = cf.boolProperty(mdmath::MathBlockProperty);
-            const QString delim = isBlock ? QStringLiteral("$$") : QStringLiteral("$");
-            out += delim + tex + delim;
+            out += mdmath::wrapTex(tex, isBlock);
             lastMathTex = tex;
             continue;
         }
@@ -253,6 +252,36 @@ QString headingCommand(int level, const QString &text)
 }
 
 } // namespace
+
+// Preámbulo del documento LaTeX: desde \documentclass hasta \begin{document} (con
+// \maketitle si hay título). Portable entre motores: pdfLaTeX usa inputenc/T1;
+// LuaLaTeX y XeLaTeX usan fontspec (Unicode nativo). Así el .tex compila con
+// cualquiera. El cuerpo y el \end{document} los añade toLatex.
+static QString latexPreamble(const Language &language, const QString &title)
+{
+    QString out;
+    out += QStringLiteral("\\documentclass[11pt]{article}\n");
+    out += QStringLiteral("\\usepackage{iftex}\n");
+    out += QStringLiteral("\\ifPDFTeX\n"
+                          "  \\usepackage[utf8]{inputenc}\n"
+                          "  \\usepackage[T1]{fontenc}\n"
+                          "\\else\n"
+                          "  \\usepackage{fontspec}\n"
+                          "\\fi\n");
+    out += QStringLiteral("\\usepackage[%1]{babel}\n").arg(language.babel);
+    out += QStringLiteral("\\usepackage{amsmath}\n");
+    out += QStringLiteral("\\usepackage{amssymb}\n");
+    out += QStringLiteral("\\usepackage[normalem]{ulem}\n");
+    out += QStringLiteral("\\usepackage{graphicx}\n");
+    out += QStringLiteral("\\usepackage[export]{adjustbox}\n");  // max width en imágenes
+    out += QStringLiteral("\\usepackage{hyperref}\n");
+    if (!title.isEmpty())
+        out += QStringLiteral("\\title{%1}\n\\author{}\n\\date{}\n").arg(latexEscape(title));
+    out += QStringLiteral("\\begin{document}\n");
+    if (!title.isEmpty())
+        out += QStringLiteral("\\maketitle\n");
+    return out;
+}
 
 QString toLatex(const QTextDocument *doc, const Language &language, const QString &title)
 {
@@ -351,32 +380,7 @@ QString toLatex(const QTextDocument *doc, const Language &language, const QStrin
     }
     closeLists(); closeQuote(); closeCode();
 
-    QString out;
-    out += QStringLiteral("\\documentclass[11pt]{article}\n");
-    // Preámbulo portable entre motores: pdfLaTeX usa inputenc/T1; LuaLaTeX y
-    // XeLaTeX usan fontspec (Unicode nativo). Así el .tex compila con cualquiera.
-    out += QStringLiteral("\\usepackage{iftex}\n");
-    out += QStringLiteral("\\ifPDFTeX\n"
-                          "  \\usepackage[utf8]{inputenc}\n"
-                          "  \\usepackage[T1]{fontenc}\n"
-                          "\\else\n"
-                          "  \\usepackage{fontspec}\n"
-                          "\\fi\n");
-    out += QStringLiteral("\\usepackage[%1]{babel}\n").arg(language.babel);
-    out += QStringLiteral("\\usepackage{amsmath}\n");
-    out += QStringLiteral("\\usepackage{amssymb}\n");
-    out += QStringLiteral("\\usepackage[normalem]{ulem}\n");
-    out += QStringLiteral("\\usepackage{graphicx}\n");
-    out += QStringLiteral("\\usepackage[export]{adjustbox}\n");  // max width en imágenes
-    out += QStringLiteral("\\usepackage{hyperref}\n");
-    if (!title.isEmpty())
-        out += QStringLiteral("\\title{%1}\n\\author{}\n\\date{}\n").arg(latexEscape(title));
-    out += QStringLiteral("\\begin{document}\n");
-    if (!title.isEmpty())
-        out += QStringLiteral("\\maketitle\n");
-    out += body;
-    out += QStringLiteral("\\end{document}\n");
-    return out;
+    return latexPreamble(language, title) + body + QStringLiteral("\\end{document}\n");
 }
 
 // --------------------------------------------------------------------------

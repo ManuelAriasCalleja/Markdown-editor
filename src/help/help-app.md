@@ -135,9 +135,13 @@ si está visible, queda pegado al bloque central. ESC o F11 salen.
 
 ## Vista de código
 
-**Ver → Vista de código** alterna entre el editor visual y un editor de texto
-plano con el Markdown crudo. Los cambios en el modo fuente se vuelcan al
-documento al volver al modo visual.
+**Ver → Código fuente Markdown** (Ctrl+Shift+M) alterna entre el editor visual y
+un editor de texto plano, a pantalla completa, con el Markdown crudo. Los cambios
+en el modo fuente se vuelcan al documento al volver al modo visual.
+
+**Ver → Vista dividida** (Ctrl+Shift+D) muestra ambos a la vez, lado a lado: el
+editor visual y el código fuente, sincronizados (lo que escribes en uno se refleja
+en el otro). Es excluyente con el modo fuente a pantalla completa.
 
 ## Exportar e imprimir
 
@@ -180,6 +184,7 @@ ofrece recuperar lo que estabas escribiendo.
 | Encabezado H1 … H6        | Ctrl+1 … Ctrl+6  |
 | Insertar fórmula          | Ctrl+Shift+F     |
 | Vista de código Markdown  | Ctrl+Shift+M     |
+| Vista dividida            | Ctrl+Shift+D     |
 | Esquema                   | F9               |
 | Sin distracciones         | F11              |
 | Zoom + / − / Normal       | Ctrl++ / Ctrl+− / Ctrl+0 |

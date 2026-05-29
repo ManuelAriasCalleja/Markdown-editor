@@ -39,12 +39,13 @@ OutlinePanel::OutlinePanel(QWidget *parent)
     m_tree->setUniformRowHeights(true);
 
     // El árbol vive en un contenedor con un relleno izquierdo opcional (ver
-    // setLeftPadding), pintado del mismo oscuro que las franjas del modo sin
-    // distracciones para que el bloque esquema+columna se vea centrado.
+    // setLeftPadding), pintado en negro puro igual que las franjas del modo sin
+    // distracciones (FocusEditor), para que el bloque esquema+columna se vea
+    // centrado sobre fondo negro.
     auto *container = new QWidget(this);
     container->setAutoFillBackground(true);
     QPalette pal = container->palette();
-    pal.setColor(QPalette::Window, QColor(30, 30, 30));  // igual que FocusEditor
+    pal.setColor(QPalette::Window, Qt::black);  // igual que FocusEditor
     container->setPalette(pal);
     m_layout = new QHBoxLayout(container);
     m_layout->setContentsMargins(0, 0, 0, 0);
