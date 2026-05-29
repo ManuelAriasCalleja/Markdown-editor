@@ -162,7 +162,10 @@ QList<ThemeSpec> makeThemes()
         t.disabledText = QColor(0x90, 0x8f, 0x82);
         t.border = QColor(0x49, 0x48, 0x3e);
         t.margin = QColor(0x1d, 0x1e, 0x19);
-        t.syntax = {QColor(0xf9, 0x26, 0x72), QColor(0xe6, 0xdb, 0x74),
+        // keyword: rosa de Monokai Pro (#ff6188) en vez del clásico #f92672, que
+        // sobre la página queda en 3.93:1 (por debajo de AA). Conserva la
+        // identidad Monokai y cumple ≥4.5:1 (ver tst_themespec).
+        t.syntax = {QColor(0xff, 0x61, 0x88), QColor(0xe6, 0xdb, 0x74),
                     QColor(0x9d, 0x9b, 0x86), QColor(0xae, 0x81, 0xff),
                     QColor(0xfd, 0x97, 0x1f)};
         themes.append(t);

@@ -18,6 +18,7 @@ private slots:
     void contrastRatioIsSymmetricAndBounded();
     void everyThemeHasReadableText();
     void everyThemeHasReadableUiElements();
+    void everyThemeHasReadableSyntax();
     void catalogIsWellFormed();
     void keyRoundTrip();
     void unknownKeyFallsBack();
@@ -62,6 +63,25 @@ void TestThemeSpec::everyThemeHasReadableUiElements()
                  name + " highlightedText/highlight");
         QVERIFY2(contrastRatio(t.tooltipText, t.tooltipBase) >= 4.5,
                  name + " tooltipText/tooltipBase");
+    }
+}
+
+void TestThemeSpec::everyThemeHasReadableSyntax()
+{
+    // El resaltado de código y las fórmulas son tinta que se dibuja sobre la
+    // página (rol Base): exigimos AA (>= 4.5:1) para cada color en cada tema. Es
+    // la garantía, verificada en compilación, de que ningún color de tinta queda
+    // de bajo contraste sobre el fondo (independiente del sistema operativo).
+    for (const ThemeSpec &t : allThemes()) {
+        const QByteArray name = t.key.toUtf8();
+        const struct { const char *label; QColor color; } inks[] = {
+            {"keyword", t.syntax.keyword}, {"string", t.syntax.string},
+            {"comment", t.syntax.comment}, {"number", t.syntax.number},
+            {"math", t.syntax.math},
+        };
+        for (const auto &ink : inks)
+            QVERIFY2(contrastRatio(ink.color, t.base) >= 4.5,
+                     name + " syntax." + ink.label + "/base");
     }
 }
 

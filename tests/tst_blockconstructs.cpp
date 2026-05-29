@@ -1,5 +1,6 @@
 #include <QtTest>
 
+#include <QTextBlock>
 #include <QTextCursor>
 #include <QTextEdit>
 
@@ -23,6 +24,10 @@ private slots:
     void toggleBlockquoteWrapsAndUnwraps();
     void toggleCodeBlockWrapsAndUnwraps();
     void toggleCodeBlockKeepsContentLiteral();
+    // --- Casos límite que antes fallaban (regresiones) ---
+    void blockquoteQuotesEveryLineOfMultiline();
+    void codeBlockOnMiddleLineMakesFenceNotInline();
+    void codeBlockOnEmptyParagraphCreatesBlock();
 };
 
 void TestBlockConstructs::addQuotePrefixesEachLine()
@@ -102,6 +107,52 @@ void TestBlockConstructs::toggleCodeBlockKeepsContentLiteral()
     const QString md = edit.document()->toMarkdown();
     QVERIFY(md.contains(QStringLiteral("# no es titulo")));
     QVERIFY(md.contains(QStringLiteral("```")));
+}
+
+void TestBlockConstructs::blockquoteQuotesEveryLineOfMultiline()
+{
+    // Antes: insertFragment fusionaba el primer bloque y la primera línea
+    // perdía la cita ("a" salía sin "> ").
+    QTextEdit edit;
+    edit.setPlainText(QStringLiteral("a\nb\nc"));
+    edit.selectAll();
+
+    Blockquote().toggle(&edit);
+    const QString md = edit.document()->toMarkdown();
+    QVERIFY2(md.contains(QStringLiteral("> a")), md.toUtf8());
+    QVERIFY2(md.contains(QStringLiteral("> b")), md.toUtf8());
+    QVERIFY2(md.contains(QStringLiteral("> c")), md.toUtf8());
+}
+
+void TestBlockConstructs::codeBlockOnMiddleLineMakesFenceNotInline()
+{
+    // Antes: convertir una sola línea en medio de varias daba código en línea
+    // (`b`) en vez de una valla, porque el único bloque del fragmento se
+    // fusionaba y perdía la valla.
+    QTextEdit edit;
+    edit.setPlainText(QStringLiteral("a\nb\nc"));
+
+    QTextCursor cur(edit.document());
+    cur.setPosition(edit.document()->findBlockByNumber(1).position());
+    cur.movePosition(QTextCursor::EndOfBlock, QTextCursor::KeepAnchor);
+    edit.setTextCursor(cur);
+
+    CodeBlock().toggle(&edit);
+    const QString md = edit.document()->toMarkdown();
+    QVERIFY2(md.contains(QStringLiteral("```")), md.toUtf8());
+    QVERIFY2(!md.contains(QStringLiteral("`b`")), md.toUtf8());  // no es código en línea
+    QVERIFY(md.contains(QLatin1Char('a')));
+    QVERIFY(md.contains(QLatin1Char('c')));
+}
+
+void TestBlockConstructs::codeBlockOnEmptyParagraphCreatesBlock()
+{
+    // Antes: pulsar Block en un párrafo vacío no creaba nada.
+    QTextEdit edit;  // documento con un único bloque vacío
+
+    CodeBlock().toggle(&edit);
+    QVERIFY(edit.document()->firstBlock().blockFormat().hasProperty(
+        QTextFormat::BlockCodeFence));
 }
 
 QTEST_MAIN(TestBlockConstructs)

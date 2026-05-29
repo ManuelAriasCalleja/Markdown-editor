@@ -2,11 +2,12 @@
 #define BLOCKCONSTRUCTS_H
 
 #include <QString>
+#include <QTextBlockFormat>
+#include <QTextCharFormat>
 #include <QTextDocumentFragment>
 
 class QTextEdit;
 class QTextCursor;
-class QTextBlockFormat;
 
 // Transformaciones de texto puras (sin estado ni GUI) que sustentan los
 // constructos de bloque. Se exponen aparte para poder probarlas de forma
@@ -43,6 +44,16 @@ protected:
     // bloques completos). `removing` indica si se está quitando el constructo.
     virtual QTextDocumentFragment buildReplacement(const QTextCursor &selection,
                                                    bool removing) const = 0;
+
+    // Formato de bloque canónico del constructo (cita o valla). toggle() lo
+    // re-aplica a cada bloque insertado: insertFragment fusiona el primer bloque
+    // del fragmento con el actual y descarta su formato de bloque, así que sin
+    // esto la primera línea perdería la valla/cita (y un párrafo vacío no se
+    // convertiría en nada).
+    virtual QTextBlockFormat blockFormat() const = 0;
+    // Formato de carácter por defecto del bloque (p. ej. monoespaciado para el
+    // código), para que el texto que se teclee en un bloque vacío salga bien.
+    virtual QTextCharFormat blockCharFormat() const { return {}; }
 };
 
 // Cita / blockquote: `> texto` (conserva el formato en línea).
@@ -54,6 +65,7 @@ public:
 protected:
     QTextDocumentFragment buildReplacement(const QTextCursor &selection,
                                            bool removing) const override;
+    QTextBlockFormat blockFormat() const override;
 };
 
 // Bloque de código con vallas ```. El contenido es literal (texto plano).
@@ -65,6 +77,8 @@ public:
 protected:
     QTextDocumentFragment buildReplacement(const QTextCursor &selection,
                                            bool removing) const override;
+    QTextBlockFormat blockFormat() const override;
+    QTextCharFormat blockCharFormat() const override;
 };
 
 #endif // BLOCKCONSTRUCTS_H

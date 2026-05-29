@@ -71,20 +71,6 @@ void expandSelection(QTextCursor &cursor, const BlockConstruct *c)
     cursor.setPosition(lb.position() + lb.length() - 1, QTextCursor::KeepAnchor);
 }
 
-// Sustituye la selección (de bloques completos) por `fragment`, reiniciando el
-// formato de bloque para que la estructura nueva venga solo del fragmento.
-void replaceSelectionWith(QTextEdit *editor, const QTextDocumentFragment &fragment)
-{
-    QTextCursor cursor = editor->textCursor();
-    cursor.beginEditBlock();
-    cursor.removeSelectedText();
-    cursor.setBlockFormat(QTextBlockFormat());
-    cursor.setBlockCharFormat(QTextCharFormat());
-    cursor.insertFragment(fragment);
-    cursor.endEditBlock();
-    editor->setFocus();
-}
-
 } // namespace
 
 void BlockConstruct::toggle(QTextEdit *editor) const
@@ -96,7 +82,40 @@ void BlockConstruct::toggle(QTextEdit *editor) const
     expandSelection(cursor, removing ? this : nullptr);
     editor->setTextCursor(cursor);
 
-    replaceSelectionWith(editor, buildReplacement(cursor, removing));
+    const QTextDocumentFragment fragment = buildReplacement(cursor, removing);
+
+    cursor.beginEditBlock();
+    const int start = cursor.selectionStart();
+    cursor.removeSelectedText();
+    // Reinicia el formato del bloque vacío resultante: la estructura nueva debe
+    // venir solo del fragmento / de blockFormat(), no arrastrar el formato viejo.
+    cursor.setBlockFormat(QTextBlockFormat());
+    cursor.setBlockCharFormat(QTextCharFormat());
+    cursor.insertFragment(fragment);
+    const int end = cursor.position();
+
+    if (!removing) {
+        // insertFragment fusiona el primer bloque del fragmento con el bloque
+        // actual y, al hacerlo, descarta su formato de bloque (no el de
+        // carácter): la primera línea perdería la valla/cita. Re-aplicamos el
+        // formato canónico del constructo a TODOS los bloques insertados, lo que
+        // además crea el bloque cuando el contenido estaba vacío (fragmento vacío
+        // ⇒ el rango es el propio bloque, que así adquiere la valla/cita).
+        QTextDocument *doc = cursor.document();
+        const QTextBlockFormat bf = blockFormat();
+        const QTextCharFormat bcf = blockCharFormat();
+        const int firstNo = doc->findBlock(start).blockNumber();
+        const int lastNo = doc->findBlock(end).blockNumber();
+        for (int i = firstNo; i <= lastNo; ++i) {
+            QTextCursor bc(doc->findBlockByNumber(i));
+            bc.mergeBlockFormat(bf);
+            if (bcf.propertyCount() > 0)
+                bc.mergeBlockCharFormat(bcf);
+        }
+    }
+    cursor.endEditBlock();
+    editor->setTextCursor(cursor);
+    editor->setFocus();
 }
 
 // ---------------------------------------------------------------------------
@@ -125,9 +144,24 @@ QTextDocumentFragment Blockquote::buildReplacement(const QTextCursor &selection,
                                                    bool removing) const
 {
     const QString md = selectionToMarkdown(selection);
+    if (!removing && md.isEmpty())
+        return {};  // cita vacía: el formato lo pone toggle() vía blockFormat()
     const QString out = removing ? mdblock::removeBlockquoteMarkers(md)
                                  : mdblock::addBlockquoteMarkers(md);
     return QTextDocumentFragment::fromMarkdown(out);
+}
+
+QTextBlockFormat Blockquote::blockFormat() const
+{
+    // Capturamos el formato exacto que Qt asigna a una cita (propiedad
+    // BlockQuoteLevel y sangrías), parseando una muestra: así el round-trip a
+    // Markdown emite "> " sin tener que codificar las propiedades a mano.
+    static const QTextBlockFormat fmt = [] {
+        QTextDocument tmp;
+        tmp.setMarkdown(QStringLiteral("> x"));
+        return tmp.firstBlock().blockFormat();
+    }();
+    return fmt;
 }
 
 // ---------------------------------------------------------------------------
@@ -152,5 +186,31 @@ QTextDocumentFragment CodeBlock::buildReplacement(const QTextCursor &selection,
         // Markdown y conserva las líneas tal cual.
         return QTextDocumentFragment::fromPlainText(text);
     }
+    if (text.isEmpty())
+        return {};  // bloque vacío: el formato lo pone toggle() vía blockFormat()
     return QTextDocumentFragment::fromMarkdown(mdblock::fenceCode(text));
+}
+
+QTextBlockFormat CodeBlock::blockFormat() const
+{
+    static const QTextBlockFormat fmt = [] {
+        QTextDocument tmp;
+        tmp.setMarkdown(QStringLiteral("```\nx\n```"));
+        return tmp.firstBlock().blockFormat();
+    }();
+    return fmt;
+}
+
+QTextCharFormat CodeBlock::blockCharFormat() const
+{
+    // Monoespaciado: para que el texto tecleado en un bloque de código vacío
+    // salga ya con la fuente de paso fijo (lo toma de la misma muestra).
+    static const QTextCharFormat fmt = [] {
+        QTextDocument tmp;
+        tmp.setMarkdown(QStringLiteral("```\nx\n```"));
+        const QTextBlock b = tmp.firstBlock();
+        auto it = b.begin();
+        return it.atEnd() ? b.charFormat() : it.fragment().charFormat();
+    }();
+    return fmt;
 }

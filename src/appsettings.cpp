@@ -9,6 +9,7 @@ inline QString warmLightKey()   { return QStringLiteral("warmLight"); }
 inline QString zoomLevelKey()   { return QStringLiteral("zoomLevel"); }
 inline QString geometryKey()    { return QStringLiteral("geometry"); }
 inline QString windowStateKey() { return QStringLiteral("windowState"); }
+inline QString splitterStateKey() { return QStringLiteral("splitterState"); }
 inline QString recentFilesKey() { return QStringLiteral("recentFiles"); }
 inline QString languageKey()    { return QStringLiteral("language"); }
 inline QString lastFileKey()    { return QStringLiteral("lastFile"); }
@@ -88,6 +89,16 @@ QByteArray AppSettings::windowState()
 void AppSettings::setWindowState(const QByteArray &state)
 {
     QSettings().setValue(windowStateKey(), state);
+}
+
+QByteArray AppSettings::splitterState()
+{
+    return QSettings().value(splitterStateKey()).toByteArray();
+}
+
+void AppSettings::setSplitterState(const QByteArray &state)
+{
+    QSettings().setValue(splitterStateKey(), state);
 }
 
 QStringList AppSettings::recentFiles()

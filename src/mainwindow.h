@@ -21,7 +21,7 @@ class QEvent;
 class QMimeData;
 class QObject;
 class QLabel;
-class QStackedWidget;
+class QSplitter;
 class QToolBar;
 class QShortcut;
 class QTimer;
@@ -147,6 +147,20 @@ private slots:
     // Alterna entre la vista WYSIWYG y la del código Markdown crudo.
     void toggleSourceMode(bool on);
 
+    // Activa/desactiva la vista dividida: WYSIWYG y fuente lado a lado, ambos
+    // editables. Es excluyente con el modo fuente a pantalla completa.
+    void toggleSplitView(bool on);
+
+    // Sincronización de la vista dividida (solo se actualiza el panel SIN foco,
+    // para no estorbar a lo que el usuario está escribiendo):
+    //   refresca el panel de fuente con el Markdown del documento WYSIWYG.
+    void syncSourceFromDocument();
+    //   vuelca el texto del panel de fuente al documento WYSIWYG (re-renderiza).
+    void syncDocumentFromSource();
+    // Vacía de inmediato el temporizador pendiente al cambiar de panel, para que
+    // el otro panel quede al día antes de empezar a editarlo.
+    void flushPendingSync(QWidget *losingFocus);
+
     // Entra/sale del modo sin distracciones: pantalla completa, oculta menú,
     // barras y estado, y centra el texto en una columna. Se sale con ESC o F11.
     void toggleDistractionFree(bool on);
@@ -222,6 +236,11 @@ private:
     // Fija/quita una lista del estilo dado en el bloque actual (toggle).
     void applyList(QTextListFormat::Style style);
 
+    // Aplica un borde visible a todas las tablas del documento (las creadas y las
+    // cargadas). El borde no se serializa a Markdown, así que no afecta al
+    // round-trip ni al estado «modificado».
+    void styleTables();
+
     // Aplica un toggle de formato de carácter: `mutate` recibe el formato a
     // rellenar y el formato actual bajo el cursor (Strategy de los botones
     // negrita/cursiva/tachado/código).
@@ -250,12 +269,25 @@ private:
     int m_zoomDelta = 0;
     QToolBar *m_formatToolBar = nullptr;
 
-    QStackedWidget *m_stack = nullptr;       // conmuta WYSIWYG / fuente
+    QSplitter *m_splitView = nullptr;        // contiene WYSIWYG y fuente lado a lado
     FocusEditor *m_sourceEditor = nullptr;   // vista de código Markdown crudo
     QAction *m_sourceModeAction = nullptr;   // toggle de Ver → Código fuente
-    bool m_sourceMode = false;
+    QAction *m_splitAction = nullptr;        // toggle de Ver → Vista dividida
+    bool m_sourceMode = false;               // fuente a pantalla completa
+    bool m_splitMode = false;                // WYSIWYG + fuente lado a lado
     bool m_sourceDirty = false;              // el fuente tiene cambios sin volcar
+    bool m_syncing = false;                  // actualización programática en curso (anti-bucle)
+    QTimer *m_syncToSourceTimer = nullptr;   // debounce WYSIWYG -> fuente
+    QTimer *m_syncToDocTimer = nullptr;      // debounce fuente -> WYSIWYG
     QList<QAction *> m_wysiwygActions;       // acciones válidas solo en WYSIWYG
+
+    // Muestra/oculta cada editor según el modo de vista activo (WYSIWYG / fuente
+    // / dividido).
+    void updateEditorVisibility();
+    // En vista dividida, ajusta a qué panel apuntan las acciones según el foco:
+    // el formato/inserción solo aplica al WYSIWYG, así que se deshabilita cuando
+    // el foco está en el fuente; la barra de búsqueda sigue al panel con foco.
+    void updateActionsForFocus();
 
     QAction *m_boldAction = nullptr;
     QAction *m_italicAction = nullptr;
@@ -274,6 +306,9 @@ private:
     QAction *m_bulletAction = nullptr;
     QAction *m_numberedAction = nullptr;
     QAction *m_taskAction = nullptr;
+    QAction *m_langAction = nullptr;      // "Lenguaje del bloque": solo dentro de fence
+    QAction *m_indentAction = nullptr;    // sangría: solo dentro de una lista
+    QAction *m_outdentAction = nullptr;
     QHash<mdtheme::ThemeId, QAction *> m_themeActions;  // marca la acción del tema activo
 
     QAction *m_distractionAction = nullptr;   // toggle de Ver → Sin distracciones

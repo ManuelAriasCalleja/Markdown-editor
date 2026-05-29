@@ -41,6 +41,10 @@ void setWindowGeometry(const QByteArray &geometry);
 QByteArray windowState();
 void setWindowState(const QByteArray &state);
 
+// Proporciones del divisor de la vista dividida (QSplitter::saveState).
+QByteArray splitterState();
+void setSplitterState(const QByteArray &state);
+
 QStringList recentFiles();
 void setRecentFiles(const QStringList &files);
 

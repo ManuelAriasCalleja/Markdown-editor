@@ -1,5 +1,7 @@
 #include "focuseditor.h"
 
+#include <QApplication>
+#include <QEvent>
 #include <QMimeData>
 #include <QPalette>
 #include <QResizeEvent>
@@ -26,17 +28,43 @@ void FocusEditor::insertFromMimeData(const QMimeData *source)
 void FocusEditor::setReadingColumnWidth(int width)
 {
     m_columnWidth = qMax(0, width);
+    applyColumnPalette();
+    updateColumnMargins();
+}
+
+void FocusEditor::setMarginColor(const QColor &color)
+{
+    if (m_marginColor == color)
+        return;
+    m_marginColor = color;
+    if (m_columnWidth > 0)
+        applyColumnPalette();
+}
+
+void FocusEditor::applyColumnPalette()
+{
+    if (m_applyingPalette)
+        return;
+    m_applyingPalette = true;
 
     if (m_columnWidth > 0) {
-        // Sin marco, y el fondo del marco (rol Window) en oscuro: así las
-        // franjas laterales quedan oscuras mientras el viewport (rol Base)
-        // mantiene el color de página del tema. Solo se fija el rol Window,
-        // de modo que el resto de la paleta sigue resolviéndose del tema
-        // global (la página no se "congela" al cambiar de tema o luz cálida).
+        // Sin marco. Partimos de la paleta del tema vigente (qApp) para que la
+        // columna (rol Base) y el texto (rol Text) conserven SUS colores —si en
+        // su lugar partiéramos de una QPalette por defecto, en el tema claro la
+        // página y el texto quedarían con colores ajenos al tema y el texto se
+        // volvería ilegible—. Solo se tiñe el rol Window (las franjas laterales)
+        // con un tono ligeramente más apagado que el de la página, en ambos
+        // temas, para enmarcar sin tapar nada.
         setFrameShape(QFrame::NoFrame);
         setAutoFillBackground(true);
-        QPalette p;
-        p.setColor(QPalette::Window, m_marginColor);
+        QPalette p = qApp->palette();
+        const QColor base = p.color(QPalette::Base);
+        // Color curado del tema si MainWindow lo fijó; si no, uno derivado del
+        // fondo (un punto más apagado que la página, en ambos temas).
+        const QColor margin = m_marginColor.isValid()
+            ? m_marginColor
+            : (base.lightness() < 128 ? base.darker(135) : base.darker(110));
+        p.setColor(QPalette::Window, margin);
         setPalette(p);
     } else {
         // Vuelve al aspecto normal: marco estándar y paleta heredada del tema.
@@ -45,7 +73,17 @@ void FocusEditor::setReadingColumnWidth(int width)
         setPalette(QPalette());
     }
 
-    updateColumnMargins();
+    m_applyingPalette = false;
+}
+
+void FocusEditor::changeEvent(QEvent *event)
+{
+    QTextEdit::changeEvent(event);
+    // Al cambiar el tema (o la luz cálida), qApp reparte un PaletteChange. Si la
+    // columna está activa, recalculamos su surround a partir del nuevo tema.
+    if (event->type() == QEvent::PaletteChange && m_columnWidth > 0
+        && !m_applyingPalette)
+        applyColumnPalette();
 }
 
 void FocusEditor::setColumnLeftAligned(bool on)

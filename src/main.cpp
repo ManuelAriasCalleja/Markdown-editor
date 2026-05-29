@@ -6,12 +6,19 @@
 #include <QIcon>
 #include <QLibraryInfo>
 #include <QLocale>
+#include <QStyleFactory>
 #include <QTimer>
 #include <QTranslator>
 
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
+    // Estilo Fusion en todas las plataformas: respeta por completo la paleta de
+    // la app, incluidos los menús. Con el estilo nativo (sobre todo en Windows),
+    // los menús los pinta el sistema operativo y el tema claro/oscuro de la app
+    // no les afecta, dejándolos ilegibles cuando difieren del tema del SO.
+    if (QStyle *fusion = QStyleFactory::create(QStringLiteral("Fusion")))
+        app.setStyle(fusion);
     app.setApplicationName(QStringLiteral("md-editor"));
     app.setApplicationDisplayName(QStringLiteral("md-editor"));
     app.setOrganizationName(QStringLiteral("md-editor"));  // para QSettings (tema)

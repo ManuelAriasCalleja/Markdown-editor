@@ -25,6 +25,11 @@ public:
     // Ancho máximo de la columna de texto en píxeles; 0 = desactivado.
     void setReadingColumnWidth(int width);
 
+    // Color de las franjas laterales (modo sin distracciones). Lo fija MainWindow
+    // con el color curado del tema; si no se fija (color inválido), se deriva del
+    // fondo de la página. Reaplica la paleta si la columna está activa.
+    void setMarginColor(const QColor &color);
+
     // Alinea la columna al borde izquierdo (margen izquierdo 0, todo el sobrante
     // a la derecha) en vez de centrarla. Se usa en el modo sin distracciones para
     // que la columna quede pegada al panel de esquema. Por defecto, centrada.
@@ -40,15 +45,23 @@ protected:
     void resizeEvent(QResizeEvent *event) override;
     bool canInsertFromMimeData(const QMimeData *source) const override;
     void insertFromMimeData(const QMimeData *source) override;
+    // Reaplica el color de los márgenes cuando cambia la paleta (cambio de tema o
+    // de luz cálida): así el surround sigue derivándose del tema vigente.
+    void changeEvent(QEvent *event) override;
 
 private:
     // Recalcula los márgenes laterales para centrar la columna en el viewport.
     void updateColumnMargins();
+    // Fija (o quita) la paleta de la columna: parte del tema actual y solo tiñe
+    // el rol Window (los márgenes) con un tono derivado del fondo de la página,
+    // de modo que la columna y el texto conservan los colores del tema.
+    void applyColumnPalette();
 
     std::function<bool(const QMimeData *)> m_mimeInsertHandler;
     int m_columnWidth = 0;
-    bool m_columnLeftAligned = false;           // columna pegada a la izquierda
-    QColor m_marginColor = QColor(30, 30, 30);  // fondo oscuro a los lados
+    bool m_columnLeftAligned = false;  // columna pegada a la izquierda
+    bool m_applyingPalette = false;    // evita recursión en changeEvent
+    QColor m_marginColor;              // franjas laterales; inválido = derivar del fondo
 };
 
 #endif // FOCUSEDITOR_H

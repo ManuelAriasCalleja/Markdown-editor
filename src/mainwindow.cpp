@@ -68,22 +68,25 @@
 #include <QPushButton>
 #include <QShortcut>
 #include <QRegularExpression>
-#include <QStackedWidget>
+#include <QSplitter>
 #include <QStatusBar>
 #include <QStringConverter>
 #include <QStringList>
 #include <QTextCharFormat>
 #include <QTextBlock>
 #include <QTextCursor>
+#include <QSpinBox>
 #include <QTextDocument>
 #include <QTextDocumentFragment>
 #include <QTextEdit>
 #include <QTextFragment>
+#include <QTextFrame>
 #include <QTextLength>
 #include <QTextList>
 #include <QTextStream>
 #include <QTextTable>
 #include <QTextTableCell>
+#include <QScrollBar>
 #include <QTimer>
 #include <QToolBar>
 #include <QUrl>
@@ -242,16 +245,21 @@ MainWindow::MainWindow(QWidget *parent)
     m_editor->setAcceptRichText(true);
 
     // Vista de código Markdown crudo: texto plano monoespaciado. El widget
-    // central es una pila que conmuta entre el editor WYSIWYG y este.
+    // central es un divisor que puede mostrar el editor WYSIWYG, este, o ambos
+    // lado a lado (vista dividida). WYSIWYG a la izquierda, fuente a la derecha.
     m_sourceEditor = new FocusEditor(this);
     m_sourceEditor->setAcceptRichText(false);
     QFont mono = QFont(QStringLiteral("monospace"));
     mono.setStyleHint(QFont::Monospace);
     m_sourceEditor->setFont(mono);
-    m_stack = new QStackedWidget(this);
-    m_stack->addWidget(m_editor);
-    m_stack->addWidget(m_sourceEditor);
-    setCentralWidget(m_stack);
+    m_splitView = new QSplitter(Qt::Horizontal, this);
+    m_splitView->addWidget(m_editor);
+    m_splitView->addWidget(m_sourceEditor);
+    m_splitView->setStretchFactor(0, 1);  // ambos paneles crecen por igual
+    m_splitView->setStretchFactor(1, 1);
+    m_sourceEditor->hide();  // arranca en WYSIWYG
+    setCentralWidget(m_splitView);
+    m_splitView->restoreState(AppSettings::splitterState());  // proporciones previas
 
     // Tamaños de fuente base (editor WYSIWYG y vista de código), para poder
     // restaurarlos con "Tamaño normal".
@@ -273,9 +281,16 @@ MainWindow::MainWindow(QWidget *parent)
     // En modo fuente, escribir marca el documento como modificado y actualiza el
     // contador (el contenido vive en m_sourceEditor hasta que se vuelca).
     connect(m_sourceEditor, &QTextEdit::textChanged, this, [this] {
-        if (m_sourceMode) {
+        // Edición real del usuario en el panel de fuente (no un refresco
+        // programático, que va con m_syncing): marca el fuente como la versión
+        // más fresca, en modo fuente o en vista dividida.
+        if (!m_syncing && (m_sourceMode || m_splitMode)) {
             m_sourceDirty = true;
             setWindowModified(true);
+            // En vista dividida, mientras el foco está en el fuente, vuelca al
+            // WYSIWYG tras una pausa (debounce). Solo el panel sin foco se toca.
+            if (m_splitMode && m_sourceEditor->hasFocus())
+                m_syncToDocTimer->start();
         }
         updateWordCount();
     });
@@ -339,6 +354,37 @@ MainWindow::MainWindow(QWidget *parent)
     connect(m_editor->document(), &QTextDocument::contentsChanged, this, [this] {
         if (!m_sourceMode)
             m_outlineTimer->start();
+        // En vista dividida, mientras el foco está en el WYSIWYG, refresca el
+        // panel de fuente tras una pausa. m_syncing distingue los cambios del
+        // usuario de los provocados por la propia sincronización (anti-bucle).
+        if (m_splitMode && !m_syncing && !m_sourceEditor->hasFocus())
+            m_syncToSourceTimer->start();
+    });
+
+    // Temporizadores de debounce de la vista dividida (~250 ms): refrescan el
+    // panel SIN foco con lo editado en el otro. Ver syncSourceFromDocument /
+    // syncDocumentFromSource.
+    m_syncToSourceTimer = new QTimer(this);
+    m_syncToSourceTimer->setSingleShot(true);
+    m_syncToSourceTimer->setInterval(250);
+    connect(m_syncToSourceTimer, &QTimer::timeout, this, [this] {
+        if (!m_sourceEditor->hasFocus())  // si el foco saltó al fuente, no lo pisamos
+            syncSourceFromDocument();
+    });
+    m_syncToDocTimer = new QTimer(this);
+    m_syncToDocTimer->setSingleShot(true);
+    m_syncToDocTimer->setInterval(250);
+    connect(m_syncToDocTimer, &QTimer::timeout, this, &MainWindow::syncDocumentFromSource);
+
+    // Al cambiar el foco entre los dos paneles, vacía de inmediato el sync
+    // pendiente para que el panel al que llegas esté al día.
+    connect(qApp, &QApplication::focusChanged, this,
+            [this](QWidget *old, QWidget *now) {
+        flushPendingSync(old);
+        // Solo reaccionamos al pasar el foco a uno de los dos editores (no a
+        // menús, diálogos o la barra de búsqueda).
+        if (m_splitMode && (now == m_editor || now == m_sourceEditor))
+            updateActionsForFocus();
     });
 
     // Autoguardado para recuperación ante fallos: escribe un borrador cada pocos
@@ -435,6 +481,8 @@ MainWindow::MainWindow(QWidget *parent)
     // al debounce de edición) para que esté listo nada más abrir.
     connect(m_documentIo, &DocumentIo::documentLoaded, this,
             [this] { m_outline->rebuild(m_editor->document()); });
+    // Las tablas cargadas no traen borde; se lo damos para que sean visibles.
+    connect(m_documentIo, &DocumentIo::documentLoaded, this, &MainWindow::styleTables);
 
     m_documentIo->reset();  // documento nuevo (fija el título inicial)
 
@@ -645,24 +693,24 @@ void MainWindow::createMenusAndActions()
     formatMenu->addAction(m_numberedAction);
     formatMenu->addAction(m_taskAction);
 
-    QAction *indentAction = formatMenu->addAction(tr("Aumentar sangría"));
-    indentAction->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_BracketRight));
-    connect(indentAction, &QAction::triggered, this, &MainWindow::indentList);
-    m_wysiwygActions.append(indentAction);
+    m_indentAction = formatMenu->addAction(tr("Aumentar sangría"));
+    m_indentAction->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_BracketRight));
+    connect(m_indentAction, &QAction::triggered, this, &MainWindow::indentList);
+    m_wysiwygActions.append(m_indentAction);
 
-    QAction *outdentAction = formatMenu->addAction(tr("Disminuir sangría"));
-    outdentAction->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_BracketLeft));
-    connect(outdentAction, &QAction::triggered, this, &MainWindow::outdentList);
-    m_wysiwygActions.append(outdentAction);
+    m_outdentAction = formatMenu->addAction(tr("Disminuir sangría"));
+    m_outdentAction->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_BracketLeft));
+    connect(m_outdentAction, &QAction::triggered, this, &MainWindow::outdentList);
+    m_wysiwygActions.append(m_outdentAction);
 
     formatMenu->addSeparator();
     formatMenu->addAction(m_quoteAction);
     formatMenu->addAction(m_codeBlockAction);
 
-    QAction *langAction = formatMenu->addAction(tr("Lenguaje del bloque..."));
-    langAction->setToolTip(tr("Fija el lenguaje del bloque de código (resaltado)"));
-    connect(langAction, &QAction::triggered, this, &MainWindow::setCodeLanguage);
-    m_wysiwygActions.append(langAction);
+    m_langAction = formatMenu->addAction(tr("Lenguaje del bloque..."));
+    m_langAction->setToolTip(tr("Fija el lenguaje del bloque de código (resaltado)"));
+    connect(m_langAction, &QAction::triggered, this, &MainWindow::setCodeLanguage);
+    m_wysiwygActions.append(m_langAction);
 
     // --- Menú Insertar ---
     QMenu *insertMenu = menuBar()->addMenu(tr("&Insertar"));
@@ -738,6 +786,15 @@ void MainWindow::createMenusAndActions()
             m_sourceModeAction->shortcut().toString(QKeySequence::NativeText)));
     connect(m_sourceModeAction, &QAction::toggled, this, &MainWindow::toggleSourceMode);
 
+    m_splitAction = viewMenu->addAction(tr("Vista dividida"));
+    m_splitAction->setCheckable(true);
+    m_splitAction->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_Backslash));
+    m_splitAction->setToolTip(
+        tr("Editar WYSIWYG y código fuente a la vez, lado a lado") +
+        QStringLiteral(" (%1)").arg(
+            m_splitAction->shortcut().toString(QKeySequence::NativeText)));
+    connect(m_splitAction, &QAction::toggled, this, &MainWindow::toggleSplitView);
+
     m_distractionAction = viewMenu->addAction(tr("Sin distracciones"));
     m_distractionAction->setCheckable(true);
     m_distractionAction->setShortcut(QKeySequence(Qt::Key_F11));
@@ -807,6 +864,10 @@ void MainWindow::createMenusAndActions()
         if (QAction *action = m_themeActions.value(id))
             action->setChecked(true);
         updateToolBarIcons();  // los iconos generados siguen el color del tema
+        // Franjas del modo sin distracciones: color curado del tema.
+        const QColor margin = mdtheme::specFor(id).margin;
+        m_editor->setMarginColor(margin);
+        m_sourceEditor->setMarginColor(margin);
     });
 
     themeMenu->addSeparator();
@@ -1066,10 +1127,13 @@ void MainWindow::applyList(QTextListFormat::Style style)
 
     cursor.beginEditBlock();
     if (currentList && currentList->format().style() == style) {
-        // Ya es ese tipo de lista: la quitamos (desligamos el bloque).
+        // Ya es ese tipo de lista: la quitamos (desligamos el bloque). También
+        // se quita el marcador de tarea, si lo hubiera, para que no quede un
+        // checkbox huérfano fuera de toda lista.
         QTextBlockFormat bf = cursor.blockFormat();
         bf.setObjectIndex(-1);
         bf.setIndent(0);
+        bf.setMarker(QTextBlockFormat::MarkerType::NoMarker);
         cursor.setBlockFormat(bf);
     } else {
         QTextListFormat lf;
@@ -1080,6 +1144,35 @@ void MainWindow::applyList(QTextListFormat::Style style)
 
     m_editor->setFocus();
     updateFormatActions();
+}
+
+void MainWindow::styleTables()
+{
+    QTextDocument *doc = m_editor->document();
+    const QColor borderColor = palette().color(QPalette::Mid);
+
+    // El borde es presentación pura: no lo serializa toMarkdown(), así que ni el
+    // round-trip ni el estado «modificado» se ven afectados. Aun así preservamos
+    // la marca de modificado de Qt, como hace recolorLinks().
+    const bool wasModified = doc->isModified();
+    QTextCursor cursor(doc);
+    cursor.beginEditBlock();
+    const QList<QTextFrame *> frames = doc->rootFrame()->childFrames();
+    for (QTextFrame *frame : frames) {
+        auto *table = qobject_cast<QTextTable *>(frame);
+        if (!table)
+            continue;
+        QTextTableFormat fmt = table->format();
+        fmt.setBorder(1);
+        fmt.setBorderStyle(QTextFrameFormat::BorderStyle_Solid);
+        fmt.setBorderBrush(borderColor);
+        fmt.setBorderCollapse(true);  // un solo trazo entre celdas, no doble
+        fmt.setCellPadding(4);
+        fmt.setCellSpacing(0);
+        table->setFormat(fmt);
+    }
+    cursor.endEditBlock();
+    doc->setModified(wasModified);
 }
 
 void MainWindow::updateFormatActions()
@@ -1101,16 +1194,34 @@ void MainWindow::updateFormatActions()
     m_h5Action->setChecked(level == 5);
     m_h6Action->setChecked(level == 6);
 
+    // En un encabezado, el formato de carácter (negrita, cursiva, etc.) no
+    // round-trip-ea a Markdown: el `#` ya implica el peso del título y Qt no
+    // serializa cursiva/subrayado dentro de un heading. Para no engañar al
+    // usuario (ni dejarle «quitar» la negrita del título), se deshabilitan.
+    const bool heading = level > 0;
+    for (QAction *a : {m_boldAction, m_italicAction, m_underlineAction,
+                       m_strikeAction, m_codeAction})
+        a->setEnabled(!heading);
+
     const QTextList *list = cursor.currentList();
     const QTextListFormat::Style style =
         list ? list->format().style() : QTextListFormat::ListStyleUndefined;
-    m_bulletAction->setChecked(style == QTextListFormat::ListDisc);
-    m_numberedAction->setChecked(style == QTextListFormat::ListDecimal);
-
     const QTextBlockFormat bf = cursor.blockFormat();
-    m_taskAction->setChecked(bf.marker() != QTextBlockFormat::MarkerType::NoMarker);
+    const bool isTask = list && bf.marker() != QTextBlockFormat::MarkerType::NoMarker;
+    // Una lista de tareas es internamente una ListDisc con marcador: marca solo
+    // «tareas», no «viñetas». Una viñeta normal (sin marcador) marca solo «viñetas».
+    m_bulletAction->setChecked(style == QTextListFormat::ListDisc && !isTask);
+    m_numberedAction->setChecked(style == QTextListFormat::ListDecimal);
+    m_taskAction->setChecked(isTask);
+
+    // La sangría de lista solo tiene efecto dentro de una lista.
+    m_indentAction->setEnabled(list != nullptr);
+    m_outdentAction->setEnabled(list != nullptr);
+
     m_quoteAction->setChecked(bf.intProperty(QTextFormat::BlockQuoteLevel) > 0);
     m_codeBlockAction->setChecked(bf.hasProperty(QTextFormat::BlockCodeFence));
+    // El lenguaje solo se puede fijar con el cursor dentro de un bloque de código.
+    m_langAction->setEnabled(bf.hasProperty(QTextFormat::BlockCodeFence));
 
     updateTableActions();  // el menú Tabla depende de si el cursor está en una
 }
@@ -1251,16 +1362,19 @@ void MainWindow::insertLink()
 
     if (!twoFieldDialog(this, tr("Enlace"), tr("Texto:"), text, tr("URL:"), url))
         return;
-    if (url.isEmpty() && text.isEmpty())
-        return;
 
     QTextCharFormat fmt;
     if (url.isEmpty()) {
-        // Sin URL: quitar el enlace y dejar texto normal.
+        // Sin URL no se crea ningún enlace: se inserta texto plano (un enlace sin
+        // destino, [texto](), no aporta nada y confunde). Si tampoco hay texto,
+        // no hay nada que insertar.
+        if (text.isEmpty())
+            return;
         fmt.setAnchor(false);
         fmt.setAnchorHref(QString());
         fmt.setForeground(palette().color(QPalette::Text));
         fmt.setFontUnderline(false);
+        cursor.insertText(text, fmt);
     } else {
         fmt.setAnchor(true);
         fmt.setAnchorHref(url);
@@ -1268,9 +1382,9 @@ void MainWindow::insertLink()
         fmt.setFontUnderline(true);
         if (text.isEmpty())
             text = url;
+        // insertText reemplaza la selección si la hay.
+        cursor.insertText(text, fmt);
     }
-    // insertText reemplaza la selección si la hay.
-    cursor.insertText(text.isEmpty() ? url : text, fmt);
     m_editor->setFocus();
     updateFormatActions();
 }
@@ -1381,15 +1495,29 @@ bool MainWindow::handlePastedImage(const QMimeData *source)
 
 void MainWindow::insertTable()
 {
-    bool ok = false;
-    const int cols = QInputDialog::getInt(this, tr("Insertar tabla"),
-                                          tr("Columnas:"), 2, 1, 20, 1, &ok);
-    if (!ok)
+    // Un solo diálogo con columnas y filas a la vez (más legible que dos seguidos).
+    QDialog dlg(this);
+    dlg.setWindowTitle(tr("Insertar tabla"));
+    auto *colsSpin = new QSpinBox(&dlg);
+    colsSpin->setRange(1, 20);
+    colsSpin->setValue(2);
+    auto *rowsSpin = new QSpinBox(&dlg);
+    rowsSpin->setRange(1, 100);
+    rowsSpin->setValue(2);
+    auto *form = new QFormLayout;
+    form->addRow(tr("Columnas:"), colsSpin);
+    form->addRow(tr("Filas de datos:"), rowsSpin);
+    auto *buttons = new QDialogButtonBox(
+        QDialogButtonBox::Ok | QDialogButtonBox::Cancel, &dlg);
+    connect(buttons, &QDialogButtonBox::accepted, &dlg, &QDialog::accept);
+    connect(buttons, &QDialogButtonBox::rejected, &dlg, &QDialog::reject);
+    auto *layout = new QVBoxLayout(&dlg);
+    layout->addLayout(form);
+    layout->addWidget(buttons);
+    if (dlg.exec() != QDialog::Accepted)
         return;
-    const int rows = QInputDialog::getInt(this, tr("Insertar tabla"),
-                                          tr("Filas de datos:"), 2, 1, 100, 1, &ok);
-    if (!ok)
-        return;
+    const int cols = colsSpin->value();
+    const int rows = rowsSpin->value();
 
     QString header = QStringLiteral("|");
     QString separator = QStringLiteral("|");
@@ -1409,6 +1537,7 @@ void MainWindow::insertTable()
     cursor.beginEditBlock();
     cursor.insertFragment(QTextDocumentFragment::fromMarkdown(md));
     cursor.endEditBlock();
+    styleTables();  // que la tabla recién creada muestre sus bordes
     m_editor->setFocus();
 }
 
@@ -1625,6 +1754,22 @@ bool MainWindow::handleMathKeyPress(QKeyEvent *event)
         return true;
     }
 
+    // Tecla imprimible en el BORDE de una fórmula (no dentro): si dejáramos que
+    // la insertara el editor, Qt heredaría el formato del carácter contiguo y el
+    // texto nuevo quedaría marcado como parte de la fórmula (mismo color y, peor,
+    // la serialización se lo tragaría, sin aparecer en el fuente). Lo insertamos
+    // nosotros con un formato limpio para que sea texto normal. Se excluyen los
+    // atajos (Ctrl/Alt/Meta), que no son escritura.
+    const bool typing = !event->text().isEmpty() && event->text().at(0).isPrint()
+        && !(event->modifiers() & (Qt::ControlModifier | Qt::AltModifier | Qt::MetaModifier));
+    if (typing) {
+        const QTextCharFormat clean;  // sin IsMath/MathTex ni super/subíndice
+        cursor.insertText(event->text(), clean);
+        m_editor->setTextCursor(cursor);
+        m_editor->setCurrentCharFormat(clean);
+        return true;
+    }
+
     return false;
 }
 
@@ -1762,7 +1907,10 @@ void MainWindow::tableAlignColumn(Qt::Alignment alignment)
 
 void MainWindow::updateTableActions()
 {
-    const bool inTable = !m_sourceMode && m_editor->textCursor().currentTable() != nullptr;
+    // En vista dividida, las acciones de tabla solo cuando el foco está en el
+    // WYSIWYG (es donde viven las tablas); con el foco en el fuente, inhabilitadas.
+    const bool wysiwygActive = !m_sourceMode && (!m_splitMode || !m_sourceEditor->hasFocus());
+    const bool inTable = wysiwygActive && m_editor->textCursor().currentTable() != nullptr;
     for (QAction *a : m_tableActions)
         a->setEnabled(inTable);
 }
@@ -1973,6 +2121,10 @@ void MainWindow::toggleDistractionFree(bool on)
     m_distractionFree = on;
 
     if (on) {
+        // El modo sin distracciones es de columna única: salimos de la vista
+        // dividida (si estaba activa) para concentrarse en la escritura.
+        if (m_splitMode)
+            toggleSplitView(false);
         // Recuerda el estado para restaurarlo al salir (y para persistirlo si
         // se cierra la app dentro del modo, en vez del estado a pantalla
         // completa con las barras ocultas).
@@ -2053,7 +2205,7 @@ void MainWindow::updateDistractionLayout()
         return;
     }
 
-    const int total = m_outline->width() + m_stack->width();  // espacio dock+central
+    const int total = m_outline->width() + m_splitView->width();  // espacio dock+central
     const int leftPad = qMax(0, (total - kOutlineTreeWidth - kReadingColumn) / 2);
     const int dockWidth = leftPad + kOutlineTreeWidth;
 
@@ -2068,17 +2220,49 @@ void MainWindow::updateDistractionLayout()
 
 QTextEdit *MainWindow::activeEditor() const
 {
-    return m_sourceMode ? m_sourceEditor : m_editor;
+    // En fuente a pantalla completa manda el editor de fuente; en vista dividida,
+    // el que tenga el foco; en WYSIWYG, el editor.
+    if (m_sourceMode)
+        return m_sourceEditor;
+    if (m_splitMode && m_sourceEditor->hasFocus())
+        return m_sourceEditor;
+    return m_editor;
+}
+
+void MainWindow::updateEditorVisibility()
+{
+    m_editor->setVisible(!m_sourceMode);                       // oculto solo en fuente-completo
+    m_sourceEditor->setVisible(m_sourceMode || m_splitMode);   // visible en fuente y en dividido
+}
+
+void MainWindow::updateActionsForFocus()
+{
+    if (!m_splitMode)
+        return;  // en los otros modos lo gestiona toggleSourceMode
+    const bool wysiwygFocused = !m_sourceEditor->hasFocus();
+    // El formato/inserción solo tiene sentido sobre el WYSIWYG.
+    for (QAction *a : m_wysiwygActions)
+        a->setEnabled(wysiwygFocused);
+    // La búsqueda actúa sobre el panel donde está el cursor.
+    m_findBar->setEditor(wysiwygFocused ? m_editor : m_sourceEditor);
+    if (wysiwygFocused)
+        updateFormatActions();  // refina habilitado (encabezado, lista, fence…) y marcas
+    else
+        updateTableActions();   // deja las de tabla inhabilitadas con el foco en el fuente
 }
 
 void MainWindow::commitSourceToDocument()
 {
     // Vuelca los cambios del editor de fuente al documento WYSIWYG, que es el
-    // que se serializa al guardar/exportar. setMarkdown re-renderiza (invisible
-    // mientras se ve el fuente) y deja el modelo al día.
-    if (m_sourceMode && m_sourceDirty) {
+    // que se serializa al guardar/exportar. setMarkdown re-renderiza y deja el
+    // modelo al día. Funciona tanto en modo fuente como en vista dividida (el
+    // disparador es m_sourceDirty, no el modo).
+    if (m_sourceDirty) {
+        m_syncing = true;
         m_editor->setMarkdown(mdmath::protectMath(m_sourceEditor->toPlainText()));
         mdmath::renderMathInDocument(m_editor->document());
+        styleTables();
+        m_syncing = false;
         m_sourceDirty = false;
     }
 }
@@ -2089,20 +2273,24 @@ void MainWindow::toggleSourceMode(bool on)
         return;
 
     if (on) {
+        // Fuente a pantalla completa y vista dividida son excluyentes.
+        if (m_splitMode)
+            toggleSplitView(false);
         // Entrar: vuelca el Markdown actual al editor de fuente (con la alineación
         // de tablas preservada, igual que al guardar).
+        m_syncing = true;
         m_sourceEditor->setPlainText(mdtable::documentMarkdown(m_editor->document()));
-        m_stack->setCurrentWidget(m_sourceEditor);
+        m_syncing = false;
         m_findBar->setEditor(m_sourceEditor);
     } else {
         // Salir: aplica los cambios del fuente y vuelve al WYSIWYG.
         commitSourceToDocument();
-        m_stack->setCurrentWidget(m_editor);
         m_findBar->setEditor(m_editor);
         m_theme->recolorLinks();  // los enlaces recargados toman el color del tema
     }
     m_sourceMode = on;
     m_sourceDirty = false;
+    updateEditorVisibility();
 
     // Las acciones de formato/inserción no aplican al texto plano: se desactivan
     // (también sus atajos) en modo fuente.
@@ -2121,6 +2309,109 @@ void MainWindow::toggleSourceMode(bool on)
         m_sourceModeAction->setChecked(on);  // mantiene el menú en sincronía
     activeEditor()->setFocus();
     updateWordCount();
+}
+
+void MainWindow::toggleSplitView(bool on)
+{
+    if (on == m_splitMode)
+        return;
+
+    if (on) {
+        // Vista dividida y fuente a pantalla completa son excluyentes.
+        if (m_sourceMode)
+            toggleSourceMode(false);
+        // Rellena el panel de fuente con el Markdown actual del documento.
+        m_syncing = true;
+        m_sourceEditor->setPlainText(mdtable::documentMarkdown(m_editor->document()));
+        m_syncing = false;
+        m_sourceDirty = false;
+    } else {
+        // Salir: vuelca cualquier edición pendiente del fuente al documento.
+        commitSourceToDocument();
+        m_theme->recolorLinks();
+    }
+    m_splitMode = on;
+    updateEditorVisibility();
+
+    if (on) {
+        // Si el panel de fuente quedó sin anchura (p. ej. estaba oculto y no había
+        // estado guardado), reparte el espacio a partes iguales.
+        const QList<int> sizes = m_splitView->sizes();
+        if (sizes.size() == 2 && (sizes[0] < 50 || sizes[1] < 50)) {
+            const int half = qMax(1, m_splitView->width() / 2);
+            m_splitView->setSizes({half, half});
+        }
+    } else {
+        // Al volver a WYSIWYG, reactiva el formato (pudo quedar deshabilitado si
+        // el foco estaba en el fuente) y refresca su estado.
+        for (QAction *a : m_wysiwygActions)
+            a->setEnabled(true);
+        m_findBar->setEditor(m_editor);
+        updateFormatActions();
+    }
+
+    if (m_splitAction->isChecked() != on)
+        m_splitAction->setChecked(on);  // mantiene el menú en sincronía
+    m_editor->setFocus();
+    updateWordCount();
+}
+
+void MainWindow::syncSourceFromDocument()
+{
+    // WYSIWYG -> fuente. La guarda de "no pisar el panel con foco" la aplica el
+    // disparador del temporizador; flushPendingSync llama aquí directamente al
+    // salir del WYSIWYG (cuando el foco ya está en el fuente) para dejarlo al día
+    // justo antes de que el usuario lo edite.
+    if (!m_splitMode)
+        return;
+    m_syncing = true;
+    // Preserva cursor/selección y scroll: setPlainText los reinicia, y al cambiar
+    // de panel el usuario espera encontrar el cursor donde lo dejó. Se guarda por
+    // offset y se reajusta (clamp) al nuevo tamaño, porque el round-trip puede
+    // normalizar ligeramente el Markdown.
+    const QTextCursor before = m_sourceEditor->textCursor();
+    const int anchor = before.anchor();
+    const int pos = before.position();
+    const int scroll = m_sourceEditor->verticalScrollBar()->value();
+
+    m_sourceEditor->setPlainText(mdtable::documentMarkdown(m_editor->document()));
+
+    const int last = m_sourceEditor->document()->characterCount() - 1;
+    QTextCursor restored = m_sourceEditor->textCursor();
+    restored.setPosition(qBound(0, anchor, last));
+    restored.setPosition(qBound(0, pos, last),
+                         pos == anchor ? QTextCursor::MoveAnchor : QTextCursor::KeepAnchor);
+    m_sourceEditor->setTextCursor(restored);
+    m_sourceEditor->verticalScrollBar()->setValue(scroll);  // no saltar la vista
+    m_syncing = false;
+    m_sourceDirty = false;  // el fuente acaba de igualarse al documento
+}
+
+void MainWindow::syncDocumentFromSource()
+{
+    // fuente -> WYSIWYG. Solo si seguimos en split y el WYSIWYG no tiene el foco.
+    if (!m_splitMode || m_editor->hasFocus() || !m_sourceDirty)
+        return;
+    const int scroll = m_editor->verticalScrollBar()->value();
+    commitSourceToDocument();  // gestiona m_syncing y re-renderiza
+    m_editor->verticalScrollBar()->setValue(scroll);  // no saltar la vista
+}
+
+void MainWindow::flushPendingSync(QWidget *losingFocus)
+{
+    if (!m_splitMode)
+        return;
+    // Al salir del fuente con un volcado pendiente, aplícalo ya (para que el
+    // WYSIWYG esté al día al llegar). Al salir del WYSIWYG, refresca el fuente.
+    if (losingFocus == m_sourceEditor && m_syncToDocTimer->isActive()) {
+        m_syncToDocTimer->stop();
+        const int scroll = m_editor->verticalScrollBar()->value();
+        commitSourceToDocument();
+        m_editor->verticalScrollBar()->setValue(scroll);
+    } else if (losingFocus == m_editor && m_syncToSourceTimer->isActive()) {
+        m_syncToSourceTimer->stop();
+        syncSourceFromDocument();
+    }
 }
 
 // ---------------------------------------------------------------------------
@@ -2558,10 +2849,11 @@ bool MainWindow::maybeSave()
 
 QString MainWindow::currentBody() const
 {
-    // El cuerpo Markdown editable. En modo fuente vive como texto plano en el
-    // editor de fuente; en WYSIWYG se serializa desde el documento.
-    return m_sourceMode ? m_sourceEditor->toPlainText()
-                        : mdtable::documentMarkdown(m_editor->document());
+    // El cuerpo Markdown editable. Si el panel de fuente tiene los cambios más
+    // frescos sin volcar (modo fuente o vista dividida), se toma de él; si no, se
+    // serializa desde el documento WYSIWYG.
+    return m_sourceDirty ? m_sourceEditor->toPlainText()
+                         : mdtable::documentMarkdown(m_editor->document());
 }
 
 void MainWindow::autosaveDraft()
@@ -2572,7 +2864,7 @@ void MainWindow::autosaveDraft()
 
     // Hay cambios sin guardar si el documento difiere de lo último guardado, o si
     // se está editando en modo fuente (cuyos cambios aún no se han volcado).
-    const bool modified = m_documentIo->isModified() || (m_sourceMode && m_sourceDirty);
+    const bool modified = m_documentIo->isModified() || m_sourceDirty;
     if (modified)
         m_recovery->saveDraft(m_documentIo->currentFile(), currentBody());
     else
@@ -2594,12 +2886,14 @@ bool MainWindow::recoverDraft()
         openFile(original);
         m_editor->setMarkdown(mdmath::protectMath(body));
         mdmath::renderMathInDocument(m_editor->document());
+        styleTables();
     } else {
         // Sin archivo asociado (o ya no existe): se recupera como sin título.
         toggleSourceMode(false);
         m_documentIo->reset();
         m_editor->setMarkdown(mdmath::protectMath(body));
         mdmath::renderMathInDocument(m_editor->document());
+        styleTables();
         m_theme->recolorLinks();
         m_outline->rebuild(m_editor->document());
     }
@@ -2733,7 +3027,7 @@ void MainWindow::checkDiskChange()
         return;  // sin cambios reales (o fue nuestro propio guardado)
 
     const bool locallyModified =
-        m_documentIo->isModified() || (m_sourceMode && m_sourceDirty);
+        m_documentIo->isModified() || m_sourceDirty;
 
     if (!locallyModified) {
         // Sin cambios locales: se recarga sin molestar.
@@ -2783,10 +3077,13 @@ void MainWindow::reloadFromDisk()
                                  .arg(path, error));
         return;
     }
-    // En modo fuente, el contenido vive como texto plano: refréscalo con lo
-    // recargado (load() solo toca el documento WYSIWYG).
-    if (m_sourceMode) {
+    // Si el panel de fuente está visible (modo fuente o vista dividida), su texto
+    // plano hay que refrescarlo con lo recargado (load() solo toca el documento
+    // WYSIWYG).
+    if (m_sourceMode || m_splitMode) {
+        m_syncing = true;
         m_sourceEditor->setPlainText(mdtable::documentMarkdown(m_editor->document()));
+        m_syncing = false;
         m_sourceDirty = false;
     }
     QTextEdit *ed = activeEditor();
@@ -2811,6 +3108,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
             AppSettings::setWindowGeometry(saveGeometry());
             AppSettings::setWindowState(saveState());
         }
+        AppSettings::setSplitterState(m_splitView->saveState());
         event->accept();
     } else {
         event->ignore();
