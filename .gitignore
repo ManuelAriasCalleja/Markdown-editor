@@ -21,6 +21,9 @@ ui_*.h
 .idea/
 *.user
 
+# clangd: índice del language server (se regenera, no se versiona)
+.cache/clangd/
+
 # Qt lupdate (cache temporal de las herramientas de traducción)
 .lupdate/
 
