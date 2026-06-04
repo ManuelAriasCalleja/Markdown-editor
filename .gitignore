@@ -32,6 +32,5 @@ ui_*.h
 Thumbs.db
 
 # Notas internas y archivos de prueba que no se publican
-CLAUDE.md
 posibles-mejoras.md
 test-formulas.md
