@@ -1,0 +1,74 @@
+# Verwendung
+
+## Öffnen und Speichern
+
+- Neu (Ctrl+N), Öffnen (Ctrl+O), Speichern (Ctrl+S), Speichern unter (Ctrl+Shift+S).
+  Alles in UTF-8.
+- **Zuletzt geöffnet** listet deine letzten Dokumente auf.
+- Du kannst auch eine Datei auf das Fenster ziehen und ablegen, um sie zu öffnen.
+- Wenn sich die Datei außerhalb von md-editor ändert, wirst du benachrichtigt: Sie wird
+  automatisch neu geladen, wenn du keine Änderungen hattest, oder du wirst gefragt, falls
+  doch.
+
+### Front matter
+
+Wenn dein Dokument mit einem Block `---…---` (YAML) oder `+++…+++` (TOML) beginnt, wird
+dieser beim Speichern unverändert beibehalten (er wird weder angezeigt noch bearbeitet).
+Er dient für Metadaten wie `title` und `lang`, die beim Exportieren verwendet werden.
+
+## Formatieren
+
+Verwende das Menü Format oder die Werkzeugleiste. Du musst keine Markdown-Symbole
+tippen: Der Editor wendet sie für dich an.
+
+- Fett (Ctrl+B), Kursiv (Ctrl+I), Unterstrichen (Ctrl+U), Durchgestrichen, Inline-Code,
+  Link (Ctrl+K).
+- Überschriften H1–H6 (Ctrl+1 … Ctrl+6).
+- Aufzählungs-, nummerierte und Aufgabenlisten, mit automatischer Fortsetzung beim Drücken
+  von Enter (ein leerer Punkt verlässt die Liste).
+- Zitate und Codeblöcke.
+
+Alle Tastenkürzel findest du unter [Tastenkürzel](Atajos-de).
+
+## Einfügen
+
+- Link und Bild (mit relativem Pfad zum Dokument, damit es portabel bleibt).
+- **Bild einfügen**: Das Bild aus der Zwischenablage wird als PNG neben deiner `.md`
+  gespeichert und als `![](ruta)` eingefügt. Funktioniert auch durch Ziehen oder Einfügen
+  über dem Editor.
+- Tabelle, Horizontale Linie und Formel (Ctrl+Shift+F).
+
+## Tabellen
+
+Wenn sich der Cursor innerhalb einer Tabelle befindet, kannst du über das Menü Tabelle
+Zeilen und Spalten hinzufügen oder entfernen und jede Spalte ausrichten
+(links/zentriert/rechts). Die Ausrichtung bleibt beim Speichern erhalten.
+
+## Formeln
+
+Füge TeX-Formeln inline (`$...$`) oder als Block (`$$...$$`) über Einfügen → Formel
+(Ctrl+Shift+F) ein, mit Live-Vorschau. Ein Doppelklick auf eine Formel bearbeitet sie.
+Mehr Details unter [Funktionen](Caracteristicas-de#tex-formeln).
+
+## Ansichtsmodi
+
+- **WYSIWYG** (Standard): nur das gerenderte Ergebnis.
+- **Markdown-Quelltext** (Ctrl+Shift+M): das rohe Markdown im Vollbild.
+- **Geteilte Ansicht** (Ctrl+Shift+D): gerenderte Darstellung und Code nebeneinander,
+  synchronisiert.
+
+## Suchen und Ersetzen
+
+Ctrl+F zum Suchen, Ctrl+H zum Ersetzen. Enthält vorherige/nächste, alles ersetzen und
+Groß-/Kleinschreibung beachten.
+
+## Exportieren und Drucken
+
+Datei → Exportieren bietet PDF, HTML, ODF (.odt) und LaTeX (.tex); Drucken ist Ctrl+P.
+Bei ODF und LaTeX wird die Dokumentsprache eingebettet.
+
+## Automatische Wiederherstellung
+
+md-editor speichert alle paar Sekunden einen Entwurf. Wird die Anwendung anormal
+geschlossen, bietet sie dir beim erneuten Öffnen an, das wiederherzustellen, woran du
+gerade geschrieben hast.
