@@ -22,13 +22,21 @@ cambios relevantes.
 
 ## Publicar en la wiki de GitHub
 
-La wiki es un repositorio git aparte. Tras activarla en la pestaña **Wiki** del
-repositorio (basta con crear la primera página desde la web):
+La wiki es un repositorio git aparte (`<repo>.wiki.git`).
+
+**Paso 1 — obligatorio, solo la primera vez.** GitHub no crea ese repositorio hasta
+que existe la primera página, y esa página **solo se puede crear desde el navegador**
+(no por git). Si intentas clonar antes, da `Repository not found`. Ve a
+`https://github.com/<usuario>/<repo>/wiki`, pulsa **Create the first page**, guarda
+cualquier contenido (lo sobrescribiremos) y pulsa **Save Page**.
+
+**Paso 2 — clonar, copiar y publicar:**
 
 ```bash
 git clone https://github.com/<usuario>/<repo>.wiki.git
 cd <repo>.wiki
 cp /ruta/a/md-editor/wiki/*.md .          # incluye _Sidebar.md y _Footer.md
+rm README.md                              # este archivo es la guía, no una página
 git add .
 git commit -m "Actualizar la wiki desde especificacion.md"
 git push

@@ -16,7 +16,7 @@ and edit on either side. On save it always serializes back to clean Markdown.
   optional table of contents (show it or hide it).
 - **Eye care**: the *warm night light* gradually dims the blue of the background
   according to the time of day, to reduce eye strain at night.
-- **TeX formulas**: [inline](Caracteristicas#fórmulas-tex) and [block](Caracteristicas#fórmulas-tex),
+- **TeX formulas**: [inline](Caracteristicas-en#tex-formulas) and [block](Caracteristicas-en#tex-formulas),
   with real super/subscripts and a live preview, with no external dependencies.
 - **Export** to PDF, HTML, ODF (.odt) and LaTeX (.tex), preserving the document
   language and the formula formatting.
@@ -25,12 +25,10 @@ and edit on either side. On save it always serializes back to clean Markdown.
 
 ## Getting started
 
-The full documentation is currently available in Spanish:
-
-- [Instalación / Installation](Instalacion)
-- [Uso / Usage](Uso)
-- [Características / Features](Caracteristicas)
-- [Atajos / Keyboard shortcuts](Atajos)
+- [Installation](Instalacion-en)
+- [Usage](Uso-en)
+- [Features](Caracteristicas-en)
+- [Keyboard shortcuts](Atajos-en)
 
 ---
 

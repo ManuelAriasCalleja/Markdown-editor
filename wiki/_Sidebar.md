@@ -9,3 +9,7 @@
 
 **English**
 - [Home](Home-en)
+- [Installation](Instalacion-en)
+- [Usage](Uso-en)
+- [Features](Caracteristicas-en)
+- [Keyboard shortcuts](Atajos-en)
