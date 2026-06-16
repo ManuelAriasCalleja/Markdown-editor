@@ -14,7 +14,7 @@ jobs:
     name: Build & Test (Linux)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       # Qt 6.8.2 (la misma versión con la que está desarrollado el proyecto).
       # `cache: true` reusa la instalación entre runs del mismo runner image.

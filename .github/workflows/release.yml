@@ -16,7 +16,7 @@ jobs:
     name: Linux (AppImage)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Install Qt
         uses: jurplel/install-qt-action@v4
@@ -73,7 +73,7 @@ jobs:
           # versión para que la página de releases muestre nombres claros.
           mv md-editor-*.AppImage "md-editor-${VERSION}-x86_64.AppImage"
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v5
         with:
           name: linux
           path: md-editor-*-x86_64.AppImage
@@ -85,7 +85,7 @@ jobs:
     name: Windows (ZIP portable)
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Install Qt
         uses: jurplel/install-qt-action@v4
@@ -112,7 +112,7 @@ jobs:
           & windeployqt.exe --release --no-system-d3d-compiler --no-opengl-sw dist/md-editor.exe
           Compress-Archive -Path dist/* -DestinationPath "md-editor-$version-windows-x64.zip"
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v5
         with:
           name: windows
           path: md-editor-*-windows-x64.zip
@@ -124,7 +124,7 @@ jobs:
     name: macOS (DMG universal)
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Install Qt
         uses: jurplel/install-qt-action@v4
@@ -152,7 +152,7 @@ jobs:
           macdeployqt md-editor.app -dmg
           mv md-editor.dmg "../md-editor-${VERSION}-macos-universal.dmg"
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v5
         with:
           name: macos
           path: md-editor-*-macos-universal.dmg
@@ -167,7 +167,7 @@ jobs:
     permissions:
       contents: write  # necesario para crear el Release en este repo
     steps:
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v5
         with:
           path: artifacts
 
