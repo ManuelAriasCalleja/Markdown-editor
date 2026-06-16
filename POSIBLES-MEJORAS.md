@@ -6,9 +6,13 @@ proyecto es sólido (~9k LOC, 18 ficheros de test, arquitectura por controllers,
 
 ## 🎯 Alto impacto (poco esfuerzo / mucho valor)
 
-1. **CI/CD con GitHub Actions** — automatizar el build de los 3 ejecutables
-   (Linux/Windows/macOS) y la publicación de releases con tags. Hoy es manual;
-   esto elimina errores y acelera versiones. *Probablemente la mejora número uno.*
+1. ✅ **CI/CD con GitHub Actions** — automatizar el build de los 3 ejecutables
+   (Linux/Windows/macOS) y la publicación de releases con tags. *Hecho:*
+   `.github/workflows/release.yml` compila al empujar un tag `vX.Y.Z` (Linux
+   AppImage, Windows ZIP portable, macOS DMG universal) y publica la Release con
+   notas autogeneradas; `ci.yml` compila y pasa los tests en cada push/PR.
+   Pendiente menor: subir las actions a Node.js 24 (`checkout`/`upload-artifact`
+   a `@v5`).
 2. **Packaging para gestores nativos** — Flatpak/AppStream o AUR (Linux),
    winget/Chocolatey (Windows), Homebrew cask (macOS). Multiplica la visibilidad
    frente al `.AppImage`/`.zip` suelto y mejora la confianza.
@@ -108,6 +112,7 @@ Lote de mejoras de bajo coste, **sin dependencias nuevas** y portables a los 3 S
 
 ---
 
-> **Prioridad sugerida:** empezar por la #1 (workflow de GitHub Actions para
-> build + release multiplataforma), que es la que más palanca tiene y deja todo
-> lo demás más fácil de publicar.
+> **Prioridad sugerida:** la #1 (CI/CD multiplataforma) ya está hecha y publica
+> releases con binarios para Linux/Windows/macOS al empujar un tag. El siguiente
+> mayor desbloqueo de distribución es la #3 (firma/notarización de binarios), que
+> elimina la fricción de Gatekeeper/SmartScreen en la instalación.
