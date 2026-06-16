@@ -1,14 +1,19 @@
 #include "filecontroller.h"
 
 #include <QCoreApplication>
+#include <QDesktopServices>
 #include <QDir>
 #include <QFileDialog>
 #include <QFileInfo>
 #include <QMessageBox>
 #include <QPushButton>
+#include <QUrl>
+#include <QTextCursor>
+#include <QTextDocument>
 #include <QTextEdit>
 #include <QTimer>
 
+#include "appsettings.h"
 #include "documentio.h"
 #include "focuseditor.h"
 #include "recoverymanager.h"
@@ -53,6 +58,7 @@ void FileController::newFile()
     m_split->toggleSourceMode(false);  // un documento nuevo se edita en WYSIWYG
     if (!maybeSave())
         return;
+    rememberCursorPosition();  // guarda dónde estaba el documento que se reemplaza
     m_documentIo->reset();
 }
 
@@ -80,6 +86,8 @@ void FileController::openFile(const QString &path)
     if (!maybeSave())
         return;
 
+    rememberCursorPosition();  // guarda dónde estaba el documento que se reemplaza
+
     QString error;
     if (!m_documentIo->load(path, &error)) {
         QMessageBox::warning(m_parent, QCoreApplication::translate("MainWindow", "Error"),
@@ -96,6 +104,23 @@ void FileController::openFile(const QString &path)
                                "%1 — front matter conservado").arg(path), 0);
     else
         emit statusMessage(path, 0);
+
+    restoreCursorPosition();  // reabre el documento donde se dejó
+}
+
+void FileController::openContainingFolder()
+{
+    const QString file = m_documentIo->currentFile();
+    if (file.isEmpty()) {
+        QMessageBox::information(
+            m_parent,
+            QCoreApplication::translate("MainWindow", "Abrir carpeta contenedora"),
+            QCoreApplication::translate("MainWindow",
+                "Guarda el documento primero para abrir su carpeta."));
+        return;
+    }
+    QDesktopServices::openUrl(
+        QUrl::fromLocalFile(QFileInfo(file).absolutePath()));
 }
 
 bool FileController::save()
@@ -175,6 +200,29 @@ void FileController::autosaveDraft()
         m_recovery->saveDraft(m_documentIo->currentFile(), currentBody());
     else
         m_recovery->clearDraft();  // el documento coincide con el disco
+}
+
+void FileController::rememberCursorPosition()
+{
+    const QString file = m_documentIo->currentFile();
+    if (!file.isEmpty())
+        AppSettings::setCursorPosition(file, m_editor->textCursor().position());
+}
+
+void FileController::restoreCursorPosition()
+{
+    const QString file = m_documentIo->currentFile();
+    if (file.isEmpty())
+        return;
+    const int pos = AppSettings::cursorPosition(file);
+    if (pos <= 0)
+        return;
+    QTextCursor cursor = m_editor->textCursor();
+    // characterCount() incluye el carácter final de bloque; el último índice
+    // válido es uno menos. Acotamos por si el archivo encogió desde la última vez.
+    cursor.setPosition(qMin(pos, m_editor->document()->characterCount() - 1));
+    m_editor->setTextCursor(cursor);
+    m_editor->ensureCursorVisible();
 }
 
 bool FileController::recoverDraft()

@@ -32,6 +32,9 @@ private slots:
     void recentFilesRoundTrips();
     void lastFileRoundTrips();
     void lastFileDefaultsEmpty();
+    void cursorPositionRoundTrips();
+    void cursorPositionDefaultsMinusOne();
+    void cursorPositionIgnoresEmptyPath();
 };
 
 void TestAppSettings::initTestCase()
@@ -164,6 +167,29 @@ void TestAppSettings::lastFileRoundTrips()
 void TestAppSettings::lastFileDefaultsEmpty()
 {
     QVERIFY(AppSettings::lastFile().isEmpty());  // sin valor guardado
+}
+
+void TestAppSettings::cursorPositionRoundTrips()
+{
+    AppSettings::setCursorPosition(QStringLiteral("/a/uno.md"), 42);
+    AppSettings::setCursorPosition(QStringLiteral("/b/dos.md"), 7);
+    QCOMPARE(AppSettings::cursorPosition(QStringLiteral("/a/uno.md")), 42);
+    QCOMPARE(AppSettings::cursorPosition(QStringLiteral("/b/dos.md")), 7);
+    // Reescribir una entrada la actualiza (no duplica).
+    AppSettings::setCursorPosition(QStringLiteral("/a/uno.md"), 100);
+    QCOMPARE(AppSettings::cursorPosition(QStringLiteral("/a/uno.md")), 100);
+}
+
+void TestAppSettings::cursorPositionDefaultsMinusOne()
+{
+    QCOMPARE(AppSettings::cursorPosition(QStringLiteral("/no/guardado.md")), -1);
+}
+
+void TestAppSettings::cursorPositionIgnoresEmptyPath()
+{
+    // Una ruta vacía (documento sin título) no se guarda ni se consulta.
+    AppSettings::setCursorPosition(QString(), 5);
+    QCOMPARE(AppSettings::cursorPosition(QString()), -1);
 }
 
 QTEST_GUILESS_MAIN(TestAppSettings)

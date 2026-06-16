@@ -42,6 +42,12 @@ void setZoomLevel(int level);
 bool showWordCount();
 void setShowWordCount(bool on);
 
+// Posición del cursor recordada por archivo (índice de carácter), para reabrir
+// cada documento donde se dejó. cursorPosition devuelve -1 si no hay nada
+// guardado. El mapa está acotado para no crecer sin límite.
+int cursorPosition(const QString &path);
+void setCursorPosition(const QString &path, int pos);
+
 // Idioma de la interfaz: código de locale (p. ej. "es", "en"). Cadena vacía =
 // usar el idioma del sistema.
 QString language();

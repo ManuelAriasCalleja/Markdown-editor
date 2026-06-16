@@ -55,6 +55,11 @@ public:
     // antes: correría durante el diálogo de recuperación con el documento vacío).
     void startAutosave();
 
+    // Guarda en AppSettings la posición del cursor del archivo actual, para
+    // reabrirlo donde se dejó. Lo llama MainWindow al cerrar (los cambios de
+    // documento ya lo hacen internamente).
+    void rememberCursorPosition();
+
 public slots:
     void newFile();
     void openFileDialog();
@@ -62,6 +67,9 @@ public slots:
     void openFile(const QString &path);
     bool save();
     bool saveAs();
+    // Abre, en el gestor de archivos del sistema, la carpeta del documento actual
+    // (multiplataforma vía QDesktopServices). Avisa si aún no está guardado.
+    void openContainingFolder();
 
 signals:
     void statusMessage(const QString &text, int timeoutMs);
@@ -71,6 +79,8 @@ signals:
 
 private:
     void autosaveDraft();
+    // Lleva el cursor a la posición recordada del archivo actual (si la hay).
+    void restoreCursorPosition();
 
     QTextEdit *m_editor = nullptr;          // editor WYSIWYG (no es propiedad nuestra)
     DocumentIo *m_documentIo = nullptr;

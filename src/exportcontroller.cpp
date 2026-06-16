@@ -2,15 +2,19 @@
 
 #include <memory>
 
+#include <QApplication>
+#include <QClipboard>
 #include <QCoreApplication>
 #include <QDir>
 #include <QFile>
+#include <QMimeData>
 #include <QFileDialog>
 #include <QFileInfo>
 #include <QInputDialog>
 #include <QLocale>
 #include <QMessageBox>
 #include <QPrintDialog>
+#include <QPrintPreviewDialog>
 #include <QPrinter>
 #include <QStringConverter>
 #include <QTextDocument>
@@ -129,6 +133,36 @@ bool ExportController::print()
     flat->print(&printer);
     emit statusMessage(QCoreApplication::translate("MainWindow", "Documento enviado a la impresora."), 4000);
     return true;
+}
+
+bool ExportController::printPreview()
+{
+    m_split->commitSourceToDocument();  // en modo fuente, previsualiza lo último
+    QPrinter printer(QPrinter::HighResolution);
+    QPrintPreviewDialog dialog(&printer, m_parent);
+    dialog.setWindowTitle(
+        QCoreApplication::translate("MainWindow", "Vista previa de impresión"));
+    // El render se pide cada vez que la vista lo necesita (zoom, cambio de página…).
+    connect(&dialog, &QPrintPreviewDialog::paintRequested, this, [this](QPrinter *p) {
+        std::unique_ptr<QTextDocument> flat(
+            mdexport::cloneForExport(m_editor->document()));
+        flat->print(p);
+    });
+    return dialog.exec() == QDialog::Accepted;
+}
+
+void ExportController::copyHtmlToClipboard()
+{
+    m_split->commitSourceToDocument();  // en modo fuente, copia lo último
+    std::unique_ptr<QTextDocument> flat(
+        mdexport::cloneForExport(m_editor->document()));
+    auto *mime = new QMimeData;  // el portapapeles toma su propiedad
+    mime->setHtml(flat->toHtml());
+    mime->setText(flat->toPlainText());  // reserva para destinos sin formato
+    QApplication::clipboard()->setMimeData(mime);
+    emit statusMessage(
+        QCoreApplication::translate("MainWindow", "Copiado como HTML al portapapeles."),
+        4000);
 }
 
 bool ExportController::exportPdf()

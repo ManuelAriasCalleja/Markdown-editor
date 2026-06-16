@@ -23,6 +23,28 @@ proyecto es sólido (~9k LOC, 18 ficheros de test, arquitectura por controllers,
 
 5. **Corrector ortográfico** — casi imprescindible en un editor de texto; Qt +
    Hunspell encaja bien con los 9 idiomas que ya soporta.
+
+   **Análisis (multiplataforma y dependencias).** Qt6 no trae corrector
+   (`QSpellChecker` no existe), hay que aportar el motor. La opción que mantiene
+   el carácter portable del proyecto (sin `#ifdef Q_OS_*`) es **Hunspell** (C++
+   puro; lo usan Chrome, Firefox, LibreOffice). Alternativas descartadas: APIs
+   nativas (NSSpellChecker / ISpellChecker / enchant) obligan a código por
+   plataforma y Objective-C++ en Mac; KDE Sonnet arrastra KDE Frameworks.
+   - *¿Funciona en Win/Linux/Mac?* Sí con Hunspell: mismo C++ en los tres y la
+     integración (subrayado `QTextCharFormat::SpellCheckUnderline` + menú de
+     sugerencias) es API pura de Qt. **Matiz**: `QTextDocument` admite un solo
+     `QSyntaxHighlighter` y ya lo ocupa `CodeBlockHighlighter`; el subrayado hay
+     que integrarlo ahí o aplicarlo por `QTextEdit::setExtraSelections`.
+   - *¿Dependencias / todo en el ejecutable?* El **motor** sería la primera
+     dependencia de terceros, pero se puede vendorizar y enlazar estático → viaja
+     dentro del binario. Los **diccionarios** (.aff/.dic) son datos (~30–50 MB
+     los 9 idiomas): o embebidos en `.qrc` (binario más grande + extraer a
+     temporal, porque Hunspell lee de rutas de fichero), o como ficheros junto al
+     binario (vía `install.sh`), o descarga bajo demanda.
+   - *Avisos:* licencias de diccionarios variadas (GPL/LGPL/MPL/BSD según idioma,
+     revisar dado lo sensible que es la licencia aquí); y es la mejora de
+     funcionalidad más cara tras multi-documento (1ª dependencia externa +
+     integración en el highlighter único + empaquetado en 3 SO).
 6. ✅ **Contador de palabras / tiempo de lectura / estadísticas** del documento.
    *Hecho:* módulo puro `docstats`, contador con tiempo de lectura en la barra de
    estado y diálogo *Ver → Estadísticas del documento…*.
@@ -49,6 +71,26 @@ proyecto es sólido (~9k LOC, 18 ficheros de test, arquitectura por controllers,
 15. **Fuzzing del round-trip Markdown** — ya existe `tst_markdownroundtrip`; un
     fuzzer (libFuzzer) sobre "parse→serialize→parse == idempotente" da robustez
     con poco código.
+
+## ✅ Mejoras baratas (hechas)
+
+Lote de mejoras de bajo coste, **sin dependencias nuevas** y portables a los 3 SO
+(Qt6 puro), ya implementadas:
+
+- **Vista previa de impresión** — `ExportController::printPreview()`
+  (`QPrintPreviewDialog`), *Archivo → Vista previa de impresión*.
+- **Recordar la posición del cursor por archivo** — mapa acotado en `AppSettings`;
+  `FileController` la guarda al cambiar de documento y al cerrar, y la restaura al
+  abrir.
+- **Abrir la carpeta contenedora** — `FileController::openContainingFolder()` vía
+  `QDesktopServices`, *Archivo → Abrir carpeta contenedora*.
+- **Pegar como texto plano** — *Editar* (Ctrl+Shift+V).
+- **Buscar con regex y palabra completa** — casillas en `FindReplaceBar` (regex
+  validada + `FindWholeWords`).
+- **Copiar como HTML al portapapeles** — `ExportController::copyHtmlToClipboard()`,
+  *Editar → Copiar como HTML*.
+- **Transformar texto y ordenar líneas** — módulo puro `mdtext`
+  (MAYÚSCULAS/minúsculas/Capitalizar/ordenar líneas), *Editar → Transformar texto*.
 
 ## 📋 Proyecto / comunidad
 

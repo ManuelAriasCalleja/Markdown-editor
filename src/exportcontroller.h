@@ -34,6 +34,12 @@ public slots:
     // Imprime el documento renderizado con el diálogo de impresión del sistema
     // (distinto de exportar a PDF, que escribe a un archivo).
     bool print();
+    // Abre una vista previa de impresión (QPrintPreviewDialog) con el documento
+    // renderizado; desde ahí se puede ajustar e imprimir.
+    bool printPreview();
+    // Copia el documento completo al portapapeles como HTML (con texto plano de
+    // reserva), para pegarlo con formato en Word, correo, etc.
+    void copyHtmlToClipboard();
 
 signals:
     // Mensaje para la barra de estado (texto, milisegundos visible).

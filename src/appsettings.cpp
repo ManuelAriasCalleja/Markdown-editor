@@ -1,6 +1,7 @@
 #include "appsettings.h"
 
 #include <QSettings>
+#include <QVariantMap>
 
 namespace {
 inline QString themeKeyKey()    { return QStringLiteral("theme"); }
@@ -9,6 +10,8 @@ inline QString warmLightKey()   { return QStringLiteral("warmLight"); }
 inline QString followSystemThemeKey() { return QStringLiteral("followSystemTheme"); }
 inline QString zoomLevelKey()   { return QStringLiteral("zoomLevel"); }
 inline QString showWordCountKey() { return QStringLiteral("showWordCount"); }
+inline QString cursorPositionsKey() { return QStringLiteral("cursorPositions"); }
+constexpr int kMaxCursorPositions = 200;  // cota del mapa de posiciones recordadas
 inline QString geometryKey()    { return QStringLiteral("geometry"); }
 inline QString windowStateKey() { return QStringLiteral("windowState"); }
 inline QString splitterStateKey() { return QStringLiteral("splitterState"); }
@@ -61,6 +64,27 @@ bool AppSettings::followSystemTheme()
 void AppSettings::setFollowSystemTheme(bool on)
 {
     QSettings().setValue(followSystemThemeKey(), on);
+}
+
+int AppSettings::cursorPosition(const QString &path)
+{
+    if (path.isEmpty())
+        return -1;
+    return QSettings().value(cursorPositionsKey()).toMap().value(path, -1).toInt();
+}
+
+void AppSettings::setCursorPosition(const QString &path, int pos)
+{
+    if (path.isEmpty())
+        return;
+    QSettings s;
+    QVariantMap m = s.value(cursorPositionsKey()).toMap();
+    // Al rebasar la cota se vacía el mapa (cota simple, sin orden de uso): el
+    // archivo recién cerrado se vuelve a sembrar para no perder su posición.
+    if (m.size() >= kMaxCursorPositions && !m.contains(path))
+        m.clear();
+    m.insert(path, pos);
+    s.setValue(cursorPositionsKey(), m);
 }
 
 int AppSettings::zoomLevel()

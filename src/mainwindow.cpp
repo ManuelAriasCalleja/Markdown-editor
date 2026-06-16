@@ -18,6 +18,7 @@
 #include "focuseditor.h"
 #include "helpdialog.h"
 #include "docstats.h"
+#include "texttransform.h"
 #include "listcontinuation.h"
 #include "mathblocks.h"
 #include "outlinepanel.h"
@@ -32,6 +33,7 @@
 #include <QAction>
 #include <QActionGroup>
 #include <QApplication>
+#include <QClipboard>
 #include <QCloseEvent>
 #include <QColor>
 #include <QDesktopServices>
@@ -539,6 +541,9 @@ void MainWindow::createFileMenu()
     saveAsAction->setShortcut(QKeySequence::SaveAs);
     connect(saveAsAction, &QAction::triggered, m_file, &FileController::saveAs);
 
+    QAction *openFolderAction = fileMenu->addAction(tr("Abrir &carpeta contenedora"));
+    connect(openFolderAction, &QAction::triggered, m_file, &FileController::openContainingFolder);
+
     fileMenu->addSeparator();
 
     QMenu *exportMenu = fileMenu->addMenu(tr("&Exportar"));
@@ -552,6 +557,9 @@ void MainWindow::createFileMenu()
     connect(exportLatexAction, &QAction::triggered, m_export, &ExportController::exportLatex);
 
     fileMenu->addSeparator();
+
+    QAction *printPreviewAction = fileMenu->addAction(tr("&Vista previa de impresión..."));
+    connect(printPreviewAction, &QAction::triggered, m_export, &ExportController::printPreview);
 
     QAction *printAction = fileMenu->addAction(tr("&Imprimir..."));
     printAction->setShortcut(QKeySequence::Print);
@@ -575,6 +583,60 @@ void MainWindow::createEditMenu()
     QAction *redoAction = editMenu->addAction(tr("Rehacer"));
     redoAction->setShortcut(QKeySequence::Redo);
     connect(redoAction, &QAction::triggered, this, [this] { activeEditor()->redo(); });
+
+    editMenu->addSeparator();
+
+    QAction *pastePlainAction = editMenu->addAction(tr("Pegar como texto plano"));
+    pastePlainAction->setShortcut(QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_V));
+    pastePlainAction->setToolTip(
+        pastePlainAction->text() + QStringLiteral(" (%1)").arg(
+            pastePlainAction->shortcut().toString(QKeySequence::NativeText)));
+    connect(pastePlainAction, &QAction::triggered, this, [this] {
+        const QString text = QApplication::clipboard()->text();
+        if (!text.isEmpty())
+            activeEditor()->insertPlainText(text);  // ignora formato/HTML del portapapeles
+    });
+
+    QAction *copyHtmlAction = editMenu->addAction(tr("Copiar como HTML"));
+    connect(copyHtmlAction, &QAction::triggered, m_export, &ExportController::copyHtmlToClipboard);
+
+    editMenu->addSeparator();
+
+    // Transformaciones de texto sobre la selección (o la palabra bajo el cursor,
+    // para las de mayúsculas/minúsculas). La lógica vive en mdtext (puro).
+    QMenu *transformMenu = editMenu->addMenu(tr("Transformar texto"));
+    const auto applyToSelection = [this](QString (*fn)(const QString &)) {
+        QTextEdit *ed = activeEditor();
+        QTextCursor c = ed->textCursor();
+        if (!c.hasSelection())
+            c.select(QTextCursor::WordUnderCursor);
+        if (c.hasSelection())
+            c.insertText(fn(c.selectedText()));  // U+2029 sobrevive: preserva párrafos
+    };
+    QAction *upperAction = transformMenu->addAction(tr("MAYÚSCULAS"));
+    connect(upperAction, &QAction::triggered, this,
+            [applyToSelection] { applyToSelection(mdtext::toUpper); });
+    QAction *lowerAction = transformMenu->addAction(tr("minúsculas"));
+    connect(lowerAction, &QAction::triggered, this,
+            [applyToSelection] { applyToSelection(mdtext::toLower); });
+    QAction *capAction = transformMenu->addAction(tr("Capitalizar"));
+    connect(capAction, &QAction::triggered, this,
+            [applyToSelection] { applyToSelection(mdtext::capitalize); });
+
+    QAction *sortAction = editMenu->addAction(tr("Ordenar líneas"));
+    connect(sortAction, &QAction::triggered, this, [this] {
+        QTextEdit *ed = activeEditor();
+        QTextCursor c = ed->textCursor();
+        if (!c.hasSelection())
+            return;  // ordenar exige un rango explícito de líneas
+        QString sel = c.selectedText();
+        // selectedText() usa U+2029 entre párrafos; lo paso a '\n' para mdtext y lo
+        // restauro antes de reinsertar (insertText vuelve a partir por U+2029).
+        sel.replace(QChar(QChar::ParagraphSeparator), QLatin1Char('\n'));
+        QString out = mdtext::sortLines(sel, true);
+        out.replace(QLatin1Char('\n'), QChar(QChar::ParagraphSeparator));
+        c.insertText(out);
+    });
 
     editMenu->addSeparator();
 
@@ -1565,6 +1627,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
         // Cierre limpio (guardado o descartado a propósito): sin borrador que
         // recuperar la próxima vez.
         m_recovery->clearDraft();
+        m_file->rememberCursorPosition();  // reabrir el documento donde se dejó
         // Recuerda tamaño/posición y disposición de barras para la próxima vez.
         // Si se cierra en modo sin distracciones, el controlador devuelve el estado
         // previo a entrar (ventana normal con sus barras), no la pantalla completa.
