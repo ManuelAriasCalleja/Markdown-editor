@@ -31,6 +31,7 @@ public slots:
     bool exportHtml();
     bool exportOdf();
     bool exportLatex();
+    bool exportDocx();
     // Imprime el documento renderizado con el diálogo de impresión del sistema
     // (distinto de exportar a PDF, que escribe a un archivo).
     bool print();

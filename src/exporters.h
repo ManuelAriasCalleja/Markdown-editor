@@ -53,6 +53,34 @@ QByteArray odfManifestWithLanguageFiles(const QByteArray &manifest);
 bool writeOdf(const QTextDocument *doc, const QString &path, const Language &language,
               const QString &title, QString *error);
 
+// --- DOCX (.docx, OOXML WordprocessingML) ---
+// Un .docx es un ZIP de XML; lo empaquetamos con el mismo QZip privado de Qt que
+// el ODF, con un serializador OOXML propio (Qt no sabe escribir DOCX). Sin
+// dependencias externas.
+
+// Una imagen embebida que produce la serialización: su ruta dentro del paquete y
+// los bytes PNG.
+struct DocxImage {
+    QString partName;  // p. ej. "media/image1.png"
+    QByteArray data;   // PNG
+};
+
+// Serializa el documento a `word/document.xml` (OOXML completo). Si `images` no es
+// nulo, las imágenes se reencodean a PNG y se registran ahí con su relación rId;
+// si es nulo, se omiten. `title`, si no está vacío, se emite como párrafo «Título».
+QString toDocxDocumentXml(const QTextDocument *doc, const QString &title,
+                          QList<DocxImage> *images = nullptr);
+
+// XML de estilos (encabezados, código, cita, título) con el idioma del documento,
+// y de numeración (listas con viñetas y numeradas). Puros y testeables aparte.
+QByteArray docxStylesXml(const Language &language);
+QByteArray docxNumberingXml();
+
+// Escribe el documento como .docx en `path`, con el idioma y el título
+// incrustados. Devuelve false y rellena *error si falla. `title` puede ir vacío.
+bool writeDocx(const QTextDocument *doc, const QString &path, const Language &language,
+               const QString &title, QString *error);
+
 // Clon del documento listo para HTML/PDF/ODF/impresión: conserva los
 // fragmentos de fórmula con su `verticalAlignment` (Qt serializa el super/sub a
 // CSS en HTML, al equivalente en ODF y los pinta directamente en PDF), pero

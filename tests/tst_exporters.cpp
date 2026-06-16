@@ -1,5 +1,8 @@
 #include <QtTest>
 
+#include <QDir>
+#include <QFile>
+#include <QTemporaryDir>
 #include <QTextDocument>
 
 #include "exporters.h"
@@ -22,6 +25,11 @@ private slots:
     void odfStylesCarryLanguage();
     void odfMetaCarriesLanguageAndTitle();
     void odfManifestListsExtraFiles();
+    void docxDocumentConstructs();
+    void docxTitleParagraph();
+    void docxStylesCarryLanguage();
+    void docxNumberingHasBulletAndDecimal();
+    void docxWriteProducesZipPackage();
 };
 
 void TestExporters::languageLookupNormalizesCode()
@@ -140,6 +148,75 @@ void TestExporters::odfManifestListsExtraFiles()
     QVERIFY(out.contains("full-path=\"styles.xml\""));
     QVERIFY(out.contains("full-path=\"meta.xml\""));
     QVERIFY(out.contains("</manifest:manifest>"));
+}
+
+void TestExporters::docxDocumentConstructs()
+{
+    QTextDocument doc;
+    doc.setMarkdown(QStringLiteral(
+        "# Título\n\n**negrita** *cursiva* `codigo`\n\n"
+        "[enlace](https://example.com)\n\n"
+        "- uno\n- dos\n\n> cita\n\n| a | b |\n|---|---|\n| 1 | 2 |\n"));
+    const QString xml = mdexport::toDocxDocumentXml(&doc, QString(), nullptr);
+
+    QVERIFY(xml.contains(QStringLiteral("<w:document")));
+    QVERIFY(xml.contains(QStringLiteral("<w:pStyle w:val=\"Heading1\"/>")));
+    QVERIFY(xml.contains(QStringLiteral("<w:b/>")));
+    QVERIFY(xml.contains(QStringLiteral("<w:i/>")));
+    QVERIFY(xml.contains(QStringLiteral("Courier New")));            // código monoespaciado
+    QVERIFY(xml.contains(QStringLiteral("HYPERLINK")));              // enlace como campo
+    QVERIFY(xml.contains(QStringLiteral("example.com")));
+    QVERIFY(xml.contains(QStringLiteral("<w:numPr>")));             // lista con numeración real
+    QVERIFY(xml.contains(QStringLiteral("<w:tbl>")));               // tabla
+    QVERIFY(xml.contains(QStringLiteral("<w:sectPr>")));           // propiedades de sección
+}
+
+void TestExporters::docxTitleParagraph()
+{
+    QTextDocument doc;
+    doc.setMarkdown(QStringLiteral("cuerpo\n"));
+    const QString xml = mdexport::toDocxDocumentXml(&doc, QStringLiteral("Mi Doc"), nullptr);
+    QVERIFY(xml.contains(QStringLiteral("<w:pStyle w:val=\"Title\"/>")));
+    QVERIFY(xml.contains(QStringLiteral("Mi Doc")));
+}
+
+void TestExporters::docxStylesCarryLanguage()
+{
+    const QByteArray xml =
+        mdexport::docxStylesXml(mdexport::languageForCode(QStringLiteral("de")));
+    QVERIFY(xml.contains("<w:lang w:val=\"de-DE\"/>"));
+    QVERIFY(xml.contains("w:styleId=\"Heading1\""));
+    QVERIFY(xml.contains("w:styleId=\"Title\""));
+}
+
+void TestExporters::docxNumberingHasBulletAndDecimal()
+{
+    const QByteArray xml = mdexport::docxNumberingXml();
+    QVERIFY(xml.contains("w:numFmt w:val=\"bullet\""));
+    QVERIFY(xml.contains("w:numFmt w:val=\"decimal\""));
+    QVERIFY(xml.contains("w:numId=\"1\""));
+    QVERIFY(xml.contains("w:numId=\"2\""));
+}
+
+void TestExporters::docxWriteProducesZipPackage()
+{
+    QTemporaryDir dir;
+    QVERIFY(dir.isValid());
+    const QString path = dir.filePath(QStringLiteral("salida.docx"));
+
+    QTextDocument doc;
+    doc.setMarkdown(QStringLiteral("# Hola\n\nmundo con **negrita**\n"));
+    QString error;
+    QVERIFY2(mdexport::writeDocx(&doc, path,
+                                 mdexport::languageForCode(QStringLiteral("es")),
+                                 QStringLiteral("T"), &error),
+             qPrintable(error));
+
+    QFile f(path);
+    QVERIFY(f.open(QIODevice::ReadOnly));
+    const QByteArray head = f.read(2);
+    QCOMPARE(head, QByteArray("PK"));  // firma de un paquete ZIP (OOXML)
+    QVERIFY(f.size() > 0);
 }
 
 QTEST_MAIN(TestExporters)

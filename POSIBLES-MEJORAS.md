@@ -49,8 +49,12 @@ proyecto es sólido (~9k LOC, 18 ficheros de test, arquitectura por controllers,
    *Hecho:* módulo puro `docstats`, contador con tiempo de lectura en la barra de
    estado y diálogo *Ver → Estadísticas del documento…*.
 7. **Pestañas o multi-documento** — `mainwindow` es de documento único.
-8. **Export a DOCX** — ya hay PDF/HTML/ODT/LaTeX; `.docx` es el formato que más
-   pide quien no usa Markdown.
+8. ✅ **Export a DOCX** — ya hay PDF/HTML/ODT/LaTeX; `.docx` es el formato que más
+   pide quien no usa Markdown. *Hecho:* serializador OOXML propio
+   (`mdexport::writeDocx`) empaquetado con el QZip privado de Qt (sin
+   dependencias), con encabezados, formato de carácter, listas, tablas, citas,
+   código, enlaces (campo HYPERLINK) e imágenes embebidas; idioma y título
+   incrustados. *Archivo → Exportar → A DOCX (Word)*.
 9. **Diagramas** (Mermaid/PlantUML) — complementaría el soporte TeX existente.
 10. **Insertar índice (TOC) automático** y **footnotes**, si no están cubiertos.
     *Hecho el TOC:* `mdoutline::tableOfContentsMarkdown` + *Insertar → Índice

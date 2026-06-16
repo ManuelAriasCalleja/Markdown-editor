@@ -553,6 +553,8 @@ void MainWindow::createFileMenu()
     connect(exportHtmlAction, &QAction::triggered, m_export, &ExportController::exportHtml);
     QAction *exportOdfAction = exportMenu->addAction(tr("A ODF (ODT)..."));
     connect(exportOdfAction, &QAction::triggered, m_export, &ExportController::exportOdf);
+    QAction *exportDocxAction = exportMenu->addAction(tr("A DOCX (Word)..."));
+    connect(exportDocxAction, &QAction::triggered, m_export, &ExportController::exportDocx);
     QAction *exportLatexAction = exportMenu->addAction(tr("A LaTeX..."));
     connect(exportLatexAction, &QAction::triggered, m_export, &ExportController::exportLatex);
 

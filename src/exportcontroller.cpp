@@ -224,6 +224,35 @@ bool ExportController::exportOdf()
     return true;
 }
 
+bool ExportController::exportDocx()
+{
+    m_split->commitSourceToDocument();
+    mdexport::Language language;
+    if (!chooseExportLanguage(&language))
+        return false;
+    const QString path = promptSavePath(
+        QCoreApplication::translate("MainWindow", "Exportar a DOCX"),
+        QCoreApplication::translate("MainWindow", "Documento Word (*.docx)"),
+        QStringLiteral("docx"));
+    if (path.isEmpty())
+        return false;
+
+    QString error;
+    std::unique_ptr<QTextDocument> flat(
+        mdexport::cloneForExport(m_editor->document()));
+    // El clon no hereda la baseUrl; la copiamos para que se resuelvan las imágenes
+    // de ruta relativa al embeberlas en el .docx.
+    flat->setBaseUrl(m_editor->document()->baseUrl());
+    if (!mdexport::writeDocx(flat.get(), path, language, exportTitle(), &error)) {
+        QMessageBox::warning(m_parent, QCoreApplication::translate("MainWindow", "Error"),
+                             QCoreApplication::translate("MainWindow",
+                                 "No se pudo exportar a DOCX:\n%1\n\n%2").arg(path, error));
+        return false;
+    }
+    emit statusMessage(QCoreApplication::translate("MainWindow", "Exportado a DOCX: %1").arg(path), 4000);
+    return true;
+}
+
 bool ExportController::exportLatex()
 {
     m_split->commitSourceToDocument();
