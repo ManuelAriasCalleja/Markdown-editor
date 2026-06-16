@@ -6,6 +6,8 @@
 #include <QObject>
 #include <QPalette>
 
+#include <Qt>  // Qt::ColorScheme
+
 class QTextEdit;
 class CodeBlockHighlighter;
 class QColor;
@@ -31,12 +33,22 @@ public:
     mdtheme::ThemeId currentTheme() const;
     bool isDark() const;
     bool isWarmLight() const;
+    bool followsSystem() const;
+
+    // Tema que corresponde al esquema de color actual del sistema operativo
+    // (Oscuro si el SO está en oscuro; Claro si está en claro o es desconocido).
+    mdtheme::ThemeId systemTheme() const;
 
     // Aplica el tema (paleta + enlaces + resaltado) y lo persiste.
     void applyTheme(mdtheme::ThemeId id);
 
     // Activa/desactiva la luz cálida nocturna, la persiste y reaplica el tema.
     void setWarmLight(bool on);
+
+    // Activa/desactiva el seguimiento del tema del SO y lo persiste. Al activarlo
+    // aplica de inmediato el tema que corresponde al esquema actual; al
+    // desactivarlo conserva el tema vigente.
+    void setFollowSystem(bool on);
 
     // Recolorea los enlaces del documento con el color del tema actual. Útil
     // tras cargar un archivo, cuyos enlaces traen un color fijo del Markdown.
@@ -47,6 +59,9 @@ signals:
 
 private:
     QColor linkColor() const;
+
+    // Mapea un esquema de color del SO a un tema (Oscuro/Claro; Unknown -> Claro).
+    static mdtheme::ThemeId themeForScheme(Qt::ColorScheme scheme);
 
     // Construye la paleta del tema (desde su ThemeSpec) sin tinte cálido.
     QPalette buildPalette(mdtheme::ThemeId id) const;
@@ -68,6 +83,7 @@ private:
     CodeBlockHighlighter *m_highlighter;
     mdtheme::ThemeId m_current = mdtheme::ThemeId::Light;
     bool m_warmLight = true;
+    bool m_followSystem = false;  // seguir el tema claro/oscuro del SO
     double m_lastWarmth = -1.0;  // último tinte aplicado, para evitar repintados
     QTimer *m_warmTimer = nullptr;
 };

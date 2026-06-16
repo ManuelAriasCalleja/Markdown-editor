@@ -34,6 +34,7 @@ public slots:
     void insertImage();
     void insertTable();
     void insertHorizontalRule();
+    void insertTableOfContents();    // índice (TOC) con los encabezados del documento
     void pasteImageFromClipboard();  // acción del menú Insertar
 
 signals:

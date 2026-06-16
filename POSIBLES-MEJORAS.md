@@ -23,13 +23,18 @@ proyecto es sólido (~9k LOC, 18 ficheros de test, arquitectura por controllers,
 
 5. **Corrector ortográfico** — casi imprescindible en un editor de texto; Qt +
    Hunspell encaja bien con los 9 idiomas que ya soporta.
-6. **Contador de palabras / tiempo de lectura / estadísticas** del documento.
+6. ✅ **Contador de palabras / tiempo de lectura / estadísticas** del documento.
+   *Hecho:* módulo puro `docstats`, contador con tiempo de lectura en la barra de
+   estado y diálogo *Ver → Estadísticas del documento…*.
 7. **Pestañas o multi-documento** — `mainwindow` es de documento único.
 8. **Export a DOCX** — ya hay PDF/HTML/ODT/LaTeX; `.docx` es el formato que más
    pide quien no usa Markdown.
 9. **Diagramas** (Mermaid/PlantUML) — complementaría el soporte TeX existente.
 10. **Insertar índice (TOC) automático** y **footnotes**, si no están cubiertos.
-11. **Tema automático según el sistema** (seguir el modo claro/oscuro del SO).
+    *Hecho el TOC:* `mdoutline::tableOfContentsMarkdown` + *Insertar → Índice
+    (TOC)*. Pendientes las footnotes (revisar antes su round-trip con `toMarkdown`).
+11. ✅ **Tema automático según el sistema** (seguir el modo claro/oscuro del SO).
+    *Hecho:* opción *Ver → Tema → Seguir el sistema* vía `QStyleHints`.
 
 ## 🧹 Calidad de código
 

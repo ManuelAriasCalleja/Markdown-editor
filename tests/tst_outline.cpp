@@ -19,6 +19,11 @@ private slots:
     void extractsHeadingsWithLevels();
     void ignoresNonHeadingParagraphs();
     void blockNumberPointsToTheHeading();
+
+    void tocEmptyForNoHeadings();
+    void tocNestsByLevel();
+    void tocCompactsLevelJumps();
+    void tocRoundTripsThroughMarkdown();
 };
 
 void TestOutline::nullDocReturnsEmpty()
@@ -77,6 +82,49 @@ void TestOutline::blockNumberPointsToTheHeading()
         QVERIFY(block.isValid());
         QCOMPARE(block.text(), heading.text);
     }
+}
+
+void TestOutline::tocEmptyForNoHeadings()
+{
+    QVERIFY(mdoutline::tableOfContentsMarkdown({}).isEmpty());
+}
+
+void TestOutline::tocNestsByLevel()
+{
+    QTextDocument doc;
+    doc.setMarkdown(QStringLiteral("# Uno\n\n## Dos\n\n### Tres\n\n## Cuatro"));
+
+    const QString toc = mdoutline::tableOfContentsMarkdown(mdoutline::headingsOf(&doc));
+    QCOMPARE(toc, QStringLiteral("- Uno\n  - Dos\n    - Tres\n  - Cuatro\n"));
+}
+
+void TestOutline::tocCompactsLevelJumps()
+{
+    // Un salto de nivel (H1 → H3) no debe dejar una sangría de dos niveles: la
+    // profundidad la marca la pila de ancestros, no el número de nivel.
+    QTextDocument doc;
+    doc.setMarkdown(QStringLiteral("# Uno\n\n### Tres"));
+
+    const QString toc = mdoutline::tableOfContentsMarkdown(mdoutline::headingsOf(&doc));
+    QCOMPARE(toc, QStringLiteral("- Uno\n  - Tres\n"));
+}
+
+void TestOutline::tocRoundTripsThroughMarkdown()
+{
+    // El Markdown generado debe releerse como una lista anidada con los mismos
+    // textos (es lo que se inserta en el documento con fromMarkdown).
+    QTextDocument src;
+    src.setMarkdown(QStringLiteral("# Alfa\n\n## Beta\n\n## Gamma"));
+    const QString toc = mdoutline::tableOfContentsMarkdown(mdoutline::headingsOf(&src));
+
+    QTextDocument rendered;
+    rendered.setMarkdown(toc);
+    const QString plain = rendered.toPlainText();
+    QVERIFY(plain.contains(QStringLiteral("Alfa")));
+    QVERIFY(plain.contains(QStringLiteral("Beta")));
+    QVERIFY(plain.contains(QStringLiteral("Gamma")));
+    // Y no debe haber dejado ningún encabezado (es una lista, no títulos).
+    QVERIFY(mdoutline::headingsOf(&rendered).isEmpty());
 }
 
 QTEST_MAIN(TestOutline)

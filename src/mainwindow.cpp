@@ -17,6 +17,7 @@
 #include "findreplacebar.h"
 #include "focuseditor.h"
 #include "helpdialog.h"
+#include "docstats.h"
 #include "listcontinuation.h"
 #include "mathblocks.h"
 #include "outlinepanel.h"
@@ -34,6 +35,8 @@
 #include <QCloseEvent>
 #include <QColor>
 #include <QDesktopServices>
+#include <QDialog>
+#include <QDialogButtonBox>
 #include <QDir>
 #include <QDropEvent>
 #include <QMouseEvent>
@@ -43,6 +46,7 @@
 #include <QFont>
 #include <QFontMetrics>
 #include <QIcon>
+#include <QFormLayout>
 #include <QKeyEvent>
 #include <QKeySequence>
 #include <QPainter>
@@ -415,7 +419,9 @@ MainWindow::MainWindow(QWidget *parent)
             m_distractionAction, &QAction::setChecked);
 
     // Contador de palabras/caracteres, anclado a la derecha de la barra de estado.
+    // Su visibilidad se recuerda entre sesiones (acción del menú Ver).
     m_countLabel = new QLabel(this);
+    m_countLabel->setVisible(AppSettings::showWordCount());
     statusBar()->addPermanentWidget(m_countLabel);
 
     // Los botones de formato reflejan en todo momento lo que hay bajo el cursor.
@@ -482,10 +488,13 @@ MainWindow::MainWindow(QWidget *parent)
     m_format->updateActions();
     updateWordCount();
 
-    // Restaura el tema elegido en la sesión anterior (la señal themeChanged
-    // marca la acción del menú correspondiente).
+    // Restaura el tema de la sesión anterior (la señal themeChanged marca la
+    // acción del menú). Si se sigue el SO, se deriva de su esquema actual en vez
+    // de la clave guardada.
     m_theme->applyTheme(
-        mdtheme::idFromKey(AppSettings::themeKey(), mdtheme::ThemeId::Light));
+        m_theme->followsSystem()
+            ? m_theme->systemTheme()
+            : mdtheme::idFromKey(AppSettings::themeKey(), mdtheme::ThemeId::Light));
 }
 
 void MainWindow::createMenusAndActions()
@@ -735,6 +744,10 @@ void MainWindow::createInsertMenu()
     QAction *insRule = insertMenu->addAction(tr("Regla horizontal"));
     connect(insRule, &QAction::triggered, m_insert, &InsertController::insertHorizontalRule);
 
+    QAction *insToc = insertMenu->addAction(tr("Índice (TOC)"));
+    insToc->setToolTip(tr("Inserta un índice con los encabezados del documento"));
+    connect(insToc, &QAction::triggered, m_insert, &InsertController::insertTableOfContents);
+
     QAction *insFormula = insertMenu->addAction(tr("Fórmula..."));
     insFormula->setShortcut(QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_F));
     insFormula->setToolTip(
@@ -743,7 +756,8 @@ void MainWindow::createInsertMenu()
     connect(insFormula, &QAction::triggered, m_formula, &FormulaController::insertFormula);
 
     // Insertar tampoco aplica en la vista de fuente.
-    m_wysiwygActions << insLink << insImage << insPasteImage << insTable << insRule << insFormula;
+    m_wysiwygActions << insLink << insImage << insPasteImage << insTable << insRule
+                     << insToc << insFormula;
 }
 
 void MainWindow::createTableMenu()
@@ -840,6 +854,21 @@ void MainWindow::createViewMenu()
     connect(zoomResetAction, &QAction::triggered, this, &MainWindow::resetZoom);
 
     viewMenu->addSeparator();
+
+    QAction *statsAction = viewMenu->addAction(tr("Estadísticas del documento..."));
+    connect(statsAction, &QAction::triggered, this, &MainWindow::showDocumentStatistics);
+
+    QAction *wordCountAction = viewMenu->addAction(tr("Mostrar contador de palabras"));
+    wordCountAction->setCheckable(true);
+    // m_countLabel aún no existe aquí (los menús se crean antes que la barra de
+    // estado); el estado inicial sale del ajuste, con el que arrancará el label.
+    wordCountAction->setChecked(AppSettings::showWordCount());
+    connect(wordCountAction, &QAction::toggled, this, [this](bool on) {
+        m_countLabel->setVisible(on);
+        AppSettings::setShowWordCount(on);
+    });
+
+    viewMenu->addSeparator();
     QMenu *themeMenu = viewMenu->addMenu(tr("Tema"));
     auto *themeGroup = new QActionGroup(this);
     themeGroup->setExclusive(true);
@@ -877,6 +906,24 @@ void MainWindow::createViewMenu()
             action->setChecked(true);
         updateToolBarIcons();  // los iconos generados siguen el color del tema
     });
+
+    themeMenu->addSeparator();
+    QAction *followSystemAction = themeMenu->addAction(tr("Seguir el sistema"));
+    followSystemAction->setCheckable(true);
+    followSystemAction->setChecked(m_theme->followsSystem());
+    followSystemAction->setToolTip(
+        tr("Usa el tema claro u oscuro según la configuración del sistema operativo"));
+    // Mientras se sigue el SO, la elección manual de tema queda deshabilitada.
+    auto setManualThemeEnabled = [this](bool follow) {
+        for (QAction *action : m_themeActions.values())
+            action->setEnabled(!follow);
+    };
+    setManualThemeEnabled(m_theme->followsSystem());
+    connect(followSystemAction, &QAction::toggled, this,
+            [this, setManualThemeEnabled](bool on) {
+                m_theme->setFollowSystem(on);
+                setManualThemeEnabled(on);
+            });
 
     themeMenu->addSeparator();
     QAction *warmLightAction = themeMenu->addAction(tr("Luz cálida nocturna"));
@@ -1049,24 +1096,48 @@ void MainWindow::updateWordCount()
     const QTextCursor cursor = ed->textCursor();
     const bool hasSelection = cursor.hasSelection();
 
-    QString text = hasSelection ? cursor.selectedText() : ed->toPlainText();
-    // selectedText() usa U+2029 como separador de párrafo; lo normalizamos para
-    // contar bien palabras y caracteres.
-    text.replace(QChar(QChar::ParagraphSeparator), QLatin1Char('\n'));
-
-    static const QRegularExpression whitespace(QStringLiteral("\\s+"));
-    const int words =
-        static_cast<int>(text.split(whitespace, Qt::SkipEmptyParts).size());
-    const int chars = static_cast<int>(text.size());
+    const QString text = hasSelection ? cursor.selectedText() : ed->toPlainText();
+    const mdstats::DocStats st = mdstats::analyze(text);
 
     // %n produce el plural correcto en cada idioma (relevante en polaco/rumano,
     // de reglas complejas, y evita el «1 palabra(s)»).
-    QString count = tr("%n palabra(s)", nullptr, words)
+    QString count = tr("%n palabra(s)", nullptr, st.words)
                     + QStringLiteral(" · ")
-                    + tr("%n carácter(es)", nullptr, chars);
+                    + tr("%n carácter(es)", nullptr, st.chars);
+    // Tiempo de lectura estimado: cualquier texto cuenta al menos como 1 min.
+    const int minutes =
+        st.words > 0 ? std::max(1, static_cast<int>(std::ceil(st.readingMinutes))) : 0;
+    if (minutes > 0)
+        count += QStringLiteral(" · ") + tr("~%n min", nullptr, minutes);
     if (hasSelection)
         count.prepend(tr("Selección: "));
     m_countLabel->setText(count);
+}
+
+void MainWindow::showDocumentStatistics()
+{
+    const mdstats::DocStats st = mdstats::analyze(activeEditor()->toPlainText());
+    const int minutes =
+        st.words > 0 ? std::max(1, static_cast<int>(std::ceil(st.readingMinutes))) : 0;
+
+    QDialog dlg(this);
+    dlg.setWindowTitle(tr("Estadísticas del documento"));
+    auto *form = new QFormLayout(&dlg);
+    form->addRow(tr("Palabras:"), new QLabel(QString::number(st.words), &dlg));
+    form->addRow(tr("Caracteres:"), new QLabel(QString::number(st.chars), &dlg));
+    form->addRow(tr("Caracteres (sin espacios):"),
+                 new QLabel(QString::number(st.charsNoSpaces), &dlg));
+    form->addRow(tr("Párrafos:"), new QLabel(QString::number(st.paragraphs), &dlg));
+    form->addRow(tr("Frases:"), new QLabel(QString::number(st.sentences), &dlg));
+    form->addRow(tr("Tiempo de lectura:"),
+                 new QLabel(tr("~%n min", nullptr, minutes), &dlg));
+
+    auto *buttons = new QDialogButtonBox(QDialogButtonBox::Close, &dlg);
+    connect(buttons, &QDialogButtonBox::rejected, &dlg, &QDialog::reject);
+    connect(buttons, &QDialogButtonBox::accepted, &dlg, &QDialog::accept);
+    form->addRow(buttons);
+
+    dlg.exec();
 }
 
 void MainWindow::styleTables()

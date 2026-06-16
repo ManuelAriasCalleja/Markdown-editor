@@ -105,6 +105,10 @@ private slots:
     // Actualiza el contador de palabras/caracteres de la barra de estado.
     void updateWordCount();
 
+    // Muestra un diálogo con las estadísticas del documento (palabras, caracteres,
+    // párrafos, frases y tiempo de lectura estimado).
+    void showDocumentStatistics();
+
 private:
     // Construye la barra de menús. Orquesta los creadores por menú de abajo y, al
     // final, entrega al controlador de la vista dividida las acciones creadas.

@@ -28,6 +28,8 @@ private slots:
     void recolorsLinksToThemeColor();
     void warmLightTogglePersists();
     void warmLightOffLeavesBaseUntinted();
+    void followSystemTogglePersists();
+    void followSystemAppliesSystemTheme();
 
 private:
     static QColor firstAnchorColor(QTextEdit &edit);
@@ -113,6 +115,41 @@ void TestThemeController::warmLightOffLeavesBaseUntinted()
     theme.applyTheme(mdtheme::ThemeId::Dark);
     QCOMPARE(qApp->palette().color(QPalette::Base),
              mdtheme::specFor(mdtheme::ThemeId::Dark).base);
+}
+
+void TestThemeController::followSystemTogglePersists()
+{
+    QTextEdit edit;
+    CodeBlockHighlighter hl(edit.document());
+    ThemeController theme(&edit, &hl);
+
+    QVERIFY(!theme.followsSystem());  // desactivado por defecto
+
+    theme.setFollowSystem(true);
+    QVERIFY(theme.followsSystem());
+    QVERIFY(AppSettings::followSystemTheme());  // se persiste
+
+    theme.setFollowSystem(false);
+    QVERIFY(!theme.followsSystem());
+    QVERIFY(!AppSettings::followSystemTheme());
+}
+
+void TestThemeController::followSystemAppliesSystemTheme()
+{
+    QTextEdit edit;
+    CodeBlockHighlighter hl(edit.document());
+    ThemeController theme(&edit, &hl);
+
+    // systemTheme() es siempre uno de los dos temas claro/oscuro canónicos.
+    const mdtheme::ThemeId sys = theme.systemTheme();
+    QVERIFY(sys == mdtheme::ThemeId::Light || sys == mdtheme::ThemeId::Dark);
+
+    // Partimos de un tema distinto del del sistema para ver el efecto de activar
+    // el seguimiento: debe quedar aplicado el tema del SO.
+    theme.applyTheme(sys == mdtheme::ThemeId::Dark ? mdtheme::ThemeId::Light
+                                                   : mdtheme::ThemeId::Dark);
+    theme.setFollowSystem(true);
+    QCOMPARE(theme.currentTheme(), sys);
 }
 
 QTEST_MAIN(TestThemeController)

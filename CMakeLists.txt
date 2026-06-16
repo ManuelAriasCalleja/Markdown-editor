@@ -55,6 +55,8 @@ add_library(md-editor-core STATIC
     src/helpdialog.h
     src/outlinepanel.cpp
     src/outlinepanel.h
+    src/docstats.cpp
+    src/docstats.h
     src/recentfilesmanager.cpp
     src/recentfilesmanager.h
     src/recoverymanager.cpp
@@ -201,6 +203,7 @@ if(Qt6Test_FOUND)
         tst_exporters
         tst_markdownroundtrip
         tst_outline
+        tst_docstats
         tst_recovery
         tst_appsettings
         tst_documentio

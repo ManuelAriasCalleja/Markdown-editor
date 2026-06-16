@@ -20,6 +20,13 @@ void setThemeKey(const QString &key);
 bool darkTheme();
 void setDarkTheme(bool dark);
 
+// Seguir el tema claro/oscuro del sistema operativo: cuando está activo, el
+// tema se deriva del esquema de color del SO (claro -> Claro, oscuro -> Oscuro)
+// y cambia solo si el SO cambia. Desactivado por defecto. Ortogonal a la luz
+// cálida nocturna.
+bool followSystemTheme();
+void setFollowSystemTheme(bool on);
+
 // Luz cálida nocturna: tiñe el fondo del editor de tono ámbar según la hora
 // (más cálido al anochecer/noche). Activada por defecto.
 bool warmLight();
@@ -29,6 +36,11 @@ void setWarmLight(bool on);
 // se aplica al editor y al resto de la interfaz. 0 = tamaño normal.
 int zoomLevel();
 void setZoomLevel(int level);
+
+// Mostrar el contador de palabras/caracteres en la barra de estado. Activado
+// por defecto.
+bool showWordCount();
+void setShowWordCount(bool on);
 
 // Idioma de la interfaz: código de locale (p. ej. "es", "en"). Cadena vacía =
 // usar el idioma del sistema.

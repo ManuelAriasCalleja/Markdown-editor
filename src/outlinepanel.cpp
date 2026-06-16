@@ -23,6 +23,21 @@ QList<OutlineHeading> mdoutline::headingsOf(const QTextDocument *doc)
     return headings;
 }
 
+QString mdoutline::tableOfContentsMarkdown(const QList<OutlineHeading> &headings)
+{
+    QString md;
+    QVector<int> stack;  // niveles de los ancestros vigentes (misma idea que rebuild)
+    for (const OutlineHeading &h : headings) {
+        while (!stack.isEmpty() && stack.last() >= h.level)
+            stack.removeLast();
+        const int depth = stack.size();  // 0 = raíz
+        md += QString(depth * 2, QLatin1Char(' '));
+        md += QStringLiteral("- ") + h.text + QLatin1Char('\n');
+        stack.append(h.level);
+    }
+    return md;
+}
+
 void OutlinePanel::setLeftPadding(int px)
 {
     m_layout->setContentsMargins(qMax(0, px), 0, 0, 0);

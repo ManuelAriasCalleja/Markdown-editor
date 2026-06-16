@@ -6,7 +6,9 @@ namespace {
 inline QString themeKeyKey()    { return QStringLiteral("theme"); }
 inline QString darkThemeKey()   { return QStringLiteral("darkTheme"); }
 inline QString warmLightKey()   { return QStringLiteral("warmLight"); }
+inline QString followSystemThemeKey() { return QStringLiteral("followSystemTheme"); }
 inline QString zoomLevelKey()   { return QStringLiteral("zoomLevel"); }
+inline QString showWordCountKey() { return QStringLiteral("showWordCount"); }
 inline QString geometryKey()    { return QStringLiteral("geometry"); }
 inline QString windowStateKey() { return QStringLiteral("windowState"); }
 inline QString splitterStateKey() { return QStringLiteral("splitterState"); }
@@ -51,6 +53,16 @@ void AppSettings::setWarmLight(bool on)
     QSettings().setValue(warmLightKey(), on);
 }
 
+bool AppSettings::followSystemTheme()
+{
+    return QSettings().value(followSystemThemeKey(), false).toBool();  // desactivado por defecto
+}
+
+void AppSettings::setFollowSystemTheme(bool on)
+{
+    QSettings().setValue(followSystemThemeKey(), on);
+}
+
 int AppSettings::zoomLevel()
 {
     return QSettings().value(zoomLevelKey(), 0).toInt();
@@ -59,6 +71,16 @@ int AppSettings::zoomLevel()
 void AppSettings::setZoomLevel(int level)
 {
     QSettings().setValue(zoomLevelKey(), level);
+}
+
+bool AppSettings::showWordCount()
+{
+    return QSettings().value(showWordCountKey(), true).toBool();  // activado por defecto
+}
+
+void AppSettings::setShowWordCount(bool on)
+{
+    QSettings().setValue(showWordCountKey(), on);
 }
 
 QString AppSettings::language()

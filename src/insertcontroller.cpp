@@ -25,6 +25,7 @@
 #include <QVBoxLayout>
 
 #include "documentio.h"
+#include "outlinepanel.h"
 
 // Los textos visibles de las acciones conservan el contexto de traducción
 // "MainWindow" (QCoreApplication::translate) para no re-hogar las cadenas ya
@@ -285,6 +286,25 @@ void InsertController::insertTable()
     cursor.insertFragment(QTextDocumentFragment::fromMarkdown(md));
     cursor.endEditBlock();
     emit tableInserted();  // que la tabla recién creada muestre sus bordes
+    m_editor->setFocus();
+}
+
+void InsertController::insertTableOfContents()
+{
+    const QList<OutlineHeading> headings = mdoutline::headingsOf(m_editor->document());
+    if (headings.isEmpty()) {
+        QMessageBox::information(
+            m_parent, QCoreApplication::translate("MainWindow", "Insertar índice"),
+            QCoreApplication::translate("MainWindow",
+                "El documento no tiene encabezados."));
+        return;
+    }
+
+    const QString md = mdoutline::tableOfContentsMarkdown(headings);
+    QTextCursor cursor = m_editor->textCursor();
+    cursor.beginEditBlock();
+    cursor.insertFragment(QTextDocumentFragment::fromMarkdown(md));
+    cursor.endEditBlock();
     m_editor->setFocus();
 }
 

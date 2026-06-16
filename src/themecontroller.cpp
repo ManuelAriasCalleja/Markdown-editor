@@ -8,6 +8,7 @@
 #include <QColor>
 #include <QList>
 #include <QPair>
+#include <QStyleHints>
 #include <QTextBlock>
 #include <QTextCursor>
 #include <QTextDocument>
@@ -23,7 +24,8 @@ ThemeController::ThemeController(QTextEdit *editor, CodeBlockHighlighter *highli
     : QObject(parent),
       m_editor(editor),
       m_highlighter(highlighter),
-      m_warmLight(AppSettings::warmLight())
+      m_warmLight(AppSettings::warmLight()),
+      m_followSystem(AppSettings::followSystemTheme())
 {
     qRegisterMetaType<mdtheme::ThemeId>();
 
@@ -34,6 +36,14 @@ ThemeController::ThemeController(QTextEdit *editor, CodeBlockHighlighter *highli
     m_warmTimer->setInterval(60 * 1000);
     connect(m_warmTimer, &QTimer::timeout, this, &ThemeController::refreshWarmth);
     m_warmTimer->start();
+
+    // Si se sigue el SO, cambiar su esquema claro/oscuro reaplica el tema solo.
+    // (La señal trae el esquema nuevo; si el seguimiento está apagado, se ignora.)
+    connect(qApp->styleHints(), &QStyleHints::colorSchemeChanged, this,
+            [this](Qt::ColorScheme scheme) {
+                if (m_followSystem)
+                    applyTheme(themeForScheme(scheme));
+            });
 }
 
 mdtheme::ThemeId ThemeController::currentTheme() const
@@ -49,6 +59,23 @@ bool ThemeController::isDark() const
 bool ThemeController::isWarmLight() const
 {
     return m_warmLight;
+}
+
+bool ThemeController::followsSystem() const
+{
+    return m_followSystem;
+}
+
+mdtheme::ThemeId ThemeController::themeForScheme(Qt::ColorScheme scheme)
+{
+    // El esquema desconocido (algunos entornos Linux) se trata como claro.
+    return scheme == Qt::ColorScheme::Dark ? mdtheme::ThemeId::Dark
+                                           : mdtheme::ThemeId::Light;
+}
+
+mdtheme::ThemeId ThemeController::systemTheme() const
+{
+    return themeForScheme(qApp->styleHints()->colorScheme());
 }
 
 QColor ThemeController::linkColor() const
@@ -161,6 +188,16 @@ void ThemeController::setWarmLight(bool on)
     m_warmLight = on;
     AppSettings::setWarmLight(on);
     applyTheme(m_current);  // reaplica el tema con o sin tinte
+}
+
+void ThemeController::setFollowSystem(bool on)
+{
+    if (m_followSystem == on)
+        return;
+    m_followSystem = on;
+    AppSettings::setFollowSystemTheme(on);
+    if (on)
+        applyTheme(systemTheme());  // al apagarlo se conserva el tema vigente
 }
 
 void ThemeController::refreshWarmth()

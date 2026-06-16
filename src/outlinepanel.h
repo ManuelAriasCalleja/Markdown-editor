@@ -21,6 +21,13 @@ struct OutlineHeading {
 // poder probarla de forma aislada (igual que mdblock en blockconstructs).
 namespace mdoutline {
 QList<OutlineHeading> headingsOf(const QTextDocument *doc);
+
+// Genera el Markdown de un índice (TOC) a partir de una lista de encabezados:
+// una lista con viñetas anidada por nivel. La profundidad se calcula como en el
+// árbol del panel (una pila de ancestros), de modo que los saltos de nivel
+// (p. ej. H1 seguido de H3) se compactan en vez de dejar sangrías vacías. Una
+// lista vacía produce una cadena vacía. Es pura (sin GUI) para poder probarla.
+QString tableOfContentsMarkdown(const QList<OutlineHeading> &headings);
 }
 
 // Panel lateral acoplable con el índice (TOC) de encabezados del documento,
