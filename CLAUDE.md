@@ -14,6 +14,19 @@ traducciones a 8 idiomas más.
 
 ## Comandos
 
+**Dependencias de compilación.** Qt6 (≥6.4) con sus cabeceras de desarrollo **y las
+privadas**: la exportación ODF usa el QZip privado de Qt vía el target CMake
+`Qt6::GuiPrivate`, que necesita las cabeceras privadas (`qzipwriter_p.h`, etc.). En
+Debian/Ubuntu vienen en un paquete aparte de `qt6-base-dev`:
+
+```bash
+sudo apt-get install qt6-base-dev qt6-base-private-dev cmake g++
+```
+
+Sin `qt6-base-private-dev`, CMake falla en la configuración con «Imported target
+"Qt6::GuiPrivate" includes non-existent path .../QtGui/<versión>» (el target existe
+pero apunta a cabeceras que no están instaladas).
+
 ```bash
 # Compilar (configura + build en build/)
 cmake -S . -B build && cmake --build build
@@ -27,9 +40,10 @@ ctest --test-dir build --output-on-failure
 ctest --test-dir build -R tst_outline        # un solo test por nombre
 ./build/tst_outline                            # ejecutable de test directo
 
-# Instalar (compila build-min/ a tamaño mínimo y copia a $PREFIX, requiere sudo).
-# Instala binario + .desktop + iconos hicolor (PNG/SVG) en Linux.
-sudo ./install.sh                              # -> /usr/local
+# Instalar (compila y copia a $PREFIX el binario + .desktop + iconos hicolor
+# PNG/SVG en Linux; sudo solo si $PREFIX no es escribible). Ayuda: ./install.sh -h
+sudo ./install.sh                              # build normal -> /usr/local
+sudo ./install.sh -m                           # build de tamaño mínimo (build-min/)
 PREFIX="$HOME/.local" ./install.sh             # de usuario, sin sudo
 ```
 

@@ -1,13 +1,17 @@
 #!/usr/bin/env bash
 #
-# install.sh — Compila md-editor a su tamaño mínimo posible (de forma
-# incremental) e instala el ejecutable, el lanzador (.desktop) y los iconos.
+# install.sh — Compila md-editor (de forma incremental) e instala el ejecutable,
+# el lanzador (.desktop) y los iconos.
 #
-# La build de tamaño mínimo usa los mismos ajustes que './build.sh -m'
-# (MinSizeRel + -Os + secciones por función/dato + --gc-sections + strip), en el
-# directorio build-min/. CMake/Make son incrementales: si no ha habido cambios
-# desde la última compilación de este tipo, no se recompila; y si el binario
-# resultante es idéntico al instalado, no se vuelve a copiar.
+# Dos modos, según el parámetro -m:
+#   • sin -m: build normal en build/ (la misma que './build.sh').
+#   • con -m: build de tamaño mínimo en build-min/, con los mismos ajustes que
+#     './build.sh -m' (MinSizeRel + -Os + secciones por función/dato +
+#     --gc-sections + strip).
+#
+# CMake/Make son incrementales: si no ha habido cambios desde la última
+# compilación de este tipo, no se recompila; y si el binario resultante es
+# idéntico al instalado, no se vuelve a copiar.
 #
 # Además del binario en $PREFIX/bin, instala:
 #   • $PREFIX/share/applications/md-editor.desktop  (lanzador + asociación .md)
@@ -15,6 +19,7 @@
 #
 # Destino configurable con PREFIX (por defecto /usr/local):
 #   ./install.sh                 # -> /usr/local (sudo si hace falta)
+#   ./install.sh -m              # build de tamaño mínimo
 #   PREFIX="$HOME/.local" ./install.sh   # instalación de usuario, sin sudo
 #
 set -euo pipefail
@@ -23,22 +28,54 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$SCRIPT_DIR"
 
-BUILD_DIR="build-min"
+usage() {
+    cat <<'EOF'
+Uso: ./install.sh [-m] [-h]
+
+Compila md-editor e instala el binario, el lanzador (.desktop) y los iconos.
+
+Opciones:
+  -m   Instala la versión de tamaño mínimo (build-min/, MinSizeRel + strip).
+       Sin -m se instala la build normal (build/).
+  -h   Muestra esta ayuda y sale.
+
+Variables de entorno:
+  PREFIX   Destino de instalación (por defecto /usr/local). Se usa sudo solo si
+           hace falta para escribir ahí. Ej.: PREFIX="$HOME/.local" ./install.sh
+EOF
+}
+
+MINIMAL=0
+while getopts ":mh" opt; do
+    case "$opt" in
+        m) MINIMAL=1 ;;
+        h) usage; exit 0 ;;
+        *) usage >&2; exit 2 ;;
+    esac
+done
+
 TARGET="md-editor"
-BIN="$BUILD_DIR/$TARGET"
 
 PREFIX="${PREFIX:-/usr/local}"
 DEST="$PREFIX/bin/$TARGET"
 APPS_DIR="$PREFIX/share/applications"
 ICONS_DIR="$PREFIX/share/icons/hicolor"
 
-# 1) Configura la build de tamaño mínimo. Es idempotente: si la caché ya tiene
-#    estos ajustes, CMake no hace nada.
-echo "==> Configurando (tamaño mínimo) en $BUILD_DIR/"
-cmake -S . -B "$BUILD_DIR" \
-    -DCMAKE_BUILD_TYPE=MinSizeRel \
-    -DCMAKE_CXX_FLAGS="-Os -ffunction-sections -fdata-sections" \
-    -DCMAKE_EXE_LINKER_FLAGS="-Wl,--gc-sections -s" >/dev/null
+# 1) Configura la build elegida. Es idempotente: si la caché ya tiene estos
+#    ajustes, CMake no hace nada.
+if [ "$MINIMAL" -eq 1 ]; then
+    BUILD_DIR="build-min"
+    echo "==> Configurando (tamaño mínimo) en $BUILD_DIR/"
+    cmake -S . -B "$BUILD_DIR" \
+        -DCMAKE_BUILD_TYPE=MinSizeRel \
+        -DCMAKE_CXX_FLAGS="-Os -ffunction-sections -fdata-sections" \
+        -DCMAKE_EXE_LINKER_FLAGS="-Wl,--gc-sections -s" >/dev/null
+else
+    BUILD_DIR="build"
+    echo "==> Configurando (build normal) en $BUILD_DIR/"
+    cmake -S . -B "$BUILD_DIR" >/dev/null
+fi
+BIN="$BUILD_DIR/$TARGET"
 
 # 2) Compila solo el ejecutable, de forma incremental.
 echo "==> Compilando $TARGET..."
