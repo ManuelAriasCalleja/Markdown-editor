@@ -24,6 +24,14 @@ private slots:
     void tocNestsByLevel();
     void tocCompactsLevelJumps();
     void tocRoundTripsThroughMarkdown();
+
+    void moveSectionAfterSibling();
+    void moveSectionBeforeSibling();
+    void moveSectionCarriesSubsections();
+    void moveSectionToEnd();
+    void moveSectionIgnoresCodeFenceHashes();
+    void moveSectionInvalidIsNoOp();
+    void moveSectionIntoItselfIsNoOp();
 };
 
 void TestOutline::nullDocReturnsEmpty()
@@ -125,6 +133,78 @@ void TestOutline::tocRoundTripsThroughMarkdown()
     QVERIFY(plain.contains(QStringLiteral("Gamma")));
     // Y no debe haber dejado ningún encabezado (es una lista, no títulos).
     QVERIFY(mdoutline::headingsOf(&rendered).isEmpty());
+}
+
+// --- moveSection (reordenación de secciones) -------------------------------
+
+void TestOutline::moveSectionAfterSibling()
+{
+    // Tres secciones de nivel 1; mover la 0 (Alfa) tras la 1 (Beta).
+    const QString md = QStringLiteral(
+        "# Alfa\n\na\n\n# Beta\n\nb\n\n# Gamma\n\ng\n");
+    const QString out = mdoutline::moveSection(md, 0, 1, /*placeAfter=*/true);
+    const int alfa = out.indexOf(QStringLiteral("# Alfa"));
+    const int beta = out.indexOf(QStringLiteral("# Beta"));
+    const int gamma = out.indexOf(QStringLiteral("# Gamma"));
+    QVERIFY(beta >= 0 && alfa >= 0 && gamma >= 0);
+    QVERIFY(beta < alfa);          // Beta ahora antes que Alfa
+    QVERIFY(alfa < gamma);         // Alfa antes que Gamma
+    QVERIFY(out.contains(QStringLiteral("a\n")));  // el contenido viaja con su sección
+}
+
+void TestOutline::moveSectionBeforeSibling()
+{
+    const QString md = QStringLiteral("# Alfa\n\na\n\n# Beta\n\nb\n");
+    const QString out = mdoutline::moveSection(md, 1, 0, /*placeAfter=*/false);
+    QVERIFY(out.indexOf(QStringLiteral("# Beta")) < out.indexOf(QStringLiteral("# Alfa")));
+}
+
+void TestOutline::moveSectionCarriesSubsections()
+{
+    // La sección Alfa incluye su subsección Alfa.1; al mover Alfa tras Beta debe
+    // arrastrar la subsección.
+    const QString md = QStringLiteral(
+        "# Alfa\n\na\n\n## Alfa.1\n\na1\n\n# Beta\n\nb\n");
+    const QString out = mdoutline::moveSection(md, 0, 2, /*placeAfter=*/true);
+    const int beta = out.indexOf(QStringLiteral("# Beta"));
+    const int alfa = out.indexOf(QStringLiteral("# Alfa"));
+    const int sub = out.indexOf(QStringLiteral("## Alfa.1"));
+    QVERIFY(beta < alfa);          // Beta antes que Alfa
+    QVERIFY(alfa < sub);           // la subsección sigue tras su sección
+}
+
+void TestOutline::moveSectionToEnd()
+{
+    const QString md = QStringLiteral("# Alfa\n\na\n\n# Beta\n\nb\n# Gamma\n\ng\n");
+    // Mover Alfa tras la última sección (Gamma).
+    const QString out = mdoutline::moveSection(md, 0, 2, /*placeAfter=*/true);
+    QVERIFY(out.indexOf(QStringLiteral("# Alfa")) > out.indexOf(QStringLiteral("# Gamma")));
+}
+
+void TestOutline::moveSectionIgnoresCodeFenceHashes()
+{
+    // El `# no es título` dentro del bloque de código no cuenta como encabezado:
+    // solo hay 2 secciones (ordinales 0 y 1).
+    const QString md = QStringLiteral(
+        "# Uno\n\n```\n# no es título\n```\n\n# Dos\n\nd\n");
+    const QString out = mdoutline::moveSection(md, 0, 1, /*placeAfter=*/true);
+    QVERIFY(out.indexOf(QStringLiteral("# Dos")) < out.indexOf(QStringLiteral("# Uno")));
+    // El comentario del bloque de código viaja con la sección Uno, intacto.
+    QVERIFY(out.contains(QStringLiteral("# no es título")));
+}
+
+void TestOutline::moveSectionInvalidIsNoOp()
+{
+    const QString md = QStringLiteral("# Alfa\n\n# Beta\n");
+    QCOMPARE(mdoutline::moveSection(md, 5, 0, true), md);   // origen fuera de rango
+    QCOMPARE(mdoutline::moveSection(md, 0, 9, false), md);  // destino fuera de rango
+}
+
+void TestOutline::moveSectionIntoItselfIsNoOp()
+{
+    // Mover una sección dentro de su propia subsección no debe hacer nada.
+    const QString md = QStringLiteral("# Alfa\n\n## Alfa.1\n\n# Beta\n");
+    QCOMPARE(mdoutline::moveSection(md, 0, 1, true), md);   // destino = subsección de origen
 }
 
 QTEST_MAIN(TestOutline)

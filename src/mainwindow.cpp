@@ -294,6 +294,23 @@ MainWindow::MainWindow(QWidget *parent)
         m_editor->ensureCursorVisible();
         m_editor->setFocus();
     });
+    // Reordenar secciones arrastrando en el esquema: serializa el cuerpo, mueve la
+    // sección con la función pura y re-renderiza. Diferido para no reconstruir el
+    // árbol mientras se procesa el propio drop. En vista de fuente no aplica (el
+    // documento WYSIWYG no es el que se edita).
+    connect(m_outline, &OutlinePanel::sectionMoveRequested, this,
+            [this](int from, int to, bool placeAfter) {
+        if (m_split->sourceMode())
+            return;  // editando la fuente a pantalla completa: no aplica
+        QTimer::singleShot(0, this, [this, from, to, placeAfter] {
+            const QString body = mdtable::documentMarkdown(m_editor->document());
+            const QString moved = mdoutline::moveSection(body, from, to, placeAfter);
+            if (moved == body)
+                return;  // movimiento no válido: nada que hacer
+            setBodyMarkdown(moved);
+            setWindowModified(true);
+        });
+    });
     // Vista de código fuente / dividida y su sincronización. Posee el editor de
     // fuente y el QSplitter central; se crea tras el editor WYSIWYG, la barra de
     // búsqueda, el índice y el tema, de los que depende.

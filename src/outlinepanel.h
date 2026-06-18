@@ -4,10 +4,11 @@
 #include <QDockWidget>
 #include <QList>
 #include <QString>
+#include <QTreeWidget>
 
 class QTextDocument;
-class QTreeWidget;
 class QHBoxLayout;
+class QDropEvent;
 
 // Un encabezado del documento, para el índice (TOC).
 struct OutlineHeading {
@@ -28,7 +29,37 @@ QList<OutlineHeading> headingsOf(const QTextDocument *doc);
 // (p. ej. H1 seguido de H3) se compactan en vez de dejar sangrías vacías. Una
 // lista vacía produce una cadena vacía. Es pura (sin GUI) para poder probarla.
 QString tableOfContentsMarkdown(const QList<OutlineHeading> &headings);
+
+// Reordena secciones en el Markdown: mueve la sección del encabezado `fromOrdinal`
+// (su encabezado más todo su contenido y subsecciones, hasta el siguiente
+// encabezado de nivel igual o menor) junto a la del encabezado `toOrdinal`. Los
+// ordinales son la posición del encabezado en orden de documento (0..N-1, como en
+// el árbol). `placeAfter` la coloca tras la sección destino; si no, antes. No
+// cambia niveles (no reanida). Devuelve el Markdown sin cambios si los ordinales
+// son inválidos, iguales, o el destino cae dentro de la propia sección origen.
+// Detecta encabezados ATX a principio de línea ignorando los bloques de código
+// vallados (``` o ~~~), igual que headingsOf, para que los ordinales coincidan.
+// Es pura (sin GUI) para poder probarla.
+QString moveSection(const QString &markdown, int fromOrdinal, int toOrdinal,
+                    bool placeAfter);
 }
+
+// Árbol del índice con reordenación por arrastre. Captura el drop para mover la
+// sección en el documento (no deja que el QTreeWidget reordene sus ítems: la
+// ventana regenera el documento y reconstruye el árbol). Emite la petición con
+// los ordinales de origen y destino y si va antes o después.
+class OutlineTree : public QTreeWidget
+{
+    Q_OBJECT
+public:
+    explicit OutlineTree(QWidget *parent = nullptr);
+
+signals:
+    void sectionMoveRequested(int fromOrdinal, int toOrdinal, bool placeAfter);
+
+protected:
+    void dropEvent(QDropEvent *event) override;
+};
 
 // Panel lateral acoplable con el índice (TOC) de encabezados del documento,
 // mostrados como un árbol que refleja su anidamiento (H1 ▸ H2 ▸ H3). Al activar
@@ -54,9 +85,11 @@ public:
 
 signals:
     void headingActivated(int blockNumber);
+    // Reenvía la petición del árbol de mover una sección (ver OutlineTree).
+    void sectionMoveRequested(int fromOrdinal, int toOrdinal, bool placeAfter);
 
 private:
-    QTreeWidget *m_tree;
+    OutlineTree *m_tree;
     QHBoxLayout *m_layout;  // contenedor: [relleno izquierdo][árbol]
 };
 
