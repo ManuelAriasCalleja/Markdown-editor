@@ -25,6 +25,7 @@
 #include "mathblocks.h"
 #include "gotoheadingdialog.h"
 #include "outlinepanel.h"
+#include "shortcodes.h"
 #include "recentfilesmanager.h"
 #include "recoverymanager.h"
 #include "splitviewcontroller.h"
@@ -1570,6 +1571,16 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
             m_formula->guardPasteAgainstMath();
         if (m_formula->handleMathKeyPress(ke))
             return true;
+        // Shortcodes `:nombre:`: al teclear el ':' de cierre, si delante hay un
+        // `:nombre:` conocido se sustituye por su símbolo. Insertamos el ':' y
+        // expandimos nosotros (solo en el editor WYSIWYG, solo al teclear).
+        if (ke->text() == QStringLiteral(":")
+            && !(ke->modifiers() & (Qt::ControlModifier | Qt::AltModifier | Qt::MetaModifier))) {
+            QTextCursor cursor = m_editor->textCursor();
+            cursor.insertText(QStringLiteral(":"));
+            expandShortcodeBefore(cursor);
+            return true;
+        }
     }
     // Continuación inteligente de listas en el editor de código fuente. Se
     // comprueba m_split porque durante su construcción (al reparentar el editor en
@@ -1656,6 +1667,38 @@ void MainWindow::goToHeading()
     m_editor->setTextCursor(cursor);
     m_editor->ensureCursorVisible();
     m_editor->setFocus();
+}
+
+void MainWindow::expandShortcodeBefore(const QTextCursor &cursor)
+{
+    const QTextBlock block = cursor.block();
+    const int blockStart = block.position();
+    const int end = cursor.position() - blockStart;  // tras el ':' de cierre, en el bloque
+    const QString text = block.text();
+    if (end < 2 || text.at(end - 1) != QLatin1Char(':'))
+        return;
+    // Busca el ':' de apertura hacia atrás; el nombre solo admite [A-Za-z0-9_].
+    int open = -1;
+    for (int i = end - 2; i >= 0; --i) {
+        const QChar c = text.at(i);
+        if (c == QLatin1Char(':')) {
+            open = i;
+            break;
+        }
+        if (!(c.isLetterOrNumber() || c == QLatin1Char('_')))
+            return;  // carácter inválido en el nombre: no es un shortcode
+    }
+    if (open < 0)
+        return;
+    const QString name = text.mid(open + 1, (end - 1) - (open + 1));
+    const QString symbol = mdshortcode::expand(name);
+    if (symbol.isEmpty())
+        return;
+    // Sustituye `:nombre:` (ambos dos puntos incluidos) por el símbolo.
+    QTextCursor replace(m_editor->document());
+    replace.setPosition(blockStart + open);
+    replace.setPosition(blockStart + end, QTextCursor::KeepAnchor);
+    replace.insertText(symbol);
 }
 
 QString MainWindow::footnoteRefIdAt(const QPoint &viewportPos) const

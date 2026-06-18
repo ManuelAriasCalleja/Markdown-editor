@@ -81,6 +81,8 @@ add_library(md-editor-core STATIC
     src/tasklist.h
     src/footnotes.cpp
     src/footnotes.h
+    src/shortcodes.cpp
+    src/shortcodes.h
     src/mathblocks.cpp
     src/mathblocks.h
     src/tableedit.cpp
@@ -215,6 +217,7 @@ if(Qt6Test_FOUND)
         tst_tasklist
         tst_symbolcatalog
         tst_urldetect
+        tst_shortcodes
         tst_footnotes
         tst_mathblocks
         tst_tableedit

@@ -12,6 +12,7 @@
 
 class QTextEdit;
 class QTextCharFormat;
+class QTextCursor;
 class QAction;
 class QCloseEvent;
 class QEvent;
@@ -86,6 +87,10 @@ private:
 
     // Abre el diálogo «Ir a encabezado» (Ctrl+G) y lleva el cursor al elegido.
     void goToHeading();
+
+    // Tras teclear el ':' de cierre (en `cursor`), si justo antes hay un shortcode
+    // `:nombre:` conocido, lo sustituye por su símbolo (ver mdshortcode).
+    void expandShortcodeBefore(const QTextCursor &cursor);
 
     // Id de la referencia de nota al pie renderizada bajo `viewportPos`, o cadena
     // vacía si no hay ninguna. Lo usan el clic y la pista de hover.
