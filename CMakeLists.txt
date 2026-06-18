@@ -41,6 +41,10 @@ add_library(md-editor-core STATIC
     src/formulacontroller.h
     src/insertcontroller.cpp
     src/insertcontroller.h
+    src/symbolcatalog.cpp
+    src/symbolcatalog.h
+    src/symbolpicker.cpp
+    src/symbolpicker.h
     src/distractionfreecontroller.cpp
     src/distractionfreecontroller.h
     src/chromezoom.cpp
@@ -205,6 +209,7 @@ if(Qt6Test_FOUND)
         tst_blockconstructs
         tst_listcontinuation
         tst_tasklist
+        tst_symbolcatalog
         tst_footnotes
         tst_mathblocks
         tst_tableedit

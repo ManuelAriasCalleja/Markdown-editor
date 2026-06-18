@@ -119,511 +119,521 @@
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="../src/mainwindow.cpp" line="507"/>
+        <location filename="../src/mainwindow.cpp" line="524"/>
         <source>Editor Markdown WYSIWYG — escribe y da formato con la barra superior</source>
         <translation>Editor Markdown WYSIWYG — scrie și formatează cu bara de sus</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="539"/>
+        <location filename="../src/mainwindow.cpp" line="556"/>
         <source>&amp;Archivo</source>
         <translation>&amp;Fișier</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="541"/>
+        <location filename="../src/mainwindow.cpp" line="558"/>
         <source>&amp;Nuevo</source>
         <translation>&amp;Nou</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="545"/>
+        <location filename="../src/mainwindow.cpp" line="562"/>
         <source>&amp;Abrir...</source>
         <translation>&amp;Deschide...</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="549"/>
+        <location filename="../src/mainwindow.cpp" line="566"/>
         <source>Abrir &amp;recientes</source>
         <translation>Deschide &amp;recente</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="554"/>
+        <location filename="../src/mainwindow.cpp" line="571"/>
         <source>&amp;Guardar</source>
         <translation>&amp;Salvează</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="558"/>
+        <location filename="../src/mainwindow.cpp" line="575"/>
         <source>Guardar &amp;como...</source>
         <translation>Salvează &amp;ca...</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="562"/>
+        <location filename="../src/mainwindow.cpp" line="579"/>
         <source>Abrir &amp;carpeta contenedora</source>
         <translation>Deschide &amp;folderul documentului</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="567"/>
+        <location filename="../src/mainwindow.cpp" line="584"/>
         <source>&amp;Exportar</source>
         <translation>&amp;Exportă</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="568"/>
+        <location filename="../src/mainwindow.cpp" line="585"/>
         <source>A PDF...</source>
         <translation>În PDF...</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="570"/>
+        <location filename="../src/mainwindow.cpp" line="587"/>
         <source>A HTML...</source>
         <translation>În HTML...</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="572"/>
+        <location filename="../src/mainwindow.cpp" line="589"/>
         <source>A ODF (ODT)...</source>
         <translation>În ODF (ODT)...</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="574"/>
+        <location filename="../src/mainwindow.cpp" line="591"/>
         <source>A DOCX (Word)...</source>
         <translation>În DOCX (Word)...</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="576"/>
+        <location filename="../src/mainwindow.cpp" line="593"/>
         <source>A LaTeX...</source>
         <translation>În LaTeX...</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="581"/>
+        <location filename="../src/mainwindow.cpp" line="598"/>
         <source>&amp;Vista previa de impresión...</source>
         <translation>&amp;Previzualizare tipărire...</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="584"/>
+        <location filename="../src/mainwindow.cpp" line="601"/>
         <source>&amp;Imprimir...</source>
         <translation>&amp;Tipărește...</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="590"/>
+        <location filename="../src/mainwindow.cpp" line="607"/>
         <source>&amp;Salir</source>
         <translation>&amp;Ieșire</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="597"/>
+        <location filename="../src/mainwindow.cpp" line="614"/>
         <source>&amp;Editar</source>
         <translation>&amp;Editare</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="599"/>
+        <location filename="../src/mainwindow.cpp" line="616"/>
         <source>Deshacer</source>
         <translation>Anulează</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="603"/>
+        <location filename="../src/mainwindow.cpp" line="620"/>
         <source>Rehacer</source>
         <translation>Refă</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="609"/>
+        <location filename="../src/mainwindow.cpp" line="626"/>
         <source>Pegar como texto plano</source>
         <translation>Lipește ca text simplu</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="620"/>
+        <location filename="../src/mainwindow.cpp" line="637"/>
         <source>Copiar como HTML</source>
         <translation>Copiază ca HTML</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="627"/>
+        <location filename="../src/mainwindow.cpp" line="644"/>
         <source>Transformar texto</source>
         <translation>Transformă textul</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="636"/>
+        <location filename="../src/mainwindow.cpp" line="653"/>
         <source>MAYÚSCULAS</source>
         <translation>MAJUSCULE</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="639"/>
+        <location filename="../src/mainwindow.cpp" line="656"/>
         <source>minúsculas</source>
         <translation>minuscule</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="642"/>
+        <location filename="../src/mainwindow.cpp" line="659"/>
         <source>Capitalizar</source>
         <translation>Capitalizează cuvintele</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="646"/>
+        <location filename="../src/mainwindow.cpp" line="663"/>
         <source>Ordenar líneas</source>
         <translation>Sortează liniile</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="663"/>
+        <location filename="../src/mainwindow.cpp" line="680"/>
         <source>Buscar...</source>
         <translation>Caută...</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="667"/>
+        <location filename="../src/mainwindow.cpp" line="684"/>
         <source>Reemplazar...</source>
         <translation>Înlocuiește...</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="693"/>
+        <location filename="../src/mainwindow.cpp" line="710"/>
         <source>Negrita</source>
         <translation>Îngroșat</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="697"/>
+        <location filename="../src/mainwindow.cpp" line="714"/>
         <source>Cursiva</source>
         <translation>Cursiv</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="701"/>
+        <location filename="../src/mainwindow.cpp" line="718"/>
         <source>Subrayado</source>
         <translation>Subliniat</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="707"/>
+        <location filename="../src/mainwindow.cpp" line="724"/>
         <source>Tachado</source>
         <translation>Tăiat</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="711"/>
+        <location filename="../src/mainwindow.cpp" line="728"/>
         <source>Código</source>
         <translation>Cod</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="719"/>
+        <location filename="../src/mainwindow.cpp" line="736"/>
         <source>Código en línea</source>
         <translation>Cod în linie</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="720"/>
-        <location filename="../src/insertcontroller.cpp" line="104"/>
+        <location filename="../src/mainwindow.cpp" line="737"/>
+        <location filename="../src/insertcontroller.cpp" line="105"/>
         <source>Enlace</source>
         <translation>Legătură</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="721"/>
+        <location filename="../src/mainwindow.cpp" line="738"/>
         <source>Insertar o editar enlace</source>
         <translation>Inserează sau editează legătura</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="722"/>
+        <location filename="../src/mainwindow.cpp" line="739"/>
         <source>❝ Cita</source>
         <translation>❝ Citat</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="723"/>
+        <location filename="../src/mainwindow.cpp" line="740"/>
         <source>Convertir en cita</source>
         <translation>Transformă în citat</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="724"/>
+        <location filename="../src/mainwindow.cpp" line="741"/>
         <source>Bloque</source>
         <translation>Bloc</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="725"/>
+        <location filename="../src/mainwindow.cpp" line="742"/>
         <source>Bloque de código</source>
         <translation>Bloc de cod</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="726"/>
+        <location filename="../src/mainwindow.cpp" line="743"/>
         <source>H1</source>
         <translation>H1</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="728"/>
+        <location filename="../src/mainwindow.cpp" line="745"/>
         <source>H2</source>
         <translation>H2</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="730"/>
+        <location filename="../src/mainwindow.cpp" line="747"/>
         <source>H3</source>
         <translation>H3</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="732"/>
+        <location filename="../src/mainwindow.cpp" line="749"/>
         <source>H4</source>
         <translation>H4</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="734"/>
+        <location filename="../src/mainwindow.cpp" line="751"/>
         <source>H5</source>
         <translation>H5</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="736"/>
+        <location filename="../src/mainwindow.cpp" line="753"/>
         <source>H6</source>
         <translation>H6</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="762"/>
+        <location filename="../src/mainwindow.cpp" line="779"/>
         <source>&amp;Formato</source>
         <translation>For&amp;mat</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="781"/>
+        <location filename="../src/mainwindow.cpp" line="798"/>
         <source>Aumentar sangría</source>
         <translation>Mărește indentarea</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="786"/>
+        <location filename="../src/mainwindow.cpp" line="803"/>
         <source>Disminuir sangría</source>
         <translation>Micșorează indentarea</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="795"/>
+        <location filename="../src/mainwindow.cpp" line="812"/>
         <source>Lenguaje del bloque...</source>
         <translation>Limbajul blocului...</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="796"/>
+        <location filename="../src/mainwindow.cpp" line="813"/>
         <source>Fija el lenguaje del bloque de código (resaltado)</source>
         <translation>Stabilește limbajul blocului de cod (evidențiere)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="811"/>
+        <location filename="../src/mainwindow.cpp" line="828"/>
         <source>&amp;Insertar</source>
         <translation>&amp;Inserare</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="813"/>
+        <location filename="../src/mainwindow.cpp" line="830"/>
         <source>Enlace...</source>
         <translation>Legătură...</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="816"/>
+        <location filename="../src/mainwindow.cpp" line="833"/>
         <source>Imagen...</source>
         <translation>Imagine...</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="819"/>
-        <location filename="../src/insertcontroller.cpp" line="171"/>
-        <location filename="../src/insertcontroller.cpp" line="188"/>
-        <location filename="../src/insertcontroller.cpp" line="230"/>
+        <location filename="../src/mainwindow.cpp" line="836"/>
+        <location filename="../src/insertcontroller.cpp" line="172"/>
+        <location filename="../src/insertcontroller.cpp" line="189"/>
+        <location filename="../src/insertcontroller.cpp" line="231"/>
         <source>Pegar imagen</source>
         <translation>Lipește imaginea</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="820"/>
+        <location filename="../src/mainwindow.cpp" line="837"/>
         <source>Guarda la imagen del portapapeles y la inserta</source>
         <translation>Salvează imaginea din clipboard și o inserează</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="823"/>
+        <location filename="../src/mainwindow.cpp" line="840"/>
         <source>Tabla...</source>
         <translation>Tabel...</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="826"/>
+        <location filename="../src/mainwindow.cpp" line="843"/>
         <source>Regla horizontal</source>
         <translation>Linie orizontală</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="829"/>
+        <location filename="../src/mainwindow.cpp" line="846"/>
         <source>Índice (TOC)</source>
         <translation>Cuprins (TOC)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="830"/>
+        <location filename="../src/mainwindow.cpp" line="847"/>
         <source>Inserta un índice con los encabezados del documento</source>
         <translation>Inserează un cuprins cu titlurile documentului</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="833"/>
+        <location filename="../src/mainwindow.cpp" line="850"/>
         <source>Fórmula...</source>
         <translation>Formulă...</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="840"/>
+        <location filename="../src/mainwindow.cpp" line="857"/>
         <source>Nota al pie</source>
         <translation>Notă de subsol</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="843"/>
+        <location filename="../src/mainwindow.cpp" line="860"/>
         <source>Inserta una referencia [^n] y su definición al final del documento</source>
         <translation>Inserează o referință [^n] și definiția ei la sfârșitul documentului</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="858"/>
+        <location filename="../src/mainwindow.cpp" line="865"/>
+        <source>Símbolos especiales...</source>
+        <translation>Simboluri speciale...</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="866"/>
+        <source>Inserta símbolos no habituales, por categorías</source>
+        <translation>Inserează simboluri mai puțin uzuale, pe categorii</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="879"/>
         <source>&amp;Tabla</source>
         <translation>&amp;Tabel</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="860"/>
+        <location filename="../src/mainwindow.cpp" line="881"/>
         <source>Insertar fila encima</source>
         <translation>Inserează rând deasupra</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="862"/>
+        <location filename="../src/mainwindow.cpp" line="883"/>
         <source>Insertar fila debajo</source>
         <translation>Inserează rând dedesubt</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="864"/>
+        <location filename="../src/mainwindow.cpp" line="885"/>
         <source>Insertar columna a la izquierda</source>
         <translation>Inserează coloană la stânga</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="866"/>
+        <location filename="../src/mainwindow.cpp" line="887"/>
         <source>Insertar columna a la derecha</source>
         <translation>Inserează coloană la dreapta</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="870"/>
+        <location filename="../src/mainwindow.cpp" line="891"/>
         <source>Eliminar fila</source>
         <translation>Șterge rândul</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="872"/>
+        <location filename="../src/mainwindow.cpp" line="893"/>
         <source>Eliminar columna</source>
         <translation>Șterge coloana</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="876"/>
+        <location filename="../src/mainwindow.cpp" line="897"/>
         <source>Alinear columna</source>
         <translation>Aliniază coloana</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="877"/>
+        <location filename="../src/mainwindow.cpp" line="898"/>
         <source>Izquierda</source>
         <translation>Stânga</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="879"/>
+        <location filename="../src/mainwindow.cpp" line="900"/>
         <source>Centrar</source>
         <translation>Centrat</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="881"/>
+        <location filename="../src/mainwindow.cpp" line="902"/>
         <source>Derecha</source>
         <translation>Dreapta</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="892"/>
+        <location filename="../src/mainwindow.cpp" line="913"/>
         <source>&amp;Ver</source>
         <translation>&amp;Vizualizare</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="902"/>
+        <location filename="../src/mainwindow.cpp" line="923"/>
         <source>Vista dividida</source>
         <translation>Vizualizare divizată</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="908"/>
+        <location filename="../src/mainwindow.cpp" line="929"/>
         <source>Editar WYSIWYG y código fuente a la vez, lado a lado</source>
         <translation>Editează WYSIWYG și codul sursă simultan, unul lângă altul</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="913"/>
+        <location filename="../src/mainwindow.cpp" line="934"/>
         <source>Sin distracciones</source>
         <translation>Mod fără distrageri</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="917"/>
+        <location filename="../src/mainwindow.cpp" line="938"/>
         <source>Pantalla completa, sin barras, con el texto centrado (ESC o F11 para salir)</source>
         <translation>Ecran complet, fără bare, cu textul centrat (ESC sau F11 pentru a ieși)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="924"/>
+        <location filename="../src/mainwindow.cpp" line="945"/>
         <source>Esquema</source>
         <translation>Schiță</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="933"/>
+        <location filename="../src/mainwindow.cpp" line="954"/>
         <source>Aumentar letra</source>
         <translation>Mărește</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="938"/>
+        <location filename="../src/mainwindow.cpp" line="959"/>
         <source>Reducir letra</source>
         <translation>Micșorează</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="942"/>
+        <location filename="../src/mainwindow.cpp" line="963"/>
         <source>Tamaño normal</source>
         <translation>Dimensiune normală</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="948"/>
+        <location filename="../src/mainwindow.cpp" line="969"/>
         <source>Estadísticas del documento...</source>
         <translation>Statisticile documentului...</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="951"/>
+        <location filename="../src/mainwindow.cpp" line="972"/>
         <source>Mostrar contador de palabras</source>
         <translation>Afișează numărul de cuvinte</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="962"/>
+        <location filename="../src/mainwindow.cpp" line="983"/>
         <source>Tema</source>
         <translation>Temă</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="971"/>
+        <location filename="../src/mainwindow.cpp" line="992"/>
         <source>Claro</source>
         <translation>Luminoasă</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="972"/>
+        <location filename="../src/mainwindow.cpp" line="993"/>
         <source>Oscuro</source>
         <translation>Întunecată</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="973"/>
+        <location filename="../src/mainwindow.cpp" line="994"/>
         <source>Alto contraste</source>
         <translation>Contrast ridicat</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1001"/>
+        <location filename="../src/mainwindow.cpp" line="1022"/>
         <source>Seguir el sistema</source>
         <translation>Urmează sistemul</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1005"/>
+        <location filename="../src/mainwindow.cpp" line="1026"/>
         <source>Usa el tema claro u oscuro según la configuración del sistema operativo</source>
         <translation>Folosește tema luminoasă sau întunecată în funcție de setarea sistemului de operare</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1019"/>
+        <location filename="../src/mainwindow.cpp" line="1040"/>
         <source>Luz cálida nocturna</source>
         <translation>Lumină caldă nocturnă</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1023"/>
+        <location filename="../src/mainwindow.cpp" line="1044"/>
         <source>Tiñe el fondo del editor de tono ámbar según la hora, más cálido de noche</source>
         <translation>Colorează fundalul editorului în chihlimbar în funcție de oră, mai cald noaptea</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1061"/>
+        <location filename="../src/mainwindow.cpp" line="1082"/>
         <source>A&amp;yuda</source>
         <translation>A&amp;jutor</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1062"/>
+        <location filename="../src/mainwindow.cpp" line="1083"/>
         <source>&amp;Manual</source>
         <translation>&amp;Manual</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1066"/>
+        <location filename="../src/mainwindow.cpp" line="1087"/>
         <source>&amp;Acerca de</source>
         <translation>&amp;Despre</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1125"/>
+        <location filename="../src/mainwindow.cpp" line="1146"/>
         <source>Acerca de</source>
         <translation>Despre</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1132"/>
+        <location filename="../src/mainwindow.cpp" line="1153"/>
         <source>Versión 1.0</source>
         <translation>Versiunea 1.0</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1133"/>
+        <location filename="../src/mainwindow.cpp" line="1154"/>
         <source>Desarrollado por Manuel Arias Calleja</source>
         <translation>Dezvoltat de Manuel Arias Calleja</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1135"/>
+        <location filename="../src/mainwindow.cpp" line="1156"/>
         <source>Editor WYSIWYG de Markdown en Qt6 + C++17.</source>
         <translation>Editor WYSIWYG Markdown în Qt6 + C++17.</translation>
     </message>
@@ -632,12 +642,12 @@
         <translation type="vanished">Realizat de Manuel Arias Calleja.</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1143"/>
+        <location filename="../src/mainwindow.cpp" line="1164"/>
         <source>Formato</source>
         <translation>Format</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1233"/>
+        <location filename="../src/mainwindow.cpp" line="1254"/>
         <source>Selección: </source>
         <translation>Selecție: </translation>
     </message>
@@ -657,63 +667,63 @@
         <translation>Limbaj (gol = niciunul):</translation>
     </message>
     <message>
-        <location filename="../src/insertcontroller.cpp" line="105"/>
+        <location filename="../src/insertcontroller.cpp" line="106"/>
         <source>Texto:</source>
         <translation>Text:</translation>
     </message>
     <message>
-        <location filename="../src/insertcontroller.cpp" line="106"/>
+        <location filename="../src/insertcontroller.cpp" line="107"/>
         <source>URL:</source>
         <translation>URL:</translation>
     </message>
     <message>
-        <location filename="../src/insertcontroller.cpp" line="138"/>
+        <location filename="../src/insertcontroller.cpp" line="139"/>
         <source>imagen</source>
         <translation>imagine</translation>
     </message>
     <message>
-        <location filename="../src/insertcontroller.cpp" line="140"/>
+        <location filename="../src/insertcontroller.cpp" line="141"/>
         <source>Insertar imagen</source>
         <translation>Inserează imagine</translation>
     </message>
     <message>
-        <location filename="../src/insertcontroller.cpp" line="141"/>
-        <location filename="../src/insertcontroller.cpp" line="189"/>
+        <location filename="../src/insertcontroller.cpp" line="142"/>
+        <location filename="../src/insertcontroller.cpp" line="190"/>
         <source>Texto alternativo:</source>
         <translation>Text alternativ:</translation>
     </message>
     <message>
-        <location filename="../src/insertcontroller.cpp" line="142"/>
+        <location filename="../src/insertcontroller.cpp" line="143"/>
         <source>Ruta o URL:</source>
         <translation>Cale sau URL:</translation>
     </message>
     <message>
-        <location filename="../src/insertcontroller.cpp" line="172"/>
+        <location filename="../src/insertcontroller.cpp" line="173"/>
         <source>El portapapeles no contiene ninguna imagen.</source>
         <translation>Clipboardul nu conține nicio imagine.</translation>
     </message>
     <message>
-        <location filename="../src/insertcontroller.cpp" line="220"/>
+        <location filename="../src/insertcontroller.cpp" line="221"/>
         <source>Guardar imagen pegada</source>
         <translation>Salvează imaginea lipită</translation>
     </message>
     <message>
-        <location filename="../src/insertcontroller.cpp" line="222"/>
+        <location filename="../src/insertcontroller.cpp" line="223"/>
         <source>Imagen PNG (*.png)</source>
         <translation>Imagine PNG (*.png)</translation>
     </message>
     <message>
-        <location filename="../src/insertcontroller.cpp" line="231"/>
+        <location filename="../src/insertcontroller.cpp" line="232"/>
         <source>No se pudo guardar la imagen en «%1».</source>
         <translation>Imaginea nu a putut fi salvată în „%1”.</translation>
     </message>
     <message>
-        <location filename="../src/insertcontroller.cpp" line="298"/>
+        <location filename="../src/insertcontroller.cpp" line="299"/>
         <source>Insertar índice</source>
         <translation>Inserează cuprins</translation>
     </message>
     <message>
-        <location filename="../src/insertcontroller.cpp" line="299"/>
+        <location filename="../src/insertcontroller.cpp" line="300"/>
         <source>El documento no tiene encabezados.</source>
         <translation>Documentul nu conține titluri.</translation>
     </message>
@@ -855,13 +865,13 @@
         <translation>Exportat în LaTeX: %1</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="472"/>
+        <location filename="../src/mainwindow.cpp" line="489"/>
         <source>El archivo se eliminó o movió en disco.</source>
         <translation>Fișierul a fost șters sau mutat pe disc.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/mainwindow.cpp" line="1231"/>
-        <location filename="../src/mainwindow.cpp" line="1253"/>
+        <location filename="../src/mainwindow.cpp" line="1252"/>
+        <location filename="../src/mainwindow.cpp" line="1274"/>
         <source>~%n min</source>
         <translation>
             <numerusform>~%n min</numerusform>
@@ -870,87 +880,87 @@
         </translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1244"/>
+        <location filename="../src/mainwindow.cpp" line="1265"/>
         <source>Estadísticas del documento</source>
         <translation>Statisticile documentului</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1246"/>
+        <location filename="../src/mainwindow.cpp" line="1267"/>
         <source>Palabras:</source>
         <translation>Cuvinte:</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1247"/>
+        <location filename="../src/mainwindow.cpp" line="1268"/>
         <source>Caracteres:</source>
         <translation>Caractere:</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1248"/>
+        <location filename="../src/mainwindow.cpp" line="1269"/>
         <source>Caracteres (sin espacios):</source>
         <translation>Caractere (fără spații):</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1250"/>
+        <location filename="../src/mainwindow.cpp" line="1271"/>
         <source>Párrafos:</source>
         <translation>Paragrafe:</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1251"/>
+        <location filename="../src/mainwindow.cpp" line="1272"/>
         <source>Frases:</source>
         <translation>Propoziții:</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1252"/>
+        <location filename="../src/mainwindow.cpp" line="1273"/>
         <source>Tiempo de lectura:</source>
         <translation>Timp de citire:</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1455"/>
+        <location filename="../src/mainwindow.cpp" line="1476"/>
         <source>Clic para marcar o desmarcar la tarea</source>
         <translation>Clic pentru a bifa sau debifa sarcina</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1461"/>
+        <location filename="../src/mainwindow.cpp" line="1482"/>
         <source>Clic para ir a la nota al pie</source>
         <translation>Clic pentru a merge la nota de subsol</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1612"/>
+        <location filename="../src/mainwindow.cpp" line="1633"/>
         <source>La nota [^%1] no tiene definición</source>
         <translation>Nota [^%1] nu are definiție</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1702"/>
+        <location filename="../src/mainwindow.cpp" line="1723"/>
         <source>El archivo cambió en disco: recargado.</source>
         <translation>Fișierul s-a schimbat pe disc: reîncărcat.</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1709"/>
+        <location filename="../src/mainwindow.cpp" line="1730"/>
         <source>Archivo modificado en disco</source>
         <translation>Fișier modificat pe disc</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1710"/>
+        <location filename="../src/mainwindow.cpp" line="1731"/>
         <source>«%1» ha cambiado en disco y tienes cambios sin guardar.</source>
         <translation>„%1” s-a schimbat pe disc și ai modificări nesalvate.</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1713"/>
+        <location filename="../src/mainwindow.cpp" line="1734"/>
         <source>¿Recargar la versión del disco (perderás tus cambios) o conservar los tuyos?</source>
         <translation>Reîncărcați versiunea de pe disc (veți pierde modificările) sau le păstrați pe ale dvs.?</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1714"/>
+        <location filename="../src/mainwindow.cpp" line="1735"/>
         <source>Recargar</source>
         <translation>Reîncarcă</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1716"/>
+        <location filename="../src/mainwindow.cpp" line="1737"/>
         <source>Conservar los míos</source>
         <translation>Păstrează-le pe ale mele</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1745"/>
+        <location filename="../src/mainwindow.cpp" line="1766"/>
         <source>No se pudo recargar el archivo:
 %1
 
@@ -961,22 +971,22 @@
 %2</translation>
     </message>
     <message>
-        <location filename="../src/insertcontroller.cpp" line="190"/>
+        <location filename="../src/insertcontroller.cpp" line="191"/>
         <source>imagen pegada</source>
         <translation>imagine lipită</translation>
     </message>
     <message>
-        <location filename="../src/insertcontroller.cpp" line="249"/>
+        <location filename="../src/insertcontroller.cpp" line="250"/>
         <source>Insertar tabla</source>
         <translation>Inserează tabel</translation>
     </message>
     <message>
-        <location filename="../src/insertcontroller.cpp" line="257"/>
+        <location filename="../src/insertcontroller.cpp" line="258"/>
         <source>Columnas:</source>
         <translation>Coloane:</translation>
     </message>
     <message>
-        <location filename="../src/insertcontroller.cpp" line="258"/>
+        <location filename="../src/insertcontroller.cpp" line="259"/>
         <source>Filas de datos:</source>
         <translation>Rânduri de date:</translation>
     </message>
@@ -1006,7 +1016,7 @@
         <translation>HTML (*.html *.htm)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1744"/>
+        <location filename="../src/mainwindow.cpp" line="1765"/>
         <location filename="../src/exportcontroller.cpp" line="111"/>
         <location filename="../src/exportcontroller.cpp" line="219"/>
         <location filename="../src/exportcontroller.cpp" line="247"/>
@@ -1032,7 +1042,7 @@
         <translation>Exportat în HTML: %1</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1468"/>
+        <location filename="../src/mainwindow.cpp" line="1489"/>
         <source>Ctrl+clic para abrir el enlace: %1</source>
         <translation>Ctrl+clic pentru a deschide legătura: %1</translation>
     </message>
@@ -1111,17 +1121,17 @@ Doriți să le salvați?</translation>
         <translation>Document recuperat din sesiunea anterioară</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1639"/>
+        <location filename="../src/mainwindow.cpp" line="1660"/>
         <source>(sin título)</source>
         <translation>(fără titlu)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1644"/>
+        <location filename="../src/mainwindow.cpp" line="1665"/>
         <source>Recuperar documento</source>
         <translation>Recuperează documentul</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1645"/>
+        <location filename="../src/mainwindow.cpp" line="1666"/>
         <source>Se encontró un documento con cambios sin guardar de una sesión anterior:
 %1 (%2).
 
@@ -1132,52 +1142,52 @@ Doriți să le salvați?</translation>
 Dorești să îl recuperezi?</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1648"/>
+        <location filename="../src/mainwindow.cpp" line="1669"/>
         <source>Recuperar</source>
         <translation>Recuperează</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1649"/>
+        <location filename="../src/mainwindow.cpp" line="1670"/>
         <source>Descartar</source>
         <translation>Renunță</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1687"/>
+        <location filename="../src/mainwindow.cpp" line="1708"/>
         <source>Sin título</source>
         <translation>Fără titlu</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1690"/>
+        <location filename="../src/mainwindow.cpp" line="1711"/>
         <source>%1[*] — md-editor</source>
         <translation>%1[*] — md-editor</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1033"/>
+        <location filename="../src/mainwindow.cpp" line="1054"/>
         <source>Automático (sistema)</source>
         <translation>Automat (sistem)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="738"/>
+        <location filename="../src/mainwindow.cpp" line="755"/>
         <source>Lista de viñetas</source>
         <translation>Listă cu marcatori</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="740"/>
+        <location filename="../src/mainwindow.cpp" line="757"/>
         <source>Lista numerada</source>
         <translation>Listă numerotată</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="742"/>
+        <location filename="../src/mainwindow.cpp" line="759"/>
         <source>Lista de tareas</source>
         <translation>Listă de sarcini</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1045"/>
+        <location filename="../src/mainwindow.cpp" line="1066"/>
         <source>Idioma</source>
         <translation>Limbă</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/mainwindow.cpp" line="1224"/>
+        <location filename="../src/mainwindow.cpp" line="1245"/>
         <source>%n palabra(s)</source>
         <translation>
             <numerusform>%n cuvânt</numerusform>
@@ -1186,7 +1196,7 @@ Dorești să îl recuperezi?</translation>
         </translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/mainwindow.cpp" line="1226"/>
+        <location filename="../src/mainwindow.cpp" line="1247"/>
         <source>%n carácter(es)</source>
         <translation>
             <numerusform>%n caracter</numerusform>
@@ -1200,7 +1210,7 @@ Dorești să îl recuperezi?</translation>
         <translation>%1 — front matter păstrat</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="894"/>
+        <location filename="../src/mainwindow.cpp" line="915"/>
         <source>Código fuente Markdown</source>
         <translation>Sursă Markdown</translation>
     </message>
@@ -1208,12 +1218,12 @@ Dorești să îl recuperezi?</translation>
 <context>
     <name>OutlinePanel</name>
     <message>
-        <location filename="../src/outlinepanel.cpp" line="50"/>
+        <location filename="../src/outlinepanel.cpp" line="206"/>
         <source>Esquema</source>
         <translation>Schiță</translation>
     </message>
     <message>
-        <location filename="../src/outlinepanel.cpp" line="87"/>
+        <location filename="../src/outlinepanel.cpp" line="244"/>
         <source>Sin encabezados</source>
         <translation>Fără titluri</translation>
     </message>
@@ -1221,17 +1231,17 @@ Dorești să îl recuperezi?</translation>
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../src/insertcontroller.cpp" line="59"/>
+        <location filename="../src/insertcontroller.cpp" line="60"/>
         <source>...</source>
         <translation>...</translation>
     </message>
     <message>
-        <location filename="../src/insertcontroller.cpp" line="62"/>
+        <location filename="../src/insertcontroller.cpp" line="63"/>
         <source>Elegir imagen</source>
         <translation>Alege imagine</translation>
     </message>
     <message>
-        <location filename="../src/insertcontroller.cpp" line="63"/>
+        <location filename="../src/insertcontroller.cpp" line="64"/>
         <source>Imágenes (*.png *.jpg *.jpeg *.gif *.bmp *.svg);;Todos (*)</source>
         <translation>Imagini (*.png *.jpg *.jpeg *.gif *.bmp *.svg);;Toate (*)</translation>
     </message>
@@ -1242,6 +1252,54 @@ Dorești să îl recuperezi?</translation>
         <location filename="../src/recentfilesmanager.cpp" line="79"/>
         <source>Borrar la lista</source>
         <translation>Golește lista</translation>
+    </message>
+</context>
+<context>
+    <name>SymbolPicker</name>
+    <message>
+        <location filename="../src/symbolpicker.cpp" line="15"/>
+        <source>Símbolos especiales</source>
+        <translation>Simboluri speciale</translation>
+    </message>
+    <message>
+        <location filename="../src/symbolcatalog.cpp" line="31"/>
+        <source>Matemáticos</source>
+        <translation>Matematice</translation>
+    </message>
+    <message>
+        <location filename="../src/symbolcatalog.cpp" line="34"/>
+        <source>Griego</source>
+        <translation>Grecești</translation>
+    </message>
+    <message>
+        <location filename="../src/symbolcatalog.cpp" line="37"/>
+        <source>Flechas</source>
+        <translation>Săgeți</translation>
+    </message>
+    <message>
+        <location filename="../src/symbolcatalog.cpp" line="40"/>
+        <source>Moneda</source>
+        <translation>Monedă</translation>
+    </message>
+    <message>
+        <location filename="../src/symbolcatalog.cpp" line="42"/>
+        <source>Puntuación y tipografía</source>
+        <translation>Punctuație și tipografie</translation>
+    </message>
+    <message>
+        <location filename="../src/symbolcatalog.cpp" line="45"/>
+        <source>Astronomía</source>
+        <translation>Astronomie</translation>
+    </message>
+    <message>
+        <location filename="../src/symbolcatalog.cpp" line="47"/>
+        <source>Marcas y viñetas</source>
+        <translation>Marcaje și buline</translation>
+    </message>
+    <message>
+        <location filename="../src/symbolcatalog.cpp" line="50"/>
+        <source>Fracciones y superíndices</source>
+        <translation>Fracții și exponenți/indici</translation>
     </message>
 </context>
 </TS>

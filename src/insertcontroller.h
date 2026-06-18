@@ -7,6 +7,7 @@ class QMimeData;
 class QTextEdit;
 class QWidget;
 class DocumentIo;
+class SymbolPicker;
 
 // Comandos de inserción del editor WYSIWYG: enlaces, imágenes (con diálogo o
 // pegadas del portapapeles), tablas y reglas horizontales. Las imágenes locales
@@ -36,6 +37,7 @@ public slots:
     void insertHorizontalRule();
     void insertTableOfContents();    // índice (TOC) con los encabezados del documento
     void insertFootnote();           // referencia `[^n]` + definición autonumeradas
+    void insertSymbol();             // abre el diálogo de símbolos especiales
     void pasteImageFromClipboard();  // acción del menú Insertar
 
 signals:
@@ -48,6 +50,7 @@ private:
     QTextEdit *m_editor = nullptr;
     DocumentIo *m_documentIo = nullptr;
     QWidget *m_parent = nullptr;  // padre de los diálogos
+    SymbolPicker *m_symbolPicker = nullptr;  // no modal, reutilizado entre aperturas
 };
 
 #endif // INSERTCONTROLLER_H

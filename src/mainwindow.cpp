@@ -862,9 +862,13 @@ void MainWindow::createInsertMenu()
             insFootnote->shortcut().toString(QKeySequence::NativeText)));
     connect(insFootnote, &QAction::triggered, m_insert, &InsertController::insertFootnote);
 
+    QAction *insSymbol = insertMenu->addAction(tr("Símbolos especiales..."));
+    insSymbol->setToolTip(tr("Inserta símbolos no habituales, por categorías"));
+    connect(insSymbol, &QAction::triggered, m_insert, &InsertController::insertSymbol);
+
     // Insertar tampoco aplica en la vista de fuente.
     m_wysiwygActions << insLink << insImage << insPasteImage << insTable << insRule
-                     << insToc << insFormula << insFootnote;
+                     << insToc << insFormula << insFootnote << insSymbol;
 }
 
 void MainWindow::createTableMenu()

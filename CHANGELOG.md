@@ -5,6 +5,14 @@ Todos los cambios relevantes de **md-editor** se documentan en este archivo.
 El formato sigue, a grandes rasgos, [Keep a Changelog](https://keepachangelog.com/es/),
 y el proyecto usa [versionado semántico](https://semver.org/lang/es/).
 
+## [Sin publicar]
+
+### Añadido
+- **Insertar → Símbolos especiales…**: diálogo con símbolos no habituales
+  (matemáticos, griego, flechas, moneda, puntuación, astronomía, marcas y
+  fracciones) organizados por categorías; un clic inserta el símbolo en el
+  cursor y el diálogo permanece abierto para insertar varios.
+
 ## [1.2.0] — 2026-06-18
 
 ### Añadido
@@ -76,6 +84,7 @@ y el proyecto usa [versionado semántico](https://semver.org/lang/es/).
 - CI/CD multiplataforma (Linux AppImage, Windows ZIP, macOS DMG) y publicación
   de releases por tag.
 
+[Sin publicar]: https://github.com/ManuelAriasCalleja/Markdown-editor/compare/v1.2.0...HEAD
 [1.2.0]: https://github.com/ManuelAriasCalleja/Markdown-editor/compare/v1.1.1...v1.2.0
 [1.1.1]: https://github.com/ManuelAriasCalleja/Markdown-editor/compare/v1.1.0...v1.1.1
 [1.1.0]: https://github.com/ManuelAriasCalleja/Markdown-editor/compare/v1.0.2...v1.1.0

@@ -27,6 +27,7 @@
 #include "documentio.h"
 #include "footnotes.h"
 #include "outlinepanel.h"
+#include "symbolpicker.h"
 
 // Los textos visibles de las acciones conservan el contexto de traducción
 // "MainWindow" (QCoreApplication::translate) para no re-hogar las cadenas ya
@@ -342,6 +343,20 @@ void InsertController::insertFootnote()
     place.setPosition(defPos);
     m_editor->setTextCursor(place);
     m_editor->setFocus();
+}
+
+void InsertController::insertSymbol()
+{
+    // Diálogo no modal y reutilizado: se queda abierto para insertar varios
+    // símbolos seguidos, cada uno en la posición actual del cursor.
+    if (!m_symbolPicker) {
+        m_symbolPicker = new SymbolPicker(m_parent);
+        connect(m_symbolPicker, &SymbolPicker::symbolChosen, this,
+                [this](const QString &symbol) { m_editor->insertPlainText(symbol); });
+    }
+    m_symbolPicker->show();
+    m_symbolPicker->raise();
+    m_symbolPicker->activateWindow();
 }
 
 void InsertController::insertHorizontalRule()
