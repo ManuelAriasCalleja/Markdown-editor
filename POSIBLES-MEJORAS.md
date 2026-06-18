@@ -1,8 +1,12 @@
 # Posibles mejoras
 
 Lista de mejoras propuestas para **md-editor**, agrupadas y priorizadas. El
-proyecto es sólido (~9k LOC, 18 ficheros de test, arquitectura por controllers,
+proyecto es sólido (~9k LOC, 23 ficheros de test, arquitectura por controllers,
 9 idiomas), así que las mejoras son sobre todo de alcance y distribución.
+
+> Leyenda: ✅ hecho · ⬜ pendiente. Las marcas reflejan el estado tras la última
+> tanda de trabajo (cambio de idioma en caliente, casillas interactivas, notas al
+> pie, reordenación de secciones y este CHANGELOG).
 
 ## 🎯 Alto impacto (poco esfuerzo / mucho valor)
 
@@ -10,9 +14,8 @@ proyecto es sólido (~9k LOC, 18 ficheros de test, arquitectura por controllers,
    (Linux/Windows/macOS) y la publicación de releases con tags. *Hecho:*
    `.github/workflows/release.yml` compila al empujar un tag `vX.Y.Z` (Linux
    AppImage, Windows ZIP portable, macOS DMG universal) y publica la Release con
-   notas autogeneradas; `ci.yml` compila y pasa los tests en cada push/PR.
-   Pendiente menor: subir las actions a Node.js 24 (`checkout`/`upload-artifact`
-   a `@v5`).
+   notas autogeneradas; `ci.yml` compila y pasa los tests en cada push/PR. Las
+   actions están ya en Node.js 24 (`@v5`).
 2. **Packaging para gestores nativos** — Flatpak/AppStream o AUR (Linux),
    winget/Chocolatey (Windows), Homebrew cask (macOS). Multiplica la visibilidad
    frente al `.AppImage`/`.zip` suelto y mejora la confianza.
@@ -60,17 +63,22 @@ proyecto es sólido (~9k LOC, 18 ficheros de test, arquitectura por controllers,
    código, enlaces (campo HYPERLINK) e imágenes embebidas; idioma y título
    incrustados. *Archivo → Exportar → A DOCX (Word)*.
 9. **Diagramas** (Mermaid/PlantUML) — complementaría el soporte TeX existente.
-10. **Insertar índice (TOC) automático** y **footnotes**, si no están cubiertos.
-    *Hecho el TOC:* `mdoutline::tableOfContentsMarkdown` + *Insertar → Índice
-    (TOC)*. Pendientes las footnotes (revisar antes su round-trip con `toMarkdown`).
+   *Tensiona la filosofía:* requiere un motor externo (JS/Java).
+10. ✅ **Insertar índice (TOC)** y ✅ **footnotes**. *Hechos:*
+    `mdoutline::tableOfContentsMarkdown` + *Insertar → Índice (TOC)*; y el módulo
+    puro `mdfootnote` + *Insertar → Nota al pie* (referencia `[^n]` autonumerada y
+    su definición, render como superíndice y salto a la definición con un clic).
+    El round-trip se respeta: Qt deja `[^id]` como texto literal y solo hace falta
+    proteger el `:` de las definiciones de una palabra (que md4c tomaría por
+    definición de enlace).
 11. ✅ **Tema automático según el sistema** (seguir el modo claro/oscuro del SO).
     *Hecho:* opción *Ver → Tema → Seguir el sistema* vía `QStyleHints`.
 
 ## 🧹 Calidad de código
 
-12. **Descomponer `mainwindow.cpp` (1507 líneas)** — es 3× el siguiente fichero.
-    Mover lógica de menús/acciones a uno o dos controllers más reduciría ese
-    "God object".
+12. **Descomponer `mainwindow.cpp`** (ya por encima de 1600 líneas) — es 3× el
+    siguiente fichero. Mover lógica de menús/acciones a uno o dos controllers más
+    reduciría ese "God object".
 13. **`mathblocks.cpp` (982 líneas)** — segundo candidato a dividir (parser vs.
     render/edición).
 14. **Static analysis en CI** — `clang-tidy` + compilar tests con ASAN/UBSAN.
@@ -99,10 +107,31 @@ Lote de mejoras de bajo coste, **sin dependencias nuevas** y portables a los 3 S
   *Editar → Copiar como HTML*.
 - **Transformar texto y ordenar líneas** — módulo puro `mdtext`
   (MAYÚSCULAS/minúsculas/Capitalizar/ordenar líneas), *Editar → Transformar texto*.
+- **Cambio de idioma sin reiniciar** — *Ver → Idioma* recrea la ventana al vuelo
+  (traductores intercambiables en `main()`), conservando el documento.
+- **Casillas de tarea interactivas** — módulo `mdtask`; clic sobre la casilla
+  marca/desmarca (`QTextBlockFormat::marker()`), round-trip nativo de Qt.
+- **Notas al pie** — ver punto 10.
+- **Reordenar secciones desde el esquema** — `mdoutline::moveSection` (pura) +
+  arrastre en el panel de índice; mueve la sección con su contenido y subsecciones.
+
+## ✨ Funcionalidad pendiente (nuevas ideas, encajan con la filosofía)
+
+Sin dependencias nuevas y con el patrón habitual (función pura + `tst_`):
+
+- ⬜ **Auto-enlazar al pegar URLs** — pegar una URL sobre texto seleccionado lo
+  convierte en `[texto](url)`; reusa el *handler* de pegado de `FocusEditor`.
+- ⬜ **Plantillas/snippets de documento** — *Archivo → Nuevo desde plantilla*,
+  `.md` embebidos en `.qrc`.
+- ⬜ **Exportar/imprimir solo la selección** — reusa `ExportController`.
+- ⬜ **Matemáticas "Nivel 2"** — layout 2D con un `QTextObjectInterface` propio
+  (fracciones reales, `\sum` con límites encima/debajo). Qt puro, esfuerzo alto.
+- ⬜ **Golden tests de exportadores** — fijar HTML/LaTeX/ODF/DOCX de referencia
+  para detectar regresiones de salida.
 
 ## 📋 Proyecto / comunidad
 
-16. **CHANGELOG.md** — facilita saber qué cambió entre versiones.
+16. ✅ **CHANGELOG.md** — *Hecho:* `CHANGELOG.md` con el historial por versión.
 17. **Repensar la licencia CC BY-ND** — el README dice que no se aceptan PRs de
     código por la licencia. Es legítimo, pero corta el crecimiento por
     contribuciones. Si algún día se quiere comunidad, una licencia de software
@@ -112,7 +141,8 @@ Lote de mejoras de bajo coste, **sin dependencias nuevas** y portables a los 3 S
 
 ---
 
-> **Prioridad sugerida:** la #1 (CI/CD multiplataforma) ya está hecha y publica
-> releases con binarios para Linux/Windows/macOS al empujar un tag. El siguiente
-> mayor desbloqueo de distribución es la #3 (firma/notarización de binarios), que
-> elimina la fricción de Gatekeeper/SmartScreen en la instalación.
+> **Prioridad sugerida:** en distribución, el mayor desbloqueo pendiente es la #3
+> (firma/notarización de binarios), que elimina la fricción de
+> Gatekeeper/SmartScreen en la instalación, seguida de la #2 (packaging nativo).
+> En funcionalidad, las nuevas ideas de la sección «pendiente» son las de mejor
+> encaje con la filosofía; en calidad, #14 (ASAN/UBSAN + clang-tidy en CI).

@@ -1,0 +1,76 @@
+# Registro de cambios
+
+Todos los cambios relevantes de **md-editor** se documentan en este archivo.
+
+El formato sigue, a grandes rasgos, [Keep a Changelog](https://keepachangelog.com/es/),
+y el proyecto usa [versionado semántico](https://semver.org/lang/es/).
+
+## [Sin publicar]
+
+### Añadido
+- **Cambio de idioma de la interfaz sin reiniciar**: *Ver → Idioma* aplica el
+  idioma al instante recreando la ventana (antes pedía reiniciar).
+- **Casillas de tarea interactivas**: un clic sobre la casilla de un ítem
+  `- [ ]`/`- [x]` la marca o desmarca, con pista al pasar por encima.
+- **Notas al pie**: *Insertar → Nota al pie* (Ctrl+Mayús+N) inserta una
+  referencia `[^n]` autonumerada y su definición; las referencias se muestran
+  como superíndice y un clic salta a su definición.
+- **Reordenar secciones desde el esquema**: arrastrar un encabezado en el panel
+  de índice mueve su sección entera (con su contenido y subsecciones).
+
+### Corregido
+- El panel de esquema (F9) podía aparecer ocupando casi toda la anchura al
+  restaurar un estado guardado desproporcionado; ahora se normaliza.
+- El tamaño de la fuente de los menús ya no se acumulaba al cambiar de idioma.
+
+## [1.1.1] — 2026-06-18
+
+### Corregido
+- La tabla de contenidos (panel de esquema) aparecía demasiado ancha.
+
+### Cambios internos
+- `install.sh`: modo `-m` (build de tamaño mínimo) / normal y ayuda `-h`.
+- CI: GitHub Actions actualizadas a Node.js 24 (v5).
+
+## [1.1.0] — 2026-06-16
+
+### Añadido
+- **Exportación a DOCX (Word)** con serializador OOXML propio (sin dependencias).
+- **Estadísticas del documento**, inserción de **índice (TOC)** y **seguir el
+  tema del sistema** (claro/oscuro).
+- Funciones baratas de Qt puro: vista previa de impresión, búsqueda con regex y
+  palabra completa, transformar texto y ordenar líneas, copiar como HTML, pegar
+  como texto plano, recordar la posición del cursor por archivo y abrir la
+  carpeta contenedora.
+- Especificación del producto y wiki bilingüe (9 idiomas).
+
+## [1.0.2] — 2026-05-30
+
+### Añadido
+- Traducción de la interfaz a 7 idiomas más (total: 9).
+
+### Corregido
+- Varios fallos menores reportados; refactor de arquitectura y mejora del
+  sistema de ayuda.
+
+## [1.0.1] — 2026-05-29
+
+### Corregido
+- Fallos reportados tras el lanzamiento inicial.
+
+## [1.0.0] — 2026-05-28
+
+### Añadido
+- Primera versión pública: editor/visor **WYSIWYG** de Markdown en Qt6 + C++17,
+  con round-trip por `QTextDocument`, fórmulas TeX, temas, modo sin
+  distracciones, vista dividida, exportación a PDF/HTML/ODT/LaTeX e
+  internacionalización a 9 idiomas.
+- CI/CD multiplataforma (Linux AppImage, Windows ZIP, macOS DMG) y publicación
+  de releases por tag.
+
+[Sin publicar]: https://github.com/ManuelAriasCalleja/Markdown-editor/compare/v1.1.1...HEAD
+[1.1.1]: https://github.com/ManuelAriasCalleja/Markdown-editor/compare/v1.1.0...v1.1.1
+[1.1.0]: https://github.com/ManuelAriasCalleja/Markdown-editor/compare/v1.0.2...v1.1.0
+[1.0.2]: https://github.com/ManuelAriasCalleja/Markdown-editor/compare/v1.0.1...v1.0.2
+[1.0.1]: https://github.com/ManuelAriasCalleja/Markdown-editor/compare/v1.0.0...v1.0.1
+[1.0.0]: https://github.com/ManuelAriasCalleja/Markdown-editor/releases/tag/v1.0.0
