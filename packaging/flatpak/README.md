@@ -41,8 +41,9 @@ flatpak run org.freedesktop.appstream-glib validate \
 2. **Directorio de trabajo de `post-install`.** Comprueba que las órdenes
    encuentran el `…metainfo.xml` (es una fuente `type: file`); si no, ajusta la
    ruta.
-3. **Captura de pantalla.** El metainfo exige al menos una `screenshot` con URL
-   pública real (sustituye el `REPLACE-with-screenshot.png`). Flathub la valida.
+3. **Captura de pantalla.** El metainfo ya apunta a `docs/screenshot.png` del
+   repo (vía `raw.githubusercontent.com`). Flathub valida que la URL resuelva y
+   que la imagen tenga una resolución razonable; si cambia de sitio, actualízala.
 4. **runtime-version.** Fijada a `6.8`; usa la versión estable de
    `org.kde.Platform` disponible en el momento del envío.
 5. **Permisos (`finish-args`).** `--filesystem=home` es amplio; Flathub puede

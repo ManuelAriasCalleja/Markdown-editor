@@ -36,11 +36,10 @@
 
   <content_rating type="oars-1.1" />
 
-  <!-- TODO: sustituir por una captura real alojada (PNG/JPG accesible por URL). -->
   <screenshots>
     <screenshot type="default">
       <caption>Editing a document in WYSIWYG mode</caption>
-      <image>https://raw.githubusercontent.com/ManuelAriasCalleja/Markdown-editor/main/REPLACE-with-screenshot.png</image>
+      <image>https://raw.githubusercontent.com/ManuelAriasCalleja/Markdown-editor/main/docs/screenshot.png</image>
     </screenshot>
   </screenshots>
 
