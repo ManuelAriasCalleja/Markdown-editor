@@ -84,6 +84,13 @@ private:
     // distracciones, que lo ensancha a propósito).
     void normalizeOutlineWidth();
 
+    // Id de la referencia de nota al pie renderizada bajo `viewportPos`, o cadena
+    // vacía si no hay ninguna. Lo usan el clic y la pista de hover.
+    QString footnoteRefIdAt(const QPoint &viewportPos) const;
+    // Si `viewportPos` cae sobre una referencia de nota al pie, lleva el cursor a
+    // su definición y devuelve true.
+    bool jumpToFootnoteAt(const QPoint &viewportPos);
+
 protected:
     void closeEvent(QCloseEvent *event) override;
     // Recoloca el esquema y la columna en el modo sin distracciones al cambiar

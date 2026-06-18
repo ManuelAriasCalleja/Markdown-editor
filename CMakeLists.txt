@@ -71,6 +71,8 @@ add_library(md-editor-core STATIC
     src/listcontinuation.h
     src/tasklist.cpp
     src/tasklist.h
+    src/footnotes.cpp
+    src/footnotes.h
     src/mathblocks.cpp
     src/mathblocks.h
     src/tableedit.cpp
@@ -203,6 +205,7 @@ if(Qt6Test_FOUND)
         tst_blockconstructs
         tst_listcontinuation
         tst_tasklist
+        tst_footnotes
         tst_mathblocks
         tst_tableedit
         tst_exporters

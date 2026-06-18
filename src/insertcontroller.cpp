@@ -25,6 +25,7 @@
 #include <QVBoxLayout>
 
 #include "documentio.h"
+#include "footnotes.h"
 #include "outlinepanel.h"
 
 // Los textos visibles de las acciones conservan el contexto de traducción
@@ -305,6 +306,41 @@ void InsertController::insertTableOfContents()
     cursor.beginEditBlock();
     cursor.insertFragment(QTextDocumentFragment::fromMarkdown(md));
     cursor.endEditBlock();
+    m_editor->setFocus();
+}
+
+void InsertController::insertFootnote()
+{
+    QTextDocument *doc = m_editor->document();
+    // El id se calcula sobre el texto plano: las referencias `[^id]` siguen ahí
+    // literalmente (el superíndice no cambia el texto), así que nextId las ve.
+    const QString id = mdfootnote::nextId(doc->toPlainText());
+
+    QTextCursor cursor = m_editor->textCursor();
+    cursor.beginEditBlock();
+
+    // 1) Referencia `[^id]` en el cursor, con estilo de superíndice.
+    const int refStart = cursor.position();
+    const QString ref = QStringLiteral("[^%1]").arg(id);
+    cursor.insertText(ref);
+    QTextCursor refFmt(doc);
+    refFmt.setPosition(refStart);
+    refFmt.setPosition(refStart + ref.length(), QTextCursor::KeepAnchor);
+    refFmt.mergeCharFormat(mdfootnote::refFormat(id));
+
+    // 2) Definición `[^id]: ` en un bloque nuevo al final del documento, con
+    //    formato limpio (ni superíndice ni el del bloque anterior).
+    QTextCursor end(doc);
+    end.movePosition(QTextCursor::End);
+    end.insertBlock(QTextBlockFormat(), QTextCharFormat());
+    end.insertText(QStringLiteral("[^%1]: ").arg(id));
+    const int defPos = end.position();
+    cursor.endEditBlock();
+
+    // 3) Lleva el cursor a la definición para teclear la nota.
+    QTextCursor place(doc);
+    place.setPosition(defPos);
+    m_editor->setTextCursor(place);
     m_editor->setFocus();
 }
 

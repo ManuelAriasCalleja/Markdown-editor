@@ -35,6 +35,7 @@ public slots:
     void insertTable();
     void insertHorizontalRule();
     void insertTableOfContents();    // índice (TOC) con los encabezados del documento
+    void insertFootnote();           // referencia `[^n]` + definición autonumeradas
     void pasteImageFromClipboard();  // acción del menú Insertar
 
 signals:

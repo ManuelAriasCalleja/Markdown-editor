@@ -3,6 +3,7 @@
 #include "appsettings.h"
 #include "blockconstructs.h"
 #include "chromezoom.h"
+#include "footnotes.h"
 #include "tasklist.h"
 #include "codehighlighter.h"
 #include "diskwatcher.h"
@@ -836,9 +837,17 @@ void MainWindow::createInsertMenu()
             insFormula->shortcut().toString(QKeySequence::NativeText)));
     connect(insFormula, &QAction::triggered, m_formula, &FormulaController::insertFormula);
 
+    QAction *insFootnote = insertMenu->addAction(tr("Nota al pie"));
+    insFootnote->setShortcut(QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_N));
+    insFootnote->setToolTip(
+        tr("Inserta una referencia [^n] y su definición al final del documento")
+        + QStringLiteral(" (%1)").arg(
+            insFootnote->shortcut().toString(QKeySequence::NativeText)));
+    connect(insFootnote, &QAction::triggered, m_insert, &InsertController::insertFootnote);
+
     // Insertar tampoco aplica en la vista de fuente.
     m_wysiwygActions << insLink << insImage << insPasteImage << insTable << insRule
-                     << insToc << insFormula;
+                     << insToc << insFormula << insFootnote;
 }
 
 void MainWindow::createTableMenu()
@@ -1396,8 +1405,9 @@ void MainWindow::setBodyMarkdown(const QString &body)
     // contentsChanged que provoca (incluido el de recolorLinks) no realimenten la
     // sincronización de la vista dividida. Se guarda/restaura por reentrancia.
     const bool wasSyncing = m_split->beginProgrammaticChange();
-    m_editor->setMarkdown(mdmath::protectMath(body));
+    m_editor->setMarkdown(mdmath::protectMath(mdfootnote::protectFootnotes(body)));
     mdmath::renderMathInDocument(m_editor->document());
+    mdfootnote::renderFootnotesInDocument(m_editor->document());
     styleTables();
     m_theme->recolorLinks();
     m_outline->rebuild(m_editor->document());
@@ -1445,6 +1455,12 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
                     statusBar()->showMessage(tr("Clic para marcar o desmarcar la tarea"));
                     return true;
                 }
+                // Sobre una referencia de nota al pie: cursor de mano y pista.
+                if (!footnoteRefIdAt(me->position().toPoint()).isEmpty()) {
+                    m_editor->viewport()->setCursor(Qt::PointingHandCursor);
+                    statusBar()->showMessage(tr("Clic para ir a la nota al pie"));
+                    return true;
+                }
                 const QString href = m_editor->anchorAt(me->position().toPoint());
                 if (!href.isEmpty()) {
                     m_editor->viewport()->setCursor(Qt::PointingHandCursor);
@@ -1478,6 +1494,11 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
                     return true;  // no mover el cursor de texto
                 }
             }
+            // Clic izquierdo simple sobre una referencia de nota al pie: salta a
+            // su definición al final del documento.
+            if (me->button() == Qt::LeftButton && me->modifiers() == Qt::NoModifier
+                && jumpToFootnoteAt(me->position().toPoint()))
+                return true;
             // Clic izquierdo simple sobre la casilla de un ítem de tarea: la
             // marca/desmarca (round-trip a `- [x]`/`- [ ]` lo da Qt solo).
             if (me->button() == Qt::LeftButton && me->modifiers() == Qt::NoModifier
@@ -1562,6 +1583,42 @@ void MainWindow::normalizeOutlineWidth()
     constexpr int kNormalOutlineWidth = 280;
     if (m_outline->width() > qMax(kNormalOutlineWidth, width() / 3))
         resizeDocks({m_outline}, {kNormalOutlineWidth}, Qt::Horizontal);
+}
+
+QString MainWindow::footnoteRefIdAt(const QPoint &viewportPos) const
+{
+    const int pos = m_editor->cursorForPosition(viewportPos).position();
+    // charFormat() devuelve el formato del carácter inmediatamente anterior al
+    // cursor; probamos pos-1 y pos para cubrir el carácter bajo el clic.
+    QTextCursor probe(m_editor->document());
+    probe.setPosition(pos > 0 ? pos - 1 : 0);
+    QTextCharFormat cf = probe.charFormat();
+    if (!cf.boolProperty(mdfootnote::IsFootnoteRefProperty)) {
+        probe.setPosition(pos);
+        cf = probe.charFormat();
+        if (!cf.boolProperty(mdfootnote::IsFootnoteRefProperty))
+            return QString();
+    }
+    return cf.property(mdfootnote::FootnoteIdProperty).toString();
+}
+
+bool MainWindow::jumpToFootnoteAt(const QPoint &viewportPos)
+{
+    const QString id = footnoteRefIdAt(viewportPos);
+    if (id.isEmpty())
+        return false;
+    const int blockNo = mdfootnote::definitionBlockNumber(m_editor->document(), id);
+    if (blockNo < 0) {
+        statusBar()->showMessage(tr("La nota [^%1] no tiene definición").arg(id));
+        return false;
+    }
+    const QTextBlock block = m_editor->document()->findBlockByNumber(blockNo);
+    QTextCursor dest(block);
+    dest.movePosition(QTextCursor::EndOfBlock);
+    m_editor->setTextCursor(dest);
+    m_editor->ensureCursorVisible();
+    m_editor->setFocus();
+    return true;
 }
 
 void MainWindow::startSession(const QString &cmdLineFile)

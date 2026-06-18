@@ -1,5 +1,6 @@
 #include "documentio.h"
 
+#include "footnotes.h"
 #include "mathblocks.h"
 #include "tableedit.h"
 
@@ -108,10 +109,13 @@ bool DocumentIo::load(const QString &path, QString *errorString)
     // Protege las fórmulas $...$/$$...$$ del re-parseo de setMarkdown(), que
     // interpretaría `_`/`*` dentro como cursiva/negrita. mdtable::documentMarkdown
     // las desenvuelve al serializar.
-    m_editor->setMarkdown(mdmath::protectMath(content));
+    m_editor->setMarkdown(mdmath::protectMath(mdfootnote::protectFootnotes(content)));
     // Tras el parseo, las fórmulas están como inline-code `$tex$`. Las convertimos
     // a fragmentos «renderizados» (Unicode visible + TeX en propiedad).
     mdmath::renderMathInDocument(m_editor->document());
+    // Da estilo de superíndice a las referencias de nota al pie `[^id]` (no toca
+    // la serialización: el round-trip de las footnotes ya es transparente).
+    mdfootnote::renderFootnotesInDocument(m_editor->document());
 
     setCurrentFile(path);
     emit documentLoaded();
