@@ -10,6 +10,7 @@ Speichern wird das Dokument wieder in reines Markdown serialisiert.
 - [Text formatieren](#text-formatieren)
 - [Überschriften, Listen und Blöcke](#uberschriften-listen-und-blocke)
 - [Links und Bilder](#links-und-bilder)
+- [Fußnoten](#fußnoten)
 - [Tabellen](#tabellen)
 - [Mathematische Formeln](#mathematische-formeln)
 - [Suchen und Ersetzen](#suchen-und-ersetzen)
@@ -60,7 +61,9 @@ dem Cursor wider.
   Ctrl+1 … Ctrl+6.
 - **Listen**: Aufzählungen, nummerierte Listen und Aufgabenlisten (mit
   Kontrollkästchen). Drücken Sie Enter am Ende eines Punktes, wird der nächste
-  automatisch erstellt; Enter auf einem leeren Punkt verlässt die Liste.
+  automatisch erstellt; Enter auf einem leeren Punkt verlässt die Liste. Ein
+  **Klick auf das Kontrollkästchen einer Aufgabe** hakt sie ab oder hebt die
+  Markierung wieder auf.
 - **Zitat** (`>` am Anfang eines Absatzes) und **Codeblock** werden über die
   Werkzeugleiste angewendet; beide werden korrekt nach Markdown
   zurückübersetzt (round-trip).
@@ -75,6 +78,16 @@ dem Cursor wider.
   ein oder verwenden Sie **Einfügen → Bild einfügen**. Das Bild wird als PNG
   neben der `.md` gespeichert und als `![alt](relativer-Pfad)` eingefügt; so
   übersteht es den Round-Trip nach Markdown (eingebettete Bilder nicht).
+
+## Fußnoten
+
+- **Einfügen → Fußnote** (Ctrl+Shift+N) fügt eine nummerierte Referenz `[^n]`
+  an der Cursorposition ein und legt ihre Definition `[^n]:` am Ende des
+  Dokuments an, bereit, damit Sie den Text der Fußnote schreiben.
+- Die Referenzen werden als **Hochstellung** angezeigt; beim **Klick** auf eine
+  springt der Cursor zu ihrer Definition.
+- Sie werden als Standard-Markdown gespeichert (`text[^1]` im Text und unten
+  `[^1]: die Fußnote`), sodass sie mit anderen Editoren kompatibel sind.
 
 ## Tabellen
 
@@ -134,6 +147,12 @@ $$
 Das linke Seitenfenster zeigt das Verzeichnis der Überschriften (TOC): es wird
 beim Tippen aktualisiert, und beim Klick auf einen Eintrag springt der Cursor
 zu dieser Überschrift. Es wird mit F9 ein- und ausgeblendet.
+
+Sie können einen Eintrag der Gliederung **ziehen**, um diesen Abschnitt — seine
+Überschrift, seinen Inhalt und seine Unterabschnitte — innerhalb des Dokuments
+**neu anzuordnen**, ohne die Ebene zu ändern. Außerdem gibt **Einfügen →
+Inhaltsverzeichnis (TOC)** eine verschachtelte Liste mit den Überschriften in
+das Dokument aus.
 
 ## Ablenkungsfreier Modus
 
@@ -196,6 +215,7 @@ wiederherzustellen.
 | Weiter-/Rückwärtssuchen   | F3 / Shift+F3    |
 | Überschrift H1 … H6       | Ctrl+1 … Ctrl+6  |
 | Formel einfügen           | Ctrl+Shift+F     |
+| Fußnote einfügen          | Ctrl+Shift+N     |
 | Markdown-Quelltextansicht | Ctrl+Shift+M     |
 | Geteilte Ansicht          | Ctrl+Shift+D     |
 | Gliederung                | F9               |

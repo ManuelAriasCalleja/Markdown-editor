@@ -10,6 +10,7 @@ este serializat înapoi în Markdown pur.
 - [Formatarea textului](#formatarea-textului)
 - [Titluri, liste și blocuri](#titluri-liste-si-blocuri)
 - [Legături și imagini](#legaturi-si-imagini)
+- [Note de subsol](#note-de-subsol)
 - [Tabele](#tabele)
 - [Formule matematice](#formule-matematice)
 - [Caută și înlocuiește](#cauta-si-inlocuieste)
@@ -58,7 +59,8 @@ Butoanele din bară reflectă formatarea activă de sub cursor.
 - **Titluri** H1–H6 din **Format → Titlu** sau cu Ctrl+1 … Ctrl+6.
 - **Liste**: cu marcatori, numerotate și de sarcini (cu casetă de bifare).
   Apăsând Enter la sfârșitul unui element se creează automat următorul;
-  apăsând Enter pe un element gol se iese din listă.
+  apăsând Enter pe un element gol se iese din listă. Un **clic pe caseta de
+  bifare a unei sarcini** o bifează sau o debifează.
 - **Citatul** (`>` la începutul unui paragraf) și **blocul de cod** se aplică
   din bară; ambele fac round-trip corect către Markdown.
 
@@ -72,6 +74,16 @@ Butoanele din bară reflectă formatarea activă de sub cursor.
   **Inserare → Lipește imaginea**. Imaginea se salvează ca PNG lângă `.md` și
   se inserează ca `![alt](cale-relativă)`; astfel supraviețuiește round-trip-ului
   către Markdown (imaginile încorporate, nu).
+
+## Note de subsol
+
+- **Inserare → Notă de subsol** (Ctrl+Shift+N) inserează o referință numerotată
+  `[^n]` acolo unde se află cursorul și creează definiția sa `[^n]:` la sfârșitul
+  documentului, gata pentru a scrie textul notei.
+- Referințele se afișează ca **superscript**; dând **clic** pe una, cursorul
+  sare la definiția sa.
+- Se salvează ca Markdown standard (`text[^1]` în corp și, mai jos,
+  `[^1]: nota`), așa că sunt compatibile cu alte editoare.
 
 ## Tabele
 
@@ -130,6 +142,11 @@ Panoul lateral din stânga afișează indexul titlurilor (TOC): se actualizează
 pe măsură ce scrii și, dând clic pe o intrare, cursorul sare la acel titlu. Se
 afișează/ascunde cu F9.
 
+Poți **trage** o intrare din schiță pentru a **reordona** acea secțiune
+—titlul ei, conținutul și subsecțiunile sale— în interiorul documentului, fără
+a schimba nivelul. În plus, **Inserare → Cuprins (TOC)** generează în document o
+listă imbricată cu titlurile.
+
 ## Mod fără distrageri
 
 **Vizualizare → Mod fără distrageri** (F11) intră pe tot ecranul, cu meniul și
@@ -187,6 +204,7 @@ oferă recuperarea a ceea ce scriai.
 | Caută următorul/anteriorul| F3 / Shift+F3    |
 | Titlu H1 … H6             | Ctrl+1 … Ctrl+6  |
 | Inserează formulă         | Ctrl+Shift+F     |
+| Inserare notă de subsol   | Ctrl+Shift+N     |
 | Vizualizare sursă Markdown| Ctrl+Shift+M     |
 | Vizualizare divizată      | Ctrl+Shift+D     |
 | Schiță                    | F9               |

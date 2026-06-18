@@ -14,6 +14,7 @@ e, al salvataggio, l'editor li genera per te.
 - [Citazioni](#citazioni)
 - [Codice](#codice)
 - [Collegamenti e immagini](#collegamenti-e-immagini)
+- [Note a piè di pagina](#note-a-pie-di-pagina)
 - [Righe orizzontali](#righe-orizzontali)
 - [Tabelle](#tabelle)
 - [Formule matematiche](#formule-matematiche)
@@ -100,6 +101,22 @@ def saluta(nome):
   collegamento, ma con un `!` davanti.
 
 In md-editor, **Ctrl+clic** su un collegamento lo apre nel browser di sistema.
+
+## Note a piè di pagina
+
+Un **riferimento** nel testo e la sua **definizione** a parte, collegati da un
+identificatore `[^id]`:
+
+```
+Un'affermazione con la sua sfumatura[^1].
+
+[^1]: Il testo della nota va qui.
+```
+
+L'`id` può essere un numero (`[^1]`) o una parola (`[^nota]`). In md-editor,
+**Inserisci → Nota a piè di pagina** (Ctrl+Shift+N) crea il riferimento e la sua
+definizione al posto tuo; i riferimenti appaiono come apice e un clic salta alla
+definizione.
 
 ## Righe orizzontali
 

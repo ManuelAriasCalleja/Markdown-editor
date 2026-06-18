@@ -10,6 +10,7 @@ save, the document is serialized back to plain Markdown.
 - [Formatting text](#formatting-text)
 - [Headings, lists and blocks](#headings-lists-and-blocks)
 - [Links and images](#links-and-images)
+- [Footnotes](#footnotes)
 - [Tables](#tables)
 - [Math formulas](#math-formulas)
 - [Find and replace](#find-and-replace)
@@ -56,7 +57,8 @@ The toolbar buttons reflect the active formatting under the cursor.
 - **Headings** H1–H6 from **Format → Heading** or with Ctrl+1 … Ctrl+6.
 - **Lists**: bullets, numbered and task lists (with a checkbox). Pressing
   Enter at the end of an item creates the next one automatically; pressing
-  Enter on an empty item exits the list.
+  Enter on an empty item exits the list. **Clicking a task's checkbox**
+  toggles it checked or unchecked.
 - **Quote** (`>` at the start of a paragraph) and **code block** are applied
   from the toolbar; both round-trip to Markdown correctly.
 
@@ -70,6 +72,16 @@ The toolbar buttons reflect the active formatting under the cursor.
   **Insert → Paste image**. The image is saved as PNG next to the `.md` and
   inserted as `![alt](relative-path)`; that way it survives the round-trip
   to Markdown (embedded images do not).
+
+## Footnotes
+
+- **Insert → Footnote** (Ctrl+Shift+N) inserts a numbered reference `[^n]`
+  where the cursor is and creates its definition `[^n]:` at the end of the
+  document, ready for you to write the note's text.
+- References are shown as a **superscript**; **clicking** one jumps the
+  cursor to its definition.
+- They are saved as standard Markdown (`text[^1]` in the body and, below,
+  `[^1]: the note`), so they are compatible with other editors.
 
 ## Tables
 
@@ -126,6 +138,11 @@ $$
 The left side panel shows the index of headings (TOC): it updates as you
 type, and clicking an entry jumps the cursor to that heading. It is
 toggled with F9.
+
+You can **drag** an outline entry to **reorder** that section —its heading,
+its content and its subsections— within the document, without changing its
+level. In addition, **Insert → Table of contents (TOC)** dumps a nested list
+of the headings into the document.
 
 ## Distraction-free mode
 
@@ -184,6 +201,7 @@ to recover what you were writing.
 | Find next / previous      | F3 / Shift+F3    |
 | Heading H1 … H6           | Ctrl+1 … Ctrl+6  |
 | Insert formula            | Ctrl+Shift+F     |
+| Insert footnote           | Ctrl+Shift+N     |
 | Markdown source view      | Ctrl+Shift+M     |
 | Split view                | Ctrl+Shift+D     |
 | Outline                   | F9               |

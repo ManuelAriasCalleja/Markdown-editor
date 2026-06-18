@@ -14,6 +14,7 @@ narzędzi, a przy zapisie edytor zapisuje je za Ciebie.
 - [Cytaty](#cytaty)
 - [Kod](#kod)
 - [Odnośniki i obrazy](#odnosniki-i-obrazy)
+- [Przypisy](#przypisy)
 - [Linie poziome](#linie-poziome)
 - [Tabele](#tabele)
 - [Wzory matematyczne](#wzory-matematyczne)
@@ -100,6 +101,21 @@ def przywitaj(imie):
 
 W md-editor **Ctrl+kliknięcie** na odnośniku otwiera go w przeglądarce
 systemowej.
+
+## Przypisy
+
+**Odwołanie** w tekście i jego osobna **definicja**, połączone
+identyfikatorem `[^id]`:
+
+```
+Stwierdzenie z jego niuansem[^1].
+
+[^1]: Tekst przypisu znajduje się tutaj.
+```
+
+`id` może być liczbą (`[^1]`) lub słowem (`[^nota]`). W md-editor
+**Wstaw → Przypis** (Ctrl+Shift+N) tworzy odwołanie i jego definicję za Ciebie;
+odwołania są wyświetlane jako indeks górny, a kliknięcie przenosi do definicji.
 
 ## Linie poziome
 

@@ -15,6 +15,7 @@ les appliquez depuis la barre d'outils et, à l'enregistrement, l'éditeur les
 - [Citations](#citations)
 - [Code](#code)
 - [Liens et images](#liens-et-images)
+- [Notes de bas de page](#notes-de-bas-de-page)
 - [Règles horizontales](#regles-horizontales)
 - [Tableaux](#tableaux)
 - [Formules mathematiques](#formules-mathematiques)
@@ -102,6 +103,22 @@ def saluer(nom):
 
 Dans md-editor, **Ctrl+clic** sur un lien l'ouvre dans le navigateur du
 système.
+
+## Notes de bas de page
+
+Une **référence** dans le texte et sa **définition** à part, reliées par un
+identifiant `[^id]` :
+
+```
+Une affirmation avec sa nuance[^1].
+
+[^1]: Le texte de la note va ici.
+```
+
+L'`id` peut être un nombre (`[^1]`) ou un mot (`[^nota]`). Dans md-editor,
+**Insérer → Note de bas de page** (Ctrl+Shift+N) crée la référence et sa
+définition pour vous ; les références s'affichent en exposant et un clic fait
+sauter vers la définition.
 
 ## Règles horizontales
 

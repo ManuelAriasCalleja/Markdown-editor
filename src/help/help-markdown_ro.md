@@ -14,6 +14,7 @@ instrumente și, la salvare, editorul le generează pentru tine.
 - [Citate](#citate)
 - [Cod](#cod)
 - [Legături și imagini](#legaturi-si-imagini)
+- [Note de subsol](#note-de-subsol)
 - [Linii orizontale](#linii-orizontale)
 - [Tabele](#tabele)
 - [Formule matematice](#formule-matematice)
@@ -100,6 +101,21 @@ def salut(nume):
   dar cu `!` în față.
 
 În md-editor, **Ctrl+clic** pe o legătură o deschide în navigator.
+
+## Note de subsol
+
+O **referință** în text și **definiția** sa separată, legate printr-un
+identificator `[^id]`:
+
+```
+O afirmație cu nuanța sa[^1].
+
+[^1]: Textul notei vine aici.
+```
+
+`id`-ul poate fi un număr (`[^1]`) sau un cuvânt (`[^nota]`). În md-editor,
+**Inserare → Notă de subsol** (Ctrl+Shift+N) creează referința și definiția sa
+pentru tine; referințele apar ca superscript și un clic sare la definiție.
 
 ## Linii orizontale
 

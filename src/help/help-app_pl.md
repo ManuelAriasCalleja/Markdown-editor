@@ -10,6 +10,7 @@ dokument jest z powrotem serializowany do czystego Markdown.
 - [Formatowanie tekstu](#formatowanie-tekstu)
 - [Nagłówki, listy i bloki](#naglowki-listy-i-bloki)
 - [Odnośniki i obrazy](#odnosniki-i-obrazy)
+- [Przypisy](#przypisy)
 - [Tabele](#tabele)
 - [Wzory matematyczne](#wzory-matematyczne)
 - [Znajdź i zamień](#znajdz-i-zamien)
@@ -57,7 +58,8 @@ Przyciski na pasku odzwierciedlają formatowanie aktywne pod kursorem.
   Ctrl+1 … Ctrl+6.
 - **Listy**: punktowane, numerowane i listy zadań (z polem wyboru).
   Naciśnięcie Enter na końcu punktu automatycznie tworzy następny;
-  naciśnięcie Enter na pustym punkcie kończy listę.
+  naciśnięcie Enter na pustym punkcie kończy listę. **Kliknięcie pola wyboru
+  zadania** zaznacza je lub odznacza.
 - **Cytat** (`>` na początku akapitu) oraz **blok kodu** stosuje się z paska
   narzędzi; oba poprawnie zachowują się w obie strony (round-trip) w Markdown.
 
@@ -71,6 +73,16 @@ Przyciski na pasku odzwierciedlają formatowanie aktywne pod kursorem.
   **Wstaw → Wklej obraz**. Obraz jest zapisywany jako PNG obok pliku `.md`
   i wstawiany jako `![alt](ścieżka-względna)`; dzięki temu przetrwa round-trip
   do Markdown (obrazy osadzone — nie).
+
+## Przypisy
+
+- **Wstaw → Przypis** (Ctrl+Shift+N) wstawia numerowane odwołanie `[^n]` w
+  miejscu kursora i tworzy jego definicję `[^n]:` na końcu dokumentu, gotową na
+  wpisanie treści przypisu.
+- Odwołania są wyświetlane jako **indeks górny**; **kliknięcie** na jednym z nich
+  przenosi kursor do jego definicji.
+- Są zapisywane jako standardowy Markdown (`tekst[^1]` w treści, a niżej
+  `[^1]: przypis`), więc są zgodne z innymi edytorami.
 
 ## Tabele
 
@@ -126,6 +138,11 @@ $$
 Lewy panel boczny pokazuje spis nagłówków (TOC): aktualizuje się podczas
 pisania, a kliknięcie pozycji przenosi kursor do danego nagłówka. Włącza się
 i wyłącza klawiszem F9.
+
+Możesz **przeciągnąć** pozycję konspektu, aby **zmienić kolejność** tej sekcji
+— jej nagłówka, treści i podsekcji — w obrębie dokumentu, bez zmiany poziomu.
+Ponadto **Wstaw → Spis treści (TOC)** umieszcza w dokumencie zagnieżdżoną listę
+nagłówków.
 
 ## Tryb bez rozproszeń
 
@@ -187,6 +204,7 @@ uruchomieniu zaproponuje odzyskanie tego, co pisałeś.
 | Znajdź następne / poprzednie | F3 / Shift+F3 |
 | Nagłówek H1 … H6          | Ctrl+1 … Ctrl+6  |
 | Wstaw wzór                | Ctrl+Shift+F     |
+| Wstaw przypis             | Ctrl+Shift+N     |
 | Widok źródła Markdown     | Ctrl+Shift+M     |
 | Widok podzielony          | Ctrl+Shift+D     |
 | Konspekt                  | F9               |

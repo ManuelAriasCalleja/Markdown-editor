@@ -10,6 +10,7 @@ opslaan wordt het document terug geserialiseerd naar pure Markdown.
 - [Tekst opmaken](#tekst-opmaken)
 - [Koppen, lijsten en blokken](#koppen-lijsten-en-blokken)
 - [Koppelingen en afbeeldingen](#koppelingen-en-afbeeldingen)
+- [Voetnoten](#voetnoten)
 - [Tabellen](#tabellen)
 - [Wiskundige formules](#wiskundige-formules)
 - [Zoeken en vervangen](#zoeken-en-vervangen)
@@ -59,7 +60,7 @@ De werkbalkknoppen weerspiegelen de actieve opmaak onder de cursor.
 - **Lijsten**: opsommingstekens, genummerd en takenlijsten (met een
   selectievakje). Door op Enter te drukken aan het einde van een item wordt
   het volgende automatisch aangemaakt; Enter op een leeg item verlaat de
-  lijst.
+  lijst. Een **klik op het selectievakje van een taak** vinkt die aan of uit.
 - **Citaat** (`>` aan het begin van een alinea) en **codeblok** worden
   toegepast vanuit de werkbalk; beide round-trippen correct naar Markdown.
 
@@ -73,6 +74,16 @@ De werkbalkknoppen weerspiegelen de actieve opmaak onder de cursor.
   gebruik **Invoegen → Afbeelding plakken**. De afbeelding wordt als PNG naast
   de `.md` opgeslagen en ingevoegd als `![alt](relatief-pad)`; zo overleeft ze
   de round-trip naar Markdown (ingebedde afbeeldingen niet).
+
+## Voetnoten
+
+- **Invoegen → Voetnoot** (Ctrl+Shift+N) voegt een genummerde verwijzing
+  `[^n]` in op de cursorpositie en maakt de bijbehorende definitie `[^n]:` aan
+  het einde van het document, klaar om de notetekst te typen.
+- De verwijzingen worden als **superscript** getoond; als je erop **klikt**,
+  springt de cursor naar de bijbehorende definitie.
+- Ze worden opgeslagen als standaard-Markdown (`tekst[^1]` in de hoofdtekst en,
+  onderaan, `[^1]: de noot`), dus ze zijn compatibel met andere editors.
 
 ## Tabellen
 
@@ -129,6 +140,11 @@ $$
 Het zijpaneel links toont de index van koppen (TOC): het werkt bij tijdens het
 typen, en door op een item te klikken springt de cursor naar die kop. Het
 wordt in-/uitgeschakeld met F9.
+
+Je kunt een item uit het overzicht **slepen** om die sectie — de kop, de
+inhoud en de subsecties ervan — binnen het document te **herordenen**, zonder
+het niveau te wijzigen. Bovendien plaatst **Invoegen → Inhoudsopgave (TOC)**
+een geneste lijst met de koppen in het document.
 
 ## Afleidingsvrije modus
 
@@ -189,6 +205,7 @@ volgende start aan om te herstellen wat je aan het schrijven was.
 | Volgende / vorige zoeken  | F3 / Shift+F3    |
 | Kop H1 … H6               | Ctrl+1 … Ctrl+6  |
 | Formule invoegen          | Ctrl+Shift+F     |
+| Voetnoot invoegen         | Ctrl+Shift+N     |
 | Markdown-broncodeweergave | Ctrl+Shift+M     |
 | Gesplitste weergave       | Ctrl+Shift+D     |
 | Overzicht                 | F9               |

@@ -14,6 +14,7 @@ Werkzeugleiste an, und beim Speichern erzeugt sie der Editor für Sie.
 - [Zitate](#zitate)
 - [Code](#code)
 - [Links und Bilder](#links-und-bilder)
+- [Fußnoten](#fußnoten)
 - [Horizontale Linien](#horizontale-linien)
 - [Tabellen](#tabellen)
 - [Mathematische Formeln](#mathematische-formeln)
@@ -100,6 +101,22 @@ def begruessen(name):
   `!` davor.
 
 In md-editor öffnet **Ctrl+Klick** auf einen Link diesen im Systembrowser.
+
+## Fußnoten
+
+Eine **Referenz** im Text und ihre **Definition** an anderer Stelle, verbunden
+durch einen Bezeichner `[^id]`:
+
+```
+Eine Aussage mit ihrer Nuance[^1].
+
+[^1]: Der Text der Fußnote steht hier.
+```
+
+Die `id` kann eine Zahl (`[^1]`) oder ein Wort (`[^nota]`) sein. In md-editor
+erstellt **Einfügen → Fußnote** (Ctrl+Shift+N) die Referenz und ihre Definition
+für Sie; die Referenzen werden als Hochstellung angezeigt, und ein Klick springt
+zur Definition.
 
 ## Horizontale Linien
 

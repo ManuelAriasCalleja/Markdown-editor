@@ -10,6 +10,7 @@ documento é serializado de volta para Markdown puro.
 - [Formatar texto](#formatar-texto)
 - [Cabeçalhos, listas e blocos](#cabecalhos-listas-e-blocos)
 - [Links e imagens](#links-e-imagens)
+- [Notas de rodapé](#notas-de-rodape)
 - [Tabelas](#tabelas)
 - [Fórmulas matemáticas](#formulas-matematicas)
 - [Localizar e substituir](#localizar-e-substituir)
@@ -57,7 +58,8 @@ Os botões da barra refletem a formatação ativa sob o cursor.
   Ctrl+1 … Ctrl+6.
 - **Listas**: com marcadores, numeradas e de tarefas (com caixa de seleção).
   Ao pressionar Enter no fim de um item, o seguinte é criado automaticamente;
-  ao pressionar Enter num item vazio, sai-se da lista.
+  ao pressionar Enter num item vazio, sai-se da lista. Um **clique na caixa de
+  seleção de uma tarefa** marca-a ou desmarca-a.
 - **Citação** (`>` no início de um parágrafo) e **bloco de código** aplicam-se
   pela barra; ambos fazem round-trip para Markdown corretamente.
 
@@ -71,6 +73,16 @@ Os botões da barra refletem a formatação ativa sob o cursor.
   use **Inserir → Colar imagem**. A imagem é salva como PNG junto ao `.md` e
   inserida como `![alt](caminho-relativo)`; assim sobrevive ao round-trip para
   Markdown (as imagens incorporadas não sobrevivem).
+
+## Notas de rodapé
+
+- **Inserir → Nota de rodapé** (Ctrl+Shift+N) insere uma referência numerada
+  `[^n]` onde está o cursor e cria a sua definição `[^n]:` no fim do documento,
+  pronta para que você escreva o texto da nota.
+- As referências são exibidas como **sobrescrito**; ao fazer **clique** sobre
+  uma, o cursor salta para a sua definição.
+- São salvas como Markdown padrão (`texto[^1]` no corpo e, abaixo, `[^1]: a
+  nota`), portanto são compatíveis com outros editores.
 
 ## Tabelas
 
@@ -128,6 +140,11 @@ $$
 O painel lateral esquerdo mostra o índice de cabeçalhos (TOC): atualiza-se à
 medida que escreve e, ao clicar numa entrada, o cursor salta para esse
 cabeçalho. Mostra-se/oculta-se com F9.
+
+Você pode **arrastar** uma entrada da estrutura para **reordenar** essa secção
+—o seu cabeçalho, o seu conteúdo e as suas subsecções— dentro do documento, sem
+mudar o nível. Além disso, **Inserir → Índice (TOC)** verte para o documento uma
+lista aninhada com os cabeçalhos.
 
 ## Modo sem distrações
 
@@ -187,6 +204,7 @@ seguinte oferece-se a recuperar o que estava a escrever.
 | Localizar seguinte/anterior | F3 / Shift+F3  |
 | Cabeçalho H1 … H6         | Ctrl+1 … Ctrl+6  |
 | Inserir fórmula           | Ctrl+Shift+F     |
+| Inserir nota de rodapé    | Ctrl+Shift+N     |
 | Vista de código Markdown  | Ctrl+Shift+M     |
 | Vista dividida            | Ctrl+Shift+D     |
 | Estrutura                 | F9               |

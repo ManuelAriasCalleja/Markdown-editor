@@ -10,6 +10,7 @@ serializa de vuelta a Markdown puro.
 - [Dar formato al texto](#dar-formato-al-texto)
 - [Encabezados, listas y bloques](#encabezados-listas-y-bloques)
 - [Enlaces e imágenes](#enlaces-e-imagenes)
+- [Notas al pie](#notas-al-pie)
 - [Tablas](#tablas)
 - [Fórmulas matemáticas](#formulas-matematicas)
 - [Buscar y reemplazar](#buscar-y-reemplazar)
@@ -57,7 +58,8 @@ Los botones de la barra reflejan el formato activo bajo el cursor.
   Ctrl+1 … Ctrl+6.
 - **Listas**: viñetas, numeradas y de tareas (con casilla). Pulsando Enter al
   final de un punto se crea el siguiente automáticamente; con Enter sobre un
-  punto vacío se sale de la lista.
+  punto vacío se sale de la lista. Un **clic sobre la casilla** de una tarea la
+  marca o desmarca.
 - **Cita** (`>` al principio de un párrafo) y **bloque de código** se aplican
   desde la barra; ambos round-trip-ean a Markdown correctamente.
 
@@ -71,6 +73,16 @@ Los botones de la barra reflejan el formato activo bajo el cursor.
   **Insertar → Pegar imagen**. La imagen se guarda como PNG junto al `.md` y
   se inserta como `![alt](ruta-relativa)`; así sobrevive al round-trip a
   Markdown (las imágenes incrustadas, no).
+
+## Notas al pie
+
+- **Insertar → Nota al pie** (Ctrl+Shift+N) inserta una referencia numerada
+  `[^n]` donde está el cursor y crea su definición `[^n]:` al final del
+  documento, lista para que escribas el texto de la nota.
+- Las referencias se muestran como **superíndice**; al hacer **clic** sobre una,
+  el cursor salta a su definición.
+- Se guardan como Markdown estándar (`texto[^1]` en el cuerpo y, abajo,
+  `[^1]: la nota`), así que son compatibles con otros editores.
 
 ## Tablas
 
@@ -126,6 +138,11 @@ $$
 El panel lateral izquierdo muestra el índice de encabezados (TOC): se
 actualiza al escribir y, al hacer clic en una entrada, el cursor salta a ese
 encabezado. Se muestra/oculta con F9.
+
+Puedes **arrastrar** una entrada del esquema para **reordenar** esa sección
+—su encabezado, su contenido y sus subsecciones— dentro del documento, sin
+cambiar el nivel. Además, **Insertar → Índice (TOC)** vuelca en el documento una
+lista anidada con los encabezados.
 
 ## Modo sin distracciones
 
@@ -183,6 +200,7 @@ ofrece recuperar lo que estabas escribiendo.
 | Buscar siguiente/anterior | F3 / Shift+F3    |
 | Encabezado H1 … H6        | Ctrl+1 … Ctrl+6  |
 | Insertar fórmula          | Ctrl+Shift+F     |
+| Insertar nota al pie      | Ctrl+Shift+N     |
 | Vista de código Markdown  | Ctrl+Shift+M     |
 | Vista dividida            | Ctrl+Shift+D     |
 | Esquema                   | F9               |

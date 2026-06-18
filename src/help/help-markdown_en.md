@@ -14,6 +14,7 @@ toolbar and, on save, the editor writes them for you.
 - [Quotes](#quotes)
 - [Code](#code)
 - [Links and images](#links-and-images)
+- [Footnotes](#footnotes)
 - [Horizontal rules](#horizontal-rules)
 - [Tables](#tables)
 - [Math formulas](#math-formulas)
@@ -100,6 +101,22 @@ def greet(name):
   a `!` in front.
 
 In md-editor, **Ctrl+click** on a link opens it in the system browser.
+
+## Footnotes
+
+A **reference** in the text and its **definition** elsewhere, linked by an
+identifier `[^id]`:
+
+```
+A claim with its nuance[^1].
+
+[^1]: The note's text goes here.
+```
+
+The `id` can be a number (`[^1]`) or a word (`[^nota]`). In md-editor,
+**Insert → Footnote** (Ctrl+Shift+N) creates the reference and its
+definition for you; references appear as a superscript and a click jumps to
+the definition.
 
 ## Horizontal rules
 

@@ -14,6 +14,7 @@ ferramentas e, ao salvar, o editor escreve-os por si.
 - [Citações](#citacoes)
 - [Código](#codigo)
 - [Links e imagens](#links-e-imagens)
+- [Notas de rodapé](#notas-de-rodape)
 - [Réguas horizontais](#reguas-horizontais)
 - [Tabelas](#tabelas)
 - [Fórmulas matemáticas](#formulas-matematicas)
@@ -100,6 +101,22 @@ def saudar(nome):
   com um `!` à frente.
 
 No md-editor, **Ctrl+clique** sobre um link abre-o no navegador do sistema.
+
+## Notas de rodapé
+
+Uma **referência** no texto e a sua **definição** à parte, ligadas por um
+identificador `[^id]`:
+
+```
+Uma afirmação com a sua nuance[^1].
+
+[^1]: O texto da nota vai aqui.
+```
+
+O `id` pode ser um número (`[^1]`) ou uma palavra (`[^nota]`). No md-editor,
+**Inserir → Nota de rodapé** (Ctrl+Shift+N) cria a referência e a sua definição
+por si; as referências aparecem como sobrescrito e um clique salta para a
+definição.
 
 ## Réguas horizontais
 

@@ -10,6 +10,7 @@ il documento viene serializzato di nuovo in Markdown puro.
 - [Formattare il testo](#formattare-il-testo)
 - [Intestazioni, elenchi e blocchi](#intestazioni-elenchi-e-blocchi)
 - [Collegamenti e immagini](#collegamenti-e-immagini)
+- [Note a piè di pagina](#note-a-pie-di-pagina)
 - [Tabelle](#tabelle)
 - [Formule matematiche](#formule-matematiche)
 - [Trova e sostituisci](#trova-e-sostituisci)
@@ -56,7 +57,8 @@ I pulsanti della barra riflettono la formattazione attiva sotto il cursore.
 - **Intestazioni** H1–H6 da **Formato → Intestazione** o con Ctrl+1 … Ctrl+6.
 - **Elenchi**: puntati, numerati e di attività (con casella di spunta). Premendo
   Invio alla fine di un elemento si crea automaticamente il successivo; premendo
-  Invio su un elemento vuoto si esce dall'elenco.
+  Invio su un elemento vuoto si esce dall'elenco. Un **clic sulla casella di
+  spunta di un'attività** la contrassegna come completata o la deseleziona.
 - **Citazione** (`>` all'inizio di un paragrafo) e **blocco di codice** si
   applicano dalla barra degli strumenti; entrambi mantengono correttamente il
   round-trip verso Markdown.
@@ -71,6 +73,16 @@ I pulsanti della barra riflettono la formattazione attiva sotto il cursore.
   **Inserisci → Incolla immagine**. L'immagine viene salvata come PNG accanto al
   `.md` e inserita come `![alt](percorso-relativo)`; in questo modo sopravvive al
   round-trip verso Markdown (le immagini incorporate no).
+
+## Note a piè di pagina
+
+- **Inserisci → Nota a piè di pagina** (Ctrl+Shift+N) inserisce un riferimento
+  numerato `[^n]` dove si trova il cursore e crea la relativa definizione `[^n]:`
+  alla fine del documento, pronta perché tu scriva il testo della nota.
+- I riferimenti vengono mostrati come **apice**; facendo **clic** su uno di essi,
+  il cursore salta alla sua definizione.
+- Vengono salvati come Markdown standard (`testo[^1]` nel corpo e, in fondo,
+  `[^1]: la nota`), quindi sono compatibili con altri editor.
 
 ## Tabelle
 
@@ -128,6 +140,11 @@ $$
 Il pannello laterale sinistro mostra l'indice delle intestazioni (TOC): si
 aggiorna mentre digiti e, facendo clic su una voce, il cursore salta a quella
 intestazione. Si mostra/nasconde con F9.
+
+Puoi **trascinare** una voce della struttura per **riordinare** quella sezione
+—la sua intestazione, il suo contenuto e le sue sottosezioni— all'interno del
+documento, senza cambiarne il livello. Inoltre, **Inserisci → Indice (TOC)**
+riversa nel documento un elenco annidato con le intestazioni.
 
 ## Modalità senza distrazioni
 
@@ -188,6 +205,7 @@ successivo propone di recuperare ciò che stavi scrivendo.
 | Trova successivo / precedente | F3 / Shift+F3 |
 | Intestazione H1 … H6      | Ctrl+1 … Ctrl+6  |
 | Inserisci formula         | Ctrl+Shift+F     |
+| Inserisci nota a piè di pagina | Ctrl+Shift+N |
 | Vista sorgente Markdown   | Ctrl+Shift+M     |
 | Vista divisa              | Ctrl+Shift+D     |
 | Struttura                 | F9               |

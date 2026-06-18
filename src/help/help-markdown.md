@@ -14,6 +14,7 @@ barra de herramientas y, al guardar, el editor los genera por ti.
 - [Citas](#citas)
 - [Código](#codigo)
 - [Enlaces e imágenes](#enlaces-e-imagenes)
+- [Notas al pie](#notas-al-pie)
 - [Reglas horizontales](#reglas-horizontales)
 - [Tablas](#tablas)
 - [Fórmulas matemáticas](#formulas-matematicas)
@@ -99,6 +100,21 @@ def saluda(nombre):
   pero con `!` delante.
 
 En md-editor, **Ctrl+clic** sobre un enlace lo abre en el navegador.
+
+## Notas al pie
+
+Una **referencia** en el texto y su **definición** aparte, enlazadas por un
+identificador `[^id]`:
+
+```
+Una afirmación con su matiz[^1].
+
+[^1]: El texto de la nota va aquí.
+```
+
+El `id` puede ser un número (`[^1]`) o una palabra (`[^nota]`). En md-editor,
+**Insertar → Nota al pie** (Ctrl+Shift+N) crea la referencia y su definición por
+ti; las referencias se ven como superíndice y un clic salta a la definición.
 
 ## Reglas horizontales
 

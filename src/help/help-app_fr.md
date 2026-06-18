@@ -10,6 +10,7 @@ l'enregistrement, le document est sérialisé de nouveau en Markdown pur.
 - [Mettre le texte en forme](#mettre-le-texte-en-forme)
 - [Titres, listes et blocs](#titres-listes-et-blocs)
 - [Liens et images](#liens-et-images)
+- [Notes de bas de page](#notes-de-bas-de-page)
 - [Tableaux](#tableaux)
 - [Formules mathematiques](#formules-mathematiques)
 - [Rechercher et remplacer](#rechercher-et-remplacer)
@@ -59,7 +60,8 @@ Les boutons de la barre reflètent la mise en forme active sous le curseur.
 - **Titres** H1–H6 depuis **Format → Titre** ou avec Ctrl+1 … Ctrl+6.
 - **Listes** : à puces, numérotées et de tâches (avec une case à cocher).
   Appuyer sur Entrée à la fin d'un élément crée le suivant automatiquement ;
-  appuyer sur Entrée sur un élément vide sort de la liste.
+  appuyer sur Entrée sur un élément vide sort de la liste. Un **clic sur la
+  case à cocher d'une tâche** la coche ou la décoche.
 - **Citation** (`>` au début d'un paragraphe) et **bloc de code** s'appliquent
   depuis la barre ; tous deux effectuent correctement l'aller-retour vers
   Markdown.
@@ -75,6 +77,17 @@ Les boutons de la barre reflètent la mise en forme active sous le curseur.
   à côté du `.md` et insérée comme `![alt](chemin-relatif)` ; elle survit
   ainsi à l'aller-retour vers Markdown (ce n'est pas le cas des images
   incorporées).
+
+## Notes de bas de page
+
+- **Insérer → Note de bas de page** (Ctrl+Shift+N) insère une référence
+  numérotée `[^n]` à l'emplacement du curseur et crée sa définition `[^n]:`
+  à la fin du document, prête pour que vous y saisissiez le texte de la note.
+- Les références s'affichent en **exposant** ; un **clic** sur l'une d'elles
+  fait sauter le curseur vers sa définition.
+- Elles sont enregistrées en Markdown standard (`texte[^1]` dans le corps et,
+  plus bas, `[^1]: la note`), elles sont donc compatibles avec d'autres
+  éditeurs.
 
 ## Tableaux
 
@@ -136,6 +149,11 @@ $$
 Le panneau latéral de gauche affiche l'index des titres (TOC) : il se met à
 jour à mesure que vous tapez, et cliquer sur une entrée fait sauter le
 curseur vers ce titre. On l'affiche/masque avec F9.
+
+Vous pouvez **glisser** une entrée du plan pour **réordonner** cette section
+— son titre, son contenu et ses sous-sections — dans le document, sans en
+changer le niveau. De plus, **Insérer → Index (TOC)** insère dans le document
+une liste imbriquée reprenant les titres.
 
 ## Mode sans distraction
 
@@ -200,6 +218,7 @@ façon inattendue, au prochain lancement elle propose de récupérer ce que vous
 | Rechercher suivant / précédent | F3 / Shift+F3 |
 | Titre H1 … H6             | Ctrl+1 … Ctrl+6  |
 | Insérer une formule       | Ctrl+Shift+F     |
+| Insérer une note de bas de page | Ctrl+Shift+N |
 | Vue source Markdown       | Ctrl+Shift+M     |
 | Vue divisée               | Ctrl+Shift+D     |
 | Plan                      | F9               |

@@ -14,6 +14,7 @@ en, bij het opslaan, schrijft de editor ze voor je.
 - [Citaten](#citaten)
 - [Code](#code)
 - [Koppelingen en afbeeldingen](#koppelingen-en-afbeeldingen)
+- [Voetnoten](#voetnoten)
 - [Horizontale lijnen](#horizontale-lijnen)
 - [Tabellen](#tabellen)
 - [Wiskundige formules](#wiskundige-formules)
@@ -100,6 +101,22 @@ def begroet(naam):
   koppeling, maar met een `!` ervoor.
 
 In md-editor opent **Ctrl+klik** op een koppeling die in de systeembrowser.
+
+## Voetnoten
+
+Een **verwijzing** in de tekst en de bijbehorende **definitie** apart,
+gekoppeld via een identifier `[^id]`:
+
+```
+Een bewering met haar nuance[^1].
+
+[^1]: De tekst van de noot komt hier.
+```
+
+De `id` kan een getal (`[^1]`) of een woord (`[^nota]`) zijn. In md-editor
+maakt **Invoegen → Voetnoot** (Ctrl+Shift+N) de verwijzing en de definitie voor
+je aan; de verwijzingen worden als superscript getoond en een klik springt naar
+de definitie.
 
 ## Horizontale lijnen
 
