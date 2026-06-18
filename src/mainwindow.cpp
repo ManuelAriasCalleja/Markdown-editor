@@ -392,7 +392,15 @@ MainWindow::MainWindow(QWidget *parent)
     // clases QMenuBar/QMenu antes de instanciarlas hace que los menús nazcan
     // ya midiéndose con la fuente correcta.
     m_zoomDelta = AppSettings::zoomLevel();
-    m_baseMenuPointSize = QApplication::font("QMenuBar").pointSizeF();
+    // applyMenuFontScale() muta la fuente de clase QMenuBar/QMenu de QApplication
+    // (global y persistente entre ventanas). Al recrear la ventana (cambio de
+    // idioma) y releer esa fuente ya escalada, el zoom de los menús se compondría
+    // en cada cambio. Por eso capturamos el tamaño base pristino una sola vez por
+    // proceso: la primera ventana lo lee antes de cualquier escalado y las
+    // recreadas reutilizan ese valor. (El resto de superficies escalan su fuente
+    // de widget, no la de clase de la app, así que no acumulan.)
+    static const qreal s_baseMenuPointSize = QApplication::font("QMenuBar").pointSizeF();
+    m_baseMenuPointSize = s_baseMenuPointSize;
     applyMenuFontScale();  // antes de createMenusAndActions
 
     createMenusAndActions();
