@@ -12,6 +12,17 @@ y el proyecto usa [versionado semántico](https://semver.org/lang/es/).
   (matemáticos, griego, flechas, moneda, puntuación, astronomía, marcas y
   fracciones) organizados por categorías; un clic inserta el símbolo en el
   cursor y el diálogo permanece abierto para insertar varios.
+- **Insertar → Fecha / Fecha y hora**: inserta la fecha (y hora) actual en
+  formato localizado.
+- **Exportar/Imprimir solo la selección**: *Archivo → Imprimir selección* y
+  *Exportar → Selección a PDF*.
+- **Auto-enlazar al pegar una URL**: pegar una URL sobre texto seleccionado
+  inserta `[texto](url)`.
+- **Ir a encabezado** (Ctrl+G): «quick open» con filtro sobre los encabezados
+  del documento.
+- **Tipografía inteligente** (en *Transformar texto*): `--`→—, `...`→…, y
+  comillas rectas → tipográficas.
+- **Shortcodes `:nombre:`**: al teclear, `:alpha:`→α, `:check:`→✓, etc.
 
 ## [1.2.0] — 2026-06-18
 

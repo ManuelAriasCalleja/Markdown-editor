@@ -119,18 +119,17 @@ Lote de mejoras de bajo coste, **sin dependencias nuevas** y portables a los 3 S
 
 Sin dependencias nuevas y con el patrón habitual (función pura + `tst_`).
 
-### Rápidas (poco coste, autocontenidas)
+### Rápidas (poco coste, autocontenidas) — ✅ hechas
 
-- ⬜ **Insertar fecha/hora** — *Insertar → Fecha y hora* con formato localizado.
-- ⬜ **Exportar/imprimir solo la selección** — reusa `ExportController`.
-- ⬜ **Auto-enlazar al pegar URLs** — pegar una URL sobre texto seleccionado lo
-  convierte en `[texto](url)`; reusa el *handler* de pegado de `FocusEditor`.
-- ⬜ **Ir a encabezado (Ctrl+G)** — «quick open» difuso sobre el esquema para
-  saltar a una sección; reusa `mdoutline`.
-- ⬜ **Tipografía inteligente** — `--`→`—`, `...`→`…`, comillas rectas→tipográficas;
-  como transformación en `mdtext` (y, opcional, en vivo al teclear).
-- ⬜ **Shortcodes `:nombre:`** — autocompletar `:alpha:`→α, `:check:`→✓…; pareja
-  natural del selector de símbolos.
+- ✅ **Insertar fecha/hora** — *Insertar → Fecha / Fecha y hora* (localizado).
+- ✅ **Exportar/imprimir solo la selección** — *Imprimir selección* + *Exportar →
+  Selección a PDF*.
+- ✅ **Auto-enlazar al pegar URLs** — `mdurl::looksLikeUrl` +
+  `InsertController::handlePastedUrl`.
+- ✅ **Ir a encabezado (Ctrl+G)** — `GoToHeadingDialog` (quick open con filtro).
+- ✅ **Tipografía inteligente** — `mdtext::smartTypography` (guiones, puntos
+  suspensivos y comillas), en *Transformar texto*.
+- ✅ **Shortcodes `:nombre:`** — `mdshortcode::expand` + expansión al teclear.
 
 ### Medias (Qt puro)
 
