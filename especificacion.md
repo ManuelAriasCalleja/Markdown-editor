@@ -5,7 +5,7 @@
 > el código Markdown e incluso tener código y renderizado en paralelo. Al guardar se
 > serializa siempre a Markdown limpio.
 
-- **Versión:** 1.1.1
+- **Versión:** 1.2.0
 - **Autor:** Manuel Arias Calleja
 - **Licencia:** CC BY-ND 4.0 (uso, compilación y redistribución sin modificar, con atribución; no se permiten obras derivadas)
 - **Plataformas:** Linux, Windows, macOS
