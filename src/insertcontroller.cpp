@@ -5,6 +5,7 @@
 #include <QComboBox>
 #include <QCoreApplication>
 #include <QDateTime>
+#include <QLocale>
 #include <QDialog>
 #include <QDialogButtonBox>
 #include <QDir>
@@ -342,6 +343,23 @@ void InsertController::insertFootnote()
     QTextCursor place(doc);
     place.setPosition(defPos);
     m_editor->setTextCursor(place);
+    m_editor->setFocus();
+}
+
+void InsertController::insertDate()
+{
+    m_editor->insertPlainText(
+        QLocale::system().toString(QDate::currentDate(), QLocale::LongFormat));
+    m_editor->setFocus();
+}
+
+void InsertController::insertDateTime()
+{
+    const QLocale loc = QLocale::system();
+    const QDateTime now = QDateTime::currentDateTime();
+    m_editor->insertPlainText(loc.toString(now.date(), QLocale::LongFormat)
+                              + QStringLiteral(", ")
+                              + loc.toString(now.time(), QLocale::ShortFormat));
     m_editor->setFocus();
 }
 

@@ -866,9 +866,18 @@ void MainWindow::createInsertMenu()
     insSymbol->setToolTip(tr("Inserta símbolos no habituales, por categorías"));
     connect(insSymbol, &QAction::triggered, m_insert, &InsertController::insertSymbol);
 
+    QAction *insDate = insertMenu->addAction(tr("Fecha"));
+    insDate->setToolTip(tr("Inserta la fecha actual en formato local"));
+    connect(insDate, &QAction::triggered, m_insert, &InsertController::insertDate);
+
+    QAction *insDateTime = insertMenu->addAction(tr("Fecha y hora"));
+    insDateTime->setToolTip(tr("Inserta la fecha y la hora actuales en formato local"));
+    connect(insDateTime, &QAction::triggered, m_insert, &InsertController::insertDateTime);
+
     // Insertar tampoco aplica en la vista de fuente.
     m_wysiwygActions << insLink << insImage << insPasteImage << insTable << insRule
-                     << insToc << insFormula << insFootnote << insSymbol;
+                     << insToc << insFormula << insFootnote << insSymbol
+                     << insDate << insDateTime;
 }
 
 void MainWindow::createTableMenu()

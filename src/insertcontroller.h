@@ -38,6 +38,8 @@ public slots:
     void insertTableOfContents();    // índice (TOC) con los encabezados del documento
     void insertFootnote();           // referencia `[^n]` + definición autonumeradas
     void insertSymbol();             // abre el diálogo de símbolos especiales
+    void insertDate();               // fecha actual (formato largo localizado)
+    void insertDateTime();           // fecha y hora actuales (localizadas)
     void pasteImageFromClipboard();  // acción del menú Insertar
 
 signals:
