@@ -3,6 +3,7 @@
 #include "appsettings.h"
 #include "blockconstructs.h"
 #include "chromezoom.h"
+#include "tasklist.h"
 #include "codehighlighter.h"
 #include "diskwatcher.h"
 #include "distractionfreecontroller.h"
@@ -1438,6 +1439,12 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
         else if (event->type() == QEvent::MouseMove) {
             auto *me = static_cast<QMouseEvent *>(event);
             if (me->buttons() == Qt::NoButton) {
+                // Sobre la casilla de una tarea: cursor de mano y pista de clic.
+                if (mdtask::isCheckboxAt(m_editor, me->position().toPoint())) {
+                    m_editor->viewport()->setCursor(Qt::PointingHandCursor);
+                    statusBar()->showMessage(tr("Clic para marcar o desmarcar la tarea"));
+                    return true;
+                }
                 const QString href = m_editor->anchorAt(me->position().toPoint());
                 if (!href.isEmpty()) {
                     m_editor->viewport()->setCursor(Qt::PointingHandCursor);
@@ -1460,9 +1467,9 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
                 && m_formula->editFormulaAt(me->position().toPoint()))
                 return true;
         }
-        // Ctrl+clic izquierdo sobre un enlace lo abre en la aplicación externa.
         else if (event->type() == QEvent::MouseButtonPress) {
             auto *me = static_cast<QMouseEvent *>(event);
+            // Ctrl+clic izquierdo sobre un enlace lo abre en la aplicación externa.
             if (me->button() == Qt::LeftButton
                 && (me->modifiers() & Qt::ControlModifier)) {
                 const QString href = m_editor->anchorAt(me->position().toPoint());
@@ -1471,6 +1478,11 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
                     return true;  // no mover el cursor de texto
                 }
             }
+            // Clic izquierdo simple sobre la casilla de un ítem de tarea: la
+            // marca/desmarca (round-trip a `- [x]`/`- [ ]` lo da Qt solo).
+            if (me->button() == Qt::LeftButton && me->modifiers() == Qt::NoModifier
+                && mdtask::toggleCheckboxAt(m_editor, me->position().toPoint()))
+                return true;  // consumido: no coloca el cursor ni inicia selección
         }
     }
     // Interceptación de teclas sobre el editor WYSIWYG para proteger las
