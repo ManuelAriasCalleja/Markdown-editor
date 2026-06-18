@@ -163,7 +163,7 @@ ultimă instanță, din limba sistemului).
   funcție de ora zilei.
 - **Zoom**: Ctrl+rotița mouse-ului, Ctrl++ / Ctrl+- și **Dimensiune normală**
   (Ctrl+0) scalează întreaga interfață (nu doar textul editorului).
-- **Vizualizare → Limbă** schimbă limba interfeței; se aplică la repornire.
+- **Vizualizare → Limbă** schimbă limba interfeței; se aplică imediat (fereastra este recreată).
 
 ## Recuperare automată
 

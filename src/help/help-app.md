@@ -159,7 +159,7 @@ en último caso, del idioma del sistema).
 - **Ver → Luz cálida nocturna** atenúa los azules del fondo según la hora.
 - **Zoom**: Ctrl+rueda del ratón, Ctrl++ / Ctrl+- y **Tamaño normal** (Ctrl+0)
   escalan toda la interfaz (no sólo el texto del editor).
-- **Ver → Idioma** cambia el idioma de la interfaz; se aplica al reiniciar.
+- **Ver → Idioma** cambia el idioma de la interfaz; se aplica al instante (recrea la ventana).
 
 ## Recuperación automática
 

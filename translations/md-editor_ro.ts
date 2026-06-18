@@ -1152,11 +1152,6 @@ Dorești să îl recuperezi?</translation>
         <source>Idioma</source>
         <translation>Limbă</translation>
     </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="1052"/>
-        <source>El idioma se aplicará la próxima vez que abras la aplicación.</source>
-        <translation>Limba se va aplica la următoarea deschidere a aplicației.</translation>
-    </message>
     <message numerus="yes">
         <location filename="../src/mainwindow.cpp" line="1168"/>
         <source>%n palabra(s)</source>

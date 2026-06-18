@@ -1152,11 +1152,6 @@ Czy chcesz go odzyskać?</translation>
         <source>Idioma</source>
         <translation>Język</translation>
     </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="1052"/>
-        <source>El idioma se aplicará la próxima vez que abras la aplicación.</source>
-        <translation>Język zostanie zastosowany przy następnym uruchomieniu aplikacji.</translation>
-    </message>
     <message numerus="yes">
         <location filename="../src/mainwindow.cpp" line="1168"/>
         <source>%n palabra(s)</source>

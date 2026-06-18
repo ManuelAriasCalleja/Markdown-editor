@@ -1006,7 +1006,7 @@ void MainWindow::createViewMenu()
     connect(warmLightAction, &QAction::toggled, this,
             [this](bool on) { m_theme->setWarmLight(on); });
 
-    // --- Idioma (se aplica al reiniciar) ---
+    // --- Idioma (se aplica al instante: recrea la ventana, ver setLanguage) ---
     // Código de locale por idioma; "" = automático (el del sistema). Los
     // nombres se muestran en su propia lengua (autónimos), no se traducen.
     // Añadir un idioma = una línea aquí + su .ts en CMakeLists.txt.
@@ -1053,11 +1053,41 @@ void MainWindow::setLanguage(const QString &code)
 {
     if (code == AppSettings::language())
         return;
+    // Cambiar de idioma recrea la ventana (la UI se construye a mano, sin un
+    // retranslateUi() que reasigne cada cadena). Antes de descartarla, ofrece
+    // guardar los cambios pendientes; si el usuario cancela, no cambiamos nada.
+    if (!m_file->maybeSave())
+        return;
+
     AppSettings::setLanguage(code);
-    // El idioma se carga al arrancar (la UI ya está construida): avisamos.
-    QMessageBox::information(
-        this, tr("Idioma"),
-        tr("El idioma se aplicará la próxima vez que abras la aplicación."));
+
+    // Persistimos el estado de ventana para que la ventana recreada arranque con
+    // el mismo tamaño/posición y disposición (geometría, barras y proporciones de
+    // la vista dividida); main() lee estas mismas claves al construirla. El menú
+    // de idioma no es accesible en modo sin distracciones, así que basta el
+    // estado plano (no el `sessionState` que el cierre usa para ese modo).
+    AppSettings::setWindowGeometry(saveGeometry());
+    AppSettings::setWindowState(saveState());
+    AppSettings::setSplitterState(m_split->splitView()->saveState());
+
+    // Recuerda dónde estaba el cursor del archivo actual para reabrirlo ahí tras
+    // recrear la ventana (igual que hace el cierre).
+    m_file->rememberCursorPosition();
+
+    // main() intercambia los traductores y recrea la ventana, reabriendo el
+    // documento actual ya saneado por maybeSave() (ruta vacía = documento nuevo).
+    emit languageChangeRequested(m_documentIo->currentFile());
+}
+
+void MainWindow::relaunchSession(const QString &reopenPath)
+{
+    normalizeOutlineWidth();
+    // El estado ya lo decidió la ventana anterior: ni recuperación de borrador ni
+    // reabrir el último documento. Solo reabrimos el que estaba abierto (si lo
+    // había y sigue existiendo); en su defecto, queda el documento nuevo vacío.
+    if (!reopenPath.isEmpty() && QFileInfo::exists(reopenPath))
+        m_file->openFile(reopenPath);
+    m_file->startAutosave();
 }
 
 void MainWindow::showHelpDialog()

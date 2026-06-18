@@ -175,8 +175,7 @@ système).
 - **Zoom** : Ctrl+molette de la souris, Ctrl++ / Ctrl+- et **Taille normale**
   (Ctrl+0) mettent à l'échelle toute l'interface (pas seulement le texte de
   l'éditeur).
-- **Affichage → Langue** change la langue de l'interface ; l'effet est pris
-  en compte au redémarrage.
+- **Affichage → Langue** change la langue de l'interface ; l'effet est immédiat (la fenêtre est recréée).
 
 ## Récupération automatique
 
