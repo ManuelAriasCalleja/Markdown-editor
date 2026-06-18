@@ -84,6 +84,21 @@ jobs:
   build-windows:
     name: Windows (ZIP portable)
     runs-on: windows-latest
+    # --- Firma de código (opcional, gratuita para OSS vía SignPath Foundation) ---
+    # La firma se ACTIVA SOLA en cuanto exista el secreto `SIGNPATH_API_TOKEN`.
+    # Sin él, el job compila y publica el ZIP SIN firmar, igual que hasta ahora.
+    #
+    # Para activarla, una vez aprobado el proyecto en https://signpath.org (programa
+    # gratuito para código abierto) y conectado el repo a la app de GitHub de
+    # SignPath, define en el repositorio:
+    #   • Secret  → SIGNPATH_API_TOKEN              (token de usuario de SignPath)
+    #   • Variables (Settings → Secrets and variables → Actions → Variables):
+    #       SIGNPATH_ORGANIZATION_ID                (GUID de la organización)
+    #       SIGNPATH_PROJECT_SLUG                   (p. ej. "md-editor")
+    #       SIGNPATH_POLICY_SLUG                    (p. ej. "release-signing")
+    #       SIGNPATH_ARTIFACT_CONFIG_SLUG           (p. ej. "exe")
+    env:
+      SIGN_ENABLED: ${{ secrets.SIGNPATH_API_TOKEN != '' }}
     steps:
       - uses: actions/checkout@v5
 
@@ -101,15 +116,43 @@ jobs:
           cmake --build build --config Release --parallel
 
       # windeployqt copia las DLL de Qt, los plugins de QPA, los .qm de
-      # traducción y el resto de runtime junto al .exe. El ZIP resultante es
-      # auto-contenido: descomprimes y ejecutas.
+      # traducción y el resto de runtime junto al .exe, en dist/. (El ZIP se
+      # comprime después, ya con el .exe firmado si la firma está activa.)
+      - name: Stage app (windeployqt)
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path dist | Out-Null
+          Copy-Item build/Release/md-editor.exe dist/
+          & windeployqt.exe --release --no-system-d3d-compiler --no-opengl-sw dist/md-editor.exe
+
+      # --- Firma del .exe (solo si SIGN_ENABLED). El ZIP de abajo recoge el
+      #     .exe ya firmado porque SignPath lo devuelve sobre el propio dist/. ---
+      - name: Upload unsigned .exe for SignPath
+        if: ${{ env.SIGN_ENABLED == 'true' }}
+        id: unsigned-exe
+        uses: actions/upload-artifact@v5
+        with:
+          name: unsigned-exe
+          path: dist/md-editor.exe
+
+      - name: Sign with SignPath
+        if: ${{ env.SIGN_ENABLED == 'true' }}
+        uses: signpath/github-action-submit-signing-request@v1
+        with:
+          api-token: ${{ secrets.SIGNPATH_API_TOKEN }}
+          organization-id: ${{ vars.SIGNPATH_ORGANIZATION_ID }}
+          project-slug: ${{ vars.SIGNPATH_PROJECT_SLUG }}
+          signing-policy-slug: ${{ vars.SIGNPATH_POLICY_SLUG }}
+          artifact-configuration-slug: ${{ vars.SIGNPATH_ARTIFACT_CONFIG_SLUG }}
+          github-artifact-id: ${{ steps.unsigned-exe.outputs.artifact-id }}
+          wait-for-completion: true
+          # Devuelve el .exe firmado sobre dist/, sustituyendo al sin firmar.
+          output-artifact-directory: dist
+
       - name: Package as portable ZIP
         shell: pwsh
         run: |
           $version = $env:GITHUB_REF_NAME.TrimStart('v')
-          New-Item -ItemType Directory -Force -Path dist | Out-Null
-          Copy-Item build/Release/md-editor.exe dist/
-          & windeployqt.exe --release --no-system-d3d-compiler --no-opengl-sw dist/md-editor.exe
           Compress-Archive -Path dist/* -DestinationPath "md-editor-$version-windows-x64.zip"
 
       - uses: actions/upload-artifact@v5
