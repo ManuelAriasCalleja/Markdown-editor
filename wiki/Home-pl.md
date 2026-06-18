@@ -34,4 +34,4 @@ serializowany do czystego Markdownu.
 
 ---
 
-*md-editor jest tworzony przez Manuel Arias Calleja. Licencja CC BY-ND 4.0.*
+*md-editor jest tworzony przez Manuel Arias Calleja. Licencja GPL-3.0.*

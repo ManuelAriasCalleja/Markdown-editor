@@ -33,4 +33,4 @@ Markdown curat.
 
 ---
 
-*md-editor este dezvoltat de Manuel Arias Calleja. Licență CC BY-ND 4.0.*
+*md-editor este dezvoltat de Manuel Arias Calleja. Licență GPL-3.0.*

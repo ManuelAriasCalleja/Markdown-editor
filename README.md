@@ -5,7 +5,7 @@ already-rendered text — never the syntax — and on save it is serialized back
 to clean Markdown.
 
 ![Version](https://img.shields.io/badge/version-1.2.0-blue)
-![License](https://img.shields.io/badge/license-CC%20BY--ND%204.0-lightgrey)
+![License](https://img.shields.io/badge/license-GPL--3.0-blue)
 ![Platforms](https://img.shields.io/badge/platforms-Linux%20%7C%20Windows%20%7C%20macOS-green)
 
 ---
@@ -63,9 +63,9 @@ Full list under *Help → Manual* inside the app.
 
 ## Building from source
 
-> **Legal note**: the code is released under **CC BY-ND 4.0**. You may clone
-> and build it for your own use; **you may not distribute modified versions**.
-> See [License](#license).
+> **Legal note**: the code is **free software** under **GPL-3.0**. You may
+> clone, build, modify and redistribute it, as long as derivatives stay under
+> the GPL-3.0. See [License](#license).
 
 ### Dependencies
 
@@ -113,25 +113,28 @@ Installs the binary, the `.desktop` launcher and hicolor icons (PNG + SVG).
 
 ## License
 
-This software is distributed under the **Creative Commons
-Attribution-NoDerivatives 4.0 International** ([**CC BY-ND 4.0**](https://creativecommons.org/licenses/by-nd/4.0/)) license.
+This software is **free software**, distributed under the **GNU General Public
+License v3.0** ([**GPL-3.0**](https://www.gnu.org/licenses/gpl-3.0.html)).
+
+Copyright © 2026 Manuel Arias Calleja.
 
 In short:
 
-- ✅ You **may** read the source code, download it and build it for your own use.
-- ✅ You **may** use the binary for any purpose (including commercial).
-- ✅ You **may** redistribute the binary or the unmodified source code, with
-  attribution.
-- ❌ You **may not** modify the source code and distribute that modified version.
-- ❌ You **may not** create derivative works from this code.
+- ✅ You **may** use, study, and run the program for any purpose.
+- ✅ You **may** redistribute copies, source or binary.
+- ✅ You **may** modify it and distribute your modified versions — **provided**
+  they are also released under the GPL-3.0 (same freedoms for everyone).
+- ❌ You **may not** distribute a closed-source or proprietary derivative.
 
-Full text in [`LICENSE`](LICENSE).
+This is a strong copyleft licence: any fork must stay free and open under the
+same terms. Full text in [`LICENSE`](LICENSE).
 
 ### Contributions
 
-Because of the license, **this project does not accept pull requests with
-code changes**. If you find a bug or have a suggestion, open an *issue* and
-the author will consider it.
+This project **does not accept pull requests**. Development is by the author
+only. If you find a bug or have a suggestion, open an *issue* and the author
+will consider it. (The licence lets you fork and modify your own copy; that is
+independent of this repository's contribution policy.)
 
 ---
 

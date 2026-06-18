@@ -35,4 +35,4 @@ schone Markdown geserialiseerd.
 
 ---
 
-*md-editor wordt ontwikkeld door Manuel Arias Calleja. Licentie CC BY-ND 4.0.*
+*md-editor wordt ontwikkeld door Manuel Arias Calleja. Licentie GPL-3.0.*

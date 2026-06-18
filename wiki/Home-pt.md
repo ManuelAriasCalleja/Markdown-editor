@@ -33,4 +33,4 @@ limpo.
 
 ---
 
-*O md-editor é desenvolvido por Manuel Arias Calleja. Licença CC BY-ND 4.0.*
+*O md-editor é desenvolvido por Manuel Arias Calleja. Licença GPL-3.0.*

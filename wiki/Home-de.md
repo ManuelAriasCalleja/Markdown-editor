@@ -33,4 +33,4 @@ wird stets sauberes Markdown serialisiert.
 
 ---
 
-*md-editor wird von Manuel Arias Calleja entwickelt. Lizenz CC BY-ND 4.0.*
+*md-editor wird von Manuel Arias Calleja entwickelt. Lizenz GPL-3.0.*

@@ -32,4 +32,4 @@ and edit on either side. On save it always serializes back to clean Markdown.
 
 ---
 
-*md-editor is developed by Manuel Arias Calleja. Licensed under CC BY-ND 4.0.*
+*md-editor is developed by Manuel Arias Calleja. Licensed under GPL-3.0.*

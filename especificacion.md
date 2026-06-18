@@ -7,7 +7,7 @@
 
 - **Versión:** 1.2.0
 - **Autor:** Manuel Arias Calleja
-- **Licencia:** CC BY-ND 4.0 (uso, compilación y redistribución sin modificar, con atribución; no se permiten obras derivadas)
+- **Licencia:** GPL-3.0 (software libre con copyleft fuerte: uso, estudio, modificación y redistribución, siempre que las obras derivadas se publiquen también bajo GPL-3.0)
 - **Plataformas:** Linux, Windows, macOS
 - **Idiomas de interfaz:** 9 (español + inglés, alemán, francés, italiano, portugués, polaco, neerlandés, rumano)
 

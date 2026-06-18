@@ -33,4 +33,4 @@ in Markdown pulito.
 
 ---
 
-*md-editor è sviluppato da Manuel Arias Calleja. Licenza CC BY-ND 4.0.*
+*md-editor è sviluppato da Manuel Arias Calleja. Licenza GPL-3.0.*

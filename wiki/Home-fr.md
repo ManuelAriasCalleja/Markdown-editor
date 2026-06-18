@@ -34,4 +34,4 @@ sérialisé en Markdown propre.
 
 ---
 
-*md-editor est développé par Manuel Arias Calleja. Licence CC BY-ND 4.0.*
+*md-editor est développé par Manuel Arias Calleja. Licence GPL-3.0.*

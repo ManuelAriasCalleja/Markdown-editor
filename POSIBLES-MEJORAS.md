@@ -132,10 +132,11 @@ Sin dependencias nuevas y con el patrón habitual (función pura + `tst_`):
 ## 📋 Proyecto / comunidad
 
 16. ✅ **CHANGELOG.md** — *Hecho:* `CHANGELOG.md` con el historial por versión.
-17. **Repensar la licencia CC BY-ND** — el README dice que no se aceptan PRs de
-    código por la licencia. Es legítimo, pero corta el crecimiento por
-    contribuciones. Si algún día se quiere comunidad, una licencia de software
-    (MIT/GPL) sería el mayor desbloqueo. *Solo si es un objetivo.*
+17. ✅ **Relicenciar a una licencia de software** — *Hecho:* el proyecto pasó de
+    CC BY-ND 4.0 a **GPL-3.0** (copyleft fuerte: permite forks pero los obliga a
+    seguir siendo libres). Desbloquea, entre otras cosas, la firma de código
+    gratuita para OSS (p. ej. SignPath Foundation). La política del repositorio
+    sigue siendo no aceptar PRs (independiente de la licencia).
 18. **Analítica de descargas con privacidad** — GitHub no dice *quién* descarga;
     un redirector propio daría país/volumen sin rastrear personas.
 
