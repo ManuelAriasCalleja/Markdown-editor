@@ -66,6 +66,12 @@ public:
     // documento de la sesión anterior. `cmdLineFile` vacío = sin argumento.
     void startSession(const QString &cmdLineFile);
 
+private:
+    // Devuelve el dock del esquema a un ancho de lectura cómodo si el estado
+    // restaurado lo dejó desproporcionadamente ancho (no toca el modo sin
+    // distracciones, que lo ensancha a propósito).
+    void normalizeOutlineWidth();
+
 protected:
     void closeEvent(QCloseEvent *event) override;
     // Recoloca el esquema y la columna en el modo sin distracciones al cambiar

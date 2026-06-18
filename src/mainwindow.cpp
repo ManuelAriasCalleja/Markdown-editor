@@ -272,11 +272,16 @@ MainWindow::MainWindow(QWidget *parent)
     addDockWidget(Qt::LeftDockWidgetArea, m_outline);
     // Mostrar/ocultar el esquema (F9) dentro del modo sin distracciones recoloca
     // el bloque centrado.
-    connect(m_outline, &QDockWidget::visibilityChanged, this, [this] {
+    connect(m_outline, &QDockWidget::visibilityChanged, this, [this](bool visible) {
         // m_distraction puede no existir aún si esto se emite durante la
         // construcción (al acoplar el dock), antes de crear el controlador.
         if (m_distraction && m_distraction->isActive())
             m_distraction->updateLayout();
+        // Al mostrar el esquema (F9), QMainWindow repone el ancho que tuviera
+        // en el estado guardado, que puede ser desproporcionado. Lo normalizamos
+        // diferido: el ancho restaurado se aplica tras asentarse el layout.
+        else if (visible)
+            QTimer::singleShot(0, this, &MainWindow::normalizeOutlineWidth);
     });
     connect(m_outline, &OutlinePanel::headingActivated, this, [this](int blockNumber) {
         const QTextBlock block = m_editor->document()->findBlockByNumber(blockNumber);
@@ -480,6 +485,9 @@ MainWindow::MainWindow(QWidget *parent)
         m_outline->setFloating(false);
         addDockWidget(Qt::LeftDockWidgetArea, m_outline);
     }
+    // El ancho del dock del esquema se normaliza en startSession(), ya con la
+    // ventana mostrada y el layout asentado (aquí, en el constructor, el ancho
+    // restaurado aún no se ha aplicado y width() no es fiable).
     // Arranca siempre como ventana normal: descarta pantalla completa/maximizado
     // que pudieran venir de una sesión cerrada en modo sin distracciones.
     setWindowState(windowState() & ~(Qt::WindowFullScreen | Qt::WindowMaximized));
@@ -1492,8 +1500,26 @@ void MainWindow::openLink(const QString &href)
     QDesktopServices::openUrl(url);
 }
 
+void MainWindow::normalizeOutlineWidth()
+{
+    // El ancho del dock se persiste en windowState y puede volver
+    // desproporcionado (p. ej. heredado del modo sin distracciones, que lo
+    // ensancha a propósito). Solo aplica fuera de ese modo y con el dock
+    // visible; si ocupa más de un tercio de la ventana lo devolvemos a un
+    // ancho de lectura cómodo para que el editor no quede en una franja.
+    if (!m_outline->isVisible() || (m_distraction && m_distraction->isActive()))
+        return;
+    constexpr int kNormalOutlineWidth = 280;
+    if (m_outline->width() > qMax(kNormalOutlineWidth, width() / 3))
+        resizeDocks({m_outline}, {kNormalOutlineWidth}, Qt::Horizontal);
+}
+
 void MainWindow::startSession(const QString &cmdLineFile)
 {
+    // Si el esquema arranca visible, normaliza ya su ancho (con el layout
+    // asentado). Si arranca oculto, lo hará el primer F9 (visibilityChanged).
+    normalizeOutlineWidth();
+
     // Prioridad: archivo de la línea de comandos > recuperar borrador > reabrir
     // el último documento. Sin returns prematuros: todas las ramas confluyen en
     // el arranque del autoguardado al final.
