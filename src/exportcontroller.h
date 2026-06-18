@@ -38,6 +38,10 @@ public slots:
     // Abre una vista previa de impresión (QPrintPreviewDialog) con el documento
     // renderizado; desde ahí se puede ajustar e imprimir.
     bool printPreview();
+    // Imprime / exporta a PDF solo el texto seleccionado (avisa si no hay
+    // selección). Construye un documento con el fragmento seleccionado.
+    bool printSelection();
+    bool exportSelectionPdf();
     // Copia el documento completo al portapapeles como HTML (con texto plano de
     // reserva), para pegarlo con formato en Word, correo, etc.
     void copyHtmlToClipboard();

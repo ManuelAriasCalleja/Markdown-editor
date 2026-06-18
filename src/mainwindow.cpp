@@ -592,6 +592,10 @@ void MainWindow::createFileMenu()
     connect(exportDocxAction, &QAction::triggered, m_export, &ExportController::exportDocx);
     QAction *exportLatexAction = exportMenu->addAction(tr("A LaTeX..."));
     connect(exportLatexAction, &QAction::triggered, m_export, &ExportController::exportLatex);
+    exportMenu->addSeparator();
+    QAction *exportSelPdfAction = exportMenu->addAction(tr("Selección a PDF..."));
+    exportSelPdfAction->setToolTip(tr("Exporta a PDF solo el texto seleccionado"));
+    connect(exportSelPdfAction, &QAction::triggered, m_export, &ExportController::exportSelectionPdf);
 
     fileMenu->addSeparator();
 
@@ -601,6 +605,10 @@ void MainWindow::createFileMenu()
     QAction *printAction = fileMenu->addAction(tr("&Imprimir..."));
     printAction->setShortcut(QKeySequence::Print);
     connect(printAction, &QAction::triggered, m_export, &ExportController::print);
+
+    QAction *printSelAction = fileMenu->addAction(tr("Imprimir &selección..."));
+    printSelAction->setToolTip(tr("Imprime solo el texto seleccionado"));
+    connect(printSelAction, &QAction::triggered, m_export, &ExportController::printSelection);
 
     fileMenu->addSeparator();
 

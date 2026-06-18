@@ -17,7 +17,9 @@
 #include <QPrintPreviewDialog>
 #include <QPrinter>
 #include <QStringConverter>
+#include <QTextCursor>
 #include <QTextDocument>
+#include <QTextDocumentFragment>
 #include <QTextEdit>
 #include <QTextStream>
 
@@ -132,6 +134,61 @@ bool ExportController::print()
         mdexport::cloneForExport(m_editor->document()));
     flat->print(&printer);
     emit statusMessage(QCoreApplication::translate("MainWindow", "Documento enviado a la impresora."), 4000);
+    return true;
+}
+
+namespace {
+// Documento listo para exportar/imprimir con SOLO la selección del editor, o
+// nullptr si no hay selección. Pasa por cloneForExport (limpia las propiedades
+// de math, conserva el formato visible).
+std::unique_ptr<QTextDocument> selectionExportDocument(QTextEdit *editor)
+{
+    const QTextCursor cursor = editor->textCursor();
+    if (!cursor.hasSelection())
+        return nullptr;
+    QTextDocument selection;
+    QTextCursor into(&selection);
+    into.insertFragment(cursor.selection());
+    return std::unique_ptr<QTextDocument>(mdexport::cloneForExport(&selection));
+}
+}  // namespace
+
+bool ExportController::printSelection()
+{
+    m_split->commitSourceToDocument();
+    std::unique_ptr<QTextDocument> doc = selectionExportDocument(m_editor);
+    if (!doc) {
+        emit statusMessage(QCoreApplication::translate("MainWindow", "No hay texto seleccionado."), 4000);
+        return false;
+    }
+    QPrinter printer(QPrinter::HighResolution);
+    QPrintDialog dialog(&printer, m_parent);
+    dialog.setWindowTitle(QCoreApplication::translate("MainWindow", "Imprimir selección"));
+    if (dialog.exec() != QDialog::Accepted)
+        return false;
+    doc->print(&printer);
+    emit statusMessage(QCoreApplication::translate("MainWindow", "Selección enviada a la impresora."), 4000);
+    return true;
+}
+
+bool ExportController::exportSelectionPdf()
+{
+    m_split->commitSourceToDocument();
+    std::unique_ptr<QTextDocument> doc = selectionExportDocument(m_editor);
+    if (!doc) {
+        emit statusMessage(QCoreApplication::translate("MainWindow", "No hay texto seleccionado."), 4000);
+        return false;
+    }
+    const QString path = promptSavePath(
+        QCoreApplication::translate("MainWindow", "Exportar selección a PDF"),
+        QCoreApplication::translate("MainWindow", "PDF (*.pdf)"), QStringLiteral("pdf"));
+    if (path.isEmpty())
+        return false;
+    QPrinter printer(QPrinter::HighResolution);
+    printer.setOutputFormat(QPrinter::PdfFormat);
+    printer.setOutputFileName(path);
+    doc->print(&printer);
+    emit statusMessage(QCoreApplication::translate("MainWindow", "Exportado a PDF: %1").arg(path), 4000);
     return true;
 }
 
