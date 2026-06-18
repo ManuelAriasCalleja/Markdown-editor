@@ -1,0 +1,47 @@
+# Política del proyecto: no se aceptan pull requests. Este workflow comenta y
+# cierra automáticamente cualquier PR que no abra el propio autor (OWNER).
+name: Close pull requests
+
+on:
+  pull_request_target:
+    types: [opened, reopened]
+
+permissions:
+  pull-requests: write
+  issues: write
+
+jobs:
+  close:
+    runs-on: ubuntu-latest
+    # No cerrar los PR que pueda abrir el propio autor del repositorio.
+    if: github.event.pull_request.author_association != 'OWNER'
+    steps:
+      - uses: actions/github-script@v7
+        with:
+          script: |
+            const pr = context.payload.pull_request;
+            const body = [
+              "¡Gracias por tu interés! Este proyecto **no acepta _pull requests_**: ",
+              "el desarrollo lo lleva solo el autor. La licencia **GPL-3.0** te permite ",
+              "hacer un _fork_ y modificar tu propia copia. Si has encontrado un fallo o ",
+              "tienes una sugerencia, por favor abre un *issue*. Ver `CONTRIBUTING.md`.",
+              "",
+              "---",
+              "",
+              "Thanks for your interest! This project **does not accept pull requests** — ",
+              "development is by the author only. The **GPL-3.0** licence lets you fork and ",
+              "modify your own copy. For bugs or suggestions, please open an *issue*. ",
+              "See `CONTRIBUTING.md`."
+            ].join("");
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: pr.number,
+              body,
+            });
+            await github.rest.pulls.update({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: pr.number,
+              state: "closed",
+            });
