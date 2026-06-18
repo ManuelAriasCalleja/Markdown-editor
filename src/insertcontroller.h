@@ -30,6 +30,11 @@ public:
     // incruste). Lo invoca el handler de pegado/soltado de FocusEditor.
     bool handlePastedImage(const QMimeData *source);
 
+    // Si se pega una sola URL habiendo una selección (de un único bloque), la
+    // envuelve como `[selección](url)`. Devuelve true si lo gestionó. Encadenado
+    // tras handlePastedImage en el handler de pegado.
+    bool handlePastedUrl(const QMimeData *source);
+
 public slots:
     void insertLink();
     void insertImage();

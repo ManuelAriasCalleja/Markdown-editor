@@ -253,8 +253,10 @@ MainWindow::MainWindow(QWidget *parent)
     // Al pegar o soltar una imagen en el editor, guardarla a disco e insertar
     // `![](ruta)` en vez de incrustarla (que no sobreviviría al round-trip a
     // Markdown). Solo en el editor WYSIWYG; en la vista de fuente es texto.
-    m_editor->setMimeInsertHandler(
-        [this](const QMimeData *src) { return m_insert->handlePastedImage(src); });
+    m_editor->setMimeInsertHandler([this](const QMimeData *src) {
+        // Primero imágenes (a disco); si no, auto-enlazar una URL sobre la selección.
+        return m_insert->handlePastedImage(src) || m_insert->handlePastedUrl(src);
+    });
 
     // Barra inferior de buscar/reemplazar (creada antes del menú que la invoca).
     m_findBar = new FindReplaceBar(m_editor, this);

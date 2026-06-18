@@ -29,6 +29,7 @@
 #include "footnotes.h"
 #include "outlinepanel.h"
 #include "symbolpicker.h"
+#include "urldetect.h"
 
 // Los textos visibles de las acciones conservan el contexto de traducción
 // "MainWindow" (QCoreApplication::translate) para no re-hogar las cadenas ya
@@ -344,6 +345,25 @@ void InsertController::insertFootnote()
     place.setPosition(defPos);
     m_editor->setTextCursor(place);
     m_editor->setFocus();
+}
+
+bool InsertController::handlePastedUrl(const QMimeData *source)
+{
+    if (!source || !source->hasText())
+        return false;
+    QTextCursor cursor = m_editor->textCursor();
+    if (!cursor.hasSelection())
+        return false;
+    const QString selected = cursor.selectedText();
+    // Selección multibloque: el separador de párrafo (U+2029) no cabe en el texto
+    // del enlace; se deja el pegado normal.
+    if (selected.contains(QChar::ParagraphSeparator))
+        return false;
+    const QString url = source->text().trimmed();
+    if (!mdurl::looksLikeUrl(url))
+        return false;
+    cursor.insertText(QStringLiteral("[%1](%2)").arg(selected, url));
+    return true;
 }
 
 void InsertController::insertDate()
