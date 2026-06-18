@@ -17,6 +17,8 @@ private slots:
     void sortLinesDescending();
     void sortLinesIsStable();
     void sortSingleLineUnchanged();
+    void smartTypographyDashesAndEllipsis();
+    void smartTypographyQuotes();
 };
 
 void TestTextTransform::upperAndLower()
@@ -68,6 +70,26 @@ void TestTextTransform::sortLinesIsStable()
 void TestTextTransform::sortSingleLineUnchanged()
 {
     QCOMPARE(mdtext::sortLines(QStringLiteral("una sola")), QStringLiteral("una sola"));
+}
+
+void TestTextTransform::smartTypographyDashesAndEllipsis()
+{
+    QCOMPARE(mdtext::smartTypography(QStringLiteral("a -- b")),
+             QString::fromUtf8("a – b"));            // –
+    QCOMPARE(mdtext::smartTypography(QStringLiteral("a --- b")),
+             QString::fromUtf8("a — b"));            // —
+    QCOMPARE(mdtext::smartTypography(QStringLiteral("espera...")),
+             QString::fromUtf8("espera…"));          // …
+}
+
+void TestTextTransform::smartTypographyQuotes()
+{
+    QCOMPARE(mdtext::smartTypography(QStringLiteral("\"hola\"")),
+             QString::fromUtf8("“hola”"));      // “hola”
+    QCOMPARE(mdtext::smartTypography(QStringLiteral("don't")),
+             QString::fromUtf8("don’t"));            // don’t
+    QCOMPARE(mdtext::smartTypography(QStringLiteral("'hi'")),
+             QString::fromUtf8("‘hi’"));        // ‘hi’
 }
 
 QTEST_MAIN(TestTextTransform)

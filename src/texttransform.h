@@ -20,6 +20,11 @@ QString capitalize(const QString &s);
 // posición relativa).
 QString sortLines(const QString &s, bool ascending = true);
 
+// Tipografía «inteligente»: `---`→— (raya), `--`→– (semirraya), `...`→…
+// (puntos suspensivos) y comillas rectas `"`/`'` → tipográficas (“ ” / ‘ ’),
+// abriendo o cerrando según el carácter anterior. No toca otros caracteres.
+QString smartTypography(const QString &s);
+
 }  // namespace mdtext
 
 #endif // TEXTTRANSFORM_H

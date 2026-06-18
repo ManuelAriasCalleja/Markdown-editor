@@ -669,6 +669,11 @@ void MainWindow::createEditMenu()
     QAction *capAction = transformMenu->addAction(tr("Capitalizar"));
     connect(capAction, &QAction::triggered, this,
             [applyToSelection] { applyToSelection(mdtext::capitalize); });
+    transformMenu->addSeparator();
+    QAction *typographyAction = transformMenu->addAction(tr("Tipografía inteligente"));
+    typographyAction->setToolTip(tr("Convierte -- — ... y comillas rectas en sus formas tipográficas"));
+    connect(typographyAction, &QAction::triggered, this,
+            [applyToSelection] { applyToSelection(mdtext::smartTypography); });
 
     QAction *sortAction = editMenu->addAction(tr("Ordenar líneas"));
     connect(sortAction, &QAction::triggered, this, [this] {
