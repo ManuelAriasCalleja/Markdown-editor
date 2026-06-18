@@ -1,11 +1,11 @@
 # md-editor
 
-Un visor de **Markdown** escrito en *Qt6 / C++*.
+Un editor visual (WYSIWYG) de **Markdown** escrito en *Qt6 / C++*.
 
 ## Características de esta versión
 
-- Abre y **renderiza** archivos Markdown.
-- Se adapta al redimensionar la ventana.
+- Abre, **edita** y **renderiza** archivos Markdown sin ver el código.
+- Exporta a PDF, HTML, ODT, DOCX y LaTeX.
 - Resuelve enlaces e imágenes relativas.
 
 ### Ejemplo de lista numerada

@@ -404,7 +404,7 @@
     <message>
         <location filename="../src/mainwindow.cpp" line="820"/>
         <source>Guarda la imagen del portapapeles y la inserta</source>
-        <translation>Guarda a imagem da área de transferência e insere-a</translation>
+        <translation>Salva a imagem da área de transferência e insere-a</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="823"/>
@@ -694,7 +694,7 @@
     <message>
         <location filename="../src/insertcontroller.cpp" line="220"/>
         <source>Guardar imagen pegada</source>
-        <translation>Guardar imagem colada</translation>
+        <translation>Salvar imagem colada</translation>
     </message>
     <message>
         <location filename="../src/insertcontroller.cpp" line="222"/>
@@ -704,7 +704,7 @@
     <message>
         <location filename="../src/insertcontroller.cpp" line="231"/>
         <source>No se pudo guardar la imagen en «%1».</source>
-        <translation>Não foi possível guardar a imagem em «%1».</translation>
+        <translation>Não foi possível salvar a imagem em «%1».</translation>
     </message>
     <message>
         <location filename="../src/insertcontroller.cpp" line="298"/>
@@ -930,7 +930,7 @@
     <message>
         <location filename="../src/mainwindow.cpp" line="1710"/>
         <source>«%1» ha cambiado en disco y tienes cambios sin guardar.</source>
-        <translation>«%1» mudou no disco e você tem alterações não guardadas.</translation>
+        <translation>«%1» mudou no disco e você tem alterações não salvas.</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="1713"/>
