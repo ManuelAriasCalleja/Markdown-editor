@@ -61,6 +61,8 @@ add_library(md-editor-core STATIC
     src/helpdialog.h
     src/outlinepanel.cpp
     src/outlinepanel.h
+    src/gotoheadingdialog.cpp
+    src/gotoheadingdialog.h
     src/docstats.cpp
     src/docstats.h
     src/texttransform.cpp

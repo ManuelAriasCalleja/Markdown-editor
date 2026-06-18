@@ -23,6 +23,7 @@
 #include "texttransform.h"
 #include "listcontinuation.h"
 #include "mathblocks.h"
+#include "gotoheadingdialog.h"
 #include "outlinepanel.h"
 #include "recentfilesmanager.h"
 #include "recoverymanager.h"
@@ -973,6 +974,13 @@ void MainWindow::createViewMenu()
             m_outlineAction->shortcut().toString(QKeySequence::NativeText)));
     viewMenu->addAction(m_outlineAction);
 
+    QAction *goToHeadingAction = viewMenu->addAction(tr("Ir a encabezado..."));
+    goToHeadingAction->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_G));
+    goToHeadingAction->setToolTip(
+        tr("Salta a un encabezado del documento") + QStringLiteral(" (%1)").arg(
+            goToHeadingAction->shortcut().toString(QKeySequence::NativeText)));
+    connect(goToHeadingAction, &QAction::triggered, this, &MainWindow::goToHeading);
+
     viewMenu->addSeparator();
 
     QAction *zoomInAction = viewMenu->addAction(tr("Aumentar letra"));
@@ -1628,6 +1636,26 @@ void MainWindow::normalizeOutlineWidth()
     constexpr int kNormalOutlineWidth = 280;
     if (m_outline->width() > qMax(kNormalOutlineWidth, width() / 3))
         resizeDocks({m_outline}, {kNormalOutlineWidth}, Qt::Horizontal);
+}
+
+void MainWindow::goToHeading()
+{
+    const QList<OutlineHeading> headings = mdoutline::headingsOf(m_editor->document());
+    if (headings.isEmpty()) {
+        statusBar()->showMessage(tr("El documento no tiene encabezados."));
+        return;
+    }
+    GoToHeadingDialog dialog(headings, this);
+    if (dialog.exec() != QDialog::Accepted)
+        return;
+    const int blockNumber = dialog.selectedBlockNumber();
+    const QTextBlock block = m_editor->document()->findBlockByNumber(blockNumber);
+    if (!block.isValid())
+        return;
+    QTextCursor cursor(block);
+    m_editor->setTextCursor(cursor);
+    m_editor->ensureCursorVisible();
+    m_editor->setFocus();
 }
 
 QString MainWindow::footnoteRefIdAt(const QPoint &viewportPos) const

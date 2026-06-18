@@ -84,6 +84,9 @@ private:
     // distracciones, que lo ensancha a propósito).
     void normalizeOutlineWidth();
 
+    // Abre el diálogo «Ir a encabezado» (Ctrl+G) y lleva el cursor al elegido.
+    void goToHeading();
+
     // Id de la referencia de nota al pie renderizada bajo `viewportPos`, o cadena
     // vacía si no hay ninguna. Lo usan el clic y la pista de hover.
     QString footnoteRefIdAt(const QPoint &viewportPos) const;
