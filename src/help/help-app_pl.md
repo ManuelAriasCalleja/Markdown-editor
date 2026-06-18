@@ -163,7 +163,7 @@ lub, w ostateczności, z ustawień regionalnych systemu).
   zależności od pory dnia.
 - **Powiększenie**: Ctrl+kółko myszy, Ctrl++ / Ctrl+- oraz **Rozmiar normalny**
   (Ctrl+0) skalują cały interfejs (nie tylko tekst w edytorze).
-- **Widok → Język** zmienia język interfejsu; działa po ponownym uruchomieniu.
+- **Widok → Język** zmienia język interfejsu; działa natychmiast (okno jest tworzone na nowo).
 
 ## Automatyczne odzyskiwanie
 

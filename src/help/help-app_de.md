@@ -171,8 +171,7 @@ als letzter Ausweg, dem Systemgebietsschema).
   Tageszeit.
 - **Zoom**: Ctrl+Mausrad, Ctrl++ / Ctrl+- und **Normale Größe** (Ctrl+0)
   skalieren die gesamte Oberfläche (nicht nur den Editortext).
-- **Ansicht → Sprache** ändert die Sprache der Oberfläche; wirksam nach einem
-  Neustart.
+- **Ansicht → Sprache** ändert die Sprache der Oberfläche; sofort wirksam (das Fenster wird neu erstellt).
 
 ## Automatische Wiederherstellung
 

@@ -1150,11 +1150,6 @@ Deseja recuperá-lo?</translation>
         <source>Idioma</source>
         <translation>Idioma</translation>
     </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="1052"/>
-        <source>El idioma se aplicará la próxima vez que abras la aplicación.</source>
-        <translation>O idioma será aplicado na próxima vez que você abrir o aplicativo.</translation>
-    </message>
     <message numerus="yes">
         <location filename="../src/mainwindow.cpp" line="1168"/>
         <source>%n palabra(s)</source>

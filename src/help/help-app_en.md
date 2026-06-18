@@ -160,8 +160,7 @@ as a last resort, the system locale).
   time of day.
 - **Zoom**: Ctrl+mouse wheel, Ctrl++ / Ctrl+- and **Normal size** (Ctrl+0)
   scale the whole interface (not just the editor text).
-- **View → Language** changes the interface language; takes effect on
-  restart.
+- **View → Language** changes the interface language; takes effect immediately (the window is recreated).
 
 ## Automatic recovery
 

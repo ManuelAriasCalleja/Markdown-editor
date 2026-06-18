@@ -66,6 +66,18 @@ public:
     // documento de la sesión anterior. `cmdLineFile` vacío = sin argumento.
     void startSession(const QString &cmdLineFile);
 
+    // Arranque de una ventana recreada tras cambiar de idioma: reabre `reopenPath`
+    // (si no está vacío) sin pasar por la recuperación de borrador ni el reabrir
+    // del último documento, y arranca el autoguardado. La diferencia con
+    // startSession() es que aquí el estado ya lo decidió la ventana anterior.
+    void relaunchSession(const QString &reopenPath);
+
+signals:
+    // El usuario eligió otro idioma. main() intercambia los traductores y recrea
+    // la ventana (rehaciendo todos los tr()) reabriendo `reopenPath`. Se emite
+    // solo tras confirmar que no hay cambios sin guardar que perder.
+    void languageChangeRequested(const QString &reopenPath);
+
 private:
     // Devuelve el dock del esquema a un ancho de lectura cómodo si el estado
     // restaurado lo dejó desproporcionadamente ancho (no toca el modo sin

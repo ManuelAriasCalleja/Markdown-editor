@@ -164,7 +164,7 @@ come ultima risorsa, dalle impostazioni locali del sistema).
   all'ora del giorno.
 - **Zoom**: Ctrl+rotella del mouse, Ctrl++ / Ctrl+- e **Dimensione normale**
   (Ctrl+0) ridimensionano tutta l'interfaccia (non solo il testo dell'editor).
-- **Visualizza → Lingua** cambia la lingua dell'interfaccia; ha effetto al riavvio.
+- **Visualizza → Lingua** cambia la lingua dell'interfaccia; ha effetto immediato (la finestra viene ricreata).
 
 ## Ripristino automatico
 

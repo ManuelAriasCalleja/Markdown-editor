@@ -1150,11 +1150,6 @@ Wil je het herstellen?</translation>
         <source>Idioma</source>
         <translation>Taal</translation>
     </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="1052"/>
-        <source>El idioma se aplicará la próxima vez que abras la aplicación.</source>
-        <translation>De taal wordt toegepast wanneer u de toepassing opnieuw opent.</translation>
-    </message>
     <message numerus="yes">
         <location filename="../src/mainwindow.cpp" line="1168"/>
         <source>%n palabra(s)</source>

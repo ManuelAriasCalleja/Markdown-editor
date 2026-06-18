@@ -163,7 +163,7 @@ em último caso, do idioma do sistema).
   dia.
 - **Zoom**: Ctrl+roda do rato, Ctrl++ / Ctrl+- e **Tamanho normal** (Ctrl+0)
   dimensionam toda a interface (não apenas o texto do editor).
-- **Exibir → Idioma** muda o idioma da interface; aplica-se ao reiniciar.
+- **Exibir → Idioma** muda o idioma da interface; aplica-se imediatamente (a janela é recriada).
 
 ## Recuperação automática
 

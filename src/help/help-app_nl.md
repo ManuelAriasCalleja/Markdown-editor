@@ -165,8 +165,7 @@ redmiddel, de systeemlocale).
   van het tijdstip van de dag.
 - **Zoom**: Ctrl+muiswiel, Ctrl++ / Ctrl+- en **Normale grootte** (Ctrl+0)
   schalen de hele interface (niet alleen de editortekst).
-- **Beeld → Taal** wijzigt de taal van de interface; werkt na opnieuw
-  opstarten.
+- **Beeld → Taal** wijzigt de taal van de interface; werkt onmiddellijk (het venster wordt opnieuw aangemaakt).
 
 ## Automatisch herstel
 
