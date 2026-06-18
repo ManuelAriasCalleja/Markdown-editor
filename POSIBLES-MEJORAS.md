@@ -117,17 +117,44 @@ Lote de mejoras de bajo coste, **sin dependencias nuevas** y portables a los 3 S
 
 ## ✨ Funcionalidad pendiente (nuevas ideas, encajan con la filosofía)
 
-Sin dependencias nuevas y con el patrón habitual (función pura + `tst_`):
+Sin dependencias nuevas y con el patrón habitual (función pura + `tst_`).
 
+### Rápidas (poco coste, autocontenidas)
+
+- ⬜ **Insertar fecha/hora** — *Insertar → Fecha y hora* con formato localizado.
+- ⬜ **Exportar/imprimir solo la selección** — reusa `ExportController`.
 - ⬜ **Auto-enlazar al pegar URLs** — pegar una URL sobre texto seleccionado lo
   convierte en `[texto](url)`; reusa el *handler* de pegado de `FocusEditor`.
+- ⬜ **Ir a encabezado (Ctrl+G)** — «quick open» difuso sobre el esquema para
+  saltar a una sección; reusa `mdoutline`.
+- ⬜ **Tipografía inteligente** — `--`→`—`, `...`→`…`, comillas rectas→tipográficas;
+  como transformación en `mdtext` (y, opcional, en vivo al teclear).
+- ⬜ **Shortcodes `:nombre:`** — autocompletar `:alpha:`→α, `:check:`→✓…; pareja
+  natural del selector de símbolos.
+
+### Medias (Qt puro)
+
+- ⬜ **Pegar texto enriquecido como Markdown** — HTML del portapapeles →
+  `setHtml`/`toMarkdown` en un documento auxiliar, en vez de incrustar formato.
 - ⬜ **Plantillas/snippets de documento** — *Archivo → Nuevo desde plantilla*,
   `.md` embebidos en `.qrc`.
-- ⬜ **Exportar/imprimir solo la selección** — reusa `ExportController`.
+- ⬜ **Admoniciones/callouts** (`> [!NOTE]`, `> [!WARNING]`) con round-trip.
 - ⬜ **Matemáticas "Nivel 2"** — layout 2D con un `QTextObjectInterface` propio
   (fracciones reales, `\sum` con límites encima/debajo). Qt puro, esfuerzo alto.
+- ⬜ **Export a EPUB** — empaquetado propio (mismo patrón que el DOCX, sin deps).
+
+### Robustez
+
+- ⬜ **ASAN/UBSAN + clang-tidy en CI** (ver también #14).
+- ⬜ **Fuzzing del round-trip** Markdown.
 - ⬜ **Golden tests de exportadores** — fijar HTML/LaTeX/ODF/DOCX de referencia
   para detectar regresiones de salida.
+- ⬜ **Accesibilidad** — nombres accesibles (Qt Accessible) en acciones/botones.
+
+### Hechas en esta tanda
+
+- ✅ **Símbolos especiales por categorías** — *Insertar → Símbolos especiales…*
+  (módulo `mdsymbols` + diálogo `SymbolPicker`, 8 categorías).
 
 ## 📋 Proyecto / comunidad
 
