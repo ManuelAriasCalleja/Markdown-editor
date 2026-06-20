@@ -4,6 +4,7 @@
 #include <QFile>
 #include <QTemporaryDir>
 #include <QTextDocument>
+#include <QXmlStreamReader>
 
 #include "exporters.h"
 
@@ -30,7 +31,20 @@ private slots:
     void docxStylesCarryLanguage();
     void docxNumberingHasBulletAndDecimal();
     void docxWriteProducesZipPackage();
+    void htmlBodyToXhtmlExtractsAndSanitizes();
+    void epubBuildersAreWellFormedXml();
+    void epubContentXhtmlWrapsBody();
+    void epubWriteProducesZipPackage();
 };
+
+// ¿`xml` es XML bien formado? (para validar las piezas del EPUB).
+static bool isWellFormedXml(const QByteArray &xml)
+{
+    QXmlStreamReader r(xml);
+    while (!r.atEnd())
+        r.readNext();
+    return !r.hasError();
+}
 
 void TestExporters::languageLookupNormalizesCode()
 {
@@ -217,6 +231,67 @@ void TestExporters::docxWriteProducesZipPackage()
     const QByteArray head = f.read(2);
     QCOMPARE(head, QByteArray("PK"));  // firma de un paquete ZIP (OOXML)
     QVERIFY(f.size() > 0);
+}
+
+void TestExporters::htmlBodyToXhtmlExtractsAndSanitizes()
+{
+    const QString html = QStringLiteral(
+        "<!DOCTYPE HTML><html><head><style>p{}</style></head>"
+        "<body style=\"x\"><p>Hola&nbsp;mundo</p><hr></body></html>");
+    const QString body = mdexport::htmlBodyToXhtml(html);
+    QVERIFY(body.contains(QStringLiteral("<p>Hola")));
+    QVERIFY(!body.contains(QStringLiteral("&nbsp;")));   // entidad XML inválida saneada
+    QVERIFY(body.contains(QStringLiteral("&#160;")));
+    QVERIFY(!body.contains(QStringLiteral("<body")));    // solo el interior
+    QVERIFY(body.contains(QStringLiteral("<hr/>")));     // elemento vacío cerrado
+}
+
+void TestExporters::epubBuildersAreWellFormedXml()
+{
+    const mdexport::Language es = mdexport::languageForCode(QStringLiteral("es"));
+    QVERIFY(isWellFormedXml(mdexport::epubContainerXml()));
+    const QByteArray opf = mdexport::epubContentOpf(
+        es, QStringLiteral("Mi <libro>"), {QStringLiteral("images/image1.png")},
+        QStringLiteral("abc-123"), QStringLiteral("2026-01-01T00:00:00Z"));
+    QVERIFY(isWellFormedXml(opf));
+    QVERIFY(opf.contains("<dc:language>es</dc:language>"));
+    QVERIFY(opf.contains("urn:uuid:abc-123"));
+    QVERIFY(opf.contains("image1.png"));
+    QVERIFY(opf.contains("dcterms:modified"));
+    QVERIFY(isWellFormedXml(mdexport::epubNavXhtml(es, QStringLiteral("T"))));
+    QVERIFY(isWellFormedXml(mdexport::epubTocNcx(QStringLiteral("T"), QStringLiteral("abc-123"))));
+}
+
+void TestExporters::epubContentXhtmlWrapsBody()
+{
+    const mdexport::Language es = mdexport::languageForCode(QStringLiteral("es"));
+    const QString xhtml = mdexport::epubContentXhtml(
+        QStringLiteral("<p>cuerpo</p>"), QStringLiteral("Título"), es);
+    QVERIFY(isWellFormedXml(xhtml.toUtf8()));
+    QVERIFY(xhtml.contains(QStringLiteral("xml:lang=\"es\"")));
+    QVERIFY(xhtml.contains(QStringLiteral("<p>cuerpo</p>")));
+}
+
+void TestExporters::epubWriteProducesZipPackage()
+{
+    QTemporaryDir dir;
+    QVERIFY(dir.isValid());
+    const QString path = dir.filePath(QStringLiteral("salida.epub"));
+
+    QTextDocument doc;
+    doc.setMarkdown(QStringLiteral("# Hola\n\nmundo con **negrita**\n"));
+    QString error;
+    QVERIFY2(mdexport::writeEpub(&doc, path,
+                                 mdexport::languageForCode(QStringLiteral("es")),
+                                 QStringLiteral("T"), &error),
+             qPrintable(error));
+
+    QFile f(path);
+    QVERIFY(f.open(QIODevice::ReadOnly));
+    const QByteArray all = f.readAll();
+    QCOMPARE(all.left(2), QByteArray("PK"));             // firma ZIP
+    QVERIFY(all.contains("application/epub+zip"));       // mimetype
+    QVERIFY(all.contains("mimetype"));
 }
 
 QTEST_MAIN(TestExporters)

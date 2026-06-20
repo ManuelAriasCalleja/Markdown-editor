@@ -47,6 +47,12 @@ add_library(md-editor-core STATIC
     src/symbolpicker.h
     src/urldetect.cpp
     src/urldetect.h
+    src/richpaste.cpp
+    src/richpaste.h
+    src/doctemplates.cpp
+    src/doctemplates.h
+    src/admonitions.cpp
+    src/admonitions.h
     src/distractionfreecontroller.cpp
     src/distractionfreecontroller.h
     src/chromezoom.cpp
@@ -217,6 +223,9 @@ if(Qt6Test_FOUND)
         tst_tasklist
         tst_symbolcatalog
         tst_urldetect
+        tst_richpaste
+        tst_doctemplates
+        tst_admonitions
         tst_shortcodes
         tst_footnotes
         tst_mathblocks

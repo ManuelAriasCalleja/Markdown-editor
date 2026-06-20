@@ -15,7 +15,7 @@
 <context>
     <name>MainWindow</name>
     <message numerus="yes">
-        <location filename="../../src/mainwindow.cpp" line="1277"/>
+        <location filename="../../src/mainwindow.cpp" line="1338"/>
         <source>%n palabra(s)</source>
         <translation>
             <numerusform>%n palabra</numerusform>
@@ -23,7 +23,7 @@
         </translation>
     </message>
     <message numerus="yes">
-        <location filename="../../src/mainwindow.cpp" line="1279"/>
+        <location filename="../../src/mainwindow.cpp" line="1340"/>
         <source>%n carácter(es)</source>
         <translation>
             <numerusform>%n carácter</numerusform>
@@ -31,8 +31,8 @@
         </translation>
     </message>
     <message numerus="yes">
-        <location filename="../../src/mainwindow.cpp" line="1284"/>
-        <location filename="../../src/mainwindow.cpp" line="1306"/>
+        <location filename="../../src/mainwindow.cpp" line="1345"/>
+        <location filename="../../src/mainwindow.cpp" line="1367"/>
         <source>~%n min</source>
         <translation>
             <numerusform>~%n min</numerusform>

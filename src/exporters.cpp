@@ -4,6 +4,7 @@
 #include "tableedit.h"
 
 #include <QBuffer>
+#include <QDateTime>
 #include <QFile>
 #include <QFont>
 #include <QHash>
@@ -21,6 +22,7 @@
 #include <QTextTable>
 #include <QTextTableCell>
 #include <QUrl>
+#include <QUuid>
 
 #include <private/qzipreader_p.h>
 #include <private/qzipwriter_p.h>
@@ -997,6 +999,225 @@ bool writeDocx(const QTextDocument *doc, const QString &path, const Language &la
     if (zip.status() != QZipWriter::NoError) {
         if (error)
             *error = QStringLiteral("Error al escribir el paquete DOCX.");
+        return false;
+    }
+    return true;
+}
+
+// ---------------------------------------------------------------------------
+// EPUB
+// ---------------------------------------------------------------------------
+
+QString htmlBodyToXhtml(const QString &fullHtml)
+{
+    QString inner;
+    int start = fullHtml.indexOf(QLatin1String("<body"));
+    if (start >= 0) {
+        start = fullHtml.indexOf(QLatin1Char('>'), start);
+        const int end = fullHtml.lastIndexOf(QLatin1String("</body>"));
+        if (start >= 0 && end > start)
+            inner = fullHtml.mid(start + 1, end - start - 1);
+    }
+    if (inner.isEmpty())
+        inner = fullHtml;
+
+    // `&nbsp;` no es una entidad XML válida sin DTD; los elementos vacíos deben
+    // ir autocerrados (Qt ya lo hace, pero curamos `<br>`/`<hr>` por seguridad).
+    inner.replace(QLatin1String("&nbsp;"), QLatin1String("&#160;"));
+    static const QRegularExpression br(QStringLiteral("<br>"),
+                                       QRegularExpression::CaseInsensitiveOption);
+    inner.replace(br, QStringLiteral("<br/>"));
+    static const QRegularExpression hr(QStringLiteral("<hr>"),
+                                       QRegularExpression::CaseInsensitiveOption);
+    inner.replace(hr, QStringLiteral("<hr/>"));
+    return inner.trimmed();
+}
+
+QString epubContentXhtml(const QString &bodyInner, const QString &title,
+                         const Language &language)
+{
+    return QStringLiteral(
+               "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
+               "<!DOCTYPE html>\n"
+               "<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"%1\" lang=\"%1\">\n"
+               "<head>\n<meta charset=\"utf-8\"/>\n<title>%2</title>\n"
+               "<link rel=\"stylesheet\" type=\"text/css\" href=\"style.css\"/>\n"
+               "</head>\n<body>\n%3\n</body>\n</html>\n")
+        .arg(language.code, title.toHtmlEscaped(), bodyInner);
+}
+
+QByteArray epubContainerXml()
+{
+    return QByteArrayLiteral(
+        "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
+        "<container version=\"1.0\" "
+        "xmlns=\"urn:oasis:names:tc:opendocument:xmlns:container\">\n"
+        "  <rootfiles>\n"
+        "    <rootfile full-path=\"OEBPS/content.opf\" "
+        "media-type=\"application/oebps-package+xml\"/>\n"
+        "  </rootfiles>\n"
+        "</container>\n");
+}
+
+QByteArray epubContentOpf(const Language &language, const QString &title,
+                          const QStringList &imageHrefs, const QString &uuid,
+                          const QString &modified)
+{
+    QString images;
+    int i = 0;
+    for (const QString &href : imageHrefs)
+        images += QStringLiteral(
+                      "    <item id=\"img%1\" href=\"%2\" media-type=\"image/png\"/>\n")
+                      .arg(++i)
+                      .arg(href);
+
+    return QStringLiteral(
+               "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
+               "<package xmlns=\"http://www.idpf.org/2007/opf\" version=\"3.0\" "
+               "unique-identifier=\"bookid\">\n"
+               "  <metadata xmlns:dc=\"http://purl.org/dc/elements/1.1/\">\n"
+               "    <dc:identifier id=\"bookid\">urn:uuid:%1</dc:identifier>\n"
+               "    <dc:title>%2</dc:title>\n"
+               "    <dc:language>%3</dc:language>\n"
+               "    <meta property=\"dcterms:modified\">%4</meta>\n"
+               "  </metadata>\n"
+               "  <manifest>\n"
+               "    <item id=\"nav\" href=\"nav.xhtml\" "
+               "media-type=\"application/xhtml+xml\" properties=\"nav\"/>\n"
+               "    <item id=\"ncx\" href=\"toc.ncx\" "
+               "media-type=\"application/x-dtbncx+xml\"/>\n"
+               "    <item id=\"css\" href=\"style.css\" media-type=\"text/css\"/>\n"
+               "    <item id=\"content\" href=\"content.xhtml\" "
+               "media-type=\"application/xhtml+xml\"/>\n"
+               "%5"
+               "  </manifest>\n"
+               "  <spine toc=\"ncx\">\n"
+               "    <itemref idref=\"content\"/>\n"
+               "  </spine>\n"
+               "</package>\n")
+        .arg(uuid, title.toHtmlEscaped(), language.code, modified, images)
+        .toUtf8();
+}
+
+QByteArray epubNavXhtml(const Language &language, const QString &title)
+{
+    const QString t = title.toHtmlEscaped();
+    return QStringLiteral(
+               "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<!DOCTYPE html>\n"
+               "<html xmlns=\"http://www.w3.org/1999/xhtml\" "
+               "xmlns:epub=\"http://www.idpf.org/2007/ops\" xml:lang=\"%1\" lang=\"%1\">\n"
+               "<head><meta charset=\"utf-8\"/><title>%2</title></head>\n"
+               "<body>\n<nav epub:type=\"toc\" id=\"toc\">\n<h1>%2</h1>\n"
+               "<ol><li><a href=\"content.xhtml\">%2</a></li></ol>\n</nav>\n"
+               "</body>\n</html>\n")
+        .arg(language.code, t)
+        .toUtf8();
+}
+
+QByteArray epubTocNcx(const QString &title, const QString &uuid)
+{
+    const QString t = title.toHtmlEscaped();
+    return QStringLiteral(
+               "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
+               "<ncx xmlns=\"http://www.daisy.org/z3986/2005/ncx/\" version=\"2005-1\">\n"
+               "  <head><meta name=\"dtb:uid\" content=\"urn:uuid:%1\"/></head>\n"
+               "  <docTitle><text>%2</text></docTitle>\n"
+               "  <navMap><navPoint id=\"np1\" playOrder=\"1\">"
+               "<navLabel><text>%2</text></navLabel>"
+               "<content src=\"content.xhtml\"/></navPoint></navMap>\n"
+               "</ncx>\n")
+        .arg(uuid, t)
+        .toUtf8();
+}
+
+QByteArray epubStyleCss()
+{
+    return QByteArrayLiteral(
+        "body { font-family: serif; line-height: 1.5; margin: 1em; }\n"
+        "h1, h2, h3, h4 { font-family: sans-serif; line-height: 1.2; }\n"
+        "pre, code, tt { font-family: monospace; }\n"
+        "pre { background: #f4f4f4; padding: 0.6em; overflow: auto; }\n"
+        "blockquote { margin: 1em 0; padding: 0.2em 1em; "
+        "border-left: 4px solid #ccc; }\n"
+        "table { border-collapse: collapse; }\n"
+        "td, th { border: 1px solid #999; padding: 0.3em 0.6em; }\n"
+        "img { max-width: 100%; }\n");
+}
+
+bool writeEpub(const QTextDocument *doc, const QString &path, const Language &language,
+               const QString &title, QString *error)
+{
+    QString body = htmlBodyToXhtml(doc->toHtml());
+
+    // Localiza las imágenes referenciadas, las embebe como PNG y reescribe su src
+    // a una ruta dentro del paquete. Las que no se puedan cargar (p. ej. URLs
+    // externas) se dejan tal cual.
+    QStringList imageHrefs;
+    QList<QPair<QString, QByteArray>> imageFiles;
+    QHash<QString, QString> remap;
+    static const QRegularExpression imgRe(QStringLiteral("src=\"([^\"]+)\""));
+    auto it = imgRe.globalMatch(body);
+    while (it.hasNext()) {
+        const QString src = it.next().captured(1);
+        if (remap.contains(src))
+            continue;
+        const QVariant res = doc->resource(QTextDocument::ImageResource, QUrl(src));
+        QImage img = qvariant_cast<QImage>(res);
+        if (img.isNull()) {
+            const QPixmap pm = qvariant_cast<QPixmap>(res);
+            if (!pm.isNull())
+                img = pm.toImage();
+        }
+        if (img.isNull())
+            continue;
+        QByteArray png;
+        {
+            QBuffer buf(&png);
+            buf.open(QIODevice::WriteOnly);
+            img.save(&buf, "PNG");
+        }
+        const QString href = QStringLiteral("images/image%1.png").arg(imageFiles.size() + 1);
+        remap.insert(src, href);
+        imageFiles.append({href, png});
+        imageHrefs.append(href);
+    }
+    for (auto i = remap.cbegin(); i != remap.cend(); ++i)
+        body.replace(QStringLiteral("src=\"%1\"").arg(i.key()),
+                     QStringLiteral("src=\"%1\"").arg(i.value()));
+
+    const QString safeTitle = title.isEmpty() ? QStringLiteral("Documento") : title;
+    const QString uuid = QUuid::createUuid().toString(QUuid::WithoutBraces);
+    const QString modified =
+        QDateTime::currentDateTimeUtc().toString(QStringLiteral("yyyy-MM-ddTHH:mm:ss'Z'"));
+
+    QFile file(path);
+    if (!file.open(QIODevice::WriteOnly)) {
+        if (error)
+            *error = file.errorString();
+        return false;
+    }
+
+    QZipWriter zip(&file);
+    // `mimetype` debe ir primero y SIN comprimir (lo exige la especificación EPUB).
+    zip.setCompressionPolicy(QZipWriter::NeverCompress);
+    zip.addFile(QStringLiteral("mimetype"), QByteArrayLiteral("application/epub+zip"));
+    zip.setCompressionPolicy(QZipWriter::AutoCompress);
+    zip.addFile(QStringLiteral("META-INF/container.xml"), epubContainerXml());
+    zip.addFile(QStringLiteral("OEBPS/content.opf"),
+                epubContentOpf(language, safeTitle, imageHrefs, uuid, modified));
+    zip.addFile(QStringLiteral("OEBPS/nav.xhtml"), epubNavXhtml(language, safeTitle));
+    zip.addFile(QStringLiteral("OEBPS/toc.ncx"), epubTocNcx(safeTitle, uuid));
+    zip.addFile(QStringLiteral("OEBPS/style.css"), epubStyleCss());
+    zip.addFile(QStringLiteral("OEBPS/content.xhtml"),
+                epubContentXhtml(body, safeTitle, language).toUtf8());
+    for (const auto &im : imageFiles)
+        zip.addFile(QStringLiteral("OEBPS/") + im.first, im.second);
+    zip.close();
+    file.close();
+
+    if (zip.status() != QZipWriter::NoError) {
+        if (error)
+            *error = QStringLiteral("Error al escribir el paquete EPUB.");
         return false;
     }
     return true;

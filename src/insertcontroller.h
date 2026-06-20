@@ -42,6 +42,7 @@ public slots:
     void insertHorizontalRule();
     void insertTableOfContents();    // índice (TOC) con los encabezados del documento
     void insertFootnote();           // referencia `[^n]` + definición autonumeradas
+    void insertAdmonition(const QString &keyword);  // callout `> [!TIPO]` estilizado
     void insertSymbol();             // abre el diálogo de símbolos especiales
     void insertDate();               // fecha actual (formato largo localizado)
     void insertDateTime();           // fecha y hora actuales (localizadas)

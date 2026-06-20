@@ -32,6 +32,7 @@ public slots:
     bool exportOdf();
     bool exportLatex();
     bool exportDocx();
+    bool exportEpub();
     // Imprime el documento renderizado con el diálogo de impresión del sistema
     // (distinto de exportar a PDF, que escribe a un archivo).
     bool print();

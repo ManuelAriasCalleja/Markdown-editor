@@ -81,6 +81,35 @@ QByteArray docxNumberingXml();
 bool writeDocx(const QTextDocument *doc, const QString &path, const Language &language,
                const QString &title, QString *error);
 
+// --- EPUB (.epub) ---
+// Un .epub es un ZIP (con `mimetype` sin comprimir primero) de XHTML + paquete
+// OPF + navegación. Lo empaquetamos con el mismo QZip privado de Qt, reutilizando
+// el HTML de Qt como cuerpo (saneado a XHTML). Sin dependencias externas.
+
+// Extrae el interior de <body> del HTML de Qt y lo deja apto para XHTML (arregla
+// `&nbsp;` y elementos vacíos sin cerrar). Función pura.
+QString htmlBodyToXhtml(const QString &fullHtml);
+
+// Documento XHTML completo (cabecera + cuerpo) para el capítulo del EPUB. Pura.
+QString epubContentXhtml(const QString &bodyInner, const QString &title,
+                         const Language &language);
+
+// Piezas XML del paquete EPUB. `uuid` identifica el libro; `modified` es la marca
+// ISO-8601 UTC (dcterms:modified, obligatoria en EPUB 3). `imageHrefs` son las
+// rutas de las imágenes empaquetadas (p. ej. "images/image1.png"). Puras.
+QByteArray epubContainerXml();
+QByteArray epubContentOpf(const Language &language, const QString &title,
+                          const QStringList &imageHrefs, const QString &uuid,
+                          const QString &modified);
+QByteArray epubNavXhtml(const Language &language, const QString &title);
+QByteArray epubTocNcx(const QString &title, const QString &uuid);
+QByteArray epubStyleCss();
+
+// Escribe el documento como .epub en `path`, con el idioma y el título
+// incrustados. Devuelve false y rellena *error si falla. `title` puede ir vacío.
+bool writeEpub(const QTextDocument *doc, const QString &path, const Language &language,
+               const QString &title, QString *error);
+
 // Clon del documento listo para HTML/PDF/ODF/impresión: conserva los
 // fragmentos de fórmula con su `verticalAlignment` (Qt serializa el super/sub a
 // CSS en HTML, al equivalente en ODF y los pinta directamente en PDF), pero

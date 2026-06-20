@@ -21,10 +21,12 @@
 #include <QPalette>
 #include <QPushButton>
 #include <QSpinBox>
+#include <QTextBlock>
 #include <QTextDocumentFragment>
 #include <QTextEdit>
 #include <QVBoxLayout>
 
+#include "admonitions.h"
 #include "documentio.h"
 #include "footnotes.h"
 #include "outlinepanel.h"
@@ -343,6 +345,38 @@ void InsertController::insertFootnote()
     // 3) Lleva el cursor a la definición para teclear la nota.
     QTextCursor place(doc);
     place.setPosition(defPos);
+    m_editor->setTextCursor(place);
+    m_editor->setFocus();
+}
+
+void InsertController::insertAdmonition(const QString &keyword)
+{
+    // Formato de cita canónico (el mismo que produce Qt para "> x"), para que la
+    // admonición serialice como cita y round-tripee.
+    static const QTextBlockFormat quoteFmt = [] {
+        QTextDocument tmp;
+        tmp.setMarkdown(QStringLiteral("> x"));
+        return tmp.firstBlock().blockFormat();
+    }();
+
+    QTextCursor cursor = m_editor->textCursor();
+    cursor.beginEditBlock();
+    // La admonición empieza en su propio bloque: si el actual tiene texto, abre uno.
+    if (!cursor.block().text().isEmpty()) {
+        cursor.movePosition(QTextCursor::EndOfBlock);
+        cursor.insertBlock(QTextBlockFormat(), QTextCharFormat());
+    }
+    cursor.setBlockFormat(quoteFmt);
+    cursor.setCharFormat(QTextCharFormat());
+    cursor.insertText(QStringLiteral("[!%1]").arg(keyword));  // marcador literal
+    cursor.insertBlock(quoteFmt, QTextCharFormat());          // línea de contenido (cita)
+    const int contentPos = cursor.position();
+    cursor.endEditBlock();
+
+    // Estiliza el callout y deja el cursor en la línea de contenido.
+    mdadmonition::renderAdmonitionsInDocument(m_editor->document());
+    QTextCursor place(m_editor->document());
+    place.setPosition(contentPos);
     m_editor->setTextCursor(place);
     m_editor->setFocus();
 }

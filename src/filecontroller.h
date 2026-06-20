@@ -62,6 +62,8 @@ public:
 
 public slots:
     void newFile();
+    // Documento nuevo prerrellenado con el cuerpo Markdown de una plantilla.
+    void newFromTemplate(const QString &body);
     void openFileDialog();
     // Carga y renderiza `path` (preguntando antes si hay cambios sin guardar).
     void openFile(const QString &path);

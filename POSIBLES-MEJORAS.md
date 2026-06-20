@@ -133,14 +133,30 @@ Sin dependencias nuevas y con el patrón habitual (función pura + `tst_`).
 
 ### Medias (Qt puro)
 
-- ⬜ **Pegar texto enriquecido como Markdown** — HTML del portapapeles →
-  `setHtml`/`toMarkdown` en un documento auxiliar, en vez de incrustar formato.
-- ⬜ **Plantillas/snippets de documento** — *Archivo → Nuevo desde plantilla*,
-  `.md` embebidos en `.qrc`.
-- ⬜ **Admoniciones/callouts** (`> [!NOTE]`, `> [!WARNING]`) con round-trip.
+- ✅ **Pegar texto enriquecido como Markdown** — *Hecho:* módulo puro
+  `richpaste` (`mdrichpaste::htmlToMarkdown`) pasa el HTML del portapapeles por un
+  `QTextDocument` auxiliar y lo serializa con la ruta canónica
+  (`mdtable::documentMarkdown`), normalizando el formato del origen al subconjunto
+  de Markdown del editor en vez de incrustarlo. *Editar → Pegar como Markdown*
+  (Ctrl+Alt+V); sin HTML, pega texto plano.
+- ✅ **Plantillas de documento** — *Hecho:* módulo `doctemplates`
+  (`mdtemplate::all()`) con 10 esqueletos Markdown (acta, nota diaria, blog,
+  README, carta, informe, lista de tareas, certificado, práctica de asignatura,
+  examen) en *Archivo → Nuevo desde plantilla*. Los textos van por `tr()` (no
+  `.qrc`), traducidos a los 9 idiomas; `DocumentIo::loadFromString` los abre como
+  documento nuevo, modificado y sin ruta. (Los **snippets de usuario** quedan
+  pendientes.)
+- ✅ **Admoniciones/callouts** (`> [!NOTE]`, `> [!WARNING]`) con round-trip.
+  *Hecho:* módulo puro `admonitions` (`mdadmonition`); estilo de callout (fondo +
+  título en color) al maquetar e inserción desde *Insertar → Admonición*. El
+  marcador sobrevive sin escape (`unescapeMarkers` en `documentMarkdown`), apto
+  para GitHub.
 - ⬜ **Matemáticas "Nivel 2"** — layout 2D con un `QTextObjectInterface` propio
   (fracciones reales, `\sum` con límites encima/debajo). Qt puro, esfuerzo alto.
-- ⬜ **Export a EPUB** — empaquetado propio (mismo patrón que el DOCX, sin deps).
+- ✅ **Export a EPUB** — *Hecho:* `mdexport::writeEpub` empaqueta un EPUB 3
+  (mimetype + OPF + nav.xhtml + toc.ncx + XHTML) con el QZip privado, reutilizando
+  el HTML de Qt saneado a XHTML (`htmlBodyToXhtml`) e incrustando las imágenes como
+  PNG. Idioma y título del front matter. *Archivo → Exportar → A EPUB*.
 
 ### Robustez
 

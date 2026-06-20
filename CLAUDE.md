@@ -8,13 +8,13 @@ Editor/visor **WYSIWYG** de Markdown en **Qt6 + C++17**. Por defecto se edita so
 el texto ya renderizado, sin ver la sintaxis; pero el código Markdown es visible
 opcionalmente (vista de fuente a pantalla completa o vista dividida con render y
 código en paralelo, ver «Modo fuente y vista dividida» abajo). Al guardar se
-serializa con `QTextDocument::toMarkdown()` (con un retoque para las tablas, ver
-abajo). La interfaz y todos los textos están en español (idioma de origen) con
-traducciones a 8 idiomas más.
+serializa con `QTextDocument::toMarkdown()` (con retoques para tablas, fórmulas y
+notas al pie, ver abajo). La interfaz y todos los textos están en español (idioma
+de origen) con traducciones a 8 idiomas más.
 
 ## Comandos
 
-**Dependencias de compilación.** Qt6 (≥6.4) con sus cabeceras de desarrollo **y las
+**Dependencias de compilación.** Qt6 (≥6.5) con sus cabeceras de desarrollo **y las
 privadas**: la exportación ODF usa el QZip privado de Qt vía el target CMake
 `Qt6::GuiPrivate`, que necesita las cabeceras privadas (`qzipwriter_p.h`, etc.). En
 Debian/Ubuntu vienen en un paquete aparte de `qt6-base-dev`:
@@ -55,7 +55,8 @@ binario instalado (`/usr/local/bin/md-editor`) **no** se actualiza al recompilar
 
 Toda la lógica vive en una **biblioteca estática `md-editor-core`** que enlazan
 tanto el ejecutable (`main.cpp`, solo arranque + i18n) como las pruebas. Añadir un
-`.cpp/.h` nuevo = añadirlo a la lista de `md-editor-core` en `CMakeLists.txt`.
+`.cpp/.h` nuevo = añadirlo a la lista de `md-editor-core` en `CMakeLists.txt` (y, si
+trae lógica pura, su `tst_*` a la lista de tests del mismo archivo).
 
 `MainWindow` es el orquestador y delega en **colaboradores autocontenidos**, cada
 uno una clase pequeña con su propia responsabilidad. Tras el refactor de
@@ -67,30 +68,37 @@ miembros de `MainWindow`, declarados en `mainwindow.h`):
   autoguardado), `RecoveryManager` (borrador de autoguardado), `RecentFilesManager`,
   `DiskWatcher` (vigila cambios externos del archivo).
 - **Vista y apariencia**: `SplitViewController` (los tres modos de vista
-  WYSIWYG/fuente/dividida y su sincronización — antes en `MainWindow`),
-  `DistractionFreeController` (pantalla completa + columna), `ThemeController`
-  (tema, luz cálida nocturna y recoloreado de enlaces), `ThemeSpec`/`mdtheme`
-  (catálogo declarativo de los 6 temas), `ChromeZoom` (zoom de toda la interfaz),
-  `OutlinePanel` (índice TOC), `FindReplaceBar`.
+  WYSIWYG/fuente/dividida y su sincronización), `DistractionFreeController`
+  (pantalla completa + columna), `ThemeController` (tema, luz cálida nocturna y
+  recoloreado de enlaces), `ThemeSpec`/`mdtheme` (catálogo declarativo de los 6
+  temas), `ChromeZoom` (zoom de toda la interfaz), `OutlinePanel` (índice TOC),
+  `GoToHeadingDialog` (quick open sobre los encabezados, Ctrl+G), `FindReplaceBar`,
+  `HelpDialog` (manual integrado, F1).
 - **Edición e inserción**: `FormatController` (marcas de carácter, encabezados,
   listas, sangrías + estado de acciones), `InsertController` (enlaces, imágenes,
-  tablas, regla), `TableController` (edición contextual de tablas),
-  `FormulaController` (fórmulas TeX: insertar/editar/proteger), `BlockConstructs`
-  (citas y bloques de código), `CodeBlockHighlighter` + `LanguageRegistry`
-  (resaltado), `FocusEditor` (QTextEdit con columna centrada para el modo sin
+  tablas, regla, notas al pie, símbolos), `TableController` (edición contextual de
+  tablas), `FormulaController` (fórmulas TeX: insertar/editar/proteger),
+  `BlockConstructs` (citas y bloques de código), `CodeBlockHighlighter` +
+  `LanguageRegistry` (resaltado), `SymbolPicker` (diálogo no modal «mapa de
+  caracteres»), `FocusEditor` (QTextEdit con columna centrada para el modo sin
   distracciones y un *handler* de pegado/soltado, `setMimeInsertHandler`).
 - **Exportación**: `ExportController` + `mdexport` (`exporters`).
 - **Persistencia**: `AppSettings` (fachada tipada sobre `QSettings`; **todas** las
   claves de persistencia viven aquí, nadie más toca `QSettings`).
 
-Módulos de lógica pura (sin clase, solo funciones en un namespace):
-`listcontinuation` (`mdlist`), `tableedit` (`mdtable`), `exporters` (`mdexport`).
+Módulos de **lógica pura** (sin clase, solo funciones en un namespace, con su
+`tst_*` aislado): `listcontinuation` (`mdlist`), `tableedit` (`mdtable`), `exporters`
+(`mdexport`), `mathblocks` (`mdmath`), `footnotes` (`mdfootnote`), `tasklist`
+(`mdtask`), `shortcodes` (`mdshortcode`), `symbolcatalog` (`mdsymbols`), `urldetect`
+(`mdurl`), `richpaste` (`mdrichpaste`), `doctemplates` (`mdtemplate`),
+`admonitions` (`mdadmonition`), `texttransform` (`mdtext`), `docstats`
+(`mdstats`), `blockconstructs` (`mdblock`), `outlinepanel`
+(`mdoutline::headingsOf`).
 
 Patrón recurrente para lógica comprobable: separar las **funciones puras** (sin
-GUI) de la integración, en un namespace, para testearlas aisladas — `mdblock`
-(`blockconstructs`), `mdoutline::headingsOf` (`outlinepanel`), `mdlist::analyze`
-(`listcontinuation`), `mdtable::injectAlignments` (`tableedit`), `mdexport::toLatex`
-(`exporters`). Sigue ese patrón al añadir lógica nueva: hay un `tst_*` por módulo.
+GUI) de la integración (qué texto y dónde reinsertarlo, que vive en `MainWindow` o
+el controlador), en un namespace, para testearlas aisladas. Sigue ese patrón al
+añadir lógica nueva: hay un `tst_*` por módulo.
 
 ### Conceptos transversales que cruzan varios archivos
 
@@ -105,7 +113,9 @@ GUI) de la integración, en un namespace, para testearlas aisladas — `mdblock`
   alineación de las celdas. **Todo** lo que serializa el documento usa esa función
   (no `toMarkdown` directo): `DocumentIo` (línea base, `isModified`, `write`) y
   `MainWindow` (vista de fuente, `currentBody` de recuperación, recarga). Si añades
-  otra ruta de serialización, usa `mdtable::documentMarkdown()`.
+  otra ruta de serialización, usa `mdtable::documentMarkdown()`. Esta misma función
+  es además la que reinyecta las fórmulas (ver «Fórmulas TeX») y deshace el escape
+  `> \[!NOTE]` de las admoniciones (`mdadmonition::unescapeMarkers`, ver abajo).
 - **Front matter.** Si el archivo empieza por `---…---`/`+++…+++`, `DocumentIo` lo
   separa antes de `setMarkdown` (para que no se tome por una regla horizontal), lo
   conserva verbatim y lo reescribe al guardar. No se renderiza ni se edita. Se
@@ -125,6 +135,15 @@ GUI) de la integración, en un namespace, para testearlas aisladas — `mdblock`
   fuente es el panel activo (lista `m_wysiwygActions`); las de tabla, por contexto
   (`updateTableActions`). En split, el panel activo lo decide el **foco**
   (`updateActionsForFocus`, vía `QApplication::focusChanged`).
+- **Sincronización de la vista dividida.** Regla: *solo se actualiza el panel SIN
+  foco*, nunca el que el usuario está editando (evita saltos de cursor y que se le
+  reescriba el texto). Dos `QTimer` de debounce (~250 ms): `m_syncToSourceTimer`
+  (WYSIWYG→fuente, `syncSourceFromDocument`) y `m_syncToDocTimer` (fuente→WYSIWYG,
+  `syncDocumentFromSource`/`commitSourceToDocument`). El flag `m_syncing` envuelve
+  toda actualización programática para que los `contentsChanged`/`textChanged` que
+  provoca no realimenten el bucle. `flushPendingSync()` (en `focusChanged`) vacía
+  el timer pendiente al cambiar de panel para que el destino llegue al día. Se
+  preserva el scroll del panel refrescado.
 - **Temas y luz cálida nocturna.** `ThemeController` aplica uno de los 6 temas del
   catálogo declarativo `mdtheme`/`ThemeSpec` (Claro, Oscuro, GitHub Light, GitHub
   Dark, Monokai, Alto contraste), persiste la clave `theme` (con migración del
@@ -137,18 +156,16 @@ GUI) de la integración, en un namespace, para testearlas aisladas — `mdblock`
   sobre `QPalette::Base`/`AlternateBase` (azul −16 %·w, verde −5 %·w, rojo intacto).
   Un `QTimer` refresca cada 60 s y solo repinta si `w` cambió ≥0.02. No afecta a
   enlaces ni resaltado.
-- **Sincronización de la vista dividida.** Regla: *solo se actualiza el panel SIN
-  foco*, nunca el que el usuario está editando (evita saltos de cursor y que se le
-  reescriba el texto). Dos `QTimer` de debounce (~250 ms): `m_syncToSourceTimer`
-  (WYSIWYG→fuente, `syncSourceFromDocument`) y `m_syncToDocTimer` (fuente→WYSIWYG,
-  `syncDocumentFromSource`/`commitSourceToDocument`). El flag `m_syncing` envuelve
-  toda actualización programática para que los `contentsChanged`/`textChanged` que
-  provoca no realimenten el bucle. `flushPendingSync()` (en `focusChanged`) vacía
-  el timer pendiente al cambiar de panel para que el destino llegue al día. Se
-  preserva el scroll del panel refrescado.
 - **«Modificado».** `DocumentIo::isModified()` compara la serialización canónica
   con una línea base, no usa `QTextDocument::isModified()` (que `QTextEdit` ensucia
   de forma espuria al trazar la primera vez).
+- **Plantillas de documento.** `doctemplates` (`mdtemplate::all()`) es el catálogo
+  de esqueletos Markdown de *Archivo → Nuevo desde plantilla*. Sus textos pasan por
+  `tr()` (contexto "MainWindow") para traducirse con el resto; **no** van en `.qrc`.
+  `FileController::newFromTemplate` los carga vía `DocumentIo::loadFromString`, que
+  es como `load()` pero sin archivo y con línea base vacía (cuenta como modificado,
+  para que no se pierdan sin avisar). El tamaño de fuente no es expresable en
+  Markdown: lo «grande» (p. ej. `CERTIFICO`) se consigue con un encabezado.
 - **Arranque de sesión.** `main.cpp` difiere con `QTimer::singleShot(0, ...)` la
   llamada a `MainWindow::startSession()` (abrir en mitad del trazado inicial de
   `QTextEdit` provoca un diálogo espurio). Prioridad: archivo de línea de comandos
@@ -160,89 +177,106 @@ GUI) de la integración, en un namespace, para testearlas aisladas — `mdblock`
   barra de formato (`updateToolBarIcons`).
 - **`eventFilter` de `MainWindow`.** Centraliza: zoom con Ctrl+rueda y abrir
   enlaces (Ctrl+clic, hover) sobre `m_editor->viewport()`; arrastrar-soltar un
-  archivo para abrirlo; y **continuación de listas** con Enter en `m_sourceEditor`
-  (en WYSIWYG la hace `QTextEdit` de serie; en el editor de fuente la añade
-  `mdlist::analyze`).
-- **Pegar/soltar imágenes.** El *handler* de `FocusEditor` desvía las imágenes del
-  portapapeles a disco (PNG junto al `.md`, ruta relativa) e inserta `![](ruta)`,
-  en vez de incrustarlas (que no round-trip-ean). También en *Insertar → Pegar
-  imagen*; pregunta el texto alternativo.
+  archivo para abrirlo; clic sobre la casilla de una tarea (`mdtask`) y sobre una
+  referencia de nota al pie (`mdfootnote`); y **continuación de listas** con Enter
+  en `m_sourceEditor` (en WYSIWYG la hace `QTextEdit` de serie; en el editor de
+  fuente la añade `mdlist::analyze`). Las fórmulas tienen su propio filtro en
+  `m_editor` (ver abajo).
+- **Pegar/soltar imágenes y URLs.** El *handler* de `FocusEditor` desvía las
+  imágenes del portapapeles a disco (PNG junto al `.md`, ruta relativa) e inserta
+  `![](ruta)`, en vez de incrustarlas (que no round-trip-ean). También en *Insertar
+  → Pegar imagen*; pregunta el texto alternativo. Al pegar una URL (`mdurl`) sobre
+  una selección, se auto-enlaza el texto seleccionado. *Editar → Pegar como
+  Markdown* (Ctrl+Alt+V) convierte el HTML del portapapeles a Markdown con
+  `mdrichpaste::htmlToMarkdown` (`QTextDocument` auxiliar + `documentMarkdown`) en
+  vez de incrustar el formato del origen.
 - **Vigilancia del archivo en disco.** `QFileSystemWatcher` sobre el archivo
   abierto, con debounce (`QTimer`) e instantánea de bytes para distinguir el propio
   guardado de un cambio externo: si no hay cambios locales recarga solo; si los
   hay, pregunta.
+- **Tareas, notas al pie, shortcodes, tipografía y admoniciones (extensiones
+  ligeras).** Módulos puros que Qt no entiende pero **tampoco estorba** al
+  round-trip:
+  - `mdtask` — casillas `- [ ]`/`- [x]`. Qt las renderiza y serializa solo
+    (`QTextBlockFormat::marker()`); el módulo solo aporta el gesto de marcar/
+    desmarcar con clic sobre la casilla.
+  - `mdfootnote` — referencias `[^id]` y definiciones `[^id]:`. **Sí** toca la
+    carga: `protectFootnotes` sustituye el `:` del rótulo por un centinela de la
+    PUA antes de `setMarkdown` (si no, md4c se comería `[^1]: Ibíd.` por una
+    definición de enlace de referencia), y `renderFootnotesInDocument` lo restaura
+    y da estilo de superíndice a las referencias. No toca el guardado (el `[^id]`
+    sobrevive como texto literal). Clic en una referencia salta a su definición.
+  - `mdshortcode` — expande `:nombre:` a símbolos (`:alpha:`→α) al teclear.
+  - `mdadmonition` — «callouts» estilo GitHub: una cita cuya primera línea es
+    `[!NOTE]`/`[!TIP]`/`[!IMPORTANT]`/`[!WARNING]`/`[!CAUTION]`.
+    `renderAdmonitionsInDocument` les da fondo tintado y título en color (solo
+    color: negrita/cursiva sí serializan y romperían el marcador). El round-trip
+    es casi transparente, salvo que `toMarkdown` escapa el corchete (`> \[!NOTE]`);
+    `unescapeMarkers` lo deshace dentro de `mdtable::documentMarkdown`. Inserción
+    desde *Insertar → Admonición*.
+  - `mdtext` — transformaciones sobre la selección (mayúsculas/minúsculas, *title
+    case*, ordenar líneas) y **tipografía inteligente** (`---`→—, `--`→–, `...`→…,
+    comillas tipográficas según el contexto).
+- **Símbolos especiales.** `mdsymbols` es el catálogo por categorías (datos puros)
+  y `SymbolPicker` el diálogo no modal que los presenta en pestañas + rejilla y
+  emite `symbolChosen()` para insertarlos sin cerrarse.
+- **Estadísticas del documento.** `mdstats::analyze` (palabras, caracteres,
+  párrafos, frases, tiempo de lectura) alimenta el contador de la barra de estado
+  y el diálogo de estadísticas, sobre el texto plano del editor activo o la
+  selección.
 
-- **Fórmulas TeX (`mdmath`).** El editor soporta `$...$` y `$$...$$` sin
-  dependencias externas. El módulo `mdmath` (`mathblocks.{h,cpp}`) lo orquesta
-  todo y es **puro** (lo prueban `tst_mathblocks`). Piezas clave:
+### Fórmulas TeX (`mdmath`)
 
-  - *Carga.* `DocumentIo::load` aplica `mdmath::protectMath` al texto fuente
-    antes de `setMarkdown`: envuelve cada `$tex$`/`$$tex$$` en inline-code
-    ``` ``$tex$`` ``` para que Qt no reinterprete `_`/`*`/`\` dentro como
-    cursiva o escape. Después llama a `mdmath::renderMathInDocument`, que
-    sustituye cada inline-code con forma `$tex$` por una **secuencia de
-    fragmentos** del `QTextDocument`: cursiva + super/subíndice real de Qt
-    (`QTextCharFormat::AlignSuperScript`/`AlignSubScript`, no solo el
-    repertorio Unicode de scripts). Todos los fragmentos de una misma fórmula
-    comparten tres propiedades custom — `IsMathProperty`, `MathTexProperty`,
-    `MathBlockProperty` — que permiten reconocerlos como grupo.
+El editor soporta `$...$` y `$$...$$` sin dependencias externas. El módulo `mdmath`
+(`mathblocks.{h,cpp}`) lo orquesta todo y es **puro** (lo prueban `tst_mathblocks`).
+Piezas clave:
 
-  - *Render TeX → runs.* `mdmath::renderTexAsRuns(tex, baseFmt)` es el parser
-    que produce esa lista de `MathRun = {QString text, QTextCharFormat fmt}`.
-    Maneja: letras griegas y operadores (tabla `singleCharCommands`), `^`/`_`
-    con argumento de carácter / grupo / comando (`^\infty` → run `∞` con
-    AlignSuperScript), `\frac{a}{b}` (fraction slash `⁄` si num y den son de un
-    solo carácter; si no, `(num)/(den)` con num y den como sub-runs),
-    `\sqrt{x}`, `\mathbb{R}`. `texToUnicode` es solo un thin-flatten encima
-    para los exports que no llevan formato rico.
-
-  - *Edición.* `Insertar → Fórmula…` (Ctrl+Shift+F) abre un diálogo con
-    previsualización en vivo (`texToUnicode` sobre el TeX según se teclea) e
-    inserta los runs en el cursor. Doble clic sobre una fórmula reabre el
-    mismo diálogo precargado y la sustituye. Las fórmulas son **atómicas**
-    frente al teclado: `MainWindow::handleMathKeyPress` (instalado como
-    `eventFilter` en `m_editor`) descarta caracteres imprimibles dentro del
-    grupo y convierte Backspace/Delete en el borde en borrado del grupo entero.
-
-  - *Serialización fiel.* `mdtable::documentMarkdown` clona el documento,
-    reemplaza cada grupo de fórmula por una **sentinela** en la PUA de
-    Unicode (`U+F8FE…U+F8FF` envolviendo el índice en la tabla
-    `MathSentinelTable`) — texto opaco que `QTextDocument::toMarkdown()` no
-    escapa, a diferencia del `\` dentro de inline-code — y reinyecta
-    `$tex$`/`$$tex$$` con `restoreMathFromSentinels`. Resultado: los `\sum`,
-    `\frac`, `_`, `*` del TeX sobreviven íntegros al round-trip. La función
-    `unprotectMath` sigue existiendo pero no se usa en producción (queda como
-    inversa explícita de `protectMath` para los tests).
-
-  - *Resaltado.* El color de las fórmulas vive en `SyntaxColors::math` y lo
-    aplica `CodeBlockHighlighter::highlightMathFragments` recorriendo los
-    fragmentos del bloque actual con `IsMathProperty` y haciendo
-    `setFormat(...)` solo con el foreground (la cursiva y vertical-align del
-    fragmento se conservan). Se actualiza al cambiar de tema porque
-    `setSyntaxColors` ya invalida y vuelve a aplicar el resaltado.
-
-  - *Exportación.*
-    - **LaTeX**: `inlineLatex` detecta los fragmentos por `IsMathProperty`,
-      agrupa los consecutivos con el mismo `MathTex` (los runs de super/sub)
-      y emite **una** `$tex$`/`$$tex$$` por grupo a partir de la propiedad,
-      no del texto visible. Preámbulo añade `amsmath` + `amssymb`.
-    - **HTML/PDF/ODF**: pasan por `mdexport::cloneForExport`, que **clona el
-      documento tal cual** y solo limpia las propiedades custom de math. Así
-      Qt serializa el vertical-align de los super/subíndices a CSS (`toHtml`),
-      al atributo equivalente del ODF y los pinta directamente en PDF. No se
-      aplana a Unicode plano.
-
-  - *Limitaciones conocidas.* (1) `$$...$$` que cruza varias líneas en la
-    fuente no se detecta (`findMath` trabaja línea a línea). (2) No hay
-    layout 2D: las fracciones grandes son `(a)/(b)`, los `\sum` con límites
-    los muestran con AlignSuperScript/SubScript a la derecha, no encima y
-    debajo (eso requeriría un `QTextObjectInterface` propio — Nivel 2).
+- *Carga.* `DocumentIo::load` aplica `mdmath::protectMath` al texto fuente antes de
+  `setMarkdown`: envuelve cada `$tex$`/`$$tex$$` en inline-code ``` ``$tex$`` ```
+  para que Qt no reinterprete `_`/`*`/`\` dentro como cursiva o escape. Después
+  `mdmath::renderMathInDocument` sustituye cada inline-code con forma `$tex$` por
+  una **secuencia de fragmentos** del `QTextDocument`: cursiva + super/subíndice
+  real de Qt (`QTextCharFormat::AlignSuperScript`/`AlignSubScript`, no solo el
+  repertorio Unicode). Todos los fragmentos de una misma fórmula comparten tres
+  propiedades custom — `IsMathProperty`, `MathTexProperty`, `MathBlockProperty` —
+  que permiten reconocerlos como grupo.
+- *Render TeX → runs.* `mdmath::renderTexAsRuns(tex, baseFmt)` es el parser que
+  produce esa lista de `MathRun = {QString text, QTextCharFormat fmt}`. Maneja:
+  letras griegas y operadores (tabla `singleCharCommands`), `^`/`_` con argumento
+  de carácter / grupo / comando, `\frac{a}{b}` (fraction slash `⁄` si num y den son
+  de un solo carácter; si no, `(num)/(den)`), `\sqrt{x}`, `\mathbb{R}`.
+  `texToUnicode` es solo un thin-flatten encima para los exports sin formato rico.
+- *Edición.* `Insertar → Fórmula…` (Ctrl+Shift+F) abre un diálogo con previsuali-
+  zación en vivo e inserta los runs en el cursor. Doble clic sobre una fórmula
+  reabre el diálogo precargado y la sustituye. Las fórmulas son **atómicas** frente
+  al teclado: `MainWindow::handleMathKeyPress` (instalado como `eventFilter` en
+  `m_editor`) descarta caracteres imprimibles dentro del grupo y convierte
+  Backspace/Delete en el borde en borrado del grupo entero.
+- *Serialización fiel.* `mdtable::documentMarkdown` clona el documento, reemplaza
+  cada grupo de fórmula por una **sentinela** en la PUA de Unicode
+  (`U+F8FE…U+F8FF` envolviendo el índice en `MathSentinelTable`) — texto opaco que
+  `QTextDocument::toMarkdown()` no escapa — y reinyecta `$tex$`/`$$tex$$` con
+  `restoreMathFromSentinels`. Resultado: los `\sum`, `\frac`, `_`, `*` del TeX
+  sobreviven íntegros al round-trip. `unprotectMath` sigue existiendo pero no se usa
+  en producción (queda como inversa explícita de `protectMath` para los tests).
+- *Resaltado.* El color vive en `SyntaxColors::math` y lo aplica
+  `CodeBlockHighlighter::highlightMathFragments` recorriendo los fragmentos del
+  bloque con `IsMathProperty` y haciendo `setFormat(...)` solo con el foreground.
+  Se reaplica al cambiar de tema (`setSyntaxColors` invalida el resaltado).
+- *Exportación.* **LaTeX**: `inlineLatex` detecta fragmentos por `IsMathProperty`,
+  agrupa los consecutivos con el mismo `MathTex` y emite **una** `$tex$`/`$$tex$$`
+  por grupo (preámbulo con `amsmath`+`amssymb`). **HTML/PDF/ODF**: pasan por
+  `mdexport::cloneForExport`, que clona el documento y solo limpia las propiedades
+  custom de math, dejando que Qt serialice el vertical-align a CSS/ODF/PDF.
+- *Limitaciones.* (1) `$$...$$` que cruza varias líneas en la fuente no se detecta
+  (`findMath` trabaja línea a línea). (2) No hay layout 2D: las fracciones grandes
+  son `(a)/(b)` y los `\sum` con límites usan super/subíndice a la derecha.
 
 ## Exportación e impresión
 
-- **Formatos**: PDF (`QPrinter`), HTML (`toHtml`), **ODF (.odt)** y **LaTeX (.tex)**
-  en `mdexport`, más **Imprimir** (`QPrintDialog`). Menú *Archivo → Exportar* /
-  *Imprimir* (Ctrl+P).
+- **Formatos**: PDF (`QPrinter`), HTML (`toHtml`), **ODF (.odt)**, **LaTeX (.tex)**,
+  **DOCX (.docx)** y **EPUB (.epub)** en `mdexport`, más **Imprimir**
+  (`QPrintDialog`). Menú *Archivo → Exportar* / *Imprimir* (Ctrl+P).
 - **Idioma del documento**: ODF y LaTeX lo incrustan. Se pregunta al exportar
   (`QInputDialog`), por defecto el `lang`/`language` del front matter › ajuste de la
   app › locale del sistema. Tabla código→{babel, fo:language} en `mdexport`.
@@ -255,6 +289,14 @@ GUI) de la integración, en un namespace, para testearlas aisladas — `mdblock`
   `iftex` (pdfLaTeX usa inputenc/T1; Lua/XeLaTeX usan fontspec) + `babel`. Los
   caracteres ≥ U+2190 (símbolos/emoji) se mapean a comandos LaTeX o se omiten para
   no romper pdfLaTeX; el código `verbatim` se sanea aparte.
+- **DOCX**: serializador OOXML propio (`mdexport::toDocxDocumentXml`) empaquetado
+  con el QZip privado; idioma/título incrustados, imágenes embebidas.
+- **EPUB**: `mdexport::writeEpub` arma un EPUB 3 (`mimetype` sin comprimir primero,
+  `META-INF/container.xml`, OPF, `nav.xhtml`, `toc.ncx`, CSS, un XHTML) con el QZip
+  privado. **Reutiliza el HTML de Qt** (`toHtml`) como cuerpo, saneado a XHTML con
+  `htmlBodyToXhtml` (`&nbsp;`→`&#160;`, elementos vacíos cerrados); las imágenes se
+  recuperan con `doc->resource` y se embeben como PNG, reescribiendo su `src`. Las
+  piezas XML son funciones puras (`epubContentOpf`, `epubNavXhtml`, etc.).
 
 ## Empaquetado multiplataforma
 

@@ -23,6 +23,16 @@ y el proyecto usa [versionado semántico](https://semver.org/lang/es/).
 - **Tipografía inteligente** (en *Transformar texto*): `--`→—, `...`→…, y
   comillas rectas → tipográficas.
 - **Shortcodes `:nombre:`**: al teclear, `:alpha:`→α, `:check:`→✓, etc.
+- **Editar → Pegar como Markdown** (Ctrl+Alt+V): convierte el texto enriquecido
+  del portapapeles (HTML) a Markdown en vez de incrustar su formato.
+- **Archivo → Nuevo desde plantilla**: 10 plantillas de documento (acta de
+  reunión, nota diaria, artículo de blog, README, carta, informe, lista de tareas,
+  certificado, práctica de asignatura y examen), traducidas a los 9 idiomas.
+- **Admoniciones / callouts** estilo GitHub (`> [!NOTE]`, `[!TIP]`, `[!IMPORTANT]`,
+  `[!WARNING]`, `[!CAUTION]`): se muestran con fondo de color y título destacado;
+  *Insertar → Admonición*. Round-trip compatible con GitHub.
+- **Exportar a EPUB** (`.epub`): *Archivo → Exportar → A EPUB*, con idioma y título
+  incrustados e imágenes embebidas. Sin dependencias externas.
 
 ## [1.2.0] — 2026-06-18
 

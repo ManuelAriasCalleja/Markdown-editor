@@ -166,6 +166,37 @@ jobs:
   build-macos:
     name: macOS (DMG universal)
     runs-on: macos-latest
+    # --- Firma + notarización (opcional, REQUIERE Apple Developer Program, 99 $/año) ---
+    # No hay vía gratuita para notarizar; sin esto, el DMG viaja SIN firmar y el
+    # usuario lo abre con Ctrl+clic → Abrir (ver «Installing on macOS» en el README).
+    #
+    # Para activarla, una vez dado de alta en el Apple Developer Program:
+    #   1. Crea un certificado «Developer ID Application» y expórtalo a .p12.
+    #   2. Genera una contraseña específica de app (appleid.apple.com) para notarytool.
+    #   3. Define en el repositorio (Settings → Secrets and variables → Actions):
+    #        • MACOS_CERTIFICATE_P12      (el .p12 en base64)
+    #        • MACOS_CERTIFICATE_PASSWORD (contraseña del .p12)
+    #        • MACOS_SIGNING_IDENTITY     (p. ej. "Developer ID Application: Nombre (TEAMID)")
+    #        • MACOS_NOTARY_APPLE_ID      (tu Apple ID)
+    #        • MACOS_NOTARY_TEAM_ID       (el Team ID, 10 caracteres)
+    #        • MACOS_NOTARY_PASSWORD      (la contraseña específica de app)
+    #   4. Reordena el job para: macdeployqt SIN -dmg → codesign del .app → crear el
+    #      DMG → notarizar → staple, usando los comandos de referencia siguientes
+    #      (dentro de build/):
+    #        # Importar el certificado en un llavero temporal
+    #        echo "$MACOS_CERTIFICATE_P12" | base64 -d > cert.p12
+    #        security create-keychain -p "" build.keychain
+    #        security import cert.p12 -k build.keychain -P "$MACOS_CERTIFICATE_PASSWORD" -T /usr/bin/codesign
+    #        security set-key-partition-list -S apple-tool:,apple: -s -k "" build.keychain
+    #        security list-keychains -d user -s build.keychain
+    #        # Firmar con hardened runtime
+    #        codesign --deep --force --options runtime --timestamp \
+    #                 --sign "$MACOS_SIGNING_IDENTITY" md-editor.app
+    #        # (crear el DMG, p. ej. macdeployqt md-editor.app -dmg)
+    #        # Notarizar y grapar el ticket al DMG
+    #        xcrun notarytool submit md-editor.dmg --apple-id "$MACOS_NOTARY_APPLE_ID" \
+    #              --team-id "$MACOS_NOTARY_TEAM_ID" --password "$MACOS_NOTARY_PASSWORD" --wait
+    #        xcrun stapler staple md-editor.dmg
     steps:
       - uses: actions/checkout@v5
 

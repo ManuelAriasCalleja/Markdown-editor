@@ -21,6 +21,9 @@
 #include "helpdialog.h"
 #include "docstats.h"
 #include "texttransform.h"
+#include "richpaste.h"
+#include "doctemplates.h"
+#include "admonitions.h"
 #include "listcontinuation.h"
 #include "mathblocks.h"
 #include "gotoheadingdialog.h"
@@ -70,6 +73,7 @@
 #include <QPushButton>
 #include <QRegularExpression>
 #include <QSplitter>
+#include <QTextDocumentFragment>
 #include <QStatusBar>
 #include <QStringList>
 #include <QTextCharFormat>
@@ -563,6 +567,14 @@ void MainWindow::createFileMenu()
     newAction->setShortcut(QKeySequence::New);
     connect(newAction, &QAction::triggered, m_file, &FileController::newFile);
 
+    QMenu *templateMenu = fileMenu->addMenu(tr("Nuevo desde &plantilla"));
+    for (const mdtemplate::DocTemplate &tpl : mdtemplate::all()) {
+        QAction *act = templateMenu->addAction(tpl.name);
+        const QString body = tpl.body;
+        connect(act, &QAction::triggered, this,
+                [this, body] { m_file->newFromTemplate(body); });
+    }
+
     QAction *openAction = fileMenu->addAction(tr("&Abrir..."));
     openAction->setShortcut(QKeySequence::Open);
     connect(openAction, &QAction::triggered, m_file, &FileController::openFileDialog);
@@ -596,6 +608,8 @@ void MainWindow::createFileMenu()
     connect(exportDocxAction, &QAction::triggered, m_export, &ExportController::exportDocx);
     QAction *exportLatexAction = exportMenu->addAction(tr("A LaTeX..."));
     connect(exportLatexAction, &QAction::triggered, m_export, &ExportController::exportLatex);
+    QAction *exportEpubAction = exportMenu->addAction(tr("A EPUB..."));
+    connect(exportEpubAction, &QAction::triggered, m_export, &ExportController::exportEpub);
     exportMenu->addSeparator();
     QAction *exportSelPdfAction = exportMenu->addAction(tr("Selección a PDF..."));
     exportSelPdfAction->setToolTip(tr("Exporta a PDF solo el texto seleccionado"));
@@ -644,6 +658,33 @@ void MainWindow::createEditMenu()
         const QString text = QApplication::clipboard()->text();
         if (!text.isEmpty())
             activeEditor()->insertPlainText(text);  // ignora formato/HTML del portapapeles
+    });
+
+    QAction *pasteMdAction = editMenu->addAction(tr("Pegar como Markdown"));
+    pasteMdAction->setShortcut(QKeySequence(Qt::CTRL | Qt::ALT | Qt::Key_V));
+    pasteMdAction->setToolTip(
+        pasteMdAction->text() + QStringLiteral(" (%1)").arg(
+            pasteMdAction->shortcut().toString(QKeySequence::NativeText)));
+    connect(pasteMdAction, &QAction::triggered, this, [this] {
+        const QMimeData *mime = QApplication::clipboard()->mimeData();
+        if (!mime)
+            return;
+        // El texto enriquecido (HTML) se normaliza a Markdown en vez de incrustar
+        // su formato; sin HTML, se pega el texto plano tal cual.
+        if (mime->hasHtml()) {
+            const QString md = mdrichpaste::htmlToMarkdown(mime->html());
+            if (md.isEmpty())
+                return;
+            QTextEdit *ed = activeEditor();
+            if (ed == m_editor)
+                ed->textCursor().insertFragment(QTextDocumentFragment::fromMarkdown(md));
+            else
+                ed->insertPlainText(md);  // la vista de fuente ya es Markdown literal
+        } else {
+            const QString text = mime->text();
+            if (!text.isEmpty())
+                activeEditor()->insertPlainText(text);
+        }
     });
 
     QAction *copyHtmlAction = editMenu->addAction(tr("Copiar como HTML"));
@@ -879,6 +920,24 @@ void MainWindow::createInsertMenu()
             insFootnote->shortcut().toString(QKeySequence::NativeText)));
     connect(insFootnote, &QAction::triggered, m_insert, &InsertController::insertFootnote);
 
+    // Admoniciones / callouts (`> [!NOTE]`, etc.). Los nombres se traducen; el
+    // marcador insertado es el keyword canónico en inglés (lo que entiende GitHub).
+    QMenu *admonitionMenu = insertMenu->addMenu(tr("Admonición"));
+    admonitionMenu->setToolTip(tr("Inserta un bloque destacado (nota, aviso, etc.)"));
+    const QList<QPair<QString, QString>> admonitions = {
+        {QStringLiteral("NOTE"), tr("Nota")},
+        {QStringLiteral("TIP"), tr("Consejo")},
+        {QStringLiteral("IMPORTANT"), tr("Importante")},
+        {QStringLiteral("WARNING"), tr("Advertencia")},
+        {QStringLiteral("CAUTION"), tr("Precaución")},
+    };
+    for (const auto &a : admonitions) {
+        const QString keyword = a.first;
+        QAction *act = admonitionMenu->addAction(a.second);
+        connect(act, &QAction::triggered, this,
+                [this, keyword] { m_insert->insertAdmonition(keyword); });
+    }
+
     QAction *insSymbol = insertMenu->addAction(tr("Símbolos especiales..."));
     insSymbol->setToolTip(tr("Inserta símbolos no habituales, por categorías"));
     connect(insSymbol, &QAction::triggered, m_insert, &InsertController::insertSymbol);
@@ -893,7 +952,8 @@ void MainWindow::createInsertMenu()
 
     // Insertar tampoco aplica en la vista de fuente.
     m_wysiwygActions << insLink << insImage << insPasteImage << insTable << insRule
-                     << insToc << insFormula << insFootnote << insSymbol
+                     << insToc << insFormula << insFootnote
+                     << admonitionMenu->menuAction() << insSymbol
                      << insDate << insDateTime;
 }
 
@@ -1462,6 +1522,7 @@ void MainWindow::setBodyMarkdown(const QString &body)
     m_editor->setMarkdown(mdmath::protectMath(mdfootnote::protectFootnotes(body)));
     mdmath::renderMathInDocument(m_editor->document());
     mdfootnote::renderFootnotesInDocument(m_editor->document());
+    mdadmonition::renderAdmonitionsInDocument(m_editor->document());
     styleTables();
     m_theme->recolorLinks();
     m_outline->rebuild(m_editor->document());

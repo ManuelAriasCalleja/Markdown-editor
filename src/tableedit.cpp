@@ -1,5 +1,6 @@
 #include "tableedit.h"
 
+#include "admonitions.h"
 #include "mathblocks.h"
 
 #include <QStringList>
@@ -114,7 +115,8 @@ QString documentMarkdown(const QTextDocument *doc)
     std::unique_ptr<QTextDocument> clone(doc->clone());
     const mdmath::MathSentinelTable table = mdmath::replaceMathWithSentinels(clone.get());
     const QString md = injectAlignments(clone->toMarkdown(), columnAlignments(clone.get()));
-    return mdmath::restoreMathFromSentinels(md, table);
+    // Reinyecta fórmulas y deshace el escape `> \[!NOTE]` de las admoniciones.
+    return mdadmonition::unescapeMarkers(mdmath::restoreMathFromSentinels(md, table));
 }
 
 } // namespace mdtable

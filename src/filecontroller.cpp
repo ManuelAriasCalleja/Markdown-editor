@@ -62,6 +62,15 @@ void FileController::newFile()
     m_documentIo->reset();
 }
 
+void FileController::newFromTemplate(const QString &body)
+{
+    m_split->toggleSourceMode(false);  // la plantilla se edita en WYSIWYG
+    if (!maybeSave())
+        return;
+    rememberCursorPosition();  // guarda dónde estaba el documento que se reemplaza
+    m_documentIo->loadFromString(body);
+}
+
 void FileController::openFileDialog()
 {
     const QString currentFile = m_documentIo->currentFile();

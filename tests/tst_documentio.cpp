@@ -22,6 +22,7 @@ private slots:
     void writeUpdatesCurrentFileAndClearsModified();
     void isModifiedTracksContentAgainstBaseline();
     void resetClearsAndSignals();
+    void loadFromStringIsUntitledModifiedAndKeepsFrontMatter();
     void loadEmitsDocumentLoaded();
     void frontMatterIsPreserved();
     void noFrontMatterWhenNotAtStart();
@@ -124,6 +125,35 @@ void TestDocumentIo::isModifiedTracksContentAgainstBaseline()
 
     edit.undo();
     QVERIFY(!io.isModified());  // de vuelta al contenido base => limpio
+}
+
+void TestDocumentIo::loadFromStringIsUntitledModifiedAndKeepsFrontMatter()
+{
+    QTextEdit edit;
+    DocumentIo io(&edit);
+
+    QSignalSpy fileSpy(&io, &DocumentIo::currentFileChanged);
+    QSignalSpy loadSpy(&io, &DocumentIo::documentLoaded);
+    io.loadFromString(QStringLiteral("---\n"
+                                     "title: Plantilla\n"
+                                     "---\n"
+                                     "\n"
+                                     "# CERTIFICO:\n"
+                                     "\n"
+                                     "Cuerpo de la plantilla.\n"));
+
+    // Sin archivo asociado: «Guardar» pedirá nombre.
+    QCOMPARE(io.currentFile(), QString());
+    // Cuenta como modificado para no perder la plantilla sin avisar.
+    QVERIFY(io.isModified());
+    // Front matter conservado y no renderizado.
+    QVERIFY(io.hasFrontMatter());
+    const QString plain = edit.toPlainText();
+    QVERIFY(plain.contains(QStringLiteral("CERTIFICO")));
+    QVERIFY(!plain.contains(QStringLiteral("title:")));
+    // Emite las mismas señales que una carga (para refrescar vista e índice).
+    QCOMPARE(fileSpy.count(), 1);
+    QCOMPARE(loadSpy.count(), 1);
 }
 
 void TestDocumentIo::frontMatterIsPreserved()

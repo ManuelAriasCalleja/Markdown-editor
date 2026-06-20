@@ -310,6 +310,35 @@ bool ExportController::exportDocx()
     return true;
 }
 
+bool ExportController::exportEpub()
+{
+    m_split->commitSourceToDocument();
+    mdexport::Language language;
+    if (!chooseExportLanguage(&language))
+        return false;
+    const QString path = promptSavePath(
+        QCoreApplication::translate("MainWindow", "Exportar a EPUB"),
+        QCoreApplication::translate("MainWindow", "Libro EPUB (*.epub)"),
+        QStringLiteral("epub"));
+    if (path.isEmpty())
+        return false;
+
+    QString error;
+    std::unique_ptr<QTextDocument> flat(
+        mdexport::cloneForExport(m_editor->document()));
+    // El clon no hereda la baseUrl; la copiamos para resolver las imágenes de
+    // ruta relativa al embeberlas en el .epub.
+    flat->setBaseUrl(m_editor->document()->baseUrl());
+    if (!mdexport::writeEpub(flat.get(), path, language, exportTitle(), &error)) {
+        QMessageBox::warning(m_parent, QCoreApplication::translate("MainWindow", "Error"),
+                             QCoreApplication::translate("MainWindow",
+                                 "No se pudo exportar a EPUB:\n%1\n\n%2").arg(path, error));
+        return false;
+    }
+    emit statusMessage(QCoreApplication::translate("MainWindow", "Exportado a EPUB: %1").arg(path), 4000);
+    return true;
+}
+
 bool ExportController::exportLatex()
 {
     m_split->commitSourceToDocument();

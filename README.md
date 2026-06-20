@@ -1,8 +1,9 @@
 # md-editor
 
-**WYSIWYG** Markdown editor written in Qt6 + C++17. You always edit on the
-already-rendered text — never the syntax — and on save it is serialized back
-to clean Markdown.
+A Markdown editor where you write on the rendered text and save clean Markdown.
+TeX formulas, aligned tables, highlighted code, document templates, and export to
+PDF/DOCX/ODT/LaTeX — lightweight, portable (Qt6/C++17, zero external
+dependencies), in 9 languages.
 
 ![Version](https://img.shields.io/badge/version-1.2.0-blue)
 ![License](https://img.shields.io/badge/license-GPL--3.0-blue)
@@ -25,6 +26,32 @@ to clean Markdown.
 
 ---
 
+## Installing on Windows
+
+The Windows build is portable: **unzip and run `md-editor.exe`** — no installer.
+The binary is not signed yet, so SmartScreen may show a blue *"Windows protected
+your PC"* screen on first run. To proceed, click **More info → Run anyway**. This
+only happens until the build earns SmartScreen reputation (or gets code-signed).
+
+---
+
+## Installing on macOS
+
+The macOS build is **not signed or notarized** (Apple code signing requires a
+paid Developer account). Gatekeeper will therefore block it on first launch with
+a *"cannot be opened because it is from an unidentified developer"* message. This
+is expected and the app is safe — to open it the first time:
+
+1. Open the `.dmg` and drag **md-editor** into *Applications*.
+2. In *Applications*, **Ctrl-click** (or right-click) the app and choose **Open**.
+3. Confirm **Open** in the dialog that appears.
+
+You only need to do this once; afterwards it launches normally with a
+double-click. Alternatively, after the blocked attempt, go to *System Settings →
+Privacy & Security* and click **Open anyway**.
+
+---
+
 ## What it does
 
 - **True WYSIWYG**: you never see the Markdown syntax, you see the rendered
@@ -33,8 +60,12 @@ to clean Markdown.
   nested lists, task lists, code blocks with syntax highlighting.
 - **TeX formulas** `$…$` and `$$…$$` with real super- and subscripts and a
   live preview — no external dependencies. Double-click to edit.
-- **Export** to PDF, HTML, ODF (`.odt`) and LaTeX (`.tex`), preserving the
-  document language and the formula formatting.
+- **Admonitions / callouts** (`> [!NOTE]`, `[!TIP]`, `[!IMPORTANT]`, `[!WARNING]`,
+  `[!CAUTION]`) shown as coloured boxes, round-trip compatible with GitHub.
+- **Document templates** (*File → New from template*): meeting minutes, report,
+  letter, README, certificate, exam and more.
+- **Export** to PDF, HTML, ODF (`.odt`), LaTeX (`.tex`), DOCX (`.docx`) and EPUB
+  (`.epub`), preserving the document language and the formula formatting.
 - **YAML / TOML front matter** preserved verbatim on save.
 - **Navigable outline panel** (F9), find and replace (Ctrl+F / Ctrl+H),
   autosave and crash recovery.

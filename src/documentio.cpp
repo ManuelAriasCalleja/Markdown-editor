@@ -1,5 +1,6 @@
 #include "documentio.h"
 
+#include "admonitions.h"
 #include "footnotes.h"
 #include "mathblocks.h"
 #include "tableedit.h"
@@ -79,6 +80,26 @@ void DocumentIo::reset()
     m_editor->setCurrentCharFormat(QTextCharFormat());
     m_frontMatter.clear();  // documento nuevo: sin front matter
     setCurrentFile(QString());
+}
+
+void DocumentIo::loadFromString(const QString &content)
+{
+    QString body = content;
+    // Mismo tratamiento que load(): el front matter se conserva verbatim (no se
+    // renderiza) y las fórmulas/notas al pie se protegen del re-parseo.
+    m_frontMatter = takeFrontMatter(body);
+    m_editor->document()->setBaseUrl(QUrl());  // documento sin ubicación en disco
+    m_editor->setMarkdown(mdmath::protectMath(mdfootnote::protectFootnotes(body)));
+    mdmath::renderMathInDocument(m_editor->document());
+    mdfootnote::renderFootnotesInDocument(m_editor->document());
+    mdadmonition::renderAdmonitionsInDocument(m_editor->document());
+
+    // Sin archivo asociado y con línea base vacía: cuenta como modificado, así
+    // cerrar sin guardar pregunta (la plantilla es trabajo que se perdería).
+    m_currentFile.clear();
+    m_baseline.clear();
+    emit currentFileChanged(QString());
+    emit documentLoaded();
 }
 
 bool DocumentIo::load(const QString &path, QString *errorString)

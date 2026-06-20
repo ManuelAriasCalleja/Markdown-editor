@@ -33,6 +33,12 @@ public:
     // Empieza un documento nuevo y vacío (sin archivo asociado).
     void reset();
 
+    // Carga `content` (Markdown) como documento nuevo sin archivo asociado: para
+    // «Nuevo desde plantilla». Separa el front matter como en load(), pero deja el
+    // documento como modificado y sin ruta (Guardar pedirá nombre), de modo que la
+    // plantilla no se pierda sin avisar.
+    void loadFromString(const QString &content);
+
     // ¿El documento cargado tenía front matter (--- … --- o +++ … +++) al
     // principio? Se conserva verbatim, sin renderizarlo, y se reescribe al
     // guardar.
