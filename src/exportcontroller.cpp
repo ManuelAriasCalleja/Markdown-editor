@@ -106,19 +106,55 @@ QString ExportController::promptSavePath(const QString &title, const QString &fi
     return path;
 }
 
-bool ExportController::writeUtf8File(const QString &path, const QString &contents)
+bool ExportController::writeUtf8File(const QString &path, const QString &contents,
+                                    QString *error)
 {
     QFile file(path);
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
-        QMessageBox::warning(m_parent, QCoreApplication::translate("MainWindow", "Error"),
-                             QCoreApplication::translate("MainWindow", "No se pudo escribir:\n%1\n\n%2")
-                                 .arg(path, file.errorString()));
+        if (error)
+            *error = file.errorString();
         return false;
     }
     QTextStream out(&file);
     out.setEncoding(QStringConverter::Utf8);
     out << contents;
     file.close();
+    return true;
+}
+
+bool ExportController::runExport(const FileExporter &exp)
+{
+    m_split->commitSourceToDocument();
+
+    mdexport::Language language;
+    if (exp.needsLanguage && !chooseExportLanguage(&language))
+        return false;
+
+    const QString path = promptSavePath(
+        QCoreApplication::translate("MainWindow", exp.title),
+        QCoreApplication::translate("MainWindow", exp.filter), exp.ext);
+    if (path.isEmpty())
+        return false;
+
+    // Documento a serializar: el clon «plano» (limpio de propiedades de math) para
+    // casi todos; el original para LaTeX, que emite las fórmulas verbatim.
+    const QTextDocument *doc = m_editor->document();
+    std::unique_ptr<QTextDocument> flat;
+    if (exp.useFlatClone) {
+        flat.reset(mdexport::cloneForExport(m_editor->document()));
+        if (exp.needsBaseUrl)  // resolver imágenes de ruta relativa al embeberlas
+            flat->setBaseUrl(m_editor->document()->baseUrl());
+        doc = flat.get();
+    }
+
+    QString error;
+    if (!exp.write(doc, path, language, exportTitle(), &error)) {
+        QMessageBox::warning(m_parent, QCoreApplication::translate("MainWindow", "Error"),
+                             QCoreApplication::translate("MainWindow", exp.errorMsg)
+                                 .arg(path, error));
+        return false;
+    }
+    emit statusMessage(QCoreApplication::translate("MainWindow", exp.okMsg).arg(path), 4000);
     return true;
 }
 
@@ -243,117 +279,73 @@ bool ExportController::exportPdf()
 
 bool ExportController::exportHtml()
 {
-    m_split->commitSourceToDocument();
-    const QString path = promptSavePath(QCoreApplication::translate("MainWindow", "Exportar a HTML"),
-                                        QCoreApplication::translate("MainWindow", "HTML (*.html *.htm)"), QStringLiteral("html"));
-    if (path.isEmpty())
-        return false;
-
-    std::unique_ptr<QTextDocument> flat(
-        mdexport::cloneForExport(m_editor->document()));
-    if (!writeUtf8File(path, flat->toHtml()))
-        return false;
-
-    emit statusMessage(QCoreApplication::translate("MainWindow", "Exportado a HTML: %1").arg(path), 4000);
-    return true;
+    return runExport({
+        QT_TRANSLATE_NOOP("MainWindow", "Exportar a HTML"),
+        QT_TRANSLATE_NOOP("MainWindow", "HTML (*.html *.htm)"),
+        QStringLiteral("html"),
+        QT_TRANSLATE_NOOP("MainWindow", "No se pudo escribir:\n%1\n\n%2"),
+        QT_TRANSLATE_NOOP("MainWindow", "Exportado a HTML: %1"),
+        /*needsLanguage=*/false, /*useFlatClone=*/true, /*needsBaseUrl=*/false,
+        [](const QTextDocument *doc, const QString &path, const mdexport::Language &,
+           const QString &, QString *error) {
+            return writeUtf8File(path, doc->toHtml(), error);
+        },
+    });
 }
 
 bool ExportController::exportOdf()
 {
-    m_split->commitSourceToDocument();
-    mdexport::Language language;
-    if (!chooseExportLanguage(&language))
-        return false;
-    const QString path = promptSavePath(QCoreApplication::translate("MainWindow", "Exportar a ODF"),
-                                        QCoreApplication::translate("MainWindow", "Documento ODF (*.odt)"), QStringLiteral("odt"));
-    if (path.isEmpty())
-        return false;
-
-    QString error;
-    std::unique_ptr<QTextDocument> flat(
-        mdexport::cloneForExport(m_editor->document()));
-    if (!mdexport::writeOdf(flat.get(), path, language, exportTitle(), &error)) {
-        QMessageBox::warning(m_parent, QCoreApplication::translate("MainWindow", "Error"),
-                             QCoreApplication::translate("MainWindow", "No se pudo exportar a ODF:\n%1\n\n%2").arg(path, error));
-        return false;
-    }
-    emit statusMessage(QCoreApplication::translate("MainWindow", "Exportado a ODF: %1").arg(path), 4000);
-    return true;
+    return runExport({
+        QT_TRANSLATE_NOOP("MainWindow", "Exportar a ODF"),
+        QT_TRANSLATE_NOOP("MainWindow", "Documento ODF (*.odt)"),
+        QStringLiteral("odt"),
+        QT_TRANSLATE_NOOP("MainWindow", "No se pudo exportar a ODF:\n%1\n\n%2"),
+        QT_TRANSLATE_NOOP("MainWindow", "Exportado a ODF: %1"),
+        /*needsLanguage=*/true, /*useFlatClone=*/true, /*needsBaseUrl=*/false,
+        &mdexport::writeOdf,
+    });
 }
 
 bool ExportController::exportDocx()
 {
-    m_split->commitSourceToDocument();
-    mdexport::Language language;
-    if (!chooseExportLanguage(&language))
-        return false;
-    const QString path = promptSavePath(
-        QCoreApplication::translate("MainWindow", "Exportar a DOCX"),
-        QCoreApplication::translate("MainWindow", "Documento Word (*.docx)"),
-        QStringLiteral("docx"));
-    if (path.isEmpty())
-        return false;
-
-    QString error;
-    std::unique_ptr<QTextDocument> flat(
-        mdexport::cloneForExport(m_editor->document()));
-    // El clon no hereda la baseUrl; la copiamos para que se resuelvan las imágenes
-    // de ruta relativa al embeberlas en el .docx.
-    flat->setBaseUrl(m_editor->document()->baseUrl());
-    if (!mdexport::writeDocx(flat.get(), path, language, exportTitle(), &error)) {
-        QMessageBox::warning(m_parent, QCoreApplication::translate("MainWindow", "Error"),
-                             QCoreApplication::translate("MainWindow",
-                                 "No se pudo exportar a DOCX:\n%1\n\n%2").arg(path, error));
-        return false;
-    }
-    emit statusMessage(QCoreApplication::translate("MainWindow", "Exportado a DOCX: %1").arg(path), 4000);
-    return true;
+    return runExport({
+        QT_TRANSLATE_NOOP("MainWindow", "Exportar a DOCX"),
+        QT_TRANSLATE_NOOP("MainWindow", "Documento Word (*.docx)"),
+        QStringLiteral("docx"),
+        QT_TRANSLATE_NOOP("MainWindow", "No se pudo exportar a DOCX:\n%1\n\n%2"),
+        QT_TRANSLATE_NOOP("MainWindow", "Exportado a DOCX: %1"),
+        /*needsLanguage=*/true, /*useFlatClone=*/true, /*needsBaseUrl=*/true,
+        &mdexport::writeDocx,
+    });
 }
 
 bool ExportController::exportEpub()
 {
-    m_split->commitSourceToDocument();
-    mdexport::Language language;
-    if (!chooseExportLanguage(&language))
-        return false;
-    const QString path = promptSavePath(
-        QCoreApplication::translate("MainWindow", "Exportar a EPUB"),
-        QCoreApplication::translate("MainWindow", "Libro EPUB (*.epub)"),
-        QStringLiteral("epub"));
-    if (path.isEmpty())
-        return false;
-
-    QString error;
-    std::unique_ptr<QTextDocument> flat(
-        mdexport::cloneForExport(m_editor->document()));
-    // El clon no hereda la baseUrl; la copiamos para resolver las imágenes de
-    // ruta relativa al embeberlas en el .epub.
-    flat->setBaseUrl(m_editor->document()->baseUrl());
-    if (!mdexport::writeEpub(flat.get(), path, language, exportTitle(), &error)) {
-        QMessageBox::warning(m_parent, QCoreApplication::translate("MainWindow", "Error"),
-                             QCoreApplication::translate("MainWindow",
-                                 "No se pudo exportar a EPUB:\n%1\n\n%2").arg(path, error));
-        return false;
-    }
-    emit statusMessage(QCoreApplication::translate("MainWindow", "Exportado a EPUB: %1").arg(path), 4000);
-    return true;
+    return runExport({
+        QT_TRANSLATE_NOOP("MainWindow", "Exportar a EPUB"),
+        QT_TRANSLATE_NOOP("MainWindow", "Libro EPUB (*.epub)"),
+        QStringLiteral("epub"),
+        QT_TRANSLATE_NOOP("MainWindow", "No se pudo exportar a EPUB:\n%1\n\n%2"),
+        QT_TRANSLATE_NOOP("MainWindow", "Exportado a EPUB: %1"),
+        /*needsLanguage=*/true, /*useFlatClone=*/true, /*needsBaseUrl=*/true,
+        &mdexport::writeEpub,
+    });
 }
 
 bool ExportController::exportLatex()
 {
-    m_split->commitSourceToDocument();
-    mdexport::Language language;
-    if (!chooseExportLanguage(&language))
-        return false;
-    const QString path = promptSavePath(QCoreApplication::translate("MainWindow", "Exportar a LaTeX"),
-                                        QCoreApplication::translate("MainWindow", "Documento LaTeX (*.tex)"), QStringLiteral("tex"));
-    if (path.isEmpty())
-        return false;
-
-    if (!writeUtf8File(path,
-                       mdexport::toLatex(m_editor->document(), language, exportTitle())))
-        return false;
-
-    emit statusMessage(QCoreApplication::translate("MainWindow", "Exportado a LaTeX: %1").arg(path), 4000);
-    return true;
+    return runExport({
+        QT_TRANSLATE_NOOP("MainWindow", "Exportar a LaTeX"),
+        QT_TRANSLATE_NOOP("MainWindow", "Documento LaTeX (*.tex)"),
+        QStringLiteral("tex"),
+        QT_TRANSLATE_NOOP("MainWindow", "No se pudo escribir:\n%1\n\n%2"),
+        QT_TRANSLATE_NOOP("MainWindow", "Exportado a LaTeX: %1"),
+        // LaTeX usa el documento ORIGINAL (no el clon plano): toLatex emite las
+        // fórmulas verbatim desde sus propiedades de math.
+        /*needsLanguage=*/true, /*useFlatClone=*/false, /*needsBaseUrl=*/false,
+        [](const QTextDocument *doc, const QString &path, const mdexport::Language &lang,
+           const QString &title, QString *error) {
+            return writeUtf8File(path, mdexport::toLatex(doc, lang, title), error);
+        },
+    });
 }

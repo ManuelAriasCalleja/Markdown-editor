@@ -1,8 +1,6 @@
 #include "documentio.h"
 
-#include "admonitions.h"
-#include "footnotes.h"
-#include "mathblocks.h"
+#include "markdownrender.h"
 #include "tableedit.h"
 
 #include <QFile>
@@ -89,10 +87,7 @@ void DocumentIo::loadFromString(const QString &content)
     // renderiza) y las fórmulas/notas al pie se protegen del re-parseo.
     m_frontMatter = takeFrontMatter(body);
     m_editor->document()->setBaseUrl(QUrl());  // documento sin ubicación en disco
-    m_editor->setMarkdown(mdmath::protectMath(mdfootnote::protectFootnotes(body)));
-    mdmath::renderMathInDocument(m_editor->document());
-    mdfootnote::renderFootnotesInDocument(m_editor->document());
-    mdadmonition::renderAdmonitionsInDocument(m_editor->document());
+    mdrender::setMarkdownWithExtensions(m_editor, body);
 
     // Sin archivo asociado y con línea base vacía: cuenta como modificado, así
     // cerrar sin guardar pregunta (la plantilla es trabajo que se perdería).
@@ -127,16 +122,11 @@ bool DocumentIo::load(const QString &path, QString *errorString)
     m_editor->document()->setBaseUrl(
         QUrl::fromLocalFile(info.absolutePath() + QLatin1Char('/')));
 
-    // Protege las fórmulas $...$/$$...$$ del re-parseo de setMarkdown(), que
-    // interpretaría `_`/`*` dentro como cursiva/negrita. mdtable::documentMarkdown
-    // las desenvuelve al serializar.
-    m_editor->setMarkdown(mdmath::protectMath(mdfootnote::protectFootnotes(content)));
-    // Tras el parseo, las fórmulas están como inline-code `$tex$`. Las convertimos
-    // a fragmentos «renderizados» (Unicode visible + TeX en propiedad).
-    mdmath::renderMathInDocument(m_editor->document());
-    // Da estilo de superíndice a las referencias de nota al pie `[^id]` (no toca
-    // la serialización: el round-trip de las footnotes ya es transparente).
-    mdfootnote::renderFootnotesInDocument(m_editor->document());
+    // Protege las extensiones del re-parseo de setMarkdown() (fórmulas, notas al
+    // pie), carga y aplica las pasadas de render (fórmulas como fragmentos, notas
+    // al pie en superíndice, admoniciones estilizadas). mdtable::documentMarkdown
+    // deshace las protecciones al serializar, así que el round-trip es transparente.
+    mdrender::setMarkdownWithExtensions(m_editor, content);
 
     setCurrentFile(path);
     emit documentLoaded();

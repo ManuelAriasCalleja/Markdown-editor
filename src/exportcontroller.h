@@ -4,15 +4,19 @@
 #include <QObject>
 #include <QString>
 
+#include <functional>
+
 class QTextEdit;
+class QTextDocument;
 class QWidget;
 class DocumentIo;
 class SplitViewController;
 namespace mdexport { struct Language; }
 
-// Exportación e impresión del documento: PDF, HTML, ODF (.odt), LaTeX (.tex) e
-// imprimir. Orquesta los serializadores puros de `mdexport` con los diálogos de
-// archivo/idioma y la escritura a disco.
+// Exportación e impresión del documento: PDF, HTML, ODF (.odt), LaTeX (.tex),
+// DOCX (.docx), EPUB (.epub) e imprimir. Orquesta los serializadores puros de
+// `mdexport` con los diálogos de archivo/idioma y la escritura a disco. Los
+// formatos basados en archivo comparten `runExport` (dirigido por `FileExporter`).
 //
 // No posee estado: lee el documento del editor WYSIWYG y los metadatos del
 // DocumentIo (front matter), vuelca antes el panel de fuente a través del
@@ -63,8 +67,29 @@ private:
     // Muestra el diálogo de guardar (con `title`, `filter` y la ruta sugerida para
     // `ext`) y, si el usuario no puso extensión, le añade `.ext`. "" si cancela.
     QString promptSavePath(const QString &title, const QString &filter, const QString &ext);
-    // Escribe `contents` en `path` en UTF-8; avisa y devuelve false si no se pudo.
-    bool writeUtf8File(const QString &path, const QString &contents);
+    // Escribe `contents` en `path` en UTF-8; devuelve false y rellena *error si no
+    // se pudo (el aviso lo muestra runExport, uniforme para todos los formatos).
+    static bool writeUtf8File(const QString &path, const QString &contents, QString *error);
+
+    // Descriptor de un formato de exportación basado en archivo (HTML/ODF/LaTeX/
+    // DOCX/EPUB). Los textos van como QT_TRANSLATE_NOOP("MainWindow", ...) para que
+    // lupdate los extraiga sin traducirlos aquí; runExport los traduce al usarlos.
+    struct FileExporter {
+        const char *title;     // título del diálogo de guardar
+        const char *filter;    // filtro de archivos del diálogo
+        QString ext;           // extensión por defecto (sin punto)
+        const char *errorMsg;  // mensaje de error (con %1=ruta, %2=detalle)
+        const char *okMsg;     // mensaje de éxito (con %1=ruta)
+        bool needsLanguage;    // ¿preguntar el idioma del documento?
+        bool useFlatClone;     // ¿exportar el clon «plano» (cloneForExport) o el original?
+        bool needsBaseUrl;     // ¿copiar la baseUrl al clon (para imágenes relativas)?
+        // Serializa `doc` a `path`. Devuelve false y rellena *error si falla.
+        std::function<bool(const QTextDocument *, const QString &,
+                           const mdexport::Language &, const QString &, QString *)> write;
+    };
+    // Flujo común de exportación a archivo: vuelca la fuente, (pide idioma), pide
+    // ruta, prepara el documento, llama a `exp.write` y muestra el resultado.
+    bool runExport(const FileExporter &exp);
 
     QTextEdit *m_editor = nullptr;          // editor WYSIWYG (no es propiedad nuestra)
     DocumentIo *m_documentIo = nullptr;

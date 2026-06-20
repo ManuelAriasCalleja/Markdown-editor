@@ -23,9 +23,8 @@
 #include "texttransform.h"
 #include "richpaste.h"
 #include "doctemplates.h"
-#include "admonitions.h"
+#include "markdownrender.h"
 #include "listcontinuation.h"
-#include "mathblocks.h"
 #include "gotoheadingdialog.h"
 #include "outlinepanel.h"
 #include "shortcodes.h"
@@ -1519,10 +1518,7 @@ void MainWindow::setBodyMarkdown(const QString &body)
     // contentsChanged que provoca (incluido el de recolorLinks) no realimenten la
     // sincronización de la vista dividida. Se guarda/restaura por reentrancia.
     const bool wasSyncing = m_split->beginProgrammaticChange();
-    m_editor->setMarkdown(mdmath::protectMath(mdfootnote::protectFootnotes(body)));
-    mdmath::renderMathInDocument(m_editor->document());
-    mdfootnote::renderFootnotesInDocument(m_editor->document());
-    mdadmonition::renderAdmonitionsInDocument(m_editor->document());
+    mdrender::setMarkdownWithExtensions(m_editor, body);
     styleTables();
     m_theme->recolorLinks();
     m_outline->rebuild(m_editor->document());

@@ -194,9 +194,16 @@ añadir lógica nueva: hay un `tst_*` por módulo.
   abierto, con debounce (`QTimer`) e instantánea de bytes para distinguir el propio
   guardado de un cambio externo: si no hay cambios locales recarga solo; si los
   hay, pregunta.
+- **Pipeline de carga (`mdrender`).** La secuencia «proteger el fuente →
+  `setMarkdown` → pasadas de render (fórmulas, notas al pie, admoniciones)» vive en
+  un único sitio: `mdrender::setMarkdownWithExtensions` (con `protect` y
+  `renderPasses` separables). La usan `DocumentIo::load`, `DocumentIo::loadFromString`
+  y `MainWindow::setBodyMarkdown`. **Añadir una extensión ligera nueva = tocar solo
+  `mdrender`**, no esos tres sitios (antes estaba duplicado y era fácil olvidarse de
+  uno).
 - **Tareas, notas al pie, shortcodes, tipografía y admoniciones (extensiones
   ligeras).** Módulos puros que Qt no entiende pero **tampoco estorba** al
-  round-trip:
+  round-trip (sus pasadas de render las orquesta `mdrender`, arriba):
   - `mdtask` — casillas `- [ ]`/`- [x]`. Qt las renderiza y serializa solo
     (`QTextBlockFormat::marker()`); el módulo solo aporta el gesto de marcar/
     desmarcar con clic sobre la casilla.
@@ -277,6 +284,13 @@ Piezas clave:
 - **Formatos**: PDF (`QPrinter`), HTML (`toHtml`), **ODF (.odt)**, **LaTeX (.tex)**,
   **DOCX (.docx)** y **EPUB (.epub)** en `mdexport`, más **Imprimir**
   (`QPrintDialog`). Menú *Archivo → Exportar* / *Imprimir* (Ctrl+P).
+- **Orquestación dirigida por datos.** Los cinco formatos basados en archivo
+  (HTML/ODF/LaTeX/DOCX/EPUB) comparten `ExportController::runExport(FileExporter)`:
+  un descriptor declara título/filtro/extensión, mensajes, si pide idioma, si usa el
+  clon plano (`cloneForExport`) o el documento original (LaTeX, que necesita las
+  propiedades de math), y la función `write`. Los textos del descriptor van como
+  `QT_TRANSLATE_NOOP("MainWindow", …)` para que `lupdate` los extraiga sin
+  traducirlos ahí. PDF/impresión van aparte (usan `QPrinter`, no un *writer*).
 - **Idioma del documento**: ODF y LaTeX lo incrustan. Se pregunta al exportar
   (`QInputDialog`), por defecto el `lang`/`language` del front matter › ajuste de la
   app › locale del sistema. Tabla código→{babel, fo:language} en `mdexport`.

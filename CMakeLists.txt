@@ -53,6 +53,8 @@ add_library(md-editor-core STATIC
     src/doctemplates.h
     src/admonitions.cpp
     src/admonitions.h
+    src/markdownrender.cpp
+    src/markdownrender.h
     src/distractionfreecontroller.cpp
     src/distractionfreecontroller.h
     src/chromezoom.cpp
@@ -226,6 +228,7 @@ if(Qt6Test_FOUND)
         tst_richpaste
         tst_doctemplates
         tst_admonitions
+        tst_markdownrender
         tst_shortcodes
         tst_footnotes
         tst_mathblocks
