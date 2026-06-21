@@ -32,9 +32,6 @@ public slots:
     // Re-escanea ya: pide renders de los diagramas y limpia previews huérfanas.
     void refresh();
 
-signals:
-    void statusMessage(const QString &text, int timeoutMs);
-
 private:
     struct Region {
         int lastBlockPos;     // posición del último bloque de código del grupo
@@ -45,12 +42,17 @@ private:
     QList<Region> scanRegions() const;
     void onRendered(mddiagram::Kind kind, const QString &source, const QImage &image);
     void removeOrphanPreviews(const QList<Region> &regions);
+    // Coloca/actualiza el bloque de preview bajo el grupo (imagen o marcador de
+    // texto). No hace nada si ya está al día (mismo hash y mismo tipo).
+    void setPreviewBlock(int lastBlockNumber, const QString &hash, bool placeholder,
+                         const QImage &image, const QString &text);
+    // Texto del marcador «herramienta no instalada» con la orden de la plataforma.
+    QString placeholderText(mddiagram::Kind kind) const;
 
     QTextEdit *m_editor = nullptr;
     DiagramRenderer *m_renderer = nullptr;
     QTimer *m_debounce = nullptr;
-    bool m_updating = false;        // cambios propios: no re-disparar refresh
-    bool m_warnedMissingTool = false;
+    bool m_updating = false;  // cambios propios: no re-disparar refresh
 };
 
 #endif // DIAGRAMCONTROLLER_H

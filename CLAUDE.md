@@ -252,8 +252,12 @@ añadir lógica nueva: hay un `tst_*` por módulo.
   código ```mermaid/plantuml, pide el render con debounce y coloca la imagen en un
   bloque de presentación **bajo** el bloque, opción «imagen debajo»). El round-trip
   es transparente: `documentMarkdown` llama a `removePreviewBlocks` sobre el clon,
-  así que la imagen nunca llega al Markdown ni cuenta para «modificado». Avisa en
-  la barra de estado solo si hay diagramas y falta la herramienta.
+  así que la imagen nunca llega al Markdown ni cuenta para «modificado». Si la
+  herramienta falta, en vez de la imagen pone un **marcador inline** (mismo bloque
+  de preview, `PreviewPlaceholderProperty`) con la orden de instalación de la
+  plataforma (detectada con `QSysInfo::kernelType`, sin `#ifdef`): contextual,
+  seleccionable para copiar la orden, y se reemplaza por la imagen en cuanto la
+  herramienta aparece.
 - **Corrección ortográfica (opcional, Hunspell).** Primera dependencia de
   terceros, **opcional** (`SPELL_CHECK`→`HAVE_HUNSPELL` en CMake): sin
   `libhunspell-dev` el build sigue verde. Piezas: `spellscan` (`mdspell`, puro:

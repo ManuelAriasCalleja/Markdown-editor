@@ -4,9 +4,13 @@
 <context>
     <name>DiagramController</name>
     <message>
-        <location filename="../src/diagramcontroller.cpp" line="98"/>
         <source>Hay diagramas, pero falta la herramienta para previsualizarlos (instala «plantuml» o «mmdc»).</source>
-        <translation>Există diagrame, dar lipsește unealta pentru previzualizare (instalează „plantuml” sau „mmdc”).</translation>
+        <translation type="vanished">Există diagrame, dar lipsește unealta pentru previzualizare (instalează „plantuml” sau „mmdc”).</translation>
+    </message>
+    <message>
+        <location filename="../src/diagramcontroller.cpp" line="102"/>
+        <source>%1 no está instalado. Para previsualizar este diagrama: %2</source>
+        <translation>%1 nu este instalat. Pentru a previzualiza această diagramă: %2</translation>
     </message>
 </context>
 <context>

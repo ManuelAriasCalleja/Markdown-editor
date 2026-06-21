@@ -283,9 +283,9 @@ MainWindow::MainWindow(QWidget *parent)
     m_spellEnabled = AppSettings::spellCheck();
 
     // Previsualización de diagramas (Mermaid/PlantUML) bajo cada bloque de código.
+    // Si falta la herramienta, el propio controlador pone un marcador inline con
+    // la orden de instalación de la plataforma (no usa la barra de estado).
     m_diagrams = new DiagramController(m_editor, this);
-    connect(m_diagrams, &DiagramController::statusMessage, this,
-            [this](const QString &text, int ms) { statusBar()->showMessage(text, ms); });
     connect(m_editor->document(), &QTextDocument::contentsChanged,
             m_diagrams, &DiagramController::scheduleRefresh);
     // Zoom con Ctrl+rueda del ratón y detección de enlaces bajo el cursor.

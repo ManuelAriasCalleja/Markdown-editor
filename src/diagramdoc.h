@@ -18,6 +18,10 @@ namespace mddiagram {
 //                                     si la imagen está al día sin re-renderizar.
 constexpr int PreviewBlockProperty  = QTextFormat::UserProperty + 30;
 constexpr int PreviewSourceProperty = QTextFormat::UserProperty + 31;
+// true si el bloque de preview es un MARCADOR de texto («instala plantuml…»)
+// en vez de la imagen renderizada. Distingue ambos para reemplazar el marcador
+// por la imagen cuando la herramienta aparece.
+constexpr int PreviewPlaceholderProperty = QTextFormat::UserProperty + 32;
 
 // Borra del documento todos los bloques de previsualización. Lo llama
 // `documentMarkdown` sobre su clon antes de `toMarkdown`, así que las imágenes de

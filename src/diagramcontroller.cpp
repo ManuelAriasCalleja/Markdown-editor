@@ -1,6 +1,8 @@
 #include "diagramcontroller.h"
 
 #include <QCryptographicHash>
+#include <QPalette>
+#include <QSysInfo>
 #include <QTextBlock>
 #include <QTextCursor>
 #include <QTextDocument>
@@ -17,6 +19,26 @@ QString sourceHash(const QString &source)
     return QString::fromLatin1(
         QCryptographicHash::hash(source.toUtf8(), QCryptographicHash::Sha1).toHex());
 }
+
+QString toolDisplayName(mddiagram::Kind kind)
+{
+    return kind == mddiagram::Kind::Mermaid ? QStringLiteral("Mermaid (mmdc)")
+                                            : QStringLiteral("PlantUML");
+}
+
+// Orden de instalación según el sistema operativo en EJECUCIÓN (QSysInfo, sin
+// `#ifdef Q_OS_*`). Mermaid va por npm en las tres plataformas; PlantUML cambia.
+QString installCommand(mddiagram::Kind kind)
+{
+    if (kind == mddiagram::Kind::Mermaid)
+        return QStringLiteral("npm install -g @mermaid-js/mermaid-cli");
+    const QString kernel = QSysInfo::kernelType();  // "linux" / "darwin" / "winnt"
+    if (kernel == QLatin1String("darwin"))
+        return QStringLiteral("brew install plantuml");
+    if (kernel == QLatin1String("winnt"))
+        return QStringLiteral("choco install plantuml");
+    return QStringLiteral("sudo apt install plantuml");
+}
 }  // namespace
 
 DiagramController::DiagramController(QTextEdit *editor, QObject *parent)
@@ -31,7 +53,7 @@ DiagramController::DiagramController(QTextEdit *editor, QObject *parent)
     connect(m_renderer, &DiagramRenderer::rendered, this, &DiagramController::onRendered);
     // Los fallos (sintaxis incompleta al teclear) son normales: no molestamos con
     // mensajes; la preview simplemente no se actualiza. El caso «falta la
-    // herramienta» sí se avisa, desde refresh().
+    // herramienta» se avisa con un MARCADOR inline bajo el bloque (ver refresh).
 }
 
 void DiagramController::scheduleRefresh()
@@ -72,6 +94,15 @@ QList<DiagramController::Region> DiagramController::scanRegions() const
     return regions;
 }
 
+QString DiagramController::placeholderText(mddiagram::Kind kind) const
+{
+    // El símbolo de aviso fuera del tr() para no obligar a traducirlo; la orden
+    // tampoco se traduce. %1 = nombre de la herramienta, %2 = orden de instalación.
+    return QStringLiteral("⚠ ")
+           + tr("%1 no está instalado. Para previsualizar este diagrama: %2")
+                 .arg(toolDisplayName(kind), installCommand(kind));
+}
+
 void DiagramController::refresh()
 {
     if (m_updating)
@@ -79,27 +110,17 @@ void DiagramController::refresh()
     const QList<Region> regions = scanRegions();
     removeOrphanPreviews(regions);
 
-    bool missingTool = false;
     for (const Region &r : regions) {
         if (r.source.trimmed().isEmpty())
             continue;
-        if (!DiagramRenderer::isAvailable(r.kind)) {
-            missingTool = true;
-            continue;
+        const QString hash = sourceHash(r.source);
+        if (DiagramRenderer::isAvailable(r.kind)) {
+            m_renderer->render(r.kind, r.source);  // async → onRendered coloca la imagen
+        } else {
+            // Herramienta ausente: marcador inline con la orden de la plataforma.
+            setPreviewBlock(r.lastBlockNumber, hash, /*placeholder=*/true, QImage(),
+                            placeholderText(r.kind));
         }
-        m_renderer->render(r.kind, r.source);  // async → onRendered coloca la imagen
-    }
-
-    // Aviso visible solo si el problema está presente: hay diagramas pero falta
-    // la herramienta para renderizarlos.
-    if (missingTool && !m_warnedMissingTool) {
-        m_warnedMissingTool = true;
-        emit statusMessage(
-            tr("Hay diagramas, pero falta la herramienta para previsualizarlos "
-               "(instala «plantuml» o «mmdc»)."),
-            8000);
-    } else if (!missingTool) {
-        m_warnedMissingTool = false;
     }
 }
 
@@ -154,50 +175,67 @@ void DiagramController::removeOrphanPreviews(const QList<Region> &regions)
 
 void DiagramController::onRendered(mddiagram::Kind, const QString &source, const QImage &image)
 {
-    const QString hash = sourceHash(source);
     // Encuentra el grupo de diagrama cuya fuente coincide (el documento pudo
-    // cambiar desde que se pidió el render).
+    // cambiar desde que se pidió el render) y coloca la imagen bajo él.
     for (const Region &r : scanRegions()) {
         if (r.source != source)
             continue;
+        setPreviewBlock(r.lastBlockNumber, sourceHash(source), /*placeholder=*/false,
+                        image, QString());
+        return;
+    }
+}
 
-        QTextDocument *doc = m_editor->document();
-        QTextBlock last = doc->findBlockByNumber(r.lastBlockNumber);
-        if (!last.isValid())
-            return;
-        const QTextBlock after = last.next();
-        const bool hasPreview =
-            after.isValid() && after.blockFormat().boolProperty(mddiagram::PreviewBlockProperty);
-        if (hasPreview
-            && after.blockFormat().stringProperty(mddiagram::PreviewSourceProperty) == hash)
-            return;  // ya está al día
+void DiagramController::setPreviewBlock(int lastBlockNumber, const QString &hash,
+                                        bool placeholder, const QImage &image,
+                                        const QString &text)
+{
+    QTextDocument *doc = m_editor->document();
+    const QTextBlock last = doc->findBlockByNumber(lastBlockNumber);
+    if (!last.isValid())
+        return;
+    const QTextBlock after = last.next();
+    const bool hasPreview =
+        after.isValid() && after.blockFormat().boolProperty(mddiagram::PreviewBlockProperty);
+    // Ya al día si coincide el hash Y el tipo (imagen vs marcador): así, cuando
+    // aparece la herramienta, la imagen reemplaza al marcador aunque el hash sea
+    // el mismo.
+    if (hasPreview
+        && after.blockFormat().stringProperty(mddiagram::PreviewSourceProperty) == hash
+        && after.blockFormat().boolProperty(mddiagram::PreviewPlaceholderProperty) == placeholder)
+        return;
 
-        m_updating = true;
-        const bool wasModified = doc->isModified();
+    m_updating = true;
+    const bool wasModified = doc->isModified();
 
-        // Recurso de imagen + formato de bloque de preview (centrado, marcado).
+    QTextCursor c(doc);
+    if (hasPreview) {
+        c.setPosition(after.position());
+        c.movePosition(QTextCursor::StartOfBlock);
+        c.movePosition(QTextCursor::EndOfBlock, QTextCursor::KeepAnchor);
+        c.removeSelectedText();
+    } else {
+        c.setPosition(last.position());
+        c.movePosition(QTextCursor::EndOfBlock);
+        c.insertBlock();
+    }
+    QTextBlockFormat bf;
+    bf.setProperty(mddiagram::PreviewBlockProperty, true);
+    bf.setProperty(mddiagram::PreviewSourceProperty, hash);
+    bf.setProperty(mddiagram::PreviewPlaceholderProperty, placeholder);
+    bf.setAlignment(Qt::AlignHCenter);
+    c.setBlockFormat(bf);
+
+    if (placeholder) {
+        // Marcador de texto atenuado (no parece contenido del documento) y
+        // seleccionable, para poder copiar la orden.
+        QTextCharFormat cf;
+        cf.setFontItalic(true);
+        cf.setForeground(m_editor->palette().placeholderText().color());
+        c.insertText(text, cf);
+    } else {
         const QString name = QStringLiteral("diagram://") + hash;
         doc->addResource(QTextDocument::ImageResource, QUrl(name), QVariant(image));
-
-        QTextCursor c(doc);
-        if (hasPreview) {
-            // Reemplaza el contenido del bloque de preview existente.
-            c.setPosition(after.position());
-            c.movePosition(QTextCursor::StartOfBlock);
-            c.movePosition(QTextCursor::EndOfBlock, QTextCursor::KeepAnchor);
-            c.removeSelectedText();
-        } else {
-            // Inserta un bloque nuevo tras la última línea de código.
-            c.setPosition(last.position());
-            c.movePosition(QTextCursor::EndOfBlock);
-            c.insertBlock();
-        }
-        QTextBlockFormat bf;
-        bf.setProperty(mddiagram::PreviewBlockProperty, true);
-        bf.setProperty(mddiagram::PreviewSourceProperty, hash);
-        bf.setAlignment(Qt::AlignHCenter);
-        c.setBlockFormat(bf);
-
         QTextImageFormat img;
         img.setName(name);
         const int maxW = m_editor->viewport()->width() - 40;
@@ -209,9 +247,8 @@ void DiagramController::onRendered(mddiagram::Kind, const QString &source, const
             img.setHeight(image.height());
         }
         c.insertImage(img);
-
-        doc->setModified(wasModified);
-        m_updating = false;
-        return;
     }
+
+    doc->setModified(wasModified);
+    m_updating = false;
 }

@@ -12,7 +12,8 @@ y el proyecto usa [versionado semántico](https://semver.org/lang/es/).
   o ` ```plantuml ` se previsualiza como imagen justo debajo, sin tocar el código
   (que sigue editable) ni el Markdown guardado. Requiere tener instalada la
   herramienta correspondiente (`plantuml` con Java, o `mmdc` con Node); si falta,
-  un aviso lo indica y el bloque queda como código normal.
+  bajo el bloque aparece un aviso discreto con la orden de instalación de tu
+  sistema operativo (y el código se mantiene como tal).
 - **Corrección ortográfica** (opcional, basada en Hunspell): subraya las palabras
   mal escritas según el idioma del documento (deducido del front matter, el ajuste
   de idioma o el sistema). Clic derecho sobre una errata para ver sugerencias,
