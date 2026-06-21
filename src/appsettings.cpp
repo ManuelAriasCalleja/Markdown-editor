@@ -199,3 +199,13 @@ void AppSettings::setLastFile(const QString &path)
 {
     QSettings().setValue(lastFileKey(), path);
 }
+
+QStringList AppSettings::openFiles()
+{
+    return QSettings().value(QStringLiteral("openFiles")).toStringList();
+}
+
+void AppSettings::setOpenFiles(const QStringList &paths)
+{
+    QSettings().setValue(QStringLiteral("openFiles"), paths);
+}

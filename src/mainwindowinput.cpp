@@ -63,7 +63,6 @@
 #include <QResizeEvent>
 #include <QToolButton>
 #include <QLabel>
-#include <memory>
 #include <QContextMenuEvent>
 #include <QMenu>
 #include <QMenuBar>
@@ -93,6 +92,10 @@
 
 bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 {
+    // El documento activo aún puede no estar fijado mientras se construye una
+    // pestaña (llegan eventos de layout antes); en ese caso, procesamiento normal.
+    if (!m_stack)
+        return QMainWindow::eventFilter(watched, event);
     // Despachador: delega en el sub-manejador del objeto vigilado. El primero que
     // consume el evento gana; si ninguno lo hace, sigue el procesamiento normal.
     if (watched == m_stack->editor()->viewport()) {
@@ -138,7 +141,7 @@ bool MainWindow::handleViewportEvent(QEvent *event)
                 const QString path =
                     drop->mimeData()->urls().constFirst().toLocalFile();
                 if (!path.isEmpty())
-                    m_stack->file()->openFile(path);
+                    openPathInTab(path);  // en una pestaña (como Archivo → Abrir)
             }
             drop->acceptProposedAction();
             return true;

@@ -70,16 +70,34 @@ tanto el ejecutable (`main.cpp`, solo arranque + i18n) como las pruebas. Añadir
 `.cpp/.h` nuevo = añadirlo a la lista de `md-editor-core` en `CMakeLists.txt` (y, si
 trae lógica pura, su `tst_*` a la lista de tests del mismo archivo).
 
-`MainWindow` es el orquestador y delega en **colaboradores autocontenidos**, cada
-uno una clase pequeña con su propia responsabilidad. Su implementación está
-repartida en tres unidades de traducción para no inflar un único fichero:
-`mainwindow.cpp` (constructor, ciclo de vida, zoom, glue), `mainwindowmenus.cpp`
+**Edición por pestañas (`EditorStack`).** Cada documento abierto vive en un
+`EditorStack` (un `QWidget`, una pestaña) que **posee** el editor WYSIWYG/fuente y
+los ~15 colaboradores ligados a ESE documento (E/S, tema, corrector, diagramas,
+vista dividida, formato, tablas, fórmulas, inserción, exportación, autoguardado,
+archivo, vigilancia de disco). `MainWindow` es el *shell*: un `QTabWidget` de
+`EditorStack` más lo que es de ventana (menús, barra de formato, zoom, panel de
+esquema, barra de búsqueda, estado, modo sin distracciones, sesión). `m_stack`
+apunta al documento **activo**; `setActiveStack()` re-vincula al activo la barra de
+búsqueda, el esquema, el estado de las acciones, el título y el modo de vista al
+cambiar de pestaña. Las acciones de menú/barra son **únicas** y compartidas: sus
+*triggers* despachan a `m_stack` (el activo) con lambdas; su estado lo refresca el
+documento activo (`configureStack()` les entrega las acciones a cada pestaña). El
+esquema y la barra de búsqueda son de la ventana (compartidos): solo el documento
+activo los alimenta. *Limitaciones conocidas:* el modo sin distracciones se sale al
+cambiar de pestaña, y el borrador de autoguardado/recuperación es de ruta fija
+(las pestañas lo comparten; recupera el último editado). `addTab`/`closeTab`/
+`openPathInTab` gestionan el ciclo de vida; la sesión (`AppSettings::openFiles`)
+reabre todas las pestañas al arrancar y tras un cambio de idioma.
+
+`MainWindow` delega en **colaboradores autocontenidos**, cada uno una clase
+pequeña con su propia responsabilidad. Su implementación está repartida en tres
+unidades de traducción para no inflar un único fichero: `mainwindow.cpp`
+(constructor, ciclo de vida, pestañas, zoom, glue), `mainwindowmenus.cpp`
 (construcción de menús y barra de formato) y `mainwindowinput.cpp` (el filtro de
 eventos `eventFilter` y sus sub-manejadores de entrada) — todos son métodos de
 `MainWindow`, solo en `.cpp` distintos. Los iconos monocromos de la barra viven
-en el módulo puro `formaticons`. Tras el refactor de arquitectura las acciones de
-usuario viven en controladores temáticos (la mayoría miembros de `MainWindow`,
-declarados en `mainwindow.h`):
+en el módulo puro `formaticons`. Los colaboradores temáticos (la mayoría miembros
+de `EditorStack` o `MainWindow`):
 
 - **Entrada/salida y sesión**: `DocumentIo` (abrir/guardar, UTF-8, baseUrl, front
   matter, estado «modificado»), `FileController` (nuevo/abrir/guardar/recuperar +

@@ -9,8 +9,10 @@
 #include <QString>
 
 #include "themespec.h"
+#include "formatcontroller.h"  // FormatController::Actions (miembro por valor)
 
 class QTextEdit;
+class QTabWidget;
 class QTextCharFormat;
 class QTextCursor;
 class QAction;
@@ -197,10 +199,43 @@ private:
 
     // Conecta las señales de un EditorStack (mensajes de estado, marca de
     // modificado, archivo actual, recargas de disco, recuento, esquema) a la
-    // ventana. En la edición por pestañas se llamará una vez por documento.
+    // ventana. Se llama una vez por documento (pestaña).
     void connectStack(EditorStack *stack);
 
-    EditorStack *m_stack = nullptr;  // documento activo: editor + sus colaboradores
+    // --- Edición por pestañas ---
+    // Crea un documento nuevo, lo cablea (connectStack + filtro de eventos + sus
+    // acciones) y lo añade como pestaña activa. Devuelve el stack creado.
+    EditorStack *addTab();
+    // Cambia el documento activo: re-vincula barra de búsqueda, esquema, estado de
+    // las acciones, título y modo de vista al stack dado.
+    void setActiveStack(EditorStack *stack);
+    // Entrega a un documento las acciones compartidas (formato, tabla, modo).
+    void configureStack(EditorStack *stack);
+    // Cierra la pestaña `index` (pregunta si tiene cambios sin guardar). No cierra
+    // la última: la deja como documento nuevo.
+    void closeTab(int index);
+    // Documento de la pestaña `index` (o la actual con -1), o nullptr.
+    EditorStack *stackAt(int index) const;
+    // Documento nuevo en una pestaña nueva (Archivo → Nuevo).
+    void newTab();
+    // Diálogo de abrir → abre en pestaña (reusa la actual si está vacía).
+    void openInTab();
+    // Abre `path` en una pestaña: si ya está abierto salta a él; reusa la actual si
+    // es un documento nuevo vacío; si no, una pestaña nueva.
+    void openPathInTab(const QString &path);
+    // Refleja en la etiqueta de la pestaña del `stack` su nombre de archivo y un
+    // punto si tiene cambios sin guardar.
+    void updateTabLabel(EditorStack *stack);
+
+    QTabWidget *m_tabs = nullptr;    // un documento por pestaña
+    EditorStack *m_stack = nullptr;  // documento ACTIVO (pestaña actual)
+    // Acciones compartidas cuyo estado sincroniza el documento activo con el
+    // cursor; se entregan a cada pestaña en configureStack().
+    FormatController::Actions m_formatActions;
+    QList<QAction *> m_tableActions;
+    // Conexión «editar → reconstruir esquema» del documento activo; se rehace al
+    // cambiar de pestaña (solo el activo alimenta el esquema compartido).
+    QMetaObject::Connection m_outlineEditConn;
     HelpDialog *m_helpDialog = nullptr;  // se crea perezoso al pulsar F1
     qreal m_baseFontPointSize = 0;  // tamaño de fuente base, para "Tamaño normal"
     // Tamaños base de las superficies que siguen al zoom y el desfase (en

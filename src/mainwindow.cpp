@@ -48,6 +48,7 @@
 #include <QEvent>
 #include <QFileDialog>
 #include <QFileInfo>
+#include <QTabWidget>
 #include <QFont>
 #include <QFontMetrics>
 #include <QIcon>
@@ -63,7 +64,6 @@
 #include <QResizeEvent>
 #include <QToolButton>
 #include <QLabel>
-#include <memory>
 
 #include <QContextMenuEvent>
 #include <QMenu>
@@ -112,34 +112,27 @@ MainWindow::MainWindow(QWidget *parent)
     connect(m_findBar, &FindReplaceBar::statusMessage,
             statusBar(), &QStatusBar::showMessage);
 
-    // --- Documento activo: editor WYSIWYG/fuente + sus 15 colaboradores ---
-    m_stack = new EditorStack(m_findBar, m_outline, this);
-    setCentralWidget(m_stack);
-    m_findBar->setEditor(m_stack->editor());
-    connectStack(m_stack);
+    // --- Documentos en pestañas: uno por archivo abierto ---
+    m_tabs = new QTabWidget(this);
+    m_tabs->setTabsClosable(true);
+    m_tabs->setMovable(true);
+    m_tabs->setDocumentMode(true);
+    setCentralWidget(m_tabs);
+    connect(m_tabs, &QTabWidget::currentChanged, this, [this](int index) {
+        if (EditorStack *s = stackAt(index))
+            setActiveStack(s);
+    });
+    connect(m_tabs, &QTabWidget::tabCloseRequested, this, &MainWindow::closeTab);
 
-    FocusEditor *editor = m_stack->editor();
-    // Zoom con Ctrl+rueda y detección de enlaces sobre el viewport; teclas
-    // interceptadas (fórmulas atómicas, continuación de listas en el fuente). El
-    // filtro de eventos es de la ventana y opera sobre el documento activo.
-    editor->viewport()->installEventFilter(this);
-    editor->viewport()->setMouseTracking(true);  // recibir hover sin botón pulsado
-    editor->installEventFilter(this);
-    m_stack->split()->sourceEditor()->installEventFilter(this);
-
-    // Tamaños de fuente base, para "Tamaño normal".
-    m_baseFontPointSize = editor->font().pointSizeF();
-    m_baseSourceFontPointSize = m_stack->split()->sourceEditor()->font().pointSizeF();
-
-    // Mostrar/ocultar el esquema (F9) dentro del modo sin distracciones recoloca el
-    // bloque centrado; al mostrarlo, normaliza su ancho (diferido).
+    // Esquema: mostrar/ocultar (F9) recoloca la columna sin distracciones; clic
+    // lleva el cursor al encabezado; arrastre reordena la sección. Operan sobre el
+    // documento ACTIVO (m_stack). Su reconstrucción la conduce setActiveStack.
     connect(m_outline, &QDockWidget::visibilityChanged, this, [this](bool visible) {
         if (m_distraction && m_distraction->isActive())
             m_distraction->updateLayout();
         else if (visible)
             QTimer::singleShot(0, this, &MainWindow::normalizeOutlineWidth);
     });
-    // Clic en una entrada del esquema: lleva el cursor a ese encabezado.
     connect(m_outline, &OutlinePanel::headingActivated, this, [this](int blockNumber) {
         FocusEditor *ed = m_stack->editor();
         const QTextBlock block = ed->document()->findBlockByNumber(blockNumber);
@@ -150,7 +143,6 @@ MainWindow::MainWindow(QWidget *parent)
         ed->ensureCursorVisible();
         ed->setFocus();
     });
-    // Reordenar secciones arrastrando en el esquema (diferido; no aplica en fuente).
     connect(m_outline, &OutlinePanel::sectionMoveRequested, this,
             [this](int from, int to, bool placeAfter) {
         if (m_stack->split()->sourceMode())
@@ -164,7 +156,8 @@ MainWindow::MainWindow(QWidget *parent)
             setWindowModified(true);
         });
     });
-    // El índice se reconstruye al editar (con debounce) y al cargar (de inmediato).
+    // El índice se reconstruye al editar (con debounce). La conexión al documento
+    // activo la (re)hace setActiveStack; este timer es de la ventana.
     m_outlineTimer = new QTimer(this);
     m_outlineTimer->setSingleShot(true);
     m_outlineTimer->setInterval(300);
@@ -172,13 +165,13 @@ MainWindow::MainWindow(QWidget *parent)
         if (!m_stack->split()->sourceMode())
             m_outline->rebuild(m_stack->editor()->document());
     });
-    connect(editor->document(), &QTextDocument::contentsChanged, this, [this] {
-        if (!m_stack->split()->sourceMode())
-            m_outlineTimer->start();
-    });
-    connect(m_stack, &EditorStack::documentLoaded, this, [this] {
-        m_outline->rebuild(m_stack->editor()->document());
-    });
+
+    // Primer documento. addTab lo crea, lo cablea y lo hace activo (setActiveStack,
+    // que de momento omite lo dependiente de los menús, aún por crear).
+    addTab();
+    FocusEditor *editor = m_stack->editor();
+    m_baseFontPointSize = editor->font().pointSizeF();
+    m_baseSourceFontPointSize = m_stack->split()->sourceEditor()->font().pointSizeF();
 
     // --- Zoom de toda la interfaz y construcción de menús ---
     // El nivel de zoom de los menús debe estar fijado ANTES de crearlos (Qt 6.8 +
@@ -190,6 +183,10 @@ MainWindow::MainWindow(QWidget *parent)
 
     createMenusAndActions();
     createFormatToolBar();
+    // Ya existen las acciones compartidas: entrégaselas al primer documento (el
+    // resto las recibe en addTab) y refresca su estado para el documento activo.
+    configureStack(m_stack);
+    setActiveStack(m_stack);
 
     // Tamaños base del resto de la interfaz, para escalar con el zoom.
     m_baseToolBarPointSize = m_formatToolBar->font().pointSizeF();
@@ -254,17 +251,35 @@ MainWindow::MainWindow(QWidget *parent)
 
 void MainWindow::connectStack(EditorStack *stack)
 {
+    // La mayoría de señales solo afectan a la VENTANA cuando provienen del
+    // documento activo (título, modificado, recuento, esquema, disco): los demás
+    // documentos viven en segundo plano sin tocar el cromo de la ventana.
     connect(stack, &EditorStack::statusMessage, statusBar(), &QStatusBar::showMessage);
-    connect(stack, &EditorStack::windowModifiedChanged, this, &QWidget::setWindowModified);
+    connect(stack, &EditorStack::windowModifiedChanged, this, [this, stack](bool m) {
+        if (stack == m_stack)
+            setWindowModified(m);
+        updateTabLabel(stack);  // el [*] de la pestaña, venga del activo o no
+    });
     connect(stack, &EditorStack::currentFileChanged, this, &MainWindow::onCurrentFileChanged);
-    connect(stack, &EditorStack::wordCountShouldUpdate, this, &MainWindow::updateWordCount);
+    connect(stack, &EditorStack::wordCountShouldUpdate, this, [this, stack] {
+        if (stack == m_stack)
+            updateWordCount();
+    });
     connect(stack, &EditorStack::loadFailed, this, [this](const QString &path) {
         if (m_recentFiles)
             m_recentFiles->removeFile(path);  // ya no accesible: quitar de recientes
     });
-    connect(stack, &EditorStack::diskExternalChange, this, &MainWindow::onDiskExternalChange);
-    connect(stack, &EditorStack::diskVanished, this, [this] {
-        statusBar()->showMessage(tr("El archivo se eliminó o movió en disco."), 6000);
+    connect(stack, &EditorStack::diskExternalChange, this, [this, stack](const QByteArray &b) {
+        if (stack == m_stack)
+            onDiskExternalChange(b);
+    });
+    connect(stack, &EditorStack::diskVanished, this, [this, stack] {
+        if (stack == m_stack)
+            statusBar()->showMessage(tr("El archivo se eliminó o movió en disco."), 6000);
+    });
+    connect(stack, &EditorStack::documentLoaded, this, [this, stack] {
+        if (stack == m_stack && !stack->split()->sourceMode())
+            m_outline->rebuild(stack->editor()->document());
     });
 }
 
@@ -275,39 +290,61 @@ void MainWindow::setLanguage(const QString &code)
         return;
     // Cambiar de idioma recrea la ventana (la UI se construye a mano, sin un
     // retranslateUi() que reasigne cada cadena). Antes de descartarla, ofrece
-    // guardar los cambios pendientes; si el usuario cancela, no cambiamos nada.
-    if (!m_stack->file()->maybeSave())
-        return;
+    // guardar los cambios pendientes de CADA pestaña; si alguna cancela, no
+    // cambiamos nada.
+    for (int i = 0; i < m_tabs->count(); ++i) {
+        EditorStack *s = stackAt(i);
+        if (!s)
+            continue;
+        m_tabs->setCurrentIndex(i);
+        if (!s->file()->maybeSave())
+            return;
+    }
 
     AppSettings::setLanguage(code);
 
     // Persistimos el estado de ventana para que la ventana recreada arranque con
-    // el mismo tamaño/posición y disposición (geometría, barras y proporciones de
-    // la vista dividida); main() lee estas mismas claves al construirla. El menú
-    // de idioma no es accesible en modo sin distracciones, así que basta el
-    // estado plano (no el `sessionState` que el cierre usa para ese modo).
+    // el mismo tamaño/posición y disposición; main() lee estas mismas claves al
+    // construirla. El menú de idioma no es accesible en modo sin distracciones,
+    // así que basta el estado plano (no el `sessionState` del cierre).
     AppSettings::setWindowGeometry(saveGeometry());
     AppSettings::setWindowState(saveState());
     AppSettings::setSplitterState(m_stack->split()->splitView()->saveState());
 
-    // Recuerda dónde estaba el cursor del archivo actual para reabrirlo ahí tras
-    // recrear la ventana (igual que hace el cierre).
-    m_stack->file()->rememberCursorPosition();
+    // Sesión de pestañas + cursores, para que la ventana recreada reabra todos los
+    // documentos donde se dejaron.
+    QStringList openFiles;
+    for (int i = 0; i < m_tabs->count(); ++i) {
+        EditorStack *s = stackAt(i);
+        if (!s)
+            continue;
+        s->file()->rememberCursorPosition();
+        const QString f = s->documentIo()->currentFile();
+        if (!f.isEmpty())
+            openFiles << f;
+    }
+    AppSettings::setOpenFiles(openFiles);
 
-    // main() intercambia los traductores y recrea la ventana, reabriendo el
-    // documento actual ya saneado por maybeSave() (ruta vacía = documento nuevo).
+    // main() intercambia los traductores y recrea la ventana, que reabrirá la
+    // sesión (ver relaunchSession). Pasa el documento activo por compatibilidad.
     emit languageChangeRequested(m_stack->documentIo()->currentFile());
 }
 
 void MainWindow::relaunchSession(const QString &reopenPath)
 {
     normalizeOutlineWidth();
-    // El estado ya lo decidió la ventana anterior: ni recuperación de borrador ni
-    // reabrir el último documento. Solo reabrimos el que estaba abierto (si lo
-    // había y sigue existiendo); en su defecto, queda el documento nuevo vacío.
-    if (!reopenPath.isEmpty() && QFileInfo::exists(reopenPath))
-        m_stack->file()->openFile(reopenPath);
-    m_stack->file()->startAutosave();
+    // El estado lo decidió la ventana anterior: sin recuperación de borrador. Se
+    // reabren todas las pestañas que estaban abiertas (sesión guardada en
+    // setLanguage); a falta de sesión, el `reopenPath` suelto (compatibilidad).
+    QStringList session = AppSettings::openFiles();
+    if (session.isEmpty() && !reopenPath.isEmpty())
+        session << reopenPath;
+    for (const QString &path : session)
+        if (QFileInfo::exists(path))
+            openPathInTab(path);
+    for (int i = 0; i < m_tabs->count(); ++i)
+        if (EditorStack *s = stackAt(i))
+            s->file()->startAutosave();
 }
 
 void MainWindow::showHelpDialog()
@@ -531,40 +568,197 @@ void MainWindow::startSession(const QString &cmdLineFile)
             m_stack->recovery()->clearDraft();  // descartado: seguir con el flujo normal
     }
 
-    // Reabrir el último documento real, salvo que ya se abriera/recuperara algo.
+    // Reabrir la sesión de pestañas anterior (todos los documentos abiertos),
+    // salvo que ya se abriera/recuperara algo. openPathInTab reusa la pestaña
+    // vacía inicial para el primero y añade una por cada documento siguiente.
     if (cmdLineFile.isEmpty() && !recovered) {
-        const QString last = AppSettings::lastFile();
-        if (!last.isEmpty() && QFileInfo::exists(last))
-            m_stack->file()->openFile(last);
+        QStringList session = AppSettings::openFiles();
+        if (session.isEmpty()) {
+            const QString last = AppSettings::lastFile();  // compatibilidad: una sola
+            if (!last.isEmpty())
+                session << last;
+        }
+        for (const QString &path : session)
+            if (QFileInfo::exists(path))
+                openPathInTab(path);
     }
 
-    // Decidida la sesión inicial, ya es seguro autoguardar borradores (no antes:
-    // correría durante el diálogo de recuperación con el documento aún vacío).
-    m_stack->file()->startAutosave();
+    // Decidida la sesión inicial, ya es seguro autoguardar borradores en cada
+    // pestaña (no antes: correría durante el diálogo de recuperación con el
+    // documento aún vacío).
+    for (int i = 0; i < m_tabs->count(); ++i)
+        if (EditorStack *s = stackAt(i))
+            s->file()->startAutosave();
+}
+
+EditorStack *MainWindow::stackAt(int index) const
+{
+    if (!m_tabs)
+        return nullptr;
+    if (index < 0)
+        index = m_tabs->currentIndex();
+    return qobject_cast<EditorStack *>(m_tabs->widget(index));
+}
+
+EditorStack *MainWindow::addTab()
+{
+    auto *stack = new EditorStack(m_findBar, m_outline, this);
+    // El filtro de eventos de la ventana consulta m_stack; fíjalo ya (aún antes de
+    // añadir la pestaña) para que ningún evento de layout llegue con m_stack a un
+    // documento previo o nulo. setActiveStack lo reconfirmará al activarse.
+    m_stack = stack;
+    connectStack(stack);
+    // El filtro de eventos de la ventana opera sobre los editores de cada documento
+    // (zoom con Ctrl+rueda, enlaces, fórmulas atómicas, listas en el fuente).
+    stack->editor()->viewport()->installEventFilter(this);
+    stack->editor()->viewport()->setMouseTracking(true);
+    stack->editor()->installEventFilter(this);
+    stack->split()->sourceEditor()->installEventFilter(this);
+    if (m_sourceModeAction)        // si los menús ya existen, dale las acciones
+        configureStack(stack);
+    const int idx = m_tabs->addTab(stack, tr("Sin título"));
+    m_tabs->setCurrentIndex(idx);  // dispara setActiveStack
+    return stack;
+}
+
+void MainWindow::setActiveStack(EditorStack *stack)
+{
+    if (!stack)
+        return;
+    m_stack = stack;
+
+    // «Editar → reconstruir esquema» se reengancha al documento activo (solo él
+    // alimenta el esquema compartido).
+    disconnect(m_outlineEditConn);
+    m_outlineEditConn = connect(stack->editor()->document(),
+                                &QTextDocument::contentsChanged, this, [this] {
+        if (!m_stack->split()->sourceMode())
+            m_outlineTimer->start();
+    });
+
+    // Aplica el zoom actual a los editores de este documento (las otras pestañas
+    // mantienen su fuente hasta que se activan).
+    if (m_baseFontPointSize > 0) {
+        QFont ef = stack->editor()->font();
+        ef.setPointSizeF(chromezoom::scaledPointSize(m_baseFontPointSize, m_zoomDelta));
+        stack->editor()->setFont(ef);
+        QFont sf = stack->split()->sourceEditor()->font();
+        sf.setPointSizeF(chromezoom::scaledPointSize(m_baseSourceFontPointSize, m_zoomDelta));
+        stack->split()->sourceEditor()->setFont(sf);
+    }
+
+    // Barra de búsqueda al editor activo (oculta al cambiar); esquema del activo.
+    if (m_findBar) {
+        m_findBar->setEditor(stack->activeEditor());
+        m_findBar->hide();
+    }
+    if (!stack->split()->sourceMode())
+        m_outline->rebuild(stack->editor()->document());
+
+    // Estado de las acciones dependientes del documento (si ya hay menús).
+    if (m_sourceModeAction) {
+        m_sourceModeAction->setChecked(stack->split()->sourceMode());
+        m_splitAction->setChecked(stack->split()->splitMode());
+        stack->format()->updateActions();
+        stack->table()->updateActions();
+    }
+    // El modo sin distracciones apunta a un editor concreto; al cambiar de
+    // documento se sale (reorientarlo no compensa la complejidad).
+    if (m_distraction && m_distraction->isActive())
+        m_distraction->setActive(false);
+
+    // Título, indicador de modificado y recuento del documento activo.
+    setWindowModified(stack->documentIo()->isModified());
+    const QString file = stack->documentIo()->currentFile();
+    setWindowTitle(tr("%1[*] — md-editor")
+                       .arg(file.isEmpty() ? tr("Sin título") : QFileInfo(file).fileName()));
+    updateWordCount();
+}
+
+void MainWindow::newTab()
+{
+    addTab();  // documento nuevo vacío en una pestaña nueva
+}
+
+void MainWindow::openInTab()
+{
+    const QString path = QFileDialog::getOpenFileName(
+        this, tr("Abrir"), QString(),
+        tr("Archivos Markdown (*.md *.markdown *.txt);;Todos los archivos (*)"));
+    if (!path.isEmpty())
+        openPathInTab(path);
+}
+
+void MainWindow::openPathInTab(const QString &path)
+{
+    // Si ya está abierto, salta a esa pestaña.
+    for (int i = 0; i < m_tabs->count(); ++i)
+        if (EditorStack *s = stackAt(i); s && s->documentIo()->currentFile() == path) {
+            m_tabs->setCurrentIndex(i);
+            return;
+        }
+    // Reusa la pestaña actual si es un documento nuevo vacío y sin cambios; si no,
+    // abre en una pestaña nueva.
+    EditorStack *target = (m_stack->documentIo()->currentFile().isEmpty()
+                           && !m_stack->documentIo()->isModified())
+                          ? m_stack : addTab();
+    m_tabs->setCurrentWidget(target);
+    target->file()->openFile(path);
+}
+
+void MainWindow::closeTab(int index)
+{
+    EditorStack *stack = stackAt(index);
+    if (!stack)
+        return;
+    m_tabs->setCurrentWidget(stack);  // mostrarlo para el posible diálogo de guardado
+    if (!stack->file()->maybeSave())
+        return;  // el usuario canceló
+    if (m_tabs->count() == 1) {
+        stack->documentIo()->reset();  // última pestaña: queda como documento nuevo
+        return;
+    }
+    m_tabs->removeTab(m_tabs->indexOf(stack));
+    stack->deleteLater();
+}
+
+void MainWindow::updateTabLabel(EditorStack *stack)
+{
+    if (!m_tabs)
+        return;
+    const int idx = m_tabs->indexOf(stack);
+    if (idx < 0)
+        return;
+    const QString file = stack->documentIo()->currentFile();
+    const QString name = file.isEmpty() ? tr("Sin título") : QFileInfo(file).fileName();
+    // Un punto delante marca los cambios sin guardar (las pestañas no soportan [*]).
+    m_tabs->setTabText(idx, stack->documentIo()->isModified()
+                                ? QStringLiteral("• %1").arg(name) : name);
 }
 
 void MainWindow::onCurrentFileChanged(const QString &path)
 {
-    // Acaba de cargarse/guardarse: el documento está limpio.
-    setWindowModified(false);
+    auto *stack = qobject_cast<EditorStack *>(sender());
 
-    // Registra el archivo en la lista de recientes (al abrir o al guardar;
-    // addFile ignora la ruta vacía del documento nuevo).
+    // Registra el archivo en recientes y recuerda el último real (para reabrirlo al
+    // arrancar; sobrevive a un cierre inesperado). addFile/lastFile ignoran la ruta
+    // vacía del documento nuevo.
     if (m_recentFiles)
         m_recentFiles->addFile(path);
-
-    // Recuerda el último archivo real para reabrirlo al arrancar. Se persiste
-    // aquí (no solo al cerrar) para sobrevivir a un cierre inesperado. Solo se
-    // guardan rutas no vacías: la ruta vacía del documento nuevo (al arrancar o
-    // tras «Nuevo») NO debe pisar el último archivo, o si no quedaría vacío en
-    // cada arranque y nunca habría nada que reabrir.
     if (!path.isEmpty())
         AppSettings::setLastFile(path);
 
-    const QString shown = path.isEmpty() ? tr("Sin título")
-                                         : QFileInfo(path).fileName();
-    // El marcador [*] se muestra automáticamente cuando hay cambios sin guardar.
-    setWindowTitle(tr("%1[*] — md-editor").arg(shown));
+    if (stack)
+        updateTabLabel(stack);
+
+    // Título e indicador [*]: solo manda el documento activo (o una llamada directa
+    // sin remitente). Acaba de cargarse/guardarse, así que está limpio.
+    if (!stack || stack == m_stack) {
+        setWindowModified(false);
+        const QString shown = path.isEmpty() ? tr("Sin título")
+                                             : QFileInfo(path).fileName();
+        setWindowTitle(tr("%1[*] — md-editor").arg(shown));
+    }
 }
 
 void MainWindow::onDiskExternalChange(const QByteArray &diskBytes)
@@ -635,19 +829,37 @@ void MainWindow::reloadFromDisk()
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
-    if (m_stack->file()->maybeSave()) {
-        // Cierre limpio (guardado o descartado a propósito): sin borrador que
-        // recuperar la próxima vez.
-        m_stack->recovery()->clearDraft();
-        m_stack->file()->rememberCursorPosition();  // reabrir el documento donde se dejó
-        // Recuerda tamaño/posición y disposición de barras para la próxima vez.
-        // Si se cierra en modo sin distracciones, el controlador devuelve el estado
-        // previo a entrar (ventana normal con sus barras), no la pantalla completa.
-        AppSettings::setWindowGeometry(m_distraction->sessionGeometry());
-        AppSettings::setWindowState(m_distraction->sessionState());
-        AppSettings::setSplitterState(m_stack->split()->splitView()->saveState());
-        event->accept();
-    } else {
-        event->ignore();
+    // Pregunta por CADA documento con cambios sin guardar; si alguno se cancela, no
+    // se cierra la ventana. Se muestra cada pestaña antes de su diálogo.
+    for (int i = 0; i < m_tabs->count(); ++i) {
+        EditorStack *s = stackAt(i);
+        if (!s)
+            continue;
+        m_tabs->setCurrentIndex(i);
+        if (!s->file()->maybeSave()) {
+            event->ignore();
+            return;
+        }
     }
+
+    // Cierre limpio: limpia borradores, recuerda cursores y guarda la sesión de
+    // pestañas (rutas abiertas) para reabrirla la próxima vez.
+    QStringList openFiles;
+    for (int i = 0; i < m_tabs->count(); ++i) {
+        EditorStack *s = stackAt(i);
+        if (!s)
+            continue;
+        s->recovery()->clearDraft();
+        s->file()->rememberCursorPosition();
+        const QString f = s->documentIo()->currentFile();
+        if (!f.isEmpty())
+            openFiles << f;
+    }
+    AppSettings::setOpenFiles(openFiles);
+    // Tamaño/posición y disposición de barras (si se cierra sin distracciones, el
+    // controlador devuelve el estado previo a entrar, no la pantalla completa).
+    AppSettings::setWindowGeometry(m_distraction->sessionGeometry());
+    AppSettings::setWindowState(m_distraction->sessionState());
+    AppSettings::setSplitterState(m_stack->split()->splitView()->saveState());
+    event->accept();
 }

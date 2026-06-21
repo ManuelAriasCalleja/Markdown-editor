@@ -86,6 +86,11 @@ void setPersonalDictionary(const QStringList &words);
 QString lastFile();
 void setLastFile(const QString &path);
 
+// Rutas de los documentos abiertos (una pestaña cada uno) al cerrar, para
+// reabrirlas en la próxima sesión. Vacío = sin sesión previa de pestañas.
+QStringList openFiles();
+void setOpenFiles(const QStringList &paths);
+
 } // namespace AppSettings
 
 #endif // APPSETTINGS_H
