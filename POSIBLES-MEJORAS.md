@@ -59,7 +59,10 @@ proyecto es sólido (~9k LOC, 23 ficheros de test, arquitectura por controllers,
    dependencia), así no hay que desplegar ninguna biblioteca; y los `dictionaries/`
    (con README y `scripts/bundle-dictionaries.sh`) se instalan junto a la app donde
    `searchPaths` los busca. Resultado: paquete autocontenido. Fase 1 (y sus
-   opcionales) completa.
+   opcionales) completa. Si el corrector está activo pero **no hay diccionario**
+   para el idioma (degrada en silencio), un aviso en la barra de estado lo indica
+   —solo cuando el problema está presente— para que el usuario sepa por qué no
+   subraya.
 
    **Análisis (multiplataforma y dependencias).** Qt6 no trae corrector
    (`QSpellChecker` no existe), hay que aportar el motor. La opción que mantiene

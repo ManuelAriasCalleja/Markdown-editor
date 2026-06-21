@@ -864,7 +864,7 @@
         <translation>Inserir índice</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1901"/>
+        <location filename="../src/mainwindow.cpp" line="1911"/>
         <location filename="../src/insertcontroller.cpp" line="304"/>
         <source>El documento no tiene encabezados.</source>
         <translation>O documento não tem títulos.</translation>
@@ -1108,67 +1108,72 @@
         <translation>Tempo de leitura:</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1530"/>
+        <location filename="../src/mainwindow.cpp" line="1501"/>
+        <source>Sin diccionario de corrección para «%1»: instálalo (Hunspell) o desactiva el corrector en «Ver».</source>
+        <translation>Sem dicionário ortográfico para «%1»: instale-o (Hunspell) ou desative a verificação em «Ver».</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="1540"/>
         <source>(sin sugerencias)</source>
         <translation>(sem sugestões)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1549"/>
+        <location filename="../src/mainwindow.cpp" line="1559"/>
         <source>Añadir «%1» al diccionario</source>
         <translation>Adicionar «%1» ao dicionário</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1555"/>
+        <location filename="../src/mainwindow.cpp" line="1565"/>
         <source>Ignorar «%1»</source>
         <translation>Ignorar «%1»</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1754"/>
+        <location filename="../src/mainwindow.cpp" line="1764"/>
         <source>Clic para marcar o desmarcar la tarea</source>
         <translation>Clique para marcar ou desmarcar a tarefa</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1760"/>
+        <location filename="../src/mainwindow.cpp" line="1770"/>
         <source>Clic para ir a la nota al pie</source>
         <translation>Clique para ir para a nota de rodapé</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1973"/>
+        <location filename="../src/mainwindow.cpp" line="1983"/>
         <source>La nota [^%1] no tiene definición</source>
         <translation>A nota [^%1] não tem definição</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2063"/>
+        <location filename="../src/mainwindow.cpp" line="2073"/>
         <source>El archivo cambió en disco: recargado.</source>
         <translation>O arquivo mudou no disco: recarregado.</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2070"/>
+        <location filename="../src/mainwindow.cpp" line="2080"/>
         <source>Archivo modificado en disco</source>
         <translation>Arquivo modificado no disco</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2071"/>
+        <location filename="../src/mainwindow.cpp" line="2081"/>
         <source>«%1» ha cambiado en disco y tienes cambios sin guardar.</source>
         <translation>«%1» mudou no disco e você tem alterações não salvas.</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2074"/>
+        <location filename="../src/mainwindow.cpp" line="2084"/>
         <source>¿Recargar la versión del disco (perderás tus cambios) o conservar los tuyos?</source>
         <translation>Recarregar a versão do disco (perderá as suas alterações) ou manter as suas?</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2075"/>
+        <location filename="../src/mainwindow.cpp" line="2085"/>
         <source>Recargar</source>
         <translation>Recarregar</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2077"/>
+        <location filename="../src/mainwindow.cpp" line="2087"/>
         <source>Conservar los míos</source>
         <translation>Manter as minhas</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2106"/>
+        <location filename="../src/mainwindow.cpp" line="2116"/>
         <source>No se pudo recargar el archivo:
 %1
 
@@ -1226,7 +1231,7 @@
         <translation>HTML (*.html *.htm)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2105"/>
+        <location filename="../src/mainwindow.cpp" line="2115"/>
         <location filename="../src/exportcontroller.cpp" line="152"/>
         <location filename="../src/filecontroller.cpp" line="102"/>
         <location filename="../src/filecontroller.cpp" line="164"/>
@@ -1251,7 +1256,7 @@
         <translation>Exportado para HTML: %1</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1767"/>
+        <location filename="../src/mainwindow.cpp" line="1777"/>
         <source>Ctrl+clic para abrir el enlace: %1</source>
         <translation>Ctrl+clique para abrir o link: %1</translation>
     </message>
@@ -1330,17 +1335,17 @@ Deseja salvá-las?</translation>
         <translation>Documento recuperado da sessão anterior</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2000"/>
+        <location filename="../src/mainwindow.cpp" line="2010"/>
         <source>(sin título)</source>
         <translation>(sem título)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2005"/>
+        <location filename="../src/mainwindow.cpp" line="2015"/>
         <source>Recuperar documento</source>
         <translation>Recuperar documento</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2006"/>
+        <location filename="../src/mainwindow.cpp" line="2016"/>
         <source>Se encontró un documento con cambios sin guardar de una sesión anterior:
 %1 (%2).
 
@@ -1351,22 +1356,22 @@ Deseja salvá-las?</translation>
 Deseja recuperá-lo?</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2009"/>
+        <location filename="../src/mainwindow.cpp" line="2019"/>
         <source>Recuperar</source>
         <translation>Recuperar</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2010"/>
+        <location filename="../src/mainwindow.cpp" line="2020"/>
         <source>Descartar</source>
         <translation>Descartar</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2048"/>
+        <location filename="../src/mainwindow.cpp" line="2058"/>
         <source>Sin título</source>
         <translation>Sem título</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2051"/>
+        <location filename="../src/mainwindow.cpp" line="2061"/>
         <source>%1[*] — md-editor</source>
         <translation>%1[*] — md-editor</translation>
     </message>

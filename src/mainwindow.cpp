@@ -1492,6 +1492,16 @@ void MainWindow::applySpellLanguage()
     m_spell.setPersonalWords(AppSettings::personalDictionary());
     m_spell.setLanguage(code);
     m_highlighter->rehighlight();  // re-subraya con el diccionario nuevo
+
+    // Aviso visible SOLO si el problema está presente: el corrector está
+    // activado pero no se cargó diccionario para el idioma pedido (degrada en
+    // silencio, así que sin esto el usuario no sabría por qué no subraya).
+    if (!m_spell.isAvailable()) {
+        statusBar()->showMessage(
+            tr("Sin diccionario de corrección para «%1»: instálalo (Hunspell) o "
+               "desactiva el corrector en «Ver».").arg(spellLanguageLabel(code)),
+            8000);
+    }
 }
 
 bool MainWindow::showSpellContextMenu(QContextMenuEvent *event)
