@@ -3,14 +3,14 @@ title: Prueba de fórmulas en 2D (Nivel 2)
 lang: es
 ---
 
-# Fórmulas en 2D — guía de comprobación
+# 																							Fórmulas en 2D — guía de comprobación
 
-Este documento ejercita la maquetación **2D real**: fracciones apiladas con
-barra y grandes operadores con sus límites encima/debajo. Cada sección dice qué
+Este documento ejercita la maquetación **2D real**: fracciones apiladas con barra
+y grandes operadores con sus límites encima/debajo. Cada sección dice qué
 deberías ver. Haz **doble clic** en cualquier fórmula para reabrir el editor, y
 prueba el **zoom** (Ctrl+rueda): las fórmulas 2D deben escalar contigo.
 
-## 1. Fracciones apiladas (deben verse con barra horizontal real)
+## 1\. Fracciones apiladas (deben verse con barra horizontal real)
 
 Una fracción simple en bloque:
 
@@ -24,10 +24,10 @@ Fracción **anidada** (una fracción dentro de otra):
 
 $$\frac{1}{1 + \frac{1}{1 + \frac{1}{x}}}$$
 
-En línea, una fracción pequeña $\frac{1}{2}$ dentro del párrafo (queda algo
-elevada respecto al texto: es la limitación conocida del alineado inline).
+En línea, una fracción pequeña $\frac{1}{2}$ dentro del párrafo (queda algo elevada
+respecto al texto: es la limitación conocida del alineado inline).
 
-## 2. Grandes operadores con límites (encima y debajo)
+## 2\. Grandes operadores con límites (encima y debajo)
 
 Sumatorio con índice inferior y superior:
 
@@ -45,7 +45,7 @@ La función zeta, combinando operador grande y fracción en el numerando:
 
 $$\zeta(s) = \sum_{n=1}^\infty \frac{1}{n^s}$$
 
-## 3. Casos clásicos combinados
+## 3\. Casos clásicos combinados
 
 Fórmula cuadrática (fracción + raíz):
 
@@ -59,7 +59,7 @@ Definición de la derivada:
 
 $$f'(x) = \lim_{h \to 0} \frac{f(x + h) - f(x)}{h}$$
 
-## 4. Raíces con vínculo (la barra sobre el radicando)
+## 4\. Raíces con vínculo (la barra sobre el radicando)
 
 Raíz cuadrada (el vínculo cubre todo el radicando y se estira con su altura):
 
@@ -73,7 +73,7 @@ Raíces anidadas:
 
 $$\sqrt{1 + \sqrt{1 + \sqrt{1 + x}}}$$
 
-## 5. Matrices
+## 5\. Matrices
 
 Con paréntesis (`pmatrix`):
 
@@ -87,26 +87,26 @@ Un sistema con vector columna:
 
 $$\begin{pmatrix} 2 & 1 \\ 1 & 3 \end{pmatrix} \begin{pmatrix} x \\ y \end{pmatrix} = \begin{pmatrix} 5 \\ 6 \end{pmatrix}$$
 
-## 6. Binomios, sistemas (`cases`) y acentos
+## 6\. Binomios, sistemas (`cases`) y acentos
 
 Coeficiente binomial (apilado entre paréntesis, sin barra):
 
 $$\binom{n}{k} = \frac{n!}{k!\,(n-k)!}$$
 
-Definición a trozos con `\begin{cases}` (llave izquierda, condiciones con `\text`):
+Definición a trozos con `\\begin{cases}` (llave izquierda, condiciones con `
+\\text`):
 
 $$|x| = \begin{cases} x & \text{si } x \geq 0 \\ -x & \text{si } x < 0 \end{cases}$$
 
-Acentos en línea: vector $\vec{v}$, media $\bar{x}$, estimador $\hat{\beta}$,
-derivada temporal $\dot{x}$, segunda derivada $\ddot{x}$ y tilde $\tilde{n}$. Y
-dentro de una fracción 2D:
+Acentos en línea: vector $\vec{v}$, media $\bar{x}$, estimador $\hat{\beta}$, derivada temporal
+$\dot{x}$, segunda derivada $\ddot{x}$ y tilde $\tilde{n}$. Y dentro de una fracción 2D:
 
 $$\sigma^2 = \frac{\sum_{i=1}^n (x_i - \bar{x})^2}{n}$$
 
-## 7. Fórmula `$$` multilínea en la fuente
+## 7\. Fórmula `$$` multilínea en la fuente
 
-Esto se escribe en varias líneas en el Markdown y debe cargarse como **una**
-sola fórmula 2D:
+Esto se escribe en varias líneas en el Markdown y debe cargarse como **una** sola
+fórmula 2D:
 
 $$
 \frac{\partial}{\partial t} \Psi
@@ -114,7 +114,7 @@ $$
 \frac{i \hbar}{2m} \nabla^2 \Psi
 $$
 
-## 8. Lo que sigue en línea (NO necesita 2D)
+## 8\. Lo que sigue en línea (NO necesita 2D)
 
 Estas se componen como antes (super/subíndice de Qt, sin apilar):
 
@@ -123,19 +123,21 @@ Estas se componen como antes (super/subíndice de Qt, sin apilar):
 - Conjuntos: $x \in \mathbb{R}$, $A \subseteq B \cup C$.
 - Un sumatorio **sin** límites tampoco se apila: $\sum a_i$.
 
-## 9. Comprobación de round-trip y export
+## 9\. Comprobación de round-trip y export
 
 Guarda el archivo (Ctrl+S) y vuelve a abrirlo: todas las fórmulas deben
 sobrevivir intactas. Exporta a HTML/PDF/ODT/DOCX (*Archivo → Exportar*): las 2D
-se vuelcan a su aproximación en línea; a LaTeX (*.tex*) salen como `$$...$$`
+se vuelcan a su aproximación en línea; a LaTeX (*.tex*) salen como $$...$$
 literales.
 
-| Magnitud   | Expresión                      |
-|------------|--------------------------------|
-| Área       | $\pi r^2$                      |
-| Gaussiana  | $\frac{1}{\sigma\sqrt{2\pi}}$  |
-| Serie      | $\sum_{k=1}^n \frac{1}{k^2}$   |
+
+|Magnitud |Expresión|
+|---|---|
+|Área     |$\pi r^2$     |
+|Gaussiana|$\frac{1}{\sigma\sqrt{2\pi}}$     |
+|Serie    |$\sum_{k=1}^n \frac{1}{k^2}$     |
 
 ```text
 $$\frac{a}{b}$$  ← esto está dentro de un bloque de código: NO es fórmula.
 ```
+

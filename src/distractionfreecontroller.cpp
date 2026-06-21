@@ -6,6 +6,7 @@
 #include <QShortcut>
 #include <QSplitter>
 #include <QStatusBar>
+#include <QTimer>
 #include <QWidget>
 
 #include "focuseditor.h"
@@ -62,7 +63,15 @@ void DistractionFreeController::setActive(bool on)
         // completa con las barras ocultas).
         m_wasMaximized = m_window->isMaximized();
         m_findBarWasVisible = m_findBar->isVisible();
-        m_normalOutlineWidth = m_outline->width();  // para restaurar el dock al salir
+        // Ancho a restaurar al salir. Si el esquema está oculto (o flotante) al
+        // entrar, su width() no es un ancho de dock acoplado válido — y si fuera
+        // 0, la restauración se saltaría (guard `> 0` en updateLayout) y el dock
+        // quedaría con el ancho ensanchado del modo. Usamos el ancho por defecto
+        // como base: así, si el usuario muestra el TOC dentro del modo, al salir
+        // vuelve a un ancho cómodo en vez de ocupar casi toda la ventana.
+        m_normalOutlineWidth = (m_outline->isVisible() && !m_outline->isFloating())
+                                   ? m_outline->width()
+                                   : kOutlineTreeWidth;
         m_preGeometry = m_window->saveGeometry();
         m_preState = m_window->saveState();
 
@@ -122,10 +131,18 @@ void DistractionFreeController::updateLayout()
     if (!group) {
         m_outline->setLeftPadding(0);
         // Al salir del modo, devuelve al dock su ancho previo (resizeDocks lo
-        // había ensanchado para el relleno).
+        // había ensanchado para el relleno). DIFERIDO: justo tras salir de
+        // pantalla completa el layout aún no se ha asentado y un resizeDocks
+        // síncrono no se aplica (mismo motivo por el que MainWindow difiere
+        // normalizeOutlineWidth). El guard `!m_active` evita restaurar si se
+        // reentró al modo antes de que dispare el temporizador.
         if (!m_active && m_normalOutlineWidth > 0) {
-            m_window->resizeDocks({m_outline}, {m_normalOutlineWidth}, Qt::Horizontal);
+            const int width = m_normalOutlineWidth;
             m_normalOutlineWidth = 0;
+            QTimer::singleShot(0, this, [this, width] {
+                if (!m_active)
+                    m_window->resizeDocks({m_outline}, {width}, Qt::Horizontal);
+            });
         }
         return;
     }
