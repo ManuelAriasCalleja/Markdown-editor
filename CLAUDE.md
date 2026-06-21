@@ -175,13 +175,14 @@ añadir lógica nueva: hay un `tst_*` por módulo.
   base, no solo el editor: menú **y cada `QMenu`** (los desplegables no heredan la
   fuente de la barra), barras, estado, fuente, panel de esquema e iconos de la
   barra de formato (`updateToolBarIcons`).
-- **`eventFilter` de `MainWindow`.** Centraliza: zoom con Ctrl+rueda y abrir
-  enlaces (Ctrl+clic, hover) sobre `m_editor->viewport()`; arrastrar-soltar un
-  archivo para abrirlo; clic sobre la casilla de una tarea (`mdtask`) y sobre una
-  referencia de nota al pie (`mdfootnote`); y **continuación de listas** con Enter
-  en `m_sourceEditor` (en WYSIWYG la hace `QTextEdit` de serie; en el editor de
-  fuente la añade `mdlist::analyze`). Las fórmulas tienen su propio filtro en
-  `m_editor` (ver abajo).
+- **`eventFilter` de `MainWindow`.** Es solo un despachador: delega en tres
+  sub-manejadores según el objeto vigilado (cada uno devuelve `bool`, el primero
+  que consume gana): `handleViewportEvent` (zoom con Ctrl+rueda; abrir enlaces con
+  Ctrl+clic/hover; arrastrar-soltar un archivo; clic sobre la casilla de una tarea
+  `mdtask` y sobre una referencia de nota al pie `mdfootnote`), `handleEditorKeyPress`
+  (protección de fórmulas y shortcodes `:nombre:` en `m_editor`) y
+  `handleSourceKeyPress` (**continuación de listas** con Enter en `m_sourceEditor`
+  vía `mdlist::analyze`; en WYSIWYG la hace `QTextEdit` de serie).
 - **Pegar/soltar imágenes y URLs.** El *handler* de `FocusEditor` desvía las
   imágenes del portapapeles a disco (PNG junto al `.md`, ruta relativa) e inserta
   `![](ruta)`, en vez de incrustarlas (que no round-trip-ean). También en *Insertar

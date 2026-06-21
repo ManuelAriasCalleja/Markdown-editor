@@ -93,6 +93,21 @@
 
 namespace {
 
+// Añade el atajo (localizado por `NativeText`) entre paréntesis al final de un
+// tooltip; si no hay atajo, deja el texto tal cual.
+QString withShortcut(const QString &base, const QKeySequence &shortcut)
+{
+    if (shortcut.isEmpty())
+        return base;
+    return base + QStringLiteral(" (%1)").arg(shortcut.toString(QKeySequence::NativeText));
+}
+
+// Tooltip = el propio texto de la acción + su atajo. El caso habitual.
+void setShortcutTooltip(QAction *action)
+{
+    action->setToolTip(withShortcut(action->text(), action->shortcut()));
+}
+
 // Devuelve un color de «tinta» (casi negro o casi blanco) que contraste con el
 // fondo dado. La decisión se toma sobre la luminancia relativa WCAG: si el
 // fondo es luminoso se devuelve tinta oscura, y al revés. Se usan tonos
@@ -650,9 +665,7 @@ void MainWindow::createEditMenu()
 
     QAction *pastePlainAction = editMenu->addAction(tr("Pegar como texto plano"));
     pastePlainAction->setShortcut(QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_V));
-    pastePlainAction->setToolTip(
-        pastePlainAction->text() + QStringLiteral(" (%1)").arg(
-            pastePlainAction->shortcut().toString(QKeySequence::NativeText)));
+    setShortcutTooltip(pastePlainAction);
     connect(pastePlainAction, &QAction::triggered, this, [this] {
         const QString text = QApplication::clipboard()->text();
         if (!text.isEmpty())
@@ -661,9 +674,7 @@ void MainWindow::createEditMenu()
 
     QAction *pasteMdAction = editMenu->addAction(tr("Pegar como Markdown"));
     pasteMdAction->setShortcut(QKeySequence(Qt::CTRL | Qt::ALT | Qt::Key_V));
-    pasteMdAction->setToolTip(
-        pasteMdAction->text() + QStringLiteral(" (%1)").arg(
-            pasteMdAction->shortcut().toString(QKeySequence::NativeText)));
+    setShortcutTooltip(pasteMdAction);
     connect(pasteMdAction, &QAction::triggered, this, [this] {
         const QMimeData *mime = QApplication::clipboard()->mimeData();
         if (!mime)
@@ -820,13 +831,10 @@ void MainWindow::createFormatActions()
     for (const FormatActionDef &d : defs) {
         auto *action = new QAction(d.text, this);
         action->setCheckable(true);
-        QString tip = d.tooltip.isEmpty() ? d.text : d.tooltip;
-        if (!d.shortcut.isEmpty()) {
+        if (!d.shortcut.isEmpty())
             action->setShortcut(d.shortcut);
-            tip += QStringLiteral(" (%1)")
-                       .arg(d.shortcut.toString(QKeySequence::NativeText));
-        }
-        action->setToolTip(tip);
+        action->setToolTip(withShortcut(d.tooltip.isEmpty() ? d.text : d.tooltip,
+                                        d.shortcut));
         connect(action, &QAction::triggered, this, d.handler);
         *d.slot = action;
         m_wysiwygActions.append(action);  // sin sentido en la vista de fuente
@@ -906,17 +914,14 @@ void MainWindow::createInsertMenu()
 
     QAction *insFormula = insertMenu->addAction(tr("Fórmula..."));
     insFormula->setShortcut(QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_F));
-    insFormula->setToolTip(
-        insFormula->text() + QStringLiteral(" (%1)").arg(
-            insFormula->shortcut().toString(QKeySequence::NativeText)));
+    setShortcutTooltip(insFormula);
     connect(insFormula, &QAction::triggered, m_formula, &FormulaController::insertFormula);
 
     QAction *insFootnote = insertMenu->addAction(tr("Nota al pie"));
     insFootnote->setShortcut(QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_N));
-    insFootnote->setToolTip(
-        tr("Inserta una referencia [^n] y su definición al final del documento")
-        + QStringLiteral(" (%1)").arg(
-            insFootnote->shortcut().toString(QKeySequence::NativeText)));
+    insFootnote->setToolTip(withShortcut(
+        tr("Inserta una referencia [^n] y su definición al final del documento"),
+        insFootnote->shortcut()));
     connect(insFootnote, &QAction::triggered, m_insert, &InsertController::insertFootnote);
 
     // Admoniciones / callouts (`> [!NOTE]`, etc.). Los nombres se traducen; el
@@ -1000,9 +1005,7 @@ void MainWindow::createViewMenu()
     m_sourceModeAction = viewMenu->addAction(tr("Código fuente Markdown"));
     m_sourceModeAction->setCheckable(true);
     m_sourceModeAction->setShortcut(QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_M));
-    m_sourceModeAction->setToolTip(
-        m_sourceModeAction->text() + QStringLiteral(" (%1)").arg(
-            m_sourceModeAction->shortcut().toString(QKeySequence::NativeText)));
+    setShortcutTooltip(m_sourceModeAction);
     connect(m_sourceModeAction, &QAction::toggled, m_split, &SplitViewController::toggleSourceMode);
 
     m_splitAction = viewMenu->addAction(tr("Vista dividida"));
@@ -1010,10 +1013,9 @@ void MainWindow::createViewMenu()
     // Ctrl+Shift+D (no Ctrl+\\: en teclados español/ISO la «\» exige AltGr y el
     // atajo resulta imposible de pulsar). «D» de «Dividida».
     m_splitAction->setShortcut(QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_D));
-    m_splitAction->setToolTip(
-        tr("Editar WYSIWYG y código fuente a la vez, lado a lado") +
-        QStringLiteral(" (%1)").arg(
-            m_splitAction->shortcut().toString(QKeySequence::NativeText)));
+    m_splitAction->setToolTip(withShortcut(
+        tr("Editar WYSIWYG y código fuente a la vez, lado a lado"),
+        m_splitAction->shortcut()));
     connect(m_splitAction, &QAction::toggled, m_split, &SplitViewController::toggleSplitView);
 
     m_distractionAction = viewMenu->addAction(tr("Sin distracciones"));
@@ -1029,16 +1031,13 @@ void MainWindow::createViewMenu()
     m_outlineAction = m_outline->toggleViewAction();
     m_outlineAction->setText(tr("Esquema"));
     m_outlineAction->setShortcut(QKeySequence(Qt::Key_F9));
-    m_outlineAction->setToolTip(
-        m_outlineAction->text() + QStringLiteral(" (%1)").arg(
-            m_outlineAction->shortcut().toString(QKeySequence::NativeText)));
+    setShortcutTooltip(m_outlineAction);
     viewMenu->addAction(m_outlineAction);
 
     QAction *goToHeadingAction = viewMenu->addAction(tr("Ir a encabezado..."));
     goToHeadingAction->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_G));
-    goToHeadingAction->setToolTip(
-        tr("Salta a un encabezado del documento") + QStringLiteral(" (%1)").arg(
-            goToHeadingAction->shortcut().toString(QKeySequence::NativeText)));
+    goToHeadingAction->setToolTip(withShortcut(
+        tr("Salta a un encabezado del documento"), goToHeadingAction->shortcut()));
     connect(goToHeadingAction, &QAction::triggered, this, &MainWindow::goToHeading);
 
     viewMenu->addSeparator();
@@ -1527,129 +1526,149 @@ void MainWindow::setBodyMarkdown(const QString &body)
 
 bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 {
+    // Despachador: delega en el sub-manejador del objeto vigilado. El primero que
+    // consume el evento gana; si ninguno lo hace, sigue el procesamiento normal.
     if (watched == m_editor->viewport()) {
-        if (event->type() == QEvent::Wheel) {
-            auto *wheel = static_cast<QWheelEvent *>(event);
-            if (wheel->modifiers() & Qt::ControlModifier) {
-                if (wheel->angleDelta().y() > 0)
-                    zoomInText();
-                else if (wheel->angleDelta().y() < 0)
-                    zoomOutText();
-                return true;  // consumimos el evento: no desplazar
-            }
-        }
-        // Arrastrar y soltar un archivo lo abre (en lugar de que el editor lo
-        // inserte como texto). El arrastre de texto interno no trae URLs y pasa.
-        else if (event->type() == QEvent::DragEnter ||
-                 event->type() == QEvent::DragMove ||
-                 event->type() == QEvent::Drop) {
-            auto *drop = static_cast<QDropEvent *>(event);
-            if (drop->mimeData()->hasUrls()) {
-                if (event->type() == QEvent::Drop) {
-                    const QString path =
-                        drop->mimeData()->urls().constFirst().toLocalFile();
-                    if (!path.isEmpty())
-                        m_file->openFile(path);
-                }
-                drop->acceptProposedAction();
-                return true;
-            }
-        }
-        // Al pasar por encima de un enlace: cursor de mano y pista de cómo
-        // abrirlo. (El clic normal coloca el cursor para editar; Ctrl+clic abre.)
-        else if (event->type() == QEvent::MouseMove) {
-            auto *me = static_cast<QMouseEvent *>(event);
-            if (me->buttons() == Qt::NoButton) {
-                // Sobre la casilla de una tarea: cursor de mano y pista de clic.
-                if (mdtask::isCheckboxAt(m_editor, me->position().toPoint())) {
-                    m_editor->viewport()->setCursor(Qt::PointingHandCursor);
-                    statusBar()->showMessage(tr("Clic para marcar o desmarcar la tarea"));
-                    return true;
-                }
-                // Sobre una referencia de nota al pie: cursor de mano y pista.
-                if (!footnoteRefIdAt(me->position().toPoint()).isEmpty()) {
-                    m_editor->viewport()->setCursor(Qt::PointingHandCursor);
-                    statusBar()->showMessage(tr("Clic para ir a la nota al pie"));
-                    return true;
-                }
-                const QString href = m_editor->anchorAt(me->position().toPoint());
-                if (!href.isEmpty()) {
-                    m_editor->viewport()->setCursor(Qt::PointingHandCursor);
-                    statusBar()->showMessage(
-                        tr("Ctrl+clic para abrir el enlace: %1").arg(href));
-                    return true;  // si no, QTextEdit restablecería el cursor a I-beam
-                }
-                // Acabamos de salir de un enlace: restablece cursor y pista.
-                if (m_editor->viewport()->cursor().shape() == Qt::PointingHandCursor) {
-                    m_editor->viewport()->setCursor(Qt::IBeamCursor);
-                    statusBar()->clearMessage();
-                }
-            }
-        }
-        // Doble clic sobre una fórmula renderizada: abre el diálogo de edición
-        // con el TeX precargado. Sin esto las fórmulas serían de solo lectura.
-        else if (event->type() == QEvent::MouseButtonDblClick) {
-            auto *me = static_cast<QMouseEvent *>(event);
-            if (me->button() == Qt::LeftButton
-                && m_formula->editFormulaAt(me->position().toPoint()))
-                return true;
-        }
-        else if (event->type() == QEvent::MouseButtonPress) {
-            auto *me = static_cast<QMouseEvent *>(event);
-            // Ctrl+clic izquierdo sobre un enlace lo abre en la aplicación externa.
-            if (me->button() == Qt::LeftButton
-                && (me->modifiers() & Qt::ControlModifier)) {
-                const QString href = m_editor->anchorAt(me->position().toPoint());
-                if (!href.isEmpty()) {
-                    openLink(href);
-                    return true;  // no mover el cursor de texto
-                }
-            }
-            // Clic izquierdo simple sobre una referencia de nota al pie: salta a
-            // su definición al final del documento.
-            if (me->button() == Qt::LeftButton && me->modifiers() == Qt::NoModifier
-                && jumpToFootnoteAt(me->position().toPoint()))
-                return true;
-            // Clic izquierdo simple sobre la casilla de un ítem de tarea: la
-            // marca/desmarca (round-trip a `- [x]`/`- [ ]` lo da Qt solo).
-            if (me->button() == Qt::LeftButton && me->modifiers() == Qt::NoModifier
-                && mdtask::toggleCheckboxAt(m_editor, me->position().toPoint()))
-                return true;  // consumido: no coloca el cursor ni inicia selección
-        }
-    }
-    // Interceptación de teclas sobre el editor WYSIWYG para proteger las
-    // fórmulas renderizadas frente a edición accidental con el teclado.
-    else if (watched == m_editor && event->type() == QEvent::KeyPress) {
-        auto *ke = static_cast<QKeyEvent *>(event);
-        // Antes de un pegado, ajusta la selección para que coja los grupos
-        // de math enteros (no a media fórmula). El paste real lo sigue
-        // haciendo QTextEdit con la selección ya extendida.
-        if (ke->matches(QKeySequence::Paste))
-            m_formula->guardPasteAgainstMath();
-        if (m_formula->handleMathKeyPress(ke))
+        if (handleViewportEvent(event))
             return true;
-        // Shortcodes `:nombre:`: al teclear el ':' de cierre, si delante hay un
-        // `:nombre:` conocido se sustituye por su símbolo. Insertamos el ':' y
-        // expandimos nosotros (solo en el editor WYSIWYG, solo al teclear).
-        if (ke->text() == QStringLiteral(":")
-            && !(ke->modifiers() & (Qt::ControlModifier | Qt::AltModifier | Qt::MetaModifier))) {
-            QTextCursor cursor = m_editor->textCursor();
-            cursor.insertText(QStringLiteral(":"));
-            expandShortcodeBefore(cursor);
+    } else if (watched == m_editor && event->type() == QEvent::KeyPress) {
+        if (handleEditorKeyPress(static_cast<QKeyEvent *>(event)))
             return true;
-        }
     }
-    // Continuación inteligente de listas en el editor de código fuente. Se
-    // comprueba m_split porque durante su construcción (al reparentar el editor en
-    // el QSplitter) ya llegan eventos aquí, antes de que el puntero esté asignado.
-    else if (m_split && watched == m_split->sourceEditor() && event->type() == QEvent::KeyPress) {
-        auto *ke = static_cast<QKeyEvent *>(event);
-        const auto mods = ke->modifiers() & ~Qt::KeypadModifier;
-        if ((ke->key() == Qt::Key_Return || ke->key() == Qt::Key_Enter)
-            && mods == Qt::NoModifier && continueSourceList())
+    // Se comprueba m_split porque durante su construcción (al reparentar el editor
+    // en el QSplitter) ya llegan eventos aquí, antes de que el puntero esté asignado.
+    else if (m_split && watched == m_split->sourceEditor()
+             && event->type() == QEvent::KeyPress) {
+        if (handleSourceKeyPress(static_cast<QKeyEvent *>(event)))
             return true;
     }
     return QMainWindow::eventFilter(watched, event);
+}
+
+bool MainWindow::handleViewportEvent(QEvent *event)
+{
+    if (event->type() == QEvent::Wheel) {
+        auto *wheel = static_cast<QWheelEvent *>(event);
+        if (wheel->modifiers() & Qt::ControlModifier) {
+            if (wheel->angleDelta().y() > 0)
+                zoomInText();
+            else if (wheel->angleDelta().y() < 0)
+                zoomOutText();
+            return true;  // consumimos el evento: no desplazar
+        }
+    }
+    // Arrastrar y soltar un archivo lo abre (en lugar de que el editor lo inserte
+    // como texto). El arrastre de texto interno no trae URLs y pasa.
+    else if (event->type() == QEvent::DragEnter ||
+             event->type() == QEvent::DragMove ||
+             event->type() == QEvent::Drop) {
+        auto *drop = static_cast<QDropEvent *>(event);
+        if (drop->mimeData()->hasUrls()) {
+            if (event->type() == QEvent::Drop) {
+                const QString path =
+                    drop->mimeData()->urls().constFirst().toLocalFile();
+                if (!path.isEmpty())
+                    m_file->openFile(path);
+            }
+            drop->acceptProposedAction();
+            return true;
+        }
+    }
+    // Al pasar por encima de un enlace: cursor de mano y pista de cómo abrirlo.
+    // (El clic normal coloca el cursor para editar; Ctrl+clic abre.)
+    else if (event->type() == QEvent::MouseMove) {
+        auto *me = static_cast<QMouseEvent *>(event);
+        if (me->buttons() == Qt::NoButton) {
+            // Sobre la casilla de una tarea: cursor de mano y pista de clic.
+            if (mdtask::isCheckboxAt(m_editor, me->position().toPoint())) {
+                m_editor->viewport()->setCursor(Qt::PointingHandCursor);
+                statusBar()->showMessage(tr("Clic para marcar o desmarcar la tarea"));
+                return true;
+            }
+            // Sobre una referencia de nota al pie: cursor de mano y pista.
+            if (!footnoteRefIdAt(me->position().toPoint()).isEmpty()) {
+                m_editor->viewport()->setCursor(Qt::PointingHandCursor);
+                statusBar()->showMessage(tr("Clic para ir a la nota al pie"));
+                return true;
+            }
+            const QString href = m_editor->anchorAt(me->position().toPoint());
+            if (!href.isEmpty()) {
+                m_editor->viewport()->setCursor(Qt::PointingHandCursor);
+                statusBar()->showMessage(
+                    tr("Ctrl+clic para abrir el enlace: %1").arg(href));
+                return true;  // si no, QTextEdit restablecería el cursor a I-beam
+            }
+            // Acabamos de salir de un enlace: restablece cursor y pista.
+            if (m_editor->viewport()->cursor().shape() == Qt::PointingHandCursor) {
+                m_editor->viewport()->setCursor(Qt::IBeamCursor);
+                statusBar()->clearMessage();
+            }
+        }
+    }
+    // Doble clic sobre una fórmula renderizada: abre el diálogo de edición con el
+    // TeX precargado. Sin esto las fórmulas serían de solo lectura.
+    else if (event->type() == QEvent::MouseButtonDblClick) {
+        auto *me = static_cast<QMouseEvent *>(event);
+        if (me->button() == Qt::LeftButton
+            && m_formula->editFormulaAt(me->position().toPoint()))
+            return true;
+    }
+    else if (event->type() == QEvent::MouseButtonPress) {
+        auto *me = static_cast<QMouseEvent *>(event);
+        // Ctrl+clic izquierdo sobre un enlace lo abre en la aplicación externa.
+        if (me->button() == Qt::LeftButton
+            && (me->modifiers() & Qt::ControlModifier)) {
+            const QString href = m_editor->anchorAt(me->position().toPoint());
+            if (!href.isEmpty()) {
+                openLink(href);
+                return true;  // no mover el cursor de texto
+            }
+        }
+        // Clic izquierdo simple sobre una referencia de nota al pie: salta a su
+        // definición al final del documento.
+        if (me->button() == Qt::LeftButton && me->modifiers() == Qt::NoModifier
+            && jumpToFootnoteAt(me->position().toPoint()))
+            return true;
+        // Clic izquierdo simple sobre la casilla de un ítem de tarea: la
+        // marca/desmarca (round-trip a `- [x]`/`- [ ]` lo da Qt solo).
+        if (me->button() == Qt::LeftButton && me->modifiers() == Qt::NoModifier
+            && mdtask::toggleCheckboxAt(m_editor, me->position().toPoint()))
+            return true;  // consumido: no coloca el cursor ni inicia selección
+    }
+    return false;
+}
+
+bool MainWindow::handleEditorKeyPress(QKeyEvent *ke)
+{
+    // Interceptación de teclas sobre el editor WYSIWYG para proteger las fórmulas
+    // renderizadas frente a edición accidental con el teclado.
+    //
+    // Antes de un pegado, ajusta la selección para que coja los grupos de math
+    // enteros (no a media fórmula). El paste real lo sigue haciendo QTextEdit con
+    // la selección ya extendida, así que aquí NO se consume.
+    if (ke->matches(QKeySequence::Paste))
+        m_formula->guardPasteAgainstMath();
+    if (m_formula->handleMathKeyPress(ke))
+        return true;
+    // Shortcodes `:nombre:`: al teclear el ':' de cierre, si delante hay un
+    // `:nombre:` conocido se sustituye por su símbolo. Insertamos el ':' y
+    // expandimos nosotros (solo en el editor WYSIWYG, solo al teclear).
+    if (ke->text() == QStringLiteral(":")
+        && !(ke->modifiers() & (Qt::ControlModifier | Qt::AltModifier | Qt::MetaModifier))) {
+        QTextCursor cursor = m_editor->textCursor();
+        cursor.insertText(QStringLiteral(":"));
+        expandShortcodeBefore(cursor);
+        return true;
+    }
+    return false;
+}
+
+bool MainWindow::handleSourceKeyPress(QKeyEvent *ke)
+{
+    // Continuación inteligente de listas en el editor de código fuente.
+    const auto mods = ke->modifiers() & ~Qt::KeypadModifier;
+    return (ke->key() == Qt::Key_Return || ke->key() == Qt::Key_Enter)
+           && mods == Qt::NoModifier && continueSourceList();
 }
 
 bool MainWindow::continueSourceList()

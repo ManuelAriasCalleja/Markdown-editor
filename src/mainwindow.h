@@ -16,6 +16,7 @@ class QTextCursor;
 class QAction;
 class QCloseEvent;
 class QEvent;
+class QKeyEvent;
 class QMimeData;
 class QObject;
 class QLabel;
@@ -106,6 +107,13 @@ protected:
     void resizeEvent(QResizeEvent *event) override;
     // Captura Ctrl+rueda sobre el editor para hacer zoom de la fuente.
     bool eventFilter(QObject *watched, QEvent *event) override;
+    // Sub-manejadores del eventFilter (cada uno devuelve true si consume el
+    // evento). Separan las tres responsabilidades que antes convivían en él:
+    // ratón/rueda/arrastre sobre el viewport, teclado del editor WYSIWYG y
+    // teclado del editor de fuente.
+    bool handleViewportEvent(QEvent *event);
+    bool handleEditorKeyPress(QKeyEvent *ke);
+    bool handleSourceKeyPress(QKeyEvent *ke);
 
 private slots:
 
