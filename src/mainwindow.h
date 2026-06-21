@@ -170,6 +170,10 @@ private:
     void createFormatToolBar();
     // (Re)genera los iconos de los botones de lista con el color del tema actual.
     void updateToolBarIcons();
+    // Nombre legible de un diccionario (basename como "en_US") para los menús de
+    // corrección. Estático y puro; lo comparten createViewMenu y el menú
+    // contextual del corrector (definido en mainwindowmenus.cpp).
+    static QString spellLanguageLabel(const QString &code);
 
     // Guarda el idioma elegido (código de locale; "" = sistema) y avisa de que
     // se aplicará al reiniciar.

@@ -123,9 +123,13 @@ proyecto es sólido (~9k LOC, 23 ficheros de test, arquitectura por controllers,
 
 ## 🧹 Calidad de código
 
-12. **Descomponer `mainwindow.cpp`** (ya por encima de 1600 líneas) — es 3× el
-    siguiente fichero. Mover lógica de menús/acciones a uno o dos controllers más
-    reduciría ese "God object".
+12. 🚧 **Descomponer `mainwindow.cpp`** — *En curso:* de 2155 a **1258 líneas**.
+    Se extrajeron los iconos de la barra de formato a un módulo puro `formaticons`
+    (`contrastingInk`/`makeFormatIcon`/`makeListIcon`) y toda la construcción de
+    menús + barra a `mainwindowmenus.cpp` (métodos de `MainWindow` en otra unidad
+    de traducción, como `texparser`). Pendiente para seguir adelgazando: zoom/
+    escalado de interfaz (entrelazado con el orden de construcción, más delicado),
+    el filtro de eventos/entrada y la órbita del corrector.
 13. ✅ **`mathblocks.cpp` (982 líneas)** — *Hecho:* extraído el motor de parseo
     TeX→runs/Unicode a `src/texparser.cpp` (puro, ~480 líneas: `renderTexAsRuns`,
     `texToUnicode`, `wrapTex` y sus tablas/helpers). `mathblocks.cpp` queda en

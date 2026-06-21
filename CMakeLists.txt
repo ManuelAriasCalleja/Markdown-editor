@@ -41,6 +41,7 @@ find_package(Qt6 REQUIRED COMPONENTS Widgets PrintSupport LinguistTools)
 # desde el ejecutable como desde las pruebas. El ejecutable es solo main().
 add_library(md-editor-core STATIC
     src/mainwindow.cpp
+    src/mainwindowmenus.cpp
     src/mainwindow.h
     src/splitviewcontroller.cpp
     src/splitviewcontroller.h
@@ -127,6 +128,8 @@ add_library(md-editor-core STATIC
     src/diagramrenderer.h
     src/diagramcontroller.cpp
     src/diagramcontroller.h
+    src/formaticons.cpp
+    src/formaticons.h
     src/tableedit.cpp
     src/tableedit.h
     src/exporters.cpp

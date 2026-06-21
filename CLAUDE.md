@@ -71,9 +71,14 @@ tanto el ejecutable (`main.cpp`, solo arranque + i18n) como las pruebas. Añadir
 trae lógica pura, su `tst_*` a la lista de tests del mismo archivo).
 
 `MainWindow` es el orquestador y delega en **colaboradores autocontenidos**, cada
-uno una clase pequeña con su propia responsabilidad. Tras el refactor de
-arquitectura las acciones de usuario viven en controladores temáticos (la mayoría
-miembros de `MainWindow`, declarados en `mainwindow.h`):
+uno una clase pequeña con su propia responsabilidad. Su implementación está
+repartida en dos unidades de traducción para no inflar un único fichero:
+`mainwindow.cpp` (constructor, ciclo de vida, zoom, entrada, glue) y
+`mainwindowmenus.cpp` (construcción de menús y barra de formato — son métodos de
+`MainWindow`, solo en otro `.cpp`). Los iconos monocromos de la barra viven en el
+módulo puro `formaticons`. Tras el refactor de arquitectura las acciones de
+usuario viven en controladores temáticos (la mayoría miembros de `MainWindow`,
+declarados en `mainwindow.h`):
 
 - **Entrada/salida y sesión**: `DocumentIo` (abrir/guardar, UTF-8, baseUrl, front
   matter, estado «modificado»), `FileController` (nuevo/abrir/guardar/recuperar +
