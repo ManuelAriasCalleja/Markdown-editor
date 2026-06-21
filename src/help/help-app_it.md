@@ -1,119 +1,156 @@
 # Manuale d'uso
 
 **md-editor** è un editor visuale (WYSIWYG) di Markdown: scrivi e applichi la
-formattazione sul testo già renderizzato, senza vedere il codice. Quando salvi,
+formattazione sul testo già renderizzato, senza vedere il codice. Al salvataggio
 il documento viene serializzato di nuovo in Markdown puro.
 
 ## Indice
 
 - [Aprire e salvare](#aprire-e-salvare)
 - [Formattare il testo](#formattare-il-testo)
-- [Intestazioni, elenchi e blocchi](#intestazioni-elenchi-e-blocchi)
+- [Titoli, elenchi e blocchi](#titoli-elenchi-e-blocchi)
+- [Trasformare il testo e gli appunti](#trasformare-il-testo-e-gli-appunti)
 - [Collegamenti e immagini](#collegamenti-e-immagini)
 - [Note a piè di pagina](#note-a-pie-di-pagina)
+- [Riquadri, simboli e scorciatoie di testo](#riquadri-simboli-e-scorciatoie-di-testo)
 - [Tabelle](#tabelle)
 - [Formule matematiche](#formule-matematiche)
+- [Diagrammi](#diagrammi)
+- [Controllo ortografico](#controllo-ortografico)
 - [Trova e sostituisci](#trova-e-sostituisci)
 - [Struttura del documento](#struttura-del-documento)
+- [Statistiche del documento](#statistiche-del-documento)
 - [Modalità senza distrazioni](#modalita-senza-distrazioni)
-- [Vista sorgente](#vista-sorgente)
+- [Vista del codice](#vista-del-codice)
 - [Esportare e stampare](#esportare-e-stampare)
 - [Temi e aspetto](#temi-e-aspetto)
-- [Ripristino automatico](#ripristino-automatico)
+- [Recupero automatico](#recupero-automatico)
 - [Scorciatoie](#scorciatoie)
 
 ## Aprire e salvare
 
 - **File → Nuovo** (Ctrl+N) crea un documento vuoto.
-- **File → Apri…** (Ctrl+O) apre un `.md` esistente. L'applicazione
-  ricorda i file più recenti in **File → Apri recenti**.
-- **Salva** (Ctrl+S) e **Salva con nome…** (Ctrl+Shift+S) scrivono il
-  documento in UTF-8.
-- Se il file cambia al di fuori dell'editor, l'applicazione lo rileva e, se
-  non hai modifiche non salvate, lo ricarica; in caso contrario chiede cosa fare.
+- **File → Nuovo da modello** crea un documento a partire da uno scheletro
+  (lettera, verbale, esame…) pronto da compilare.
+- **File → Apri…** (Ctrl+O) apre un `.md` esistente. L'applicazione ricorda gli
+  ultimi aperti in **File → Apri recenti**.
+- **Salva** (Ctrl+S) e **Salva come…** (Ctrl+Maiusc+S) scrivono il documento in
+  UTF-8. **Apri cartella contenitore** apre la cartella del documento nel gestore
+  file.
+- Se il file cambia fuori dall'editor, l'applicazione lo rileva e, se non hai
+  modifiche non salvate, lo ricarica; altrimenti chiede cosa fare.
 - Puoi anche **trascinare e rilasciare** un file sulla finestra per aprirlo.
 
-### Front matter
+### *Front matter*
 
 Se il documento inizia con un blocco `---…---` (YAML) o `+++…+++` (TOML), viene
-conservato testualmente al salvataggio: non è mostrato nell'editor e non è
-modificabile. Serve per metadati come `title`, `lang`, ecc., che vengono usati
-durante l'esportazione.
+conservato così com'è al salvataggio: non si vede nell'editor e non si modifica.
+Serve per metadati come `title`, `lang`, ecc., usati in fase di esportazione.
 
 ## Formattare il testo
 
-Seleziona un frammento e applica la formattazione dalla barra degli strumenti o
-dal menu **Formato**:
+Seleziona un frammento e applica la formattazione con la barra degli strumenti o
+il menu **Formato**:
 
 - **Grassetto** (Ctrl+B), **Corsivo** (Ctrl+I), **Sottolineato** (Ctrl+U),
   **Barrato**.
-- **Codice inline** per frammenti `a spaziatura fissa`.
+- **Codice in linea** per frammenti a `spaziatura fissa`.
 - **Collegamento**: aggiunge `[testo](url)` sulla selezione.
 
 I pulsanti della barra riflettono la formattazione attiva sotto il cursore.
 
-## Intestazioni, elenchi e blocchi
+## Titoli, elenchi e blocchi
 
-- **Intestazioni** H1–H6 da **Formato → Intestazione** o con Ctrl+1 … Ctrl+6.
-- **Elenchi**: puntati, numerati e di attività (con casella di spunta). Premendo
-  Invio alla fine di un elemento si crea automaticamente il successivo; premendo
-  Invio su un elemento vuoto si esce dall'elenco. Un **clic sulla casella di
-  spunta di un'attività** la contrassegna come completata o la deseleziona.
+- **Titoli** H1–H6 da **Formato → Titolo** o con Ctrl+1 … Ctrl+6.
+- **Elenchi**: puntati, numerati e di attività (con casella). Premendo Invio alla
+  fine di un punto si crea automaticamente il successivo; Invio su un punto vuoto
+  esce dall'elenco. Un **clic sulla casella** di un'attività la spunta o la
+  deseleziona.
 - **Citazione** (`>` all'inizio di un paragrafo) e **blocco di codice** si
-  applicano dalla barra degli strumenti; entrambi mantengono correttamente il
-  round-trip verso Markdown.
+  applicano dalla barra; entrambi tornano correttamente a Markdown.
+- **Rientro**: **Formato → Aumenta/Riduci rientro** annida elenchi e citazioni.
+
+## Trasformare il testo e gli appunti
+
+- **Modifica → Trasforma testo** agisce sulla selezione: **MAIUSCOLO**,
+  **minuscolo**, **Capitalizza** e **Ordina righe**.
+- **Tipografia intelligente** (nello stesso menu) converte nella selezione i
+  trattini `--`/`---` in `–`/`—`, `...` in `…` e le virgolette dritte in
+  tipografiche secondo il contesto.
+- **Incolla come testo semplice** (Ctrl+Maiusc+V) incolla senza formattazione.
+  **Incolla come Markdown** (Ctrl+Alt+V) converte il contenuto formattato degli
+  appunti (HTML) in Markdown invece di incorporare la formattazione di origine.
+- **Copia come HTML** copia la selezione (o il documento) come HTML, per
+  incollarla in un'email, un CMS, ecc.
+- Quando incolli un **URL** su una selezione di testo, il testo viene collegato
+  automaticamente.
 
 ## Collegamenti e immagini
 
-- **Inserisci → Collegamento…** apre una finestra con i campi testo e URL. Se
-  avevi una selezione, viene usata come testo.
+- **Inserisci → Collegamento…** apre una finestra con testo e URL. Una selezione
+  esistente viene usata come testo.
 - **Ctrl+clic** su un collegamento lo apre nel browser di sistema; passandoci
-  sopra il puntatore viene mostrato l'URL nella barra di stato.
+  sopra il mouse, l'URL appare nella barra di stato.
 - **Immagini**: trascina un file, incolla un'immagine dagli appunti o usa
   **Inserisci → Incolla immagine**. L'immagine viene salvata come PNG accanto al
-  `.md` e inserita come `![alt](percorso-relativo)`; in questo modo sopravvive al
-  round-trip verso Markdown (le immagini incorporate no).
+  `.md` e inserita come `![alt](percorso-relativo)`; così sopravvive al round-trip
+  verso Markdown (le immagini incorporate no).
 
 ## Note a piè di pagina
 
-- **Inserisci → Nota a piè di pagina** (Ctrl+Shift+N) inserisce un riferimento
-  numerato `[^n]` dove si trova il cursore e crea la relativa definizione `[^n]:`
-  alla fine del documento, pronta perché tu scriva il testo della nota.
-- I riferimenti vengono mostrati come **apice**; facendo **clic** su uno di essi,
-  il cursore salta alla sua definizione.
-- Vengono salvati come Markdown standard (`testo[^1]` nel corpo e, in fondo,
-  `[^1]: la nota`), quindi sono compatibili con altri editor.
+- **Inserisci → Nota a piè di pagina** (Ctrl+Maiusc+N) inserisce un riferimento
+  numerato `[^n]` al cursore e crea la sua definizione `[^n]:` in fondo al
+  documento, pronta per il testo della nota.
+- I riferimenti sono mostrati in **apice**; un **clic** su uno di essi sposta il
+  cursore alla sua definizione.
+- Vengono salvati come Markdown standard (`testo[^1]` nel corpo e, sotto,
+  `[^1]: la nota`), quindi compatibili con altri editor.
+
+## Riquadri, simboli e scorciatoie di testo
+
+- **Inserisci → Riquadro** crea un *callout* in stile GitHub: una citazione la cui
+  prima riga è `[!NOTE]`, `[!TIP]`, `[!IMPORTANT]`, `[!WARNING]` o `[!CAUTION]`.
+  Viene mostrato con sfondo colorato e titolo a colori, e salvato come Markdown
+  compatibile con GitHub.
+- **Inserisci → Simboli speciali…** apre una mappa caratteri per categorie
+  (matematici, greco, frecce, valute, punteggiatura…); un clic inserisce il
+  simbolo e la finestra resta aperta per inserirne altri.
+- **Scorciatoie `:nome:`**: digitando un codice come `:alpha:` o `:euro:` viene
+  espanso al simbolo corrispondente (α, €…).
+- **Inserisci → Data** e **Data e ora** inseriscono la data (e l'ora) attuale in
+  formato localizzato.
 
 ## Tabelle
 
-- **Tabella → Tabella…** chiede righe e colonne.
+- **Tabella → Inserisci tabella…** chiede righe e colonne.
 - Le azioni del menu **Tabella** (aggiungi/rimuovi riga o colonna, allinea
-  colonna) sono abilitate solo quando il cursore si trova dentro una tabella.
-- L'allineamento delle colonne (sinistra/centro/destra) viene conservato al
+  colonna) sono attive solo quando il cursore è dentro una tabella.
+- L'allineamento della colonna (sinistra/centro/destra) viene conservato al
   salvataggio come `:--`/`:-:`/`--:`.
 
 ## Formule matematiche
 
-md-editor supporta le **formule TeX** inline (`$...$`) e in blocco
-(`$$...$$`), con la consueta sintassi LaTeX (Pandoc, Obsidian, Quarto…). Non
-serve alcuna dipendenza esterna.
+md-editor supporta le **formule TeX** in linea (`$...$`) e a blocco (`$$...$$`),
+con la consueta sintassi LaTeX (Pandoc, Obsidian, Quarto…). Non serve alcuna
+dipendenza esterna.
 
-- **Inserisci → Formula…** (Ctrl+Shift+F) apre una finestra con un campo TeX e
-  un'**anteprima dal vivo**: mentre digiti vedi come apparirà. Scegli
-  *Inline* o *Blocco* e conferma per inserirla.
-- Nell'editor le formule appaiono in corsivo con il colore d'accento del tema,
-  con **veri apici e pedici** (non caratteri Unicode piatti): `x²`, `Hᵢ`,
-  e così via — il vertical-align di Qt ridimensiona correttamente qualsiasi
-  carattere.
+- **Inserisci → Formula…** (Ctrl+Maiusc+F) apre una finestra con un campo per il
+  TeX e un'**anteprima dal vivo**: mentre scrivi vedi il risultato. Scegli *In
+  linea* o *A blocco* e conferma per inserirla.
+- Le formule sono impaginate in **2D reale**: le frazioni (`\frac`) sono
+  impilate con una barra, i grandi operatori (`\sum`, `\int`, `\prod`…) mostrano
+  i limiti sopra e sotto, le radici (`\sqrt`) hanno il loro vinculum, e ci sono
+  matrici (`\begin{pmatrix}`…), coefficienti binomiali (`\binom`) e accenti
+  (`\hat`, `\vec`, `\bar`…). Le più semplici (potenze, pedici, greco) sono
+  composte in linea. Il rendering scala con lo zoom.
 - **Doppio clic** su una formula riapre la finestra con il suo TeX originale
-  precaricato: la modifichi e confermando viene sostituita.
-- Le formule sono **atomiche**: digitare al loro interno attiva un promemoria a
-  fare doppio clic per modificarle; Backspace/Canc al bordo elimina l'intero
-  gruppo.
-- All'**esportazione** le formule vengono conservate: LaTeX le emette
-  testualmente (con `amsmath` e `amssymb` nel preambolo); HTML/PDF/ODF mantengono
-  gli apici/pedici con vertical-align di Qt nel formato di destinazione.
-- Nella **vista sorgente** le vedi come `$...$` / `$$...$$`, con tutti i
+  precaricato: la modifichi e alla conferma viene sostituita.
+- Le formule sono **atomiche**: se digiti all'interno, l'app ricorda di usare il
+  doppio clic; Backspace/Canc al bordo eliminano l'intero gruppo.
+- All'**esportazione** vengono conservate: in LaTeX vengono emesse così come sono
+  (con `amsmath` e `amssymb` nel preambolo); in HTML/PDF/ODF vengono ridotte alla
+  loro approssimazione in linea.
+- Nella **vista del codice** appaiono come `$...$` / `$$...$$`, con tutti i
   caratteri TeX (`\sum`, `\frac`, `_`, `*`) intatti al salvataggio.
 
 Esempi:
@@ -126,68 +163,111 @@ $$
 $$
 ```
 
-> Limitazione: nel sorgente, `$$...$$` può estendersi su più righe (stile
-> Obsidian/Pandoc); `$...$` deve aprirsi e chiudersi sulla stessa riga.
+> Nel sorgente, `$$...$$` può estendersi su più righe (stile Obsidian/Pandoc);
+> `$...$` deve aprirsi e chiudersi sulla stessa riga.
+
+## Diagrammi
+
+Un blocco di codice con linguaggio `mermaid` o `plantuml` viene **mostrato in
+anteprima come immagine** subito sotto il blocco, senza toccare il codice (che
+resta modificabile) né il Markdown salvato.
+
+- Richiede lo strumento corrispondente installato: **`plantuml`** (con Java) per
+  PlantUML, o **`mmdc`** (mermaid-cli, con Node) per Mermaid.
+- Se lo strumento manca, sotto il blocco appare un avviso con il comando di
+  installazione per il tuo sistema operativo; il blocco resta come codice.
+- L'immagine è solo presentazione: non viene scritta nel Markdown e non conta come
+  modifica non salvata.
+
+Ad esempio, un blocco di codice etichettato `mermaid` contenente `flowchart LR  A
+--> B --> C` viene mostrato come il diagramma di flusso corrispondente.
+
+## Controllo ortografico
+
+- Sottolinea in rosso le parole errate secondo la **lingua del documento** (presa
+  dal front matter `lang`, dall'impostazione di lingua o dal sistema). Non
+  controlla il codice, le formule né i collegamenti.
+- Il **clic destro** su una parola sottolineata offre **suggerimenti** (un clic la
+  sostituisce), **Aggiungi al dizionario** (un elenco personale permanente) e
+  **Ignora** (per la sessione).
+- Si attiva/disattiva in **Visualizza → Controllo ortografico**, e la lingua si
+  imposta in **Visualizza → Lingua del controllo ortografico** (o si lascia
+  automatica).
+- Servono dizionari Hunspell: su Linux quelli di sistema (`hunspell-es`,
+  `hunspell-en-us`…); su Windows/macOS sono forniti con l'applicazione.
 
 ## Trova e sostituisci
 
-- **Trova** (Ctrl+F) apre una barra inferiore con i campi per trovare e
-  sostituire, oltre alle opzioni (maiuscole/minuscole, parola intera).
-- **Trova successivo** F3 / **Trova precedente** Shift+F3.
+- **Trova** (Ctrl+F) apre una barra in basso con campi per trovare e sostituire,
+  oltre alle opzioni (maiuscole/minuscole, parola intera).
+- **Trova successivo** F3 / **Trova precedente** Maiusc+F3.
 
 ## Struttura del documento
 
-Il pannello laterale sinistro mostra l'indice delle intestazioni (TOC): si
-aggiorna mentre digiti e, facendo clic su una voce, il cursore salta a quella
-intestazione. Si mostra/nasconde con F9.
+Il pannello laterale sinistro mostra la struttura dei titoli (TOC): si aggiorna
+mentre scrivi e, facendo clic su una voce, il cursore salta a quel titolo. Si
+mostra/nasconde con F9.
 
-Puoi **trascinare** una voce della struttura per **riordinare** quella sezione
-—la sua intestazione, il suo contenuto e le sue sottosezioni— all'interno del
-documento, senza cambiarne il livello. Inoltre, **Inserisci → Indice (TOC)**
-riversa nel documento un elenco annidato con le intestazioni.
+Puoi **trascinare** una voce della struttura per **riordinare** quella sezione —il
+suo titolo, il suo contenuto e le sue sottosezioni— nel documento, senza cambiare
+il livello. Inoltre, **Inserisci → Indice (TOC)** inserisce nel documento un
+elenco annidato dei titoli. **Visualizza → Vai al titolo…** (Ctrl+G) salta a un
+titolo digitando parte del suo testo.
+
+## Statistiche del documento
+
+- **Visualizza → Statistiche del documento…** mostra parole, caratteri,
+  paragrafi, frasi e tempo di lettura stimato (del documento o della selezione).
+- **Visualizza → Mostra conteggio parole** attiva un contatore permanente nella
+  barra di stato.
 
 ## Modalità senza distrazioni
 
-**Visualizza → Modalità senza distrazioni** (F11) entra a schermo intero con il
-menu e le barre degli strumenti nascosti e il testo centrato in una colonna di
-lettura. La struttura, se visibile, resta agganciata al blocco centrale. ESC o
-F11 escono.
+**Visualizza → Senza distrazioni** (F11) passa a schermo intero con menu e barre
+nascosti e il testo centrato in una colonna di lettura. La struttura, se visibile,
+resta accostata al blocco centrale. ESC o F11 escono.
 
-## Vista sorgente
+## Vista del codice
 
-**Visualizza → Sorgente Markdown** (Ctrl+Shift+M) alterna tra l'editor visuale e
-un editor di testo semplice a schermo intero che mostra il Markdown grezzo. Le
-modifiche fatte in modalità sorgente vengono riversate nel documento quando torni
-alla modalità visuale.
+**Visualizza → Sorgente Markdown** (Ctrl+Maiusc+M) alterna tra l'editor visuale e
+un editor di testo semplice, a schermo intero, con il Markdown grezzo. Le
+modifiche in modalità sorgente vengono riportate nel documento al ritorno alla
+modalità visuale.
 
-**Visualizza → Vista divisa** (Ctrl+Shift+D) mostra entrambi affiancati: l'editor
-visuale e il sorgente, mantenuti sincronizzati (ciò che digiti in uno si riflette
-nell'altro). È mutuamente esclusiva con la modalità sorgente a schermo intero.
+**Visualizza → Vista divisa** (Ctrl+Maiusc+D) mostra entrambi insieme, fianco a
+fianco: l'editor visuale e il sorgente, sincronizzati (ciò che digiti in uno si
+riflette nell'altro). È esclusiva con la modalità sorgente a schermo intero.
 
 ## Esportare e stampare
 
-**File → Esporta** offre **PDF**, **HTML**, **ODF (.odt)** e
-**LaTeX (.tex)**. Per ODF e LaTeX la lingua del documento viene incorporata
-(presa dal front matter `lang`/`language`, dall'impostazione dell'applicazione o,
-come ultima risorsa, dalle impostazioni locali del sistema).
+**File → Esporta** offre **PDF**, **HTML**, **ODF (.odt)**, **DOCX (.docx)**,
+**LaTeX (.tex)** ed **EPUB (.epub)**. In ODF, DOCX, LaTeX ed EPUB viene incorporata
+la lingua del documento (presa dal front matter `lang`/`language`,
+dall'impostazione dell'applicazione o, in ultima istanza, dalla lingua del
+sistema).
 
-**File → Stampa** (Ctrl+P) apre la finestra di sistema.
+Puoi anche esportare **solo la selezione in PDF** e usare l'**Anteprima di
+stampa**.
+
+**File → Stampa** (Ctrl+P) apre la finestra di sistema; **Stampa selezione** stampa
+solo ciò che è selezionato.
 
 ## Temi e aspetto
 
-- **Visualizza → Tema** offre Chiaro, Scuro, GitHub Light, GitHub Dark, Monokai
-  e Contrasto elevato.
-- **Visualizza → Luce calda notturna** attenua i toni di blu dello sfondo in base
-  all'ora del giorno.
-- **Zoom**: Ctrl+rotella del mouse, Ctrl++ / Ctrl+- e **Dimensione normale**
-  (Ctrl+0) ridimensionano tutta l'interfaccia (non solo il testo dell'editor).
-- **Visualizza → Lingua** cambia la lingua dell'interfaccia; ha effetto immediato (la finestra viene ricreata).
+- **Visualizza → Tema** offre Chiaro, Scuro, GitHub Light, GitHub Dark, Monokai e
+  Alto contrasto. **Segui il sistema** allinea il tema chiaro/scuro a quello del
+  sistema operativo.
+- **Visualizza → Luce calda notturna** attenua i blu dello sfondo in base all'ora.
+- **Zoom**: Ctrl+rotellina, Ctrl++ / Ctrl+- e **Dimensione normale** (Ctrl+0)
+  scalano tutta l'interfaccia (non solo il testo dell'editor).
+- **Visualizza → Lingua** cambia la lingua dell'interfaccia; si applica all'istante
+  (la finestra viene ricreata).
 
-## Ripristino automatico
+## Recupero automatico
 
-Mentre modifichi, il contenuto viene salvato automaticamente ogni pochi secondi
-in una copia di bozza. Se l'applicazione si chiude in modo anomalo, all'avvio
-successivo propone di recuperare ciò che stavi scrivendo.
+Mentre modifichi, il contenuto viene salvato automaticamente ogni pochi secondi in
+una copia di bozza. Se l'applicazione si chiude in modo anomalo, alla riapertura
+propone di recuperare ciò che stavi scrivendo.
 
 ## Scorciatoie
 
@@ -196,18 +276,21 @@ successivo propone di recuperare ciò che stavi scrivendo.
 | Nuovo                     | Ctrl+N           |
 | Apri                      | Ctrl+O           |
 | Salva                     | Ctrl+S           |
-| Salva con nome            | Ctrl+Shift+S     |
+| Salva come                | Ctrl+Maiusc+S    |
 | Stampa                    | Ctrl+P           |
 | Annulla / Ripeti          | Ctrl+Z / Ctrl+Y  |
 | Grassetto / Corsivo       | Ctrl+B / Ctrl+I  |
 | Sottolineato              | Ctrl+U           |
+| Incolla come testo semplice | Ctrl+Maiusc+V  |
+| Incolla come Markdown     | Ctrl+Alt+V       |
 | Trova                     | Ctrl+F           |
-| Trova successivo / precedente | F3 / Shift+F3 |
-| Intestazione H1 … H6      | Ctrl+1 … Ctrl+6  |
-| Inserisci formula         | Ctrl+Shift+F     |
-| Inserisci nota a piè di pagina | Ctrl+Shift+N |
-| Vista sorgente Markdown   | Ctrl+Shift+M     |
-| Vista divisa              | Ctrl+Shift+D     |
+| Trova successivo/precedente | F3 / Maiusc+F3 |
+| Titolo H1 … H6            | Ctrl+1 … Ctrl+6  |
+| Inserisci formula         | Ctrl+Maiusc+F    |
+| Inserisci nota            | Ctrl+Maiusc+N    |
+| Vai al titolo             | Ctrl+G           |
+| Vista sorgente Markdown   | Ctrl+Maiusc+M    |
+| Vista divisa              | Ctrl+Maiusc+D    |
 | Struttura                 | F9               |
 | Senza distrazioni         | F11              |
 | Zoom + / − / Normale      | Ctrl++ / Ctrl+− / Ctrl+0 |

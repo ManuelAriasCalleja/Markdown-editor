@@ -1,20 +1,25 @@
 # User manual
 
-**md-editor** is a visual (WYSIWYG) Markdown editor: you write and apply
-formatting over the already-rendered text, without seeing the code. When you
-save, the document is serialized back to plain Markdown.
+**md-editor** is a visual (WYSIWYG) Markdown editor: you write and format on the
+already-rendered text, without seeing the code. On save, the document is
+serialized back to plain Markdown.
 
-## Contents
+## Index
 
 - [Opening and saving](#opening-and-saving)
 - [Formatting text](#formatting-text)
 - [Headings, lists and blocks](#headings-lists-and-blocks)
+- [Transforming text and the clipboard](#transforming-text-and-the-clipboard)
 - [Links and images](#links-and-images)
 - [Footnotes](#footnotes)
+- [Admonitions, symbols and text shortcuts](#admonitions-symbols-and-text-shortcuts)
 - [Tables](#tables)
 - [Math formulas](#math-formulas)
+- [Diagrams](#diagrams)
+- [Spell checking](#spell-checking)
 - [Find and replace](#find-and-replace)
 - [Document outline](#document-outline)
+- [Document statistics](#document-statistics)
 - [Distraction-free mode](#distraction-free-mode)
 - [Source view](#source-view)
 - [Export and print](#export-and-print)
@@ -25,25 +30,25 @@ save, the document is serialized back to plain Markdown.
 ## Opening and saving
 
 - **File → New** (Ctrl+N) creates an empty document.
-- **File → Open…** (Ctrl+O) opens an existing `.md`. The application
-  remembers the most recent files in **File → Open recent**.
-- **Save** (Ctrl+S) and **Save as…** (Ctrl+Shift+S) write the document in
-  UTF-8.
-- If the file changes outside the editor, the application detects it and, if
-  you have no unsaved changes, reloads it; otherwise it asks what to do.
+- **File → New from template** creates a document from a skeleton (letter,
+  minutes, exam…) ready to fill in.
+- **File → Open…** (Ctrl+O) opens an existing `.md`. The application remembers
+  the most recent ones in **File → Open recent**.
+- **Save** (Ctrl+S) and **Save as…** (Ctrl+Shift+S) write the document in UTF-8.
+  **Open containing folder** opens the document's folder in the file manager.
+- If the file changes outside the editor, the application detects it and, if you
+  have no unsaved changes, reloads it; if you do, it asks what to do.
 - You can also **drag and drop** a file onto the window to open it.
 
-### Front matter
+### *Front matter*
 
-If the document begins with a `---…---` (YAML) or `+++…+++` (TOML) block, it
-is preserved verbatim on save: it is not shown in the editor and is not
-editable. It is meant for metadata such as `title`, `lang`, etc., which are
-used when exporting.
+If the document starts with a `---…---` (YAML) or `+++…+++` (TOML) block, it is
+preserved verbatim on save: it is not shown in the editor and not edited. It is
+used for metadata such as `title`, `lang`, etc., which are used when exporting.
 
 ## Formatting text
 
-Select a fragment and apply formatting from the toolbar or the **Format**
-menu:
+Select a fragment and apply formatting with the toolbar or the **Format** menu:
 
 - **Bold** (Ctrl+B), **Italic** (Ctrl+I), **Underline** (Ctrl+U),
   **Strikethrough**.
@@ -55,63 +60,93 @@ The toolbar buttons reflect the active formatting under the cursor.
 ## Headings, lists and blocks
 
 - **Headings** H1–H6 from **Format → Heading** or with Ctrl+1 … Ctrl+6.
-- **Lists**: bullets, numbered and task lists (with a checkbox). Pressing
-  Enter at the end of an item creates the next one automatically; pressing
-  Enter on an empty item exits the list. **Clicking a task's checkbox**
-  toggles it checked or unchecked.
+- **Lists**: bullets, numbered and task lists (with a checkbox). Pressing Enter
+  at the end of an item automatically creates the next one; Enter on an empty
+  item leaves the list. A **click on the checkbox** of a task toggles it.
 - **Quote** (`>` at the start of a paragraph) and **code block** are applied
   from the toolbar; both round-trip to Markdown correctly.
+- **Indentation**: **Format → Increase/Decrease indent** nests lists and quotes.
+
+## Transforming text and the clipboard
+
+- **Edit → Transform text** acts on the selection: **UPPERCASE**, **lowercase**,
+  **Capitalize** and **Sort lines**.
+- **Smart typography** (in the same menu) converts the dashes `--`/`---` in the
+  selection to `–`/`—`, `...` to `…` and straight quotes to typographic ones
+  according to context.
+- **Paste as plain text** (Ctrl+Shift+V) pastes without formatting. **Paste as
+  Markdown** (Ctrl+Alt+V) converts the clipboard's rich content (HTML) to
+  Markdown instead of embedding the source's formatting.
+- **Copy as HTML** copies the selection (or the document) as HTML, to paste into
+  email, a CMS, etc.
+- When you paste a **URL** over a text selection, the text is linked
+  automatically.
 
 ## Links and images
 
-- **Insert → Link…** opens a dialog with text and URL fields. If you had a
-  selection, it is used as the text.
-- **Ctrl+click** on a link opens it in the system browser; hovering shows
-  the URL in the status bar.
-- **Images**: drag a file, paste an image from the clipboard, or use
-  **Insert → Paste image**. The image is saved as PNG next to the `.md` and
-  inserted as `![alt](relative-path)`; that way it survives the round-trip
-  to Markdown (embedded images do not).
+- **Insert → Link…** opens a dialog with text and URL. If you had a selection,
+  it is used as the text.
+- **Ctrl+click** on a link opens it in the system browser; hovering over it
+  shows the URL in the status bar.
+- **Images**: drag a file, paste an image from the clipboard or use **Insert →
+  Paste image**. The image is saved as PNG next to the `.md` and inserted as
+  `![alt](relative-path)`; this way it survives the round-trip to Markdown
+  (embedded images do not).
 
 ## Footnotes
 
-- **Insert → Footnote** (Ctrl+Shift+N) inserts a numbered reference `[^n]`
-  where the cursor is and creates its definition `[^n]:` at the end of the
-  document, ready for you to write the note's text.
-- References are shown as a **superscript**; **clicking** one jumps the
-  cursor to its definition.
+- **Insert → Footnote** (Ctrl+Shift+N) inserts a numbered reference `[^n]` at the
+  cursor and creates its definition `[^n]:` at the end of the document, ready for
+  you to write the note text.
+- References are shown as **superscript**; **clicking** one jumps the cursor to
+  its definition.
 - They are saved as standard Markdown (`text[^1]` in the body and, below,
   `[^1]: the note`), so they are compatible with other editors.
+
+## Admonitions, symbols and text shortcuts
+
+- **Insert → Admonition** creates a GitHub-style callout: a quote whose first
+  line is `[!NOTE]`, `[!TIP]`, `[!IMPORTANT]`, `[!WARNING]` or `[!CAUTION]`. It
+  is shown with a tinted background and a colored title, and is saved as
+  GitHub-compatible Markdown.
+- **Insert → Special symbols…** opens a character map by categories
+  (mathematical, Greek, arrows, currency, punctuation…); a click inserts the
+  symbol and the dialog stays open to insert several.
+- **`:name:` shortcuts**: typing a code such as `:alpha:` or `:euro:` expands to
+  the corresponding symbol (α, €…).
+- **Insert → Date** and **Date and time** insert the current date (and time) in
+  localized format.
 
 ## Tables
 
 - **Table → Insert table…** asks for rows and columns.
-- The actions in the **Table** menu (add/remove row or column, align column)
-  are only enabled when the cursor is inside a table.
-- Column alignment (left/center/right) is preserved on save as
-  `:--`/`:-:`/`--:`.
+- The **Table** menu actions (add/remove row or column, align column) are only
+  enabled when the cursor is inside a table.
+- Column alignment (left/center/right) is preserved on save as `:--`/`:-:`/`--:`.
 
 ## Math formulas
 
-md-editor supports **TeX formulas** inline (`$...$`) and as blocks
-(`$$...$$`), with the usual LaTeX syntax (Pandoc, Obsidian, Quarto…). No
-external dependencies needed.
+md-editor supports **TeX formulas** inline (`$...$`) and in block (`$$...$$`),
+with the usual LaTeX syntax (Pandoc, Obsidian, Quarto…). No external dependency
+is needed.
 
-- **Insert → Formula…** (Ctrl+Shift+F) opens a dialog with a TeX field and a
-  **live preview**: as you type you see what it will look like. Choose
-  *Inline* or *Block* and accept to insert it.
-- In the editor, formulas appear in italics with the theme's accent color,
-  with **real super/subscripts** (not flat Unicode characters): `x²`, `Hᵢ`,
-  and so on — Qt vertical-align scales any character correctly.
-- **Double-click** a formula to reopen the dialog with its original TeX
-  preloaded: edit and accept to replace it.
-- Formulas are **atomic**: typing inside one triggers a reminder to
-  double-click for editing; Backspace/Delete at the edge removes the whole
-  group.
-- On **export**, formulas are preserved: LaTeX emits them verbatim (with
-  `amsmath` and `amssymb` in the preamble); HTML/PDF/ODF keep Qt's
-  vertical-align super/subscripts in the target format.
-- In **source view** you see them as `$...$` / `$$...$$`, with all TeX
+- **Insert → Formula…** (Ctrl+Shift+F) opens a dialog with a field for the TeX
+  and a **live preview**: as you type you see how it will look. Choose *Inline*
+  or *Block* and accept to insert it.
+- Formulas are laid out in **real 2D**: fractions (`\frac`) stack with a bar,
+  large operators (`\sum`, `\int`, `\prod`…) show their limits above and below,
+  roots (`\sqrt`) carry their vinculum, and there are matrices
+  (`\begin{pmatrix}`…), binomials (`\binom`) and accents (`\hat`, `\vec`,
+  `\bar`…). Simpler ones (powers, subscripts, Greek) are composed inline. The
+  rendering scales with the zoom.
+- **Double-click** on a formula reopens the dialog with its original TeX
+  preloaded: you edit and on accept it is replaced.
+- Formulas are **atomic**: if you type inside, the app reminds you to use the
+  double-click; Backspace/Delete at their edge delete the whole group.
+- When **exporting** they are preserved: to LaTeX they are emitted verbatim
+  (with `amsmath` and `amssymb` in the preamble); to HTML/PDF/ODF they fall back
+  to their inline approximation.
+- In the **source view** they appear as `$...$` / `$$...$$`, with all the TeX
   characters (`\sum`, `\frac`, `_`, `*`) intact on save.
 
 Examples:
@@ -124,66 +159,105 @@ $$
 $$
 ```
 
-> Limitation: in source, `$$...$$` may span multiple lines (Obsidian/Pandoc
-> style); `$...$` must open and close on the same line.
+> In the source, `$$...$$` may span several lines (Obsidian/Pandoc style);
+> `$...$` must open and close on the same line.
+
+## Diagrams
+
+A code block with language `mermaid` or `plantuml` is **previewed as an image**
+right below the block, without touching the code (which stays editable) or the
+saved Markdown.
+
+- It requires the corresponding tool to be installed: **`plantuml`** (with Java)
+  for PlantUML, or **`mmdc`** (mermaid-cli, with Node) for Mermaid.
+- If the tool is missing, a notice with the installation command for your
+  operating system appears below the block; the block stays as code.
+- The image is presentation only: it is not written to the Markdown and does not
+  count as an unsaved change.
+
+For example, a code block tagged `mermaid` containing `flowchart LR  A --> B
+--> C` is previewed as the corresponding flowchart.
+
+## Spell checking
+
+- Underlines misspelled words in red according to the **document language**
+  (taken from the `lang` front matter, the language setting or the system). It
+  does not check code, formulas or links.
+- **Right-click** on an underlined word offers **suggestions** (a click replaces
+  it), **Add to dictionary** (a permanent personal list) and **Ignore** (for the
+  session).
+- It is turned on/off in **View → Spell checking**, and the language is set in
+  **View → Spell-check language** (or left automatic).
+- It needs Hunspell dictionaries: on Linux, the system ones (`hunspell-es`,
+  `hunspell-en-us`…); on Windows/macOS they ship with the application.
 
 ## Find and replace
 
-- **Find** (Ctrl+F) opens a bottom bar with find and replace fields, plus
+- **Find** (Ctrl+F) opens a bottom bar with fields to find and replace, plus
   options (case, whole word).
 - **Find next** F3 / **Find previous** Shift+F3.
 
 ## Document outline
 
-The left side panel shows the index of headings (TOC): it updates as you
-type, and clicking an entry jumps the cursor to that heading. It is
-toggled with F9.
+The left side panel shows the heading outline (TOC): it updates as you type and,
+when you click an entry, the cursor jumps to that heading. It is shown/hidden
+with F9.
 
-You can **drag** an outline entry to **reorder** that section —its heading,
-its content and its subsections— within the document, without changing its
-level. In addition, **Insert → Table of contents (TOC)** dumps a nested list
-of the headings into the document.
+You can **drag** an outline entry to **reorder** that section —its heading, its
+content and its subsections— within the document, without changing its level.
+Also, **Insert → Table of contents (TOC)** dumps a nested list of the headings
+into the document. **View → Go to heading…** (Ctrl+G) jumps to a heading by
+typing part of its text.
+
+## Document statistics
+
+- **View → Document statistics…** shows words, characters, paragraphs, sentences
+  and estimated reading time (of the document or the selection).
+- **View → Show word count** enables a permanent counter in the status bar.
 
 ## Distraction-free mode
 
-**View → Distraction-free** (F11) enters full screen with the menu and
-toolbars hidden and the text centered in a reading column. The outline, if
-visible, stays attached to the central block. ESC or F11 exits.
+**View → Distraction-free** (F11) enters full screen with the menu and toolbars
+hidden and the text centered in a reading column. The outline, if visible, stays
+attached to the central block. ESC or F11 leave.
 
 ## Source view
 
-**View → Markdown source** (Ctrl+Shift+M) toggles between the visual editor and a
-full-screen plain-text editor showing the raw Markdown. Changes made in source
-mode are flushed into the document when you return to visual mode.
+**View → Markdown source** (Ctrl+Shift+M) toggles between the visual editor and
+a plain-text editor, full screen, with the raw Markdown. Changes in the source
+mode are committed to the document when you return to the visual mode.
 
-**View → Split view** (Ctrl+Shift+D) shows both side by side: the visual editor
-and the source, kept in sync (what you type in one is reflected in the other). It
-is mutually exclusive with full-screen source mode.
+**View → Split view** (Ctrl+Shift+D) shows both at once, side by side: the visual
+editor and the source code, synchronized (what you type in one is reflected in
+the other). It is mutually exclusive with the full-screen source mode.
 
 ## Export and print
 
-**File → Export** offers **PDF**, **HTML**, **ODF (.odt)** and
-**LaTeX (.tex)**. For ODF and LaTeX the document language is embedded
-(taken from the front matter `lang`/`language`, the application setting or,
-as a last resort, the system locale).
+**File → Export** offers **PDF**, **HTML**, **ODF (.odt)**, **DOCX (.docx)**,
+**LaTeX (.tex)** and **EPUB (.epub)**. In ODF, DOCX, LaTeX and EPUB the document
+language is embedded (taken from the `lang`/`language` front matter, the
+application setting or, as a last resort, the system language).
 
-**File → Print** (Ctrl+P) opens the system dialog.
+You can also export **only the selection to PDF** and use the **Print preview**.
+
+**File → Print** (Ctrl+P) opens the system dialog; **Print selection** prints
+only what is selected.
 
 ## Themes and appearance
 
-- **View → Theme** offers Light, Dark, GitHub Light, GitHub Dark, Monokai
-  and High contrast.
-- **View → Warm night light** dims the blues in the background based on the
-  time of day.
-- **Zoom**: Ctrl+mouse wheel, Ctrl++ / Ctrl+- and **Normal size** (Ctrl+0)
-  scale the whole interface (not just the editor text).
-- **View → Language** changes the interface language; takes effect immediately (the window is recreated).
+- **View → Theme** offers Light, Dark, GitHub Light, GitHub Dark, Monokai and
+  High contrast. **Follow the system** matches the light/dark theme to the OS.
+- **View → Night warm light** dims the background blues according to the time.
+- **Zoom**: Ctrl+mouse wheel, Ctrl++ / Ctrl+- and **Normal size** (Ctrl+0) scale
+  the whole interface (not just the editor text).
+- **View → Language** changes the interface language; it applies instantly
+  (recreates the window).
 
 ## Automatic recovery
 
-While you edit, the content is autosaved every few seconds into a draft
-copy. If the application closes unexpectedly, on the next launch it offers
-to recover what you were writing.
+While you edit, the content is auto-saved every few seconds into a draft copy.
+If the application closes abnormally, on reopening it offers to recover what you
+were writing.
 
 ## Shortcuts
 
@@ -197,11 +271,14 @@ to recover what you were writing.
 | Undo / Redo               | Ctrl+Z / Ctrl+Y  |
 | Bold / Italic             | Ctrl+B / Ctrl+I  |
 | Underline                 | Ctrl+U           |
+| Paste as plain text       | Ctrl+Shift+V     |
+| Paste as Markdown         | Ctrl+Alt+V       |
 | Find                      | Ctrl+F           |
-| Find next / previous      | F3 / Shift+F3    |
+| Find next/previous        | F3 / Shift+F3    |
 | Heading H1 … H6           | Ctrl+1 … Ctrl+6  |
 | Insert formula            | Ctrl+Shift+F     |
 | Insert footnote           | Ctrl+Shift+N     |
+| Go to heading             | Ctrl+G           |
 | Markdown source view      | Ctrl+Shift+M     |
 | Split view                | Ctrl+Shift+D     |
 | Outline                   | F9               |

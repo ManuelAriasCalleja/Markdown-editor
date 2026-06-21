@@ -1,120 +1,155 @@
 # Manual de utilizare
 
 **md-editor** este un editor vizual (WYSIWYG) de Markdown: scrii și aplici
-formatare peste textul deja randat, fără să vezi codul. La salvare, documentul
-este serializat înapoi în Markdown pur.
+formatare pe textul deja randat, fără a vedea codul. La salvare, documentul este
+serializat înapoi în Markdown pur.
 
 ## Cuprins
 
-- [Deschiderea și salvarea](#deschiderea-si-salvarea)
+- [Deschidere și salvare](#deschidere-si-salvare)
 - [Formatarea textului](#formatarea-textului)
 - [Titluri, liste și blocuri](#titluri-liste-si-blocuri)
-- [Legături și imagini](#legaturi-si-imagini)
+- [Transformarea textului și clipboardul](#transformarea-textului-si-clipboardul)
+- [Linkuri și imagini](#linkuri-si-imagini)
 - [Note de subsol](#note-de-subsol)
+- [Casete, simboluri și scurtături de text](#casete-simboluri-si-scurtaturi-de-text)
 - [Tabele](#tabele)
 - [Formule matematice](#formule-matematice)
-- [Caută și înlocuiește](#cauta-si-inlocuieste)
-- [Schița documentului](#schita-documentului)
+- [Diagrame](#diagrame)
+- [Corectare ortografică](#corectare-ortografica)
+- [Căutare și înlocuire](#cautare-si-inlocuire)
+- [Structura documentului](#structura-documentului)
+- [Statistici despre document](#statistici-despre-document)
 - [Mod fără distrageri](#mod-fara-distrageri)
-- [Vizualizarea sursei](#vizualizarea-sursei)
+- [Vizualizarea codului](#vizualizarea-codului)
 - [Export și tipărire](#export-si-tiparire)
 - [Teme și aspect](#teme-si-aspect)
 - [Recuperare automată](#recuperare-automata)
 - [Scurtături](#scurtaturi)
 
-## Deschiderea și salvarea
+## Deschidere și salvare
 
 - **Fișier → Nou** (Ctrl+N) creează un document gol.
-- **Fișier → Deschide…** (Ctrl+O) deschide un `.md` existent. Aplicația
-  reține cele mai recente fișiere în **Fișier → Deschide recente**.
-- **Salvează** (Ctrl+S) și **Salvează ca…** (Ctrl+Shift+S) scriu documentul
-  în UTF-8.
-- Dacă fișierul se modifică în afara editorului, aplicația detectează acest
-  lucru și, dacă nu ai modificări nesalvate, îl reîncarcă; dacă ai, te
-  întreabă ce să facă.
-- De asemenea, poți **trage și plasa** un fișier peste fereastră pentru a-l
-  deschide.
+- **Fișier → Nou din șablon** creează un document pornind de la un schelet
+  (scrisoare, proces-verbal, examen…) gata de completat.
+- **Fișier → Deschide…** (Ctrl+O) deschide un `.md` existent. Aplicația reține
+  ultimele deschise în **Fișier → Deschise recent**.
+- **Salvează** (Ctrl+S) și **Salvează ca…** (Ctrl+Shift+S) scriu documentul în
+  UTF-8. **Deschide folderul documentului** deschide folderul documentului în
+  managerul de fișiere.
+- Dacă fișierul se schimbă în afara editorului, aplicația detectează asta și, dacă
+  nu ai modificări nesalvate, îl reîncarcă; dacă ai, întreabă ce să facă.
+- Poți de asemenea **trage și plasa** un fișier pe fereastră pentru a-l deschide.
 
 ### *Front matter*
 
-Dacă documentul începe cu un bloc `---…---` (YAML) sau `+++…+++` (TOML),
-acesta este păstrat ca atare la salvare: nu se afișează în editor și nu se
-editează. Servește pentru metadate precum `title`, `lang` etc., care sunt
-folosite la export.
+Dacă documentul începe cu un bloc `---…---` (YAML) sau `+++…+++` (TOML), acesta
+este păstrat ca atare la salvare: nu se vede în editor și nu se editează. Servește
+pentru metadate precum `title`, `lang` etc., folosite la export.
 
 ## Formatarea textului
 
-Selectează un fragment și aplică formatarea din bara de instrumente sau din
-meniul **Format**:
+Selectează un fragment și aplică formatarea din bara de instrumente sau din meniul
+**Format**:
 
-- **Îngroșat** (Ctrl+B), **Cursiv** (Ctrl+I), **Subliniat** (Ctrl+U),
-  **Tăiat**.
+- **Aldin** (Ctrl+B), **Cursiv** (Ctrl+I), **Subliniat** (Ctrl+U), **Tăiat**.
 - **Cod în linie** pentru fragmente `monospațiate`.
-- **Legătură**: adaugă `[text](url)` peste selecție.
+- **Link**: adaugă `[text](url)` peste selecție.
 
-Butoanele din bară reflectă formatarea activă de sub cursor.
+Butoanele din bară reflectă formatarea activă sub cursor.
 
 ## Titluri, liste și blocuri
 
 - **Titluri** H1–H6 din **Format → Titlu** sau cu Ctrl+1 … Ctrl+6.
-- **Liste**: cu marcatori, numerotate și de sarcini (cu casetă de bifare).
-  Apăsând Enter la sfârșitul unui element se creează automat următorul;
-  apăsând Enter pe un element gol se iese din listă. Un **clic pe caseta de
-  bifare a unei sarcini** o bifează sau o debifează.
-- **Citatul** (`>` la începutul unui paragraf) și **blocul de cod** se aplică
-  din bară; ambele fac round-trip corect către Markdown.
+- **Liste**: cu marcatori, numerotate și de sarcini (cu casetă). Enter la sfârșitul
+  unui punct creează automat următorul; Enter pe un punct gol iese din listă. Un
+  **clic pe caseta** unei sarcini o bifează sau o debifează.
+- **Citat** (`>` la începutul unui paragraf) și **bloc de cod** se aplică din bară;
+  ambele revin corect la Markdown.
+- **Indentare**: **Format → Mărește/Micșorează indentarea** imbrică listele și
+  citatele.
 
-## Legături și imagini
+## Transformarea textului și clipboardul
 
-- **Inserare → Legătură…** deschide un dialog cu câmpuri pentru text și URL.
-  Dacă aveai o selecție, aceasta este folosită ca text.
-- **Ctrl+clic** pe o legătură o deschide în navigatorul sistemului; trecând
-  cursorul peste ea se afișează URL-ul în bara de stare.
+- **Editare → Transformă textul** acționează asupra selecției: **MAJUSCULE**,
+  **minuscule**, **Capitalizează** și **Sortează liniile**.
+- **Tipografie inteligentă** (în același meniu) convertește în selecție liniuțele
+  `--`/`---` în `–`/`—`, `...` în `…` și ghilimelele drepte în ghilimele
+  tipografice în funcție de context.
+- **Lipește ca text simplu** (Ctrl+Shift+V) lipește fără formatare. **Lipește ca
+  Markdown** (Ctrl+Alt+V) convertește conținutul formatat din clipboard (HTML) în
+  Markdown în loc să încorporeze formatarea sursei.
+- **Copiază ca HTML** copiază selecția (sau documentul) ca HTML, pentru a o lipi
+  într-un e-mail, un CMS etc.
+- Când lipești o **adresă URL** peste o selecție de text, textul devine link
+  automat.
+
+## Linkuri și imagini
+
+- **Inserare → Link…** deschide o fereastră cu text și URL. O selecție existentă
+  este folosită ca text.
+- **Ctrl+clic** pe un link îl deschide în browserul sistemului; la trecerea cu
+  mouse-ul, URL-ul apare în bara de stare.
 - **Imagini**: trage un fișier, lipește o imagine din clipboard sau folosește
-  **Inserare → Lipește imaginea**. Imaginea se salvează ca PNG lângă `.md` și
-  se inserează ca `![alt](cale-relativă)`; astfel supraviețuiește round-trip-ului
-  către Markdown (imaginile încorporate, nu).
+  **Inserare → Lipește imagine**. Imaginea este salvată ca PNG lângă `.md` și
+  inserată ca `![alt](cale-relativă)`; astfel supraviețuiește conversiei dus-întors
+  în Markdown (imaginile încorporate nu).
 
 ## Note de subsol
 
-- **Inserare → Notă de subsol** (Ctrl+Shift+N) inserează o referință numerotată
-  `[^n]` acolo unde se află cursorul și creează definiția sa `[^n]:` la sfârșitul
-  documentului, gata pentru a scrie textul notei.
-- Referințele se afișează ca **superscript**; dând **clic** pe una, cursorul
-  sare la definiția sa.
-- Se salvează ca Markdown standard (`text[^1]` în corp și, mai jos,
-  `[^1]: nota`), așa că sunt compatibile cu alte editoare.
+- **Inserare → Notă de subsol** (Ctrl+Shift+N) inserează la cursor o referință
+  numerotată `[^n]` și creează definiția ei `[^n]:` la sfârșitul documentului,
+  gata pentru textul notei.
+- Referințele sunt afișate ca **exponent**; un **clic** pe una mută cursorul la
+  definiția ei.
+- Sunt salvate ca Markdown standard (`text[^1]` în corp și, dedesubt,
+  `[^1]: nota`), deci sunt compatibile cu alte editoare.
+
+## Casete, simboluri și scurtături de text
+
+- **Inserare → Casetă** creează un *callout* în stil GitHub: un citat a cărui primă
+  linie este `[!NOTE]`, `[!TIP]`, `[!IMPORTANT]`, `[!WARNING]` sau `[!CAUTION]`.
+  Este afișat cu fundal colorat și titlu colorat și salvat ca Markdown compatibil
+  cu GitHub.
+- **Inserare → Simboluri speciale…** deschide o hartă de caractere pe categorii
+  (matematice, grecești, săgeți, monedă, punctuație…); un clic inserează simbolul,
+  iar fereastra rămâne deschisă pentru a insera mai multe.
+- **Scurtături `:nume:`**: tastând un cod precum `:alpha:` sau `:euro:`, acesta este
+  extins la simbolul corespunzător (α, €…).
+- **Inserare → Dată** și **Dată și oră** inserează data (și ora) curentă în format
+  localizat.
 
 ## Tabele
 
-- **Tabel → Inserează tabel…** cere numărul de rânduri și coloane.
-- Acțiunile din meniul **Tabel** (adăugare/ștergere rând sau coloană,
-  alinierea coloanei) sunt activate doar când cursorul se află într-un tabel.
-- Alinierea coloanei (stânga/centru/dreapta) se păstrează la salvare ca
+- **Tabel → Inserează tabel…** cere rânduri și coloane.
+- Acțiunile meniului **Tabel** (adaugă/elimină rând sau coloană, aliniază coloana)
+  sunt active doar când cursorul este într-un tabel.
+- Alinierea coloanei (stânga/centru/dreapta) este păstrată la salvare ca
   `:--`/`:-:`/`--:`.
 
 ## Formule matematice
 
-md-editor acceptă **formule TeX** în linie (`$...$`) și în bloc (`$$...$$`),
-cu sintaxa obișnuită LaTeX (Pandoc, Obsidian, Quarto…). Nu este nevoie de
-nicio dependență externă.
+md-editor acceptă **formule TeX** în linie (`$...$`) și în bloc (`$$...$$`), cu
+sintaxa LaTeX obișnuită (Pandoc, Obsidian, Quarto…). Nu este necesară nicio
+dependență externă.
 
-- **Inserare → Formulă…** (Ctrl+Shift+F) deschide un dialog cu un câmp pentru
-  TeX și o **previzualizare în timp real**: pe măsură ce scrii vezi cum va
-  arăta. Alege *În linie* sau *Bloc* și acceptă pentru a o insera.
-- În editor, formulele apar cu cursive și culoarea de accent a temei, cu
-  **superscripte și subscripte reale** (nu caractere Unicode plate): `x²`,
-  `Hᵢ` ș.a.m.d. — vertical-align-ul Qt scalează corect orice caracter.
-- **Dublu clic** pe o formulă redeschide dialogul cu TeX-ul ei original
-  preîncărcat: o editezi și, la acceptare, se înlocuiește.
-- Formulele sunt **atomice**: dacă tastezi în interiorul uneia, aplicația îți
-  amintește să folosești dublul clic; Backspace/Delete la marginea ei șterge
-  întregul grup.
-- La **export** se păstrează: în LaTeX se emit ca atare (cu `amsmath` și
-  `amssymb` în preambul); în HTML/PDF/ODF se păstrează superscriptele/subscriptele
-  cu vertical-align ale Qt în formatul de destinație.
-- În **vizualizarea sursei** apar ca `$...$` / `$$...$$`, cu toate caracterele
-  TeX (`\sum`, `\frac`, `_`, `*`) intacte la salvare.
+- **Inserare → Formulă…** (Ctrl+Shift+F) deschide o fereastră cu un câmp pentru TeX
+  și o **previzualizare în timp real**: pe măsură ce scrii vezi rezultatul. Alege
+  *În linie* sau *Bloc* și confirmă pentru a o insera.
+- Formulele sunt aranjate în **2D real**: fracțiile (`\frac`) sunt stivuite cu o
+  bară, operatorii mari (`\sum`, `\int`, `\prod`…) își arată limitele deasupra și
+  dedesubt, radicalii (`\sqrt`) își poartă bara, iar există matrice
+  (`\begin{pmatrix}`…), coeficienți binomiali (`\binom`) și accente (`\hat`,
+  `\vec`, `\bar`…). Cele mai simple (puteri, indici, greacă) sunt compuse în linie.
+  Desenul se scalează cu zoomul.
+- **Dublu clic** pe o formulă redeschide fereastra cu TeX-ul original preîncărcat:
+  o editezi și, la confirmare, este înlocuită.
+- Formulele sunt **atomice**: dacă tastezi în interior, aplicația îți amintește să
+  folosești dublul clic; Backspace/Delete pe margine șterg întregul grup.
+- La **export** sunt păstrate: în LaTeX sunt emise ca atare (cu `amsmath` și
+  `amssymb` în preambul); în HTML/PDF/ODF sunt reduse la aproximarea lor în linie.
+- În **vizualizarea codului** apar ca `$...$` / `$$...$$`, cu toate caracterele TeX
+  (`\sum`, `\frac`, `_`, `*`) intacte la salvare.
 
 Exemple:
 
@@ -126,67 +161,111 @@ $$
 $$
 ```
 
-> Limitare: în sursă, `$$...$$` poate să se întindă pe mai multe linii (stil
-> Obsidian/Pandoc); `$...$` trebuie să se deschidă și să se închidă pe aceeași
-> linie.
+> În sursă, `$$...$$` poate cuprinde mai multe linii (stil Obsidian/Pandoc);
+> `$...$` trebuie să se deschidă și să se închidă pe aceeași linie.
 
-## Caută și înlocuiește
+## Diagrame
 
-- **Caută** (Ctrl+F) deschide o bară inferioară cu câmpuri pentru căutare și
-  înlocuire, plus opțiuni (majuscule, cuvânt întreg).
+Un bloc de cod cu limbajul `mermaid` sau `plantuml` este **previzualizat ca
+imagine** chiar sub bloc, fără a atinge codul (care rămâne editabil) sau Markdown-ul
+salvat.
+
+- Necesită instalarea instrumentului corespunzător: **`plantuml`** (cu Java) pentru
+  PlantUML sau **`mmdc`** (mermaid-cli, cu Node) pentru Mermaid.
+- Dacă instrumentul lipsește, sub bloc apare un avertisment cu comanda de instalare
+  pentru sistemul tău de operare; blocul rămâne cod.
+- Imaginea este doar prezentare: nu este scrisă în Markdown și nu contează ca
+  modificare nesalvată.
+
+De exemplu, un bloc de cod etichetat `mermaid` care conține `flowchart LR  A --> B
+--> C` este previzualizat ca diagrama de flux corespunzătoare.
+
+## Corectare ortografică
+
+- Subliniază cu roșu cuvintele scrise greșit în funcție de **limba documentului**
+  (din front matter `lang`, din setarea de limbă sau din sistem). Nu verifică
+  codul, formulele sau linkurile.
+- **Clic dreapta** pe un cuvânt subliniat oferă **sugestii** (un clic îl
+  înlocuiește), **Adaugă în dicționar** (o listă personală permanentă) și
+  **Ignoră** (pe durata sesiunii).
+- Se activează/dezactivează din **Vizualizare → Corectare ortografică**, iar limba
+  se stabilește din **Vizualizare → Limba de corectare** (sau se lasă automată).
+- Are nevoie de dicționare Hunspell: pe Linux, cele ale sistemului (`hunspell-es`,
+  `hunspell-en-us`…); pe Windows/macOS sunt livrate cu aplicația.
+
+## Căutare și înlocuire
+
+- **Caută** (Ctrl+F) deschide o bară jos cu câmpuri pentru căutare și înlocuire,
+  plus opțiuni (majuscule/minuscule, cuvânt întreg).
 - **Caută următorul** F3 / **Caută anteriorul** Shift+F3.
 
-## Schița documentului
+## Structura documentului
 
-Panoul lateral din stânga afișează indexul titlurilor (TOC): se actualizează
-pe măsură ce scrii și, dând clic pe o intrare, cursorul sare la acel titlu. Se
+Panoul lateral din stânga arată structura titlurilor (cuprins): se actualizează pe
+măsură ce scrii și, la clic pe o intrare, cursorul sare la acel titlu. Se
 afișează/ascunde cu F9.
 
-Poți **trage** o intrare din schiță pentru a **reordona** acea secțiune
-—titlul ei, conținutul și subsecțiunile sale— în interiorul documentului, fără
-a schimba nivelul. În plus, **Inserare → Cuprins (TOC)** generează în document o
-listă imbricată cu titlurile.
+Poți **trage** o intrare din structură pentru a **reordona** acea secțiune —titlul,
+conținutul și subsecțiunile ei— în document, fără a schimba nivelul. În plus,
+**Inserare → Cuprins (TOC)** plasează în document o listă imbricată a titlurilor.
+**Vizualizare → Mergi la titlu…** (Ctrl+G) sare la un titlu tastând o parte din
+textul lui.
+
+## Statistici despre document
+
+- **Vizualizare → Statistici despre document…** arată cuvinte, caractere,
+  paragrafe, propoziții și timpul estimat de citire (al documentului sau al
+  selecției).
+- **Vizualizare → Arată contorul de cuvinte** activează un contor permanent în bara
+  de stare.
 
 ## Mod fără distrageri
 
-**Vizualizare → Mod fără distrageri** (F11) intră pe tot ecranul, cu meniul și
-barele ascunse și textul centrat într-o coloană de lectură. Schița, dacă este
-vizibilă, rămâne lipită de blocul central. ESC sau F11 ies.
+**Vizualizare → Fără distrageri** (F11) intră pe ecran complet cu meniul și barele
+ascunse și textul centrat într-o coloană de citire. Structura, dacă este vizibilă,
+rămâne lipită de blocul central. ESC sau F11 ies.
 
-## Vizualizarea sursei
+## Vizualizarea codului
 
-**Vizualizare → Sursă Markdown** (Ctrl+Shift+M) comută între editorul vizual și
-un editor de text simplu, pe tot ecranul, cu Markdown-ul brut. Modificările din
-modul sursă se transferă în document la revenirea în modul vizual.
+**Vizualizare → Sursă Markdown** (Ctrl+Shift+M) comută între editorul vizual și un
+editor de text simplu, pe ecran complet, cu Markdown-ul brut. Modificările din
+modul sursă sunt aplicate documentului la revenirea în modul vizual.
 
-**Vizualizare → Vizualizare divizată** (Ctrl+Shift+D) afișează ambele simultan,
-unul lângă altul: editorul vizual și sursa, sincronizate (ce scrii într-unul se
-reflectă în celălalt). Este reciproc exclusivă cu modul sursă pe tot ecranul.
+**Vizualizare → Vizualizare divizată** (Ctrl+Shift+D) le arată pe ambele
+simultan, una lângă alta: editorul vizual și sursa, sincronizate (ce tastezi
+într-unul se reflectă în celălalt). Se exclude reciproc cu modul sursă pe ecran
+complet.
 
 ## Export și tipărire
 
-**Fișier → Exportă** oferă **PDF**, **HTML**, **ODF (.odt)** și
-**LaTeX (.tex)**. Pentru ODF și LaTeX se încorporează limba documentului
-(preluată din front matter `lang`/`language`, din setarea aplicației sau, în
-ultimă instanță, din limba sistemului).
+**Fișier → Exportă** oferă **PDF**, **HTML**, **ODF (.odt)**, **DOCX (.docx)**,
+**LaTeX (.tex)** și **EPUB (.epub)**. În ODF, DOCX, LaTeX și EPUB este încorporată
+limba documentului (din front matter `lang`/`language`, din setarea aplicației sau,
+în ultimă instanță, din limba sistemului).
 
-**Fișier → Tipărește** (Ctrl+P) deschide dialogul sistemului.
+Poți, de asemenea, să exporți **doar selecția în PDF** și să folosești
+**Previzualizarea tipăririi**.
+
+**Fișier → Tipărește** (Ctrl+P) deschide dialogul sistemului; **Tipărește selecția**
+tipărește doar ce este selectat.
 
 ## Teme și aspect
 
-- **Vizualizare → Temă** oferă Luminoasă, Întunecată, GitHub Light, GitHub
-  Dark, Monokai și Contrast ridicat.
-- **Vizualizare → Lumină caldă nocturnă** atenuează albastrurile din fundal în
-  funcție de ora zilei.
+- **Vizualizare → Temă** oferă Luminoasă, Întunecată, GitHub Light, GitHub Dark,
+  Monokai și Contrast ridicat. **Urmează sistemul** potrivește tema
+  luminoasă/întunecată cu cea a sistemului de operare.
+- **Vizualizare → Lumină caldă nocturnă** atenuează albastrurile fundalului în
+  funcție de oră.
 - **Zoom**: Ctrl+rotița mouse-ului, Ctrl++ / Ctrl+- și **Dimensiune normală**
   (Ctrl+0) scalează întreaga interfață (nu doar textul editorului).
-- **Vizualizare → Limbă** schimbă limba interfeței; se aplică imediat (fereastra este recreată).
+- **Vizualizare → Limbă** schimbă limba interfeței; se aplică imediat (fereastra
+  este recreată).
 
 ## Recuperare automată
 
-În timp ce editezi, conținutul se salvează automat la fiecare câteva secunde
-într-o copie ciornă. Dacă aplicația se închide anormal, la următoarea pornire
-oferă recuperarea a ceea ce scriai.
+În timp ce editezi, conținutul este salvat automat la câteva secunde într-o copie
+ciornă. Dacă aplicația se închide anormal, la redeschidere oferă recuperarea a ceea
+ce scriai.
 
 ## Scurtături
 
@@ -198,16 +277,19 @@ oferă recuperarea a ceea ce scriai.
 | Salvează ca               | Ctrl+Shift+S     |
 | Tipărește                 | Ctrl+P           |
 | Anulează / Refă           | Ctrl+Z / Ctrl+Y  |
-| Îngroșat / Cursiv         | Ctrl+B / Ctrl+I  |
+| Aldin / Cursiv            | Ctrl+B / Ctrl+I  |
 | Subliniat                 | Ctrl+U           |
+| Lipește ca text simplu    | Ctrl+Shift+V     |
+| Lipește ca Markdown       | Ctrl+Alt+V       |
 | Caută                     | Ctrl+F           |
-| Caută următorul/anteriorul| F3 / Shift+F3    |
+| Caută următorul/anteriorul | F3 / Shift+F3   |
 | Titlu H1 … H6             | Ctrl+1 … Ctrl+6  |
 | Inserează formulă         | Ctrl+Shift+F     |
-| Inserare notă de subsol   | Ctrl+Shift+N     |
-| Vizualizare sursă Markdown| Ctrl+Shift+M     |
+| Inserează notă de subsol  | Ctrl+Shift+N     |
+| Mergi la titlu            | Ctrl+G           |
+| Vizualizare sursă Markdown | Ctrl+Shift+M    |
 | Vizualizare divizată      | Ctrl+Shift+D     |
-| Schiță                    | F9               |
-| Mod fără distrageri       | F11              |
+| Structură                 | F9               |
+| Fără distrageri           | F11              |
 | Zoom + / − / Normal       | Ctrl++ / Ctrl+− / Ctrl+0 |
 | Ajutor                    | F1               |

@@ -1,22 +1,27 @@
 # Manuel d'utilisation
 
-**md-editor** est un éditeur Markdown visuel (WYSIWYG) : vous écrivez et
-appliquez la mise en forme sur le texte déjà rendu, sans voir le code. À
-l'enregistrement, le document est sérialisé de nouveau en Markdown pur.
+**md-editor** est un éditeur Markdown visuel (WYSIWYG) : vous écrivez et mettez
+en forme sur le texte déjà rendu, sans voir le code. À l'enregistrement, le
+document est sérialisé de nouveau en Markdown pur.
 
 ## Sommaire
 
 - [Ouvrir et enregistrer](#ouvrir-et-enregistrer)
-- [Mettre le texte en forme](#mettre-le-texte-en-forme)
+- [Mettre en forme le texte](#mettre-en-forme-le-texte)
 - [Titres, listes et blocs](#titres-listes-et-blocs)
+- [Transformer le texte et le presse-papiers](#transformer-le-texte-et-le-presse-papiers)
 - [Liens et images](#liens-et-images)
 - [Notes de bas de page](#notes-de-bas-de-page)
+- [Encadrés, symboles et raccourcis de texte](#encadres-symboles-et-raccourcis-de-texte)
 - [Tableaux](#tableaux)
-- [Formules mathematiques](#formules-mathematiques)
+- [Formules mathématiques](#formules-mathematiques)
+- [Diagrammes](#diagrammes)
+- [Correction orthographique](#correction-orthographique)
 - [Rechercher et remplacer](#rechercher-et-remplacer)
 - [Plan du document](#plan-du-document)
+- [Statistiques du document](#statistiques-du-document)
 - [Mode sans distraction](#mode-sans-distraction)
-- [Vue source](#vue-source)
+- [Vue du code](#vue-du-code)
 - [Exporter et imprimer](#exporter-et-imprimer)
 - [Thèmes et apparence](#themes-et-apparence)
 - [Récupération automatique](#recuperation-automatique)
@@ -25,31 +30,31 @@ l'enregistrement, le document est sérialisé de nouveau en Markdown pur.
 ## Ouvrir et enregistrer
 
 - **Fichier → Nouveau** (Ctrl+N) crée un document vide.
-- **Fichier → Ouvrir…** (Ctrl+O) ouvre un `.md` existant. L'application
-  mémorise les fichiers les plus récents dans **Fichier → Ouvrir les
-  récents**.
-- **Enregistrer** (Ctrl+S) et **Enregistrer sous…** (Ctrl+Shift+S) écrivent
-  le document en UTF-8.
-- Si le fichier change en dehors de l'éditeur, l'application le détecte et,
-  si vous n'avez aucune modification non enregistrée, le recharge ; sinon,
-  elle demande quoi faire.
-- Vous pouvez aussi **glisser-déposer** un fichier sur la fenêtre pour
-  l'ouvrir.
+- **Fichier → Nouveau à partir d'un modèle** crée un document à partir d'un
+  squelette (lettre, compte rendu, examen…) prêt à remplir.
+- **Fichier → Ouvrir…** (Ctrl+O) ouvre un `.md` existant. L'application retient
+  les derniers ouverts dans **Fichier → Ouvrir récents**.
+- **Enregistrer** (Ctrl+S) et **Enregistrer sous…** (Ctrl+Maj+S) écrivent le
+  document en UTF-8. **Ouvrir le dossier contenant** ouvre le dossier du document
+  dans le gestionnaire de fichiers.
+- Si le fichier change hors de l'éditeur, l'application le détecte et, si vous
+  n'avez pas de modifications non enregistrées, le recharge ; sinon, elle demande
+  quoi faire.
+- Vous pouvez aussi **glisser-déposer** un fichier sur la fenêtre pour l'ouvrir.
 
-### Front matter
+### *Front matter*
 
-Si le document commence par un bloc `---…---` (YAML) ou `+++…+++` (TOML), il
-est conservé tel quel à l'enregistrement : il n'apparaît pas dans l'éditeur
-et n'est pas modifiable. Il sert aux métadonnées telles que `title`, `lang`,
-etc., utilisées lors de l'exportation.
+Si le document commence par un bloc `---…---` (YAML) ou `+++…+++` (TOML), il est
+conservé tel quel à l'enregistrement : il n'est ni affiché dans l'éditeur ni
+modifié. Il sert aux métadonnées comme `title`, `lang`, etc., utilisées à
+l'export.
 
-## Mettre le texte en forme
+## Mettre en forme le texte
 
-Sélectionnez un fragment et appliquez la mise en forme depuis la barre
-d'outils ou le menu **Format** :
+Sélectionnez un fragment et appliquez la mise en forme via la barre d'outils ou
+le menu **Format** :
 
-- **Gras** (Ctrl+B), **Italique** (Ctrl+I), **Souligné** (Ctrl+U),
-  **Barré**.
+- **Gras** (Ctrl+B), **Italique** (Ctrl+I), **Souligné** (Ctrl+U), **Barré**.
 - **Code en ligne** pour les fragments en `chasse fixe`.
 - **Lien** : ajoute `[texte](url)` sur la sélection.
 
@@ -58,71 +63,97 @@ Les boutons de la barre reflètent la mise en forme active sous le curseur.
 ## Titres, listes et blocs
 
 - **Titres** H1–H6 depuis **Format → Titre** ou avec Ctrl+1 … Ctrl+6.
-- **Listes** : à puces, numérotées et de tâches (avec une case à cocher).
-  Appuyer sur Entrée à la fin d'un élément crée le suivant automatiquement ;
-  appuyer sur Entrée sur un élément vide sort de la liste. Un **clic sur la
-  case à cocher d'une tâche** la coche ou la décoche.
+- **Listes** : à puces, numérotées et de tâches (avec case). Entrée à la fin d'un
+  point crée automatiquement le suivant ; Entrée sur un point vide quitte la
+  liste. Un **clic sur la case** d'une tâche la coche ou la décoche.
 - **Citation** (`>` au début d'un paragraphe) et **bloc de code** s'appliquent
-  depuis la barre ; tous deux effectuent correctement l'aller-retour vers
-  Markdown.
+  depuis la barre ; les deux font correctement l'aller-retour vers Markdown.
+- **Indentation** : **Format → Augmenter/Diminuer l'indentation** imbrique listes
+  et citations.
+
+## Transformer le texte et le presse-papiers
+
+- **Édition → Transformer le texte** agit sur la sélection : **MAJUSCULES**,
+  **minuscules**, **Capitaliser** et **Trier les lignes**.
+- **Typographie intelligente** (dans le même menu) convertit dans la sélection
+  les tirets `--`/`---` en `–`/`—`, `...` en `…` et les guillemets droits en
+  guillemets typographiques selon le contexte.
+- **Coller comme texte brut** (Ctrl+Maj+V) colle sans mise en forme. **Coller
+  comme Markdown** (Ctrl+Alt+V) convertit le contenu enrichi du presse-papiers
+  (HTML) en Markdown au lieu d'incruster la mise en forme de la source.
+- **Copier comme HTML** copie la sélection (ou le document) en HTML, pour la
+  coller dans un courriel, un CMS, etc.
+- Quand vous collez une **URL** sur une sélection de texte, le texte est lié
+  automatiquement.
 
 ## Liens et images
 
-- **Insertion → Lien…** ouvre une boîte de dialogue avec les champs texte et
-  URL. Si vous aviez une sélection, elle est utilisée comme texte.
-- **Ctrl+clic** sur un lien l'ouvre dans le navigateur du système ; le survol
-  affiche l'URL dans la barre d'état.
-- **Images** : glissez un fichier, collez une image depuis le presse-papiers,
-  ou utilisez **Insertion → Coller l'image**. L'image est enregistrée en PNG
-  à côté du `.md` et insérée comme `![alt](chemin-relatif)` ; elle survit
-  ainsi à l'aller-retour vers Markdown (ce n'est pas le cas des images
-  incorporées).
+- **Insérer → Lien…** ouvre une boîte de dialogue avec le texte et l'URL. Une
+  sélection existante est reprise comme texte.
+- **Ctrl+clic** sur un lien l'ouvre dans le navigateur du système ; au survol,
+  l'URL s'affiche dans la barre d'état.
+- **Images** : glissez un fichier, collez une image du presse-papiers ou utilisez
+  **Insérer → Coller l'image**. L'image est enregistrée en PNG à côté du `.md` et
+  insérée comme `![alt](chemin-relatif)` ; ainsi elle survit à l'aller-retour vers
+  Markdown (pas les images incrustées).
 
 ## Notes de bas de page
 
-- **Insérer → Note de bas de page** (Ctrl+Shift+N) insère une référence
-  numérotée `[^n]` à l'emplacement du curseur et crée sa définition `[^n]:`
-  à la fin du document, prête pour que vous y saisissiez le texte de la note.
-- Les références s'affichent en **exposant** ; un **clic** sur l'une d'elles
-  fait sauter le curseur vers sa définition.
-- Elles sont enregistrées en Markdown standard (`texte[^1]` dans le corps et,
-  plus bas, `[^1]: la note`), elles sont donc compatibles avec d'autres
-  éditeurs.
+- **Insérer → Note de bas de page** (Ctrl+Maj+N) insère une référence numérotée
+  `[^n]` au curseur et crée sa définition `[^n]:` à la fin du document, prête pour
+  le texte de la note.
+- Les références s'affichent en **exposant** ; un **clic** dessus déplace le
+  curseur vers sa définition.
+- Elles sont enregistrées en Markdown standard (`texte[^1]` dans le corps et, en
+  bas, `[^1]: la note`), donc compatibles avec d'autres éditeurs.
+
+## Encadrés, symboles et raccourcis de texte
+
+- **Insérer → Encadré** crée un *callout* de style GitHub : une citation dont la
+  première ligne est `[!NOTE]`, `[!TIP]`, `[!IMPORTANT]`, `[!WARNING]` ou
+  `[!CAUTION]`. Il s'affiche avec un fond teinté et un titre en couleur, et est
+  enregistré en Markdown compatible GitHub.
+- **Insérer → Symboles spéciaux…** ouvre une table de caractères par catégories
+  (mathématiques, grec, flèches, monnaie, ponctuation…) ; un clic insère le
+  symbole et la boîte reste ouverte pour en insérer plusieurs.
+- **Raccourcis `:nom:`** : en tapant un code comme `:alpha:` ou `:euro:`, il est
+  remplacé par le symbole correspondant (α, €…).
+- **Insérer → Date** et **Date et heure** insèrent la date (et l'heure) actuelle
+  au format localisé.
 
 ## Tableaux
 
-- **Tableau → Insérer un tableau…** demande le nombre de lignes et de
-  colonnes.
-- Les actions du menu **Tableau** (ajouter/supprimer une ligne ou une
-  colonne, aligner une colonne) ne sont activées que lorsque le curseur se
-  trouve à l'intérieur d'un tableau.
-- L'alignement des colonnes (gauche/centre/droite) est conservé à
-  l'enregistrement sous la forme `:--`/`:-:`/`--:`.
+- **Tableau → Insérer un tableau…** demande lignes et colonnes.
+- Les actions du menu **Tableau** (ajouter/supprimer ligne ou colonne, aligner
+  une colonne) ne sont actives que lorsque le curseur est dans un tableau.
+- L'alignement de colonne (gauche/centre/droite) est conservé à l'enregistrement
+  sous la forme `:--`/`:-:`/`--:`.
 
 ## Formules mathématiques
 
 md-editor prend en charge les **formules TeX** en ligne (`$...$`) et en bloc
-(`$$...$$`), avec la syntaxe LaTeX habituelle (Pandoc, Obsidian, Quarto…).
-Aucune dépendance externe n'est nécessaire.
+(`$$...$$`), avec la syntaxe LaTeX habituelle (Pandoc, Obsidian, Quarto…). Aucune
+dépendance externe n'est nécessaire.
 
-- **Insertion → Formule…** (Ctrl+Shift+F) ouvre une boîte de dialogue avec un
-  champ TeX et un **aperçu en direct** : à mesure que vous tapez, vous voyez
-  le rendu final. Choisissez *En ligne* ou *Bloc* et validez pour l'insérer.
-- Dans l'éditeur, les formules apparaissent en italique avec la couleur
-  d'accentuation du thème, avec de **vrais exposants/indices** (et non des
-  caractères Unicode plats) : `x²`, `Hᵢ`, et ainsi de suite — l'alignement
-  vertical de Qt met n'importe quel caractère à l'échelle correctement.
-- **Double-cliquez** sur une formule pour rouvrir la boîte de dialogue avec
-  son TeX d'origine préchargé : modifiez et validez pour la remplacer.
-- Les formules sont **atomiques** : taper à l'intérieur de l'une d'elles
-  déclenche un rappel d'utiliser le double-clic pour l'éditer ;
-  Retour arrière/Suppr au bord supprime tout le groupe.
-- À l'**exportation**, les formules sont conservées : LaTeX les émet telles
-  quelles (avec `amsmath` et `amssymb` dans le préambule) ; HTML/PDF/ODF
-  conservent les exposants/indices en alignement vertical de Qt dans le
-  format cible.
-- En **vue source**, vous les voyez comme `$...$` / `$$...$$`, avec tous les
-  caractères TeX (`\sum`, `\frac`, `_`, `*`) intacts à l'enregistrement.
+- **Insérer → Formule…** (Ctrl+Maj+F) ouvre une boîte avec un champ pour le TeX et
+  un **aperçu en direct** : à mesure que vous tapez, vous voyez le rendu.
+  Choisissez *En ligne* ou *Bloc* et validez pour l'insérer.
+- Les formules sont composées en **2D réel** : les fractions (`\frac`) sont
+  empilées avec une barre, les grands opérateurs (`\sum`, `\int`, `\prod`…)
+  affichent leurs bornes au-dessus et au-dessous, les racines (`\sqrt`) portent
+  leur vinculum, et il y a des matrices (`\begin{pmatrix}`…), des coefficients
+  binomiaux (`\binom`) et des accents (`\hat`, `\vec`, `\bar`…). Les plus simples
+  (puissances, indices, grec) sont composées en ligne. Le rendu s'adapte au zoom.
+- **Double-clic** sur une formule rouvre la boîte avec son TeX d'origine
+  préchargé : vous modifiez et à la validation elle est remplacée.
+- Les formules sont **atomiques** : si vous tapez à l'intérieur, l'application
+  vous rappelle d'utiliser le double-clic ; Retour arrière/Suppr au bord
+  suppriment tout le groupe.
+- À l'**export**, elles sont conservées : vers LaTeX elles sont émises telles
+  quelles (avec `amsmath` et `amssymb` dans le préambule) ; vers HTML/PDF/ODF
+  elles sont ramenées à leur approximation en ligne.
+- Dans la **vue du code**, elles apparaissent comme `$...$` / `$$...$$`, avec tous
+  les caractères TeX (`\sum`, `\frac`, `_`, `*`) intacts à l'enregistrement.
 
 Exemples :
 
@@ -134,73 +165,111 @@ $$
 $$
 ```
 
-> Limitation : dans la source, `$$...$$` peut s'étendre sur plusieurs lignes
-> (style Obsidian/Pandoc) ; `$...$` doit s'ouvrir et se fermer sur la même
-> ligne.
+> Dans la source, `$$...$$` peut s'étendre sur plusieurs lignes (style
+> Obsidian/Pandoc) ; `$...$` doit ouvrir et fermer sur la même ligne.
+
+## Diagrammes
+
+Un bloc de code avec le langage `mermaid` ou `plantuml` est **prévisualisé comme
+une image** juste sous le bloc, sans toucher au code (qui reste modifiable) ni au
+Markdown enregistré.
+
+- Il faut que l'outil correspondant soit installé : **`plantuml`** (avec Java)
+  pour PlantUML, ou **`mmdc`** (mermaid-cli, avec Node) pour Mermaid.
+- Si l'outil manque, un avis avec la commande d'installation de votre système
+  d'exploitation apparaît sous le bloc ; le bloc reste du code.
+- L'image n'est que de la présentation : elle n'est pas écrite dans le Markdown et
+  ne compte pas comme une modification non enregistrée.
+
+Par exemple, un bloc de code étiqueté `mermaid` contenant `flowchart LR  A --> B
+--> C` est prévisualisé comme l'organigramme correspondant.
+
+## Correction orthographique
+
+- Souligne en rouge les mots mal orthographiés selon la **langue du document**
+  (issue du front matter `lang`, du réglage de langue ou du système). Elle ne
+  vérifie ni le code, ni les formules, ni les liens.
+- Un **clic droit** sur un mot souligné propose des **suggestions** (un clic le
+  remplace), **Ajouter au dictionnaire** (une liste personnelle permanente) et
+  **Ignorer** (pour la session).
+- Elle s'active/désactive dans **Affichage → Correction orthographique**, et la
+  langue se règle dans **Affichage → Langue de correction** (ou se laisse en
+  automatique).
+- Elle a besoin de dictionnaires Hunspell : sous Linux, ceux du système
+  (`hunspell-es`, `hunspell-en-us`…) ; sous Windows/macOS, ils sont fournis avec
+  l'application.
 
 ## Rechercher et remplacer
 
-- **Rechercher** (Ctrl+F) ouvre une barre inférieure avec des champs de
-  recherche et de remplacement, plus des options (casse, mot entier).
-- **Rechercher suivant** F3 / **Rechercher précédent** Shift+F3.
+- **Rechercher** (Ctrl+F) ouvre une barre en bas avec des champs pour rechercher
+  et remplacer, ainsi que des options (casse, mot entier).
+- **Suivant** F3 / **Précédent** Maj+F3.
 
 ## Plan du document
 
-Le panneau latéral de gauche affiche l'index des titres (TOC) : il se met à
-jour à mesure que vous tapez, et cliquer sur une entrée fait sauter le
-curseur vers ce titre. On l'affiche/masque avec F9.
+Le panneau latéral gauche affiche le plan des titres (sommaire) : il se met à jour
+à la frappe et, au clic sur une entrée, le curseur saute à ce titre. On
+l'affiche/masque avec F9.
 
-Vous pouvez **glisser** une entrée du plan pour **réordonner** cette section
-— son titre, son contenu et ses sous-sections — dans le document, sans en
-changer le niveau. De plus, **Insérer → Index (TOC)** insère dans le document
-une liste imbriquée reprenant les titres.
+Vous pouvez **glisser** une entrée du plan pour **réordonner** cette section —son
+titre, son contenu et ses sous-sections— dans le document, sans changer le niveau.
+De plus, **Insérer → Table des matières (TOC)** insère dans le document une liste
+imbriquée des titres. **Affichage → Aller au titre…** (Ctrl+G) saute à un titre en
+tapant une partie de son texte.
+
+## Statistiques du document
+
+- **Affichage → Statistiques du document…** affiche mots, caractères,
+  paragraphes, phrases et temps de lecture estimé (du document ou de la
+  sélection).
+- **Affichage → Afficher le compteur de mots** active un compteur permanent dans
+  la barre d'état.
 
 ## Mode sans distraction
 
-**Affichage → Mode sans distraction** (F11) passe en plein écran avec le menu
-et les barres d'outils masqués et le texte centré dans une colonne de
-lecture. Le plan, s'il est visible, reste rattaché au bloc central. ESC ou
-F11 en sortent.
+**Affichage → Sans distraction** (F11) passe en plein écran avec le menu et les
+barres masqués et le texte centré dans une colonne de lecture. Le plan, s'il est
+visible, reste accolé au bloc central. ESC ou F11 quittent.
 
-## Vue source
+## Vue du code
 
-**Affichage → Source Markdown** (Ctrl+Shift+M) bascule entre l'éditeur visuel
-et un éditeur de texte brut en plein écran affichant le Markdown brut. Les
-modifications faites en mode source sont reportées dans le document lorsque
-vous revenez au mode visuel.
+**Affichage → Source Markdown** (Ctrl+Maj+M) bascule entre l'éditeur visuel et un
+éditeur de texte brut, en plein écran, avec le Markdown brut. Les modifications du
+mode source sont reportées dans le document au retour au mode visuel.
 
-**Affichage → Vue divisée** (Ctrl+Shift+D) affiche les deux côte à côte :
-l'éditeur visuel et la source, maintenus synchronisés (ce que vous tapez dans
-l'un se reflète dans l'autre). Ce mode est mutuellement exclusif avec le mode
-source plein écran.
+**Affichage → Vue partagée** (Ctrl+Maj+D) montre les deux à la fois, côte à côte :
+l'éditeur visuel et la source, synchronisés (ce que vous tapez dans l'un apparaît
+dans l'autre). Elle est exclusive avec le mode source en plein écran.
 
 ## Exporter et imprimer
 
-**Fichier → Exporter** propose **PDF**, **HTML**, **ODF (.odt)** et
-**LaTeX (.tex)**. Pour ODF et LaTeX, la langue du document est incorporée
-(prise dans le `lang`/`language` du front matter, dans le réglage de
-l'application ou, en dernier recours, dans les paramètres régionaux du
-système).
+**Fichier → Exporter** propose **PDF**, **HTML**, **ODF (.odt)**, **DOCX (.docx)**,
+**LaTeX (.tex)** et **EPUB (.epub)**. En ODF, DOCX, LaTeX et EPUB, la langue du
+document est incorporée (issue du front matter `lang`/`language`, du réglage de
+l'application ou, en dernier recours, de la langue du système).
 
-**Fichier → Imprimer** (Ctrl+P) ouvre la boîte de dialogue du système.
+Vous pouvez aussi exporter **seulement la sélection en PDF** et utiliser
+l'**Aperçu avant impression**.
+
+**Fichier → Imprimer** (Ctrl+P) ouvre la boîte de dialogue du système ;
+**Imprimer la sélection** n'imprime que ce qui est sélectionné.
 
 ## Thèmes et apparence
 
-- **Affichage → Thème** propose Clair, Sombre, GitHub Light, GitHub Dark,
-  Monokai et Contraste élevé.
-- **Affichage → Lumière chaude nocturne** atténue les bleus du fond selon
-  l'heure de la journée.
-- **Zoom** : Ctrl+molette de la souris, Ctrl++ / Ctrl+- et **Taille normale**
-  (Ctrl+0) mettent à l'échelle toute l'interface (pas seulement le texte de
-  l'éditeur).
-- **Affichage → Langue** change la langue de l'interface ; l'effet est immédiat (la fenêtre est recréée).
+- **Affichage → Thème** propose Clair, Sombre, GitHub Light, GitHub Dark, Monokai
+  et Contraste élevé. **Suivre le système** aligne le thème clair/sombre sur celui
+  du système.
+- **Affichage → Lumière chaude nocturne** atténue les bleus du fond selon l'heure.
+- **Zoom** : Ctrl+molette, Ctrl++ / Ctrl+- et **Taille normale** (Ctrl+0) mettent
+  à l'échelle toute l'interface (pas seulement le texte de l'éditeur).
+- **Affichage → Langue** change la langue de l'interface ; elle s'applique
+  immédiatement (la fenêtre est recréée).
 
 ## Récupération automatique
 
 Pendant que vous éditez, le contenu est enregistré automatiquement toutes les
-quelques secondes dans une copie de brouillon. Si l'application se ferme de
-façon inattendue, au prochain lancement elle propose de récupérer ce que vous
-étiez en train d'écrire.
+quelques secondes dans une copie brouillon. Si l'application se ferme anormalement,
+elle propose à la réouverture de récupérer ce que vous étiez en train d'écrire.
 
 ## Raccourcis
 
@@ -209,19 +278,22 @@ façon inattendue, au prochain lancement elle propose de récupérer ce que vous
 | Nouveau                   | Ctrl+N           |
 | Ouvrir                    | Ctrl+O           |
 | Enregistrer               | Ctrl+S           |
-| Enregistrer sous          | Ctrl+Shift+S     |
+| Enregistrer sous          | Ctrl+Maj+S       |
 | Imprimer                  | Ctrl+P           |
 | Annuler / Rétablir        | Ctrl+Z / Ctrl+Y  |
 | Gras / Italique           | Ctrl+B / Ctrl+I  |
 | Souligné                  | Ctrl+U           |
+| Coller comme texte brut   | Ctrl+Maj+V       |
+| Coller comme Markdown     | Ctrl+Alt+V       |
 | Rechercher                | Ctrl+F           |
-| Rechercher suivant / précédent | F3 / Shift+F3 |
+| Suivant / Précédent       | F3 / Maj+F3      |
 | Titre H1 … H6             | Ctrl+1 … Ctrl+6  |
-| Insérer une formule       | Ctrl+Shift+F     |
-| Insérer une note de bas de page | Ctrl+Shift+N |
-| Vue source Markdown       | Ctrl+Shift+M     |
-| Vue divisée               | Ctrl+Shift+D     |
+| Insérer une formule       | Ctrl+Maj+F       |
+| Insérer une note          | Ctrl+Maj+N       |
+| Aller au titre            | Ctrl+G           |
+| Vue source Markdown       | Ctrl+Maj+M       |
+| Vue partagée              | Ctrl+Maj+D       |
 | Plan                      | F9               |
-| Mode sans distraction     | F11              |
+| Sans distraction          | F11              |
 | Zoom + / − / Normal       | Ctrl++ / Ctrl+− / Ctrl+0 |
 | Aide                      | F1               |

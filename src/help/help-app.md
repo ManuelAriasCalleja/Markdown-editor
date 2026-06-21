@@ -9,12 +9,17 @@ serializa de vuelta a Markdown puro.
 - [Abrir y guardar](#abrir-y-guardar)
 - [Dar formato al texto](#dar-formato-al-texto)
 - [Encabezados, listas y bloques](#encabezados-listas-y-bloques)
+- [Transformar texto y portapapeles](#transformar-texto-y-portapapeles)
 - [Enlaces e imágenes](#enlaces-e-imagenes)
 - [Notas al pie](#notas-al-pie)
+- [Admoniciones, símbolos y atajos de texto](#admoniciones-simbolos-y-atajos-de-texto)
 - [Tablas](#tablas)
 - [Fórmulas matemáticas](#formulas-matematicas)
+- [Diagramas](#diagramas)
+- [Corrección ortográfica](#correccion-ortografica)
 - [Buscar y reemplazar](#buscar-y-reemplazar)
 - [Esquema del documento](#esquema-del-documento)
+- [Estadísticas del documento](#estadisticas-del-documento)
 - [Modo sin distracciones](#modo-sin-distracciones)
 - [Vista de código](#vista-de-codigo)
 - [Exportar e imprimir](#exportar-e-imprimir)
@@ -25,10 +30,13 @@ serializa de vuelta a Markdown puro.
 ## Abrir y guardar
 
 - **Archivo → Nuevo** (Ctrl+N) crea un documento vacío.
+- **Archivo → Nuevo desde plantilla** crea un documento a partir de un esqueleto
+  (carta, acta, examen…) listo para rellenar.
 - **Archivo → Abrir…** (Ctrl+O) abre un `.md` existente. La aplicación
   recuerda los últimos abiertos en **Archivo → Abrir recientes**.
 - **Guardar** (Ctrl+S) y **Guardar como…** (Ctrl+Shift+S) escriben el
-  documento en UTF-8.
+  documento en UTF-8. **Abrir carpeta contenedora** abre en el gestor de
+  archivos la carpeta del documento actual.
 - Si el archivo cambia fuera del editor, la aplicación lo detecta y, si no
   tienes cambios sin guardar, lo recarga; si los tienes, pregunta qué hacer.
 - También puedes **arrastrar y soltar** un archivo sobre la ventana para
@@ -62,6 +70,22 @@ Los botones de la barra reflejan el formato activo bajo el cursor.
   marca o desmarca.
 - **Cita** (`>` al principio de un párrafo) y **bloque de código** se aplican
   desde la barra; ambos round-trip-ean a Markdown correctamente.
+- **Sangría**: **Formato → Aumentar/Disminuir sangría** anida listas y citas.
+
+## Transformar texto y portapapeles
+
+- **Editar → Transformar texto** opera sobre la selección: **MAYÚSCULAS**,
+  **minúsculas**, **Capitalizar** y **Ordenar líneas**.
+- **Tipografía inteligente** (en el mismo menú) convierte sobre la selección
+  los guiones `--`/`---` en `–`/`—`, `...` en `…` y las comillas rectas en
+  tipográficas según el contexto.
+- **Pegar como texto plano** (Ctrl+Shift+V) pega sin formato. **Pegar como
+  Markdown** (Ctrl+Alt+V) convierte el contenido enriquecido del portapapeles
+  (HTML) a Markdown en vez de incrustar el formato del origen.
+- **Copiar como HTML** copia la selección (o el documento) como HTML, para
+  pegarla en correo, un CMS, etc.
+- Al pegar una **URL** sobre una selección de texto, el texto queda enlazado
+  automáticamente.
 
 ## Enlaces e imágenes
 
@@ -84,6 +108,20 @@ Los botones de la barra reflejan el formato activo bajo el cursor.
 - Se guardan como Markdown estándar (`texto[^1]` en el cuerpo y, abajo,
   `[^1]: la nota`), así que son compatibles con otros editores.
 
+## Admoniciones, símbolos y atajos de texto
+
+- **Insertar → Admonición** crea un *callout* estilo GitHub: una cita cuya
+  primera línea es `[!NOTE]`, `[!TIP]`, `[!IMPORTANT]`, `[!WARNING]` o
+  `[!CAUTION]`. Se muestra con fondo tintado y título en color, y se guarda como
+  Markdown compatible con GitHub.
+- **Insertar → Símbolos especiales…** abre un mapa de caracteres por categorías
+  (matemáticos, griego, flechas, moneda, puntuación…); un clic inserta el
+  símbolo y el diálogo se queda abierto para insertar varios.
+- **Atajos `:nombre:`**: al teclear un código como `:alpha:` o `:euro:` se
+  expande al símbolo correspondiente (α, €…).
+- **Insertar → Fecha** y **Fecha y hora** insertan la fecha (y hora) actual en
+  formato localizado.
+
 ## Tablas
 
 - **Tabla → Insertar tabla…** pide filas y columnas.
@@ -101,16 +139,19 @@ ninguna dependencia externa.
 - **Insertar → Fórmula…** (Ctrl+Shift+F) abre un diálogo con un campo para el
   TeX y una **previsualización en vivo**: a medida que escribes ves cómo
   quedará. Elige *En línea* o *Bloque* y acepta para insertarla.
-- En el editor, las fórmulas se ven con cursiva y color de acento del tema,
-  con **super y subíndices reales** (no caracteres Unicode planos): `x²`,
-  `Hᵢ`, `∑ₙ₌₁` con el límite encima/debajo se aproximan mejor que con texto.
+- Las fórmulas se maquetan en **2D real**: las fracciones (`\frac`) se apilan
+  con barra, los grandes operadores (`\sum`, `\int`, `\prod`…) muestran sus
+  límites encima y debajo, las raíces (`\sqrt`) llevan su vínculo, y hay
+  matrices (`\begin{pmatrix}`…), binomios (`\binom`) y acentos (`\hat`, `\vec`,
+  `\bar`…). Las más simples (potencias, subíndices, griego) se componen en
+  línea. El diagrama escala con el zoom.
 - **Doble clic** sobre una fórmula reabre el diálogo con su TeX original
   precargado: editas y al aceptar se sustituye.
 - Las fórmulas son **atómicas**: si tecleas dentro la app te recuerda que
   uses el doble clic; Backspace/Suprimir en su borde borran el grupo entero.
 - Al **exportar** se conservan: a LaTeX se vuelcan tal cual (con `amsmath` y
-  `amssymb` en el preámbulo); a HTML/PDF/ODF se preserva el super/subíndice
-  vertical-align de Qt en el formato destino.
+  `amssymb` en el preámbulo); a HTML/PDF/ODF se vuelcan a su aproximación en
+  línea.
 - En la **vista de código** se ven como `$...$` / `$$...$$`, con todos los
   caracteres TeX (`\sum`, `\frac`, `_`, `*`) intactos al guardar.
 
@@ -124,8 +165,38 @@ $$
 $$
 ```
 
-> Limitación: en la fuente, `$$...$$` puede cruzar varias líneas (estilo
-> Obsidian/Pandoc); `$...$` debe abrir y cerrar en la misma línea.
+> En la fuente, `$$...$$` puede cruzar varias líneas (estilo Obsidian/Pandoc);
+> `$...$` debe abrir y cerrar en la misma línea.
+
+## Diagramas
+
+Un bloque de código con lenguaje `mermaid` o `plantuml` se **previsualiza como
+imagen** justo debajo del bloque, sin tocar el código (que sigue editable) ni el
+Markdown guardado.
+
+- Requiere tener instalada la herramienta correspondiente: **`plantuml`** (con
+  Java) para PlantUML, o **`mmdc`** (mermaid-cli, con Node) para Mermaid.
+- Si la herramienta falta, bajo el bloque aparece un aviso con la orden de
+  instalación de tu sistema operativo; el bloque se mantiene como código.
+- La imagen es solo presentación: no se escribe en el Markdown ni cuenta como
+  cambio sin guardar.
+
+Por ejemplo, un bloque de código con la etiqueta `mermaid` que contenga
+`flowchart LR  A --> B --> C` se previsualiza como el diagrama de flujo
+correspondiente.
+
+## Corrección ortográfica
+
+- Subraya en rojo las palabras mal escritas según el **idioma del documento**
+  (deducido del front matter `lang`, del ajuste de idioma o del sistema). No
+  comprueba el código, las fórmulas ni los enlaces.
+- **Clic derecho** sobre una palabra subrayada ofrece **sugerencias** (un clic
+  la reemplaza), **Añadir al diccionario** (lista personal, permanente) e
+  **Ignorar** (durante la sesión).
+- Se activa/desactiva en **Ver → Corrección ortográfica**, y el idioma se fija
+  en **Ver → Idioma de corrección** (o se deja en automático).
+- Necesita diccionarios Hunspell: en Linux, los del sistema (`hunspell-es`,
+  `hunspell-en-us`…); en Windows/macOS vienen con la aplicación.
 
 ## Buscar y reemplazar
 
@@ -142,7 +213,15 @@ encabezado. Se muestra/oculta con F9.
 Puedes **arrastrar** una entrada del esquema para **reordenar** esa sección
 —su encabezado, su contenido y sus subsecciones— dentro del documento, sin
 cambiar el nivel. Además, **Insertar → Índice (TOC)** vuelca en el documento una
-lista anidada con los encabezados.
+lista anidada con los encabezados. **Ver → Ir a encabezado…** (Ctrl+G) salta a
+un encabezado escribiendo parte de su texto.
+
+## Estadísticas del documento
+
+- **Ver → Estadísticas del documento…** muestra palabras, caracteres, párrafos,
+  frases y tiempo estimado de lectura (del documento o de la selección).
+- **Ver → Mostrar contador de palabras** activa un contador permanente en la
+  barra de estado.
 
 ## Modo sin distracciones
 
@@ -162,17 +241,21 @@ en el otro). Es excluyente con el modo fuente a pantalla completa.
 
 ## Exportar e imprimir
 
-**Archivo → Exportar** ofrece **PDF**, **HTML**, **ODF (.odt)** y
-**LaTeX (.tex)**. En ODF y LaTeX se incrusta el idioma del documento
-(tomado del front matter `lang`/`language`, del ajuste de la aplicación o,
-en último caso, del idioma del sistema).
+**Archivo → Exportar** ofrece **PDF**, **HTML**, **ODF (.odt)**, **DOCX (.docx)**,
+**LaTeX (.tex)** y **EPUB (.epub)**. En ODF, DOCX, LaTeX y EPUB se incrusta el
+idioma del documento (tomado del front matter `lang`/`language`, del ajuste de la
+aplicación o, en último caso, del idioma del sistema).
 
-**Archivo → Imprimir** (Ctrl+P) abre el diálogo del sistema.
+También puedes exportar **solo la selección a PDF** y usar la **Vista previa de
+impresión**.
+
+**Archivo → Imprimir** (Ctrl+P) abre el diálogo del sistema; **Imprimir
+selección** imprime solo lo seleccionado.
 
 ## Temas y apariencia
 
 - **Ver → Tema** ofrece Claro, Oscuro, GitHub Light, GitHub Dark, Monokai y
-  Alto contraste.
+  Alto contraste. **Seguir el sistema** ajusta el tema claro/oscuro al del SO.
 - **Ver → Luz cálida nocturna** atenúa los azules del fondo según la hora.
 - **Zoom**: Ctrl+rueda del ratón, Ctrl++ / Ctrl+- y **Tamaño normal** (Ctrl+0)
   escalan toda la interfaz (no sólo el texto del editor).
@@ -196,11 +279,14 @@ ofrece recuperar lo que estabas escribiendo.
 | Deshacer / Rehacer        | Ctrl+Z / Ctrl+Y  |
 | Negrita / Cursiva         | Ctrl+B / Ctrl+I  |
 | Subrayado                 | Ctrl+U           |
+| Pegar como texto plano    | Ctrl+Shift+V     |
+| Pegar como Markdown       | Ctrl+Alt+V       |
 | Buscar                    | Ctrl+F           |
 | Buscar siguiente/anterior | F3 / Shift+F3    |
 | Encabezado H1 … H6        | Ctrl+1 … Ctrl+6  |
 | Insertar fórmula          | Ctrl+Shift+F     |
 | Insertar nota al pie      | Ctrl+Shift+N     |
+| Ir a encabezado           | Ctrl+G           |
 | Vista de código Markdown  | Ctrl+Shift+M     |
 | Vista dividida            | Ctrl+Shift+D     |
 | Esquema                   | F9               |

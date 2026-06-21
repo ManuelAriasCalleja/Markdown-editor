@@ -1,126 +1,161 @@
 # Benutzerhandbuch
 
 **md-editor** ist ein visueller (WYSIWYG-)Markdown-Editor: Sie schreiben und
-formatieren über dem bereits gerenderten Text, ohne den Code zu sehen. Beim
-Speichern wird das Dokument wieder in reines Markdown serialisiert.
+formatieren auf dem bereits gerenderten Text, ohne den Code zu sehen. Beim
+Speichern wird das Dokument wieder als reines Markdown serialisiert.
 
 ## Inhalt
 
 - [Öffnen und Speichern](#offnen-und-speichern)
 - [Text formatieren](#text-formatieren)
 - [Überschriften, Listen und Blöcke](#uberschriften-listen-und-blocke)
+- [Text umwandeln und Zwischenablage](#text-umwandeln-und-zwischenablage)
 - [Links und Bilder](#links-und-bilder)
 - [Fußnoten](#fußnoten)
+- [Hinweise, Symbole und Textkürzel](#hinweise-symbole-und-textkurzel)
 - [Tabellen](#tabellen)
 - [Mathematische Formeln](#mathematische-formeln)
+- [Diagramme](#diagramme)
+- [Rechtschreibprüfung](#rechtschreibprufung)
 - [Suchen und Ersetzen](#suchen-und-ersetzen)
 - [Dokumentgliederung](#dokumentgliederung)
+- [Dokumentstatistik](#dokumentstatistik)
 - [Ablenkungsfreier Modus](#ablenkungsfreier-modus)
 - [Quelltextansicht](#quelltextansicht)
 - [Exportieren und Drucken](#exportieren-und-drucken)
-- [Designs und Erscheinungsbild](#designs-und-erscheinungsbild)
+- [Themes und Aussehen](#themes-und-aussehen)
 - [Automatische Wiederherstellung](#automatische-wiederherstellung)
 - [Tastenkürzel](#tastenkurzel)
 
 ## Öffnen und Speichern
 
-- **Datei → Neu** (Ctrl+N) erstellt ein leeres Dokument.
-- **Datei → Öffnen…** (Ctrl+O) öffnet eine vorhandene `.md`. Die Anwendung
-  merkt sich die zuletzt geöffneten Dateien unter **Datei → Zuletzt geöffnet**.
-- **Speichern** (Ctrl+S) und **Speichern unter…** (Ctrl+Shift+S) schreiben das
-  Dokument in UTF-8.
-- Ändert sich die Datei außerhalb des Editors, erkennt die Anwendung dies und
-  lädt sie neu, sofern Sie keine ungespeicherten Änderungen haben; andernfalls
-  fragt sie, was zu tun ist.
-- Sie können eine Datei auch per **Ziehen und Ablegen** auf das Fenster
-  öffnen.
+- **Datei → Neu** (Strg+N) erstellt ein leeres Dokument.
+- **Datei → Neu aus Vorlage** erstellt ein Dokument aus einem Gerüst (Brief,
+  Protokoll, Prüfung…), das nur noch ausgefüllt werden muss.
+- **Datei → Öffnen…** (Strg+O) öffnet eine vorhandene `.md`. Die Anwendung merkt
+  sich die zuletzt geöffneten unter **Datei → Zuletzt geöffnet**.
+- **Speichern** (Strg+S) und **Speichern unter…** (Strg+Umschalt+S) schreiben das
+  Dokument als UTF-8. **Enthaltenden Ordner öffnen** öffnet den Ordner des
+  Dokuments im Dateimanager.
+- Ändert sich die Datei außerhalb des Editors, erkennt die Anwendung das und lädt
+  sie neu, wenn keine ungespeicherten Änderungen vorliegen; andernfalls fragt sie
+  nach.
+- Sie können eine Datei auch per **Ziehen und Ablegen** auf das Fenster öffnen.
 
-### Front matter
+### *Front Matter*
 
-Beginnt das Dokument mit einem Block `---…---` (YAML) oder `+++…+++` (TOML),
-wird er beim Speichern unverändert beibehalten: er wird im Editor nicht
-angezeigt und ist nicht bearbeitbar. Er dient für Metadaten wie `title`,
-`lang` usw., die beim Exportieren verwendet werden.
+Beginnt das Dokument mit einem Block `---…---` (YAML) oder `+++…+++` (TOML), wird
+er beim Speichern unverändert beibehalten: Er wird im Editor nicht angezeigt und
+nicht bearbeitet. Er dient für Metadaten wie `title`, `lang` usw., die beim
+Exportieren verwendet werden.
 
 ## Text formatieren
 
 Markieren Sie einen Abschnitt und wenden Sie die Formatierung über die
-Werkzeugleiste oder das Menü **Format** an:
+Symbolleiste oder das Menü **Format** an:
 
-- **Fett** (Ctrl+B), **Kursiv** (Ctrl+I), **Unterstrichen** (Ctrl+U),
+- **Fett** (Strg+B), **Kursiv** (Strg+I), **Unterstrichen** (Strg+U),
   **Durchgestrichen**.
-- **Inline-Code** für `nichtproportionale` Abschnitte.
+- **Inline-Code** für `monospace`-Abschnitte.
 - **Link**: fügt `[Text](url)` über der Auswahl ein.
 
-Die Schaltflächen der Werkzeugleiste spiegeln die aktive Formatierung unter
-dem Cursor wider.
+Die Schaltflächen der Symbolleiste zeigen die aktive Formatierung unter dem
+Cursor an.
 
 ## Überschriften, Listen und Blöcke
 
-- **Überschriften** H1–H6 über **Format → Überschrift** oder mit
-  Ctrl+1 … Ctrl+6.
-- **Listen**: Aufzählungen, nummerierte Listen und Aufgabenlisten (mit
-  Kontrollkästchen). Drücken Sie Enter am Ende eines Punktes, wird der nächste
-  automatisch erstellt; Enter auf einem leeren Punkt verlässt die Liste. Ein
-  **Klick auf das Kontrollkästchen einer Aufgabe** hakt sie ab oder hebt die
-  Markierung wieder auf.
+- **Überschriften** H1–H6 über **Format → Überschrift** oder mit Strg+1 … Strg+6.
+- **Listen**: Aufzählungen, nummerierte und Aufgabenlisten (mit Kontrollkästchen).
+  Enter am Ende eines Punktes erstellt automatisch den nächsten; Enter auf einem
+  leeren Punkt verlässt die Liste. Ein **Klick auf das Kontrollkästchen** einer
+  Aufgabe schaltet sie um.
 - **Zitat** (`>` am Anfang eines Absatzes) und **Codeblock** werden über die
-  Werkzeugleiste angewendet; beide werden korrekt nach Markdown
-  zurückübersetzt (round-trip).
+  Symbolleiste angewendet; beide werden korrekt nach Markdown zurückgewandelt.
+- **Einrückung**: **Format → Einzug vergrößern/verkleinern** verschachtelt Listen
+  und Zitate.
+
+## Text umwandeln und Zwischenablage
+
+- **Bearbeiten → Text umwandeln** wirkt auf die Auswahl: **GROSSBUCHSTABEN**,
+  **kleinbuchstaben**, **Großschreibung** und **Zeilen sortieren**.
+- **Intelligente Typografie** (im selben Menü) wandelt in der Auswahl die
+  Bindestriche `--`/`---` in `–`/`—`, `...` in `…` und gerade Anführungszeichen
+  je nach Kontext in typografische um.
+- **Als Klartext einfügen** (Strg+Umschalt+V) fügt ohne Formatierung ein. **Als
+  Markdown einfügen** (Strg+Alt+V) wandelt den Rich-Inhalt der Zwischenablage
+  (HTML) in Markdown um, statt die Formatierung der Quelle einzubetten.
+- **Als HTML kopieren** kopiert die Auswahl (oder das Dokument) als HTML, zum
+  Einfügen in E-Mail, ein CMS usw.
+- Wenn Sie eine **URL** über eine Textauswahl einfügen, wird der Text automatisch
+  verlinkt.
 
 ## Links und Bilder
 
-- **Einfügen → Link…** öffnet einen Dialog mit Text- und URL-Feldern. Wenn Sie
-  etwas markiert hatten, wird es als Text verwendet.
-- **Ctrl+Klick** auf einen Link öffnet ihn im Systembrowser; beim Überfahren
-  mit der Maus wird die URL in der Statusleiste angezeigt.
-- **Bilder**: ziehen Sie eine Datei, fügen Sie ein Bild aus der Zwischenablage
-  ein oder verwenden Sie **Einfügen → Bild einfügen**. Das Bild wird als PNG
-  neben der `.md` gespeichert und als `![alt](relativer-Pfad)` eingefügt; so
-  übersteht es den Round-Trip nach Markdown (eingebettete Bilder nicht).
+- **Einfügen → Link…** öffnet einen Dialog mit Text und URL. Eine vorhandene
+  Auswahl wird als Text übernommen.
+- **Strg+Klick** auf einen Link öffnet ihn im Systembrowser; beim Überfahren mit
+  der Maus wird die URL in der Statusleiste angezeigt.
+- **Bilder**: Ziehen Sie eine Datei, fügen Sie ein Bild aus der Zwischenablage
+  ein oder verwenden Sie **Einfügen → Bild einfügen**. Das Bild wird als PNG neben
+  der `.md` gespeichert und als `![alt](relativer-pfad)` eingefügt; so übersteht
+  es den Round-Trip nach Markdown (eingebettete Bilder nicht).
 
 ## Fußnoten
 
-- **Einfügen → Fußnote** (Ctrl+Shift+N) fügt eine nummerierte Referenz `[^n]`
-  an der Cursorposition ein und legt ihre Definition `[^n]:` am Ende des
-  Dokuments an, bereit, damit Sie den Text der Fußnote schreiben.
-- Die Referenzen werden als **Hochstellung** angezeigt; beim **Klick** auf eine
-  springt der Cursor zu ihrer Definition.
-- Sie werden als Standard-Markdown gespeichert (`text[^1]` im Text und unten
-  `[^1]: die Fußnote`), sodass sie mit anderen Editoren kompatibel sind.
+- **Einfügen → Fußnote** (Strg+Umschalt+N) fügt am Cursor eine nummerierte
+  Referenz `[^n]` ein und erstellt deren Definition `[^n]:` am Ende des Dokuments,
+  bereit für den Notentext.
+- Referenzen werden **hochgestellt** angezeigt; ein **Klick** darauf springt mit
+  dem Cursor zur Definition.
+- Sie werden als Standard-Markdown gespeichert (`Text[^1]` im Text und unten
+  `[^1]: die Notiz`), sodass sie mit anderen Editoren kompatibel sind.
+
+## Hinweise, Symbole und Textkürzel
+
+- **Einfügen → Hinweis** erstellt ein Callout im GitHub-Stil: ein Zitat, dessen
+  erste Zeile `[!NOTE]`, `[!TIP]`, `[!IMPORTANT]`, `[!WARNING]` oder `[!CAUTION]`
+  ist. Es wird mit getöntem Hintergrund und farbigem Titel angezeigt und als
+  GitHub-kompatibles Markdown gespeichert.
+- **Einfügen → Sonderzeichen…** öffnet eine Zeichentabelle nach Kategorien
+  (mathematisch, griechisch, Pfeile, Währung, Interpunktion…); ein Klick fügt das
+  Zeichen ein und der Dialog bleibt zum Einfügen mehrerer offen.
+- **`:name:`-Kürzel**: Beim Tippen eines Codes wie `:alpha:` oder `:euro:` wird er
+  zum entsprechenden Symbol erweitert (α, €…).
+- **Einfügen → Datum** und **Datum und Uhrzeit** fügen das aktuelle Datum (und die
+  Uhrzeit) im lokalisierten Format ein.
 
 ## Tabellen
 
 - **Tabelle → Tabelle einfügen…** fragt nach Zeilen und Spalten.
-- Die Aktionen im Menü **Tabelle** (Zeile oder Spalte hinzufügen/entfernen,
-  Spalte ausrichten) sind nur aktiviert, wenn sich der Cursor innerhalb einer
-  Tabelle befindet.
-- Die Spaltenausrichtung (links/zentriert/rechts) wird beim Speichern als
-  `:--`/`:-:`/`--:` beibehalten.
+- Die Aktionen des Menüs **Tabelle** (Zeile/Spalte hinzufügen/entfernen, Spalte
+  ausrichten) sind nur aktiv, wenn der Cursor in einer Tabelle steht.
+- Die Spaltenausrichtung (links/zentriert/rechts) bleibt beim Speichern als
+  `:--`/`:-:`/`--:` erhalten.
 
 ## Mathematische Formeln
 
-md-editor unterstützt **TeX-Formeln** inline (`$...$`) und als Blöcke
-(`$$...$$`) mit der üblichen LaTeX-Syntax (Pandoc, Obsidian, Quarto…). Es sind
-keine externen Abhängigkeiten nötig.
+md-editor unterstützt **TeX-Formeln** inline (`$...$`) und als Block (`$$...$$`)
+mit der üblichen LaTeX-Syntax (Pandoc, Obsidian, Quarto…). Es ist keine externe
+Abhängigkeit nötig.
 
-- **Einfügen → Formel…** (Ctrl+Shift+F) öffnet einen Dialog mit einem
-  TeX-Feld und einer **Live-Vorschau**: während Sie tippen, sehen Sie, wie es
-  aussehen wird. Wählen Sie *Inline* oder *Block* und bestätigen Sie, um es
-  einzufügen.
-- Im Editor erscheinen Formeln kursiv in der Akzentfarbe des Designs, mit
-  **echten Hoch-/Tiefstellungen** (nicht mit flachen Unicode-Zeichen): `x²`,
-  `Hᵢ` usw. — Qt skaliert mit Vertical-Align jedes Zeichen korrekt.
-- Ein **Doppelklick** auf eine Formel öffnet den Dialog erneut, mit dem
-  ursprünglichen TeX vorausgefüllt: bearbeiten und bestätigen ersetzt sie.
-- Formeln sind **atomar**: Tippen innerhalb einer Formel löst einen Hinweis
-  aus, zum Bearbeiten doppelzuklicken; Backspace/Delete am Rand entfernt die
-  gesamte Gruppe.
-- Beim **Exportieren** bleiben Formeln erhalten: LaTeX gibt sie unverändert aus
-  (mit `amsmath` und `amssymb` in der Präambel); HTML/PDF/ODF behalten die
-  Vertical-Align-Hoch-/Tiefstellungen von Qt im Zielformat.
-- In der **Quelltextansicht** sehen Sie sie als `$...$` / `$$...$$`, wobei alle
-  TeX-Zeichen (`\sum`, `\frac`, `_`, `*`) beim Speichern intakt bleiben.
+- **Einfügen → Formel…** (Strg+Umschalt+F) öffnet einen Dialog mit einem Feld für
+  das TeX und einer **Live-Vorschau**: Während Sie tippen, sehen Sie das Ergebnis.
+  Wählen Sie *Inline* oder *Block* und bestätigen Sie zum Einfügen.
+- Formeln werden in **echtem 2D** gesetzt: Brüche (`\frac`) werden mit Strich
+  gestapelt, große Operatoren (`\sum`, `\int`, `\prod`…) zeigen ihre Grenzen
+  oben und unten, Wurzeln (`\sqrt`) tragen ihren Strich, und es gibt Matrizen
+  (`\begin{pmatrix}`…), Binomialkoeffizienten (`\binom`) und Akzente (`\hat`,
+  `\vec`, `\bar`…). Einfachere (Potenzen, Indizes, Griechisch) werden inline
+  gesetzt. Die Darstellung skaliert mit dem Zoom.
+- **Doppelklick** auf eine Formel öffnet den Dialog mit dem ursprünglichen TeX
+  erneut: Sie bearbeiten es und beim Bestätigen wird es ersetzt.
+- Formeln sind **atomar**: Tippen Sie hinein, erinnert die App an den Doppelklick;
+  Rücktaste/Entf am Rand löschen die ganze Gruppe.
+- Beim **Exportieren** bleiben sie erhalten: nach LaTeX werden sie unverändert
+  ausgegeben (mit `amsmath` und `amssymb` in der Präambel); nach HTML/PDF/ODF
+  werden sie auf ihre Inline-Näherung zurückgeführt.
+- In der **Quelltextansicht** erscheinen sie als `$...$` / `$$...$$`, mit allen
+  TeX-Zeichen (`\sum`, `\frac`, `_`, `*`) beim Speichern unversehrt.
 
 Beispiele:
 
@@ -132,93 +167,136 @@ $$
 $$
 ```
 
-> Einschränkung: in der Quelle kann sich `$$...$$` über mehrere Zeilen
-> erstrecken (Stil Obsidian/Pandoc); `$...$` muss in derselben Zeile geöffnet
-> und geschlossen werden.
+> Im Quelltext darf `$$...$$` mehrere Zeilen umfassen (Obsidian/Pandoc-Stil);
+> `$...$` muss in derselben Zeile öffnen und schließen.
+
+## Diagramme
+
+Ein Codeblock mit der Sprache `mermaid` oder `plantuml` wird direkt unter dem
+Block **als Bild vorschau**, ohne den Code (der bearbeitbar bleibt) oder das
+gespeicherte Markdown zu verändern.
+
+- Es ist das entsprechende Werkzeug erforderlich: **`plantuml`** (mit Java) für
+  PlantUML oder **`mmdc`** (mermaid-cli, mit Node) für Mermaid.
+- Fehlt das Werkzeug, erscheint unter dem Block ein Hinweis mit dem
+  Installationsbefehl für Ihr Betriebssystem; der Block bleibt als Code.
+- Das Bild dient nur der Darstellung: Es wird nicht ins Markdown geschrieben und
+  zählt nicht als ungespeicherte Änderung.
+
+Zum Beispiel wird ein als `mermaid` markierter Codeblock mit `flowchart LR  A
+--> B --> C` als das entsprechende Flussdiagramm vorgeschaut.
+
+## Rechtschreibprüfung
+
+- Unterstreicht falsch geschriebene Wörter rot gemäß der **Dokumentsprache** (aus
+  dem `lang`-Front-Matter, der Spracheinstellung oder dem System). Code, Formeln
+  und Links werden nicht geprüft.
+- **Rechtsklick** auf ein unterstrichenes Wort bietet **Vorschläge** (ein Klick
+  ersetzt es), **Zum Wörterbuch hinzufügen** (eine dauerhafte persönliche Liste)
+  und **Ignorieren** (für die Sitzung).
+- Sie wird unter **Ansicht → Rechtschreibprüfung** ein-/ausgeschaltet, und die
+  Sprache wird unter **Ansicht → Sprache der Rechtschreibprüfung** festgelegt
+  (oder automatisch gelassen).
+- Sie benötigt Hunspell-Wörterbücher: unter Linux die des Systems (`hunspell-es`,
+  `hunspell-en-us`…); unter Windows/macOS sind sie in der Anwendung enthalten.
 
 ## Suchen und Ersetzen
 
-- **Suchen** (Ctrl+F) öffnet eine Leiste am unteren Rand mit Feldern zum
-  Suchen und Ersetzen sowie Optionen (Groß-/Kleinschreibung, ganzes Wort).
-- **Weitersuchen** F3 / **Rückwärts suchen** Shift+F3.
+- **Suchen** (Strg+F) öffnet unten eine Leiste mit Feldern zum Suchen und Ersetzen
+  sowie Optionen (Groß-/Kleinschreibung, ganzes Wort).
+- **Weitersuchen** F3 / **Rückwärts suchen** Umschalt+F3.
 
 ## Dokumentgliederung
 
-Das linke Seitenfenster zeigt das Verzeichnis der Überschriften (TOC): es wird
-beim Tippen aktualisiert, und beim Klick auf einen Eintrag springt der Cursor
-zu dieser Überschrift. Es wird mit F9 ein- und ausgeblendet.
+Das linke Seitenpanel zeigt die Überschriftengliederung (Inhaltsverzeichnis): Sie
+aktualisiert sich beim Tippen, und beim Klick auf einen Eintrag springt der Cursor
+zu dieser Überschrift. Ein-/ausblenden mit F9.
 
-Sie können einen Eintrag der Gliederung **ziehen**, um diesen Abschnitt — seine
-Überschrift, seinen Inhalt und seine Unterabschnitte — innerhalb des Dokuments
-**neu anzuordnen**, ohne die Ebene zu ändern. Außerdem gibt **Einfügen →
-Inhaltsverzeichnis (TOC)** eine verschachtelte Liste mit den Überschriften in
-das Dokument aus.
+Sie können einen Gliederungseintrag **ziehen**, um diesen Abschnitt —seine
+Überschrift, seinen Inhalt und seine Unterabschnitte— im Dokument **umzuordnen**,
+ohne die Ebene zu ändern. Außerdem schreibt **Einfügen → Inhaltsverzeichnis (TOC)**
+eine verschachtelte Liste der Überschriften ins Dokument. **Ansicht → Zu
+Überschrift gehen…** (Strg+G) springt zu einer Überschrift durch Eingabe eines
+Teils ihres Textes.
+
+## Dokumentstatistik
+
+- **Ansicht → Dokumentstatistik…** zeigt Wörter, Zeichen, Absätze, Sätze und die
+  geschätzte Lesezeit (des Dokuments oder der Auswahl).
+- **Ansicht → Wortzähler anzeigen** aktiviert einen dauerhaften Zähler in der
+  Statusleiste.
 
 ## Ablenkungsfreier Modus
 
-**Ansicht → Ablenkungsfreier Modus** (F11) wechselt in den Vollbildmodus mit
-ausgeblendeten Menüs und Leisten und dem Text zentriert in einer Lesespalte.
-Die Gliederung bleibt, sofern sichtbar, am zentralen Block angeheftet. ESC oder
-F11 beenden ihn.
+**Ansicht → Ablenkungsfrei** (F11) wechselt in den Vollbildmodus mit
+ausgeblendetem Menü und Leisten und dem Text zentriert in einer Lesespalte. Die
+Gliederung bleibt, falls sichtbar, am zentralen Block. ESC oder F11 beenden.
 
 ## Quelltextansicht
 
-**Ansicht → Markdown-Quelltext** (Ctrl+Shift+M) wechselt zwischen dem visuellen
-Editor und einem Vollbild-Klartexteditor, der das rohe Markdown anzeigt.
-Änderungen im Quelltextmodus werden in das Dokument übernommen, wenn Sie in den
-visuellen Modus zurückkehren.
+**Ansicht → Markdown-Quelltext** (Strg+Umschalt+M) wechselt zwischen dem visuellen
+Editor und einem Klartext-Editor im Vollbild mit dem rohen Markdown. Änderungen im
+Quelltextmodus werden beim Zurückwechseln in den visuellen Modus übernommen.
 
-**Ansicht → Geteilte Ansicht** (Ctrl+Shift+D) zeigt beide nebeneinander: den
-visuellen Editor und den Quelltext, synchron gehalten (was Sie in dem einen
-tippen, spiegelt sich im anderen wider). Sie schließt sich mit dem
-Vollbild-Quelltextmodus gegenseitig aus.
+**Ansicht → Geteilte Ansicht** (Strg+Umschalt+D) zeigt beide gleichzeitig
+nebeneinander: den visuellen Editor und den Quelltext, synchronisiert (was Sie in
+einem tippen, erscheint im anderen). Sie schließt sich mit dem Vollbild-Quelltext
+gegenseitig aus.
 
 ## Exportieren und Drucken
 
-**Datei → Exportieren** bietet **PDF**, **HTML**, **ODF (.odt)** und
-**LaTeX (.tex)**. Bei ODF und LaTeX wird die Dokumentsprache eingebettet
-(entnommen dem Front matter `lang`/`language`, der Anwendungseinstellung oder,
-als letzter Ausweg, dem Systemgebietsschema).
+**Datei → Exportieren** bietet **PDF**, **HTML**, **ODF (.odt)**, **DOCX (.docx)**,
+**LaTeX (.tex)** und **EPUB (.epub)**. In ODF, DOCX, LaTeX und EPUB wird die
+Dokumentsprache eingebettet (aus dem `lang`/`language`-Front-Matter, der
+Anwendungseinstellung oder zuletzt der Systemsprache).
 
-**Datei → Drucken** (Ctrl+P) öffnet den Systemdialog.
+Sie können auch **nur die Auswahl als PDF** exportieren und die
+**Druckvorschau** verwenden.
 
-## Designs und Erscheinungsbild
+**Datei → Drucken** (Strg+P) öffnet den Systemdialog; **Auswahl drucken** druckt
+nur das Markierte.
 
-- **Ansicht → Design** bietet Hell, Dunkel, GitHub Light, GitHub Dark, Monokai
-  und Hoher Kontrast.
-- **Ansicht → Warmes Nachtlicht** dämpft die Blautöne im Hintergrund je nach
-  Tageszeit.
-- **Zoom**: Ctrl+Mausrad, Ctrl++ / Ctrl+- und **Normale Größe** (Ctrl+0)
+## Themes und Aussehen
+
+- **Ansicht → Theme** bietet Hell, Dunkel, GitHub Light, GitHub Dark, Monokai und
+  Hoher Kontrast. **Dem System folgen** passt das helle/dunkle Theme an das des
+  Betriebssystems an.
+- **Ansicht → Nächtliches warmes Licht** dimmt die Blautöne des Hintergrunds je
+  nach Uhrzeit.
+- **Zoom**: Strg+Mausrad, Strg++ / Strg+- und **Normale Größe** (Strg+0)
   skalieren die gesamte Oberfläche (nicht nur den Editortext).
-- **Ansicht → Sprache** ändert die Sprache der Oberfläche; sofort wirksam (das Fenster wird neu erstellt).
+- **Ansicht → Sprache** ändert die Oberflächensprache; sie wird sofort angewendet
+  (das Fenster wird neu erstellt).
 
 ## Automatische Wiederherstellung
 
-Während Sie bearbeiten, wird der Inhalt alle paar Sekunden in eine
-Entwurfskopie automatisch gespeichert. Schließt sich die Anwendung
-unerwartet, bietet sie beim nächsten Start an, das Geschriebene
-wiederherzustellen.
+Während Sie bearbeiten, wird der Inhalt alle paar Sekunden in einer Entwurfskopie
+automatisch gespeichert. Schließt die Anwendung unerwartet, bietet sie beim erneuten
+Öffnen an, das Geschriebene wiederherzustellen.
 
 ## Tastenkürzel
 
-| Aktion                    | Tastenkürzel     |
+| Aktion                    | Kürzel           |
 |---------------------------|------------------|
-| Neu                       | Ctrl+N           |
-| Öffnen                    | Ctrl+O           |
-| Speichern                 | Ctrl+S           |
-| Speichern unter           | Ctrl+Shift+S     |
-| Drucken                   | Ctrl+P           |
-| Rückgängig / Wiederholen  | Ctrl+Z / Ctrl+Y  |
-| Fett / Kursiv             | Ctrl+B / Ctrl+I  |
-| Unterstrichen             | Ctrl+U           |
-| Suchen                    | Ctrl+F           |
-| Weiter-/Rückwärtssuchen   | F3 / Shift+F3    |
-| Überschrift H1 … H6       | Ctrl+1 … Ctrl+6  |
-| Formel einfügen           | Ctrl+Shift+F     |
-| Fußnote einfügen          | Ctrl+Shift+N     |
-| Markdown-Quelltextansicht | Ctrl+Shift+M     |
-| Geteilte Ansicht          | Ctrl+Shift+D     |
+| Neu                       | Strg+N           |
+| Öffnen                    | Strg+O           |
+| Speichern                 | Strg+S           |
+| Speichern unter           | Strg+Umschalt+S  |
+| Drucken                   | Strg+P           |
+| Rückgängig / Wiederholen  | Strg+Z / Strg+Y  |
+| Fett / Kursiv             | Strg+B / Strg+I  |
+| Unterstrichen             | Strg+U           |
+| Als Klartext einfügen     | Strg+Umschalt+V  |
+| Als Markdown einfügen     | Strg+Alt+V       |
+| Suchen                    | Strg+F           |
+| Weiter-/Rückwärtssuchen   | F3 / Umschalt+F3 |
+| Überschrift H1 … H6       | Strg+1 … Strg+6  |
+| Formel einfügen           | Strg+Umschalt+F  |
+| Fußnote einfügen          | Strg+Umschalt+N  |
+| Zu Überschrift gehen      | Strg+G           |
+| Markdown-Quelltextansicht | Strg+Umschalt+M  |
+| Geteilte Ansicht          | Strg+Umschalt+D  |
 | Gliederung                | F9               |
-| Ablenkungsfreier Modus    | F11              |
-| Zoom + / − / Normal       | Ctrl++ / Ctrl+− / Ctrl+0 |
+| Ablenkungsfrei            | F11              |
+| Zoom + / − / Normal       | Strg++ / Strg+− / Strg+0 |
 | Hilfe                     | F1               |

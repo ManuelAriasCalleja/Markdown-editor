@@ -1,22 +1,27 @@
 # Podręcznik użytkownika
 
-**md-editor** to wizualny (WYSIWYG) edytor Markdown: piszesz i nadajesz
-formatowanie na już wyrenderowanym tekście, bez oglądania kodu. Przy zapisie
-dokument jest z powrotem serializowany do czystego Markdown.
+**md-editor** to wizualny (WYSIWYG) edytor Markdown: piszesz i formatujesz na już
+wyrenderowanym tekście, bez oglądania kodu. Przy zapisie dokument jest z powrotem
+serializowany do czystego Markdown.
 
 ## Spis treści
 
 - [Otwieranie i zapisywanie](#otwieranie-i-zapisywanie)
 - [Formatowanie tekstu](#formatowanie-tekstu)
-- [Nagłówki, listy i bloki](#naglowki-listy-i-bloki)
+- [Nagłówki, listy i bloki](#nagłowki-listy-i-bloki)
+- [Przekształcanie tekstu i schowek](#przekształcanie-tekstu-i-schowek)
 - [Odnośniki i obrazy](#odnosniki-i-obrazy)
 - [Przypisy](#przypisy)
+- [Wyróżnienia, symbole i skróty tekstowe](#wyroznienia-symbole-i-skroty-tekstowe)
 - [Tabele](#tabele)
 - [Wzory matematyczne](#wzory-matematyczne)
+- [Diagramy](#diagramy)
+- [Sprawdzanie pisowni](#sprawdzanie-pisowni)
 - [Znajdź i zamień](#znajdz-i-zamien)
-- [Konspekt dokumentu](#konspekt-dokumentu)
-- [Tryb bez rozproszeń](#tryb-bez-rozproszen)
-- [Widok źródła](#widok-zrodla)
+- [Struktura dokumentu](#struktura-dokumentu)
+- [Statystyki dokumentu](#statystyki-dokumentu)
+- [Tryb bez rozpraszania](#tryb-bez-rozpraszania)
+- [Widok kodu](#widok-kodu)
 - [Eksport i drukowanie](#eksport-i-drukowanie)
 - [Motywy i wygląd](#motywy-i-wyglad)
 - [Automatyczne odzyskiwanie](#automatyczne-odzyskiwanie)
@@ -25,172 +30,240 @@ dokument jest z powrotem serializowany do czystego Markdown.
 ## Otwieranie i zapisywanie
 
 - **Plik → Nowy** (Ctrl+N) tworzy pusty dokument.
-- **Plik → Otwórz…** (Ctrl+O) otwiera istniejący plik `.md`. Aplikacja
-  zapamiętuje ostatnio używane pliki w **Plik → Otwórz ostatnie**.
-- **Zapisz** (Ctrl+S) oraz **Zapisz jako…** (Ctrl+Shift+S) zapisują dokument
-  w kodowaniu UTF-8.
+- **Plik → Nowy z szablonu** tworzy dokument na podstawie szkieletu (list,
+  protokół, egzamin…) gotowego do wypełnienia.
+- **Plik → Otwórz…** (Ctrl+O) otwiera istniejący `.md`. Aplikacja zapamiętuje
+  ostatnio otwarte w **Plik → Otwórz ostatnie**.
+- **Zapisz** (Ctrl+S) i **Zapisz jako…** (Ctrl+Shift+S) zapisują dokument w UTF-8.
+  **Otwórz folder dokumentu** otwiera folder dokumentu w menedżerze plików.
 - Jeśli plik zmieni się poza edytorem, aplikacja to wykryje i — jeśli nie masz
-  niezapisanych zmian — przeładuje go; w przeciwnym razie zapyta, co zrobić.
-- Możesz też **przeciągnąć i upuścić** plik na okno, aby go otworzyć.
+  niezapisanych zmian — przeładuje go; jeśli masz, zapyta, co zrobić.
+- Plik możesz też **przeciągnąć i upuścić** na okno, aby go otworzyć.
 
-### Front matter
+### *Front matter*
 
-Jeśli dokument zaczyna się od bloku `---…---` (YAML) lub `+++…+++` (TOML), jest
-on zachowywany dosłownie przy zapisie: nie jest pokazywany w edytorze i nie
-można go edytować. Służy do metadanych, takich jak `title`, `lang` itp., które
-są wykorzystywane podczas eksportu.
+Jeśli dokument zaczyna się blokiem `---…---` (YAML) lub `+++…+++` (TOML), jest on
+zachowywany bez zmian przy zapisie: nie jest widoczny w edytorze ani edytowany.
+Służy do metadanych takich jak `title`, `lang` itp., używanych przy eksporcie.
 
 ## Formatowanie tekstu
 
-Zaznacz fragment i nadaj formatowanie za pomocą paska narzędzi lub menu
-**Format**:
+Zaznacz fragment i nadaj formatowanie paskiem narzędzi lub menu **Format**:
 
 - **Pogrubienie** (Ctrl+B), **Kursywa** (Ctrl+I), **Podkreślenie** (Ctrl+U),
   **Przekreślenie**.
-- **Kod w wierszu** dla fragmentów o `stałej szerokości znaku`.
+- **Kod w wierszu** dla fragmentów o `stałej szerokości`.
 - **Odnośnik**: dodaje `[tekst](url)` na zaznaczeniu.
 
-Przyciski na pasku odzwierciedlają formatowanie aktywne pod kursorem.
+Przyciski paska odzwierciedlają formatowanie aktywne pod kursorem.
 
 ## Nagłówki, listy i bloki
 
-- **Nagłówki** H1–H6 z menu **Format → Nagłówek** lub skrótami
-  Ctrl+1 … Ctrl+6.
-- **Listy**: punktowane, numerowane i listy zadań (z polem wyboru).
-  Naciśnięcie Enter na końcu punktu automatycznie tworzy następny;
-  naciśnięcie Enter na pustym punkcie kończy listę. **Kliknięcie pola wyboru
-  zadania** zaznacza je lub odznacza.
-- **Cytat** (`>` na początku akapitu) oraz **blok kodu** stosuje się z paska
-  narzędzi; oba poprawnie zachowują się w obie strony (round-trip) w Markdown.
+- **Nagłówki** H1–H6 z **Format → Nagłówek** lub przez Ctrl+1 … Ctrl+6.
+- **Listy**: punktowane, numerowane i zadań (z polem wyboru). Enter na końcu
+  punktu tworzy automatycznie następny; Enter na pustym punkcie opuszcza listę.
+  **Kliknięcie pola wyboru** zadania zaznacza je lub odznacza.
+- **Cytat** (`>` na początku akapitu) i **blok kodu** stosuje się z paska; oba
+  poprawnie wracają do Markdown.
+- **Wcięcie**: **Format → Zwiększ/Zmniejsz wcięcie** zagnieżdża listy i cytaty.
+
+## Przekształcanie tekstu i schowek
+
+- **Edycja → Przekształć tekst** działa na zaznaczeniu: **WIELKIE LITERY**, **małe
+  litery**, **Kapitalizuj** i **Sortuj wiersze**.
+- **Inteligentna typografia** (w tym samym menu) zamienia w zaznaczeniu myślniki
+  `--`/`---` na `–`/`—`, `...` na `…` oraz proste cudzysłowy na typograficzne w
+  zależności od kontekstu.
+- **Wklej jako zwykły tekst** (Ctrl+Shift+V) wkleja bez formatowania. **Wklej jako
+  Markdown** (Ctrl+Alt+V) konwertuje sformatowaną zawartość schowka (HTML) na
+  Markdown zamiast osadzać formatowanie źródła.
+- **Kopiuj jako HTML** kopiuje zaznaczenie (lub dokument) jako HTML, do wklejenia
+  w e-mailu, CMS-ie itp.
+- Po wklejeniu **adresu URL** na zaznaczonym tekście tekst zostaje automatycznie
+  podlinkowany.
 
 ## Odnośniki i obrazy
 
-- **Wstaw → Odnośnik…** otwiera okno z polami tekstu i adresu URL. Jeśli miałeś
-  zaznaczenie, zostanie ono użyte jako tekst.
-- **Ctrl+kliknięcie** na odnośniku otwiera go w przeglądarce systemowej;
-  najechanie kursorem pokazuje adres URL na pasku stanu.
-- **Obrazy**: przeciągnij plik, wklej obraz ze schowka lub użyj
-  **Wstaw → Wklej obraz**. Obraz jest zapisywany jako PNG obok pliku `.md`
-  i wstawiany jako `![alt](ścieżka-względna)`; dzięki temu przetrwa round-trip
-  do Markdown (obrazy osadzone — nie).
+- **Wstaw → Odnośnik…** otwiera okno z tekstem i adresem URL. Istniejące
+  zaznaczenie jest użyte jako tekst.
+- **Ctrl+kliknięcie** odnośnika otwiera go w przeglądarce systemowej; po najechaniu
+  myszą URL pojawia się na pasku stanu.
+- **Obrazy**: przeciągnij plik, wklej obraz ze schowka lub użyj **Wstaw → Wklej
+  obraz**. Obraz jest zapisywany jako PNG obok `.md` i wstawiany jako
+  `![alt](ścieżka-względna)`; dzięki temu przetrwa konwersję do Markdown (obrazy
+  osadzone nie).
 
 ## Przypisy
 
-- **Wstaw → Przypis** (Ctrl+Shift+N) wstawia numerowane odwołanie `[^n]` w
-  miejscu kursora i tworzy jego definicję `[^n]:` na końcu dokumentu, gotową na
-  wpisanie treści przypisu.
-- Odwołania są wyświetlane jako **indeks górny**; **kliknięcie** na jednym z nich
+- **Wstaw → Przypis** (Ctrl+Shift+N) wstawia w miejscu kursora numerowane
+  odwołanie `[^n]` i tworzy jego definicję `[^n]:` na końcu dokumentu, gotową na
+  tekst przypisu.
+- Odwołania są pokazywane w **indeksie górnym**; **kliknięcie** jednego z nich
   przenosi kursor do jego definicji.
-- Są zapisywane jako standardowy Markdown (`tekst[^1]` w treści, a niżej
+- Są zapisywane jako standardowy Markdown (`tekst[^1]` w treści i niżej
   `[^1]: przypis`), więc są zgodne z innymi edytorami.
+
+## Wyróżnienia, symbole i skróty tekstowe
+
+- **Wstaw → Wyróżnienie** tworzy *callout* w stylu GitHuba: cytat, którego pierwszy
+  wiersz to `[!NOTE]`, `[!TIP]`, `[!IMPORTANT]`, `[!WARNING]` lub `[!CAUTION]`.
+  Jest pokazywany z zabarwionym tłem i kolorowym tytułem oraz zapisywany jako
+  Markdown zgodny z GitHubem.
+- **Wstaw → Symbole specjalne…** otwiera mapę znaków według kategorii
+  (matematyczne, greka, strzałki, waluty, interpunkcja…); kliknięcie wstawia symbol,
+  a okno pozostaje otwarte, aby wstawić kilka.
+- **Skróty `:nazwa:`**: po wpisaniu kodu takiego jak `:alpha:` lub `:euro:` jest on
+  rozwijany do odpowiedniego symbolu (α, €…).
+- **Wstaw → Data** i **Data i godzina** wstawiają bieżącą datę (i godzinę) w
+  formacie lokalnym.
 
 ## Tabele
 
-- **Tabela → Wstaw tabelę…** pyta o liczbę wierszy i kolumn.
-- Polecenia menu **Tabela** (dodaj/usuń wiersz lub kolumnę, wyrównaj kolumnę)
-  są aktywne tylko wtedy, gdy kursor znajduje się wewnątrz tabeli.
-- Wyrównanie kolumny (do lewej/do środka/do prawej) jest zachowywane przy
-  zapisie jako `:--`/`:-:`/`--:`.
+- **Tabela → Wstaw tabelę…** pyta o wiersze i kolumny.
+- Akcje menu **Tabela** (dodaj/usuń wiersz lub kolumnę, wyrównaj kolumnę) są
+  aktywne tylko, gdy kursor jest w tabeli.
+- Wyrównanie kolumny (do lewej/środka/prawej) jest zachowywane przy zapisie jako
+  `:--`/`:-:`/`--:`.
 
 ## Wzory matematyczne
 
-md-editor obsługuje **wzory TeX** w wierszu (`$...$`) i w bloku (`$$...$$`),
-ze zwykłą składnią LaTeX (Pandoc, Obsidian, Quarto…). Nie wymaga żadnych
-zewnętrznych zależności.
+md-editor obsługuje **wzory TeX** w wierszu (`$...$`) i w bloku (`$$...$$`), ze
+zwykłą składnią LaTeX (Pandoc, Obsidian, Quarto…). Nie jest potrzebna żadna
+zewnętrzna zależność.
 
-- **Wstaw → Wzór…** (Ctrl+Shift+F) otwiera okno z polem na kod TeX oraz
-  **podglądem na żywo**: w miarę pisania widzisz, jak będzie wyglądać. Wybierz
-  *W wierszu* lub *Blok* i zatwierdź, aby go wstawić.
-- W edytorze wzory są wyświetlane kursywą w kolorze akcentu motywu, z
-  **prawdziwymi indeksami górnymi i dolnymi** (nie płaskimi znakami Unicode):
-  `x²`, `Hᵢ` itd. — wyrównanie pionowe Qt poprawnie skaluje dowolny znak.
+- **Wstaw → Wzór…** (Ctrl+Shift+F) otwiera okno z polem na TeX i **podglądem na
+  żywo**: w miarę pisania widzisz wynik. Wybierz *W wierszu* lub *Blok* i
+  zatwierdź, aby go wstawić.
+- Wzory są składane w **prawdziwym 2D**: ułamki (`\frac`) są piętrzone z kreską,
+  duże operatory (`\sum`, `\int`, `\prod`…) pokazują granice nad i pod, pierwiastki
+  (`\sqrt`) mają swoją kreskę, a są też macierze (`\begin{pmatrix}`…),
+  współczynniki dwumianowe (`\binom`) i akcenty (`\hat`, `\vec`, `\bar`…).
+  Prostsze (potęgi, indeksy dolne, greka) są składane w wierszu. Rysunek skaluje
+  się z powiększeniem.
 - **Dwukrotne kliknięcie** wzoru ponownie otwiera okno z wczytanym oryginalnym
-  kodem TeX: edytujesz i po zatwierdzeniu wzór zostaje zastąpiony.
-- Wzory są **atomowe**: pisanie wewnątrz nich przypomina o dwukrotnym
-  kliknięciu w celu edycji; Backspace/Delete na ich krawędzi usuwa całą grupę.
-- Przy **eksporcie** wzory są zachowywane: do LaTeX trafiają dosłownie (z
-  `amsmath` i `amssymb` w preambule); w HTML/PDF/ODF zachowywane jest pionowe
-  wyrównanie indeksów górnych i dolnych Qt w formacie docelowym.
-- W **widoku źródła** widać je jako `$...$` / `$$...$$`, ze wszystkimi znakami
+  TeX-em: edytujesz, a po zatwierdzeniu zostaje zastąpiony.
+- Wzory są **atomowe**: jeśli wpiszesz coś w środku, aplikacja przypomni o
+  dwukrotnym kliknięciu; Backspace/Delete na krawędzi usuwają całą grupę.
+- Przy **eksporcie** są zachowywane: do LaTeX-a są zapisywane bez zmian (z
+  `amsmath` i `amssymb` w preambule); do HTML/PDF/ODF są sprowadzane do ich
+  przybliżenia w wierszu.
+- W **widoku kodu** pojawiają się jako `$...$` / `$$...$$`, ze wszystkimi znakami
   TeX (`\sum`, `\frac`, `_`, `*`) nienaruszonymi przy zapisie.
 
 Przykłady:
 
 ```
-Energia wynosi $E = mc^2$.
+Energia to $E = mc^2$.
 
 $$
 \sum_{i=1}^n a_i = \frac{n(n+1)}{2}
 $$
 ```
 
-> Ograniczenie: w źródle `$$...$$` może obejmować wiele wierszy (styl
-> Obsidian/Pandoc); `$...$` musi otwierać się i zamykać w tym samym wierszu.
+> W kodzie źródłowym `$$...$$` może obejmować kilka wierszy (styl Obsidian/Pandoc);
+> `$...$` musi otwierać się i zamykać w tym samym wierszu.
+
+## Diagramy
+
+Blok kodu z językiem `mermaid` lub `plantuml` jest **wyświetlany jako obraz**
+podglądu tuż pod blokiem, bez naruszania kodu (który pozostaje edytowalny) ani
+zapisanego Markdown.
+
+- Wymaga zainstalowanego odpowiedniego narzędzia: **`plantuml`** (z Javą) dla
+  PlantUML lub **`mmdc`** (mermaid-cli, z Node) dla Mermaid.
+- Jeśli narzędzia brakuje, pod blokiem pojawia się komunikat z poleceniem
+  instalacji dla Twojego systemu operacyjnego; blok pozostaje kodem.
+- Obraz jest tylko prezentacją: nie jest zapisywany w Markdown i nie liczy się jako
+  niezapisana zmiana.
+
+Na przykład blok kodu oznaczony `mermaid` zawierający `flowchart LR  A --> B
+--> C` jest wyświetlany jako odpowiedni schemat blokowy.
+
+## Sprawdzanie pisowni
+
+- Podkreśla na czerwono błędnie napisane słowa według **języka dokumentu** (z
+  front matter `lang`, ustawienia języka lub systemu). Nie sprawdza kodu, wzorów
+  ani odnośników.
+- **Kliknięcie prawym przyciskiem** na podkreślonym słowie oferuje **podpowiedzi**
+  (kliknięcie zastępuje słowo), **Dodaj do słownika** (trwała lista osobista) i
+  **Ignoruj** (na czas sesji).
+- Włącza się/wyłącza w **Widok → Sprawdzanie pisowni**, a język ustawia się w
+  **Widok → Język sprawdzania pisowni** (lub zostawia automatyczny).
+- Potrzebuje słowników Hunspell: w Linuksie systemowych (`hunspell-es`,
+  `hunspell-en-us`…); w Windows/macOS są dołączone do aplikacji.
 
 ## Znajdź i zamień
 
-- **Znajdź** (Ctrl+F) otwiera dolny pasek z polami wyszukiwania i zamiany
-  oraz opcjami (wielkość liter, całe słowo).
-- **Znajdź następne** F3 / **Znajdź poprzednie** Shift+F3.
+- **Znajdź** (Ctrl+F) otwiera dolny pasek z polami do wyszukiwania i zamiany oraz
+  opcjami (wielkość liter, całe słowo).
+- **Znajdź następny** F3 / **Znajdź poprzedni** Shift+F3.
 
-## Konspekt dokumentu
+## Struktura dokumentu
 
-Lewy panel boczny pokazuje spis nagłówków (TOC): aktualizuje się podczas
-pisania, a kliknięcie pozycji przenosi kursor do danego nagłówka. Włącza się
-i wyłącza klawiszem F9.
+Lewy panel boczny pokazuje strukturę nagłówków (spis treści): aktualizuje się
+podczas pisania, a po kliknięciu pozycji kursor przeskakuje do tego nagłówka.
+Pokazuje się/ukrywa klawiszem F9.
 
-Możesz **przeciągnąć** pozycję konspektu, aby **zmienić kolejność** tej sekcji
-— jej nagłówka, treści i podsekcji — w obrębie dokumentu, bez zmiany poziomu.
-Ponadto **Wstaw → Spis treści (TOC)** umieszcza w dokumencie zagnieżdżoną listę
-nagłówków.
+Pozycję struktury możesz **przeciągnąć**, aby **zmienić kolejność** tej sekcji —jej
+nagłówka, treści i podsekcji— w dokumencie, bez zmiany poziomu. Ponadto **Wstaw →
+Spis treści (TOC)** wstawia do dokumentu zagnieżdżoną listę nagłówków. **Widok →
+Przejdź do nagłówka…** (Ctrl+G) przeskakuje do nagłówka po wpisaniu części jego
+tekstu.
 
-## Tryb bez rozproszeń
+## Statystyki dokumentu
 
-**Widok → Tryb bez rozproszeń** (F11) przechodzi w tryb pełnoekranowy z
-ukrytym menu i paskami narzędzi oraz tekstem wyśrodkowanym w kolumnie do
-czytania. Konspekt, jeśli jest widoczny, pozostaje przyklejony do bloku
-centralnego. ESC lub F11 kończy ten tryb.
+- **Widok → Statystyki dokumentu…** pokazuje słowa, znaki, akapity, zdania i
+  szacowany czas czytania (dokumentu lub zaznaczenia).
+- **Widok → Pokaż licznik słów** włącza stały licznik na pasku stanu.
 
-## Widok źródła
+## Tryb bez rozpraszania
 
-**Widok → Źródło Markdown** (Ctrl+Shift+M) przełącza między edytorem
-wizualnym a pełnoekranowym edytorem tekstu wyświetlającym surowy Markdown.
-Zmiany wprowadzone w trybie źródła są przenoszone do dokumentu po powrocie
-do trybu wizualnego.
+**Widok → Bez rozpraszania** (F11) przechodzi na pełny ekran z ukrytym menu i
+paskami oraz tekstem wyśrodkowanym w kolumnie do czytania. Struktura, jeśli jest
+widoczna, pozostaje przy środkowym bloku. ESC lub F11 wychodzą.
 
-**Widok → Widok podzielony** (Ctrl+Shift+D) pokazuje oba obok siebie: edytor
-wizualny i źródło, utrzymywane w synchronizacji (to, co wpisujesz w jednym,
-odzwierciedla się w drugim). Wyklucza się wzajemnie z pełnoekranowym trybem
-źródła.
+## Widok kodu
+
+**Widok → Źródło Markdown** (Ctrl+Shift+M) przełącza między edytorem wizualnym a
+edytorem zwykłego tekstu, na pełnym ekranie, z surowym Markdown. Zmiany w trybie
+źródła są przenoszone do dokumentu po powrocie do trybu wizualnego.
+
+**Widok → Widok podzielony** (Ctrl+Shift+D) pokazuje oba naraz, obok siebie: edytor
+wizualny i źródło, zsynchronizowane (to, co wpiszesz w jednym, odbija się w
+drugim). Wyklucza się z trybem źródła na pełnym ekranie.
 
 ## Eksport i drukowanie
 
-**Plik → Eksportuj** oferuje **PDF**, **HTML**, **ODF (.odt)** oraz
-**LaTeX (.tex)**. W przypadku ODF i LaTeX osadzany jest język dokumentu
-(pobrany z pola `lang`/`language` we front matter, z ustawienia aplikacji
-lub, w ostateczności, z ustawień regionalnych systemu).
+**Plik → Eksportuj** oferuje **PDF**, **HTML**, **ODF (.odt)**, **DOCX (.docx)**,
+**LaTeX (.tex)** i **EPUB (.epub)**. W ODF, DOCX, LaTeX i EPUB osadzany jest język
+dokumentu (z front matter `lang`/`language`, ustawienia aplikacji lub, w ostatniej
+kolejności, języka systemu).
 
-**Plik → Drukuj** (Ctrl+P) otwiera okno dialogowe systemu.
+Możesz też wyeksportować **tylko zaznaczenie do PDF** i użyć **Podglądu wydruku**.
+
+**Plik → Drukuj** (Ctrl+P) otwiera okno systemowe; **Drukuj zaznaczenie** drukuje
+tylko to, co zaznaczone.
 
 ## Motywy i wygląd
 
-- **Widok → Motyw** oferuje Jasny, Ciemny, GitHub Light, GitHub Dark, Monokai
-  oraz Wysoki kontrast.
-- **Widok → Ciepłe światło nocne** przyciemnia barwy niebieskie tła w
-  zależności od pory dnia.
-- **Powiększenie**: Ctrl+kółko myszy, Ctrl++ / Ctrl+- oraz **Rozmiar normalny**
-  (Ctrl+0) skalują cały interfejs (nie tylko tekst w edytorze).
-- **Widok → Język** zmienia język interfejsu; działa natychmiast (okno jest tworzone na nowo).
+- **Widok → Motyw** oferuje Jasny, Ciemny, GitHub Light, GitHub Dark, Monokai i
+  Wysoki kontrast. **Podążaj za systemem** dopasowuje motyw jasny/ciemny do
+  systemu operacyjnego.
+- **Widok → Nocne ciepłe światło** przyciemnia błękity tła zależnie od godziny.
+- **Powiększenie**: Ctrl+kółko myszy, Ctrl++ / Ctrl+- i **Rozmiar normalny**
+  (Ctrl+0) skalują cały interfejs (nie tylko tekst edytora).
+- **Widok → Język** zmienia język interfejsu; stosuje się od razu (okno jest
+  tworzone na nowo).
 
 ## Automatyczne odzyskiwanie
 
-Podczas edycji zawartość jest co kilka sekund automatycznie zapisywana w
-kopii roboczej. Jeśli aplikacja zamknie się nieoczekiwanie, przy następnym
-uruchomieniu zaproponuje odzyskanie tego, co pisałeś.
+Podczas edycji treść jest automatycznie zapisywana co kilka sekund w kopii
+roboczej. Jeśli aplikacja zamknie się nieprawidłowo, przy ponownym otwarciu
+proponuje odzyskanie tego, co pisałeś.
 
 ## Skróty
 
-| Czynność                  | Skrót            |
+| Akcja                     | Skrót            |
 |---------------------------|------------------|
 | Nowy                      | Ctrl+N           |
 | Otwórz                    | Ctrl+O           |
@@ -200,14 +273,17 @@ uruchomieniu zaproponuje odzyskanie tego, co pisałeś.
 | Cofnij / Ponów            | Ctrl+Z / Ctrl+Y  |
 | Pogrubienie / Kursywa     | Ctrl+B / Ctrl+I  |
 | Podkreślenie              | Ctrl+U           |
+| Wklej jako zwykły tekst   | Ctrl+Shift+V     |
+| Wklej jako Markdown       | Ctrl+Alt+V       |
 | Znajdź                    | Ctrl+F           |
-| Znajdź następne / poprzednie | F3 / Shift+F3 |
+| Znajdź następny/poprzedni | F3 / Shift+F3    |
 | Nagłówek H1 … H6          | Ctrl+1 … Ctrl+6  |
 | Wstaw wzór                | Ctrl+Shift+F     |
 | Wstaw przypis             | Ctrl+Shift+N     |
+| Przejdź do nagłówka       | Ctrl+G           |
 | Widok źródła Markdown     | Ctrl+Shift+M     |
 | Widok podzielony          | Ctrl+Shift+D     |
-| Konspekt                  | F9               |
-| Tryb bez rozproszeń       | F11              |
-| Powiększenie + / − / Normalny | Ctrl++ / Ctrl+− / Ctrl+0 |
+| Struktura                 | F9               |
+| Bez rozpraszania          | F11              |
+| Powiększenie + / − / Normalne | Ctrl++ / Ctrl+− / Ctrl+0 |
 | Pomoc                     | F1               |

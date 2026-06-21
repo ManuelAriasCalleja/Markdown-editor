@@ -1,119 +1,159 @@
 # Gebruikershandleiding
 
-**md-editor** is een visuele (WYSIWYG) Markdown-editor: je schrijft en past
-opmaak toe op de reeds weergegeven tekst, zonder de code te zien. Bij het
-opslaan wordt het document terug geserialiseerd naar pure Markdown.
+**md-editor** is een visuele (WYSIWYG) Markdown-editor: je schrijft en maakt op
+in de reeds gerenderde tekst, zonder de code te zien. Bij het opslaan wordt het
+document weer naar pure Markdown geserialiseerd.
 
 ## Inhoud
 
 - [Openen en opslaan](#openen-en-opslaan)
 - [Tekst opmaken](#tekst-opmaken)
 - [Koppen, lijsten en blokken](#koppen-lijsten-en-blokken)
+- [Tekst omzetten en het klembord](#tekst-omzetten-en-het-klembord)
 - [Koppelingen en afbeeldingen](#koppelingen-en-afbeeldingen)
 - [Voetnoten](#voetnoten)
+- [Aandachtsblokken, symbolen en tekstsnelkoppelingen](#aandachtsblokken-symbolen-en-tekstsnelkoppelingen)
 - [Tabellen](#tabellen)
 - [Wiskundige formules](#wiskundige-formules)
+- [Diagrammen](#diagrammen)
+- [Spellingcontrole](#spellingcontrole)
 - [Zoeken en vervangen](#zoeken-en-vervangen)
 - [Documentoverzicht](#documentoverzicht)
+- [Documentstatistieken](#documentstatistieken)
 - [Afleidingsvrije modus](#afleidingsvrije-modus)
-- [Broncodeweergave](#broncodeweergave)
+- [Codeweergave](#codeweergave)
 - [Exporteren en afdrukken](#exporteren-en-afdrukken)
-- [Thema's en weergave](#themas-en-weergave)
+- [Thema's en uiterlijk](#themas-en-uiterlijk)
 - [Automatisch herstel](#automatisch-herstel)
 - [Sneltoetsen](#sneltoetsen)
 
 ## Openen en opslaan
 
 - **Bestand → Nieuw** (Ctrl+N) maakt een leeg document.
-- **Bestand → Openen…** (Ctrl+O) opent een bestaande `.md`. De toepassing
-  onthoudt de meest recente bestanden in **Bestand → Recente openen**.
-- **Opslaan** (Ctrl+S) en **Opslaan als…** (Ctrl+Shift+S) schrijven het
-  document weg in UTF-8.
-- Als het bestand buiten de editor wijzigt, detecteert de toepassing dat en,
-  als je geen niet-opgeslagen wijzigingen hebt, laadt het het opnieuw; heb je
-  die wel, dan vraagt het wat te doen.
-- Je kunt een bestand ook **slepen en neerzetten** op het venster om het te
+- **Bestand → Nieuw op basis van sjabloon** maakt een document op basis van een
+  skelet (brief, verslag, examen…) klaar om in te vullen.
+- **Bestand → Openen…** (Ctrl+O) opent een bestaand `.md`. De toepassing onthoudt
+  de laatst geopende in **Bestand → Recent geopend**.
+- **Opslaan** (Ctrl+S) en **Opslaan als…** (Ctrl+Shift+S) schrijven het document
+  in UTF-8. **Bevattende map openen** opent de map van het document in de
+  bestandsbeheerder.
+- Als het bestand buiten de editor verandert, detecteert de toepassing dat en
+  herlaadt het als je geen niet-opgeslagen wijzigingen hebt; anders vraagt ze wat
+  te doen.
+- Je kunt ook een bestand op het venster **slepen en neerzetten** om het te
   openen.
 
-### Front matter
+### *Front matter*
 
-Als het document begint met een `---…---` (YAML) of `+++…+++` (TOML) blok,
-wordt dat ongewijzigd bewaard bij het opslaan: het wordt niet in de editor
-getoond en is niet bewerkbaar. Het is bedoeld voor metadata zoals `title`,
-`lang`, enz., die bij het exporteren worden gebruikt.
+Als het document begint met een blok `---…---` (YAML) of `+++…+++` (TOML), wordt
+het bij het opslaan ongewijzigd behouden: het wordt niet in de editor getoond en
+niet bewerkt. Het dient voor metagegevens zoals `title`, `lang` enz., die bij het
+exporteren worden gebruikt.
 
 ## Tekst opmaken
 
-Selecteer een fragment en pas opmaak toe via de werkbalk of het menu
-**Opmaak**:
+Selecteer een fragment en pas opmaak toe met de werkbalk of het menu **Opmaak**:
 
-- **Vet** (Ctrl+B), **Cursief** (Ctrl+I), **Onderstrepen** (Ctrl+U),
-  **Doorhalen**.
-- **Inline-code** voor `monospace`-fragmenten.
-- **Koppeling**: voegt `[tekst](url)` toe over de selectie.
+- **Vet** (Ctrl+B), **Cursief** (Ctrl+I), **Onderstreept** (Ctrl+U),
+  **Doorgehaald**.
+- **Code in regel** voor `monospace`-fragmenten.
+- **Koppeling**: voegt `[tekst](url)` over de selectie toe.
 
 De werkbalkknoppen weerspiegelen de actieve opmaak onder de cursor.
 
 ## Koppen, lijsten en blokken
 
 - **Koppen** H1–H6 via **Opmaak → Kop** of met Ctrl+1 … Ctrl+6.
-- **Lijsten**: opsommingstekens, genummerd en takenlijsten (met een
-  selectievakje). Door op Enter te drukken aan het einde van een item wordt
-  het volgende automatisch aangemaakt; Enter op een leeg item verlaat de
-  lijst. Een **klik op het selectievakje van een taak** vinkt die aan of uit.
-- **Citaat** (`>` aan het begin van een alinea) en **codeblok** worden
-  toegepast vanuit de werkbalk; beide round-trippen correct naar Markdown.
+- **Lijsten**: opsommingen, genummerd en taken (met selectievakje). Enter aan het
+  einde van een punt maakt automatisch het volgende; Enter op een leeg punt
+  verlaat de lijst. Een **klik op het selectievakje** van een taak schakelt deze
+  om.
+- **Citaat** (`>` aan het begin van een alinea) en **codeblok** pas je toe via de
+  werkbalk; beide gaan correct heen en terug naar Markdown.
+- **Inspringen**: **Opmaak → Inspringen vergroten/verkleinen** nestelt lijsten en
+  citaten.
+
+## Tekst omzetten en het klembord
+
+- **Bewerken → Tekst omzetten** werkt op de selectie: **HOOFDLETTERS**,
+  **kleine letters**, **Met hoofdletter** en **Regels sorteren**.
+- **Slimme typografie** (in hetzelfde menu) zet in de selectie de streepjes
+  `--`/`---` om in `–`/`—`, `...` in `…` en rechte aanhalingstekens in
+  typografische, afhankelijk van de context.
+- **Plakken als platte tekst** (Ctrl+Shift+V) plakt zonder opmaak. **Plakken als
+  Markdown** (Ctrl+Alt+V) zet de opgemaakte klembordinhoud (HTML) om naar Markdown
+  in plaats van de opmaak van de bron in te bedden.
+- **Kopiëren als HTML** kopieert de selectie (of het document) als HTML, om in een
+  e-mail, een CMS enz. te plakken.
+- Als je een **URL** over een tekstselectie plakt, wordt de tekst automatisch
+  gekoppeld.
 
 ## Koppelingen en afbeeldingen
 
-- **Invoegen → Koppeling…** opent een dialoogvenster met velden voor tekst en
-  URL. Had je een selectie, dan wordt die als tekst gebruikt.
-- **Ctrl+klik** op een koppeling opent die in de systeembrowser; bij het
-  zweven met de muis wordt de URL in de statusbalk getoond.
+- **Invoegen → Koppeling…** opent een dialoog met tekst en URL. Een bestaande
+  selectie wordt als tekst gebruikt.
+- **Ctrl+klik** op een koppeling opent deze in de systeembrowser; bij het zweven
+  met de muis verschijnt de URL in de statusbalk.
 - **Afbeeldingen**: sleep een bestand, plak een afbeelding van het klembord of
-  gebruik **Invoegen → Afbeelding plakken**. De afbeelding wordt als PNG naast
-  de `.md` opgeslagen en ingevoegd als `![alt](relatief-pad)`; zo overleeft ze
-  de round-trip naar Markdown (ingebedde afbeeldingen niet).
+  gebruik **Invoegen → Afbeelding plakken**. De afbeelding wordt als PNG naast de
+  `.md` opgeslagen en ingevoegd als `![alt](relatief-pad)`; zo overleeft ze de
+  heen-en-terugconversie naar Markdown (ingebedde afbeeldingen niet).
 
 ## Voetnoten
 
-- **Invoegen → Voetnoot** (Ctrl+Shift+N) voegt een genummerde verwijzing
-  `[^n]` in op de cursorpositie en maakt de bijbehorende definitie `[^n]:` aan
-  het einde van het document, klaar om de notetekst te typen.
-- De verwijzingen worden als **superscript** getoond; als je erop **klikt**,
-  springt de cursor naar de bijbehorende definitie.
-- Ze worden opgeslagen als standaard-Markdown (`tekst[^1]` in de hoofdtekst en,
-  onderaan, `[^1]: de noot`), dus ze zijn compatibel met andere editors.
+- **Invoegen → Voetnoot** (Ctrl+Shift+N) voegt bij de cursor een genummerde
+  verwijzing `[^n]` in en maakt de definitie `[^n]:` aan het einde van het
+  document, klaar voor de noottekst.
+- Verwijzingen worden in **superscript** getoond; een **klik** erop verplaatst de
+  cursor naar de definitie.
+- Ze worden als standaard-Markdown opgeslagen (`tekst[^1]` in de tekst en eronder
+  `[^1]: de noot`), dus compatibel met andere editors.
+
+## Aandachtsblokken, symbolen en tekstsnelkoppelingen
+
+- **Invoegen → Aandachtsblok** maakt een callout in GitHub-stijl: een citaat
+  waarvan de eerste regel `[!NOTE]`, `[!TIP]`, `[!IMPORTANT]`, `[!WARNING]` of
+  `[!CAUTION]` is. Het wordt getoond met een getinte achtergrond en een gekleurde
+  titel, en opgeslagen als GitHub-compatibele Markdown.
+- **Invoegen → Speciale symbolen…** opent een tekentabel per categorie (wiskundig,
+  Grieks, pijlen, valuta, leestekens…); een klik voegt het symbool in en het
+  venster blijft open om er meerdere in te voegen.
+- **`:naam:`-snelkoppelingen**: bij het typen van een code zoals `:alpha:` of
+  `:euro:` wordt deze uitgebreid tot het bijbehorende symbool (α, €…).
+- **Invoegen → Datum** en **Datum en tijd** voegen de huidige datum (en tijd) in
+  gelokaliseerde notatie in.
 
 ## Tabellen
 
 - **Tabel → Tabel invoegen…** vraagt om rijen en kolommen.
-- De acties in het menu **Tabel** (rij of kolom toevoegen/verwijderen, kolom
-  uitlijnen) zijn alleen actief wanneer de cursor zich in een tabel bevindt.
+- De acties van het menu **Tabel** (rij of kolom toevoegen/verwijderen, kolom
+  uitlijnen) zijn alleen actief wanneer de cursor in een tabel staat.
 - De kolomuitlijning (links/midden/rechts) blijft bij het opslaan behouden als
   `:--`/`:-:`/`--:`.
 
 ## Wiskundige formules
 
-md-editor ondersteunt **TeX-formules** inline (`$...$`) en als blok
-(`$$...$$`), met de gebruikelijke LaTeX-syntaxis (Pandoc, Obsidian, Quarto…).
-Er zijn geen externe afhankelijkheden nodig.
+md-editor ondersteunt **TeX-formules** in regel (`$...$`) en in blok (`$$...$$`),
+met de gebruikelijke LaTeX-syntaxis (Pandoc, Obsidian, Quarto…). Er is geen
+externe afhankelijkheid nodig.
 
-- **Invoegen → Formule…** (Ctrl+Shift+F) opent een dialoogvenster met een
-  TeX-veld en een **live voorbeeld**: terwijl je typt zie je hoe het eruit zal
-  zien. Kies *Inline* of *Blok* en bevestig om de formule in te voegen.
-- In de editor verschijnen formules cursief met de accentkleur van het thema,
-  met **echte super-/subscripts** (geen platte Unicode-tekens): `x²`, `Hᵢ`,
-  enzovoort — de vertical-align van Qt schaalt elk teken correct.
-- **Dubbelklik** op een formule om het dialoogvenster opnieuw te openen met de
-  oorspronkelijke TeX vooraf ingevuld: bewerk en bevestig om die te vervangen.
-- Formules zijn **atomisch**: binnenin typen geeft een herinnering om te
-  dubbelklikken voor bewerken; Backspace/Delete aan de rand verwijdert de hele
-  groep.
-- Bij het **exporteren** blijven formules behouden: LaTeX geeft ze
-  ongewijzigd door (met `amsmath` en `amssymb` in het preambule); HTML/PDF/ODF
-  behouden de super-/subscripts met vertical-align van Qt in het doelformaat.
-- In de **broncodeweergave** zie je ze als `$...$` / `$$...$$`, met alle
+- **Invoegen → Formule…** (Ctrl+Shift+F) opent een dialoog met een veld voor de
+  TeX en een **live voorvertoning**: terwijl je typt zie je het resultaat. Kies
+  *In regel* of *Blok* en bevestig om in te voegen.
+- Formules worden in **echt 2D** opgemaakt: breuken (`\frac`) worden met een
+  streep gestapeld, grote operatoren (`\sum`, `\int`, `\prod`…) tonen hun grenzen
+  boven en onder, wortels (`\sqrt`) dragen hun streep, en er zijn matrices
+  (`\begin{pmatrix}`…), binomiaalcoëfficiënten (`\binom`) en accenten (`\hat`,
+  `\vec`, `\bar`…). Eenvoudigere (machten, subscripts, Grieks) worden in regel
+  opgemaakt. De weergave schaalt mee met de zoom.
+- **Dubbelklik** op een formule heropent de dialoog met de oorspronkelijke TeX
+  voorgeladen: je bewerkt en bij bevestiging wordt ze vervangen.
+- Formules zijn **atomair**: typ je erin, dan herinnert de app aan de dubbelklik;
+  Backspace/Delete aan de rand verwijderen de hele groep.
+- Bij het **exporteren** blijven ze behouden: naar LaTeX worden ze ongewijzigd
+  uitgevoerd (met `amsmath` en `amssymb` in de preambule); naar HTML/PDF/ODF worden
+  ze teruggebracht tot hun benadering in regel.
+- In de **codeweergave** verschijnen ze als `$...$` / `$$...$$`, met alle
   TeX-tekens (`\sum`, `\frac`, `_`, `*`) intact bij het opslaan.
 
 Voorbeelden:
@@ -126,68 +166,110 @@ $$
 $$
 ```
 
-> Beperking: in de bron mag `$$...$$` meerdere regels beslaan
-> (Obsidian-/Pandoc-stijl); `$...$` moet op dezelfde regel openen en sluiten.
+> In de bron mag `$$...$$` meerdere regels beslaan (Obsidian/Pandoc-stijl);
+> `$...$` moet op dezelfde regel openen en sluiten.
+
+## Diagrammen
+
+Een codeblok met taal `mermaid` of `plantuml` wordt **als afbeelding
+voorvertoond** vlak onder het blok, zonder de code (die bewerkbaar blijft) of de
+opgeslagen Markdown aan te raken.
+
+- Het vereist dat het bijbehorende hulpprogramma is geïnstalleerd: **`plantuml`**
+  (met Java) voor PlantUML, of **`mmdc`** (mermaid-cli, met Node) voor Mermaid.
+- Ontbreekt het hulpprogramma, dan verschijnt onder het blok een melding met het
+  installatiecommando voor jouw besturingssysteem; het blok blijft code.
+- De afbeelding is alleen presentatie: ze wordt niet naar de Markdown geschreven
+  en telt niet als een niet-opgeslagen wijziging.
+
+Een codeblok met label `mermaid` dat `flowchart LR  A --> B --> C` bevat, wordt
+bijvoorbeeld voorvertoond als het bijbehorende stroomschema.
+
+## Spellingcontrole
+
+- Onderstreept verkeerd gespelde woorden in het rood volgens de **documenttaal**
+  (uit de `lang`-front-matter, de taalinstelling of het systeem). Code, formules
+  en koppelingen worden niet gecontroleerd.
+- **Rechtsklik** op een onderstreept woord biedt **suggesties** (een klik vervangt
+  het), **Aan woordenboek toevoegen** (een permanente persoonlijke lijst) en
+  **Negeren** (voor de sessie).
+- Ze wordt in-/uitgeschakeld via **Beeld → Spellingcontrole**, en de taal stel je
+  in via **Beeld → Taal van spellingcontrole** (of laat je automatisch).
+- Ze heeft Hunspell-woordenboeken nodig: op Linux die van het systeem
+  (`hunspell-es`, `hunspell-en-us`…); op Windows/macOS worden ze met de toepassing
+  meegeleverd.
 
 ## Zoeken en vervangen
 
-- **Zoeken** (Ctrl+F) opent een onderbalk met velden voor zoeken en vervangen,
-  plus opties (hoofdletters, heel woord).
+- **Zoeken** (Ctrl+F) opent onderaan een balk met velden om te zoeken en te
+  vervangen, plus opties (hoofdlettergevoelig, heel woord).
 - **Volgende zoeken** F3 / **Vorige zoeken** Shift+F3.
 
 ## Documentoverzicht
 
-Het zijpaneel links toont de index van koppen (TOC): het werkt bij tijdens het
-typen, en door op een item te klikken springt de cursor naar die kop. Het
-wordt in-/uitgeschakeld met F9.
+Het linker zijpaneel toont het koppenoverzicht (inhoudsopgave): het werkt bij
+tijdens het typen en, bij een klik op een item, springt de cursor naar die kop.
+Het wordt getoond/verborgen met F9.
 
-Je kunt een item uit het overzicht **slepen** om die sectie — de kop, de
-inhoud en de subsecties ervan — binnen het document te **herordenen**, zonder
-het niveau te wijzigen. Bovendien plaatst **Invoegen → Inhoudsopgave (TOC)**
-een geneste lijst met de koppen in het document.
+Je kunt een overzichtsitem **slepen** om die sectie —de kop, de inhoud en de
+subsecties— in het document te **herordenen**, zonder het niveau te wijzigen.
+Bovendien plaatst **Invoegen → Inhoudsopgave (TOC)** een geneste lijst van de
+koppen in het document. **Beeld → Ga naar kop…** (Ctrl+G) springt naar een kop
+door een deel van de tekst te typen.
+
+## Documentstatistieken
+
+- **Beeld → Documentstatistieken…** toont woorden, tekens, alinea's, zinnen en de
+  geschatte leestijd (van het document of de selectie).
+- **Beeld → Woordenteller tonen** schakelt een permanente teller in de statusbalk
+  in.
 
 ## Afleidingsvrije modus
 
-**Beeld → Afleidingsvrije modus** (F11) opent het volledige scherm met
-verborgen menu en werkbalken en de tekst gecentreerd in een leeskolom. Het
-overzicht blijft, indien zichtbaar, vastgehecht aan het centrale blok. ESC of
-F11 sluit af.
+**Beeld → Afleidingsvrij** (F11) gaat naar volledig scherm met het menu en de
+balken verborgen en de tekst gecentreerd in een leeskolom. Het overzicht blijft,
+indien zichtbaar, tegen het centrale blok. ESC of F11 verlaten.
 
-## Broncodeweergave
+## Codeweergave
 
-**Beeld → Markdown-broncode** (Ctrl+Shift+M) schakelt tussen de visuele editor
-en een schermvullende platte-teksteditor met de ruwe Markdown. Wijzigingen in
-de bronmodus worden in het document doorgevoerd wanneer je terugkeert naar de
-visuele modus.
+**Beeld → Markdown-bron** (Ctrl+Shift+M) wisselt tussen de visuele editor en een
+platte-tekst-editor, op volledig scherm, met de ruwe Markdown. Wijzigingen in de
+bronmodus worden naar het document doorgevoerd bij terugkeer naar de visuele modus.
 
-**Beeld → Gesplitste weergave** (Ctrl+Shift+D) toont beide naast elkaar: de
-visuele editor en de bron, gesynchroniseerd (wat je in de ene typt wordt in de
-andere weerspiegeld). Het sluit de schermvullende bronmodus uit.
+**Beeld → Gesplitste weergave** (Ctrl+Shift+D) toont beide tegelijk, naast elkaar:
+de visuele editor en de bron, gesynchroniseerd (wat je in de ene typt, verschijnt
+in de andere). Ze sluit elkaar uit met de bronmodus op volledig scherm.
 
 ## Exporteren en afdrukken
 
-**Bestand → Exporteren** biedt **PDF**, **HTML**, **ODF (.odt)** en
-**LaTeX (.tex)**. Voor ODF en LaTeX wordt de documenttaal ingebed (genomen uit
-de front matter `lang`/`language`, de toepassingsinstelling of, als laatste
-redmiddel, de systeemlocale).
+**Bestand → Exporteren** biedt **PDF**, **HTML**, **ODF (.odt)**, **DOCX
+(.docx)**, **LaTeX (.tex)** en **EPUB (.epub)**. In ODF, DOCX, LaTeX en EPUB wordt
+de documenttaal ingebed (uit de `lang`/`language`-front-matter, de
+toepassingsinstelling of, als laatste, de systeemtaal).
 
-**Bestand → Afdrukken** (Ctrl+P) opent het systeemdialoogvenster.
+Je kunt ook **alleen de selectie naar PDF** exporteren en het **Afdrukvoorbeeld**
+gebruiken.
 
-## Thema's en weergave
+**Bestand → Afdrukken** (Ctrl+P) opent het systeemdialoogvenster; **Selectie
+afdrukken** drukt alleen het geselecteerde af.
+
+## Thema's en uiterlijk
 
 - **Beeld → Thema** biedt Licht, Donker, GitHub Light, GitHub Dark, Monokai en
-  Hoog contrast.
-- **Beeld → Warm nachtlicht** dempt de blauwtinten in de achtergrond op basis
-  van het tijdstip van de dag.
-- **Zoom**: Ctrl+muiswiel, Ctrl++ / Ctrl+- en **Normale grootte** (Ctrl+0)
-  schalen de hele interface (niet alleen de editortekst).
-- **Beeld → Taal** wijzigt de taal van de interface; werkt onmiddellijk (het venster wordt opnieuw aangemaakt).
+  Hoog contrast. **Systeem volgen** stemt het lichte/donkere thema af op dat van
+  het besturingssysteem.
+- **Beeld → Nachtelijk warm licht** dempt de blauwtinten van de achtergrond
+  afhankelijk van het tijdstip.
+- **Zoom**: Ctrl+muiswiel, Ctrl++ / Ctrl+- en **Normale grootte** (Ctrl+0) schalen
+  de hele interface (niet alleen de editortekst).
+- **Beeld → Taal** wijzigt de interfacetaal; ze wordt meteen toegepast (het venster
+  wordt opnieuw gemaakt).
 
 ## Automatisch herstel
 
-Terwijl je bewerkt, wordt de inhoud om de paar seconden automatisch opgeslagen
-in een conceptkopie. Sluit de toepassing onverwacht af, dan biedt ze bij de
-volgende start aan om te herstellen wat je aan het schrijven was.
+Terwijl je bewerkt, wordt de inhoud om de paar seconden automatisch opgeslagen in
+een conceptkopie. Sluit de toepassing abnormaal af, dan biedt ze bij het opnieuw
+openen aan om te herstellen wat je aan het schrijven was.
 
 ## Sneltoetsen
 
@@ -200,15 +282,18 @@ volgende start aan om te herstellen wat je aan het schrijven was.
 | Afdrukken                 | Ctrl+P           |
 | Ongedaan maken / Opnieuw  | Ctrl+Z / Ctrl+Y  |
 | Vet / Cursief             | Ctrl+B / Ctrl+I  |
-| Onderstrepen              | Ctrl+U           |
+| Onderstreept              | Ctrl+U           |
+| Plakken als platte tekst  | Ctrl+Shift+V     |
+| Plakken als Markdown      | Ctrl+Alt+V       |
 | Zoeken                    | Ctrl+F           |
-| Volgende / vorige zoeken  | F3 / Shift+F3    |
+| Volgende/vorige zoeken    | F3 / Shift+F3    |
 | Kop H1 … H6               | Ctrl+1 … Ctrl+6  |
 | Formule invoegen          | Ctrl+Shift+F     |
 | Voetnoot invoegen         | Ctrl+Shift+N     |
-| Markdown-broncodeweergave | Ctrl+Shift+M     |
+| Ga naar kop               | Ctrl+G           |
+| Markdown-bronweergave     | Ctrl+Shift+M     |
 | Gesplitste weergave       | Ctrl+Shift+D     |
 | Overzicht                 | F9               |
-| Afleidingsvrije modus     | F11              |
+| Afleidingsvrij            | F11              |
 | Zoom + / − / Normaal      | Ctrl++ / Ctrl+− / Ctrl+0 |
 | Help                      | F1               |
