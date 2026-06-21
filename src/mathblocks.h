@@ -17,8 +17,10 @@ class QTextDocument;
 //
 // El módulo es puro (sin GUI ni estado): solo manipula cadenas.
 //
-// Limitación de v1: solo se reconocen fórmulas que abren y cierran en la misma
-// línea. `$$ ... $$` que cruza párrafos no se detecta.
+// Las fórmulas inline (`$...$`) deben abrir y cerrar en la misma línea; las de
+// bloque (`$$...$$`) sí pueden cruzar varias líneas (estilo Pandoc/Obsidian):
+// `findMath` las rastrea con un estado de apertura y `protectMath` codifica sus
+// saltos internos en un placeholder PUA para que quepan en el inline-code.
 namespace mdmath {
 
 // Una fórmula encontrada en el Markdown fuente.

@@ -36,6 +36,9 @@ private slots:
     void unrenderRestoresInlineCode();
     void fullRoundTripPreservesTex();
     void findFindsMultilineBlockMath();
+    void findFindsMultilineWithContentOnDelimiterLines();
+    void findIgnoresMultilineOpenInsideFence();
+    void findDiscardsUnclosedMultilineBlock();
     void roundTripPreservesMultilineMath();
 };
 
@@ -263,6 +266,34 @@ void TestMathBlocks::roundTripPreservesMultilineMath()
     const QString saved = mdmath::restoreMathFromSentinels(clone->toMarkdown(), table);
     // El TeX completo (con saltos internos) debe estar presente entre $$.
     QVERIFY(saved.contains(QStringLiteral("$$\n\\sum_{i=1}^n a_i\n$$")));
+}
+
+// El `$$` de apertura/cierre puede llevar TeX en la misma línea (estilo Pandoc),
+// no solo `$$` aislado en su propia línea: el contenido capturado debe abarcar
+// ambas líneas con su salto interno.
+void TestMathBlocks::findFindsMultilineWithContentOnDelimiterLines()
+{
+    const QString s = QStringLiteral("a\n$$ \\sum_{i=1}^n\nx_i $$\nb\n");
+    const QList<mdmath::Span> spans = mdmath::findMath(s);
+    QCOMPARE(spans.size(), 1);
+    QCOMPARE(spans[0].block, true);
+    QCOMPARE(spans[0].content, QStringLiteral(" \\sum_{i=1}^n\nx_i "));
+}
+
+// Un `$$` que abre dentro de una valla de código no debe iniciar un bloque
+// multilínea (la apertura cae en zona de código y se ignora por completo).
+void TestMathBlocks::findIgnoresMultilineOpenInsideFence()
+{
+    const QString s = QStringLiteral("```\n$$\nx\n$$\n```\n");
+    QCOMPARE(mdmath::findMath(s).size(), 0);
+}
+
+// Un `$$` de apertura que nunca encuentra cierre se descarta (no produce span),
+// para no «tragarse» el resto del documento.
+void TestMathBlocks::findDiscardsUnclosedMultilineBlock()
+{
+    const QString s = QStringLiteral("texto\n$$\n\\sum x\nsin cierre\n");
+    QCOMPARE(mdmath::findMath(s).size(), 0);
 }
 
 QTEST_MAIN(TestMathBlocks)

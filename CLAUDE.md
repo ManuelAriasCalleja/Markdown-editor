@@ -280,9 +280,16 @@ solo incluyen `mathblocks.h`. Piezas clave:
   por grupo (preámbulo con `amsmath`+`amssymb`). **HTML/PDF/ODF**: pasan por
   `mdexport::cloneForExport`, que clona el documento y solo limpia las propiedades
   custom de math, dejando que Qt serialice el vertical-align a CSS/ODF/PDF.
-- *Limitaciones.* (1) `$$...$$` que cruza varias líneas en la fuente no se detecta
-  (`findMath` trabaja línea a línea). (2) No hay layout 2D: las fracciones grandes
-  son `(a)/(b)` y los `\sum` con límites usan super/subíndice a la derecha.
+- *Multilínea.* `$$...$$` de bloque puede cruzar varias líneas en la fuente
+  (estilo Pandoc/Obsidian): `findMath` rastrea la apertura entre líneas y
+  `protectMath` codifica los saltos internos en un placeholder PUA
+  (`kNewlinePlaceholder`) para que el inline-code quepa en una sola línea de
+  Markdown; `renderMathInDocument` los restaura. Las inline (`$...$`) no cruzan
+  líneas (regla habitual). Lo verifican `findFindsMultilineBlockMath` y
+  `roundTripPreservesMultilineMath` (+ casos límite: contenido en las líneas
+  delimitadoras, descarte si no cierra, ignorado dentro de un fence).
+- *Limitaciones.* No hay layout 2D: las fracciones grandes son `(a)/(b)` y los
+  `\sum` con límites usan super/subíndice a la derecha (sería el «Nivel 2»).
 
 ## Exportación e impresión
 
