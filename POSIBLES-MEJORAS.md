@@ -223,7 +223,11 @@ Sin dependencias nuevas y con el patrón habitual (función pura + `tst_`).
 
 ### Robustez
 
-- ⬜ **ASAN/UBSAN + clang-tidy en CI** (ver también #14).
+- ✅ **ASAN/UBSAN + clang-tidy en CI** — *Hecho:* opción CMake `ENABLE_SANITIZERS`
+  (ASan+UBSan, con `vptr` desactivado por el ruido de Qt) y `.clang-tidy` con
+  checks de alta señal; dos *jobs* en `ci.yml` que corren la suite bajo sanitizers
+  y clang-tidy (fail-on-warning) en cada push/PR. La primera pasada cazó un bug de
+  un test (`QChar` de un carácter astral) y 3 avisos de clang-tidy, ya corregidos.
 - ⬜ **Fuzzing del round-trip** Markdown.
 - ⬜ **Golden tests de exportadores** — fijar HTML/LaTeX/ODF/DOCX de referencia
   para detectar regresiones de salida.

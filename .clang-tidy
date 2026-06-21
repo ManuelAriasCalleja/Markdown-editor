@@ -1,0 +1,26 @@
+# Análisis estático con clang-tidy. Conjunto acotado a checks de ALTA SEÑAL
+# (sobre todo correctness `bugprone-*`), evitando los ruidosos o de mero estilo
+# para que el aviso signifique algo. Se ejecuta en CI sobre src/*.cpp.
+Checks: >
+  bugprone-*,
+  -bugprone-easily-swappable-parameters,
+  -bugprone-narrowing-conversions,
+  -bugprone-branch-clone,
+  misc-*,
+  -misc-non-private-member-variables-in-classes,
+  -misc-no-recursion,
+  -misc-include-cleaner,
+  -misc-use-anonymous-namespace,
+  -misc-const-correctness,
+  performance-*,
+  -performance-no-int-to-ptr,
+  -performance-enum-size,
+  modernize-use-override,
+  modernize-use-nullptr,
+  modernize-use-equals-default,
+  readability-container-size-empty,
+  readability-redundant-string-init,
+  readability-redundant-member-init,
+# Solo nuestras cabeceras (no las de Qt ni el código generado por moc).
+HeaderFilterRegex: 'src/[^/]*\.h$'
+WarningsAsErrors: ''

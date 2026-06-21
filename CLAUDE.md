@@ -45,6 +45,13 @@ ctest --test-dir build --output-on-failure
 ctest --test-dir build -R tst_outline        # un solo test por nombre
 ./build/tst_outline                            # ejecutable de test directo
 
+# Robustez (lo corre CI; en local, build aparte):
+#   Sanitizers (ASan+UBSan): aborta ante errores de memoria / UB
+cmake -S . -B build-san -DENABLE_SANITIZERS=ON -DCMAKE_BUILD_TYPE=Debug && cmake --build build-san
+ASAN_OPTIONS=detect_leaks=0 ctest --test-dir build-san --output-on-failure
+#   clang-tidy (config en .clang-tidy; CI falla ante cualquier aviso)
+clang-tidy -p build src/*.cpp
+
 # Instalar (compila y copia a $PREFIX el binario + .desktop + iconos hicolor
 # PNG/SVG en Linux; sudo solo si $PREFIX no es escribible). Ayuda: ./install.sh -h
 sudo ./install.sh                              # build normal -> /usr/local

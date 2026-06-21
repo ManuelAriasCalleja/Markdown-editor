@@ -39,7 +39,7 @@ QString mdoutline::tableOfContentsMarkdown(const QList<OutlineHeading> &headings
         while (!stack.isEmpty() && stack.last() >= h.level)
             stack.removeLast();
         const int depth = stack.size();  // 0 = raíz
-        md += QString(depth * 2, QLatin1Char(' '));
+        md += QString(qsizetype(depth) * 2, QLatin1Char(' '));
         md += QStringLiteral("- ") + h.text + QLatin1Char('\n');
         stack.append(h.level);
     }

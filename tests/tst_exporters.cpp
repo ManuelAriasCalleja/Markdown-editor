@@ -125,8 +125,9 @@ void TestExporters::latexSanitizesHighUnicode()
     doc.setMarkdown(QStringLiteral("✅ hecho — cañón 🚀\n\n```\ncode ✅ x\n```\n"));
     const QString tex = mdexport::toLatex(
         &doc, mdexport::languageForCode(QStringLiteral("es")), QString());
-    QVERIFY(!tex.contains(QChar(0x2705)));   // ✅ ya no aparece crudo
-    QVERIFY(!tex.contains(QChar(0x1F680)));  // 🚀 (par subrogado) omitido
+    QVERIFY(!tex.contains(QChar(0x2705)));        // ✅ ya no aparece crudo
+    QVERIFY(!tex.contains(QStringLiteral("🚀")));  // 🚀 omitido (es astral: QChar no lo
+                                                  // representa, hay que comparar el QString)
     QVERIFY(tex.contains(QStringLiteral("\\checkmark")));  // ✅ → símbolo LaTeX
     QVERIFY(tex.contains(QString::fromUtf8("cañón")));     // acentos intactos
     QVERIFY(tex.contains(QString::fromUtf8("—")));         // raya intacta

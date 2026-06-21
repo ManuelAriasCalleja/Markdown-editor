@@ -8,6 +8,23 @@ project(md-editor
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+# Sanitizers (ASan + UBSan) para una build de diagnóstico: instrumenta TODO
+# (biblioteca, ejecutable y tests) y aborta en el primer error de memoria o
+# comportamiento indefinido. Se usa en CI corriendo la suite; en local:
+#   cmake -S . -B build-san -DENABLE_SANITIZERS=ON && cmake --build build-san
+#   ASAN_OPTIONS=detect_leaks=0 ctest --test-dir build-san --output-on-failure
+# (detect_leaks=0 evita el ruido de fugas a la salida de Qt/fontconfig).
+option(ENABLE_SANITIZERS "Compila con AddressSanitizer + UndefinedBehaviorSanitizer" OFF)
+if(ENABLE_SANITIZERS)
+    # Se desactiva el sub-check `vptr` de UBSan: en una app Qt salta con falsos
+    # positivos benignos al acceder a `this` desde slots que se emiten durante la
+    # construcción/destrucción de un QObject (el vptr es aún/ya el de la base). Se
+    # conservan ASan (memoria) y el resto de UBSan (enteros, OOB, alineación, null).
+    add_compile_options(-fsanitize=address,undefined -fno-sanitize=vptr
+                        -fno-omit-frame-pointer -fno-sanitize-recover=all)
+    add_link_options(-fsanitize=address,undefined -fno-sanitize=vptr)
+endif()
+
 # Genera compile_commands.json para que clangd / el IDE resuelvan las
 # cabeceras de Qt y ofrezcan autocompletado y diagnósticos correctos.
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)

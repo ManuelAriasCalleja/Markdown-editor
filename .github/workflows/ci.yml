@@ -36,6 +36,11 @@ jobs:
             libxcb-randr0 libxcb-render-util0 libxcb-shape0 libxcb-sync1 \
             libxcb-xfixes0 libxcb-xinerama0 libxcb-xkb1 libxkbcommon0
 
+      # Hunspell para compilar el corrector de verdad (no el stub) y que sus
+      # pruebas corran (con un diccionario instalado).
+      - name: Install Hunspell
+        run: sudo apt-get install -y libhunspell-dev hunspell-en-us
+
       - name: Configure
         run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
 
@@ -48,3 +53,78 @@ jobs:
         run: ctest --test-dir build --output-on-failure
         env:
           QT_QPA_PLATFORM: offscreen
+
+  sanitizers:
+    name: Sanitizers (ASan/UBSan)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v4
+        with:
+          version: '6.8.2'
+          cache: true
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libhunspell-dev hunspell-en-us \
+            libgl1-mesa-dev libxkbcommon-x11-0 libfontconfig1 libdbus-1-3 \
+            libegl1 libxcb-cursor0 libxcb-icccm4 libxcb-image0 libxcb-keysyms1 \
+            libxcb-randr0 libxcb-render-util0 libxcb-shape0 libxcb-sync1 \
+            libxcb-xfixes0 libxcb-xinerama0 libxcb-xkb1 libxkbcommon0
+
+      # Build de diagnóstico: instrumenta todo con ASan + UBSan y aborta al primer
+      # error de memoria / comportamiento indefinido. Debug para mejores trazas.
+      - name: Configure
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -DENABLE_SANITIZERS=ON
+
+      - name: Build
+        run: cmake --build build --parallel
+
+      # detect_leaks=0: el ruido de fugas a la salida es de Qt/fontconfig, no
+      # nuestro; nos interesan los errores de memoria y el UB.
+      - name: Test (bajo sanitizers)
+        run: ctest --test-dir build --output-on-failure
+        env:
+          QT_QPA_PLATFORM: offscreen
+          ASAN_OPTIONS: detect_leaks=0
+          UBSAN_OPTIONS: print_stacktrace=1:halt_on_error=1
+
+  clang-tidy:
+    name: clang-tidy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v4
+        with:
+          version: '6.8.2'
+          cache: true
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            clang-tidy libhunspell-dev \
+            libgl1-mesa-dev libxkbcommon-x11-0 libfontconfig1 libdbus-1-3 \
+            libegl1 libxcb-cursor0 libxcb-icccm4 libxcb-image0 libxcb-keysyms1 \
+            libxcb-randr0 libxcb-render-util0 libxcb-shape0 libxcb-sync1 \
+            libxcb-xfixes0 libxcb-xinerama0 libxcb-xkb1 libxkbcommon0
+
+      # Configurar genera compile_commands.json (CMAKE_EXPORT_COMPILE_COMMANDS) y
+      # el código de moc; build asegura que todo lo generado existe.
+      - name: Configure
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+
+      - name: Build
+        run: cmake --build build --parallel
+
+      # Análisis estático con los checks del .clang-tidy del repo; falla ante
+      # cualquier aviso (el código está limpio, así que es una guardia de
+      # regresión). Solo sobre src/*.cpp (no las pruebas ni el código generado).
+      - name: clang-tidy
+        run: clang-tidy -p build --warnings-as-errors='*' src/*.cpp

@@ -22,7 +22,7 @@ GoToHeadingDialog::GoToHeadingDialog(const QList<OutlineHeading> &headings, QWid
 
     for (const OutlineHeading &h : headings) {
         auto *item = new QListWidgetItem(
-            QString((h.level - 1) * 2, QLatin1Char(' ')) + h.text, m_list);
+            QString(qsizetype(h.level - 1) * 2, QLatin1Char(' ')) + h.text, m_list);
         item->setData(Qt::UserRole, h.blockNumber);
     }
     if (m_list->count() > 0)

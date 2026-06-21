@@ -77,7 +77,7 @@ QString pickDictionary(const QString &lang, const QStringList &available)
         if (!hit.isEmpty())
             return hit;
     }
-    const QString baseHit = findCi(base);
+    QString baseHit = findCi(base);  // no const: permite mover en el return
     if (!baseHit.isEmpty())
         return baseHit;
 
