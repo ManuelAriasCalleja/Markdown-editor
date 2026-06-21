@@ -6,30 +6,20 @@
 // MainWindow, separados de mainwindow.cpp para aligerarlo.
 
 #include "mainwindow.h"
-#include "appsettings.h"
 #include "blockconstructs.h"
-#include "chromezoom.h"
 #include "footnotes.h"
 #include "tasklist.h"
-#include "codehighlighter.h"
-#include "diskwatcher.h"
 #include "distractionfreecontroller.h"
 #include "documentio.h"
 #include "exportcontroller.h"
 #include "exporters.h"
 #include "filecontroller.h"
-#include "formaticons.h"
 #include "formatcontroller.h"
 #include "formulacontroller.h"
 #include "insertcontroller.h"
 #include "tablecontroller.h"
 #include "findreplacebar.h"
 #include "focuseditor.h"
-#include "helpdialog.h"
-#include "docstats.h"
-#include "texttransform.h"
-#include "richpaste.h"
-#include "doctemplates.h"
 #include "markdownrender.h"
 #include "listcontinuation.h"
 #include "gotoheadingdialog.h"
@@ -37,9 +27,7 @@
 #include "mathblocks.h"
 #include "outlinepanel.h"
 #include "shortcodes.h"
-#include "recentfilesmanager.h"
-#include "recoverymanager.h"
-#include "spellscan.h"
+#include "spellcontroller.h"
 #include "splitviewcontroller.h"
 #include "tableedit.h"
 #include "themecontroller.h"
@@ -126,7 +114,7 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 bool MainWindow::handleViewportEvent(QEvent *event)
 {
     if (event->type() == QEvent::ContextMenu) {
-        return showSpellContextMenu(static_cast<QContextMenuEvent *>(event));
+        return m_spellController->showContextMenu(static_cast<QContextMenuEvent *>(event));
     }
     if (event->type() == QEvent::Wheel) {
         auto *wheel = static_cast<QWheelEvent *>(event);

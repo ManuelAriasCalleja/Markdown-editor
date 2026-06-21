@@ -10,7 +10,6 @@
 #include "footnotes.h"
 #include "tasklist.h"
 #include "codehighlighter.h"
-#include "diskwatcher.h"
 #include "distractionfreecontroller.h"
 #include "documentio.h"
 #include "exportcontroller.h"
@@ -23,21 +22,16 @@
 #include "tablecontroller.h"
 #include "findreplacebar.h"
 #include "focuseditor.h"
-#include "helpdialog.h"
-#include "docstats.h"
 #include "texttransform.h"
 #include "richpaste.h"
 #include "doctemplates.h"
 #include "markdownrender.h"
-#include "listcontinuation.h"
-#include "gotoheadingdialog.h"
 #include "diagramcontroller.h"
 #include "mathblocks.h"
 #include "outlinepanel.h"
-#include "shortcodes.h"
 #include "recentfilesmanager.h"
-#include "recoverymanager.h"
-#include "spellscan.h"
+#include "spellchecker.h"
+#include "spellcontroller.h"
 #include "splitviewcontroller.h"
 #include "tableedit.h"
 #include "themecontroller.h"
@@ -116,21 +110,6 @@ void setShortcutTooltip(QAction *action)
     action->setToolTip(withShortcut(action->text(), action->shortcut()));
 }
 } // namespace
-
-// Nombre legible de un diccionario (basename como "en_US", "es") para el menú,
-// derivado del locale: «Inglés (Estados Unidos)», «Español»… Si el código trae
-// territorio (es_ES), se muestra; si no se reconoce, se deja el código tal cual.
-QString MainWindow::spellLanguageLabel(const QString &code)
-{
-    const QLocale loc(code);
-    QString name = loc.nativeLanguageName();
-    if (name.isEmpty())
-        return code;
-    name[0] = name.at(0).toUpper();
-    if (code.contains(QLatin1Char('_')) && !loc.nativeTerritoryName().isEmpty())
-        return QStringLiteral("%1 (%2)").arg(name, loc.nativeTerritoryName());
-    return name;
-}
 
 void MainWindow::createMenusAndActions()
 {
@@ -651,9 +630,7 @@ void MainWindow::createViewMenu()
     spellAction->setChecked(AppSettings::spellCheck());
     spellAction->setToolTip(tr("Subraya las palabras mal escritas según el idioma del documento"));
     connect(spellAction, &QAction::toggled, this, [this](bool on) {
-        m_spellEnabled = on;
-        AppSettings::setSpellCheck(on);
-        applySpellLanguage();  // carga/descarga el diccionario y rehace el resaltado
+        m_spellController->setEnabled(on);  // persiste, carga/descarga y rehace el resaltado
     });
 
     // Idioma del corrector: «Automático» (deduce del documento) o uno fijo de los
@@ -667,20 +644,18 @@ void MainWindow::createViewMenu()
     autoLangAction->setChecked(currentSpellLang.isEmpty());
     spellLangGroup->addAction(autoLangAction);
     connect(autoLangAction, &QAction::triggered, this, [this] {
-        AppSettings::setSpellLanguage(QString());
-        applySpellLanguage();
+        m_spellController->setLanguageOverride(QString());
     });
     const QStringList spellLangs = SpellChecker::availableLanguages();
     if (!spellLangs.isEmpty())
         spellLangMenu->addSeparator();
     for (const QString &code : spellLangs) {
-        QAction *langAct = spellLangMenu->addAction(spellLanguageLabel(code));
+        QAction *langAct = spellLangMenu->addAction(SpellController::languageLabel(code));
         langAct->setCheckable(true);
         langAct->setChecked(code == currentSpellLang);
         spellLangGroup->addAction(langAct);
         connect(langAct, &QAction::triggered, this, [this, code] {
-            AppSettings::setSpellLanguage(code);
-            applySpellLanguage();
+            m_spellController->setLanguageOverride(code);
         });
     }
 

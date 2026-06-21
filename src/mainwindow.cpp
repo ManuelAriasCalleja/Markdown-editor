@@ -12,7 +12,6 @@
 #include "exportcontroller.h"
 #include "exporters.h"
 #include "filecontroller.h"
-#include "formaticons.h"
 #include "formatcontroller.h"
 #include "formulacontroller.h"
 #include "insertcontroller.h"
@@ -21,19 +20,13 @@
 #include "focuseditor.h"
 #include "helpdialog.h"
 #include "docstats.h"
-#include "texttransform.h"
-#include "richpaste.h"
-#include "doctemplates.h"
 #include "markdownrender.h"
-#include "listcontinuation.h"
-#include "gotoheadingdialog.h"
 #include "diagramcontroller.h"
 #include "mathblocks.h"
 #include "outlinepanel.h"
-#include "shortcodes.h"
 #include "recentfilesmanager.h"
 #include "recoverymanager.h"
-#include "spellscan.h"
+#include "spellcontroller.h"
 #include "splitviewcontroller.h"
 #include "tableedit.h"
 #include "themecontroller.h"
@@ -110,8 +103,6 @@ MainWindow::MainWindow(QWidget *parent)
     m_baseFontPointSize = m_editor->font().pointSizeF();
     // Resaltado de sintaxis de los bloques de código.
     m_highlighter = new CodeBlockHighlighter(m_editor->document());
-    m_highlighter->setSpellChecker(&m_spell);  // subrayado ortográfico
-    m_spellEnabled = AppSettings::spellCheck();
 
     // Previsualización de diagramas (Mermaid/PlantUML) bajo cada bloque de código.
     // Si falta la herramienta, el propio controlador pone un marcador inline con
@@ -131,6 +122,13 @@ MainWindow::MainWindow(QWidget *parent)
     // menú porque sus acciones los invocan.
     m_documentIo = new DocumentIo(m_editor, this);
     m_theme = new ThemeController(m_editor, m_highlighter, this);
+
+    // Corrector ortográfico: posee el motor (que enchufa al highlighter para el
+    // subrayado) y el menú contextual de sugerencias. Avisa por la barra de
+    // estado si falta el diccionario del idioma.
+    m_spellController = new SpellController(m_editor, m_highlighter, m_documentIo, this);
+    connect(m_spellController, &SpellController::statusMessage,
+            statusBar(), &QStatusBar::showMessage);
 
     // Al pegar o soltar una imagen en el editor, guardarla a disco e insertar
     // `![](ruta)` en vez de incrustarla (que no sobreviviría al round-trip a
@@ -381,10 +379,11 @@ MainWindow::MainWindow(QWidget *parent)
     // Las tablas cargadas no traen borde; se lo damos para que sean visibles.
     connect(m_documentIo, &DocumentIo::documentLoaded, this, &MainWindow::styleTables);
     // El idioma del corrector puede cambiar con el front matter del documento.
-    connect(m_documentIo, &DocumentIo::documentLoaded, this, &MainWindow::applySpellLanguage);
+    connect(m_documentIo, &DocumentIo::documentLoaded,
+            m_spellController, &SpellController::applyLanguage);
 
     m_documentIo->reset();  // documento nuevo (fija el título inicial)
-    applySpellLanguage();   // idioma inicial (ajuste de la app o locale)
+    m_spellController->applyLanguage();  // idioma inicial (ajuste de la app o locale)
 
     // Restaura tamaño/posición y disposición de barras de la sesión anterior.
     const QByteArray geometry = AppSettings::windowGeometry();
@@ -575,117 +574,6 @@ void MainWindow::styleTables()
     }
     cursor.endEditBlock();
     doc->setModified(wasModified);
-}
-
-void MainWindow::applySpellLanguage()
-{
-    // Desactivado: descarga el diccionario (sin subrayado y sin huella de
-    // memoria) y rehace el resaltado para limpiar las erratas marcadas.
-    if (!m_spellEnabled) {
-        m_spell.setLanguage(QString());
-        m_highlighter->rehighlight();
-        return;
-    }
-    // Idioma: override manual (Ver → Idioma de corrección) si lo hay; si no,
-    // automático, igual que la exportación: front matter › ajuste › locale.
-    QString code = AppSettings::spellLanguage();
-    if (code.isEmpty()) {
-        const QString fm = m_documentIo->frontMatter();
-        code = mdexport::frontMatterValue(fm, QStringLiteral("lang"));
-        if (code.isEmpty())
-            code = mdexport::frontMatterValue(fm, QStringLiteral("language"));
-        if (code.isEmpty())
-            code = AppSettings::language();
-        if (code.isEmpty())
-            code = QLocale::system().name();  // p. ej. "es_ES"
-    }
-
-    m_spell.setPersonalWords(AppSettings::personalDictionary());
-    m_spell.setLanguage(code);
-    m_highlighter->rehighlight();  // re-subraya con el diccionario nuevo
-
-    // Aviso visible SOLO si el problema está presente: el corrector está
-    // activado pero no se cargó diccionario para el idioma pedido (degrada en
-    // silencio, así que sin esto el usuario no sabría por qué no subraya).
-    if (!m_spell.isAvailable()) {
-        statusBar()->showMessage(
-            tr("Sin diccionario de corrección para «%1»: instálalo (Hunspell) o "
-               "desactiva el corrector en «Ver».").arg(spellLanguageLabel(code)),
-            8000);
-    }
-}
-
-bool MainWindow::showSpellContextMenu(QContextMenuEvent *event)
-{
-    std::unique_ptr<QMenu> menu(m_editor->createStandardContextMenu());
-
-    // Palabra bajo el clic (misma tokenización que el subrayado).
-    const QTextCursor cursor = m_editor->cursorForPosition(event->pos());
-    const QTextBlock block = cursor.block();
-    const QString blockText = block.text();
-    const int posInBlock = cursor.position() - block.position();
-    int wordStart = -1;
-    int wordLen = 0;
-    for (const mdspell::Word &w : mdspell::tokenize(blockText)) {
-        if (posInBlock >= w.start && posInBlock <= w.start + w.length) {
-            wordStart = w.start;
-            wordLen = w.length;
-            break;
-        }
-    }
-
-    if (wordStart >= 0 && m_spell.isAvailable()) {
-        const QString word = blockText.mid(wordStart, wordLen);
-        const int absStart = block.position() + wordStart;
-        // Saltar código en línea / fórmula / enlace, igual que el subrayado.
-        QTextCursor fc(m_editor->document());
-        fc.setPosition(absStart + 1);
-        const QTextCharFormat cf = fc.charFormat();
-        const bool skip = cf.fontFixedPitch()
-                          || cf.boolProperty(mdmath::IsMathProperty) || cf.isAnchor();
-        if (!skip && !m_spell.isCorrect(word)) {
-            // Insertamos todo ANTES de la primera acción estándar (cortar/copiar…).
-            QAction *before = menu->actions().value(0);
-            const QStringList suggestions = m_spell.suggestions(word);
-            if (suggestions.isEmpty()) {
-                QAction *none = new QAction(tr("(sin sugerencias)"), menu.get());
-                none->setEnabled(false);
-                menu->insertAction(before, none);
-            } else {
-                for (const QString &s : suggestions.mid(0, 8)) {  // hasta 8 sugerencias
-                    QAction *act = new QAction(s, menu.get());
-                    QFont f = act->font();
-                    f.setBold(true);
-                    act->setFont(f);
-                    connect(act, &QAction::triggered, this, [this, absStart, wordLen, s] {
-                        QTextCursor c(m_editor->document());
-                        c.setPosition(absStart);
-                        c.setPosition(absStart + wordLen, QTextCursor::KeepAnchor);
-                        c.insertText(s);
-                    });
-                    menu->insertAction(before, act);
-                }
-            }
-            QAction *addAct =
-                new QAction(tr("Añadir «%1» al diccionario").arg(word), menu.get());
-            connect(addAct, &QAction::triggered, this, [this, word] {
-                m_spell.addToPersonal(word);
-                AppSettings::setPersonalDictionary(m_spell.personalWords());
-                m_highlighter->rehighlight();
-            });
-            QAction *ignoreAct = new QAction(tr("Ignorar «%1»").arg(word), menu.get());
-            connect(ignoreAct, &QAction::triggered, this, [this, word] {
-                m_spell.ignoreWord(word);
-                m_highlighter->rehighlight();
-            });
-            menu->insertAction(before, addAct);
-            menu->insertAction(before, ignoreAct);
-            menu->insertSeparator(before);
-        }
-    }
-
-    menu->exec(event->globalPos());
-    return true;
 }
 
 // ---------------------------------------------------------------------------

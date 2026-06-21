@@ -72,11 +72,12 @@ trae lógica pura, su `tst_*` a la lista de tests del mismo archivo).
 
 `MainWindow` es el orquestador y delega en **colaboradores autocontenidos**, cada
 uno una clase pequeña con su propia responsabilidad. Su implementación está
-repartida en dos unidades de traducción para no inflar un único fichero:
-`mainwindow.cpp` (constructor, ciclo de vida, zoom, entrada, glue) y
-`mainwindowmenus.cpp` (construcción de menús y barra de formato — son métodos de
-`MainWindow`, solo en otro `.cpp`). Los iconos monocromos de la barra viven en el
-módulo puro `formaticons`. Tras el refactor de arquitectura las acciones de
+repartida en tres unidades de traducción para no inflar un único fichero:
+`mainwindow.cpp` (constructor, ciclo de vida, zoom, glue), `mainwindowmenus.cpp`
+(construcción de menús y barra de formato) y `mainwindowinput.cpp` (el filtro de
+eventos `eventFilter` y sus sub-manejadores de entrada) — todos son métodos de
+`MainWindow`, solo en `.cpp` distintos. Los iconos monocromos de la barra viven
+en el módulo puro `formaticons`. Tras el refactor de arquitectura las acciones de
 usuario viven en controladores temáticos (la mayoría miembros de `MainWindow`,
 declarados en `mainwindow.h`):
 
@@ -278,9 +279,12 @@ añadir lógica nueva: hay un `tst_*` por módulo.
   un idioma). El subrayado lo hace el **mismo** `CodeBlockHighlighter`
   (`highlightSpelling`, en la rama no-código, saltando código en línea, fórmulas
   y enlaces) con `SpellCheckUnderline` — presentación pura, no toca el Markdown.
-  `MainWindow::applySpellLanguage` elige el diccionario por el idioma del
-  documento (front matter › ajuste › locale) en cada `documentLoaded` y al
-  arrancar, y rehace el resaltado; la lista personal vive en
+  `SpellController` es el colaborador de `MainWindow` que **posee** el motor
+  `SpellChecker` (se lo enchufa al highlighter), el interruptor activado/
+  desactivado y el menú contextual de sugerencias. `applyLanguage()` elige el
+  diccionario por el idioma del documento (front matter › ajuste › locale) en cada
+  `documentLoaded` y al arrancar, y rehace el resaltado; si falta el diccionario
+  emite `statusMessage`. La lista personal vive en
   `AppSettings::personalDictionary`.
 
 ### Fórmulas TeX (`mdmath`)

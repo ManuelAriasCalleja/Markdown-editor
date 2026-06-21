@@ -8,7 +8,6 @@
 #include <QPalette>
 #include <QString>
 
-#include "spellchecker.h"
 #include "themespec.h"
 
 class QTextEdit;
@@ -38,6 +37,7 @@ class OutlinePanel;
 class RecoveryManager;
 class CodeBlockHighlighter;
 class DiagramController;
+class SpellController;
 class FindReplaceBar;
 class RecentFilesManager;
 class DocumentIo;
@@ -170,10 +170,6 @@ private:
     void createFormatToolBar();
     // (Re)genera los iconos de los botones de lista con el color del tema actual.
     void updateToolBarIcons();
-    // Nombre legible de un diccionario (basename como "en_US") para los menús de
-    // corrección. Estático y puro; lo comparten createViewMenu y el menú
-    // contextual del corrector (definido en mainwindowmenus.cpp).
-    static QString spellLanguageLabel(const QString &code);
 
     // Guarda el idioma elegido (código de locale; "" = sistema) y avisa de que
     // se aplicará al reiniciar.
@@ -203,18 +199,6 @@ private:
     // round-trip ni al estado «modificado».
     void styleTables();
 
-    // Carga en el corrector el diccionario del idioma del documento (front matter
-    // `lang`/`language` › ajuste de la app › locale del sistema), repuebla la
-    // lista personal y vuelve a resaltar. Sin diccionario para ese idioma, el
-    // corrector queda inactivo (no subraya nada).
-    void applySpellLanguage();
-
-    // Menú contextual del editor WYSIWYG: el estándar (cortar/copiar/pegar…) y,
-    // si el clic cae sobre una palabra mal escrita, sus sugerencias arriba +
-    // «añadir al diccionario»/«ignorar». Devuelve true (siempre consume el evento
-    // construyendo su propio menú). Lo invoca el filtro de eventos del viewport.
-    bool showSpellContextMenu(class QContextMenuEvent *event);
-
     // Editor actualmente visible (WYSIWYG o fuente); delega en m_split.
     QTextEdit *activeEditor() const;
     // Reemplaza el cuerpo del documento WYSIWYG por el Markdown dado y deja el
@@ -227,8 +211,7 @@ private:
     FocusEditor *m_editor = nullptr;
     HelpDialog *m_helpDialog = nullptr;  // se crea perezoso al pulsar F1
     CodeBlockHighlighter *m_highlighter = nullptr;
-    SpellChecker m_spell;  // motor de corrección; lo consume el highlighter
-    bool m_spellEnabled = true;  // interruptor del corrector (Ver → ...)
+    SpellController *m_spellController = nullptr;  // corrector ortográfico
     DiagramController *m_diagrams = nullptr;  // previsualización de diagramas
     qreal m_baseFontPointSize = 0;  // tamaño de fuente base, para "Tamaño normal"
     // Tamaños base de las superficies que siguen al zoom y el desfase (en

@@ -121,6 +121,8 @@ add_library(md-editor-core STATIC
     src/spellscan.h
     src/spellchecker.cpp
     src/spellchecker.h
+    src/spellcontroller.cpp
+    src/spellcontroller.h
     src/diagram.cpp
     src/diagram.h
     src/diagramdoc.cpp

@@ -123,13 +123,15 @@ proyecto es sólido (~9k LOC, 23 ficheros de test, arquitectura por controllers,
 
 ## 🧹 Calidad de código
 
-12. 🚧 **Descomponer `mainwindow.cpp`** — *En curso:* de 2155 a **1258 líneas**.
-    Se extrajeron los iconos de la barra de formato a un módulo puro `formaticons`
-    (`contrastingInk`/`makeFormatIcon`/`makeListIcon`) y toda la construcción de
-    menús + barra a `mainwindowmenus.cpp` (métodos de `MainWindow` en otra unidad
-    de traducción, como `texparser`). Pendiente para seguir adelgazando: zoom/
-    escalado de interfaz (entrelazado con el orden de construcción, más delicado),
-    el filtro de eventos/entrada y la órbita del corrector.
+12. 🚧 **Descomponer `mainwindow.cpp`** — *En curso:* de 2155 a **854 líneas**
+    (−60 %). Pasos dados: (a) iconos de la barra a un módulo puro `formaticons`;
+    (b) construcción de menús + barra a `mainwindowmenus.cpp`; (c) filtro de
+    eventos/entrada a `mainwindowinput.cpp` (ambos, métodos de `MainWindow` en
+    otra unidad de traducción, como `texparser`); (d) el corrector ortográfico a
+    un `SpellController` real (posee motor + estado + menú contextual). Pendiente:
+    el zoom/escalado de interfaz (entrelazado con el orden de construcción y lleno
+    de *workarounds* de Qt/gtk3, el más delicado) y, si se quiere, la órbita de
+    sesión/recarga.
 13. ✅ **`mathblocks.cpp` (982 líneas)** — *Hecho:* extraído el motor de parseo
     TeX→runs/Unicode a `src/texparser.cpp` (puro, ~480 líneas: `renderTexAsRuns`,
     `texToUnicode`, `wrapTex` y sus tablas/helpers). `mathblocks.cpp` queda en
