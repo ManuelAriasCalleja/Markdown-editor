@@ -103,9 +103,13 @@ proyecto es sólido (~9k LOC, 23 ficheros de test, arquitectura por controllers,
    y `DiagramRenderer` (ejecuta `plantuml`/`mmdc` async vía `QProcess`, cachea por
    fuente, emite `rendered`/`failed`). Sin dependencia de terceros enlazada: solo
    lanza procesos si existen. `tst_diagram` + `tst_diagramrenderer` (renderiza
-   PlantUML real a PNG; QSKIP si la herramienta falta). *Pendiente (Fase 2):*
-   representación en el editor (mostrar la imagen del bloque, round-trip intacto)
-   + aviso si falta la herramienta.
+   PlantUML real a PNG; QSKIP si la herramienta falta). *Hecho (Fase 2):*
+   `DiagramController` coloca la imagen renderizada en un bloque de presentación
+   **bajo** el bloque de código (opción «imagen debajo»); `diagramdoc` la marca y
+   `documentMarkdown` la elimina del clon, así que el round-trip / `isModified` /
+   guardado no la ven. Debounce 600 ms, caché por fuente, limpieza de previews
+   huérfanas, y aviso en la barra de estado si hay diagramas y falta la
+   herramienta. Completo.
    *Tensiona la filosofía:* requiere un motor externo (JS/Java).
 10. ✅ **Insertar índice (TOC)** y ✅ **footnotes**. *Hechos:*
     `mdoutline::tableOfContentsMarkdown` + *Insertar → Índice (TOC)*; y el módulo

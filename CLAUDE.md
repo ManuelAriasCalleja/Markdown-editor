@@ -242,6 +242,18 @@ añadir lógica nueva: hay un `tst_*` por módulo.
   párrafos, frases, tiempo de lectura) alimenta el contador de la barra de estado
   y el diálogo de estadísticas, sobre el texto plano del editor activo o la
   selección.
+- **Diagramas (opcional, Mermaid/PlantUML).** Como Mermaid es JS y PlantUML es
+  Java, no hay motor C++: se renderizan ejecutando la herramienta externa
+  (`plantuml` / `mmdc`) si está instalada — degradación elegante, **sin
+  dependencia enlazada** (solo `QProcess`). Piezas: `diagram` (`mddiagram`, puro:
+  `kindForLanguage`), `DiagramRenderer` (async vía `QProcess`, cachea por fuente,
+  emite `rendered`/`failed`), `diagramdoc` (bloque de preview marcado +
+  `removePreviewBlocks`) y `DiagramController` (escanea los grupos de bloques de
+  código ```mermaid/plantuml, pide el render con debounce y coloca la imagen en un
+  bloque de presentación **bajo** el bloque, opción «imagen debajo»). El round-trip
+  es transparente: `documentMarkdown` llama a `removePreviewBlocks` sobre el clon,
+  así que la imagen nunca llega al Markdown ni cuenta para «modificado». Avisa en
+  la barra de estado solo si hay diagramas y falta la herramienta.
 - **Corrección ortográfica (opcional, Hunspell).** Primera dependencia de
   terceros, **opcional** (`SPELL_CHECK`→`HAVE_HUNSPELL` en CMake): sin
   `libhunspell-dev` el build sigue verde. Piezas: `spellscan` (`mdspell`, puro:

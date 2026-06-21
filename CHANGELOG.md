@@ -8,6 +8,11 @@ y el proyecto usa [versionado semántico](https://semver.org/lang/es/).
 ## [Sin publicar]
 
 ### Añadido
+- **Diagramas Mermaid y PlantUML** (opcional): un bloque de código ` ```mermaid `
+  o ` ```plantuml ` se previsualiza como imagen justo debajo, sin tocar el código
+  (que sigue editable) ni el Markdown guardado. Requiere tener instalada la
+  herramienta correspondiente (`plantuml` con Java, o `mmdc` con Node); si falta,
+  un aviso lo indica y el bloque queda como código normal.
 - **Corrección ortográfica** (opcional, basada en Hunspell): subraya las palabras
   mal escritas según el idioma del documento (deducido del front matter, el ajuste
   de idioma o el sistema). Clic derecho sobre una errata para ver sugerencias,
