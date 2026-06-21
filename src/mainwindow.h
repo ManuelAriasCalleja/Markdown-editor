@@ -204,6 +204,12 @@ private:
     // corrector queda inactivo (no subraya nada).
     void applySpellLanguage();
 
+    // Menú contextual del editor WYSIWYG: el estándar (cortar/copiar/pegar…) y,
+    // si el clic cae sobre una palabra mal escrita, sus sugerencias arriba +
+    // «añadir al diccionario»/«ignorar». Devuelve true (siempre consume el evento
+    // construyendo su propio menú). Lo invoca el filtro de eventos del viewport.
+    bool showSpellContextMenu(class QContextMenuEvent *event);
+
     // Editor actualmente visible (WYSIWYG o fuente); delega en m_split.
     QTextEdit *activeEditor() const;
     // Reemplaza el cuerpo del documento WYSIWYG por el Markdown dado y deja el

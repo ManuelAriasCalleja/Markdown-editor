@@ -47,9 +47,12 @@ proyecto es sólido (~9k LOC, 23 ficheros de test, arquitectura por controllers,
    `SpellCheckUnderline`; `MainWindow::applySpellLanguage` carga el diccionario
    del idioma del documento (front matter › ajuste › locale) tras cada carga y al
    arrancar, y la lista personal se persiste en `AppSettings::personalDictionary`.
-   *Pendiente:* menú contextual (clic derecho: sugerencias + «añadir al
-   diccionario»/«ignorar»), y una acción de menú para activar/desactivar y elegir
-   idioma manualmente.
+   También hay **menú contextual** (`MainWindow::showSpellContextMenu`, vía el
+   filtro de eventos del viewport): sobre una errata, antepone hasta 8 sugerencias
+   (un clic reemplaza) + «añadir al diccionario» / «ignorar», sobre el menú
+   estándar. *Pendiente:* una acción de menú para activar/desactivar el corrector
+   y elegir idioma manualmente (ahora siempre activo si hay diccionario para el
+   idioma del documento).
 
    **Análisis (multiplataforma y dependencias).** Qt6 no trae corrector
    (`QSpellChecker` no existe), hay que aportar el motor. La opción que mantiene

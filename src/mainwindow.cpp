@@ -26,10 +26,12 @@
 #include "markdownrender.h"
 #include "listcontinuation.h"
 #include "gotoheadingdialog.h"
+#include "mathblocks.h"
 #include "outlinepanel.h"
 #include "shortcodes.h"
 #include "recentfilesmanager.h"
 #include "recoverymanager.h"
+#include "spellscan.h"
 #include "splitviewcontroller.h"
 #include "tableedit.h"
 #include "themecontroller.h"
@@ -66,6 +68,9 @@
 #include <QResizeEvent>
 #include <QToolButton>
 #include <QLabel>
+#include <memory>
+
+#include <QContextMenuEvent>
 #include <QMenu>
 #include <QMenuBar>
 #include <QMessageBox>
@@ -1424,6 +1429,79 @@ void MainWindow::applySpellLanguage()
     m_highlighter->rehighlight();  // re-subraya con el diccionario nuevo
 }
 
+bool MainWindow::showSpellContextMenu(QContextMenuEvent *event)
+{
+    std::unique_ptr<QMenu> menu(m_editor->createStandardContextMenu());
+
+    // Palabra bajo el clic (misma tokenización que el subrayado).
+    const QTextCursor cursor = m_editor->cursorForPosition(event->pos());
+    const QTextBlock block = cursor.block();
+    const QString blockText = block.text();
+    const int posInBlock = cursor.position() - block.position();
+    int wordStart = -1;
+    int wordLen = 0;
+    for (const mdspell::Word &w : mdspell::tokenize(blockText)) {
+        if (posInBlock >= w.start && posInBlock <= w.start + w.length) {
+            wordStart = w.start;
+            wordLen = w.length;
+            break;
+        }
+    }
+
+    if (wordStart >= 0 && m_spell.isAvailable()) {
+        const QString word = blockText.mid(wordStart, wordLen);
+        const int absStart = block.position() + wordStart;
+        // Saltar código en línea / fórmula / enlace, igual que el subrayado.
+        QTextCursor fc(m_editor->document());
+        fc.setPosition(absStart + 1);
+        const QTextCharFormat cf = fc.charFormat();
+        const bool skip = cf.fontFixedPitch()
+                          || cf.boolProperty(mdmath::IsMathProperty) || cf.isAnchor();
+        if (!skip && !m_spell.isCorrect(word)) {
+            // Insertamos todo ANTES de la primera acción estándar (cortar/copiar…).
+            QAction *before = menu->actions().value(0);
+            const QStringList suggestions = m_spell.suggestions(word);
+            if (suggestions.isEmpty()) {
+                QAction *none = new QAction(tr("(sin sugerencias)"), menu.get());
+                none->setEnabled(false);
+                menu->insertAction(before, none);
+            } else {
+                for (const QString &s : suggestions.mid(0, 8)) {  // hasta 8 sugerencias
+                    QAction *act = new QAction(s, menu.get());
+                    QFont f = act->font();
+                    f.setBold(true);
+                    act->setFont(f);
+                    connect(act, &QAction::triggered, this, [this, absStart, wordLen, s] {
+                        QTextCursor c(m_editor->document());
+                        c.setPosition(absStart);
+                        c.setPosition(absStart + wordLen, QTextCursor::KeepAnchor);
+                        c.insertText(s);
+                    });
+                    menu->insertAction(before, act);
+                }
+            }
+            QAction *addAct =
+                new QAction(tr("Añadir «%1» al diccionario").arg(word), menu.get());
+            connect(addAct, &QAction::triggered, this, [this, word] {
+                m_spell.addToPersonal(word);
+                AppSettings::setPersonalDictionary(m_spell.personalWords());
+                m_highlighter->rehighlight();
+            });
+            QAction *ignoreAct = new QAction(tr("Ignorar «%1»").arg(word), menu.get());
+            connect(ignoreAct, &QAction::triggered, this, [this, word] {
+                m_spell.ignoreWord(word);
+                m_highlighter->rehighlight();
+            });
+            menu->insertAction(before, addAct);
+            menu->insertAction(before, ignoreAct);
+            menu->insertSeparator(before);
+        }
+    }
+
+    menu->exec(event->globalPos());
+    return true;
+}
+
 // ---------------------------------------------------------------------------
 // Zoom de la fuente
 // ---------------------------------------------------------------------------
@@ -1570,6 +1648,9 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 
 bool MainWindow::handleViewportEvent(QEvent *event)
 {
+    if (event->type() == QEvent::ContextMenu) {
+        return showSpellContextMenu(static_cast<QContextMenuEvent *>(event));
+    }
     if (event->type() == QEvent::Wheel) {
         auto *wheel = static_cast<QWheelEvent *>(event);
         if (wheel->modifiers() & Qt::ControlModifier) {
