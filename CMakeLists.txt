@@ -42,6 +42,7 @@ find_package(Qt6 REQUIRED COMPONENTS Widgets PrintSupport LinguistTools)
 add_library(md-editor-core STATIC
     src/mainwindow.cpp
     src/mainwindowmenus.cpp
+    src/mainwindowinput.cpp
     src/mainwindow.h
     src/splitviewcontroller.cpp
     src/splitviewcontroller.h
