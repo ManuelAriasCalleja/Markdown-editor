@@ -4,6 +4,7 @@
 // unidad de traducción. Ver mainwindow.cpp para el resto.
 
 #include "mainwindow.h"
+#include "editorstack.h"
 #include "appsettings.h"
 #include "blockconstructs.h"
 #include "chromezoom.h"
@@ -124,8 +125,8 @@ void MainWindow::createMenusAndActions()
     // Entrega al controlador de la vista dividida las acciones recién creadas: las
     // de modo (que conmuta y mantiene marcadas) y las válidas solo en WYSIWYG (que
     // deshabilita en modo fuente).
-    m_split->setModeActions(m_sourceModeAction, m_splitAction);
-    m_split->setWysiwygActions(m_wysiwygActions);
+    m_stack->split()->setModeActions(m_sourceModeAction, m_splitAction);
+    m_stack->split()->setWysiwygActions(m_wysiwygActions);
 }
 
 void MainWindow::createFileMenu()
@@ -134,68 +135,68 @@ void MainWindow::createFileMenu()
 
     QAction *newAction = fileMenu->addAction(tr("&Nuevo"));
     newAction->setShortcut(QKeySequence::New);
-    connect(newAction, &QAction::triggered, m_file, &FileController::newFile);
+    connect(newAction, &QAction::triggered, m_stack->file(), &FileController::newFile);
 
     QMenu *templateMenu = fileMenu->addMenu(tr("Nuevo desde &plantilla"));
     for (const mdtemplate::DocTemplate &tpl : mdtemplate::all()) {
         QAction *act = templateMenu->addAction(tpl.name);
         const QString body = tpl.body;
         connect(act, &QAction::triggered, this,
-                [this, body] { m_file->newFromTemplate(body); });
+                [this, body] { m_stack->file()->newFromTemplate(body); });
     }
 
     QAction *openAction = fileMenu->addAction(tr("&Abrir..."));
     openAction->setShortcut(QKeySequence::Open);
-    connect(openAction, &QAction::triggered, m_file, &FileController::openFileDialog);
+    connect(openAction, &QAction::triggered, m_stack->file(), &FileController::openFileDialog);
 
     QMenu *recentMenu = fileMenu->addMenu(tr("Abrir &recientes"));
     m_recentFiles = new RecentFilesManager(recentMenu, this);
     connect(m_recentFiles, &RecentFilesManager::fileOpenRequested,
-            m_file, &FileController::openFile);
+            m_stack->file(), &FileController::openFile);
 
     QAction *saveAction = fileMenu->addAction(tr("&Guardar"));
     saveAction->setShortcut(QKeySequence::Save);
-    connect(saveAction, &QAction::triggered, m_file, &FileController::save);
+    connect(saveAction, &QAction::triggered, m_stack->file(), &FileController::save);
 
     QAction *saveAsAction = fileMenu->addAction(tr("Guardar &como..."));
     saveAsAction->setShortcut(QKeySequence::SaveAs);
-    connect(saveAsAction, &QAction::triggered, m_file, &FileController::saveAs);
+    connect(saveAsAction, &QAction::triggered, m_stack->file(), &FileController::saveAs);
 
     QAction *openFolderAction = fileMenu->addAction(tr("Abrir &carpeta contenedora"));
-    connect(openFolderAction, &QAction::triggered, m_file, &FileController::openContainingFolder);
+    connect(openFolderAction, &QAction::triggered, m_stack->file(), &FileController::openContainingFolder);
 
     fileMenu->addSeparator();
 
     QMenu *exportMenu = fileMenu->addMenu(tr("&Exportar"));
     QAction *exportPdfAction = exportMenu->addAction(tr("A PDF..."));
-    connect(exportPdfAction, &QAction::triggered, m_export, &ExportController::exportPdf);
+    connect(exportPdfAction, &QAction::triggered, m_stack->exporter(), &ExportController::exportPdf);
     QAction *exportHtmlAction = exportMenu->addAction(tr("A HTML..."));
-    connect(exportHtmlAction, &QAction::triggered, m_export, &ExportController::exportHtml);
+    connect(exportHtmlAction, &QAction::triggered, m_stack->exporter(), &ExportController::exportHtml);
     QAction *exportOdfAction = exportMenu->addAction(tr("A ODF (ODT)..."));
-    connect(exportOdfAction, &QAction::triggered, m_export, &ExportController::exportOdf);
+    connect(exportOdfAction, &QAction::triggered, m_stack->exporter(), &ExportController::exportOdf);
     QAction *exportDocxAction = exportMenu->addAction(tr("A DOCX (Word)..."));
-    connect(exportDocxAction, &QAction::triggered, m_export, &ExportController::exportDocx);
+    connect(exportDocxAction, &QAction::triggered, m_stack->exporter(), &ExportController::exportDocx);
     QAction *exportLatexAction = exportMenu->addAction(tr("A LaTeX..."));
-    connect(exportLatexAction, &QAction::triggered, m_export, &ExportController::exportLatex);
+    connect(exportLatexAction, &QAction::triggered, m_stack->exporter(), &ExportController::exportLatex);
     QAction *exportEpubAction = exportMenu->addAction(tr("A EPUB..."));
-    connect(exportEpubAction, &QAction::triggered, m_export, &ExportController::exportEpub);
+    connect(exportEpubAction, &QAction::triggered, m_stack->exporter(), &ExportController::exportEpub);
     exportMenu->addSeparator();
     QAction *exportSelPdfAction = exportMenu->addAction(tr("Selección a PDF..."));
     exportSelPdfAction->setToolTip(tr("Exporta a PDF solo el texto seleccionado"));
-    connect(exportSelPdfAction, &QAction::triggered, m_export, &ExportController::exportSelectionPdf);
+    connect(exportSelPdfAction, &QAction::triggered, m_stack->exporter(), &ExportController::exportSelectionPdf);
 
     fileMenu->addSeparator();
 
     QAction *printPreviewAction = fileMenu->addAction(tr("&Vista previa de impresión..."));
-    connect(printPreviewAction, &QAction::triggered, m_export, &ExportController::printPreview);
+    connect(printPreviewAction, &QAction::triggered, m_stack->exporter(), &ExportController::printPreview);
 
     QAction *printAction = fileMenu->addAction(tr("&Imprimir..."));
     printAction->setShortcut(QKeySequence::Print);
-    connect(printAction, &QAction::triggered, m_export, &ExportController::print);
+    connect(printAction, &QAction::triggered, m_stack->exporter(), &ExportController::print);
 
     QAction *printSelAction = fileMenu->addAction(tr("Imprimir &selección..."));
     printSelAction->setToolTip(tr("Imprime solo el texto seleccionado"));
-    connect(printSelAction, &QAction::triggered, m_export, &ExportController::printSelection);
+    connect(printSelAction, &QAction::triggered, m_stack->exporter(), &ExportController::printSelection);
 
     fileMenu->addSeparator();
 
@@ -210,11 +211,11 @@ void MainWindow::createEditMenu()
 
     QAction *undoAction = editMenu->addAction(tr("Deshacer"));
     undoAction->setShortcut(QKeySequence::Undo);
-    connect(undoAction, &QAction::triggered, this, [this] { activeEditor()->undo(); });
+    connect(undoAction, &QAction::triggered, this, [this] { m_stack->activeEditor()->undo(); });
 
     QAction *redoAction = editMenu->addAction(tr("Rehacer"));
     redoAction->setShortcut(QKeySequence::Redo);
-    connect(redoAction, &QAction::triggered, this, [this] { activeEditor()->redo(); });
+    connect(redoAction, &QAction::triggered, this, [this] { m_stack->activeEditor()->redo(); });
 
     editMenu->addSeparator();
 
@@ -224,7 +225,7 @@ void MainWindow::createEditMenu()
     connect(pastePlainAction, &QAction::triggered, this, [this] {
         const QString text = QApplication::clipboard()->text();
         if (!text.isEmpty())
-            activeEditor()->insertPlainText(text);  // ignora formato/HTML del portapapeles
+            m_stack->activeEditor()->insertPlainText(text);  // ignora formato/HTML del portapapeles
     });
 
     QAction *pasteMdAction = editMenu->addAction(tr("Pegar como Markdown"));
@@ -240,20 +241,20 @@ void MainWindow::createEditMenu()
             const QString md = mdrichpaste::htmlToMarkdown(mime->html());
             if (md.isEmpty())
                 return;
-            QTextEdit *ed = activeEditor();
-            if (ed == m_editor)
+            QTextEdit *ed = m_stack->activeEditor();
+            if (ed == m_stack->editor())
                 ed->textCursor().insertFragment(QTextDocumentFragment::fromMarkdown(md));
             else
                 ed->insertPlainText(md);  // la vista de fuente ya es Markdown literal
         } else {
             const QString text = mime->text();
             if (!text.isEmpty())
-                activeEditor()->insertPlainText(text);
+                m_stack->activeEditor()->insertPlainText(text);
         }
     });
 
     QAction *copyHtmlAction = editMenu->addAction(tr("Copiar como HTML"));
-    connect(copyHtmlAction, &QAction::triggered, m_export, &ExportController::copyHtmlToClipboard);
+    connect(copyHtmlAction, &QAction::triggered, m_stack->exporter(), &ExportController::copyHtmlToClipboard);
 
     editMenu->addSeparator();
 
@@ -261,7 +262,7 @@ void MainWindow::createEditMenu()
     // para las de mayúsculas/minúsculas). La lógica vive en mdtext (puro).
     QMenu *transformMenu = editMenu->addMenu(tr("Transformar texto"));
     const auto applyToSelection = [this](QString (*fn)(const QString &)) {
-        QTextEdit *ed = activeEditor();
+        QTextEdit *ed = m_stack->activeEditor();
         QTextCursor c = ed->textCursor();
         if (!c.hasSelection())
             c.select(QTextCursor::WordUnderCursor);
@@ -285,7 +286,7 @@ void MainWindow::createEditMenu()
 
     QAction *sortAction = editMenu->addAction(tr("Ordenar líneas"));
     connect(sortAction, &QAction::triggered, this, [this] {
-        QTextEdit *ed = activeEditor();
+        QTextEdit *ed = m_stack->activeEditor();
         QTextCursor c = ed->textCursor();
         if (!c.hasSelection())
             return;  // ordenar exige un rango explícito de líneas
@@ -318,7 +319,7 @@ void MainWindow::createFormatActions()
     // atajo: así no hay que traducirlo a mano ni puede desincronizarse.
     using Mutator = std::function<void(QTextCharFormat &, const QTextCharFormat &)>;
     const auto charToggle = [this](Mutator m) {
-        return [this, m = std::move(m)] { m_format->toggleCharFormat(m); };
+        return [this, m = std::move(m)] { m_stack->format()->toggleCharFormat(m); };
     };
 
     struct FormatActionDef {
@@ -354,33 +355,33 @@ void MainWindow::createFormatActions()
              f.setFontFixedPitch(enable);
              // El conversor a Markdown emite `código` con fuente de paso fijo.
              f.setFontFamilies({enable ? QStringLiteral("monospace")
-                                       : m_editor->document()->defaultFont().family()});
+                                       : m_stack->editor()->document()->defaultFont().family()});
          }),
          tr("Código en línea")},
         {&m_linkAction, tr("Enlace"), QKeySequence(Qt::CTRL | Qt::Key_K),
-         [this] { m_insert->insertLink(); }, tr("Insertar o editar enlace")},
+         [this] { m_stack->insert()->insertLink(); }, tr("Insertar o editar enlace")},
         {&m_quoteAction, tr("❝ Cita"), QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_Q),
-         [this] { m_format->toggleBlockquote(); }, tr("Convertir en cita")},
+         [this] { m_stack->format()->toggleBlockquote(); }, tr("Convertir en cita")},
         {&m_codeBlockAction, tr("Bloque"), QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_K),
-         [this] { m_format->toggleCodeBlock(); }, tr("Bloque de código")},
+         [this] { m_stack->format()->toggleCodeBlock(); }, tr("Bloque de código")},
         {&m_h1Action, tr("H1"), QKeySequence(Qt::CTRL | Qt::Key_1),
-         [this] { m_format->applyHeading(1); }},
+         [this] { m_stack->format()->applyHeading(1); }},
         {&m_h2Action, tr("H2"), QKeySequence(Qt::CTRL | Qt::Key_2),
-         [this] { m_format->applyHeading(2); }},
+         [this] { m_stack->format()->applyHeading(2); }},
         {&m_h3Action, tr("H3"), QKeySequence(Qt::CTRL | Qt::Key_3),
-         [this] { m_format->applyHeading(3); }},
+         [this] { m_stack->format()->applyHeading(3); }},
         {&m_h4Action, tr("H4"), QKeySequence(Qt::CTRL | Qt::Key_4),
-         [this] { m_format->applyHeading(4); }},
+         [this] { m_stack->format()->applyHeading(4); }},
         {&m_h5Action, tr("H5"), QKeySequence(Qt::CTRL | Qt::Key_5),
-         [this] { m_format->applyHeading(5); }},
+         [this] { m_stack->format()->applyHeading(5); }},
         {&m_h6Action, tr("H6"), QKeySequence(Qt::CTRL | Qt::Key_6),
-         [this] { m_format->applyHeading(6); }},
+         [this] { m_stack->format()->applyHeading(6); }},
         {&m_bulletAction, tr("Lista de viñetas"), QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_U),
-         [this] { m_format->applyList(QTextListFormat::ListDisc); }},
+         [this] { m_stack->format()->applyList(QTextListFormat::ListDisc); }},
         {&m_numberedAction, tr("Lista numerada"), QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_O),
-         [this] { m_format->applyList(QTextListFormat::ListDecimal); }},
+         [this] { m_stack->format()->applyList(QTextListFormat::ListDecimal); }},
         {&m_taskAction, tr("Lista de tareas"), QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_T),
-         [this] { m_format->toggleTaskItem(); }},
+         [this] { m_stack->format()->toggleTaskItem(); }},
     };
 
     for (const FormatActionDef &d : defs) {
@@ -417,12 +418,12 @@ void MainWindow::createFormatActions()
 
     m_indentAction = formatMenu->addAction(tr("Aumentar sangría"));
     m_indentAction->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_BracketRight));
-    connect(m_indentAction, &QAction::triggered, m_format, &FormatController::indentList);
+    connect(m_indentAction, &QAction::triggered, m_stack->format(), &FormatController::indentList);
     m_wysiwygActions.append(m_indentAction);
 
     m_outdentAction = formatMenu->addAction(tr("Disminuir sangría"));
     m_outdentAction->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_BracketLeft));
-    connect(m_outdentAction, &QAction::triggered, m_format, &FormatController::outdentList);
+    connect(m_outdentAction, &QAction::triggered, m_stack->format(), &FormatController::outdentList);
     m_wysiwygActions.append(m_outdentAction);
 
     formatMenu->addSeparator();
@@ -431,12 +432,12 @@ void MainWindow::createFormatActions()
 
     m_langAction = formatMenu->addAction(tr("Lenguaje del bloque..."));
     m_langAction->setToolTip(tr("Fija el lenguaje del bloque de código (resaltado)"));
-    connect(m_langAction, &QAction::triggered, m_format, &FormatController::setCodeLanguage);
+    connect(m_langAction, &QAction::triggered, m_stack->format(), &FormatController::setCodeLanguage);
     m_wysiwygActions.append(m_langAction);
 
     // Entrega a FormatController las acciones que sincroniza con el formato bajo
     // el cursor (las comparten este menú y la barra de botones).
-    m_format->setActions({
+    m_stack->format()->setActions({
         m_boldAction, m_italicAction, m_underlineAction, m_strikeAction, m_codeAction,
         m_linkAction, m_quoteAction, m_codeBlockAction, m_langAction,
         m_h1Action, m_h2Action, m_h3Action, m_h4Action, m_h5Action, m_h6Action,
@@ -448,36 +449,36 @@ void MainWindow::createInsertMenu()
     QMenu *insertMenu = menuBar()->addMenu(tr("&Insertar"));
 
     QAction *insLink = insertMenu->addAction(tr("Enlace..."));
-    connect(insLink, &QAction::triggered, m_insert, &InsertController::insertLink);
+    connect(insLink, &QAction::triggered, m_stack->insert(), &InsertController::insertLink);
 
     QAction *insImage = insertMenu->addAction(tr("Imagen..."));
-    connect(insImage, &QAction::triggered, m_insert, &InsertController::insertImage);
+    connect(insImage, &QAction::triggered, m_stack->insert(), &InsertController::insertImage);
 
     QAction *insPasteImage = insertMenu->addAction(tr("Pegar imagen"));
     insPasteImage->setToolTip(tr("Guarda la imagen del portapapeles y la inserta"));
-    connect(insPasteImage, &QAction::triggered, m_insert, &InsertController::pasteImageFromClipboard);
+    connect(insPasteImage, &QAction::triggered, m_stack->insert(), &InsertController::pasteImageFromClipboard);
 
     QAction *insTable = insertMenu->addAction(tr("Tabla..."));
-    connect(insTable, &QAction::triggered, m_insert, &InsertController::insertTable);
+    connect(insTable, &QAction::triggered, m_stack->insert(), &InsertController::insertTable);
 
     QAction *insRule = insertMenu->addAction(tr("Regla horizontal"));
-    connect(insRule, &QAction::triggered, m_insert, &InsertController::insertHorizontalRule);
+    connect(insRule, &QAction::triggered, m_stack->insert(), &InsertController::insertHorizontalRule);
 
     QAction *insToc = insertMenu->addAction(tr("Índice (TOC)"));
     insToc->setToolTip(tr("Inserta un índice con los encabezados del documento"));
-    connect(insToc, &QAction::triggered, m_insert, &InsertController::insertTableOfContents);
+    connect(insToc, &QAction::triggered, m_stack->insert(), &InsertController::insertTableOfContents);
 
     QAction *insFormula = insertMenu->addAction(tr("Fórmula..."));
     insFormula->setShortcut(QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_F));
     setShortcutTooltip(insFormula);
-    connect(insFormula, &QAction::triggered, m_formula, &FormulaController::insertFormula);
+    connect(insFormula, &QAction::triggered, m_stack->formula(), &FormulaController::insertFormula);
 
     QAction *insFootnote = insertMenu->addAction(tr("Nota al pie"));
     insFootnote->setShortcut(QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_N));
     insFootnote->setToolTip(withShortcut(
         tr("Inserta una referencia [^n] y su definición al final del documento"),
         insFootnote->shortcut()));
-    connect(insFootnote, &QAction::triggered, m_insert, &InsertController::insertFootnote);
+    connect(insFootnote, &QAction::triggered, m_stack->insert(), &InsertController::insertFootnote);
 
     // Admoniciones / callouts (`> [!NOTE]`, etc.). Los nombres se traducen; el
     // marcador insertado es el keyword canónico en inglés (lo que entiende GitHub).
@@ -494,20 +495,20 @@ void MainWindow::createInsertMenu()
         const QString keyword = a.first;
         QAction *act = admonitionMenu->addAction(a.second);
         connect(act, &QAction::triggered, this,
-                [this, keyword] { m_insert->insertAdmonition(keyword); });
+                [this, keyword] { m_stack->insert()->insertAdmonition(keyword); });
     }
 
     QAction *insSymbol = insertMenu->addAction(tr("Símbolos especiales..."));
     insSymbol->setToolTip(tr("Inserta símbolos no habituales, por categorías"));
-    connect(insSymbol, &QAction::triggered, m_insert, &InsertController::insertSymbol);
+    connect(insSymbol, &QAction::triggered, m_stack->insert(), &InsertController::insertSymbol);
 
     QAction *insDate = insertMenu->addAction(tr("Fecha"));
     insDate->setToolTip(tr("Inserta la fecha actual en formato local"));
-    connect(insDate, &QAction::triggered, m_insert, &InsertController::insertDate);
+    connect(insDate, &QAction::triggered, m_stack->insert(), &InsertController::insertDate);
 
     QAction *insDateTime = insertMenu->addAction(tr("Fecha y hora"));
     insDateTime->setToolTip(tr("Inserta la fecha y la hora actuales en formato local"));
-    connect(insDateTime, &QAction::triggered, m_insert, &InsertController::insertDateTime);
+    connect(insDateTime, &QAction::triggered, m_stack->insert(), &InsertController::insertDateTime);
 
     // Insertar tampoco aplica en la vista de fuente.
     m_wysiwygActions << insLink << insImage << insPasteImage << insTable << insRule
@@ -524,33 +525,33 @@ void MainWindow::createTableMenu()
     QMenu *tableMenu = menuBar()->addMenu(tr("&Tabla"));
 
     QAction *aRowAbove = tableMenu->addAction(tr("Insertar fila encima"));
-    connect(aRowAbove, &QAction::triggered, this, [this] { m_table->insertRow(false); });
+    connect(aRowAbove, &QAction::triggered, this, [this] { m_stack->table()->insertRow(false); });
     QAction *aRowBelow = tableMenu->addAction(tr("Insertar fila debajo"));
-    connect(aRowBelow, &QAction::triggered, this, [this] { m_table->insertRow(true); });
+    connect(aRowBelow, &QAction::triggered, this, [this] { m_stack->table()->insertRow(true); });
     QAction *aColLeft = tableMenu->addAction(tr("Insertar columna a la izquierda"));
-    connect(aColLeft, &QAction::triggered, this, [this] { m_table->insertColumn(false); });
+    connect(aColLeft, &QAction::triggered, this, [this] { m_stack->table()->insertColumn(false); });
     QAction *aColRight = tableMenu->addAction(tr("Insertar columna a la derecha"));
-    connect(aColRight, &QAction::triggered, this, [this] { m_table->insertColumn(true); });
+    connect(aColRight, &QAction::triggered, this, [this] { m_stack->table()->insertColumn(true); });
 
     tableMenu->addSeparator();
     QAction *aDelRow = tableMenu->addAction(tr("Eliminar fila"));
-    connect(aDelRow, &QAction::triggered, m_table, &TableController::deleteRow);
+    connect(aDelRow, &QAction::triggered, m_stack->table(), &TableController::deleteRow);
     QAction *aDelCol = tableMenu->addAction(tr("Eliminar columna"));
-    connect(aDelCol, &QAction::triggered, m_table, &TableController::deleteColumn);
+    connect(aDelCol, &QAction::triggered, m_stack->table(), &TableController::deleteColumn);
 
     tableMenu->addSeparator();
     QMenu *alignMenu = tableMenu->addMenu(tr("Alinear columna"));
     QAction *aLeft = alignMenu->addAction(tr("Izquierda"));
-    connect(aLeft, &QAction::triggered, this, [this] { m_table->alignColumn(Qt::AlignLeft); });
+    connect(aLeft, &QAction::triggered, this, [this] { m_stack->table()->alignColumn(Qt::AlignLeft); });
     QAction *aCenter = alignMenu->addAction(tr("Centrar"));
-    connect(aCenter, &QAction::triggered, this, [this] { m_table->alignColumn(Qt::AlignHCenter); });
+    connect(aCenter, &QAction::triggered, this, [this] { m_stack->table()->alignColumn(Qt::AlignHCenter); });
     QAction *aRight = alignMenu->addAction(tr("Derecha"));
-    connect(aRight, &QAction::triggered, this, [this] { m_table->alignColumn(Qt::AlignRight); });
+    connect(aRight, &QAction::triggered, this, [this] { m_stack->table()->alignColumn(Qt::AlignRight); });
 
-    m_table->setActions({aRowAbove, aRowBelow, aColLeft, aColRight,
+    m_stack->table()->setActions({aRowAbove, aRowBelow, aColLeft, aColRight,
                          aDelRow, aDelCol, alignMenu->menuAction(),
                          aLeft, aCenter, aRight});
-    m_table->updateActions();  // estado inicial (sin tabla bajo el cursor)
+    m_stack->table()->updateActions();  // estado inicial (sin tabla bajo el cursor)
 }
 
 void MainWindow::createViewMenu()
@@ -561,7 +562,7 @@ void MainWindow::createViewMenu()
     m_sourceModeAction->setCheckable(true);
     m_sourceModeAction->setShortcut(QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_M));
     setShortcutTooltip(m_sourceModeAction);
-    connect(m_sourceModeAction, &QAction::toggled, m_split, &SplitViewController::toggleSourceMode);
+    connect(m_sourceModeAction, &QAction::toggled, m_stack->split(), &SplitViewController::toggleSourceMode);
 
     m_splitAction = viewMenu->addAction(tr("Vista dividida"));
     m_splitAction->setCheckable(true);
@@ -571,7 +572,7 @@ void MainWindow::createViewMenu()
     m_splitAction->setToolTip(withShortcut(
         tr("Editar WYSIWYG y código fuente a la vez, lado a lado"),
         m_splitAction->shortcut()));
-    connect(m_splitAction, &QAction::toggled, m_split, &SplitViewController::toggleSplitView);
+    connect(m_splitAction, &QAction::toggled, m_stack->split(), &SplitViewController::toggleSplitView);
 
     m_distractionAction = viewMenu->addAction(tr("Sin distracciones"));
     m_distractionAction->setCheckable(true);
@@ -630,7 +631,7 @@ void MainWindow::createViewMenu()
     spellAction->setChecked(AppSettings::spellCheck());
     spellAction->setToolTip(tr("Subraya las palabras mal escritas según el idioma del documento"));
     connect(spellAction, &QAction::toggled, this, [this](bool on) {
-        m_spellController->setEnabled(on);  // persiste, carga/descarga y rehace el resaltado
+        m_stack->spell()->setEnabled(on);  // persiste, carga/descarga y rehace el resaltado
     });
 
     // Idioma del corrector: «Automático» (deduce del documento) o uno fijo de los
@@ -644,7 +645,7 @@ void MainWindow::createViewMenu()
     autoLangAction->setChecked(currentSpellLang.isEmpty());
     spellLangGroup->addAction(autoLangAction);
     connect(autoLangAction, &QAction::triggered, this, [this] {
-        m_spellController->setLanguageOverride(QString());
+        m_stack->spell()->setLanguageOverride(QString());
     });
     const QStringList spellLangs = SpellChecker::availableLanguages();
     if (!spellLangs.isEmpty())
@@ -655,7 +656,7 @@ void MainWindow::createViewMenu()
         langAct->setChecked(code == currentSpellLang);
         spellLangGroup->addAction(langAct);
         connect(langAct, &QAction::triggered, this, [this, code] {
-            m_spellController->setLanguageOverride(code);
+            m_stack->spell()->setLanguageOverride(code);
         });
     }
 
@@ -687,11 +688,11 @@ void MainWindow::createViewMenu()
         m_themeActions.insert(spec.id, action);
         const mdtheme::ThemeId id = spec.id;
         connect(action, &QAction::triggered, this,
-                [this, id] { m_theme->applyTheme(id); });
+                [this, id] { m_stack->theme()->applyTheme(id); });
     }
 
     // El control del tema avisa para mantener marcada la acción del tema activo.
-    connect(m_theme, &ThemeController::themeChanged, this,
+    connect(m_stack->theme(), &ThemeController::themeChanged, this,
             [this](mdtheme::ThemeId id) {
         if (QAction *action = m_themeActions.value(id))
             action->setChecked(true);
@@ -701,7 +702,7 @@ void MainWindow::createViewMenu()
     themeMenu->addSeparator();
     QAction *followSystemAction = themeMenu->addAction(tr("Seguir el sistema"));
     followSystemAction->setCheckable(true);
-    followSystemAction->setChecked(m_theme->followsSystem());
+    followSystemAction->setChecked(m_stack->theme()->followsSystem());
     followSystemAction->setToolTip(
         tr("Usa el tema claro u oscuro según la configuración del sistema operativo"));
     // Mientras se sigue el SO, la elección manual de tema queda deshabilitada.
@@ -709,21 +710,21 @@ void MainWindow::createViewMenu()
         for (QAction *action : m_themeActions.values())
             action->setEnabled(!follow);
     };
-    setManualThemeEnabled(m_theme->followsSystem());
+    setManualThemeEnabled(m_stack->theme()->followsSystem());
     connect(followSystemAction, &QAction::toggled, this,
             [this, setManualThemeEnabled](bool on) {
-                m_theme->setFollowSystem(on);
+                m_stack->theme()->setFollowSystem(on);
                 setManualThemeEnabled(on);
             });
 
     themeMenu->addSeparator();
     QAction *warmLightAction = themeMenu->addAction(tr("Luz cálida nocturna"));
     warmLightAction->setCheckable(true);
-    warmLightAction->setChecked(m_theme->isWarmLight());
+    warmLightAction->setChecked(m_stack->theme()->isWarmLight());
     warmLightAction->setToolTip(
         tr("Tiñe el fondo del editor de tono ámbar según la hora, más cálido de noche"));
     connect(warmLightAction, &QAction::toggled, this,
-            [this](bool on) { m_theme->setWarmLight(on); });
+            [this](bool on) { m_stack->theme()->setWarmLight(on); });
 
     // --- Idioma (se aplica al instante: recrea la ventana, ver setLanguage) ---
     // Código de locale por idioma; "" = automático (el del sistema). Los

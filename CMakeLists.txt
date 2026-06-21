@@ -131,6 +131,8 @@ add_library(md-editor-core STATIC
     src/diagramrenderer.h
     src/diagramcontroller.cpp
     src/diagramcontroller.h
+    src/editorstack.cpp
+    src/editorstack.h
     src/formaticons.cpp
     src/formaticons.h
     src/tableedit.cpp

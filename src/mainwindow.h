@@ -22,6 +22,7 @@ class QObject;
 class QLabel;
 class QToolBar;
 class QTimer;
+class EditorStack;
 class FocusEditor;
 class SplitViewController;
 class DiskWatcher;
@@ -194,25 +195,13 @@ private:
     // Recarga el archivo actual desde disco descartando el contenido en memoria.
     void reloadFromDisk();
 
-    // Aplica un borde visible a todas las tablas del documento (las creadas y las
-    // cargadas). El borde no se serializa a Markdown, así que no afecta al
-    // round-trip ni al estado «modificado».
-    void styleTables();
+    // Conecta las señales de un EditorStack (mensajes de estado, marca de
+    // modificado, archivo actual, recargas de disco, recuento, esquema) a la
+    // ventana. En la edición por pestañas se llamará una vez por documento.
+    void connectStack(EditorStack *stack);
 
-    // Editor actualmente visible (WYSIWYG o fuente); delega en m_split.
-    QTextEdit *activeEditor() const;
-    // Reemplaza el cuerpo del documento WYSIWYG por el Markdown dado y deja el
-    // modelo plenamente al día: protege/renderiza fórmulas, da borde a las
-    // tablas, recolorea enlaces y reconstruye el índice. Único punto por el que
-    // pasa toda sustitución del cuerpo (volcado del fuente, recuperación) para
-    // que ningún paso del pipeline se quede atrás.
-    void setBodyMarkdown(const QString &body);
-
-    FocusEditor *m_editor = nullptr;
+    EditorStack *m_stack = nullptr;  // documento activo: editor + sus colaboradores
     HelpDialog *m_helpDialog = nullptr;  // se crea perezoso al pulsar F1
-    CodeBlockHighlighter *m_highlighter = nullptr;
-    SpellController *m_spellController = nullptr;  // corrector ortográfico
-    DiagramController *m_diagrams = nullptr;  // previsualización de diagramas
     qreal m_baseFontPointSize = 0;  // tamaño de fuente base, para "Tamaño normal"
     // Tamaños base de las superficies que siguen al zoom y el desfase (en
     // puntos) que se les aplica para escalar junto con el texto del editor.
@@ -224,9 +213,6 @@ private:
     int m_zoomDelta = 0;
     QToolBar *m_formatToolBar = nullptr;
 
-    // Vista de código fuente / dividida y su sincronización (posee el editor de
-    // fuente y el QSplitter central).
-    SplitViewController *m_split = nullptr;
     QAction *m_sourceModeAction = nullptr;   // toggle de Ver → Código fuente
     QAction *m_splitAction = nullptr;        // toggle de Ver → Vista dividida
     QList<QAction *> m_wysiwygActions;       // acciones válidas solo en WYSIWYG
@@ -256,9 +242,6 @@ private:
     QAction *m_distractionAction = nullptr;   // toggle de Ver → Sin distracciones
     DistractionFreeController *m_distraction = nullptr;  // modo pantalla completa/columna
 
-    RecoveryManager *m_recovery = nullptr;      // borrador de recuperación ante fallos
-    FileController *m_file = nullptr;           // abrir/guardar/nuevo/recuperar + autoguardado
-
     OutlinePanel *m_outline = nullptr;          // panel lateral con el índice (TOC)
     QAction *m_outlineAction = nullptr;         // toggle de Ver → Esquema (F9)
     QTimer *m_outlineTimer = nullptr;           // debounce para reconstruir el índice
@@ -266,17 +249,7 @@ private:
 
     FindReplaceBar *m_findBar = nullptr;        // barra de buscar/reemplazar (abajo)
     RecentFilesManager *m_recentFiles = nullptr;  // gestor de "Abrir recientes"
-    DocumentIo *m_documentIo = nullptr;         // E/S del documento (abrir/guardar)
-    ThemeController *m_theme = nullptr;         // tema claro/oscuro y enlaces
     QLabel *m_countLabel = nullptr;             // contador en la barra de estado
-
-    FormatController *m_format = nullptr;        // comandos de formato + estado de acciones
-    FormulaController *m_formula = nullptr;      // fórmulas TeX (insertar/editar/proteger)
-    InsertController *m_insert = nullptr;        // enlaces, imágenes, tablas, regla
-    TableController *m_table = nullptr;         // edición de tablas (contextual)
-
-    DiskWatcher *m_diskWatcher = nullptr;       // vigila cambios externos del archivo
-    ExportController *m_export = nullptr;        // exportación e impresión
 };
 
 #endif // MAINWINDOW_H

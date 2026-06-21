@@ -7,6 +7,7 @@
 
 #include "focuseditor.h"
 #include "mainwindow.h"
+#include "editorstack.h"
 #include "splitviewcontroller.h"
 #include "tableedit.h"
 
@@ -52,59 +53,59 @@ void TestSplitView::cleanup()
 
 QString TestSplitView::docMarkdown(MainWindow &w)
 {
-    return mdtable::documentMarkdown(w.m_editor->document());
+    return mdtable::documentMarkdown(w.m_stack->editor()->document());
 }
 
 void TestSplitView::startsInWysiwyg()
 {
     MainWindow w;
     w.show();
-    QVERIFY(w.m_editor->isVisible());
-    QVERIFY(!w.m_split->sourceEditor()->isVisible());
-    QCOMPARE(w.activeEditor(), static_cast<QTextEdit *>(w.m_editor));
+    QVERIFY(w.m_stack->editor()->isVisible());
+    QVERIFY(!w.m_stack->split()->sourceEditor()->isVisible());
+    QCOMPARE(w.m_stack->activeEditor(), static_cast<QTextEdit *>(w.m_stack->editor()));
 }
 
 void TestSplitView::sourceModeShowsOnlySource()
 {
     MainWindow w;
     w.show();
-    w.m_split->toggleSourceMode(true);
-    QVERIFY(!w.m_editor->isVisible());
-    QVERIFY(w.m_split->sourceEditor()->isVisible());
-    QCOMPARE(w.activeEditor(), static_cast<QTextEdit *>(w.m_split->sourceEditor()));
+    w.m_stack->split()->toggleSourceMode(true);
+    QVERIFY(!w.m_stack->editor()->isVisible());
+    QVERIFY(w.m_stack->split()->sourceEditor()->isVisible());
+    QCOMPARE(w.m_stack->activeEditor(), static_cast<QTextEdit *>(w.m_stack->split()->sourceEditor()));
 
-    w.m_split->toggleSourceMode(false);
-    QVERIFY(w.m_editor->isVisible());
-    QVERIFY(!w.m_split->sourceEditor()->isVisible());
-    QCOMPARE(w.activeEditor(), static_cast<QTextEdit *>(w.m_editor));
+    w.m_stack->split()->toggleSourceMode(false);
+    QVERIFY(w.m_stack->editor()->isVisible());
+    QVERIFY(!w.m_stack->split()->sourceEditor()->isVisible());
+    QCOMPARE(w.m_stack->activeEditor(), static_cast<QTextEdit *>(w.m_stack->editor()));
 }
 
 void TestSplitView::sourceModePopulatesFromDocument()
 {
     MainWindow w;
     w.show();
-    w.m_editor->setMarkdown(QStringLiteral("# Hola\n\nMundo\n"));
+    w.m_stack->editor()->setMarkdown(QStringLiteral("# Hola\n\nMundo\n"));
     const QString expected = docMarkdown(w);
 
-    w.m_split->toggleSourceMode(true);
-    QCOMPARE(w.m_split->sourceEditor()->toPlainText(), expected);
+    w.m_stack->split()->toggleSourceMode(true);
+    QCOMPARE(w.m_stack->split()->sourceEditor()->toPlainText(), expected);
 }
 
 void TestSplitView::splitViewShowsBothPanels()
 {
     MainWindow w;
     w.show();
-    w.m_editor->setMarkdown(QStringLiteral("texto\n"));
+    w.m_stack->editor()->setMarkdown(QStringLiteral("texto\n"));
     const QString expected = docMarkdown(w);
 
-    w.m_split->toggleSplitView(true);
-    QVERIFY(w.m_editor->isVisible());
-    QVERIFY(w.m_split->sourceEditor()->isVisible());
-    QCOMPARE(w.m_split->sourceEditor()->toPlainText(), expected);
+    w.m_stack->split()->toggleSplitView(true);
+    QVERIFY(w.m_stack->editor()->isVisible());
+    QVERIFY(w.m_stack->split()->sourceEditor()->isVisible());
+    QCOMPARE(w.m_stack->split()->sourceEditor()->toPlainText(), expected);
 
-    w.m_split->toggleSplitView(false);
-    QVERIFY(w.m_editor->isVisible());
-    QVERIFY(!w.m_split->sourceEditor()->isVisible());
+    w.m_stack->split()->toggleSplitView(false);
+    QVERIFY(w.m_stack->editor()->isVisible());
+    QVERIFY(!w.m_stack->split()->sourceEditor()->isVisible());
 }
 
 void TestSplitView::splitAndSourceAreExclusive()
@@ -112,24 +113,24 @@ void TestSplitView::splitAndSourceAreExclusive()
     MainWindow w;
     w.show();
 
-    w.m_split->toggleSourceMode(true);
-    w.m_split->toggleSplitView(true);          // entrar en dividido debe sacar de fuente
-    QVERIFY(w.m_split->splitMode());
-    QVERIFY(!w.m_split->sourceMode());
+    w.m_stack->split()->toggleSourceMode(true);
+    w.m_stack->split()->toggleSplitView(true);          // entrar en dividido debe sacar de fuente
+    QVERIFY(w.m_stack->split()->splitMode());
+    QVERIFY(!w.m_stack->split()->sourceMode());
 
-    w.m_split->toggleSourceMode(true);         // entrar en fuente debe sacar de dividido
-    QVERIFY(w.m_split->sourceMode());
-    QVERIFY(!w.m_split->splitMode());
+    w.m_stack->split()->toggleSourceMode(true);         // entrar en fuente debe sacar de dividido
+    QVERIFY(w.m_stack->split()->sourceMode());
+    QVERIFY(!w.m_stack->split()->splitMode());
 }
 
 void TestSplitView::commitSourceUpdatesDocument()
 {
     MainWindow w;
     w.show();
-    w.m_split->toggleSourceMode(true);
-    w.m_split->sourceEditor()->setPlainText(QStringLiteral("# Nuevo título\n"));
+    w.m_stack->split()->toggleSourceMode(true);
+    w.m_stack->split()->sourceEditor()->setPlainText(QStringLiteral("# Nuevo título\n"));
 
-    w.m_split->commitSourceToDocument();
+    w.m_stack->split()->commitSourceToDocument();
     QVERIFY(docMarkdown(w).contains(QStringLiteral("Nuevo título")));
 }
 
@@ -137,12 +138,12 @@ void TestSplitView::syncSourceFromDocumentRefreshesPanel()
 {
     MainWindow w;
     w.show();
-    w.m_split->toggleSplitView(true);
+    w.m_stack->split()->toggleSplitView(true);
 
     // Cambia el documento WYSIWYG y fuerza la sincronización hacia el fuente.
-    w.m_editor->setMarkdown(QStringLiteral("# Cambiado\n"));
-    w.m_split->syncSourceFromDocument();
-    QCOMPARE(w.m_split->sourceEditor()->toPlainText(), docMarkdown(w));
+    w.m_stack->editor()->setMarkdown(QStringLiteral("# Cambiado\n"));
+    w.m_stack->split()->syncSourceFromDocument();
+    QCOMPARE(w.m_stack->split()->sourceEditor()->toPlainText(), docMarkdown(w));
 }
 
 QTEST_MAIN(TestSplitView)

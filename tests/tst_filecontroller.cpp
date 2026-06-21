@@ -12,6 +12,7 @@
 #include "filecontroller.h"
 #include "focuseditor.h"
 #include "mainwindow.h"
+#include "editorstack.h"
 #include "splitviewcontroller.h"
 #include "tableedit.h"
 
@@ -68,14 +69,14 @@ void TestFileController::writeToFileRoundTrips()
     const QString path = dir.filePath(QStringLiteral("out.md"));
 
     MainWindow w;
-    w.m_editor->setMarkdown(QStringLiteral("# Título\n\nUn párrafo.\n"));
-    QVERIFY(w.m_file->writeToFile(path));
+    w.m_stack->editor()->setMarkdown(QStringLiteral("# Título\n\nUn párrafo.\n"));
+    QVERIFY(w.m_stack->file()->writeToFile(path));
 
     // El archivo contiene la serialización canónica del documento.
-    QCOMPARE(readFile(path), mdtable::documentMarkdown(w.m_editor->document()));
+    QCOMPARE(readFile(path), mdtable::documentMarkdown(w.m_stack->editor()->document()));
     // Tras guardar, el documento ya no está modificado respecto a lo escrito.
-    QVERIFY(!w.m_documentIo->isModified());
-    QCOMPARE(w.m_documentIo->currentFile(), path);
+    QVERIFY(!w.m_stack->documentIo()->isModified());
+    QCOMPARE(w.m_stack->documentIo()->currentFile(), path);
 }
 
 void TestFileController::openFileLoadsContent()
@@ -92,9 +93,9 @@ void TestFileController::openFileLoadsContent()
     }
 
     MainWindow w;  // documento nuevo: no modificado, openFile no pregunta
-    w.m_file->openFile(path);
-    QCOMPARE(w.m_documentIo->currentFile(), path);
-    const QString md = mdtable::documentMarkdown(w.m_editor->document());
+    w.m_stack->file()->openFile(path);
+    QCOMPARE(w.m_stack->documentIo()->currentFile(), path);
+    const QString md = mdtable::documentMarkdown(w.m_stack->editor()->document());
     QVERIFY(md.contains(QStringLiteral("Encabezado")));
     QVERIFY(md.contains(QStringLiteral("Cuerpo del documento")));
 }
@@ -102,19 +103,19 @@ void TestFileController::openFileLoadsContent()
 void TestFileController::currentBodyComesFromDocument()
 {
     MainWindow w;
-    w.m_editor->setMarkdown(QStringLiteral("texto plano\n"));
+    w.m_stack->editor()->setMarkdown(QStringLiteral("texto plano\n"));
     // Sin panel de fuente sucio: el cuerpo se serializa del documento WYSIWYG.
-    QCOMPARE(w.m_file->currentBody(), mdtable::documentMarkdown(w.m_editor->document()));
+    QCOMPARE(w.m_stack->file()->currentBody(), mdtable::documentMarkdown(w.m_stack->editor()->document()));
 }
 
 void TestFileController::currentBodyComesFromSourcePanel()
 {
     MainWindow w;
-    w.m_split->toggleSplitView(true);
-    w.m_split->sourceEditor()->setPlainText(QStringLiteral("# Desde el fuente\n"));
+    w.m_stack->split()->toggleSplitView(true);
+    w.m_stack->split()->sourceEditor()->setPlainText(QStringLiteral("# Desde el fuente\n"));
     // Con el fuente sucio, currentBody toma su texto literal.
-    QVERIFY(w.m_split->isSourceDirty());
-    QCOMPARE(w.m_file->currentBody(), QStringLiteral("# Desde el fuente\n"));
+    QVERIFY(w.m_stack->split()->isSourceDirty());
+    QCOMPARE(w.m_stack->file()->currentBody(), QStringLiteral("# Desde el fuente\n"));
 }
 
 void TestFileController::saveToExistingFileUpdatesDisk()
@@ -124,14 +125,14 @@ void TestFileController::saveToExistingFileUpdatesDisk()
     const QString path = dir.filePath(QStringLiteral("doc.md"));
 
     MainWindow w;
-    w.m_editor->setMarkdown(QStringLiteral("versión 1\n"));
-    QVERIFY(w.m_file->writeToFile(path));
+    w.m_stack->editor()->setMarkdown(QStringLiteral("versión 1\n"));
+    QVERIFY(w.m_stack->file()->writeToFile(path));
 
     // Edita y guarda con save() (usa el archivo actual, sin diálogo).
-    w.m_editor->setMarkdown(QStringLiteral("versión 2 corregida\n"));
-    QVERIFY(w.m_file->save());
+    w.m_stack->editor()->setMarkdown(QStringLiteral("versión 2 corregida\n"));
+    QVERIFY(w.m_stack->file()->save());
     QVERIFY(readFile(path).contains(QStringLiteral("versión 2 corregida")));
-    QVERIFY(!w.m_documentIo->isModified());
+    QVERIFY(!w.m_stack->documentIo()->isModified());
 }
 
 QTEST_MAIN(TestFileController)

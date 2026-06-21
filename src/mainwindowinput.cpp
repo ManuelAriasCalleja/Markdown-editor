@@ -6,6 +6,7 @@
 // MainWindow, separados de mainwindow.cpp para aligerarlo.
 
 #include "mainwindow.h"
+#include "editorstack.h"
 #include "blockconstructs.h"
 #include "footnotes.h"
 #include "tasklist.h"
@@ -94,16 +95,16 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 {
     // Despachador: delega en el sub-manejador del objeto vigilado. El primero que
     // consume el evento gana; si ninguno lo hace, sigue el procesamiento normal.
-    if (watched == m_editor->viewport()) {
+    if (watched == m_stack->editor()->viewport()) {
         if (handleViewportEvent(event))
             return true;
-    } else if (watched == m_editor && event->type() == QEvent::KeyPress) {
+    } else if (watched == m_stack->editor() && event->type() == QEvent::KeyPress) {
         if (handleEditorKeyPress(static_cast<QKeyEvent *>(event)))
             return true;
     }
-    // Se comprueba m_split porque durante su construcción (al reparentar el editor
+    // Se comprueba m_stack->split() porque durante su construcción (al reparentar el editor
     // en el QSplitter) ya llegan eventos aquí, antes de que el puntero esté asignado.
-    else if (m_split && watched == m_split->sourceEditor()
+    else if (m_stack->split() && watched == m_stack->split()->sourceEditor()
              && event->type() == QEvent::KeyPress) {
         if (handleSourceKeyPress(static_cast<QKeyEvent *>(event)))
             return true;
@@ -114,7 +115,7 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 bool MainWindow::handleViewportEvent(QEvent *event)
 {
     if (event->type() == QEvent::ContextMenu) {
-        return m_spellController->showContextMenu(static_cast<QContextMenuEvent *>(event));
+        return m_stack->spell()->showContextMenu(static_cast<QContextMenuEvent *>(event));
     }
     if (event->type() == QEvent::Wheel) {
         auto *wheel = static_cast<QWheelEvent *>(event);
@@ -137,7 +138,7 @@ bool MainWindow::handleViewportEvent(QEvent *event)
                 const QString path =
                     drop->mimeData()->urls().constFirst().toLocalFile();
                 if (!path.isEmpty())
-                    m_file->openFile(path);
+                    m_stack->file()->openFile(path);
             }
             drop->acceptProposedAction();
             return true;
@@ -149,27 +150,27 @@ bool MainWindow::handleViewportEvent(QEvent *event)
         auto *me = static_cast<QMouseEvent *>(event);
         if (me->buttons() == Qt::NoButton) {
             // Sobre la casilla de una tarea: cursor de mano y pista de clic.
-            if (mdtask::isCheckboxAt(m_editor, me->position().toPoint())) {
-                m_editor->viewport()->setCursor(Qt::PointingHandCursor);
+            if (mdtask::isCheckboxAt(m_stack->editor(), me->position().toPoint())) {
+                m_stack->editor()->viewport()->setCursor(Qt::PointingHandCursor);
                 statusBar()->showMessage(tr("Clic para marcar o desmarcar la tarea"));
                 return true;
             }
             // Sobre una referencia de nota al pie: cursor de mano y pista.
             if (!footnoteRefIdAt(me->position().toPoint()).isEmpty()) {
-                m_editor->viewport()->setCursor(Qt::PointingHandCursor);
+                m_stack->editor()->viewport()->setCursor(Qt::PointingHandCursor);
                 statusBar()->showMessage(tr("Clic para ir a la nota al pie"));
                 return true;
             }
-            const QString href = m_editor->anchorAt(me->position().toPoint());
+            const QString href = m_stack->editor()->anchorAt(me->position().toPoint());
             if (!href.isEmpty()) {
-                m_editor->viewport()->setCursor(Qt::PointingHandCursor);
+                m_stack->editor()->viewport()->setCursor(Qt::PointingHandCursor);
                 statusBar()->showMessage(
                     tr("Ctrl+clic para abrir el enlace: %1").arg(href));
                 return true;  // si no, QTextEdit restablecería el cursor a I-beam
             }
             // Acabamos de salir de un enlace: restablece cursor y pista.
-            if (m_editor->viewport()->cursor().shape() == Qt::PointingHandCursor) {
-                m_editor->viewport()->setCursor(Qt::IBeamCursor);
+            if (m_stack->editor()->viewport()->cursor().shape() == Qt::PointingHandCursor) {
+                m_stack->editor()->viewport()->setCursor(Qt::IBeamCursor);
                 statusBar()->clearMessage();
             }
         }
@@ -179,7 +180,7 @@ bool MainWindow::handleViewportEvent(QEvent *event)
     else if (event->type() == QEvent::MouseButtonDblClick) {
         auto *me = static_cast<QMouseEvent *>(event);
         if (me->button() == Qt::LeftButton
-            && m_formula->editFormulaAt(me->position().toPoint()))
+            && m_stack->formula()->editFormulaAt(me->position().toPoint()))
             return true;
     }
     else if (event->type() == QEvent::MouseButtonPress) {
@@ -187,7 +188,7 @@ bool MainWindow::handleViewportEvent(QEvent *event)
         // Ctrl+clic izquierdo sobre un enlace lo abre en la aplicación externa.
         if (me->button() == Qt::LeftButton
             && (me->modifiers() & Qt::ControlModifier)) {
-            const QString href = m_editor->anchorAt(me->position().toPoint());
+            const QString href = m_stack->editor()->anchorAt(me->position().toPoint());
             if (!href.isEmpty()) {
                 openLink(href);
                 return true;  // no mover el cursor de texto
@@ -201,7 +202,7 @@ bool MainWindow::handleViewportEvent(QEvent *event)
         // Clic izquierdo simple sobre la casilla de un ítem de tarea: la
         // marca/desmarca (round-trip a `- [x]`/`- [ ]` lo da Qt solo).
         if (me->button() == Qt::LeftButton && me->modifiers() == Qt::NoModifier
-            && mdtask::toggleCheckboxAt(m_editor, me->position().toPoint()))
+            && mdtask::toggleCheckboxAt(m_stack->editor(), me->position().toPoint()))
             return true;  // consumido: no coloca el cursor ni inicia selección
     }
     return false;
@@ -216,15 +217,15 @@ bool MainWindow::handleEditorKeyPress(QKeyEvent *ke)
     // enteros (no a media fórmula). El paste real lo sigue haciendo QTextEdit con
     // la selección ya extendida, así que aquí NO se consume.
     if (ke->matches(QKeySequence::Paste))
-        m_formula->guardPasteAgainstMath();
-    if (m_formula->handleMathKeyPress(ke))
+        m_stack->formula()->guardPasteAgainstMath();
+    if (m_stack->formula()->handleMathKeyPress(ke))
         return true;
     // Shortcodes `:nombre:`: al teclear el ':' de cierre, si delante hay un
     // `:nombre:` conocido se sustituye por su símbolo. Insertamos el ':' y
     // expandimos nosotros (solo en el editor WYSIWYG, solo al teclear).
     if (ke->text() == QStringLiteral(":")
         && !(ke->modifiers() & (Qt::ControlModifier | Qt::AltModifier | Qt::MetaModifier))) {
-        QTextCursor cursor = m_editor->textCursor();
+        QTextCursor cursor = m_stack->editor()->textCursor();
         cursor.insertText(QStringLiteral(":"));
         expandShortcodeBefore(cursor);
         return true;
@@ -242,7 +243,7 @@ bool MainWindow::handleSourceKeyPress(QKeyEvent *ke)
 
 bool MainWindow::continueSourceList()
 {
-    QTextEdit *source = m_split->sourceEditor();
+    QTextEdit *source = m_stack->split()->sourceEditor();
     QTextCursor cursor = source->textCursor();
     if (cursor.hasSelection())
         return false;  // con selección, Enter la reemplaza: comportamiento normal
@@ -276,7 +277,7 @@ void MainWindow::openLink(const QString &href)
     // (la misma baseUrl con la que se cargaron imágenes/enlaces al abrir).
     QUrl url(href);
     if (url.isRelative())
-        url = m_editor->document()->baseUrl().resolved(url);
+        url = m_stack->editor()->document()->baseUrl().resolved(url);
     QDesktopServices::openUrl(url);
 }
 
@@ -296,7 +297,7 @@ void MainWindow::normalizeOutlineWidth()
 
 void MainWindow::goToHeading()
 {
-    const QList<OutlineHeading> headings = mdoutline::headingsOf(m_editor->document());
+    const QList<OutlineHeading> headings = mdoutline::headingsOf(m_stack->editor()->document());
     if (headings.isEmpty()) {
         statusBar()->showMessage(tr("El documento no tiene encabezados."));
         return;
@@ -305,13 +306,13 @@ void MainWindow::goToHeading()
     if (dialog.exec() != QDialog::Accepted)
         return;
     const int blockNumber = dialog.selectedBlockNumber();
-    const QTextBlock block = m_editor->document()->findBlockByNumber(blockNumber);
+    const QTextBlock block = m_stack->editor()->document()->findBlockByNumber(blockNumber);
     if (!block.isValid())
         return;
     QTextCursor cursor(block);
-    m_editor->setTextCursor(cursor);
-    m_editor->ensureCursorVisible();
-    m_editor->setFocus();
+    m_stack->editor()->setTextCursor(cursor);
+    m_stack->editor()->ensureCursorVisible();
+    m_stack->editor()->setFocus();
 }
 
 void MainWindow::expandShortcodeBefore(const QTextCursor &cursor)
@@ -340,7 +341,7 @@ void MainWindow::expandShortcodeBefore(const QTextCursor &cursor)
     if (symbol.isEmpty())
         return;
     // Sustituye `:nombre:` (ambos dos puntos incluidos) por el símbolo.
-    QTextCursor replace(m_editor->document());
+    QTextCursor replace(m_stack->editor()->document());
     replace.setPosition(blockStart + open);
     replace.setPosition(blockStart + end, QTextCursor::KeepAnchor);
     replace.insertText(symbol);
@@ -348,10 +349,10 @@ void MainWindow::expandShortcodeBefore(const QTextCursor &cursor)
 
 QString MainWindow::footnoteRefIdAt(const QPoint &viewportPos) const
 {
-    const int pos = m_editor->cursorForPosition(viewportPos).position();
+    const int pos = m_stack->editor()->cursorForPosition(viewportPos).position();
     // charFormat() devuelve el formato del carácter inmediatamente anterior al
     // cursor; probamos pos-1 y pos para cubrir el carácter bajo el clic.
-    QTextCursor probe(m_editor->document());
+    QTextCursor probe(m_stack->editor()->document());
     probe.setPosition(pos > 0 ? pos - 1 : 0);
     QTextCharFormat cf = probe.charFormat();
     if (!cf.boolProperty(mdfootnote::IsFootnoteRefProperty)) {
@@ -368,16 +369,16 @@ bool MainWindow::jumpToFootnoteAt(const QPoint &viewportPos)
     const QString id = footnoteRefIdAt(viewportPos);
     if (id.isEmpty())
         return false;
-    const int blockNo = mdfootnote::definitionBlockNumber(m_editor->document(), id);
+    const int blockNo = mdfootnote::definitionBlockNumber(m_stack->editor()->document(), id);
     if (blockNo < 0) {
         statusBar()->showMessage(tr("La nota [^%1] no tiene definición").arg(id));
         return false;
     }
-    const QTextBlock block = m_editor->document()->findBlockByNumber(blockNo);
+    const QTextBlock block = m_stack->editor()->document()->findBlockByNumber(blockNo);
     QTextCursor dest(block);
     dest.movePosition(QTextCursor::EndOfBlock);
-    m_editor->setTextCursor(dest);
-    m_editor->ensureCursorVisible();
-    m_editor->setFocus();
+    m_stack->editor()->setTextCursor(dest);
+    m_stack->editor()->ensureCursorVisible();
+    m_stack->editor()->setFocus();
     return true;
 }

@@ -8,6 +8,7 @@
 
 #include "focuseditor.h"
 #include "mainwindow.h"
+#include "editorstack.h"
 #include "formulacontroller.h"
 #include "mathblocks.h"
 
@@ -60,17 +61,17 @@ QPair<int, int> TestFormula::insertMath(QTextEdit *editor, const QString &tex)
 void TestFormula::guardExpandsSelectionInsideFormula()
 {
     MainWindow w;
-    const auto bounds = insertMath(w.m_editor, QStringLiteral("x^2"));
+    const auto bounds = insertMath(w.m_stack->editor(), QStringLiteral("x^2"));
     QVERIFY(bounds.second - bounds.first >= 2);  // varios runs (base + superíndice)
 
     // Cursor estrictamente dentro del grupo, sin selección.
-    QTextCursor c = w.m_editor->textCursor();
+    QTextCursor c = w.m_stack->editor()->textCursor();
     c.setPosition(bounds.first + 1);
-    w.m_editor->setTextCursor(c);
+    w.m_stack->editor()->setTextCursor(c);
 
-    w.m_formula->guardPasteAgainstMath();
+    w.m_stack->formula()->guardPasteAgainstMath();
 
-    const QTextCursor sel = w.m_editor->textCursor();
+    const QTextCursor sel = w.m_stack->editor()->textCursor();
     QCOMPARE(sel.selectionStart(), bounds.first);
     QCOMPARE(sel.selectionEnd(), bounds.second);
 }
@@ -78,32 +79,32 @@ void TestFormula::guardExpandsSelectionInsideFormula()
 void TestFormula::backspaceAtRightEdgeDeletesGroup()
 {
     MainWindow w;
-    const auto bounds = insertMath(w.m_editor, QStringLiteral("x^2"));
+    const auto bounds = insertMath(w.m_stack->editor(), QStringLiteral("x^2"));
 
     // Cursor en el borde derecho del grupo (Backspace debe borrarlo entero).
-    QTextCursor c = w.m_editor->textCursor();
+    QTextCursor c = w.m_stack->editor()->textCursor();
     c.setPosition(bounds.second);
-    w.m_editor->setTextCursor(c);
+    w.m_stack->editor()->setTextCursor(c);
 
     QKeyEvent backspace(QEvent::KeyPress, Qt::Key_Backspace, Qt::NoModifier);
-    QVERIFY(w.m_formula->handleMathKeyPress(&backspace));
+    QVERIFY(w.m_stack->formula()->handleMathKeyPress(&backspace));
     // El grupo entero desaparece: no queda ningún fragmento de math.
-    QVERIFY(mdmath::mathGroupBounds(w.m_editor->document()).isEmpty());
+    QVERIFY(mdmath::mathGroupBounds(w.m_stack->editor()->document()).isEmpty());
 }
 
 void TestFormula::printableInsideFormulaIsBlocked()
 {
     MainWindow w;
-    const auto bounds = insertMath(w.m_editor, QStringLiteral("x^2"));
-    const QString before = w.m_editor->toPlainText();
+    const auto bounds = insertMath(w.m_stack->editor(), QStringLiteral("x^2"));
+    const QString before = w.m_stack->editor()->toPlainText();
 
-    QTextCursor c = w.m_editor->textCursor();
+    QTextCursor c = w.m_stack->editor()->textCursor();
     c.setPosition(bounds.first + 1);  // dentro del grupo
-    w.m_editor->setTextCursor(c);
+    w.m_stack->editor()->setTextCursor(c);
 
     QKeyEvent typeA(QEvent::KeyPress, Qt::Key_A, Qt::NoModifier, QStringLiteral("a"));
-    QVERIFY(w.m_formula->handleMathKeyPress(&typeA));          // consumido
-    QCOMPARE(w.m_editor->toPlainText(), before);    // no se insertó nada
+    QVERIFY(w.m_stack->formula()->handleMathKeyPress(&typeA));          // consumido
+    QCOMPARE(w.m_stack->editor()->toPlainText(), before);    // no se insertó nada
 }
 
 QTEST_MAIN(TestFormula)

@@ -1,0 +1,201 @@
+#include "editorstack.h"
+
+#include <QColor>
+#include <QMimeData>
+#include <QPalette>
+#include <QSplitter>
+#include <QTextCursor>
+#include <QTextDocument>
+#include <QTextEdit>
+#include <QTextFrame>
+#include <QTextTable>
+#include <QVBoxLayout>
+
+#include "codehighlighter.h"
+#include "diagramcontroller.h"
+#include "diskwatcher.h"
+#include "documentio.h"
+#include "exportcontroller.h"
+#include "filecontroller.h"
+#include "focuseditor.h"
+#include "formatcontroller.h"
+#include "formulacontroller.h"
+#include "insertcontroller.h"
+#include "markdownrender.h"
+#include "outlinepanel.h"
+#include "recoverymanager.h"
+#include "spellcontroller.h"
+#include "splitviewcontroller.h"
+#include "tablecontroller.h"
+#include "themecontroller.h"
+
+EditorStack::EditorStack(FindReplaceBar *findBar, OutlinePanel *outline, QWidget *parent)
+    : QWidget(parent)
+    , m_findBar(findBar)
+    , m_outline(outline)
+{
+    m_editor = new FocusEditor(this);
+    m_editor->setAcceptRichText(true);
+    // Resaltado de sintaxis de los bloques de código.
+    m_highlighter = new CodeBlockHighlighter(m_editor->document());
+
+    // Previsualización de diagramas (Mermaid/PlantUML) bajo cada bloque de código.
+    m_diagrams = new DiagramController(m_editor, this);
+    connect(m_editor->document(), &QTextDocument::contentsChanged,
+            m_diagrams, &DiagramController::scheduleRefresh);
+
+    // E/S del documento y control del tema (recolorea enlaces de ESTE editor).
+    m_documentIo = new DocumentIo(m_editor, this);
+    m_theme = new ThemeController(m_editor, m_highlighter, this);
+
+    // Corrector ortográfico: posee el motor (lo enchufa al highlighter) y el menú
+    // contextual de sugerencias.
+    m_spell = new SpellController(m_editor, m_highlighter, m_documentIo, this);
+    connect(m_spell, &SpellController::statusMessage, this, &EditorStack::statusMessage);
+
+    // Al pegar/soltar una imagen, guardarla a disco e insertar `![](ruta)` en vez
+    // de incrustarla (el lambda consulta m_insert en tiempo de pegado).
+    m_editor->setMimeInsertHandler([this](const QMimeData *src) {
+        return m_insert->handlePastedImage(src) || m_insert->handlePastedUrl(src);
+    });
+
+    // Vista de código fuente / dividida (posee el editor de fuente y el QSplitter
+    // central). Usa la barra de búsqueda y el esquema compartidos de la ventana.
+    m_split = new SplitViewController(m_editor, m_findBar, m_outline, m_theme, this);
+    connect(m_split->sourceEditor(), &QTextEdit::cursorPositionChanged,
+            this, &EditorStack::wordCountShouldUpdate);
+    connect(m_split->sourceEditor(), &QTextEdit::selectionChanged,
+            this, &EditorStack::wordCountShouldUpdate);
+    connect(m_split, &SplitViewController::wordCountShouldUpdate,
+            this, &EditorStack::wordCountShouldUpdate);
+    connect(m_split, &SplitViewController::formatActionsShouldUpdate,
+            this, [this] { m_format->updateActions(); });
+    connect(m_split, &SplitViewController::documentModified,
+            this, [this] { emit windowModifiedChanged(true); });
+    m_split->setRenderBody([this](const QString &body) { setBodyMarkdown(body); });
+
+    // La vista (QSplitter con WYSIWYG + fuente) es el contenido de este widget.
+    auto *layout = new QVBoxLayout(this);
+    layout->setContentsMargins(0, 0, 0, 0);
+    layout->addWidget(m_split->splitView());
+
+    // Comandos de formato y sincronización de sus acciones con el cursor.
+    m_format = new FormatController(m_editor, m_highlighter, this);
+    connect(m_format, &FormatController::statusMessage, this, &EditorStack::statusMessage);
+
+    // Edición de tablas (contextual).
+    m_table = new TableController(m_editor, m_split, m_documentIo, this);
+    connect(m_split, &SplitViewController::tableActionsShouldUpdate,
+            m_table, &TableController::updateActions);
+    connect(m_table, &TableController::modifiedChanged,
+            this, &EditorStack::windowModifiedChanged);
+    connect(m_format, &FormatController::actionsUpdated,
+            m_table, &TableController::updateActions);
+
+    // Fórmulas TeX (insertar/editar/proteger).
+    m_formula = new FormulaController(m_editor, this);
+    connect(m_formula, &FormulaController::statusMessage, this, &EditorStack::statusMessage);
+
+    // Inserción (enlaces, imágenes, tablas, regla).
+    m_insert = new InsertController(m_editor, m_documentIo, this);
+    connect(m_insert, &InsertController::formatActionsShouldRefresh,
+            m_format, &FormatController::updateActions);
+    connect(m_insert, &InsertController::tableInserted, this, [this] { styleTables(); });
+
+    // Exportación e impresión.
+    m_export = new ExportController(m_editor, m_documentIo, m_split, this);
+    connect(m_export, &ExportController::statusMessage, this, &EditorStack::statusMessage);
+
+    // Operaciones de archivo + autoguardado del borrador.
+    m_recovery = new RecoveryManager(this);
+    m_file = new FileController(m_editor, m_documentIo, m_split, m_recovery, this);
+    m_file->setRenderBody([this](const QString &body) { setBodyMarkdown(body); });
+    connect(m_file, &FileController::statusMessage, this, &EditorStack::statusMessage);
+    connect(m_file, &FileController::windowModifiedChanged,
+            this, &EditorStack::windowModifiedChanged);
+    connect(m_file, &FileController::loadFailed, this, &EditorStack::loadFailed);
+    // Escribir en cualquiera de los dos editores marca el borrador como pendiente.
+    connect(m_editor, &QTextEdit::textChanged, m_file, &FileController::markDirty);
+    connect(m_split->sourceEditor(), &QTextEdit::textChanged, m_file, &FileController::markDirty);
+
+    // Los botones de formato reflejan lo que hay bajo el cursor.
+    connect(m_editor, &QTextEdit::currentCharFormatChanged,
+            this, [this] { m_format->updateActions(); });
+    connect(m_editor, &QTextEdit::cursorPositionChanged,
+            this, [this] { m_format->updateActions(); });
+    // Marca «modificado» comparando con la línea base (DocumentIo).
+    connect(m_editor->document(), &QTextDocument::contentsChanged, this,
+            [this] { emit windowModifiedChanged(m_documentIo->isModified()); });
+    // Contador al día con el contenido y la selección.
+    connect(m_editor, &QTextEdit::textChanged, this, &EditorStack::wordCountShouldUpdate);
+    connect(m_editor, &QTextEdit::selectionChanged, this, &EditorStack::wordCountShouldUpdate);
+
+    // El archivo actual sube a la ventana (título + recientes + vigilancia).
+    connect(m_documentIo, &DocumentIo::currentFileChanged,
+            this, &EditorStack::currentFileChanged);
+
+    // Vigilancia de cambios externos del archivo abierto.
+    m_diskWatcher = new DiskWatcher(this);
+    connect(m_documentIo, &DocumentIo::currentFileChanged,
+            m_diskWatcher, &DiskWatcher::watch);
+    connect(m_diskWatcher, &DiskWatcher::externalChange,
+            this, &EditorStack::diskExternalChange);
+    connect(m_diskWatcher, &DiskWatcher::vanished, this, &EditorStack::diskVanished);
+
+    // Al cargar: recolorear enlaces, avisar a la ventana (reconstruye el esquema),
+    // dar borde a las tablas y reajustar el idioma del corrector. El orden importa
+    // (recolor › esquema › tablas › corrector), por eso van en esta secuencia.
+    connect(m_documentIo, &DocumentIo::documentLoaded,
+            m_theme, &ThemeController::recolorLinks);
+    connect(m_documentIo, &DocumentIo::documentLoaded, this, &EditorStack::documentLoaded);
+    connect(m_documentIo, &DocumentIo::documentLoaded, this, [this] { styleTables(); });
+    connect(m_documentIo, &DocumentIo::documentLoaded,
+            m_spell, &SpellController::applyLanguage);
+}
+
+QTextEdit *EditorStack::activeEditor() const
+{
+    return m_split->activeEditor();
+}
+
+void EditorStack::styleTables()
+{
+    QTextDocument *doc = m_editor->document();
+    const QColor borderColor = m_editor->palette().color(QPalette::Mid);
+
+    // El borde es presentación pura: no lo serializa toMarkdown(), así que ni el
+    // round-trip ni el estado «modificado» se ven afectados. Aun así preservamos
+    // la marca de modificado de Qt, como hace recolorLinks().
+    const bool wasModified = doc->isModified();
+    QTextCursor cursor(doc);
+    cursor.beginEditBlock();
+    const QList<QTextFrame *> frames = doc->rootFrame()->childFrames();
+    for (QTextFrame *frame : frames) {
+        auto *table = qobject_cast<QTextTable *>(frame);
+        if (!table)
+            continue;
+        QTextTableFormat fmt = table->format();
+        fmt.setBorder(1);
+        fmt.setBorderStyle(QTextFrameFormat::BorderStyle_Solid);
+        fmt.setBorderBrush(borderColor);
+        fmt.setBorderCollapse(true);  // un solo trazo entre celdas, no doble
+        fmt.setCellPadding(4);
+        fmt.setCellSpacing(0);
+        table->setFormat(fmt);
+    }
+    cursor.endEditBlock();
+    doc->setModified(wasModified);
+}
+
+void EditorStack::setBodyMarkdown(const QString &body)
+{
+    // El flag anti-bucle del controlador envuelve la sustitución para que los
+    // contentsChanged que provoca (incluido el de recolorLinks) no realimenten la
+    // sincronización de la vista dividida. Se guarda/restaura por reentrancia.
+    const bool wasSyncing = m_split->beginProgrammaticChange();
+    mdrender::setMarkdownWithExtensions(m_editor, body);
+    styleTables();
+    m_theme->recolorLinks();
+    m_outline->rebuild(m_editor->document());
+    m_split->endProgrammaticChange(wasSyncing);
+}
