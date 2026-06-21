@@ -1,0 +1,4 @@
+# Los diccionarios se copian localmente al empaquetar para Windows/macOS; no se
+# versionan (licencias y tamaño varían). Ver README.md.
+*.aff
+*.dic

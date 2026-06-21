@@ -52,9 +52,11 @@ proyecto es sólido (~9k LOC, 23 ficheros de test, arquitectura por controllers,
    (un clic reemplaza) + «añadir al diccionario» / «ignorar», sobre el menú
    estándar. Y el interruptor **Ver → Corrección ortográfica** (acción checkable,
    `AppSettings::spellCheck`): al desactivar, descarga el diccionario (sin huella
-   de memoria) y limpia el subrayado. *Opcional a futuro:* selector de idioma
-   manual (ahora se deduce del documento) y diccionarios empaquetados para
-   Windows/Mac (en Linux se usan los del sistema).
+   de memoria) y limpia el subrayado. **Ver → Idioma de corrección** permite fijar
+   un idioma o dejarlo en automático (`AppSettings::spellLanguage`). Y el
+   **empaquetado** para Windows/Mac está resuelto: `dictionaries/` (con su README y
+   el script `scripts/bundle-dictionaries.sh`) se instala junto a la app donde
+   `searchPaths` la busca. Fase 1 (y sus opcionales) completa.
 
    **Análisis (multiplataforma y dependencias).** Qt6 no trae corrector
    (`QSpellChecker` no existe), hay que aportar el motor. La opción que mantiene

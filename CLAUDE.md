@@ -386,6 +386,16 @@ Qt (`qt_generate_deploy_app_script` → windeployqt/macdeployqt) solo en Win/mac
 `md-editor.icns` (macOS, copiado al bundle + `MACOSX_BUNDLE_ICON_FILE`). El icono de
 ventana en runtime ya lo fija `main.cpp` con `app.setWindowIcon`.
 
+**Diccionarios del corrector.** Linux usa los del sistema (`/usr/share/hunspell`);
+Windows/macOS no tienen, así que se empaquetan. La carpeta `dictionaries/` (con su
+`README.md`; los `.aff/.dic` están en `.gitignore` por licencias y tamaño) es el
+punto de empaquetado: si tiene ficheros, `CMakeLists.txt` los instala donde
+`SpellChecker::searchPaths()` los busca — junto al `.exe` (Windows), en
+`Contents/Resources/dictionaries` (macOS), o `<prefix>/share/hunspell` (Linux). El
+script `scripts/bundle-dictionaries.sh` copia ahí los del sistema (los 9 idiomas
+de la interfaz) para una build de Win/Mac. Es un bloque `install` **condicional**
+(vacío = no-op), así que no afecta a la build de Linux.
+
 ## Internacionalización (importante y con trampas)
 
 Todos los textos visibles pasan por `tr()`. El idioma de origen es el **español**;

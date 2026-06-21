@@ -22,9 +22,10 @@ QStringList searchPaths()
 {
     QStringList paths;
     const QString appDir = QCoreApplication::applicationDirPath();
-    paths << appDir + QStringLiteral("/dictionaries")
-          << appDir + QStringLiteral("/../share/hunspell")
-          << QStringLiteral("/usr/share/hunspell")
+    paths << appDir + QStringLiteral("/dictionaries")               // junto al .exe (Windows) / binario
+          << appDir + QStringLiteral("/../Resources/dictionaries")  // dentro del .app (macOS)
+          << appDir + QStringLiteral("/../share/hunspell")          // <prefix>/share/hunspell (instalación)
+          << QStringLiteral("/usr/share/hunspell")                  // diccionarios del sistema (Linux)
           << QStringLiteral("/usr/share/myspell/dicts")
           << QStringLiteral("/usr/share/myspell");
     return paths;

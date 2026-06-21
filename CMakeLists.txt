@@ -222,6 +222,31 @@ install(TARGETS md-editor
     BUNDLE  DESTINATION .
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 
+# Diccionarios del corrector empaquetados (opcional). En Linux se usan los del
+# sistema (/usr/share/hunspell), pero Windows/macOS no tienen ninguno: hay que
+# llevarlos junto a la app. Si el usuario deja pares .aff/.dic en `dictionaries/`,
+# se instalan donde el corrector los busca (ver searchPaths en spellchecker.cpp):
+#   - Windows: junto al .exe (bin/dictionaries)
+#   - macOS:   dentro del .app (Contents/Resources/dictionaries)
+#   - Linux:   <prefix>/share/hunspell (por si se quiere una instalación cerrada)
+# Vacío por defecto (no se commitean diccionarios: licencias y tamaño varían; ver
+# dictionaries/README.md).
+file(GLOB BUNDLED_DICTS "${CMAKE_CURRENT_SOURCE_DIR}/dictionaries/*.aff"
+                        "${CMAKE_CURRENT_SOURCE_DIR}/dictionaries/*.dic")
+if(BUNDLED_DICTS)
+    if(APPLE)
+        install(FILES ${BUNDLED_DICTS}
+            DESTINATION "md-editor.app/Contents/Resources/dictionaries")
+    elseif(WIN32)
+        install(FILES ${BUNDLED_DICTS}
+            DESTINATION "${CMAKE_INSTALL_BINDIR}/dictionaries")
+    else()
+        install(FILES ${BUNDLED_DICTS}
+            DESTINATION "${CMAKE_INSTALL_DATAROOTDIR}/hunspell")
+    endif()
+    message(STATUS "Diccionarios empaquetados: ${BUNDLED_DICTS}")
+endif()
+
 if(UNIX AND NOT APPLE)
     install(FILES md-editor.desktop
         DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/applications)
