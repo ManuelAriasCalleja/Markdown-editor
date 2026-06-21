@@ -4,6 +4,8 @@
 #include <QFont>
 #include <QFontMetricsF>
 #include <QPainter>
+#include <QPainterPath>
+#include <QPolygonF>
 
 #include <algorithm>
 #include <cmath>
@@ -49,6 +51,15 @@ qreal barThickness(const QFont &f) { return std::max(1.0, QFontMetricsF(f).ascen
 qreal scriptRaise(const QFont &f){ return QFontMetricsF(f).ascent() * 0.50; }
 qreal scriptDrop(const QFont &f) { return QFontMetricsF(f).ascent() * 0.28; }
 qreal bigOpGap(const QFont &f)   { return QFontMetricsF(f).xHeight() * 0.45; }
+qreal sqrtGap(const QFont &f)    { return std::max(1.0, barThickness(f) * 2.0); }   // vínculo↔radicando
+qreal sqrtSignW(const QFont &f)  { return std::max(6.0, QFontMetricsF(f).averageCharWidth() * 0.9); }
+qreal matrixColGap(const QFont &f){ return QFontMetricsF(f).averageCharWidth() * 1.1; }
+qreal matrixRowGap(const QFont &f){ return QFontMetricsF(f).xHeight() * 0.7; }
+qreal delimWidth(const QFont &f) { return std::max(3.0, QFontMetricsF(f).averageCharWidth() * 0.5); }
+qreal delimPad(const QFont &f)   { return QFontMetricsF(f).averageCharWidth() * 0.25; }
+
+// Delimitadores de matriz.
+enum Delim { DelimNone = 0, DelimParen, DelimBracket, DelimBrace, DelimBar };
 
 // Caja del árbol de maquetación. Según `kind`, `kids` tiene aridad fija:
 //   HList  -> ítems en fila.
@@ -56,15 +67,19 @@ qreal bigOpGap(const QFont &f)   { return QFontMetricsF(f).xHeight() * 0.45; }
 //   Frac   -> {numerador, denominador}.
 //   Script -> {base, superíndice, subíndice} (presencia en hasSup/hasSub).
 //   BigOp  -> {operador, límite-encima, límite-debajo} (hasOver/hasUnder).
+//   Sqrt   -> {radicando, índice} (índice opcional, en hasIndex).
+//   Matrix -> rows*cols celdas en orden por filas; `rows`/`cols`/`delim`.
 // La geometría (w/asc/dsc) la rellena `measure`. `asc`/`dsc` se miden desde el
 // baseline (arriba/abajo); height = asc + dsc; `w` es el avance horizontal.
 struct Box {
-    enum Kind { HList, Glyph, Frac, Script, BigOp };
+    enum Kind { HList, Glyph, Frac, Script, BigOp, Sqrt, Matrix };
     Kind kind = HList;
     QString text;
     QFont font;
     QList<Box> kids;
     bool hasSup = false, hasSub = false, hasOver = false, hasUnder = false;
+    bool hasIndex = false;            // Sqrt
+    int rows = 0, cols = 0, delim = DelimNone;  // Matrix
     qreal w = 0, asc = 0, dsc = 0;
     qreal height() const { return asc + dsc; }
 };
@@ -177,6 +192,118 @@ Box makeBigOp(const QString &cmd, const QFont &font)
     return b;
 }
 
+// `\sqrt[índice]{radicando}`. `after` apunta tras `sqrt` (saltados espacios);
+// `i` sale tras el grupo consumido. El índice es opcional (`\sqrt[3]{x}`).
+Box makeSqrt(const QString &tex, int after, int &i, const QFont &font)
+{
+    const int n = tex.size();
+    int k = after;
+    Box index;
+    bool hasIdx = false;
+    if (k < n && tex.at(k) == QLatin1Char('[')) {
+        const int start = ++k;
+        int depth = 1;
+        while (k < n && depth > 0) {
+            const QChar ch = tex.at(k);
+            if (ch == QLatin1Char('[')) ++depth;
+            else if (ch == QLatin1Char(']')) --depth;
+            if (depth > 0) ++k;
+        }
+        index = buildHList(tex.mid(start, k - start), scriptFont(font));
+        hasIdx = true;
+        if (k < n && tex.at(k) == QLatin1Char(']')) ++k;
+        while (k < n && tex.at(k) == QLatin1Char(' ')) ++k;
+    }
+    QString radTex;
+    if (k < n && tex.at(k) == QLatin1Char('{')) {
+        i = k;
+        radTex = readGroup(tex, i);
+    } else if (k < n) {
+        // Sin llaves: el radicando es el siguiente token (`\sqrt 2`, `\sqrt\pi`).
+        i = k;
+        if (tex.at(k) == QLatin1Char('\\')) {
+            const int s = i;
+            ++i;
+            if (i < n && tex.at(i).isLetter()) readCommand(tex, i);
+            else if (i < n) ++i;
+            radTex = tex.mid(s, i - s);
+        } else {
+            radTex = QString(tex.at(k));
+            i = k + 1;
+        }
+    } else {
+        i = k;
+    }
+    Box b;
+    b.kind = Box::Sqrt;
+    b.font = font;
+    b.kids = { buildHList(radTex, font),
+               hasIdx ? index : glyph(QString(), scriptFont(font)) };
+    b.hasIndex = hasIdx;
+    return b;
+}
+
+int matrixDelim(const QString &env)
+{
+    if (env == QLatin1String("pmatrix")) return DelimParen;
+    if (env == QLatin1String("bmatrix")) return DelimBracket;
+    if (env == QLatin1String("Bmatrix")) return DelimBrace;
+    if (env == QLatin1String("vmatrix") || env == QLatin1String("Vmatrix")) return DelimBar;
+    return DelimNone;  // matrix y entornos desconocidos: sin delimitador
+}
+
+// `\begin{env} celda & celda \\ … \end{env}`. `after` apunta al `{env}`; `i`
+// sale tras el `\end{env}`. Construye una rejilla de celdas.
+Box makeMatrix(const QString &tex, int after, int &i, const QFont &font)
+{
+    const int n = tex.size();
+    i = after;
+    const QString env = readGroup(tex, i);
+    const QString endTok = QStringLiteral("\\end{") + env + QLatin1Char('}');
+    const int endPos = tex.indexOf(endTok, i);
+    const QString body = (endPos >= 0) ? tex.mid(i, endPos - i) : tex.mid(i);
+    i = (endPos >= 0) ? endPos + endTok.size() : n;
+
+    Box b;
+    b.kind = Box::Matrix;
+    b.font = font;
+    b.delim = matrixDelim(env);
+    QList<QList<Box>> grid;
+    int cols = 0;
+    for (const QString &rowStr : body.split(QStringLiteral("\\\\"))) {
+        if (rowStr.trimmed().isEmpty())
+            continue;  // fila vacía (p. ej. tras el último `\\`)
+        QList<Box> cells;
+        for (const QString &cellStr : rowStr.split(QLatin1Char('&')))
+            cells.append(buildHList(cellStr.trimmed(), font));
+        cols = std::max(cols, int(cells.size()));
+        grid.append(cells);
+    }
+    b.rows = int(grid.size());
+    b.cols = cols;
+    for (const QList<Box> &row : grid) {
+        for (int cc = 0; cc < cols; ++cc)
+            b.kids.append(cc < row.size() ? row[cc] : glyph(QString(), font));
+    }
+    return b;
+}
+
+// Anchos de columna y asc/dsc de cada fila de una matriz ya medida.
+void matrixMetrics(const Box &b, QList<qreal> &colW, QList<qreal> &rowAsc, QList<qreal> &rowDsc)
+{
+    colW = QList<qreal>(b.cols, 0.0);
+    rowAsc = QList<qreal>(b.rows, 0.0);
+    rowDsc = QList<qreal>(b.rows, 0.0);
+    for (int r = 0; r < b.rows; ++r) {
+        for (int cc = 0; cc < b.cols; ++cc) {
+            const Box &cell = b.kids[r * b.cols + cc];
+            colW[cc] = std::max(colW[cc], cell.w);
+            rowAsc[r] = std::max(rowAsc[r], cell.asc);
+            rowDsc[r] = std::max(rowDsc[r], cell.dsc);
+        }
+    }
+}
+
 Box buildHList(const QString &tex, const QFont &font)
 {
     Box list;
@@ -217,6 +344,10 @@ Box buildHList(const QString &tex, const QFont &font)
                     atom.kids = { buildHList(num, font), buildHList(den, font) };
                 } else if (isBigOp(cmd)) {
                     atom = makeBigOp(cmd, font);
+                } else if (cmd == QLatin1String("sqrt")) {
+                    atom = makeSqrt(tex, after, i, font);
+                } else if (cmd == QLatin1String("begin")) {
+                    atom = makeMatrix(tex, after, i, font);
                 } else {
                     // \mathbb{R} y similares: el comando con su grupo puede estar
                     // en la tabla como un único glifo.
@@ -321,10 +452,75 @@ void measure(Box &b)
         }
         break;
     }
+    case Box::Sqrt: {
+        Box &rad = b.kids[0];
+        measure(rad);
+        const qreal t = barThickness(b.font);
+        const qreal gap = sqrtGap(b.font);
+        qreal idxW = 0;
+        if (b.hasIndex) {
+            measure(b.kids[1]);
+            idxW = b.kids[1].w;
+        }
+        // El índice se aloja en el codo del radical (dentro de su altura), así
+        // que no aumenta el ascenso.
+        b.asc = rad.asc + gap + t;
+        b.dsc = rad.dsc;
+        b.w = idxW + sqrtSignW(b.font) + rad.w + fracPad(b.font);
+        break;
+    }
+    case Box::Matrix: {
+        for (Box &cell : b.kids)
+            measure(cell);
+        QList<qreal> colW, rowAsc, rowDsc;
+        matrixMetrics(b, colW, rowAsc, rowDsc);
+        qreal totalW = 0;
+        for (qreal w : colW) totalW += w;
+        totalW += matrixColGap(b.font) * std::max(0, b.cols - 1);
+        qreal totalH = 0;
+        for (int r = 0; r < b.rows; ++r) totalH += rowAsc[r] + rowDsc[r];
+        totalH += matrixRowGap(b.font) * std::max(0, b.rows - 1);
+        const qreal dW = (b.delim != DelimNone) ? (delimWidth(b.font) + delimPad(b.font)) : 0;
+        b.w = totalW + 2 * dW;
+        const qreal axis = axisHeight(b.font);
+        b.asc = totalH / 2 + axis;
+        b.dsc = std::max(0.0, totalH / 2 - axis);
+        break;
+    }
     }
 }
 
 // --- Pintado -----------------------------------------------------------------
+
+// Dibuja un delimitador de matriz (paréntesis/corchete/llave/barra) de altura
+// `h` desde `top`, en la columna [x, x+delimWidth]. `left` elige la orientación.
+void paintDelim(QPainter *p, int delim, bool left, qreal x, qreal top, qreal h, const QFont &font)
+{
+    const qreal w = delimWidth(font);
+    QPen pen = p->pen();
+    pen.setWidthF(barThickness(font));
+    pen.setCapStyle(Qt::RoundCap);
+    pen.setJoinStyle(Qt::MiterJoin);
+    p->save();
+    p->setPen(pen);
+    p->setBrush(Qt::NoBrush);
+    const qreal bottom = top + h;
+    const qreal mid = top + h / 2;
+    if (delim == DelimParen) {
+        QPainterPath path;
+        if (left) { path.moveTo(x + w, top); path.quadTo(x - w * 0.2, mid, x + w, bottom); }
+        else      { path.moveTo(x, top);     path.quadTo(x + w * 1.2, mid, x, bottom); }
+        p->drawPath(path);
+    } else if (delim == DelimBar) {
+        p->drawLine(QPointF(x + w / 2, top), QPointF(x + w / 2, bottom));
+    } else {  // corchete y llave (aproximada): tres tramos en U
+        QPolygonF poly = left
+            ? QPolygonF({QPointF(x + w, top), QPointF(x, top), QPointF(x, bottom), QPointF(x + w, bottom)})
+            : QPolygonF({QPointF(x, top), QPointF(x + w, top), QPointF(x + w, bottom), QPointF(x, bottom)});
+        p->drawPolyline(poly);
+    }
+    p->restore();
+}
 
 void paint(const Box &b, QPainter *p, qreal x, qreal baseline)
 {
@@ -383,6 +579,60 @@ void paint(const Box &b, QPainter *p, qreal x, qreal baseline)
         }
         break;
     }
+    case Box::Sqrt: {
+        const Box &rad = b.kids[0];
+        const qreal t = barThickness(b.font);
+        const qreal gap = sqrtGap(b.font);
+        const qreal sw = sqrtSignW(b.font);
+        const qreal idxW = b.hasIndex ? b.kids[1].w : 0;
+        const qreal vinY = baseline - rad.asc - gap;     // y del vínculo (sobre el radicando)
+        const qreal bottom = baseline + rad.dsc;          // punto más bajo del radical
+        const qreal x0 = x + idxW;
+        const qreal radX = x0 + sw + fracPad(b.font) * 0.5;
+        QPen pen = p->pen();
+        pen.setWidthF(t);
+        pen.setCapStyle(Qt::RoundCap);
+        pen.setJoinStyle(Qt::MiterJoin);
+        p->save();
+        p->setPen(pen);
+        // Radical vectorial: arranque medio → punta inferior → sube al vínculo →
+        // vínculo horizontal sobre el radicando. Escala con la altura del radicando.
+        p->drawPolyline(QPolygonF({
+            QPointF(x0, vinY + (bottom - vinY) * 0.6),
+            QPointF(x0 + sw * 0.5, bottom),
+            QPointF(x0 + sw, vinY),
+            QPointF(radX + rad.w + fracPad(b.font) * 0.5, vinY),
+        }));
+        p->restore();
+        paint(rad, p, radX, baseline);
+        if (b.hasIndex)  // en el codo: bajo el vínculo, dentro de la altura del radical
+            paint(b.kids[1], p, x, vinY + (bottom - vinY) * 0.30 - b.kids[1].dsc);
+        break;
+    }
+    case Box::Matrix: {
+        QList<qreal> colW, rowAsc, rowDsc;
+        matrixMetrics(b, colW, rowAsc, rowDsc);
+        qreal totalH = 0;
+        for (int r = 0; r < b.rows; ++r) totalH += rowAsc[r] + rowDsc[r];
+        totalH += matrixRowGap(b.font) * std::max(0, b.rows - 1);
+        const qreal gridTop = baseline - axisHeight(b.font) - totalH / 2;
+        const qreal dW = (b.delim != DelimNone) ? (delimWidth(b.font) + delimPad(b.font)) : 0;
+        if (b.delim != DelimNone) {
+            paintDelim(p, b.delim, true, x, gridTop, totalH, b.font);
+            paintDelim(p, b.delim, false, x + b.w - delimWidth(b.font), gridTop, totalH, b.font);
+        }
+        qreal cx = x + dW;
+        for (int cc = 0; cc < b.cols; ++cc) {
+            qreal cy = gridTop;
+            for (int r = 0; r < b.rows; ++r) {
+                const Box &cell = b.kids[r * b.cols + cc];
+                paint(cell, p, cx + (colW[cc] - cell.w) / 2, cy + rowAsc[r]);
+                cy += rowAsc[r] + rowDsc[r] + matrixRowGap(b.font);
+            }
+            cx += colW[cc] + matrixColGap(b.font);
+        }
+        break;
+    }
     }
 }
 
@@ -401,7 +651,8 @@ bool needsTwoDLayout(const QString &tex)
         if (i >= n) break;
         if (!tex.at(i).isLetter()) { ++i; continue; }
         const QString cmd = readCommand(tex, i);
-        if (cmd == QLatin1String("frac"))
+        if (cmd == QLatin1String("frac") || cmd == QLatin1String("sqrt")
+            || cmd == QLatin1String("begin"))
             return true;
         if (isBigOp(cmd)) {
             int after = i;
