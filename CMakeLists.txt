@@ -129,9 +129,21 @@ target_compile_definitions(md-editor-core PUBLIC APP_VERSION="${PROJECT_VERSION}
 # Hunspell es la PRIMERA dependencia de terceros del proyecto, así que es
 # OPCIONAL: si no está, el binario compila igual y el corrector queda inactivo
 # (HAVE_HUNSPELL sin definir). La lógica pura (spellscan) se compila siempre; el
-# motor y su integración se guardan tras HAVE_HUNSPELL. En Debian/Ubuntu:
-#   sudo apt-get install libhunspell-dev
+# motor y su integración se guardan tras HAVE_HUNSPELL.
+#
+# Por defecto se enlaza ESTÁTICO (SPELL_CHECK_STATIC): el motor viaja DENTRO del
+# ejecutable, así el paquete descargable no depende de ninguna .so/.dll/.dylib de
+# Hunspell. Esto es clave en Windows/macOS, donde windeployqt/macdeployqt solo
+# empaquetan Qt (no las bibliotecas de terceros): al ir estático, no hay nada de
+# Hunspell que desplegar. Solo quedan los diccionarios (ver dictionaries/).
+#
+# Cómo obtener Hunspell (con su biblioteca estática) por plataforma:
+#   - Debian/Ubuntu: sudo apt-get install libhunspell-dev   (trae .a y .so)
+#   - macOS (Homebrew): brew install hunspell                (trae .a)
+#   - Windows (vcpkg):  vcpkg install hunspell:x64-windows-static
+#     y configurar con -DCMAKE_TOOLCHAIN_FILE=<vcpkg>/scripts/buildsystems/vcpkg.cmake
 option(SPELL_CHECK "Corrector ortográfico (requiere Hunspell)" ON)
+option(SPELL_CHECK_STATIC "Enlazar Hunspell estáticamente (binario autocontenido)" ON)
 if(SPELL_CHECK)
     find_package(PkgConfig QUIET)
     if(PkgConfig_FOUND)
@@ -140,11 +152,39 @@ if(SPELL_CHECK)
     if(HUNSPELL_FOUND)
         target_compile_definitions(md-editor-core PUBLIC HAVE_HUNSPELL)
         target_include_directories(md-editor-core PUBLIC ${HUNSPELL_INCLUDE_DIRS})
-        target_link_libraries(md-editor-core PUBLIC ${HUNSPELL_LIBRARIES})
-        message(STATUS "Corrector ortográfico: Hunspell ${HUNSPELL_VERSION} encontrado")
+
+        set(_hunspell_link ${HUNSPELL_LIBRARIES})  # dinámico por defecto del pkg
+        if(SPELL_CHECK_STATIC)
+            # Busca el archivo estático (.a/.lib) forzando el sufijo, porque
+            # find_library prefiere la compartida si están las dos.
+            set(_saved_suffixes ${CMAKE_FIND_LIBRARY_SUFFIXES})
+            if(WIN32)
+                set(CMAKE_FIND_LIBRARY_SUFFIXES .lib .a)
+            else()
+                set(CMAKE_FIND_LIBRARY_SUFFIXES .a)
+            endif()
+            find_library(HUNSPELL_STATIC_LIB
+                NAMES ${HUNSPELL_LIBRARIES} hunspell-1.7 hunspell libhunspell
+                HINTS ${HUNSPELL_STATIC_LIBRARY_DIRS} ${HUNSPELL_LIBRARY_DIRS})
+            set(CMAKE_FIND_LIBRARY_SUFFIXES ${_saved_suffixes})
+            if(HUNSPELL_STATIC_LIB)
+                set(_hunspell_link ${HUNSPELL_STATIC_LIB})
+                message(STATUS "Corrector ortográfico: Hunspell ${HUNSPELL_VERSION} "
+                               "(estático: ${HUNSPELL_STATIC_LIB})")
+            else()
+                message(WARNING "Corrector ortográfico: no se encontró la biblioteca "
+                                "ESTÁTICA de Hunspell; se enlaza dinámica (el paquete "
+                                "necesitará libhunspell en destino). Usa "
+                                "-DSPELL_CHECK_STATIC=OFF para silenciar este aviso.")
+            endif()
+        endif()
+        if(NOT SPELL_CHECK_STATIC OR NOT HUNSPELL_STATIC_LIB)
+            message(STATUS "Corrector ortográfico: Hunspell ${HUNSPELL_VERSION} (dinámico)")
+        endif()
+        target_link_libraries(md-editor-core PUBLIC ${_hunspell_link})
     else()
         message(STATUS "Corrector ortográfico: Hunspell no encontrado, se omite "
-                       "(instala libhunspell-dev para activarlo)")
+                       "(instala libhunspell-dev / brew / vcpkg para activarlo)")
     endif()
 endif()
 

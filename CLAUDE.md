@@ -27,6 +27,11 @@ Sin `qt6-base-private-dev`, CMake falla en la configuración con «Imported targ
 "Qt6::GuiPrivate" includes non-existent path .../QtGui/<versión>» (el target existe
 pero apunta a cabeceras que no están instaladas).
 
+**Opcional:** el corrector ortográfico necesita **Hunspell** (`sudo apt-get
+install libhunspell-dev`); sin él, el resto compila igual y el corrector queda
+inactivo. Se enlaza estático por defecto (ver «Empaquetado»). Los diccionarios en
+Linux son del sistema (`hunspell-es`, `hunspell-en-us`…).
+
 ```bash
 # Compilar (configura + build en build/)
 cmake -S . -B build && cmake --build build
@@ -385,6 +390,16 @@ Qt (`qt_generate_deploy_app_script` → windeployqt/macdeployqt) solo en Win/mac
 **iconos de SO**: `src/icons/md-editor.ico` (Windows, vía recurso `md-editor.rc`) y
 `md-editor.icns` (macOS, copiado al bundle + `MACOSX_BUNDLE_ICON_FILE`). El icono de
 ventana en runtime ya lo fija `main.cpp` con `app.setWindowIcon`.
+
+**Corrector: motor estático.** Hunspell se enlaza **estático** por defecto
+(`SPELL_CHECK_STATIC`, busca el `.a`/`.lib` forzando el sufijo): el motor viaja
+DENTRO del ejecutable, así que el paquete no depende de ninguna `.so/.dll/.dylib`
+de Hunspell (`ldd` no lo muestra). Esto es lo que cierra el empaquetado en
+Windows/macOS, donde `windeployqt`/`macdeployqt` solo despliegan Qt: al ir
+estático **no hay biblioteca de terceros que desplegar**. Para esas builds se
+necesita un Hunspell con su `.a`/`.lib` estático: Homebrew (`brew install
+hunspell`) o vcpkg (`hunspell:x64-windows-static`). Con `-DSPELL_CHECK_STATIC=OFF`
+vuelve al enlace dinámico.
 
 **Diccionarios del corrector.** Linux usa los del sistema (`/usr/share/hunspell`);
 Windows/macOS no tienen, así que se empaquetan. La carpeta `dictionaries/` (con su

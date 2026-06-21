@@ -54,9 +54,12 @@ proyecto es sólido (~9k LOC, 23 ficheros de test, arquitectura por controllers,
    `AppSettings::spellCheck`): al desactivar, descarga el diccionario (sin huella
    de memoria) y limpia el subrayado. **Ver → Idioma de corrección** permite fijar
    un idioma o dejarlo en automático (`AppSettings::spellLanguage`). Y el
-   **empaquetado** para Windows/Mac está resuelto: `dictionaries/` (con su README y
-   el script `scripts/bundle-dictionaries.sh`) se instala junto a la app donde
-   `searchPaths` la busca. Fase 1 (y sus opcionales) completa.
+   **empaquetado** para Windows/Mac está resuelto: Hunspell se enlaza **estático**
+   (`SPELL_CHECK_STATIC`, el motor va dentro del binario — `ldd` no muestra
+   dependencia), así no hay que desplegar ninguna biblioteca; y los `dictionaries/`
+   (con README y `scripts/bundle-dictionaries.sh`) se instalan junto a la app donde
+   `searchPaths` los busca. Resultado: paquete autocontenido. Fase 1 (y sus
+   opcionales) completa.
 
    **Análisis (multiplataforma y dependencias).** Qt6 no trae corrector
    (`QSpellChecker` no existe), hay que aportar el motor. La opción que mantiene
