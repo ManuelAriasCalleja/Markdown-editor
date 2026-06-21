@@ -163,10 +163,12 @@ Sin dependencias nuevas y con el patrón habitual (función pura + `tst_`).
   fuente del documento) y `cloneForExport` lo expande a runs inline para que
   HTML/ODF/PDF/DOCX se exporten igual que antes. **2ª tanda:** añadidos `\sqrt`
   con vínculo (e índice `\sqrt[n]`) y matrices (`pmatrix`/`bmatrix`/…) con
-  delimitadores dibujados. El centrado vertical de las 2D inline **no es viable**
-  con `QTextObjectInterface` (Qt ancla el objeto por su base al baseline y no
-  expone ascenso/descenso); queda como limitación. Posible 3ª tanda: `\binom`,
-  `\begin{cases}`, y acentos (`\hat`/`\vec`/`\bar`) en 2D.
+  delimitadores dibujados. **3ª tanda:** `\binom` apilado, `\begin{cases}` (llave
+  izquierda + celdas alineadas), acentos (`\hat`/`\bar`/`\vec`/`\tilde`/`\dot`/…
+  por caracteres combinantes Unicode, también inline) y `\text{…}`/`\mathrm{…}`.
+  El centrado vertical de las 2D inline **no es viable** con `QTextObjectInterface`
+  (Qt ancla el objeto por su base al baseline y no expone ascenso/descenso); queda
+  como limitación.
 - ✅ **Export a EPUB** — *Hecho:* `mdexport::writeEpub` empaqueta un EPUB 3
   (mimetype + OPF + nav.xhtml + toc.ncx + XHTML) con el QZip privado, reutilizando
   el HTML de Qt saneado a XHTML (`htmlBodyToXhtml`) e incrustando las imágenes como

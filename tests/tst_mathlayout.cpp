@@ -25,6 +25,7 @@ private:
 private slots:
     void needsTwoDDetectsFracAndLimitedBigOps();
     void needsTwoDDetectsSqrtAndMatrix();
+    void needsTwoDBinomYesAccentsNo();
     void needsTwoDIgnoresPlainAndBareBigOps();
     void fracIsTallerThanInline();
     void bigOpLimitsAddHeight();
@@ -49,6 +50,19 @@ void TestMathLayout::needsTwoDDetectsSqrtAndMatrix()
     QVERIFY(mdmath::needsTwoDLayout(QStringLiteral("\\sqrt[3]{x}")));
     QVERIFY(mdmath::needsTwoDLayout(
         QStringLiteral("\\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}")));
+}
+
+void TestMathLayout::needsTwoDBinomYesAccentsNo()
+{
+    // \binom se apila → 2D; los acentos se resuelven con combinantes inline → no.
+    QVERIFY(mdmath::needsTwoDLayout(QStringLiteral("\\binom{n}{k}")));
+    QVERIFY(mdmath::needsTwoDLayout(
+        QStringLiteral("\\begin{cases} a & x>0 \\\\ b & x<0 \\end{cases}")));
+    QVERIFY(!mdmath::needsTwoDLayout(QStringLiteral("\\hat{x} + \\vec{v} + \\bar{y}")));
+    // El binomio es más alto que su contenido en línea (se apila en 2D).
+    const QFont f = baseFont();
+    QVERIFY(mdmath::measureFormula(QStringLiteral("\\binom{n}{k}"), f).height()
+            > mdmath::measureFormula(QStringLiteral("nk"), f).height());
 }
 
 void TestMathLayout::needsTwoDIgnoresPlainAndBareBigOps()
@@ -109,6 +123,9 @@ void TestMathLayout::measurePositiveForVariety()
         QStringLiteral("x = \\frac{-b \\pm \\sqrt{b^2-4ac}}{2a}"),  // raíz en fracción
         QStringLiteral("\\sqrt[3]{\\frac{a}{b}}"),                   // raíz con índice
         QStringLiteral("\\begin{bmatrix} 1 & 0 \\\\ 0 & 1 \\end{bmatrix}"),
+        QStringLiteral("\\binom{n}{k}"),                             // binomio
+        QStringLiteral("\\begin{cases} x^2 & x>0 \\\\ -x & x\\leq 0 \\end{cases}"),
+        QStringLiteral("\\frac{\\hat{y}}{\\bar{x}}"),                // acentos en 2D
     };
     for (const QString &tex : cases) {
         const QSizeF s = mdmath::measureFormula(tex, f);

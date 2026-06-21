@@ -273,14 +273,20 @@ solo incluyen `mathblocks.h`. Piezas clave:
   `restoreMathFromSentinels`. Resultado: los `\sum`, `\frac`, `_`, `*` del TeX
   sobreviven íntegros al round-trip. `unprotectMath` sigue existiendo pero no se usa
   en producción (queda como inversa explícita de `protectMath` para los tests).
-- *Maquetación 2D (Nivel 2).* Las fórmulas con `\frac`, `\sqrt`, una matriz
-  (`\begin{matrix}`/`pmatrix`/`bmatrix`…) o un gran operador (`\sum`/`\int`/
-  `\prod`…) con límites se pintan en 2D real (fracciones apiladas con barra,
-  límites encima/debajo, radical con vínculo, rejillas con delimitadores) en vez
-  de aplanarse a runs. El motor puro es `mdmath` en `mathlayout.{h,cpp}`: parsea
-  el TeX a un árbol de cajas (`HList`/`Glyph`/`Frac`/`Script`/`BigOp`/`Sqrt`/
-  `Matrix`) y lo mide/pinta (`needsTwoDLayout`/`measureFormula`/`paintFormula`,
-  reutilizando la tabla de glifos de texparser, `commandToUnicode`). Una de esas fórmulas vive en
+- *Maquetación 2D (Nivel 2).* Las fórmulas con `\frac`, `\sqrt`, `\binom`, una
+  matriz (`\begin{matrix}`/`pmatrix`/`bmatrix`/`cases`…) o un gran operador
+  (`\sum`/`\int`/`\prod`…) con límites se pintan en 2D real (fracciones y binomios
+  apilados, límites encima/debajo, radical con vínculo, rejillas con
+  delimitadores) en vez de aplanarse a runs. El motor puro es `mdmath` en
+  `mathlayout.{h,cpp}`: parsea el TeX a un árbol de cajas (`HList`/`Glyph`/`Frac`/
+  `Script`/`BigOp`/`Sqrt`/`Matrix`/`Binom`) y lo mide/pinta (`needsTwoDLayout`/
+  `measureFormula`/`paintFormula`, reutilizando la tabla de glifos de texparser,
+  `commandToUnicode`). Los **acentos** (`\hat`/`\bar`/`\vec`/`\tilde`/`\dot`/
+  `\ddot`…) NO fuerzan 2D: se resuelven con caracteres combinantes Unicode
+  (`accentCombiningChar`, p. ej. `x̂`) tanto en los runs inline como en el 2D, así
+  que `$\hat{x}$` se queda en línea y exporta solo. `\text{…}`/`\mathrm{…}` emiten
+  su argumento literal; `\binom` inline (y en export) se aproxima como `C(n, k)`
+  (en LaTeX se emite nativo). Una de esas fórmulas vive en
   el documento como **un carácter** `ObjectReplacementCharacter` con
   `setObjectType(MathObjectType)` + las propiedades de math; lo dibuja el
   `QTextObjectInterface` `MathObject` (`mathobject.{h,cpp}`), que lo mide con la
@@ -314,9 +320,10 @@ solo incluyen `mathblocks.h`. Piezas clave:
   líneas (regla habitual). Lo verifican `findFindsMultilineBlockMath` y
   `roundTripPreservesMultilineMath` (+ casos límite: contenido en las líneas
   delimitadoras, descarte si no cierra, ignorado dentro de un fence).
-- *Limitaciones.* El motor 2D cubre fracciones, raíces, grandes operadores con
-  límites y matrices; lo no soportado (p. ej. `\binom`, `\begin{cases}`) se
-  aproxima inline y puede verse pobre. El alineado vertical de las fórmulas 2D
+- *Limitaciones.* El motor 2D cubre fracciones, raíces, binomios, matrices,
+  `cases`, acentos y grandes operadores con límites; lo no soportado (entornos
+  raros, `\overbrace`, layout de límites de integral propios…) se aproxima inline
+  y puede verse pobre. El alineado vertical de las fórmulas 2D
   **inline** queda alto: el `QTextObjectInterface` de Qt ancla el objeto por su
   borde inferior al baseline y su API (`intrinsicSize` da un `QSizeF`, sin
   separar ascenso/descenso) no permite descender bajo el baseline, así que no se

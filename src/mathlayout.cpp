@@ -72,14 +72,16 @@ enum Delim { DelimNone = 0, DelimParen, DelimBracket, DelimBrace, DelimBar };
 // La geometría (w/asc/dsc) la rellena `measure`. `asc`/`dsc` se miden desde el
 // baseline (arriba/abajo); height = asc + dsc; `w` es el avance horizontal.
 struct Box {
-    enum Kind { HList, Glyph, Frac, Script, BigOp, Sqrt, Matrix };
+    enum Kind { HList, Glyph, Frac, Script, BigOp, Sqrt, Matrix, Binom };
     Kind kind = HList;
     QString text;
     QFont font;
     QList<Box> kids;
     bool hasSup = false, hasSub = false, hasOver = false, hasUnder = false;
     bool hasIndex = false;            // Sqrt
-    int rows = 0, cols = 0, delim = DelimNone;  // Matrix
+    int rows = 0, cols = 0, delim = DelimNone;  // Matrix / Binom
+    bool leftAlign = false;           // Matrix: celdas a la izquierda (cases)
+    bool braceLeftOnly = false;       // Matrix: solo delimitador izquierdo (cases)
     qreal w = 0, asc = 0, dsc = 0;
     qreal height() const { return asc + dsc; }
 };
@@ -267,7 +269,14 @@ Box makeMatrix(const QString &tex, int after, int &i, const QFont &font)
     Box b;
     b.kind = Box::Matrix;
     b.font = font;
-    b.delim = matrixDelim(env);
+    if (env == QLatin1String("cases")) {
+        // Sistema de ecuaciones: llave izquierda y celdas alineadas a la izquierda.
+        b.delim = DelimBrace;
+        b.braceLeftOnly = true;
+        b.leftAlign = true;
+    } else {
+        b.delim = matrixDelim(env);
+    }
     QList<QList<Box>> grid;
     int cols = 0;
     for (const QString &rowStr : body.split(QStringLiteral("\\\\"))) {
@@ -356,6 +365,29 @@ Box buildHList(const QString &tex, const QFont &font)
                     atom = makeSqrt(tex, after, i, font);
                 } else if (cmd == QLatin1String("begin")) {
                     atom = makeMatrix(tex, after, i, font);
+                } else if (cmd == QLatin1String("binom") && after < n && tex.at(after) == QLatin1Char('{')) {
+                    i = after;
+                    const QString a = readGroup(tex, i);
+                    while (i < n && tex.at(i) == QLatin1Char(' ')) ++i;
+                    QString bb;
+                    if (i < n && tex.at(i) == QLatin1Char('{')) bb = readGroup(tex, i);
+                    atom.kind = Box::Binom;
+                    atom.font = font;
+                    atom.kids = { buildHList(a, font), buildHList(bb, font) };
+                } else if (!accentCombiningChar(cmd).isNull() && after < n
+                           && tex.at(after) == QLatin1Char('{')) {
+                    // Acento: aplana el argumento y le añade el carácter combinante.
+                    i = after;
+                    const QString arg = readGroup(tex, i);
+                    atom = glyph(texToUnicode(arg) + QString(accentCombiningChar(cmd)), font);
+                } else if ((cmd == QLatin1String("text") || cmd == QLatin1String("mathrm")
+                            || cmd == QLatin1String("mathbf") || cmd == QLatin1String("mathit")
+                            || cmd == QLatin1String("mathsf") || cmd == QLatin1String("mathtt")
+                            || cmd == QLatin1String("operatorname"))
+                           && after < n && tex.at(after) == QLatin1Char('{')) {
+                    // Texto literal (redonda); el argumento no se parsea como math.
+                    i = after;
+                    atom = glyph(readGroup(tex, i), font);
                 } else {
                     // \mathbb{R} y similares: el comando con su grupo puede estar
                     // en la tabla como un único glifo.
@@ -489,10 +521,24 @@ void measure(Box &b)
         for (int r = 0; r < b.rows; ++r) totalH += rowAsc[r] + rowDsc[r];
         totalH += matrixRowGap(b.font) * std::max(0, b.rows - 1);
         const qreal dW = (b.delim != DelimNone) ? (delimWidth(b.font) + delimPad(b.font)) : 0;
-        b.w = totalW + 2 * dW;
+        const int sides = b.braceLeftOnly ? 1 : 2;  // cases: solo la llave izquierda
+        b.w = totalW + sides * dW;
         const qreal axis = axisHeight(b.font);
         b.asc = totalH / 2 + axis;
         b.dsc = std::max(0.0, totalH / 2 - axis);
+        break;
+    }
+    case Box::Binom: {
+        Box &top = b.kids[0];
+        Box &bot = b.kids[1];
+        measure(top);
+        measure(bot);
+        const qreal axis = axisHeight(b.font);
+        const qreal gap = fracGap(b.font);
+        const qreal dW = delimWidth(b.font) + delimPad(b.font);
+        b.asc = top.height() + gap + axis;
+        b.dsc = std::max(0.0, bot.height() + gap - axis);
+        b.w = std::max(top.w, bot.w) + 2 * dW;
         break;
     }
     }
@@ -521,7 +567,19 @@ void paintDelim(QPainter *p, int delim, bool left, qreal x, qreal top, qreal h, 
         p->drawPath(path);
     } else if (delim == DelimBar) {
         p->drawLine(QPointF(x + w / 2, top), QPointF(x + w / 2, bottom));
-    } else {  // corchete y llave (aproximada): tres tramos en U
+    } else if (delim == DelimBrace) {
+        // Llave curva con cúspide hacia afuera en el centro.
+        const qreal cx = x + w * 0.5;
+        const qreal cusp = left ? x : x + w;
+        const qreal arm = left ? x + w : x;
+        QPainterPath path;
+        path.moveTo(arm, top);
+        path.quadTo(cx, top, cx, top + h * 0.25);
+        path.quadTo(cx, mid, cusp, mid);
+        path.quadTo(cx, mid, cx, top + h * 0.75);
+        path.quadTo(cx, bottom, arm, bottom);
+        p->drawPath(path);
+    } else {  // corchete: tres tramos en U
         QPolygonF poly = left
             ? QPolygonF({QPointF(x + w, top), QPointF(x, top), QPointF(x, bottom), QPointF(x + w, bottom)})
             : QPolygonF({QPointF(x, top), QPointF(x + w, top), QPointF(x + w, bottom), QPointF(x, bottom)});
@@ -627,18 +685,33 @@ void paint(const Box &b, QPainter *p, qreal x, qreal baseline)
         const qreal dW = (b.delim != DelimNone) ? (delimWidth(b.font) + delimPad(b.font)) : 0;
         if (b.delim != DelimNone) {
             paintDelim(p, b.delim, true, x, gridTop, totalH, b.font);
-            paintDelim(p, b.delim, false, x + b.w - delimWidth(b.font), gridTop, totalH, b.font);
+            if (!b.braceLeftOnly)  // cases: solo la llave izquierda
+                paintDelim(p, b.delim, false, x + b.w - delimWidth(b.font), gridTop, totalH, b.font);
         }
         qreal cx = x + dW;
         for (int cc = 0; cc < b.cols; ++cc) {
             qreal cy = gridTop;
             for (int r = 0; r < b.rows; ++r) {
                 const Box &cell = b.kids[r * b.cols + cc];
-                paint(cell, p, cx + (colW[cc] - cell.w) / 2, cy + rowAsc[r]);
+                // cases alinea a la izquierda; las matrices centran en la columna.
+                const qreal cellX = b.leftAlign ? cx : cx + (colW[cc] - cell.w) / 2;
+                paint(cell, p, cellX, cy + rowAsc[r]);
                 cy += rowAsc[r] + rowDsc[r] + matrixRowGap(b.font);
             }
             cx += colW[cc] + matrixColGap(b.font);
         }
+        break;
+    }
+    case Box::Binom: {
+        const Box &top = b.kids[0];
+        const Box &bot = b.kids[1];
+        const qreal axis = axisHeight(b.font);
+        const qreal gap = fracGap(b.font);
+        const qreal centerY = baseline - axis;
+        paint(top, p, x + (b.w - top.w) / 2, centerY - gap - top.dsc);
+        paint(bot, p, x + (b.w - bot.w) / 2, centerY + gap + bot.asc);
+        paintDelim(p, DelimParen, true, x, baseline - b.asc, b.height(), b.font);
+        paintDelim(p, DelimParen, false, x + b.w - delimWidth(b.font), baseline - b.asc, b.height(), b.font);
         break;
     }
     }
@@ -660,7 +733,7 @@ bool needsTwoDLayout(const QString &tex)
         if (!tex.at(i).isLetter()) { ++i; continue; }
         const QString cmd = readCommand(tex, i);
         if (cmd == QLatin1String("frac") || cmd == QLatin1String("sqrt")
-            || cmd == QLatin1String("begin"))
+            || cmd == QLatin1String("begin") || cmd == QLatin1String("binom"))
             return true;
         if (isBigOp(cmd)) {
             int after = i;

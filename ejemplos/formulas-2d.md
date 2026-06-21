@@ -87,7 +87,23 @@ Un sistema con vector columna:
 
 $$\begin{pmatrix} 2 & 1 \\ 1 & 3 \end{pmatrix} \begin{pmatrix} x \\ y \end{pmatrix} = \begin{pmatrix} 5 \\ 6 \end{pmatrix}$$
 
-## 6. Fórmula `$$` multilínea en la fuente
+## 6. Binomios, sistemas (`cases`) y acentos
+
+Coeficiente binomial (apilado entre paréntesis, sin barra):
+
+$$\binom{n}{k} = \frac{n!}{k!\,(n-k)!}$$
+
+Definición a trozos con `\begin{cases}` (llave izquierda, condiciones con `\text`):
+
+$$|x| = \begin{cases} x & \text{si } x \geq 0 \\ -x & \text{si } x < 0 \end{cases}$$
+
+Acentos en línea: vector $\vec{v}$, media $\bar{x}$, estimador $\hat{\beta}$,
+derivada temporal $\dot{x}$, segunda derivada $\ddot{x}$ y tilde $\tilde{n}$. Y
+dentro de una fracción 2D:
+
+$$\sigma^2 = \frac{\sum_{i=1}^n (x_i - \bar{x})^2}{n}$$
+
+## 7. Fórmula `$$` multilínea en la fuente
 
 Esto se escribe en varias líneas en el Markdown y debe cargarse como **una**
 sola fórmula 2D:
@@ -98,7 +114,7 @@ $$
 \frac{i \hbar}{2m} \nabla^2 \Psi
 $$
 
-## 7. Lo que sigue en línea (NO necesita 2D)
+## 8. Lo que sigue en línea (NO necesita 2D)
 
 Estas se componen como antes (super/subíndice de Qt, sin apilar):
 
@@ -107,7 +123,7 @@ Estas se componen como antes (super/subíndice de Qt, sin apilar):
 - Conjuntos: $x \in \mathbb{R}$, $A \subseteq B \cup C$.
 - Un sumatorio **sin** límites tampoco se apila: $\sum a_i$.
 
-## 8. Comprobación de round-trip y export
+## 9. Comprobación de round-trip y export
 
 Guarda el archivo (Ctrl+S) y vuelve a abrirlo: todas las fórmulas deben
 sobrevivir intactas. Exporta a HTML/PDF/ODT/DOCX (*Archivo → Exportar*): las 2D

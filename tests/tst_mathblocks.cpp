@@ -31,6 +31,7 @@ private slots:
     void texToUnicodeScripts();
     void texToUnicodeFrac();
     void texToUnicodeFunctionsAndSpacing();
+    void texToUnicodeAccentsBinomText();
     void replaceMathReplacesDollars();
     void renderConvertsInlineCodeToFormattedFragments();
     void renderIsIdempotent();
@@ -153,6 +154,20 @@ void TestMathBlocks::texToUnicodeFunctionsAndSpacing()
     QCOMPARE(mdmath::texToUnicode(QStringLiteral("a\\,b")),
              QStringLiteral("a") + QChar(0x2009) + QStringLiteral("b"));
     QCOMPARE(mdmath::texToUnicode(QStringLiteral("a\\!b")), QStringLiteral("ab"));
+}
+
+void TestMathBlocks::texToUnicodeAccentsBinomText()
+{
+    // Acento: base + carácter combinante (x̂ = x + U+0302).
+    QCOMPARE(mdmath::texToUnicode(QStringLiteral("\\hat{x}")),
+             QStringLiteral("x") + QChar(0x0302));
+    QCOMPARE(mdmath::texToUnicode(QStringLiteral("\\bar{y}")),
+             QStringLiteral("y") + QChar(0x0304));
+    // \binom inline → C(n, k); \text → literal.
+    QCOMPARE(mdmath::texToUnicode(QStringLiteral("\\binom{n}{k}")),
+             QStringLiteral("C(n, k)"));
+    QCOMPARE(mdmath::texToUnicode(QStringLiteral("\\text{si } x")),
+             QStringLiteral("si  x"));
 }
 
 void TestMathBlocks::texToUnicodeFrac()

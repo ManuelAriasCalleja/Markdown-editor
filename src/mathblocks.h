@@ -84,6 +84,12 @@ constexpr int MathObjectType = QTextFormat::UserObject + 1;
 // la tabla de glifos (griego, operadores) sin duplicarla.
 QString commandToUnicode(const QString &cmd);
 
+// Carácter Unicode combinante del acento `cmd` (`hat`→◌̂, `bar`→◌̄, `vec`→◌⃗,
+// `tilde`/`dot`/`ddot`/`acute`/`grave`/`check`/`breve`), o QChar nulo si no es
+// un acento. Se pone DETRÁS del carácter base para que se superponga. Compartido
+// por el render inline (texparser) y el 2D (mathlayout).
+QChar accentCombiningChar(const QString &cmd);
+
 // Char-format del carácter ObjectReplacementCharacter de una fórmula 2D: las
 // tres propiedades de math + objectType = MathObjectType.
 QTextCharFormat mathObjectFormat(const QString &tex, bool block);

@@ -316,6 +316,20 @@ QString commandToUnicode(const QString &cmd)
     return QLatin1Char('\\') + cmd;
 }
 
+QChar accentCombiningChar(const QString &cmd)
+{
+    static const QHash<QString, QChar> m = {
+        {QStringLiteral("hat"),       QChar(0x0302)}, {QStringLiteral("widehat"),   QChar(0x0302)},
+        {QStringLiteral("bar"),       QChar(0x0304)}, {QStringLiteral("overline"),  QChar(0x0304)},
+        {QStringLiteral("tilde"),     QChar(0x0303)}, {QStringLiteral("widetilde"), QChar(0x0303)},
+        {QStringLiteral("vec"),       QChar(0x20D7)},
+        {QStringLiteral("dot"),       QChar(0x0307)}, {QStringLiteral("ddot"),      QChar(0x0308)},
+        {QStringLiteral("acute"),     QChar(0x0301)}, {QStringLiteral("grave"),     QChar(0x0300)},
+        {QStringLiteral("check"),     QChar(0x030C)}, {QStringLiteral("breve"),     QChar(0x0306)},
+    };
+    return m.value(cmd, QChar());
+}
+
 // Vuelca el texto acumulado en `buffer` (si lo hay) como un run con `baseFmt` y lo
 // limpia. Sub-paso común de los parsers de renderTexAsRuns.
 static void flushBuffer(QList<MathRun> &runs, QString &buffer, const QTextCharFormat &baseFmt)
@@ -452,6 +466,39 @@ QList<MathRun> renderTexAsRuns(const QString &tex, const QTextCharFormat &baseFm
 
             if (cmd == QLatin1String("sqrt")) {
                 i = parseSqrt(tex, i, after, baseFmt, runs, buffer);
+                continue;
+            }
+
+            // Acento: base + carácter combinante (x̂). Aplana el argumento.
+            const QChar accent = accentCombiningChar(cmd);
+            if (!accent.isNull() && after < n && tex.at(after) == QLatin1Char('{')) {
+                i = after;
+                buffer += texToUnicode(readGroup(tex, i)) + accent;
+                continue;
+            }
+
+            // \binom{n}{k}: inline no se puede apilar, así que se aproxima como
+            // C(n, k) (el 2D sí lo apila; LaTeX emite \binom nativo).
+            if (cmd == QLatin1String("binom") && after < n && tex.at(after) == QLatin1Char('{')) {
+                i = after;
+                const QString a = readGroup(tex, i);
+                while (i < n && tex.at(i) == QLatin1Char(' ')) ++i;
+                QString b;
+                if (i < n && tex.at(i) == QLatin1Char('{')) b = readGroup(tex, i);
+                buffer += QStringLiteral("C(") + texToUnicode(a) + QStringLiteral(", ")
+                          + texToUnicode(b) + QLatin1Char(')');
+                continue;
+            }
+
+            // \text{...} y familia de fuentes: el argumento se emite literal
+            // (texto en redonda). \mathbb{X} cae más abajo (tabla de glifos).
+            if ((cmd == QLatin1String("text") || cmd == QLatin1String("mathrm")
+                 || cmd == QLatin1String("mathbf") || cmd == QLatin1String("mathit")
+                 || cmd == QLatin1String("mathsf") || cmd == QLatin1String("mathtt")
+                 || cmd == QLatin1String("operatorname"))
+                && after < n && tex.at(after) == QLatin1Char('{')) {
+                i = after;
+                buffer += readGroup(tex, i);
                 continue;
             }
 
