@@ -66,6 +66,11 @@ void setSplitterState(const QByteArray &state);
 QStringList recentFiles();
 void setRecentFiles(const QStringList &files);
 
+// Diccionario personal del corrector ortográfico: palabras que el usuario marcó
+// como correctas («añadir al diccionario»), compartidas entre idiomas.
+QStringList personalDictionary();
+void setPersonalDictionary(const QStringList &words);
+
 // Último documento abierto: ruta del archivo activo al cerrar, para reabrirlo
 // al arrancar (vacío = no había archivo, se arranca en blanco).
 QString lastFile();

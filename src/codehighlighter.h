@@ -11,6 +11,8 @@
 #include <QSyntaxHighlighter>
 #include <QTextCharFormat>
 
+class SpellChecker;
+
 // Resaltador de sintaxis que actúa sobre dos cosas del documento:
 //   1) Bloques de código (los que tienen la propiedad QTextFormat::BlockCodeFence).
 //   2) Fragmentos de fórmula (los marcados con mdmath::IsMathProperty), a los
@@ -34,6 +36,11 @@ public:
     // resaltar.
     void setSyntaxColors(const mdtheme::SyntaxColors &colors);
 
+    // Motor de corrección ortográfica (propiedad del llamador). Si es nullptr o
+    // no tiene diccionario cargado, no se subraya nada. Tras cambiarlo (o cambiar
+    // de idioma/diccionario), el llamador debe llamar a `rehighlight()`.
+    void setSpellChecker(SpellChecker *checker);
+
 protected:
     void highlightBlock(const QString &text) override;
 
@@ -50,13 +57,18 @@ private:
     // Aplica el color matemático a las posiciones del bloque ocupadas por
     // fragmentos con IsMathProperty.
     void highlightMathFragments();
+    // Subraya las palabras mal escritas del bloque (solo en prosa), saltando
+    // fragmentos de código en línea, fórmulas y enlaces.
+    void highlightSpelling();
 
     QColor m_keywordColor;
     QColor m_stringColor;
     QColor m_commentColor;
     QColor m_numberColor;
     QColor m_mathColor;
+    QColor m_misspellColor{0xd0, 0x30, 0x30};  // rojo del subrayado ortográfico
 
+    SpellChecker *m_spell = nullptr;
     QHash<QString, QList<Rule>> m_cache;  // reglas compiladas por lenguaje
 };
 

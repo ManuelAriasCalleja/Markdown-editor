@@ -16,6 +16,7 @@ inline QString geometryKey()    { return QStringLiteral("geometry"); }
 inline QString windowStateKey() { return QStringLiteral("windowState"); }
 inline QString splitterStateKey() { return QStringLiteral("splitterState"); }
 inline QString recentFilesKey() { return QStringLiteral("recentFiles"); }
+inline QString personalDictionaryKey() { return QStringLiteral("personalDictionary"); }
 inline QString languageKey()    { return QStringLiteral("language"); }
 inline QString lastFileKey()    { return QStringLiteral("lastFile"); }
 } // namespace
@@ -155,6 +156,16 @@ QStringList AppSettings::recentFiles()
 void AppSettings::setRecentFiles(const QStringList &files)
 {
     QSettings().setValue(recentFilesKey(), files);
+}
+
+QStringList AppSettings::personalDictionary()
+{
+    return QSettings().value(personalDictionaryKey()).toStringList();
+}
+
+void AppSettings::setPersonalDictionary(const QStringList &words)
+{
+    QSettings().setValue(personalDictionaryKey(), words);
 }
 
 QString AppSettings::lastFile()

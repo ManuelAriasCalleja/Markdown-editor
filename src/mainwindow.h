@@ -8,6 +8,7 @@
 #include <QPalette>
 #include <QString>
 
+#include "spellchecker.h"
 #include "themespec.h"
 
 class QTextEdit;
@@ -197,6 +198,12 @@ private:
     // round-trip ni al estado «modificado».
     void styleTables();
 
+    // Carga en el corrector el diccionario del idioma del documento (front matter
+    // `lang`/`language` › ajuste de la app › locale del sistema), repuebla la
+    // lista personal y vuelve a resaltar. Sin diccionario para ese idioma, el
+    // corrector queda inactivo (no subraya nada).
+    void applySpellLanguage();
+
     // Editor actualmente visible (WYSIWYG o fuente); delega en m_split.
     QTextEdit *activeEditor() const;
     // Reemplaza el cuerpo del documento WYSIWYG por el Markdown dado y deja el
@@ -209,6 +216,7 @@ private:
     FocusEditor *m_editor = nullptr;
     HelpDialog *m_helpDialog = nullptr;  // se crea perezoso al pulsar F1
     CodeBlockHighlighter *m_highlighter = nullptr;
+    SpellChecker m_spell;  // motor de corrección; lo consume el highlighter
     qreal m_baseFontPointSize = 0;  // tamaño de fuente base, para "Tamaño normal"
     // Tamaños base de las superficies que siguen al zoom y el desfase (en
     // puntos) que se les aplica para escalar junto con el texto del editor.

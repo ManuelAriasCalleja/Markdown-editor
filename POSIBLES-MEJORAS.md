@@ -41,11 +41,15 @@ proyecto es sólido (~9k LOC, 23 ficheros de test, arquitectura por controllers,
    incluye Hunspell), **siempre se compila** (stub inerte sin el `-dev`), con
    carga perezosa de UN idioma, descubrimiento de diccionarios en rutas estándar
    (`pickDictionary`), codificación según el `.aff`, e ignorar/personal.
-   `tst_spellchecker` (se salta si no hay diccionarios). *Pendiente:* cargar el
-   idioma desde el `lang` del front matter, subrayar en la rama no-código de
-   `CodeBlockHighlighter::highlightBlock` (saltando fragmentos de math/URL), menú
-   contextual (sugerencias + «añadir al diccionario»/«ignorar»), persistir la
-   lista personal en `AppSettings`, y la acción de menú para activarlo/idioma.
+   `tst_spellchecker` (se salta si no hay diccionarios). Ya integrado en el
+   resaltado: `CodeBlockHighlighter::highlightSpelling` subraya las erratas en la
+   rama no-código (saltando código en línea, fórmulas y enlaces) con
+   `SpellCheckUnderline`; `MainWindow::applySpellLanguage` carga el diccionario
+   del idioma del documento (front matter › ajuste › locale) tras cada carga y al
+   arrancar, y la lista personal se persiste en `AppSettings::personalDictionary`.
+   *Pendiente:* menú contextual (clic derecho: sugerencias + «añadir al
+   diccionario»/«ignorar»), y una acción de menú para activar/desactivar y elegir
+   idioma manualmente.
 
    **Análisis (multiplataforma y dependencias).** Qt6 no trae corrector
    (`QSpellChecker` no existe), hay que aportar el motor. La opción que mantiene

@@ -1,6 +1,8 @@
 #include "codehighlighter.h"
 
 #include "mathblocks.h"
+#include "spellchecker.h"
+#include "spellscan.h"
 
 #include <QFont>
 #include <QTextBlock>
@@ -11,6 +13,11 @@ CodeBlockHighlighter::CodeBlockHighlighter(QTextDocument *parent)
 {
     // Colores iniciales del tema claro; el tema real los reajusta al aplicarse.
     setSyntaxColors(mdtheme::specFor(mdtheme::ThemeId::Light).syntax);
+}
+
+void CodeBlockHighlighter::setSpellChecker(SpellChecker *checker)
+{
+    m_spell = checker;
 }
 
 void CodeBlockHighlighter::setSyntaxColors(const mdtheme::SyntaxColors &colors)
@@ -73,6 +80,7 @@ void CodeBlockHighlighter::highlightBlock(const QString &text)
     if (!bf.hasProperty(QTextFormat::BlockCodeFence)) {
         setCurrentBlockState(-1);
         highlightMathFragments();
+        highlightSpelling();
         return;
     }
 
@@ -112,6 +120,34 @@ void CodeBlockHighlighter::highlightMathFragments()
         // setFormat solo merge-a el foreground: la cursiva, vertical-align y
         // demás del fragmento se conservan.
         setFormat(frag.position() - basePos, frag.length(), fmt);
+    }
+}
+
+void CodeBlockHighlighter::highlightSpelling()
+{
+    if (!m_spell || !m_spell->isAvailable())
+        return;  // sin diccionario no se subraya nada (coste cero)
+    const QTextBlock block = currentBlock();
+    const int basePos = block.position();
+    QTextCharFormat underline;
+    underline.setUnderlineStyle(QTextCharFormat::SpellCheckUnderline);
+    underline.setUnderlineColor(m_misspellColor);
+    // Recorremos fragmentos para saltar lo que no es prosa: código en línea
+    // (monoespaciado), fórmulas (IsMathProperty) y enlaces (anchor). El subrayado
+    // es de la capa de presentación: no toca el Markdown.
+    for (auto it = block.begin(); it != block.end(); ++it) {
+        const QTextFragment frag = it.fragment();
+        if (!frag.isValid())
+            continue;
+        const QTextCharFormat cf = frag.charFormat();
+        if (cf.fontFixedPitch() || cf.boolProperty(mdmath::IsMathProperty) || cf.isAnchor())
+            continue;
+        const QString text = frag.text();
+        const int offset = frag.position() - basePos;
+        for (const mdspell::Word &w : mdspell::tokenize(text)) {
+            if (!m_spell->isCorrect(text.mid(w.start, w.length)))
+                setFormat(offset + w.start, w.length, underline);
+        }
     }
 }
 

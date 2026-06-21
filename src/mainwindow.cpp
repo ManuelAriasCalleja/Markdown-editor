@@ -57,6 +57,7 @@
 #include <QFormLayout>
 #include <QKeyEvent>
 #include <QKeySequence>
+#include <QLocale>
 #include <QPainter>
 #include <QPixmap>
 #include <QPointF>
@@ -257,6 +258,7 @@ MainWindow::MainWindow(QWidget *parent)
     m_baseFontPointSize = m_editor->font().pointSizeF();
     // Resaltado de sintaxis de los bloques de código.
     m_highlighter = new CodeBlockHighlighter(m_editor->document());
+    m_highlighter->setSpellChecker(&m_spell);  // subrayado ortográfico
     // Zoom con Ctrl+rueda del ratón y detección de enlaces bajo el cursor.
     m_editor->viewport()->installEventFilter(this);
     m_editor->viewport()->setMouseTracking(true);  // recibir hover sin botón pulsado
@@ -518,8 +520,11 @@ MainWindow::MainWindow(QWidget *parent)
             [this] { m_outline->rebuild(m_editor->document()); });
     // Las tablas cargadas no traen borde; se lo damos para que sean visibles.
     connect(m_documentIo, &DocumentIo::documentLoaded, this, &MainWindow::styleTables);
+    // El idioma del corrector puede cambiar con el front matter del documento.
+    connect(m_documentIo, &DocumentIo::documentLoaded, this, &MainWindow::applySpellLanguage);
 
     m_documentIo->reset();  // documento nuevo (fija el título inicial)
+    applySpellLanguage();   // idioma inicial (ajuste de la app o locale)
 
     // Restaura tamaño/posición y disposición de barras de la sesión anterior.
     const QByteArray geometry = AppSettings::windowGeometry();
@@ -1400,6 +1405,23 @@ void MainWindow::styleTables()
     }
     cursor.endEditBlock();
     doc->setModified(wasModified);
+}
+
+void MainWindow::applySpellLanguage()
+{
+    // Mismo criterio que la exportación: front matter › ajuste de la app › locale.
+    const QString fm = m_documentIo->frontMatter();
+    QString code = mdexport::frontMatterValue(fm, QStringLiteral("lang"));
+    if (code.isEmpty())
+        code = mdexport::frontMatterValue(fm, QStringLiteral("language"));
+    if (code.isEmpty())
+        code = AppSettings::language();
+    if (code.isEmpty())
+        code = QLocale::system().name();  // p. ej. "es_ES"
+
+    m_spell.setPersonalWords(AppSettings::personalDictionary());
+    m_spell.setLanguage(code);
+    m_highlighter->rehighlight();  // re-subraya con el diccionario nuevo
 }
 
 // ---------------------------------------------------------------------------

@@ -235,6 +235,18 @@ añadir lógica nueva: hay un `tst_*` por módulo.
   párrafos, frases, tiempo de lectura) alimenta el contador de la barra de estado
   y el diálogo de estadísticas, sobre el texto plano del editor activo o la
   selección.
+- **Corrección ortográfica (opcional, Hunspell).** Primera dependencia de
+  terceros, **opcional** (`SPELL_CHECK`→`HAVE_HUNSPELL` en CMake): sin
+  `libhunspell-dev` el build sigue verde. Piezas: `spellscan` (`mdspell`, puro:
+  `tokenize` palabras + `pickDictionary`), `SpellChecker` (envuelve Hunspell tras
+  un *pimpl*; **siempre se compila**, stub inerte sin soporte; carga perezosa de
+  un idioma). El subrayado lo hace el **mismo** `CodeBlockHighlighter`
+  (`highlightSpelling`, en la rama no-código, saltando código en línea, fórmulas
+  y enlaces) con `SpellCheckUnderline` — presentación pura, no toca el Markdown.
+  `MainWindow::applySpellLanguage` elige el diccionario por el idioma del
+  documento (front matter › ajuste › locale) en cada `documentLoaded` y al
+  arrancar, y rehace el resaltado; la lista personal vive en
+  `AppSettings::personalDictionary`.
 
 ### Fórmulas TeX (`mdmath`)
 
