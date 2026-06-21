@@ -7,6 +7,18 @@ y el proyecto usa [versionado semántico](https://semver.org/lang/es/).
 
 ## [Sin publicar]
 
+### Añadido
+- **Fórmulas en 2D real («Nivel 2»)**: las fracciones se apilan con barra real y
+  los grandes operadores (`\sum`, `\int`, `\prod`…) muestran sus límites encima y
+  debajo, en vez de aproximarse en línea. Se pintan vectorialmente, escalan con el
+  zoom y siguen al tema. Las fórmulas más simples se siguen componiendo en línea.
+  La exportación a HTML/ODF/PDF/DOCX y el round-trip Markdown no cambian.
+
+### Interno
+- El motor de fórmulas se divide en módulos: `texparser` (TeX→runs) y `mathlayout`
+  (maquetación 2D), además del `mathblocks` existente; el `QTextObjectInterface`
+  `MathObject` pinta las fórmulas 2D en el documento.
+
 ## [1.3.0] — 2026-06-21
 
 ### Añadido

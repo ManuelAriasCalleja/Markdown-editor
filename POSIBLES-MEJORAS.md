@@ -155,8 +155,14 @@ Sin dependencias nuevas y con el patrón habitual (función pura + `tst_`).
   título en color) al maquetar e inserción desde *Insertar → Admonición*. El
   marcador sobrevive sin escape (`unescapeMarkers` en `documentMarkdown`), apto
   para GitHub.
-- ⬜ **Matemáticas "Nivel 2"** — layout 2D con un `QTextObjectInterface` propio
-  (fracciones reales, `\sum` con límites encima/debajo). Qt puro, esfuerzo alto.
+- ✅ **Matemáticas "Nivel 2"** — *Hecho:* layout 2D con un `QTextObjectInterface`
+  propio (`MathObject`) sobre un motor de cajas puro (`mathlayout`): fracciones
+  apiladas con barra real y grandes operadores (`\sum`/`\int`/`\prod`…) con
+  límites encima/debajo. Solo se activa (objeto) cuando la fórmula lo necesita
+  (`needsTwoDLayout`); el resto sigue como runs. Escala con el zoom (mide con la
+  fuente del documento) y `cloneForExport` lo expande a runs inline para que
+  HTML/ODF/PDF/DOCX se exporten igual que antes. *Pendiente para una 2ª tanda:*
+  vínculo de `\sqrt`, matrices apiladas y centrado vertical de las 2D inline.
 - ✅ **Export a EPUB** — *Hecho:* `mdexport::writeEpub` empaqueta un EPUB 3
   (mimetype + OPF + nav.xhtml + toc.ncx + XHTML) con el QZip privado, reutilizando
   el HTML de Qt saneado a XHTML (`htmlBodyToXhtml`) e incrustando las imágenes como

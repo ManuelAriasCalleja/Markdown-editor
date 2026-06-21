@@ -77,8 +77,9 @@ miembros de `MainWindow`, declarados en `mainwindow.h`):
 - **Edición e inserción**: `FormatController` (marcas de carácter, encabezados,
   listas, sangrías + estado de acciones), `InsertController` (enlaces, imágenes,
   tablas, regla, notas al pie, símbolos), `TableController` (edición contextual de
-  tablas), `FormulaController` (fórmulas TeX: insertar/editar/proteger),
-  `BlockConstructs` (citas y bloques de código), `CodeBlockHighlighter` +
+  tablas), `FormulaController` (fórmulas TeX: insertar/editar/proteger; registra
+  el pintor 2D `MathObject`), `BlockConstructs` (citas y bloques de código),
+  `CodeBlockHighlighter` +
   `LanguageRegistry` (resaltado), `SymbolPicker` (diálogo no modal «mapa de
   caracteres»), `FocusEditor` (QTextEdit con columna centrada para el modo sin
   distracciones y un *handler* de pegado/soltado, `setMimeInsertHandler`).
@@ -88,7 +89,8 @@ miembros de `MainWindow`, declarados en `mainwindow.h`):
 
 Módulos de **lógica pura** (sin clase, solo funciones en un namespace, con su
 `tst_*` aislado): `listcontinuation` (`mdlist`), `tableedit` (`mdtable`), `exporters`
-(`mdexport`), `mathblocks` (`mdmath`), `footnotes` (`mdfootnote`), `tasklist`
+(`mdexport`), `mathblocks` + `texparser` + `mathlayout` (los tres en `mdmath`;
+parser de fuente / motor TeX→runs / maquetación 2D), `footnotes` (`mdfootnote`), `tasklist`
 (`mdtask`), `shortcodes` (`mdshortcode`), `symbolcatalog` (`mdsymbols`), `urldetect`
 (`mdurl`), `richpaste` (`mdrichpaste`), `doctemplates` (`mdtemplate`),
 `admonitions` (`mdadmonition`), `texttransform` (`mdtext`), `docstats`
@@ -271,15 +273,37 @@ solo incluyen `mathblocks.h`. Piezas clave:
   `restoreMathFromSentinels`. Resultado: los `\sum`, `\frac`, `_`, `*` del TeX
   sobreviven íntegros al round-trip. `unprotectMath` sigue existiendo pero no se usa
   en producción (queda como inversa explícita de `protectMath` para los tests).
+- *Maquetación 2D (Nivel 2).* Las fórmulas con `\frac` o un gran operador
+  (`\sum`/`\int`/`\prod`…) con límites se pintan en 2D real (fracciones apiladas
+  con barra, límites encima/debajo) en vez de aplanarse a runs. El motor puro es
+  `mdmath` en `mathlayout.{h,cpp}`: parsea el TeX a un árbol de cajas y lo
+  mide/pinta (`needsTwoDLayout`/`measureFormula`/`paintFormula`, reutilizando la
+  tabla de glifos de texparser, `commandToUnicode`). Una de esas fórmulas vive en
+  el documento como **un carácter** `ObjectReplacementCharacter` con
+  `setObjectType(MathObjectType)` + las propiedades de math; lo dibuja el
+  `QTextObjectInterface` `MathObject` (`mathobject.{h,cpp}`), que lo mide con la
+  fuente por defecto del documento (así **escala con el zoom**). `renderFormulaRuns`
+  es el despachador único (objeto 2D vs runs inline según `needsTwoDLayout`) que
+  usan la carga (`renderMathInDocument`), la inserción y el preview. Las demás
+  fórmulas siguen como runs. Como el carácter objeto comparte `IsMath`/`MathTex`,
+  la serialización (sentinelas), los bounds y la edición atómica lo tratan como un
+  grupo de un fragmento, sin cambios. *Limitación:* el objeto se ancla por su borde
+  inferior al baseline (modelo de Qt), así que una fórmula 2D **inline** queda algo
+  alta; las de bloque (`$$`, solas en su línea) se ven centradas.
 - *Resaltado.* El color vive en `SyntaxColors::math` y lo aplica
   `CodeBlockHighlighter::highlightMathFragments` recorriendo los fragmentos del
   bloque con `IsMathProperty` y haciendo `setFormat(...)` solo con el foreground.
-  Se reaplica al cambiar de tema (`setSyntaxColors` invalida el resaltado).
+  Se reaplica al cambiar de tema (`setSyntaxColors` invalida el resaltado). El
+  carácter objeto 2D toma su color del lápiz que Qt fija antes de `drawObject`
+  (que ya incluye ese overlay), así que también sigue al tema.
 - *Exportación.* **LaTeX**: `inlineLatex` detecta fragmentos por `IsMathProperty`,
   agrupa los consecutivos con el mismo `MathTex` y emite **una** `$tex$`/`$$tex$$`
-  por grupo (preámbulo con `amsmath`+`amssymb`). **HTML/PDF/ODF**: pasan por
-  `mdexport::cloneForExport`, que clona el documento y solo limpia las propiedades
-  custom de math, dejando que Qt serialice el vertical-align a CSS/ODF/PDF.
+  por grupo (preámbulo con `amsmath`+`amssymb`); el carácter objeto 2D cuenta como
+  un grupo de uno. **HTML/PDF/ODF/DOCX**: pasan por `mdexport::cloneForExport`, que
+  clona el documento, limpia las propiedades custom de los runs inline y
+  **expande** cada carácter objeto 2D a esos runs inline (cursiva + super/sub),
+  dejando que Qt serialice el vertical-align a CSS/ODF/PDF (la maquetación 2D es
+  solo de pantalla).
 - *Multilínea.* `$$...$$` de bloque puede cruzar varias líneas en la fuente
   (estilo Pandoc/Obsidian): `findMath` rastrea la apertura entre líneas y
   `protectMath` codifica los saltos internos en un placeholder PUA
@@ -288,8 +312,10 @@ solo incluyen `mathblocks.h`. Piezas clave:
   líneas (regla habitual). Lo verifican `findFindsMultilineBlockMath` y
   `roundTripPreservesMultilineMath` (+ casos límite: contenido en las líneas
   delimitadoras, descarte si no cierra, ignorado dentro de un fence).
-- *Limitaciones.* No hay layout 2D: las fracciones grandes son `(a)/(b)` y los
-  `\sum` con límites usan super/subíndice a la derecha (sería el «Nivel 2»).
+- *Limitaciones.* El motor 2D cubre fracciones y grandes operadores con límites;
+  `\sqrt` se pinta con el glifo `√` sin vínculo sobre el radicando, y no hay
+  matrices apiladas (ambas se aproximan inline). El alineado vertical de las 2D
+  inline queda alto (ver «Maquetación 2D»).
 
 ## Exportación e impresión
 

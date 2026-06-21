@@ -40,6 +40,7 @@ private slots:
     void findIgnoresMultilineOpenInsideFence();
     void findDiscardsUnclosedMultilineBlock();
     void roundTripPreservesMultilineMath();
+    void renderFormulaRunsPicksObjectFor2D();
 };
 
 void TestMathBlocks::findFindsInlineAndBlock()
@@ -294,6 +295,29 @@ void TestMathBlocks::findDiscardsUnclosedMultilineBlock()
 {
     const QString s = QStringLiteral("texto\n$$\n\\sum x\nsin cierre\n");
     QCOMPARE(mdmath::findMath(s).size(), 0);
+}
+
+// renderFormulaRuns es el despachador: una fórmula con \frac (o gran operador
+// con límites) se inserta como UN carácter objeto 2D; el resto, como runs de
+// texto inline. Así la serialización y el export las distinguen.
+void TestMathBlocks::renderFormulaRunsPicksObjectFor2D()
+{
+    const QList<mdmath::MathRun> twoD =
+        mdmath::renderFormulaRuns(QStringLiteral("\\frac{a}{b}"), false);
+    QCOMPARE(twoD.size(), 1);
+    QCOMPARE(twoD[0].text, QString(QChar(QChar::ObjectReplacementCharacter)));
+    QCOMPARE(twoD[0].fmt.objectType(), mdmath::MathObjectType);
+    QVERIFY(twoD[0].fmt.boolProperty(mdmath::IsMathProperty));
+    QCOMPARE(twoD[0].fmt.property(mdmath::MathTexProperty).toString(),
+             QStringLiteral("\\frac{a}{b}"));
+
+    const QList<mdmath::MathRun> inl =
+        mdmath::renderFormulaRuns(QStringLiteral("x^2 + 1"), false);
+    QVERIFY(!inl.isEmpty());
+    for (const mdmath::MathRun &r : inl) {
+        QVERIFY(r.fmt.objectType() != mdmath::MathObjectType);
+        QVERIFY(!r.text.contains(QChar(QChar::ObjectReplacementCharacter)));
+    }
 }
 
 QTEST_MAIN(TestMathBlocks)
