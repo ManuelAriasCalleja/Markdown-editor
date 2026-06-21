@@ -282,8 +282,12 @@ QString flattenScriptToUnicode(const QString &arg, bool sup)
     return out;
 }
 
+} // namespace
+
 // Convierte un comando TeX (sin barra invertida) a Unicode si está en la
-// tabla; si no, devuelve `\nombre` para que el usuario vea el error.
+// tabla; si no, devuelve `\nombre` para que el usuario vea el error. Público
+// (declarado en mathblocks.h) para que el motor de maquetación 2D (mathlayout)
+// reutilice la misma tabla de glifos sin duplicarla.
 QString commandToUnicode(const QString &cmd)
 {
     const auto it = singleCharCommands().constFind(cmd);
@@ -294,8 +298,6 @@ QString commandToUnicode(const QString &cmd)
         return itm.value();
     return QLatin1Char('\\') + cmd;
 }
-
-} // namespace
 
 // Vuelca el texto acumulado en `buffer` (si lo hay) como un run con `baseFmt` y lo
 // limpia. Sub-paso común de los parsers de renderTexAsRuns.

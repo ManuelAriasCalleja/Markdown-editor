@@ -94,6 +94,8 @@ add_library(md-editor-core STATIC
     src/mathblocks.cpp
     src/mathblocks.h
     src/texparser.cpp
+    src/mathlayout.cpp
+    src/mathlayout.h
     src/tableedit.cpp
     src/tableedit.h
     src/exporters.cpp
@@ -236,6 +238,7 @@ if(Qt6Test_FOUND)
         tst_shortcodes
         tst_footnotes
         tst_mathblocks
+        tst_mathlayout
         tst_tableedit
         tst_exporters
         tst_markdownroundtrip

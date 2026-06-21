@@ -305,6 +305,16 @@ QTextCharFormat mathCharFormat(const QString &tex, bool block)
     return fmt;
 }
 
+QTextCharFormat mathObjectFormat(const QString &tex, bool block)
+{
+    QTextCharFormat fmt;
+    fmt.setProperty(IsMathProperty, true);
+    fmt.setProperty(MathTexProperty, tex);
+    fmt.setProperty(MathBlockProperty, block);
+    fmt.setObjectType(MathObjectType);
+    return fmt;
+}
+
 namespace {
 
 // Helper: ¿el texto de un fragmento de inline-code es una fórmula con la

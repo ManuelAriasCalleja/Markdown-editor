@@ -70,6 +70,24 @@ constexpr int IsMathProperty    = QTextFormat::UserProperty + 1;
 constexpr int MathTexProperty   = QTextFormat::UserProperty + 2;
 constexpr int MathBlockProperty = QTextFormat::UserProperty + 3;
 
+// Tipo de objeto de texto custom para las fórmulas que se pintan en 2D real
+// (fracciones apiladas, grandes operadores con límites). Una de esas fórmulas
+// vive como UN carácter ObjectReplacementCharacter cuyo char-format lleva las
+// propiedades de math de arriba + `setObjectType(MathObjectType)`. Lo dibuja un
+// QTextObjectInterface registrado en la GUI (MathObject); en mdmath solo se
+// inserta el carácter (sin GUI). Las fórmulas que NO necesitan 2D siguen como
+// secuencia de runs (mathCharFormat + renderTexAsRuns).
+constexpr int MathObjectType = QTextFormat::UserObject + 1;
+
+// Comando TeX (sin la `\`) a su carácter Unicode, o `\cmd` si no está en la
+// tabla. Lo implementa texparser.cpp; lo expone para que mathlayout reutilice
+// la tabla de glifos (griego, operadores) sin duplicarla.
+QString commandToUnicode(const QString &cmd);
+
+// Char-format del carácter ObjectReplacementCharacter de una fórmula 2D: las
+// tres propiedades de math + objectType = MathObjectType.
+QTextCharFormat mathObjectFormat(const QString &tex, bool block);
+
 // Char-format base para los fragmentos de una fórmula: cursiva (señal
 // visual) + las tres propiedades de math. Cada «run» de la fórmula (texto
 // normal, súper, subíndice) lo extiende añadiendo su alineación vertical.
