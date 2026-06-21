@@ -98,6 +98,8 @@ add_library(md-editor-core STATIC
     src/mathlayout.h
     src/mathobject.cpp
     src/mathobject.h
+    src/spellscan.cpp
+    src/spellscan.h
     src/tableedit.cpp
     src/tableedit.h
     src/exporters.cpp
@@ -120,6 +122,29 @@ target_include_directories(md-editor-core PUBLIC src)
 # Versión del proyecto disponible en el código (p. ej. el diálogo «Acerca de»),
 # para no tenerla escrita a mano en dos sitios. PUBLIC: la ven el ejecutable y los tests.
 target_compile_definitions(md-editor-core PUBLIC APP_VERSION="${PROJECT_VERSION}")
+
+# --- Corrector ortográfico (opcional) ---
+# Hunspell es la PRIMERA dependencia de terceros del proyecto, así que es
+# OPCIONAL: si no está, el binario compila igual y el corrector queda inactivo
+# (HAVE_HUNSPELL sin definir). La lógica pura (spellscan) se compila siempre; el
+# motor y su integración se guardan tras HAVE_HUNSPELL. En Debian/Ubuntu:
+#   sudo apt-get install libhunspell-dev
+option(SPELL_CHECK "Corrector ortográfico (requiere Hunspell)" ON)
+if(SPELL_CHECK)
+    find_package(PkgConfig QUIET)
+    if(PkgConfig_FOUND)
+        pkg_check_modules(HUNSPELL hunspell)
+    endif()
+    if(HUNSPELL_FOUND)
+        target_compile_definitions(md-editor-core PUBLIC HAVE_HUNSPELL)
+        target_include_directories(md-editor-core PUBLIC ${HUNSPELL_INCLUDE_DIRS})
+        target_link_libraries(md-editor-core PUBLIC ${HUNSPELL_LIBRARIES})
+        message(STATUS "Corrector ortográfico: Hunspell ${HUNSPELL_VERSION} encontrado")
+    else()
+        message(STATUS "Corrector ortográfico: Hunspell no encontrado, se omite "
+                       "(instala libhunspell-dev para activarlo)")
+    endif()
+endif()
 
 # Icono de la aplicación a nivel de SO (el de ventana ya se fija en runtime con
 # app.setWindowIcon). En Windows se incrusta vía recurso .rc; en macOS se copia
@@ -241,6 +266,7 @@ if(Qt6Test_FOUND)
         tst_footnotes
         tst_mathblocks
         tst_mathlayout
+        tst_spellscan
         tst_tableedit
         tst_exporters
         tst_markdownroundtrip

@@ -1,0 +1,119 @@
+#include <QtTest>
+
+#include "spellscan.h"
+
+// Pruebas de la lógica pura del corrector: tokenización de palabras y elección
+// de diccionario por idioma.
+class TestSpellScan : public QObject
+{
+    Q_OBJECT
+
+private:
+    // Devuelve las palabras de `text` como QStringList, para comparar cómodo.
+    static QStringList words(const QString &text)
+    {
+        QStringList out;
+        for (const mdspell::Word &w : mdspell::tokenize(text))
+            out << text.mid(w.start, w.length);
+        return out;
+    }
+
+private slots:
+    void tokenizeSplitsOnWhitespaceAndPunctuation();
+    void tokenizeKeepsInternalApostrophes();
+    void tokenizeTrimsEdgeApostrophes();
+    void tokenizeSkipsTokensWithDigits();
+    void tokenizeSplitsOnHyphen();
+    void tokenizeHandlesUnicodeLetters();
+    void tokenizeOffsetsAreCorrect();
+    void pickDictionaryExactRegion();
+    void pickDictionaryFallsBackToBase();
+    void pickDictionaryFallsBackToAnyRegion();
+    void pickDictionaryReturnsEmptyWhenAbsent();
+};
+
+void TestSpellScan::tokenizeSplitsOnWhitespaceAndPunctuation()
+{
+    QCOMPARE(words(QStringLiteral("Hola, mundo cruel.")),
+             (QStringList{QStringLiteral("Hola"), QStringLiteral("mundo"), QStringLiteral("cruel")}));
+    QCOMPARE(words(QStringLiteral("  ¡Vaya!  ")), (QStringList{QStringLiteral("Vaya")}));
+    QCOMPARE(words(QString()), QStringList());
+}
+
+void TestSpellScan::tokenizeKeepsInternalApostrophes()
+{
+    QCOMPARE(words(QStringLiteral("don't can't")),
+             (QStringList{QStringLiteral("don't"), QStringLiteral("can't")}));
+    // Apóstrofo tipográfico ’ (U+2019).
+    QCOMPARE(words(QStringLiteral("l’eau")), (QStringList{QStringLiteral("l’eau")}));
+}
+
+void TestSpellScan::tokenizeTrimsEdgeApostrophes()
+{
+    QCOMPARE(words(QStringLiteral("'tis dogs'")),
+             (QStringList{QStringLiteral("tis"), QStringLiteral("dogs")}));
+}
+
+void TestSpellScan::tokenizeSkipsTokensWithDigits()
+{
+    QCOMPARE(words(QStringLiteral("h2o utf8 v1 abc")), (QStringList{QStringLiteral("abc")}));
+    QCOMPARE(words(QStringLiteral("123 456")), QStringList());
+}
+
+void TestSpellScan::tokenizeSplitsOnHyphen()
+{
+    QCOMPARE(words(QStringLiteral("bien-venido")),
+             (QStringList{QStringLiteral("bien"), QStringLiteral("venido")}));
+}
+
+void TestSpellScan::tokenizeHandlesUnicodeLetters()
+{
+    QCOMPARE(words(QStringLiteral("café señor mañana ÑOÑO")),
+             (QStringList{QStringLiteral("café"), QStringLiteral("señor"),
+                          QStringLiteral("mañana"), QStringLiteral("ÑOÑO")}));
+}
+
+void TestSpellScan::tokenizeOffsetsAreCorrect()
+{
+    const QString text = QStringLiteral("ab cd");
+    const QList<mdspell::Word> ws = mdspell::tokenize(text);
+    QCOMPARE(ws.size(), 2);
+    QCOMPARE(ws.at(0).start, 0);
+    QCOMPARE(ws.at(0).length, 2);
+    QCOMPARE(ws.at(1).start, 3);
+    QCOMPARE(ws.at(1).length, 2);
+}
+
+void TestSpellScan::pickDictionaryExactRegion()
+{
+    const QStringList avail{QStringLiteral("es"), QStringLiteral("es_ES"), QStringLiteral("en_US")};
+    QCOMPARE(mdspell::pickDictionary(QStringLiteral("es-ES"), avail), QStringLiteral("es_ES"));
+    QCOMPARE(mdspell::pickDictionary(QStringLiteral("es_ES"), avail), QStringLiteral("es_ES"));
+    // Caja indiferente en la entrada.
+    QCOMPARE(mdspell::pickDictionary(QStringLiteral("EN-us"), avail), QStringLiteral("en_US"));
+}
+
+void TestSpellScan::pickDictionaryFallsBackToBase()
+{
+    const QStringList avail{QStringLiteral("es"), QStringLiteral("es_ES")};
+    // es_MX no está; cae al idioma base "es".
+    QCOMPARE(mdspell::pickDictionary(QStringLiteral("es_MX"), avail), QStringLiteral("es"));
+    QCOMPARE(mdspell::pickDictionary(QStringLiteral("es"), avail), QStringLiteral("es"));
+}
+
+void TestSpellScan::pickDictionaryFallsBackToAnyRegion()
+{
+    const QStringList avail{QStringLiteral("pt_PT"), QStringLiteral("pt_BR")};
+    // No hay "pt" base: se elige una variante regional, de forma determinista.
+    QCOMPARE(mdspell::pickDictionary(QStringLiteral("pt"), avail), QStringLiteral("pt_BR"));
+}
+
+void TestSpellScan::pickDictionaryReturnsEmptyWhenAbsent()
+{
+    const QStringList avail{QStringLiteral("es"), QStringLiteral("en_US")};
+    QCOMPARE(mdspell::pickDictionary(QStringLiteral("de"), avail), QString());
+    QCOMPARE(mdspell::pickDictionary(QStringLiteral("es"), QStringList()), QString());
+}
+
+QTEST_MAIN(TestSpellScan)
+#include "tst_spellscan.moc"

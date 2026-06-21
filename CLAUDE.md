@@ -95,7 +95,8 @@ parser de fuente / motor TeX→runs / maquetación 2D), `footnotes` (`mdfootnote
 (`mdurl`), `richpaste` (`mdrichpaste`), `doctemplates` (`mdtemplate`),
 `admonitions` (`mdadmonition`), `texttransform` (`mdtext`), `docstats`
 (`mdstats`), `blockconstructs` (`mdblock`), `outlinepanel`
-(`mdoutline::headingsOf`).
+(`mdoutline::headingsOf`), `spellscan` (`mdspell`; tokenización de palabras y
+selección de diccionario para el corrector ortográfico, ver abajo).
 
 Patrón recurrente para lógica comprobable: separar las **funciones puras** (sin
 GUI) de la integración (qué texto y dónde reinsertarlo, que vive en `MainWindow` o

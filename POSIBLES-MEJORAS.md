@@ -31,6 +31,18 @@ proyecto es sólido (~9k LOC, 23 ficheros de test, arquitectura por controllers,
 5. **Corrector ortográfico** — casi imprescindible en un editor de texto; Qt +
    Hunspell encaja bien con los 9 idiomas que ya soporta.
 
+   **🚧 En curso (Fase 1).** *Hecho:* módulo puro `spellscan` (`mdspell`):
+   `tokenize` (extrae palabras Unicode con apóstrofos internos, descarta tokens
+   con dígitos, separa por guion) y `pickDictionary` (elige el `.aff/.dic` para
+   un idioma), con `tst_spellscan`. Hunspell ya es **dependencia opcional** en
+   CMake (`SPELL_CHECK` → `HAVE_HUNSPELL`): si falta `libhunspell-dev`, el build
+   sigue verde y el corrector queda inactivo. *Pendiente:* clase motor
+   `SpellChecker` (envuelve Hunspell, carga perezosa de un solo idioma según el
+   `lang` del front matter, lista personal/ignorados), subrayado en la rama
+   no-código de `CodeBlockHighlighter::highlightBlock` (saltando fragmentos de
+   math/URL), y menú contextual con sugerencias + «añadir al diccionario».
+   Requiere instalar `libhunspell-dev` para compilar el motor.
+
    **Análisis (multiplataforma y dependencias).** Qt6 no trae corrector
    (`QSpellChecker` no existe), hay que aportar el motor. La opción que mantiene
    el carácter portable del proyecto (sin `#ifdef Q_OS_*`) es **Hunspell** (C++
