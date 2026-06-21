@@ -30,6 +30,7 @@ private slots:
     void texToUnicodeGreekAndOps();
     void texToUnicodeScripts();
     void texToUnicodeFrac();
+    void texToUnicodeFunctionsAndSpacing();
     void replaceMathReplacesDollars();
     void renderConvertsInlineCodeToFormattedFragments();
     void renderIsIdempotent();
@@ -140,6 +141,18 @@ void TestMathBlocks::texToUnicodeScripts()
     // Argumentos compuestos con un comando dentro: -x → ⁻ˣ.
     QCOMPARE(mdmath::texToUnicode(QStringLiteral("e^{-x}")),
              QStringLiteral("e⁻ˣ"));
+}
+
+void TestMathBlocks::texToUnicodeFunctionsAndSpacing()
+{
+    // Nombres de función: se componen como texto, sin la barra invertida.
+    QCOMPARE(mdmath::texToUnicode(QStringLiteral("\\sin x + \\cos y")),
+             QStringLiteral("sin x + cos y"));
+    QVERIFY(mdmath::texToUnicode(QStringLiteral("\\lim")).startsWith(QStringLiteral("lim")));
+    // Comandos de espaciado: `\,` → espacio fino (U+2009); `\!` → nada.
+    QCOMPARE(mdmath::texToUnicode(QStringLiteral("a\\,b")),
+             QStringLiteral("a") + QChar(0x2009) + QStringLiteral("b"));
+    QCOMPARE(mdmath::texToUnicode(QStringLiteral("a\\!b")), QStringLiteral("ab"));
 }
 
 void TestMathBlocks::texToUnicodeFrac()

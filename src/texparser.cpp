@@ -2,6 +2,7 @@
 
 #include <QChar>
 #include <QHash>
+#include <QSet>
 #include <QString>
 
 // Motor de parseo TeX -> runs/Unicode, extraido de mathblocks.cpp (era el bloque
@@ -296,6 +297,22 @@ QString commandToUnicode(const QString &cmd)
     const auto itm = multiCharCommands().constFind(cmd);
     if (itm != multiCharCommands().cend())
         return itm.value();
+    // Nombres de función / operadores que se componen como texto (sin `\`):
+    // \lim, \sin, \log… En matemáticas van en redonda, pero aquí basta con el
+    // propio nombre (el italic del run es aceptable).
+    static const QSet<QString> functionNames = {
+        QStringLiteral("lim"),    QStringLiteral("sin"),    QStringLiteral("cos"),
+        QStringLiteral("tan"),    QStringLiteral("cot"),    QStringLiteral("sec"),
+        QStringLiteral("csc"),    QStringLiteral("sinh"),   QStringLiteral("cosh"),
+        QStringLiteral("tanh"),   QStringLiteral("arcsin"), QStringLiteral("arccos"),
+        QStringLiteral("arctan"), QStringLiteral("log"),    QStringLiteral("ln"),
+        QStringLiteral("exp"),    QStringLiteral("max"),    QStringLiteral("min"),
+        QStringLiteral("sup"),    QStringLiteral("inf"),    QStringLiteral("det"),
+        QStringLiteral("dim"),    QStringLiteral("gcd"),    QStringLiteral("arg"),
+        QStringLiteral("deg"),    QStringLiteral("ker"),    QStringLiteral("mod"),
+    };
+    if (functionNames.contains(cmd))
+        return cmd;
     return QLatin1Char('\\') + cmd;
 }
 
@@ -410,7 +427,18 @@ QList<MathRun> renderTexAsRuns(const QString &tex, const QTextCharFormat &baseFm
             ++i;
             if (i >= n) { buffer += QLatin1Char('\\'); break; }
             if (tex.at(i) == QLatin1Char('\\')) { buffer += QLatin1Char(' '); ++i; continue; }
-            if (!tex.at(i).isLetter()) { buffer += tex.at(i); ++i; continue; }
+            if (!tex.at(i).isLetter()) {
+                // Comandos de espaciado: `\,` `\;` `\:` `\ ` → espacio fino; `\!`
+                // → nada. El resto (`\$`, `\{`, `\_`…) es el carácter literal.
+                const QChar e = tex.at(i);
+                ++i;
+                if (e == QLatin1Char(',') || e == QLatin1Char(';') || e == QLatin1Char(':')
+                    || e == QLatin1Char(' '))
+                    buffer += QChar(0x2009);  // thin space
+                else if (e != QLatin1Char('!'))
+                    buffer += e;
+                continue;
+            }
             const QString cmd = readCommand(tex, i);
 
             int after = i;

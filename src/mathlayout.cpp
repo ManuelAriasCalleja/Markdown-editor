@@ -326,8 +326,16 @@ Box buildHList(const QString &tex, const QFont &font)
             if (i >= n) {
                 atom = glyph(QStringLiteral("\\"), font);
             } else if (!tex.at(i).isLetter()) {
-                atom = glyph(QString(tex.at(i)), font);
+                // Espaciado `\,` `\;` `\:` `\ ` → espacio fino; `\!` → nada.
+                const QChar e = tex.at(i);
                 ++i;
+                if (e == QLatin1Char(',') || e == QLatin1Char(';') || e == QLatin1Char(':')
+                    || e == QLatin1Char(' '))
+                    atom = glyph(QString(QChar(0x2009)), font);
+                else if (e == QLatin1Char('!'))
+                    continue;
+                else
+                    atom = glyph(QString(e), font);
             } else {
                 const QString cmd = readCommand(tex, i);
                 int after = i;

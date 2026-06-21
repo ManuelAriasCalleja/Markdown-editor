@@ -15,6 +15,8 @@ y el proyecto usa [versionado semántico](https://semver.org/lang/es/).
   corchetes, en vez de aproximarse en línea. Se pintan vectorialmente, escalan con
   el zoom y siguen al tema. Las fórmulas más simples se siguen componiendo en
   línea. La exportación a HTML/ODF/PDF/DOCX y el round-trip Markdown no cambian.
+  Además, los nombres de función (`\lim`, `\sin`, `\cos`, `\log`…) se componen
+  como texto y los comandos de espaciado (`\,`, `\;`, `\!`) se respetan.
 
 ### Interno
 - El motor de fórmulas se divide en módulos: `texparser` (TeX→runs) y `mathlayout`

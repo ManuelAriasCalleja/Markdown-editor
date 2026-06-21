@@ -53,7 +53,7 @@ $$x = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a}$$
 
 Media de los cuadrados (operador grande dentro del numerador):
 
-$$\bar{x} = \frac{\sum_{i=1}^n x_i^2}{n}$$
+$$\mu = \frac{\sum_{i=1}^n x_i^2}{n}$$
 
 Definición de la derivada:
 
