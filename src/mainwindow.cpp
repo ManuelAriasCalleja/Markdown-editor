@@ -26,6 +26,7 @@
 #include "markdownrender.h"
 #include "listcontinuation.h"
 #include "gotoheadingdialog.h"
+#include "diagramcontroller.h"
 #include "mathblocks.h"
 #include "outlinepanel.h"
 #include "shortcodes.h"
@@ -280,6 +281,13 @@ MainWindow::MainWindow(QWidget *parent)
     m_highlighter = new CodeBlockHighlighter(m_editor->document());
     m_highlighter->setSpellChecker(&m_spell);  // subrayado ortográfico
     m_spellEnabled = AppSettings::spellCheck();
+
+    // Previsualización de diagramas (Mermaid/PlantUML) bajo cada bloque de código.
+    m_diagrams = new DiagramController(m_editor, this);
+    connect(m_diagrams, &DiagramController::statusMessage, this,
+            [this](const QString &text, int ms) { statusBar()->showMessage(text, ms); });
+    connect(m_editor->document(), &QTextDocument::contentsChanged,
+            m_diagrams, &DiagramController::scheduleRefresh);
     // Zoom con Ctrl+rueda del ratón y detección de enlaces bajo el cursor.
     m_editor->viewport()->installEventFilter(this);
     m_editor->viewport()->setMouseTracking(true);  // recibir hover sin botón pulsado

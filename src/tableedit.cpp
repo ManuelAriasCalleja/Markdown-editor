@@ -1,6 +1,7 @@
 #include "tableedit.h"
 
 #include "admonitions.h"
+#include "diagramdoc.h"
 #include "mathblocks.h"
 
 #include <QStringList>
@@ -113,6 +114,10 @@ QString documentMarkdown(const QTextDocument *doc)
     // desde la tabla. Así sobreviven íntegros `\`, `_` y `*` dentro del TeX,
     // cosa que el camino antiguo (inline-code) no garantizaba.
     std::unique_ptr<QTextDocument> clone(doc->clone());
+    // Las imágenes de previsualización de diagramas son presentación: fuera del
+    // clon antes de serializar (no aparecen en el Markdown ni cuentan para
+    // «modificado», porque isModified compara la salida de esta función).
+    mddiagram::removePreviewBlocks(clone.get());
     const mdmath::MathSentinelTable table = mdmath::replaceMathWithSentinels(clone.get());
     const QString md = injectAlignments(clone->toMarkdown(), columnAlignments(clone.get()));
     // Reinyecta fórmulas y deshace el escape `> \[!NOTE]` de las admoniciones.

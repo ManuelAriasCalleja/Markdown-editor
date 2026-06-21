@@ -37,6 +37,7 @@ class HelpDialog;
 class OutlinePanel;
 class RecoveryManager;
 class CodeBlockHighlighter;
+class DiagramController;
 class FindReplaceBar;
 class RecentFilesManager;
 class DocumentIo;
@@ -224,6 +225,7 @@ private:
     CodeBlockHighlighter *m_highlighter = nullptr;
     SpellChecker m_spell;  // motor de corrección; lo consume el highlighter
     bool m_spellEnabled = true;  // interruptor del corrector (Ver → ...)
+    DiagramController *m_diagrams = nullptr;  // previsualización de diagramas
     qreal m_baseFontPointSize = 0;  // tamaño de fuente base, para "Tamaño normal"
     // Tamaños base de las superficies que siguen al zoom y el desfase (en
     // puntos) que se les aplica para escalar junto con el texto del editor.

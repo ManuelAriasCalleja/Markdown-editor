@@ -104,8 +104,12 @@ add_library(md-editor-core STATIC
     src/spellchecker.h
     src/diagram.cpp
     src/diagram.h
+    src/diagramdoc.cpp
+    src/diagramdoc.h
     src/diagramrenderer.cpp
     src/diagramrenderer.h
+    src/diagramcontroller.cpp
+    src/diagramcontroller.h
     src/tableedit.cpp
     src/tableedit.h
     src/exporters.cpp
