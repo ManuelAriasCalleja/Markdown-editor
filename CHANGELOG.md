@@ -7,6 +7,8 @@ y el proyecto usa [versionado semántico](https://semver.org/lang/es/).
 
 ## [Sin publicar]
 
+## [1.3.0] — 2026-06-21
+
 ### Añadido
 - **Insertar → Símbolos especiales…**: diálogo con símbolos no habituales
   (matemáticos, griego, flechas, moneda, puntuación, astronomía, marcas y

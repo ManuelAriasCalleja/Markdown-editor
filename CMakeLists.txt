@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.16)
 
 project(md-editor
-    VERSION 1.2.0
+    VERSION 1.3.0
     DESCRIPTION "Editor/visor de archivos Markdown en Qt6"
     LANGUAGES CXX)
 
@@ -112,6 +112,9 @@ add_library(md-editor-core STATIC
 # ninguna biblioteca de terceros.
 target_link_libraries(md-editor-core PUBLIC Qt6::Widgets Qt6::PrintSupport Qt6::GuiPrivate)
 target_include_directories(md-editor-core PUBLIC src)
+# Versión del proyecto disponible en el código (p. ej. el diálogo «Acerca de»),
+# para no tenerla escrita a mano en dos sitios. PUBLIC: la ven el ejecutable y los tests.
+target_compile_definitions(md-editor-core PUBLIC APP_VERSION="${PROJECT_VERSION}")
 
 # Icono de la aplicación a nivel de SO (el de ventana ya se fija en runtime con
 # app.setWindowIcon). En Windows se incrusta vía recurso .rc; en macOS se copia

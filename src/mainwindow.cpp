@@ -1241,7 +1241,8 @@ void MainWindow::showAboutDialog()
     box.setTextFormat(Qt::RichText);
     box.setText(
         QStringLiteral("<h3>md-editor</h3>")
-        + QStringLiteral("<p>") + tr("Versión 1.0") + QStringLiteral("</p>")
+        + QStringLiteral("<p>") + tr("Versión %1").arg(QStringLiteral(APP_VERSION))
+        + QStringLiteral("</p>")
         + QStringLiteral("<p>") + tr("Desarrollado por Manuel Arias Calleja")
         + QStringLiteral("</p>")
         + QStringLiteral("<p>") + tr("Editor WYSIWYG de Markdown en Qt6 + C++17.")
