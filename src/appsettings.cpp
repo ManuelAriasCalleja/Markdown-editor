@@ -10,6 +10,7 @@ inline QString warmLightKey()   { return QStringLiteral("warmLight"); }
 inline QString followSystemThemeKey() { return QStringLiteral("followSystemTheme"); }
 inline QString zoomLevelKey()   { return QStringLiteral("zoomLevel"); }
 inline QString showWordCountKey() { return QStringLiteral("showWordCount"); }
+inline QString spellCheckKey()  { return QStringLiteral("spellCheck"); }
 inline QString cursorPositionsKey() { return QStringLiteral("cursorPositions"); }
 constexpr int kMaxCursorPositions = 200;  // cota del mapa de posiciones recordadas
 inline QString geometryKey()    { return QStringLiteral("geometry"); }
@@ -106,6 +107,16 @@ bool AppSettings::showWordCount()
 void AppSettings::setShowWordCount(bool on)
 {
     QSettings().setValue(showWordCountKey(), on);
+}
+
+bool AppSettings::spellCheck()
+{
+    return QSettings().value(spellCheckKey(), true).toBool();  // activado por defecto
+}
+
+void AppSettings::setSpellCheck(bool on)
+{
+    QSettings().setValue(spellCheckKey(), on);
 }
 
 QString AppSettings::language()

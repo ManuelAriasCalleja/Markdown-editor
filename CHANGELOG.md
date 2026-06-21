@@ -8,6 +8,12 @@ y el proyecto usa [versionado semántico](https://semver.org/lang/es/).
 ## [Sin publicar]
 
 ### Añadido
+- **Corrección ortográfica** (opcional, basada en Hunspell): subraya las palabras
+  mal escritas según el idioma del documento (deducido del front matter, el ajuste
+  de idioma o el sistema). Clic derecho sobre una errata para ver sugerencias,
+  añadirla al diccionario personal o ignorarla. Se activa/desactiva en
+  *Ver → Corrección ortográfica*. En Linux usa los diccionarios del sistema; si no
+  hay biblioteca Hunspell, el programa funciona igual sin corrector.
 - **Fórmulas en 2D real («Nivel 2»)**: las fracciones se apilan con barra real,
   los grandes operadores (`\sum`, `\int`, `\prod`…) muestran sus límites encima y
   debajo, las raíces (`\sqrt`, `\sqrt[n]`) llevan vínculo sobre el radicando y las

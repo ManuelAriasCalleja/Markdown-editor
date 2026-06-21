@@ -42,6 +42,10 @@ void setZoomLevel(int level);
 bool showWordCount();
 void setShowWordCount(bool on);
 
+// Corrector ortográfico activo (subrayado de erratas). Activado por defecto.
+bool spellCheck();
+void setSpellCheck(bool on);
+
 // Posición del cursor recordada por archivo (índice de carácter), para reabrir
 // cada documento donde se dejó. cursorPosition devuelve -1 si no hay nada
 // guardado. El mapa está acotado para no crecer sin límite.

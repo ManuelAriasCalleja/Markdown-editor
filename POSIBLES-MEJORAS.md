@@ -31,7 +31,7 @@ proyecto es sólido (~9k LOC, 23 ficheros de test, arquitectura por controllers,
 5. **Corrector ortográfico** — casi imprescindible en un editor de texto; Qt +
    Hunspell encaja bien con los 9 idiomas que ya soporta.
 
-   **🚧 En curso (Fase 1).** *Hecho:* módulo puro `spellscan` (`mdspell`):
+   **✅ Fase 1 hecha.** *Hecho:* módulo puro `spellscan` (`mdspell`):
    `tokenize` (extrae palabras Unicode con apóstrofos internos, descarta tokens
    con dígitos, separa por guion) y `pickDictionary` (elige el `.aff/.dic` para
    un idioma), con `tst_spellscan`. Hunspell ya es **dependencia opcional** en
@@ -50,9 +50,11 @@ proyecto es sólido (~9k LOC, 23 ficheros de test, arquitectura por controllers,
    También hay **menú contextual** (`MainWindow::showSpellContextMenu`, vía el
    filtro de eventos del viewport): sobre una errata, antepone hasta 8 sugerencias
    (un clic reemplaza) + «añadir al diccionario» / «ignorar», sobre el menú
-   estándar. *Pendiente:* una acción de menú para activar/desactivar el corrector
-   y elegir idioma manualmente (ahora siempre activo si hay diccionario para el
-   idioma del documento).
+   estándar. Y el interruptor **Ver → Corrección ortográfica** (acción checkable,
+   `AppSettings::spellCheck`): al desactivar, descarga el diccionario (sin huella
+   de memoria) y limpia el subrayado. *Opcional a futuro:* selector de idioma
+   manual (ahora se deduce del documento) y diccionarios empaquetados para
+   Windows/Mac (en Linux se usan los del sistema).
 
    **Análisis (multiplataforma y dependencias).** Qt6 no trae corrector
    (`QSpellChecker` no existe), hay que aportar el motor. La opción que mantiene

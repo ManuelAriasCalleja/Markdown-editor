@@ -264,6 +264,7 @@ MainWindow::MainWindow(QWidget *parent)
     // Resaltado de sintaxis de los bloques de código.
     m_highlighter = new CodeBlockHighlighter(m_editor->document());
     m_highlighter->setSpellChecker(&m_spell);  // subrayado ortográfico
+    m_spellEnabled = AppSettings::spellCheck();
     // Zoom con Ctrl+rueda del ratón y detección de enlaces bajo el cursor.
     m_editor->viewport()->installEventFilter(this);
     m_editor->viewport()->setMouseTracking(true);  // recibir hover sin botón pulsado
@@ -1080,6 +1081,16 @@ void MainWindow::createViewMenu()
         AppSettings::setShowWordCount(on);
     });
 
+    QAction *spellAction = viewMenu->addAction(tr("Corrección ortográfica"));
+    spellAction->setCheckable(true);
+    spellAction->setChecked(AppSettings::spellCheck());
+    spellAction->setToolTip(tr("Subraya las palabras mal escritas según el idioma del documento"));
+    connect(spellAction, &QAction::toggled, this, [this](bool on) {
+        m_spellEnabled = on;
+        AppSettings::setSpellCheck(on);
+        applySpellLanguage();  // carga/descarga el diccionario y rehace el resaltado
+    });
+
     viewMenu->addSeparator();
     QMenu *themeMenu = viewMenu->addMenu(tr("Tema"));
     auto *themeGroup = new QActionGroup(this);
@@ -1414,6 +1425,13 @@ void MainWindow::styleTables()
 
 void MainWindow::applySpellLanguage()
 {
+    // Desactivado: descarga el diccionario (sin subrayado y sin huella de
+    // memoria) y rehace el resaltado para limpiar las erratas marcadas.
+    if (!m_spellEnabled) {
+        m_spell.setLanguage(QString());
+        m_highlighter->rehighlight();
+        return;
+    }
     // Mismo criterio que la exportación: front matter › ajuste de la app › locale.
     const QString fm = m_documentIo->frontMatter();
     QString code = mdexport::frontMatterValue(fm, QStringLiteral("lang"));
