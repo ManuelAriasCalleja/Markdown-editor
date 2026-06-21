@@ -2,6 +2,24 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="it" sourcelanguage="es">
 <context>
+    <name>DiagramRenderer</name>
+    <message>
+        <location filename="../src/diagramrenderer.cpp" line="69"/>
+        <source>herramienta no encontrada</source>
+        <translation>strumento non trovato</translation>
+    </message>
+    <message>
+        <location filename="../src/diagramrenderer.cpp" line="118"/>
+        <source>no se pudo crear un directorio temporal</source>
+        <translation>impossibile creare una cartella temporanea</translation>
+    </message>
+    <message>
+        <location filename="../src/diagramrenderer.cpp" line="127"/>
+        <source>no se pudo escribir la fuente</source>
+        <translation>impossibile scrivere il sorgente</translation>
+    </message>
+</context>
+<context>
     <name>FindReplaceBar</name>
     <message>
         <location filename="../src/findreplacebar.cpp" line="15"/>

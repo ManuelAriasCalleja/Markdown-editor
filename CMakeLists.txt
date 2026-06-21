@@ -102,6 +102,10 @@ add_library(md-editor-core STATIC
     src/spellscan.h
     src/spellchecker.cpp
     src/spellchecker.h
+    src/diagram.cpp
+    src/diagram.h
+    src/diagramrenderer.cpp
+    src/diagramrenderer.h
     src/tableedit.cpp
     src/tableedit.h
     src/exporters.cpp
@@ -335,6 +339,8 @@ if(Qt6Test_FOUND)
         tst_mathlayout
         tst_spellscan
         tst_spellchecker
+        tst_diagram
+        tst_diagramrenderer
         tst_tableedit
         tst_exporters
         tst_markdownroundtrip

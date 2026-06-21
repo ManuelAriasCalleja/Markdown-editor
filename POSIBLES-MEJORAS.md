@@ -96,6 +96,16 @@ proyecto es sólido (~9k LOC, 23 ficheros de test, arquitectura por controllers,
    código, enlaces (campo HYPERLINK) e imágenes embebidas; idioma y título
    incrustados. *Archivo → Exportar → A DOCX (Word)*.
 9. **Diagramas** (Mermaid/PlantUML) — complementaría el soporte TeX existente.
+
+   **🚧 En curso.** Enfoque elegido: **CLI externo opcional** (degradación
+   elegante, como el corrector), ambos motores. *Hecho (backend):* módulo puro
+   `diagram` (`mddiagram::kindForLanguage` clasifica ```mermaid/plantuml/puml/uml)
+   y `DiagramRenderer` (ejecuta `plantuml`/`mmdc` async vía `QProcess`, cachea por
+   fuente, emite `rendered`/`failed`). Sin dependencia de terceros enlazada: solo
+   lanza procesos si existen. `tst_diagram` + `tst_diagramrenderer` (renderiza
+   PlantUML real a PNG; QSKIP si la herramienta falta). *Pendiente (Fase 2):*
+   representación en el editor (mostrar la imagen del bloque, round-trip intacto)
+   + aviso si falta la herramienta.
    *Tensiona la filosofía:* requiere un motor externo (JS/Java).
 10. ✅ **Insertar índice (TOC)** y ✅ **footnotes**. *Hechos:*
     `mdoutline::tableOfContentsMarkdown` + *Insertar → Índice (TOC)*; y el módulo
