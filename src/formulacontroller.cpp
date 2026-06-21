@@ -12,6 +12,7 @@
 #include <QVBoxLayout>
 
 #include "mathblocks.h"
+#include "mathobject.h"
 
 // Los textos visibles conservan el contexto de traducción "MainWindow"
 // (QCoreApplication::translate) para no re-hogar las cadenas ya traducidas en los
@@ -21,7 +22,12 @@ FormulaController::FormulaController(QTextEdit *editor, QWidget *parent)
     : QObject(parent)
     , m_editor(editor)
     , m_parent(parent)
+    , m_mathObject(new MathObject(this))
 {
+    // Registra el pintor de fórmulas 2D en el documento del editor. El editor
+    // conserva el mismo QTextDocument durante toda la sesión (setMarkdown lo
+    // reusa), así que basta registrarlo una vez.
+    MathObject::registerOn(m_editor->document(), m_mathObject);
 }
 
 bool FormulaController::askFormula(QString *tex, bool *block,
@@ -49,6 +55,8 @@ bool FormulaController::askFormula(QString *tex, bool *block,
     preview->setFrameStyle(QFrame::StyledPanel | QFrame::Sunken);
     preview->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     preview->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    // Las fórmulas 2D del preview las pinta el mismo handler que el editor.
+    MathObject::registerOn(preview->document(), m_mathObject);
     QFont previewFont = preview->font();
     previewFont.setPointSizeF(previewFont.pointSizeF() * 1.25);
     preview->setFont(previewFont);
@@ -60,11 +68,9 @@ bool FormulaController::askFormula(QString *tex, bool *block,
             return;
         }
         QTextCursor c(preview->document());
-        // El char-format base lleva las propiedades de math (cursiva, etc.);
-        // no importa que el preview no las consuma — solo nos interesan los
-        // runs con AlignSuperScript/SubScript.
-        const QTextCharFormat base = mdmath::mathCharFormat(tex, /*block=*/false);
-        for (const mdmath::MathRun &r : mdmath::renderTexAsRuns(tex, base))
+        // Mismo camino que la inserción real: 2D si la fórmula lo necesita
+        // (objeto pintado), runs con super/subíndice si no.
+        for (const mdmath::MathRun &r : mdmath::renderFormulaRuns(tex, /*block=*/false))
             c.insertText(r.text, r.fmt);
     };
     QObject::connect(edit, &QPlainTextEdit::textChanged, &dlg, updatePreview);
@@ -95,12 +101,11 @@ void FormulaController::insertFormula()
     if (!askFormula(&tex, &block))
         return;
 
-    // Inserta la fórmula como una secuencia de runs (varios fragmentos con
-    // super/subíndice de verdad, no solo Unicode). Todos comparten el TeX en
-    // la propiedad MathTex, lo que permite agruparlos al serializar y al
-    // editar con doble clic.
-    const QTextCharFormat base = mdmath::mathCharFormat(tex, block);
-    const QList<mdmath::MathRun> runs = mdmath::renderTexAsRuns(tex, base);
+    // Inserta la fórmula: 2D (un carácter objeto) si lleva fracciones o grandes
+    // operadores con límites; si no, runs con super/subíndice reales. En ambos
+    // casos comparten el TeX en MathTex, lo que permite agruparlos al serializar
+    // y al editar con doble clic.
+    const QList<mdmath::MathRun> runs = mdmath::renderFormulaRuns(tex, block);
 
     QTextCursor cursor = m_editor->textCursor();
     cursor.beginEditBlock();
@@ -301,8 +306,7 @@ bool FormulaController::editFormulaAt(const QPoint &viewportPos)
     if (!askFormula(&newTex, &newBlock, tex, block))
         return true;  // canceló pero atendimos el clic
 
-    const QTextCharFormat base = mdmath::mathCharFormat(newTex, newBlock);
-    const QList<mdmath::MathRun> runs = mdmath::renderTexAsRuns(newTex, base);
+    const QList<mdmath::MathRun> runs = mdmath::renderFormulaRuns(newTex, newBlock);
     QTextCursor c(m_editor->document());
     c.beginEditBlock();
     c.setPosition(start);

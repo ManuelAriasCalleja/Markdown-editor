@@ -96,6 +96,8 @@ add_library(md-editor-core STATIC
     src/texparser.cpp
     src/mathlayout.cpp
     src/mathlayout.h
+    src/mathobject.cpp
+    src/mathobject.h
     src/tableedit.cpp
     src/tableedit.h
     src/exporters.cpp

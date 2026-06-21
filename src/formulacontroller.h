@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QString>
 
+class MathObject;
 class QKeyEvent;
 class QPoint;
 class QTextEdit;
@@ -51,6 +52,7 @@ private:
 
     QTextEdit *m_editor = nullptr;
     QWidget *m_parent = nullptr;  // padre del diálogo de fórmula
+    MathObject *m_mathObject = nullptr;  // handler 2D registrado en el documento
 };
 
 #endif // FORMULACONTROLLER_H

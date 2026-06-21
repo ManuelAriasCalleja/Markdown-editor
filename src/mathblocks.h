@@ -113,6 +113,14 @@ struct MathRun {
 // elevado.
 QList<MathRun> renderTexAsRuns(const QString &tex, const QTextCharFormat &baseFmt);
 
+// Representación de una fórmula para insertar en el documento: punto único que
+// elige entre 2D y runs. Si `needsTwoDLayout(tex)` (fracciones, grandes
+// operadores con límites), devuelve UN run con el carácter objeto
+// (`mathObjectFormat`, lo pinta el QTextObjectInterface MathObject); si no, los
+// runs inline de `renderTexAsRuns`. Lo usan la carga (`renderMathInDocument`) y
+// la inserción/edición interactiva (FormulaController).
+QList<MathRun> renderFormulaRuns(const QString &tex, bool block);
+
 // Envuelve una expresión TeX en sus delimitadores: `$tex$` (inline) o `$$tex$$`
 // (bloque). Centraliza la convención de delimitadores del editor.
 QString wrapTex(const QString &tex, bool block);

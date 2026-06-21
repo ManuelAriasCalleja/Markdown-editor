@@ -1,4 +1,5 @@
 #include "mathblocks.h"
+#include "mathlayout.h"  // needsTwoDLayout
 
 #include <QChar>
 #include <QHash>
@@ -315,6 +316,18 @@ QTextCharFormat mathObjectFormat(const QString &tex, bool block)
     return fmt;
 }
 
+QList<MathRun> renderFormulaRuns(const QString &tex, bool block)
+{
+    if (needsTwoDLayout(tex)) {
+        // Fórmula 2D: un único «run» con el carácter objeto. Lo pinta el
+        // QTextObjectInterface registrado (MathObject). Comparte IsMath/MathTex
+        // con los runs inline, así que la serialización y la edición atómica lo
+        // tratan igual (un grupo de un solo fragmento).
+        return { { QString(QChar::ObjectReplacementCharacter), mathObjectFormat(tex, block) } };
+    }
+    return renderTexAsRuns(tex, mathCharFormat(tex, block));
+}
+
 namespace {
 
 // Helper: ¿el texto de un fragmento de inline-code es una fórmula con la
@@ -425,10 +438,9 @@ void renderMathInDocument(QTextDocument *doc)
             bool isBlock = false;
             if (!inlineCodeIsMath(frag.text(), tex, isBlock))
                 continue;
-            const QTextCharFormat base = mathCharFormat(tex, isBlock);
             repls.append({frag.position(),
                           frag.position() + frag.length(),
-                          renderTexAsRuns(tex, base)});
+                          renderFormulaRuns(tex, isBlock)});
         }
     }
     applyReplacements(doc, repls);

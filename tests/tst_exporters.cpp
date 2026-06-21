@@ -7,6 +7,7 @@
 #include <QXmlStreamReader>
 
 #include "exporters.h"
+#include "mathblocks.h"
 
 // Pruebas de la exportación: el serializador LaTeX puro, la lectura del front
 // matter y los XML de idioma del ODF. El empaquetado real del ODT (QZip) se
@@ -35,6 +36,7 @@ private slots:
     void epubBuildersAreWellFormedXml();
     void epubContentXhtmlWrapsBody();
     void epubWriteProducesZipPackage();
+    void twoDFormulaExpandsForHtmlAndLatex();
 };
 
 // ¿`xml` es XML bien formado? (para validar las piezas del EPUB).
@@ -292,6 +294,28 @@ void TestExporters::epubWriteProducesZipPackage()
     QCOMPARE(all.left(2), QByteArray("PK"));             // firma ZIP
     QVERIFY(all.contains("application/epub+zip"));       // mimetype
     QVERIFY(all.contains("mimetype"));
+}
+
+// Una fórmula 2D vive en el documento como un carácter objeto que ningún writer
+// sabe pintar. cloneForExport debe expandirla a runs inline para HTML/ODF/PDF/
+// DOCX; LaTeX, que usa el documento original, la emite como `$$tex$$` desde la
+// propiedad. Verificamos que no se cuela un U+FFFC (objeto sin pintar).
+void TestExporters::twoDFormulaExpandsForHtmlAndLatex()
+{
+    QTextDocument doc;
+    doc.setMarkdown(mdmath::protectMath(
+        QStringLiteral("Sea $$\\sum_{i=1}^n \\frac{x_i}{2}$$ fin\n")));
+    mdmath::renderMathInDocument(&doc);
+
+    std::unique_ptr<QTextDocument> flat(mdexport::cloneForExport(&doc));
+    const QString html = flat->toHtml();
+    QVERIFY2(!html.contains(QChar(0xFFFC)),
+             "el carácter objeto no debe llegar al HTML sin expandir");
+    QVERIFY(html.contains(QChar(0x2211)));  // Σ del sumatorio expandido
+
+    const QString latex = mdexport::toLatex(&doc, mdexport::Language{}, QString());
+    QVERIFY(latex.contains(QStringLiteral("\\sum_{i=1}^n")));
+    QVERIFY(latex.contains(QStringLiteral("\\frac{x_i}{2}")));
 }
 
 QTEST_MAIN(TestExporters)

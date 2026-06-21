@@ -24,6 +24,8 @@
 #include <QUrl>
 #include <QUuid>
 
+#include <algorithm>
+
 #include <private/qzipreader_p.h>
 #include <private/qzipwriter_p.h>
 
@@ -1226,12 +1228,19 @@ bool writeEpub(const QTextDocument *doc, const QString &path, const Language &la
 QTextDocument *cloneForExport(const QTextDocument *src)
 {
     // Clon directo: preserva fragmentos, formatos y vertical-align (lo que
-    // hace que HTML/PDF/ODF muestren los super/subíndices reales). Después
-    // limpiamos las propiedades custom de math: son internas del editor y no
-    // las entiende ningún writer; quitarlas mantiene el .html/.odt exportado
-    // sin atributos privados sueltos.
+    // hace que HTML/PDF/ODF muestren los super/subíndices reales). Después:
+    //   - los runs de math inline: solo limpiamos sus propiedades custom (son
+    //     internas del editor y no las entiende ningún writer);
+    //   - las fórmulas 2D (un carácter objeto MathObjectType, que los writers
+    //     tampoco saben pintar): las EXPANDIMOS a esos mismos runs inline
+    //     (cursiva + super/subíndice de Qt), la representación que sí exporta a
+    //     HTML/ODF/PDF/DOCX. La maquetación 2D es solo de pantalla.
+    // Recolectamos primero y aplicamos en orden descendente para no invalidar
+    // posiciones (las expansiones cambian la longitud).
     QTextDocument *out = src->clone();
     QTextCursor c(out);
+    struct MathEdit { int start; int end; bool isObject; QString tex; QTextCharFormat cleared; };
+    QList<MathEdit> edits;
     for (QTextBlock b = out->begin(); b.isValid(); b = b.next()) {
         for (auto it = b.begin(); it != b.end(); ++it) {
             const QTextFragment frag = it.fragment();
@@ -1240,13 +1249,33 @@ QTextDocument *cloneForExport(const QTextDocument *src)
             QTextCharFormat cf = frag.charFormat();
             if (!cf.boolProperty(mdmath::IsMathProperty))
                 continue;
-            cf.clearProperty(mdmath::IsMathProperty);
-            cf.clearProperty(mdmath::MathTexProperty);
-            cf.clearProperty(mdmath::MathBlockProperty);
-            c.setPosition(frag.position());
-            c.setPosition(frag.position() + frag.length(), QTextCursor::KeepAnchor);
-            c.setCharFormat(cf);
+            if (cf.objectType() == mdmath::MathObjectType) {
+                edits.append({frag.position(), frag.position() + frag.length(), true,
+                              cf.property(mdmath::MathTexProperty).toString(), {}});
+            } else {
+                cf.clearProperty(mdmath::IsMathProperty);
+                cf.clearProperty(mdmath::MathTexProperty);
+                cf.clearProperty(mdmath::MathBlockProperty);
+                edits.append({frag.position(), frag.position() + frag.length(), false,
+                              QString(), cf});
+            }
         }
+    }
+    std::sort(edits.begin(), edits.end(),
+              [](const MathEdit &a, const MathEdit &b) { return a.start > b.start; });
+    for (const MathEdit &e : edits) {
+        c.setPosition(e.start);
+        c.setPosition(e.end, QTextCursor::KeepAnchor);
+        if (!e.isObject) {
+            c.setCharFormat(e.cleared);
+            continue;
+        }
+        c.removeSelectedText();
+        QTextCharFormat base;
+        base.setFontItalic(true);  // convención tipográfica de las matemáticas
+        c.setPosition(e.start);
+        for (const mdmath::MathRun &r : mdmath::renderTexAsRuns(e.tex, base))
+            c.insertText(r.text, r.fmt);
     }
     return out;
 }
