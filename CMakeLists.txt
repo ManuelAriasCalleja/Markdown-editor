@@ -93,6 +93,7 @@ add_library(md-editor-core STATIC
     src/shortcodes.h
     src/mathblocks.cpp
     src/mathblocks.h
+    src/texparser.cpp
     src/tableedit.cpp
     src/tableedit.h
     src/exporters.cpp

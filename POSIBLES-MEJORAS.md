@@ -79,8 +79,12 @@ proyecto es sólido (~9k LOC, 23 ficheros de test, arquitectura por controllers,
 12. **Descomponer `mainwindow.cpp`** (ya por encima de 1600 líneas) — es 3× el
     siguiente fichero. Mover lógica de menús/acciones a uno o dos controllers más
     reduciría ese "God object".
-13. **`mathblocks.cpp` (982 líneas)** — segundo candidato a dividir (parser vs.
-    render/edición).
+13. ✅ **`mathblocks.cpp` (982 líneas)** — *Hecho:* extraído el motor de parseo
+    TeX→runs/Unicode a `src/texparser.cpp` (puro, ~480 líneas: `renderTexAsRuns`,
+    `texToUnicode`, `wrapTex` y sus tablas/helpers). `mathblocks.cpp` queda en
+    ~510 líneas (scanning del fuente + integración con `QTextDocument`). Header
+    único `mathblocks.h` (cero cambios en consumidores); cobertura intacta en
+    `tst_mathblocks`/`tst_formulacontroller`.
 14. **Static analysis en CI** — `clang-tidy` + compilar tests con ASAN/UBSAN.
     Para un parser con round-trip, los sanitizers cazan bugs de memoria que los
     tests funcionales no ven.

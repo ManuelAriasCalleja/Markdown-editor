@@ -236,8 +236,12 @@ añadir lógica nueva: hay un `tst_*` por módulo.
 ### Fórmulas TeX (`mdmath`)
 
 El editor soporta `$...$` y `$$...$$` sin dependencias externas. El módulo `mdmath`
-(`mathblocks.{h,cpp}`) lo orquesta todo y es **puro** (lo prueban `tst_mathblocks`).
-Piezas clave:
+lo orquesta todo y es **puro** (lo prueban `tst_mathblocks`). Vive en un header
+único `mathblocks.h` pero el `.cpp` está partido en dos: `mathblocks.cpp` (scanning
+del Markdown fuente — `findMath`/`protectMath` — e integración con `QTextDocument`)
+y `texparser.cpp` (el motor de parseo TeX→runs/Unicode: `renderTexAsRuns`,
+`texToUnicode`, `wrapTex` y sus tablas). Mismo namespace `mdmath`; los consumidores
+solo incluyen `mathblocks.h`. Piezas clave:
 
 - *Carga.* `DocumentIo::load` aplica `mdmath::protectMath` al texto fuente antes de
   `setMarkdown`: envuelve cada `$tex$`/`$$tex$$` en inline-code ``` ``$tex$`` ```
