@@ -99,6 +99,21 @@
 
 namespace {
 
+// Nombre legible de un diccionario (basename como "en_US", "es") para el menú,
+// derivado del locale: «Inglés (Estados Unidos)», «Español»… Si el código trae
+// territorio (es_ES), se muestra; si no se reconoce, se deja el código tal cual.
+QString spellLanguageLabel(const QString &code)
+{
+    const QLocale loc(code);
+    QString name = loc.nativeLanguageName();
+    if (name.isEmpty())
+        return code;
+    name[0] = name.at(0).toUpper();
+    if (code.contains(QLatin1Char('_')) && !loc.nativeTerritoryName().isEmpty())
+        return QStringLiteral("%1 (%2)").arg(name, loc.nativeTerritoryName());
+    return name;
+}
+
 // Añade el atajo (localizado por `NativeText`) entre paréntesis al final de un
 // tooltip; si no hay atajo, deja el texto tal cual.
 QString withShortcut(const QString &base, const QKeySequence &shortcut)
@@ -1091,6 +1106,34 @@ void MainWindow::createViewMenu()
         applySpellLanguage();  // carga/descarga el diccionario y rehace el resaltado
     });
 
+    // Idioma del corrector: «Automático» (deduce del documento) o uno fijo de los
+    // diccionarios disponibles. El nombre legible sale del propio locale.
+    QMenu *spellLangMenu = viewMenu->addMenu(tr("Idioma de corrección"));
+    auto *spellLangGroup = new QActionGroup(this);
+    spellLangGroup->setExclusive(true);
+    const QString currentSpellLang = AppSettings::spellLanguage();
+    QAction *autoLangAction = spellLangMenu->addAction(tr("Automático (según el documento)"));
+    autoLangAction->setCheckable(true);
+    autoLangAction->setChecked(currentSpellLang.isEmpty());
+    spellLangGroup->addAction(autoLangAction);
+    connect(autoLangAction, &QAction::triggered, this, [this] {
+        AppSettings::setSpellLanguage(QString());
+        applySpellLanguage();
+    });
+    const QStringList spellLangs = SpellChecker::availableLanguages();
+    if (!spellLangs.isEmpty())
+        spellLangMenu->addSeparator();
+    for (const QString &code : spellLangs) {
+        QAction *langAct = spellLangMenu->addAction(spellLanguageLabel(code));
+        langAct->setCheckable(true);
+        langAct->setChecked(code == currentSpellLang);
+        spellLangGroup->addAction(langAct);
+        connect(langAct, &QAction::triggered, this, [this, code] {
+            AppSettings::setSpellLanguage(code);
+            applySpellLanguage();
+        });
+    }
+
     viewMenu->addSeparator();
     QMenu *themeMenu = viewMenu->addMenu(tr("Tema"));
     auto *themeGroup = new QActionGroup(this);
@@ -1432,15 +1475,19 @@ void MainWindow::applySpellLanguage()
         m_highlighter->rehighlight();
         return;
     }
-    // Mismo criterio que la exportación: front matter › ajuste de la app › locale.
-    const QString fm = m_documentIo->frontMatter();
-    QString code = mdexport::frontMatterValue(fm, QStringLiteral("lang"));
-    if (code.isEmpty())
-        code = mdexport::frontMatterValue(fm, QStringLiteral("language"));
-    if (code.isEmpty())
-        code = AppSettings::language();
-    if (code.isEmpty())
-        code = QLocale::system().name();  // p. ej. "es_ES"
+    // Idioma: override manual (Ver → Idioma de corrección) si lo hay; si no,
+    // automático, igual que la exportación: front matter › ajuste › locale.
+    QString code = AppSettings::spellLanguage();
+    if (code.isEmpty()) {
+        const QString fm = m_documentIo->frontMatter();
+        code = mdexport::frontMatterValue(fm, QStringLiteral("lang"));
+        if (code.isEmpty())
+            code = mdexport::frontMatterValue(fm, QStringLiteral("language"));
+        if (code.isEmpty())
+            code = AppSettings::language();
+        if (code.isEmpty())
+            code = QLocale::system().name();  // p. ej. "es_ES"
+    }
 
     m_spell.setPersonalWords(AppSettings::personalDictionary());
     m_spell.setLanguage(code);

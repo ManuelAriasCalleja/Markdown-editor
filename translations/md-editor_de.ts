@@ -131,328 +131,328 @@
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="../src/mainwindow.cpp" line="557"/>
+        <location filename="../src/mainwindow.cpp" line="572"/>
         <source>Editor Markdown WYSIWYG — escribe y da formato con la barra superior</source>
         <translation>WYSIWYG-Markdown-Editor — schreiben und mit der oberen Leiste formatieren</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="589"/>
+        <location filename="../src/mainwindow.cpp" line="604"/>
         <source>&amp;Archivo</source>
         <translation>&amp;Datei</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="591"/>
+        <location filename="../src/mainwindow.cpp" line="606"/>
         <source>&amp;Nuevo</source>
         <translation>&amp;Neu</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="595"/>
+        <location filename="../src/mainwindow.cpp" line="610"/>
         <source>Nuevo desde &amp;plantilla</source>
         <translation>Neu aus &amp;Vorlage</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="603"/>
+        <location filename="../src/mainwindow.cpp" line="618"/>
         <source>&amp;Abrir...</source>
         <translation>&amp;Öffnen...</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="607"/>
+        <location filename="../src/mainwindow.cpp" line="622"/>
         <source>Abrir &amp;recientes</source>
         <translation>&amp;Zuletzt geöffnet</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="612"/>
+        <location filename="../src/mainwindow.cpp" line="627"/>
         <source>&amp;Guardar</source>
         <translation>&amp;Speichern</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="616"/>
+        <location filename="../src/mainwindow.cpp" line="631"/>
         <source>Guardar &amp;como...</source>
         <translation>Speichern &amp;unter...</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="620"/>
+        <location filename="../src/mainwindow.cpp" line="635"/>
         <source>Abrir &amp;carpeta contenedora</source>
         <translation>Enthaltenden &amp;Ordner öffnen</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="625"/>
+        <location filename="../src/mainwindow.cpp" line="640"/>
         <source>&amp;Exportar</source>
         <translation>&amp;Exportieren</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="626"/>
+        <location filename="../src/mainwindow.cpp" line="641"/>
         <source>A PDF...</source>
         <translation>Als PDF...</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="628"/>
+        <location filename="../src/mainwindow.cpp" line="643"/>
         <source>A HTML...</source>
         <translation>Als HTML...</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="630"/>
+        <location filename="../src/mainwindow.cpp" line="645"/>
         <source>A ODF (ODT)...</source>
         <translation>Als ODF (ODT)...</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="632"/>
+        <location filename="../src/mainwindow.cpp" line="647"/>
         <source>A DOCX (Word)...</source>
         <translation>Als DOCX (Word)...</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="634"/>
+        <location filename="../src/mainwindow.cpp" line="649"/>
         <source>A LaTeX...</source>
         <translation>Als LaTeX...</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="636"/>
+        <location filename="../src/mainwindow.cpp" line="651"/>
         <source>A EPUB...</source>
         <translation>Als EPUB...</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="639"/>
+        <location filename="../src/mainwindow.cpp" line="654"/>
         <source>Selección a PDF...</source>
         <translation>Auswahl als PDF...</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="640"/>
+        <location filename="../src/mainwindow.cpp" line="655"/>
         <source>Exporta a PDF solo el texto seleccionado</source>
         <translation>Nur den ausgewählten Text als PDF exportieren</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="645"/>
+        <location filename="../src/mainwindow.cpp" line="660"/>
         <source>&amp;Vista previa de impresión...</source>
         <translation>&amp;Druckvorschau...</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="648"/>
+        <location filename="../src/mainwindow.cpp" line="663"/>
         <source>&amp;Imprimir...</source>
         <translation>&amp;Drucken...</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="652"/>
+        <location filename="../src/mainwindow.cpp" line="667"/>
         <source>Imprimir &amp;selección...</source>
         <translation>&amp;Auswahl drucken...</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="653"/>
+        <location filename="../src/mainwindow.cpp" line="668"/>
         <source>Imprime solo el texto seleccionado</source>
         <translation>Nur den ausgewählten Text drucken</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="658"/>
+        <location filename="../src/mainwindow.cpp" line="673"/>
         <source>&amp;Salir</source>
         <translation>&amp;Beenden</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="665"/>
+        <location filename="../src/mainwindow.cpp" line="680"/>
         <source>&amp;Editar</source>
         <translation>&amp;Bearbeiten</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="667"/>
+        <location filename="../src/mainwindow.cpp" line="682"/>
         <source>Deshacer</source>
         <translation>Rückgängig</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="671"/>
+        <location filename="../src/mainwindow.cpp" line="686"/>
         <source>Rehacer</source>
         <translation>Wiederholen</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="677"/>
+        <location filename="../src/mainwindow.cpp" line="692"/>
         <source>Pegar como texto plano</source>
         <translation>Als unformatierten Text einfügen</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="686"/>
+        <location filename="../src/mainwindow.cpp" line="701"/>
         <source>Pegar como Markdown</source>
         <translation>Als Markdown einfügen</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="711"/>
+        <location filename="../src/mainwindow.cpp" line="726"/>
         <source>Copiar como HTML</source>
         <translation>Als HTML kopieren</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="718"/>
+        <location filename="../src/mainwindow.cpp" line="733"/>
         <source>Transformar texto</source>
         <translation>Text umwandeln</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="727"/>
+        <location filename="../src/mainwindow.cpp" line="742"/>
         <source>MAYÚSCULAS</source>
         <translation>GROSSBUCHSTABEN</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="730"/>
+        <location filename="../src/mainwindow.cpp" line="745"/>
         <source>minúsculas</source>
         <translation>kleinbuchstaben</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="733"/>
+        <location filename="../src/mainwindow.cpp" line="748"/>
         <source>Capitalizar</source>
         <translation>Wörter großschreiben</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="737"/>
+        <location filename="../src/mainwindow.cpp" line="752"/>
         <source>Tipografía inteligente</source>
         <translation>Intelligente Typografie</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="738"/>
+        <location filename="../src/mainwindow.cpp" line="753"/>
         <source>Convierte -- — ... y comillas rectas en sus formas tipográficas</source>
         <translation>Wandelt -- — ... und gerade Anführungszeichen in ihre typografischen Formen um</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="742"/>
+        <location filename="../src/mainwindow.cpp" line="757"/>
         <source>Ordenar líneas</source>
         <translation>Zeilen sortieren</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="759"/>
+        <location filename="../src/mainwindow.cpp" line="774"/>
         <source>Buscar...</source>
         <translation>Suchen...</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="763"/>
+        <location filename="../src/mainwindow.cpp" line="778"/>
         <source>Reemplazar...</source>
         <translation>Ersetzen...</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="789"/>
+        <location filename="../src/mainwindow.cpp" line="804"/>
         <source>Negrita</source>
         <translation>Fett</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="793"/>
+        <location filename="../src/mainwindow.cpp" line="808"/>
         <source>Cursiva</source>
         <translation>Kursiv</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="797"/>
+        <location filename="../src/mainwindow.cpp" line="812"/>
         <source>Subrayado</source>
         <translation>Unterstrichen</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="803"/>
+        <location filename="../src/mainwindow.cpp" line="818"/>
         <source>Tachado</source>
         <translation>Durchgestrichen</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="807"/>
+        <location filename="../src/mainwindow.cpp" line="822"/>
         <source>Código</source>
         <translation>Code</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="815"/>
+        <location filename="../src/mainwindow.cpp" line="830"/>
         <source>Código en línea</source>
         <translation>Inline-Code</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="816"/>
+        <location filename="../src/mainwindow.cpp" line="831"/>
         <location filename="../src/insertcontroller.cpp" line="109"/>
         <source>Enlace</source>
         <translation>Link</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="817"/>
+        <location filename="../src/mainwindow.cpp" line="832"/>
         <source>Insertar o editar enlace</source>
         <translation>Link einfügen oder bearbeiten</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="818"/>
+        <location filename="../src/mainwindow.cpp" line="833"/>
         <source>❝ Cita</source>
         <translation>❝ Zitat</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="819"/>
+        <location filename="../src/mainwindow.cpp" line="834"/>
         <source>Convertir en cita</source>
         <translation>In Zitat umwandeln</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="820"/>
+        <location filename="../src/mainwindow.cpp" line="835"/>
         <source>Bloque</source>
         <translation>Block</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="821"/>
+        <location filename="../src/mainwindow.cpp" line="836"/>
         <source>Bloque de código</source>
         <translation>Codeblock</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="822"/>
+        <location filename="../src/mainwindow.cpp" line="837"/>
         <source>H1</source>
         <translation>H1</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="824"/>
+        <location filename="../src/mainwindow.cpp" line="839"/>
         <source>H2</source>
         <translation>H2</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="826"/>
+        <location filename="../src/mainwindow.cpp" line="841"/>
         <source>H3</source>
         <translation>H3</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="828"/>
+        <location filename="../src/mainwindow.cpp" line="843"/>
         <source>H4</source>
         <translation>H4</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="830"/>
+        <location filename="../src/mainwindow.cpp" line="845"/>
         <source>H5</source>
         <translation>H5</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="832"/>
+        <location filename="../src/mainwindow.cpp" line="847"/>
         <source>H6</source>
         <translation>H6</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="855"/>
+        <location filename="../src/mainwindow.cpp" line="870"/>
         <source>&amp;Formato</source>
         <translation>F&amp;ormat</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="874"/>
+        <location filename="../src/mainwindow.cpp" line="889"/>
         <source>Aumentar sangría</source>
         <translation>Einzug vergrößern</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="879"/>
+        <location filename="../src/mainwindow.cpp" line="894"/>
         <source>Disminuir sangría</source>
         <translation>Einzug verkleinern</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="888"/>
+        <location filename="../src/mainwindow.cpp" line="903"/>
         <source>Lenguaje del bloque...</source>
         <translation>Blocksprache...</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="889"/>
+        <location filename="../src/mainwindow.cpp" line="904"/>
         <source>Fija el lenguaje del bloque de código (resaltado)</source>
         <translation>Legt die Sprache des Codeblocks fest (Hervorhebung)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="904"/>
+        <location filename="../src/mainwindow.cpp" line="919"/>
         <source>&amp;Insertar</source>
         <translation>&amp;Einfügen</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="906"/>
+        <location filename="../src/mainwindow.cpp" line="921"/>
         <source>Enlace...</source>
         <translation>Link...</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="909"/>
+        <location filename="../src/mainwindow.cpp" line="924"/>
         <source>Imagen...</source>
         <translation>Bild...</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="912"/>
+        <location filename="../src/mainwindow.cpp" line="927"/>
         <location filename="../src/insertcontroller.cpp" line="176"/>
         <location filename="../src/insertcontroller.cpp" line="193"/>
         <location filename="../src/insertcontroller.cpp" line="235"/>
@@ -460,297 +460,307 @@
         <translation>Bild einfügen</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="913"/>
+        <location filename="../src/mainwindow.cpp" line="928"/>
         <source>Guarda la imagen del portapapeles y la inserta</source>
         <translation>Speichert das Bild aus der Zwischenablage und fügt es ein</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="916"/>
+        <location filename="../src/mainwindow.cpp" line="931"/>
         <source>Tabla...</source>
         <translation>Tabelle...</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="919"/>
+        <location filename="../src/mainwindow.cpp" line="934"/>
         <source>Regla horizontal</source>
         <translation>Horizontale Linie</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="922"/>
+        <location filename="../src/mainwindow.cpp" line="937"/>
         <source>Índice (TOC)</source>
         <translation>Inhaltsverzeichnis (TOC)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="923"/>
+        <location filename="../src/mainwindow.cpp" line="938"/>
         <source>Inserta un índice con los encabezados del documento</source>
         <translation>Fügt ein Inhaltsverzeichnis mit den Überschriften des Dokuments ein</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="926"/>
+        <location filename="../src/mainwindow.cpp" line="941"/>
         <source>Fórmula...</source>
         <translation>Formel...</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="931"/>
+        <location filename="../src/mainwindow.cpp" line="946"/>
         <source>Nota al pie</source>
         <translation>Fußnote</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="934"/>
+        <location filename="../src/mainwindow.cpp" line="949"/>
         <source>Inserta una referencia [^n] y su definición al final del documento</source>
         <translation>Fügt eine Referenz [^n] und ihre Definition am Dokumentende ein</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="940"/>
+        <location filename="../src/mainwindow.cpp" line="955"/>
         <source>Admonición</source>
         <translation>Hinweisblock</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="941"/>
+        <location filename="../src/mainwindow.cpp" line="956"/>
         <source>Inserta un bloque destacado (nota, aviso, etc.)</source>
         <translation>Einen Hinweisblock einfügen (Notiz, Warnung usw.)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="943"/>
+        <location filename="../src/mainwindow.cpp" line="958"/>
         <source>Nota</source>
         <translation>Notiz</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="944"/>
+        <location filename="../src/mainwindow.cpp" line="959"/>
         <source>Consejo</source>
         <translation>Tipp</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="945"/>
+        <location filename="../src/mainwindow.cpp" line="960"/>
         <source>Importante</source>
         <translation>Wichtig</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="946"/>
+        <location filename="../src/mainwindow.cpp" line="961"/>
         <source>Advertencia</source>
         <translation>Warnung</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="947"/>
+        <location filename="../src/mainwindow.cpp" line="962"/>
         <source>Precaución</source>
         <translation>Vorsicht</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="956"/>
+        <location filename="../src/mainwindow.cpp" line="971"/>
         <source>Símbolos especiales...</source>
         <translation>Sonderzeichen...</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="957"/>
+        <location filename="../src/mainwindow.cpp" line="972"/>
         <source>Inserta símbolos no habituales, por categorías</source>
         <translation>Ungewöhnliche Zeichen nach Kategorie einfügen</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="960"/>
+        <location filename="../src/mainwindow.cpp" line="975"/>
         <source>Fecha</source>
         <translation>Datum</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="961"/>
+        <location filename="../src/mainwindow.cpp" line="976"/>
         <source>Inserta la fecha actual en formato local</source>
         <translation>Aktuelles Datum im lokalen Format einfügen</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="964"/>
+        <location filename="../src/mainwindow.cpp" line="979"/>
         <source>Fecha y hora</source>
         <translation>Datum und Uhrzeit</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="965"/>
+        <location filename="../src/mainwindow.cpp" line="980"/>
         <source>Inserta la fecha y la hora actuales en formato local</source>
         <translation>Aktuelles Datum und aktuelle Uhrzeit im lokalen Format einfügen</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="980"/>
+        <location filename="../src/mainwindow.cpp" line="995"/>
         <source>&amp;Tabla</source>
         <translation>&amp;Tabelle</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="982"/>
+        <location filename="../src/mainwindow.cpp" line="997"/>
         <source>Insertar fila encima</source>
         <translation>Zeile oberhalb einfügen</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="984"/>
+        <location filename="../src/mainwindow.cpp" line="999"/>
         <source>Insertar fila debajo</source>
         <translation>Zeile unterhalb einfügen</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="986"/>
+        <location filename="../src/mainwindow.cpp" line="1001"/>
         <source>Insertar columna a la izquierda</source>
         <translation>Spalte links einfügen</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="988"/>
+        <location filename="../src/mainwindow.cpp" line="1003"/>
         <source>Insertar columna a la derecha</source>
         <translation>Spalte rechts einfügen</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="992"/>
+        <location filename="../src/mainwindow.cpp" line="1007"/>
         <source>Eliminar fila</source>
         <translation>Zeile löschen</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="994"/>
+        <location filename="../src/mainwindow.cpp" line="1009"/>
         <source>Eliminar columna</source>
         <translation>Spalte löschen</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="998"/>
+        <location filename="../src/mainwindow.cpp" line="1013"/>
         <source>Alinear columna</source>
         <translation>Spalte ausrichten</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="999"/>
+        <location filename="../src/mainwindow.cpp" line="1014"/>
         <source>Izquierda</source>
         <translation>Links</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1001"/>
+        <location filename="../src/mainwindow.cpp" line="1016"/>
         <source>Centrar</source>
         <translation>Zentriert</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1003"/>
+        <location filename="../src/mainwindow.cpp" line="1018"/>
         <source>Derecha</source>
         <translation>Rechts</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1014"/>
+        <location filename="../src/mainwindow.cpp" line="1029"/>
         <source>&amp;Ver</source>
         <translation>&amp;Ansicht</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1022"/>
+        <location filename="../src/mainwindow.cpp" line="1037"/>
         <source>Vista dividida</source>
         <translation>Geteilte Ansicht</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1028"/>
+        <location filename="../src/mainwindow.cpp" line="1043"/>
         <source>Editar WYSIWYG y código fuente a la vez, lado a lado</source>
         <translation>WYSIWYG und Quelltext gleichzeitig nebeneinander bearbeiten</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1032"/>
+        <location filename="../src/mainwindow.cpp" line="1047"/>
         <source>Sin distracciones</source>
         <translation>Ablenkungsfreier Modus</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1036"/>
+        <location filename="../src/mainwindow.cpp" line="1051"/>
         <source>Pantalla completa, sin barras, con el texto centrado (ESC o F11 para salir)</source>
         <translation>Vollbild, ohne Leisten, mit zentriertem Text (ESC oder F11 zum Beenden)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1043"/>
+        <location filename="../src/mainwindow.cpp" line="1058"/>
         <source>Esquema</source>
         <translation>Gliederung</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1048"/>
+        <location filename="../src/mainwindow.cpp" line="1063"/>
         <source>Ir a encabezado...</source>
         <translation>Zu Überschrift springen...</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1051"/>
+        <location filename="../src/mainwindow.cpp" line="1066"/>
         <source>Salta a un encabezado del documento</source>
         <translation>Zu einer Überschrift im Dokument springen</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1056"/>
+        <location filename="../src/mainwindow.cpp" line="1071"/>
         <source>Aumentar letra</source>
         <translation>Vergrößern</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1061"/>
+        <location filename="../src/mainwindow.cpp" line="1076"/>
         <source>Reducir letra</source>
         <translation>Verkleinern</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1065"/>
+        <location filename="../src/mainwindow.cpp" line="1080"/>
         <source>Tamaño normal</source>
         <translation>Normale Größe</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1071"/>
+        <location filename="../src/mainwindow.cpp" line="1086"/>
         <source>Estadísticas del documento...</source>
         <translation>Dokumentstatistik...</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1074"/>
+        <location filename="../src/mainwindow.cpp" line="1089"/>
         <source>Mostrar contador de palabras</source>
         <translation>Wortzähler anzeigen</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1084"/>
+        <location filename="../src/mainwindow.cpp" line="1099"/>
         <source>Corrección ortográfica</source>
         <translation>Rechtschreibprüfung</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1087"/>
+        <location filename="../src/mainwindow.cpp" line="1102"/>
         <source>Subraya las palabras mal escritas según el idioma del documento</source>
         <translation>Unterstreicht falsch geschriebene Wörter in der Sprache des Dokuments</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1095"/>
+        <location filename="../src/mainwindow.cpp" line="1111"/>
+        <source>Idioma de corrección</source>
+        <translation>Sprache der Rechtschreibprüfung</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="1115"/>
+        <source>Automático (según el documento)</source>
+        <translation>Automatisch (laut Dokument)</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="1138"/>
         <source>Tema</source>
         <translation>Design</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1104"/>
+        <location filename="../src/mainwindow.cpp" line="1147"/>
         <source>Claro</source>
         <translation>Hell</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1105"/>
+        <location filename="../src/mainwindow.cpp" line="1148"/>
         <source>Oscuro</source>
         <translation>Dunkel</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1106"/>
+        <location filename="../src/mainwindow.cpp" line="1149"/>
         <source>Alto contraste</source>
         <translation>Hoher Kontrast</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1134"/>
+        <location filename="../src/mainwindow.cpp" line="1177"/>
         <source>Seguir el sistema</source>
         <translation>Dem System folgen</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1138"/>
+        <location filename="../src/mainwindow.cpp" line="1181"/>
         <source>Usa el tema claro u oscuro según la configuración del sistema operativo</source>
         <translation>Verwendet das helle oder dunkle Design entsprechend der Systemeinstellung</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1152"/>
+        <location filename="../src/mainwindow.cpp" line="1195"/>
         <source>Luz cálida nocturna</source>
         <translation>Warmes Nachtlicht</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1156"/>
+        <location filename="../src/mainwindow.cpp" line="1199"/>
         <source>Tiñe el fondo del editor de tono ámbar según la hora, más cálido de noche</source>
         <translation>Färbt den Editorhintergrund je nach Tageszeit bernsteinfarben, nachts wärmer</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1194"/>
+        <location filename="../src/mainwindow.cpp" line="1237"/>
         <source>A&amp;yuda</source>
         <translation>&amp;Hilfe</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1195"/>
+        <location filename="../src/mainwindow.cpp" line="1238"/>
         <source>&amp;Manual</source>
         <translation>&amp;Handbuch</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1199"/>
+        <location filename="../src/mainwindow.cpp" line="1242"/>
         <source>&amp;Acerca de</source>
         <translation>&amp;Über</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1258"/>
+        <location filename="../src/mainwindow.cpp" line="1301"/>
         <source>Acerca de</source>
         <translation>Über</translation>
     </message>
@@ -759,12 +769,12 @@
         <translation type="vanished">Version 1.0</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1267"/>
+        <location filename="../src/mainwindow.cpp" line="1310"/>
         <source>Desarrollado por Manuel Arias Calleja</source>
         <translation>Entwickelt von Manuel Arias Calleja</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1269"/>
+        <location filename="../src/mainwindow.cpp" line="1312"/>
         <source>Editor WYSIWYG de Markdown en Qt6 + C++17.</source>
         <translation>WYSIWYG-Markdown-Editor in Qt6 + C++17.</translation>
     </message>
@@ -773,12 +783,12 @@
         <translation type="vanished">Erstellt von Manuel Arias Calleja.</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1277"/>
+        <location filename="../src/mainwindow.cpp" line="1320"/>
         <source>Formato</source>
         <translation>Format</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1367"/>
+        <location filename="../src/mainwindow.cpp" line="1410"/>
         <source>Selección: </source>
         <translation>Auswahl: </translation>
     </message>
@@ -854,7 +864,7 @@
         <translation>Inhaltsverzeichnis einfügen</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1854"/>
+        <location filename="../src/mainwindow.cpp" line="1901"/>
         <location filename="../src/insertcontroller.cpp" line="304"/>
         <source>El documento no tiene encabezados.</source>
         <translation>Das Dokument enthält keine Überschriften.</translation>
@@ -1044,18 +1054,18 @@
         <translation>Als LaTeX exportiert: %1</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="519"/>
+        <location filename="../src/mainwindow.cpp" line="534"/>
         <source>El archivo se eliminó o movió en disco.</source>
         <translation>Die Datei wurde auf dem Datenträger gelöscht oder verschoben.</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1265"/>
+        <location filename="../src/mainwindow.cpp" line="1308"/>
         <source>Versión %1</source>
         <translation>Version %1</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/mainwindow.cpp" line="1365"/>
-        <location filename="../src/mainwindow.cpp" line="1387"/>
+        <location filename="../src/mainwindow.cpp" line="1408"/>
+        <location filename="../src/mainwindow.cpp" line="1430"/>
         <source>~%n min</source>
         <translation>
             <numerusform>~%n min</numerusform>
@@ -1063,102 +1073,102 @@
         </translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1378"/>
+        <location filename="../src/mainwindow.cpp" line="1421"/>
         <source>Estadísticas del documento</source>
         <translation>Dokumentstatistik</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1380"/>
+        <location filename="../src/mainwindow.cpp" line="1423"/>
         <source>Palabras:</source>
         <translation>Wörter:</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1381"/>
+        <location filename="../src/mainwindow.cpp" line="1424"/>
         <source>Caracteres:</source>
         <translation>Zeichen:</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1382"/>
+        <location filename="../src/mainwindow.cpp" line="1425"/>
         <source>Caracteres (sin espacios):</source>
         <translation>Zeichen (ohne Leerzeichen):</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1384"/>
+        <location filename="../src/mainwindow.cpp" line="1427"/>
         <source>Párrafos:</source>
         <translation>Absätze:</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1385"/>
+        <location filename="../src/mainwindow.cpp" line="1428"/>
         <source>Frases:</source>
         <translation>Sätze:</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1386"/>
+        <location filename="../src/mainwindow.cpp" line="1429"/>
         <source>Tiempo de lectura:</source>
         <translation>Lesezeit:</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1483"/>
+        <location filename="../src/mainwindow.cpp" line="1530"/>
         <source>(sin sugerencias)</source>
         <translation>(keine Vorschläge)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1502"/>
+        <location filename="../src/mainwindow.cpp" line="1549"/>
         <source>Añadir «%1» al diccionario</source>
         <translation>„%1“ zum Wörterbuch hinzufügen</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1508"/>
+        <location filename="../src/mainwindow.cpp" line="1555"/>
         <source>Ignorar «%1»</source>
         <translation>„%1“ ignorieren</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1707"/>
+        <location filename="../src/mainwindow.cpp" line="1754"/>
         <source>Clic para marcar o desmarcar la tarea</source>
         <translation>Klicken, um die Aufgabe an- oder abzuhaken</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1713"/>
+        <location filename="../src/mainwindow.cpp" line="1760"/>
         <source>Clic para ir a la nota al pie</source>
         <translation>Klicken, um zur Fußnote zu springen</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1926"/>
+        <location filename="../src/mainwindow.cpp" line="1973"/>
         <source>La nota [^%1] no tiene definición</source>
         <translation>Die Fußnote [^%1] hat keine Definition</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2016"/>
+        <location filename="../src/mainwindow.cpp" line="2063"/>
         <source>El archivo cambió en disco: recargado.</source>
         <translation>Die Datei wurde auf dem Datenträger geändert: neu geladen.</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2023"/>
+        <location filename="../src/mainwindow.cpp" line="2070"/>
         <source>Archivo modificado en disco</source>
         <translation>Datei auf dem Datenträger geändert</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2024"/>
+        <location filename="../src/mainwindow.cpp" line="2071"/>
         <source>«%1» ha cambiado en disco y tienes cambios sin guardar.</source>
         <translation>„%1“ wurde auf dem Datenträger geändert und Sie haben ungespeicherte Änderungen.</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2027"/>
+        <location filename="../src/mainwindow.cpp" line="2074"/>
         <source>¿Recargar la versión del disco (perderás tus cambios) o conservar los tuyos?</source>
         <translation>Die Version vom Datenträger neu laden (Ihre Änderungen gehen verloren) oder Ihre behalten?</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2028"/>
+        <location filename="../src/mainwindow.cpp" line="2075"/>
         <source>Recargar</source>
         <translation>Neu laden</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2030"/>
+        <location filename="../src/mainwindow.cpp" line="2077"/>
         <source>Conservar los míos</source>
         <translation>Meine behalten</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2059"/>
+        <location filename="../src/mainwindow.cpp" line="2106"/>
         <source>No se pudo recargar el archivo:
 %1
 
@@ -1216,7 +1226,7 @@
         <translation>HTML (*.html *.htm)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2058"/>
+        <location filename="../src/mainwindow.cpp" line="2105"/>
         <location filename="../src/exportcontroller.cpp" line="152"/>
         <location filename="../src/filecontroller.cpp" line="102"/>
         <location filename="../src/filecontroller.cpp" line="164"/>
@@ -1241,7 +1251,7 @@
         <translation>Als HTML exportiert: %1</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1720"/>
+        <location filename="../src/mainwindow.cpp" line="1767"/>
         <source>Ctrl+clic para abrir el enlace: %1</source>
         <translation>Strg+Klick zum Öffnen des Links: %1</translation>
     </message>
@@ -1320,17 +1330,17 @@ Möchtest du sie speichern?</translation>
         <translation>Dokument aus der vorherigen Sitzung wiederhergestellt</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1953"/>
+        <location filename="../src/mainwindow.cpp" line="2000"/>
         <source>(sin título)</source>
         <translation>(ohne Titel)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1958"/>
+        <location filename="../src/mainwindow.cpp" line="2005"/>
         <source>Recuperar documento</source>
         <translation>Dokument wiederherstellen</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1959"/>
+        <location filename="../src/mainwindow.cpp" line="2006"/>
         <source>Se encontró un documento con cambios sin guardar de una sesión anterior:
 %1 (%2).
 
@@ -1341,53 +1351,53 @@ Möchtest du sie speichern?</translation>
 Möchtest du es wiederherstellen?</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1962"/>
+        <location filename="../src/mainwindow.cpp" line="2009"/>
         <source>Recuperar</source>
         <translation>Wiederherstellen</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1963"/>
+        <location filename="../src/mainwindow.cpp" line="2010"/>
         <source>Descartar</source>
         <translation>Verwerfen</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2001"/>
+        <location filename="../src/mainwindow.cpp" line="2048"/>
         <source>Sin título</source>
         <translation>Unbenannt</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2004"/>
+        <location filename="../src/mainwindow.cpp" line="2051"/>
         <source>%1[*] — md-editor</source>
         <translation>%1[*] — md-editor</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1166"/>
+        <location filename="../src/mainwindow.cpp" line="1209"/>
         <source>Automático (sistema)</source>
         <translation>Automatisch (System)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="834"/>
+        <location filename="../src/mainwindow.cpp" line="849"/>
         <source>Lista de viñetas</source>
         <translation>Aufzählungsliste</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="836"/>
+        <location filename="../src/mainwindow.cpp" line="851"/>
         <source>Lista numerada</source>
         <translation>Nummerierte Liste</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="838"/>
+        <location filename="../src/mainwindow.cpp" line="853"/>
         <location filename="../src/doctemplates.cpp" line="134"/>
         <source>Lista de tareas</source>
         <translation>Aufgabenliste</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1178"/>
+        <location filename="../src/mainwindow.cpp" line="1221"/>
         <source>Idioma</source>
         <translation>Sprache</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/mainwindow.cpp" line="1358"/>
+        <location filename="../src/mainwindow.cpp" line="1401"/>
         <source>%n palabra(s)</source>
         <translation>
             <numerusform>%n Wort</numerusform>
@@ -1395,7 +1405,7 @@ Möchtest du es wiederherstellen?</translation>
         </translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/mainwindow.cpp" line="1360"/>
+        <location filename="../src/mainwindow.cpp" line="1403"/>
         <source>%n carácter(es)</source>
         <translation>
             <numerusform>%n Zeichen</numerusform>
@@ -1408,7 +1418,7 @@ Möchtest du es wiederherstellen?</translation>
         <translation>%1 — Front Matter beibehalten</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1016"/>
+        <location filename="../src/mainwindow.cpp" line="1031"/>
         <source>Código fuente Markdown</source>
         <translation>Markdown-Quelltext</translation>
     </message>

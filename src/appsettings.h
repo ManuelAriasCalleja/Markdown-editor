@@ -46,6 +46,12 @@ void setShowWordCount(bool on);
 bool spellCheck();
 void setSpellCheck(bool on);
 
+// Idioma de corrección forzado (basename de diccionario, p. ej. "en_US"). Vacío
+// = automático (se deduce del documento: front matter › idioma de la app ›
+// locale del sistema).
+QString spellLanguage();
+void setSpellLanguage(const QString &code);
+
 // Posición del cursor recordada por archivo (índice de carácter), para reabrir
 // cada documento donde se dejó. cursorPosition devuelve -1 si no hay nada
 // guardado. El mapa está acotado para no crecer sin límite.
