@@ -59,7 +59,35 @@ Definición de la derivada:
 
 $$f'(x) = \lim_{h \to 0} \frac{f(x + h) - f(x)}{h}$$
 
-## 4. Fórmula `$$` multilínea en la fuente
+## 4. Raíces con vínculo (la barra sobre el radicando)
+
+Raíz cuadrada (el vínculo cubre todo el radicando y se estira con su altura):
+
+$$\sqrt{x^2 + y^2}$$
+
+Raíz con índice y radicando alto:
+
+$$\sqrt[3]{\frac{a}{b}}$$
+
+Raíces anidadas:
+
+$$\sqrt{1 + \sqrt{1 + \sqrt{1 + x}}}$$
+
+## 5. Matrices
+
+Con paréntesis (`pmatrix`):
+
+$$\begin{pmatrix} a & b \\ c & d \end{pmatrix}$$
+
+Con corchetes (`bmatrix`), una identidad 3×3:
+
+$$\begin{bmatrix} 1 & 0 & 0 \\ 0 & 1 & 0 \\ 0 & 0 & 1 \end{bmatrix}$$
+
+Un sistema con vector columna:
+
+$$\begin{pmatrix} 2 & 1 \\ 1 & 3 \end{pmatrix} \begin{pmatrix} x \\ y \end{pmatrix} = \begin{pmatrix} 5 \\ 6 \end{pmatrix}$$
+
+## 6. Fórmula `$$` multilínea en la fuente
 
 Esto se escribe en varias líneas en el Markdown y debe cargarse como **una**
 sola fórmula 2D:
@@ -70,7 +98,7 @@ $$
 \frac{i \hbar}{2m} \nabla^2 \Psi
 $$
 
-## 5. Lo que sigue en línea (NO necesita 2D)
+## 7. Lo que sigue en línea (NO necesita 2D)
 
 Estas se componen como antes (super/subíndice de Qt, sin apilar):
 
@@ -79,18 +107,18 @@ Estas se componen como antes (super/subíndice de Qt, sin apilar):
 - Conjuntos: $x \in \mathbb{R}$, $A \subseteq B \cup C$.
 - Un sumatorio **sin** límites tampoco se apila: $\sum a_i$.
 
-## 6. Comprobación de round-trip y export
+## 8. Comprobación de round-trip y export
 
 Guarda el archivo (Ctrl+S) y vuelve a abrirlo: todas las fórmulas deben
 sobrevivir intactas. Exporta a HTML/PDF/ODT/DOCX (*Archivo → Exportar*): las 2D
 se vuelcan a su aproximación en línea; a LaTeX (*.tex*) salen como `$$...$$`
 literales.
 
-| Magnitud   | Expresión                       |
-|------------|---------------------------------|
-| Área       | $\pi r^2$                       |
-| Gaussiana  | $\frac{1}{\sigma\sqrt{2\pi}}$   |
-| Binomio    | $\sum_{k=0}^n \binom{n}{k} x^k$ |
+| Magnitud   | Expresión                      |
+|------------|--------------------------------|
+| Área       | $\pi r^2$                      |
+| Gaussiana  | $\frac{1}{\sigma\sqrt{2\pi}}$  |
+| Serie      | $\sum_{k=1}^n \frac{1}{k^2}$   |
 
 ```text
 $$\frac{a}{b}$$  ← esto está dentro de un bloque de código: NO es fórmula.

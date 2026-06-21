@@ -273,12 +273,14 @@ solo incluyen `mathblocks.h`. Piezas clave:
   `restoreMathFromSentinels`. Resultado: los `\sum`, `\frac`, `_`, `*` del TeX
   sobreviven íntegros al round-trip. `unprotectMath` sigue existiendo pero no se usa
   en producción (queda como inversa explícita de `protectMath` para los tests).
-- *Maquetación 2D (Nivel 2).* Las fórmulas con `\frac` o un gran operador
-  (`\sum`/`\int`/`\prod`…) con límites se pintan en 2D real (fracciones apiladas
-  con barra, límites encima/debajo) en vez de aplanarse a runs. El motor puro es
-  `mdmath` en `mathlayout.{h,cpp}`: parsea el TeX a un árbol de cajas y lo
-  mide/pinta (`needsTwoDLayout`/`measureFormula`/`paintFormula`, reutilizando la
-  tabla de glifos de texparser, `commandToUnicode`). Una de esas fórmulas vive en
+- *Maquetación 2D (Nivel 2).* Las fórmulas con `\frac`, `\sqrt`, una matriz
+  (`\begin{matrix}`/`pmatrix`/`bmatrix`…) o un gran operador (`\sum`/`\int`/
+  `\prod`…) con límites se pintan en 2D real (fracciones apiladas con barra,
+  límites encima/debajo, radical con vínculo, rejillas con delimitadores) en vez
+  de aplanarse a runs. El motor puro es `mdmath` en `mathlayout.{h,cpp}`: parsea
+  el TeX a un árbol de cajas (`HList`/`Glyph`/`Frac`/`Script`/`BigOp`/`Sqrt`/
+  `Matrix`) y lo mide/pinta (`needsTwoDLayout`/`measureFormula`/`paintFormula`,
+  reutilizando la tabla de glifos de texparser, `commandToUnicode`). Una de esas fórmulas vive en
   el documento como **un carácter** `ObjectReplacementCharacter` con
   `setObjectType(MathObjectType)` + las propiedades de math; lo dibuja el
   `QTextObjectInterface` `MathObject` (`mathobject.{h,cpp}`), que lo mide con la
@@ -312,10 +314,14 @@ solo incluyen `mathblocks.h`. Piezas clave:
   líneas (regla habitual). Lo verifican `findFindsMultilineBlockMath` y
   `roundTripPreservesMultilineMath` (+ casos límite: contenido en las líneas
   delimitadoras, descarte si no cierra, ignorado dentro de un fence).
-- *Limitaciones.* El motor 2D cubre fracciones y grandes operadores con límites;
-  `\sqrt` se pinta con el glifo `√` sin vínculo sobre el radicando, y no hay
-  matrices apiladas (ambas se aproximan inline). El alineado vertical de las 2D
-  inline queda alto (ver «Maquetación 2D»).
+- *Limitaciones.* El motor 2D cubre fracciones, raíces, grandes operadores con
+  límites y matrices; lo no soportado (p. ej. `\binom`, `\begin{cases}`) se
+  aproxima inline y puede verse pobre. El alineado vertical de las fórmulas 2D
+  **inline** queda alto: el `QTextObjectInterface` de Qt ancla el objeto por su
+  borde inferior al baseline y su API (`intrinsicSize` da un `QSizeF`, sin
+  separar ascenso/descenso) no permite descender bajo el baseline, así que no se
+  puede centrar sobre el eje. Las de bloque (`$$`, solas en su línea) sí se ven
+  bien. (`setBaselineOffset` no es fiable sobre objetos: se descartó.)
 
 ## Exportación e impresión
 
