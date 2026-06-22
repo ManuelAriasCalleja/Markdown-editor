@@ -6,6 +6,7 @@
 
 class QMainWindow;
 class QShortcut;
+class QTabBar;
 class QWidget;
 class FocusEditor;
 class SplitViewController;
@@ -26,7 +27,8 @@ class DistractionFreeController : public QObject
 public:
     DistractionFreeController(QMainWindow *window, FocusEditor *editor,
                               SplitViewController *split, OutlinePanel *outline,
-                              QWidget *formatToolBar, QWidget *findBar, QObject *parent);
+                              QWidget *formatToolBar, QWidget *findBar,
+                              QTabBar *tabBar, QObject *parent);
 
     bool isActive() const { return m_active; }
 
@@ -54,6 +56,7 @@ private:
     OutlinePanel *m_outline = nullptr;
     QWidget *m_formatToolBar = nullptr;
     QWidget *m_findBar = nullptr;
+    QTabBar *m_tabBar = nullptr;          // barra de pestañas (se oculta en el modo)
     QShortcut *m_escShortcut = nullptr;  // ESC para salir (solo activo en el modo)
 
     bool m_active = false;

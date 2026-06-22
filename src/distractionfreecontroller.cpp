@@ -6,6 +6,7 @@
 #include <QShortcut>
 #include <QSplitter>
 #include <QStatusBar>
+#include <QTabBar>
 #include <QTimer>
 #include <QWidget>
 
@@ -21,7 +22,8 @@ constexpr int kOutlineTreeWidth = 280;
 
 DistractionFreeController::DistractionFreeController(
     QMainWindow *window, FocusEditor *editor, SplitViewController *split,
-    OutlinePanel *outline, QWidget *formatToolBar, QWidget *findBar, QObject *parent)
+    OutlinePanel *outline, QWidget *formatToolBar, QWidget *findBar,
+    QTabBar *tabBar, QObject *parent)
     : QObject(parent)
     , m_window(window)
     , m_editor(editor)
@@ -29,6 +31,7 @@ DistractionFreeController::DistractionFreeController(
     , m_outline(outline)
     , m_formatToolBar(formatToolBar)
     , m_findBar(findBar)
+    , m_tabBar(tabBar)
 {
     // ESC sale del modo. Solo se activa dentro del modo para no interferir con
     // otros usos de ESC (p. ej. cerrar la barra de búsqueda).
@@ -79,6 +82,13 @@ void DistractionFreeController::setActive(bool on)
         m_formatToolBar->hide();
         m_findBar->hide();
         m_window->statusBar()->hide();
+        // El modo es de documento único: oculta la barra de pestañas para que se
+        // renderice como antes de la edición por pestañas (sin una barra cruzando
+        // todo el ancho sobre la columna de lectura) e impide cambiar de pestaña
+        // mientras dura el modo. Se hace ANTES de updateLayout para que el cálculo
+        // de la columna/relleno vea ya la configuración final de widgets.
+        if (m_tabBar)
+            m_tabBar->hide();
         // El esquema no se oculta: sigue pegado a la izquierda del área visible
         // (conserva la visibilidad que tuviera al entrar al modo). Su barra de
         // título sí se oculta: con el dock ensanchado por el relleno izquierdo,
@@ -99,6 +109,8 @@ void DistractionFreeController::setActive(bool on)
         m_window->menuBar()->show();
         m_formatToolBar->show();
         m_window->statusBar()->show();
+        if (m_tabBar)
+            m_tabBar->show();
         // Devuelve al dock su barra de título nativa.
         if (QWidget *tb = m_outline->titleBarWidget()) {
             m_outline->setTitleBarWidget(nullptr);

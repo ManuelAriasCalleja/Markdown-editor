@@ -209,7 +209,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     // Modo sin distracciones (pantalla completa, columna centrada).
     m_distraction = new DistractionFreeController(
-        this, editor, m_stack->split(), m_outline, m_formatToolBar, m_findBar, this);
+        this, editor, m_stack->split(), m_outline, m_formatToolBar, m_findBar,
+        m_tabs->tabBar(), this);
     connect(m_distractionAction, &QAction::toggled,
             m_distraction, &DistractionFreeController::setActive);
     connect(m_distraction, &DistractionFreeController::activeChanged,
