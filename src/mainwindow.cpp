@@ -48,6 +48,7 @@
 #include <QEvent>
 #include <QFileDialog>
 #include <QFileInfo>
+#include <QTabBar>
 #include <QTabWidget>
 #include <QFont>
 #include <QFontMetrics>
@@ -209,6 +210,12 @@ MainWindow::MainWindow(QWidget *parent)
             m_distraction, &DistractionFreeController::setActive);
     connect(m_distraction, &DistractionFreeController::activeChanged,
             m_distractionAction, &QAction::setChecked);
+    // La barra de pestañas es parte del QTabWidget central, así que el controlador
+    // (que no lo conoce) no la oculta: lo hacemos aquí. En el modo sin distracciones
+    // se esconde para no romper la columna de lectura (con una sola pestaña se
+    // estiraría hasta el borde).
+    connect(m_distraction, &DistractionFreeController::activeChanged, this,
+            [this](bool on) { m_tabs->tabBar()->setVisible(!on); });
 
     // Contador de palabras/caracteres, anclado a la derecha de la barra de estado.
     m_countLabel = new QLabel(this);
