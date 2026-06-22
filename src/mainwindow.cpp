@@ -118,6 +118,10 @@ MainWindow::MainWindow(QWidget *parent)
     m_tabs->setTabsClosable(true);
     m_tabs->setMovable(true);
     m_tabs->setDocumentMode(true);
+    // Sin esto, una sola pestaña se estira hasta llenar todo el ancho (el defecto
+    // de QTabBar es expandir): se vería desproporcionada, sobre todo en el modo
+    // sin distracciones. Con expanding=false cada pestaña se dimensiona a su texto.
+    m_tabs->tabBar()->setExpanding(false);
     setCentralWidget(m_tabs);
     connect(m_tabs, &QTabWidget::currentChanged, this, [this](int index) {
         if (EditorStack *s = stackAt(index))
@@ -210,12 +214,6 @@ MainWindow::MainWindow(QWidget *parent)
             m_distraction, &DistractionFreeController::setActive);
     connect(m_distraction, &DistractionFreeController::activeChanged,
             m_distractionAction, &QAction::setChecked);
-    // La barra de pestañas es parte del QTabWidget central, así que el controlador
-    // (que no lo conoce) no la oculta: lo hacemos aquí. En el modo sin distracciones
-    // se esconde para no romper la columna de lectura (con una sola pestaña se
-    // estiraría hasta el borde).
-    connect(m_distraction, &DistractionFreeController::activeChanged, this,
-            [this](bool on) { m_tabs->tabBar()->setVisible(!on); });
 
     // Contador de palabras/caracteres, anclado a la derecha de la barra de estado.
     m_countLabel = new QLabel(this);
