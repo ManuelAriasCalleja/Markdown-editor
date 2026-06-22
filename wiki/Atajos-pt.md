@@ -8,6 +8,7 @@
 | `Ctrl+O` | Abrir |
 | `Ctrl+S` | Salvar |
 | `Ctrl+Shift+S` | Salvar como |
+| `Ctrl+W` | Fechar separador |
 | `Ctrl+P` | Imprimir |
 | `Ctrl+Q` | Sair |
 
@@ -17,6 +18,8 @@
 |---|---|
 | `Ctrl+Z` | Desfazer |
 | `Ctrl+Y` / `Ctrl+Shift+Z` | Refazer |
+| `Ctrl+Shift+V` | Colar como texto simples |
+| `Ctrl+Alt+V` | Colar como Markdown |
 | `Ctrl+F` | Localizar |
 | `Ctrl+H` | Substituir |
 
@@ -43,6 +46,7 @@
 | Atalho | Ação |
 |---|---|
 | `Ctrl+Shift+F` | Inserir fórmula |
+| `Ctrl+Shift+N` | Inserir nota de rodapé |
 
 ## Exibir
 
@@ -52,6 +56,7 @@
 | `Ctrl+Shift+D` | Vista dividida |
 | `F11` | Modo sem distrações (ESC para sair) |
 | `F9` | Estrutura |
+| `Ctrl+G` | Ir para título |
 | `Ctrl++` / `Ctrl+-` / `Ctrl+0` | Zoom (também Ctrl + roda) |
 
 ## Ajuda

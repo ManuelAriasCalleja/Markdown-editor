@@ -8,6 +8,7 @@
 | `Ctrl+O` | Otwórz |
 | `Ctrl+S` | Zapisz |
 | `Ctrl+Shift+S` | Zapisz jako |
+| `Ctrl+W` | Zamknij kartę |
 | `Ctrl+P` | Drukowanie |
 | `Ctrl+Q` | Zakończ |
 
@@ -17,6 +18,8 @@
 |---|---|
 | `Ctrl+Z` | Cofnij |
 | `Ctrl+Y` / `Ctrl+Shift+Z` | Ponów |
+| `Ctrl+Shift+V` | Wklej jako zwykły tekst |
+| `Ctrl+Alt+V` | Wklej jako Markdown |
 | `Ctrl+F` | Znajdź |
 | `Ctrl+H` | Zamień |
 
@@ -43,6 +46,7 @@
 | Skrót | Działanie |
 |---|---|
 | `Ctrl+Shift+F` | Wstaw wzór |
+| `Ctrl+Shift+N` | Wstaw przypis dolny |
 
 ## Widok
 
@@ -52,6 +56,7 @@
 | `Ctrl+Shift+D` | Widok podzielony |
 | `F11` | Tryb bez rozproszeń (ESC, aby wyjść) |
 | `F9` | Konspekt |
+| `Ctrl+G` | Idź do nagłówka |
 | `Ctrl++` / `Ctrl+-` / `Ctrl+0` | Powiększenie (także Ctrl + kółko) |
 
 ## Pomoc

@@ -8,6 +8,7 @@
 | `Ctrl+O` | Open |
 | `Ctrl+S` | Save |
 | `Ctrl+Shift+S` | Save As |
+| `Ctrl+W` | Close tab |
 | `Ctrl+P` | Print |
 | `Ctrl+Q` | Quit |
 
@@ -17,6 +18,8 @@
 |---|---|
 | `Ctrl+Z` | Undo |
 | `Ctrl+Y` / `Ctrl+Shift+Z` | Redo |
+| `Ctrl+Shift+V` | Paste as plain text |
+| `Ctrl+Alt+V` | Paste as Markdown |
 | `Ctrl+F` | Find |
 | `Ctrl+H` | Replace |
 
@@ -43,6 +46,7 @@
 | Shortcut | Action |
 |---|---|
 | `Ctrl+Shift+F` | Insert formula |
+| `Ctrl+Shift+N` | Insert footnote |
 
 ## View
 
@@ -52,6 +56,7 @@
 | `Ctrl+Shift+D` | Split view |
 | `F11` | Distraction-free mode (ESC to exit) |
 | `F9` | Outline |
+| `Ctrl+G` | Go to heading |
 | `Ctrl++` / `Ctrl+-` / `Ctrl+0` | Zoom (also Ctrl + wheel) |
 
 ## Help

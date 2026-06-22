@@ -10,18 +10,21 @@ serializowany do czystego Markdownu.
 
 - **Prawdziwy WYSIWYG**: widzisz wynik, a nie symbole.
 - **Wierny round-trip**: to, co otwierasz, jest tym, co zapisujesz — z wyrównanymi
-  tabelami, listami zadań, cytatami, blokami kodu i wzorami.
+  tabelami, listami zadań, cytatami, blokami kodu, przypisami dolnymi, wyróżnieniami
+  (admonitions) i wzorami.
+- **Edycja w kartach**: kilka dokumentów otwartych jednocześnie, każdy we własnej
+  karcie.
 - **Trzy sposoby pracy**: tylko wynik renderowania (domyślnie), tylko kod, albo oba
   obok siebie (zsynchronizowany widok podzielony).
 - **Tryb bez rozproszeń**: wyśrodkowana kolumna do czytania, bez pasków (F11), z
-  opcjonalnym spisem treści (możesz go pokazać lub ukryć).
+  opcjonalnym spisem treści.
 - **Dbałość o wzrok**: *Ciepłe światło nocne* stopniowo wytłumia niebieski odcień tła
   w zależności od pory dnia, aby zmniejszyć zmęczenie oczu w nocy.
-- **Wzory TeX**: [w wierszu](Caracteristicas-pl#wzory-tex) i [w bloku](Caracteristicas-pl#wzory-tex),
-  z prawdziwymi indeksami górnymi/dolnymi i podglądem na żywo, bez zewnętrznych
-  zależności.
-- **Eksport** do PDF, HTML, ODF (.odt) i LaTeX (.tex), z zachowaniem języka dokumentu
-  i formatowania wzorów.
+- **Wzory TeX** z prawdziwym układem 2D (ułamki piętrowe, pierwiastki, macierze,
+  sumy z granicami…) i podglądem na żywo, bez zewnętrznych zależności.
+- **Sprawdzanie pisowni** opcjonalne (Hunspell) oraz **diagramy** Mermaid/PlantUML.
+- **Eksport** do PDF, HTML, ODF (.odt), DOCX (.docx), LaTeX (.tex) i EPUB (.epub),
+  z zachowaniem języka dokumentu i formatowania wzorów.
 - **Wyświetlanie**: 1) 6 motywów jasnych i ciemnych, 2) powiększenie całego interfejsu,
   3) interfejs przetłumaczony na 9 języków.
 

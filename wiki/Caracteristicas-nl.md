@@ -7,7 +7,13 @@ raadpleeg `especificacion.md` in de repository.
 
 Je bewerkt de gerenderde tekst en bij het opslaan wordt geserialiseerd naar schone
 Markdown in UTF-8. Wat je opent is wat je opslaat: tabellen met uitlijning, geneste
-lijsten, takenlijsten, citaten, codeblokken en formules blijven getrouw behouden.
+lijsten, takenlijsten, citaten, codeblokken, voetnoten, admonities en formules blijven
+getrouw behouden.
+
+## Bewerking met tabbladen
+
+Open meerdere documenten tegelijk, elk in zijn eigen tabblad, en wissel ertussen.
+Tabblad sluiten met Ctrl+W. De sessie heropent de tabbladen bij het opnieuw opstarten.
 
 ## Weergavemodi
 
@@ -32,7 +38,8 @@ werkbalken. ESC of F11 sluiten af.
 
 ## Documentoverzicht
 
-Zijpaneel (F9) met de inhoudsopgave van koppen; een klik springt naar de sectie.
+Zijpaneel (F9) met de inhoudsopgave van koppen; een klik springt naar de sectie. «Ga
+naar kop» (Ctrl+G) opent een snelzoeker van koppen.
 
 ## TeX-formules
 
@@ -40,11 +47,29 @@ Inline-formules (`$...$`) en blokformules (`$$...$$`) met LaTeX-syntaxis, zonder
 externe afhankelijkheden:
 
 - Invoegen met live voorbeeldweergave (Ctrl+Shift+F) en bewerken met dubbelklik.
-- Echte superscripten en subscripten, Griekse letters, operatoren, `\frac`, `\sqrt`,
-  `\mathbb`…
-- Ze zijn atomisch in de editor en overleven de round-trip en de export.
-- Beperkingen: `$...$` moet op dezelfde regel openen en sluiten; er is geen 2D-*layout*
-  (grote breuken zoals `(a)/(b)`).
+- **Echte 2D-layout**: gestapelde breuken (`\frac`), wortels met overkapping
+  (`\sqrt`), binomiaalcoëfficiënten (`\binom`), matrices en omgevingen (`matrix`,
+  `pmatrix`, `cases`…), grote operatoren met grenzen boven en onder (`\sum`, `\int`,
+  `\prod`…), accenten (`\hat`, `\vec`…), echte superscripten en subscripten, Griekse
+  letters en `\mathbb`.
+- Ze zijn atomisch in de editor, schalen mee met de zoom en overleven de round-trip en
+  de export. Blokken `$$...$$` mogen meerdere regels beslaan.
+- Beperkingen: `$...$` moet op dezelfde regel openen en sluiten; inline 2D-formules
+  staan wat hoog (blokformules zien er goed uit).
+
+## Spellingcontrole (optioneel)
+
+Onderstreept verkeerd gespelde woorden naargelang de taal van het document (Beeld →
+Spellingcontrole). De taal wordt vanzelf gekozen (front matter, instelling of systeem)
+of handmatig (Beeld → Controletaal). Rechtsklik biedt suggesties en toevoegen aan het
+persoonlijke woordenboek. Vereist Hunspell; zonder dit werkt de rest gewoon door.
+
+## Diagrammen (optioneel)
+
+De blokken ```` ```mermaid ```` en ```` ```plantuml ```` worden gerenderd als
+afbeelding onder het blok, door het externe hulpprogramma (`mmdc` / `plantuml`) uit te
+voeren als het is geïnstalleerd. Ontbreekt het, dan wordt de installatieopdracht voor
+je systeem getoond. De afbeelding wordt niet in de Markdown opgeslagen.
 
 ## Syntaxismarkering
 
@@ -56,11 +81,20 @@ Python, shell/YAML/TOML… en een generieke modus).
 Een afbeelding plakken of neerzetten slaat deze op als PNG naast het document en voegt
 deze in als `![](ruta)` —het bedt deze niet in—, zodat de Markdown draagbaar blijft.
 
+## Invoegen en transformeren
+
+- Invoegen: koppeling, afbeelding, tabel, lijn, inhoudsopgave (TOC), formule, voetnoot,
+  admonitie (notitie/waarschuwing…), speciale symbolen en datum/tijd.
+- Plakken als Markdown (Ctrl+Alt+V) zet de HTML van het klembord om naar Markdown.
+- Tekst transformeren: HOOFDLETTERS/kleine letters, beginhoofdletters, regels sorteren
+  en slimme typografie (—, –, …, typografische aanhalingstekens).
+- Documentstatistieken: woorden, tekens, alinea's, zinnen en leestijd.
+
 ## Exporteren en afdrukken
 
-PDF, HTML, ODF (.odt) en LaTeX (.tex), plus afdrukken (Ctrl+P). ODF en LaTeX bedden de
-taal van het document in (uit de front matter, uit de app-instelling of uit het
-systeem).
+PDF, HTML, ODF (.odt), DOCX (.docx), LaTeX (.tex) en EPUB (.epub), plus
+afdrukvoorbeeld en afdrukken (Ctrl+P). ODF, DOCX en LaTeX bedden de taal van het
+document in (uit de front matter, uit de app-instelling of uit het systeem).
 
 ## Zoom van de hele interface
 
@@ -75,6 +109,7 @@ Ctrl+F / Ctrl+H, met vorige/volgende, alles vervangen en hoofdlettergevoeligheid
 
 - **Recente bestanden**, openen door slepen en bevestiging van niet-opgeslagen
   wijzigingen.
+- **Documentsjablonen** (Bestand → Nieuw vanuit sjabloon).
 - **Front matter** YAML/TOML letterlijk behouden.
 - **Bewaking van het bestand op schijf**: detecteert externe wijzigingen en biedt aan
   om opnieuw te laden.

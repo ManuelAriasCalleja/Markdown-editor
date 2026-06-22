@@ -10,17 +10,20 @@ limpio.
 
 - **WYSIWYG real**: ves el resultado, no los símbolos.
 - **Round-trip fiel**: lo que abres es lo que guardas, con tablas alineadas, listas
-  de tareas, citas, bloques de código y fórmulas.
+  de tareas, citas, bloques de código, notas al pie, admoniciones y fórmulas.
+- **Edición por pestañas**: varios documentos abiertos a la vez, cada uno en su
+  pestaña.
 - **Tres formas de trabajar**: sólo renderizado (por defecto), sólo código, o ambos
   en paralelo (vista dividida sincronizada).
 - **Modo sin distracciones**: columna de lectura centrada, sin barras (F11), con la
-  tabla de contenidos opcional (la muestras o la ocultas).
+  tabla de contenidos opcional.
 - **Cuidado ocular**: la *Luz cálida nocturna* atenúa el azul del fondo de forma
   gradual según la hora del día, para reducir la fatiga ocular por la noche.
-- **Fórmulas TeX**: [en línea](Caracteristicas#fórmulas-tex) y [en bloque](Caracteristicas#fórmulas-tex),
-  con super/subíndices reales y vista previa en vivo, sin dependencias externas.
-- **Exportación** a PDF, HTML, ODF (.odt) y LaTeX (.tex), conservando el idioma del
-  documento y el formato de las fórmulas.
+- **Fórmulas TeX** con maquetación 2D real (fracciones apiladas, raíces, matrices,
+  sumatorios con límites…) y vista previa en vivo, sin dependencias externas.
+- **Corrector ortográfico** opcional (Hunspell) y **diagramas** Mermaid/PlantUML.
+- **Exportación** a PDF, HTML, ODF (.odt), DOCX (.docx), LaTeX (.tex) y EPUB (.epub),
+  conservando el idioma del documento y el formato de las fórmulas.
 - **Visualización**: 1) 6 temas claros y oscuros, 2) zoom de toda la interfaz, 3)
   interfaz traducida a 9 idiomas.
 

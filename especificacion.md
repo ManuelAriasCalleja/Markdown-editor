@@ -5,7 +5,7 @@
 > el código Markdown e incluso tener código y renderizado en paralelo. Al guardar se
 > serializa siempre a Markdown limpio.
 
-- **Versión:** 1.2.0
+- **Versión:** 2.0.0
 - **Autor:** Manuel Arias Calleja
 - **Licencia:** GPL-3.0 (software libre con copyleft fuerte: uso, estudio, modificación y redistribución, siempre que las obras derivadas se publiquen también bajo GPL-3.0)
 - **Plataformas:** Linux, Windows, macOS
@@ -24,7 +24,8 @@ verdad última; aquí se recoge el comportamiento observable de cara al usuario.
   nativos de Qt que serializan limpiamente a Markdown.
 - **Round-trip fiel.** «Lo que abres es lo que guardas»: el documento se serializa
   de vuelta a Markdown limpio en UTF-8, conservando tablas con alineación, citas,
-  listas anidadas, listas de tareas, bloques de código y fórmulas.
+  listas anidadas, listas de tareas, bloques de código, notas al pie, admoniciones y
+  fórmulas.
 - **El código es opcional, no obligatorio.** Quien quiera ver o editar el Markdown
   crudo puede hacerlo (vista de fuente a pantalla completa o vista dividida con
   render y código en paralelo, §4).
@@ -36,18 +37,33 @@ verdad última; aquí se recoge el comportamiento observable de cara al usuario.
 
 ## 2. Gestión de archivos y sesión
 
+### Edición multi-archivo por pestañas
+- Cada documento abierto vive en su propia **pestaña**; se pueden tener varios
+  abiertos a la vez y cambiar entre ellos. Cada pestaña conserva su propio estado
+  (modo de vista, modificado, archivo en disco, etc.).
+- **Cerrar pestaña** con `Ctrl+W` (pide confirmación si hay cambios sin guardar).
+- La **sesión** reabre todas las pestañas que estaban abiertas al arrancar y tras un
+  cambio de idioma.
+
 ### Operaciones de archivo
 | Acción | Atajo |
 |---|---|
 | Nuevo | `Ctrl+N` |
+| Nuevo desde plantilla | (submenú) |
 | Abrir… | `Ctrl+O` |
 | Guardar | `Ctrl+S` |
 | Guardar como… | `Ctrl+Shift+S` |
+| Cerrar pestaña | `Ctrl+W` |
 | Salir | `Ctrl+Q` |
 
 - Filtros de apertura: `*.md`, `*.markdown`, `*.mdown`, `*.mkd`.
 - **Confirmación de cambios sin guardar** antes de cerrar o descartar un documento.
 - **Abrir arrastrando y soltando** un archivo sobre la ventana.
+
+### Plantillas de documento
+- **Archivo → Nuevo desde plantilla** crea un documento a partir de un esqueleto
+  Markdown ya preparado (carta, acta, artículo, etc.). El documento nace marcado como
+  modificado para que no se pierda sin avisar.
 
 ### Archivos recientes
 - Submenú **Abrir recientes** con los últimos documentos, ruta completa en el
@@ -61,9 +77,9 @@ verdad última; aquí se recoge el comportamiento observable de cara al usuario.
 
 ### Arranque de sesión
 Al iniciar, la prioridad es: **archivo de línea de comandos** › **recuperar
-borrador** (si hubo un cierre anómalo) › **reabrir el último documento**. La
-apertura se difiere un instante para evitar diálogos espurios durante el trazado
-inicial.
+borrador** (si hubo un cierre anómalo) › **reabrir las pestañas de la última
+sesión**. La apertura se difiere un instante para evitar diálogos espurios durante el
+trazado inicial.
 
 ### Autoguardado y recuperación ante fallos
 - **Borrador de recuperación** autoguardado cada ~5 s mientras hay cambios, en el
@@ -116,9 +132,23 @@ reflejan el formato activo bajo el cursor.
 
 - **Continuación inteligente de listas**: al pulsar Enter, la lista continúa sola
   (viñetas, numeración que se incrementa, tareas que nacen sin marcar). Un ítem
-  vacío sale de la lista.
+  vacío sale de la lista. Las listas de tareas se marcan/desmarcan con un clic sobre
+  la casilla.
 - Citas y bloques de código se gestionan reescribiendo el Markdown del bloque, de
   modo que round-trip-ean correctamente.
+
+### Pegar inteligente
+- **Pegar como texto plano** (`Ctrl+Shift+V`): inserta el portapapeles sin formato.
+- **Pegar como Markdown** (`Ctrl+Alt+V`): convierte el HTML del portapapeles a
+  Markdown en vez de incrustar el formato del origen.
+- Al pegar una **URL** sobre una selección, se auto-enlaza el texto seleccionado.
+
+### Transformar texto (sobre la selección)
+Submenú **Editar → Transformar texto**:
+- **MAYÚSCULAS**, **minúsculas**, **Capitalizar** (título).
+- **Ordenar líneas**.
+- **Tipografía inteligente**: convierte `--`, `---`, `...` y las comillas rectas en
+  sus formas tipográficas (–, —, …, « » / " ").
 
 ### Edición general
 - Deshacer `Ctrl+Z`, Rehacer `Ctrl+Y` / `Ctrl+Shift+Z`.
@@ -154,20 +184,24 @@ Reglas y comportamiento:
 - Toggle con **F9**.
 - Se reconstruye al editar (con *debounce*) y al cargar. Un clic navega al
   encabezado y devuelve el foco al editor. Muestra «Sin encabezados» cuando procede.
+  La sección se puede reordenar arrastrándola en el árbol.
+- **Ir a encabezado** — `Ctrl+G`: apertura rápida (*quick open*) que filtra los
+  encabezados al teclear y salta al elegido.
 
 ---
 
 ## 6. Modo sin distracciones
 
 - Toggle con **F11**; se sale también con **ESC**.
-- Pantalla completa que oculta menú, barras de herramientas, barra de búsqueda y
-  barra de estado.
+- Pantalla completa que oculta menú, barras de herramientas, barra de pestañas, barra
+  de búsqueda y barra de estado.
 - El texto se centra en una **columna de lectura** (≈960 px), con los márgenes
   laterales en negro para minimizar la distracción.
 - Si el esquema está visible, queda pegado a la columna y el conjunto se centra.
-- Es de columna única: al entrar se abandona la vista dividida. Al cerrar la
-  aplicación estando en este modo, se persiste el estado de ventana **previo**
-  (normal, con barras), no el de pantalla completa.
+- Es de documento único y columna única: al entrar se abandona la vista dividida y se
+  oculta la barra de pestañas (no se cambia de pestaña mientras dura el modo). Al
+  cerrar la aplicación estando en este modo, se persiste el estado de ventana
+  **previo** (normal, con barras), no el de pantalla completa.
 
 ---
 
@@ -220,7 +254,15 @@ alteración del sueño al trabajar de noche:
 - **Tabla…**: diálogo con número de columnas y filas; la tabla se crea con borde
   visible.
 - **Regla horizontal**.
+- **Índice (TOC)**: inserta una lista de enlaces con los encabezados del documento.
 - **Fórmula…** — `Ctrl+Shift+F` (§10).
+- **Nota al pie** — `Ctrl+Shift+N`: inserta una referencia `[^n]` y su definición al
+  final del documento (§16).
+- **Admonición**: bloque destacado estilo GitHub —**Nota**, **Consejo**,
+  **Importante**, **Advertencia**, **Precaución**— (§16).
+- **Símbolos especiales…**: diálogo no modal de «mapa de caracteres» por categorías
+  para insertar símbolos poco habituales sin cerrar el diálogo.
+- **Fecha** / **Fecha y hora**: inserta la fecha (y hora) actuales en formato local.
 
 ### Enlaces
 - **Ctrl+clic** abre el enlace en la aplicación externa correspondiente.
@@ -255,15 +297,22 @@ externas**.
 - **Fórmulas atómicas**: en el editor se comportan como una unidad. Teclear dentro
   recuerda usar el doble clic; Backspace/Suprimir en el borde borran el grupo
   entero; pegar sobre una fórmula la reemplaza completa.
-- **Render**: super y subíndices **reales** (no caracteres Unicode planos), letras
-  griegas, operadores matemáticos comunes (`\pm`, `\times`, `\div`, `\cdot`,
-  `\oplus`…), `\frac{a}{b}`, `\sqrt{x}`, `\mathbb{R}`, y `^`/`_` con argumento. Las
-  fórmulas se muestran en cursiva con el color de acento del tema.
+- **Render con maquetación 2D real.** Las fórmulas se pintan en dos dimensiones, no
+  aplanadas: super y subíndices **reales**, letras griegas, operadores matemáticos
+  (`\pm`, `\times`, `\div`, `\cdot`, `\oplus`…), **fracciones apiladas** (`\frac`),
+  **raíces con vínculo** (`\sqrt`), **binomios** (`\binom`), **matrices** y entornos
+  (`matrix`, `pmatrix`, `bmatrix`, `cases`…), **grandes operadores con límites**
+  encima y debajo (`\sum`, `\int`, `\prod`…), **acentos** (`\hat`, `\bar`, `\vec`,
+  `\tilde`, `\dot`…), `\mathbb{R}`, `\text{…}`/`\mathrm{…}`. Las fórmulas en línea se
+  muestran con el color de acento del tema y **escalan con el zoom**.
+- **Multilínea**: los bloques `$$...$$` pueden abarcar varias líneas en la fuente
+  (estilo Pandoc/Obsidian).
 - **Round-trip**: en la vista de código se ven como `$...$` / `$$...$$` con todos
   los caracteres TeX intactos.
-- **Limitaciones conocidas**: `$...$` debe abrir y cerrar en la misma línea; no hay
-  *layout* bidimensional (las fracciones grandes se muestran como `(a)/(b)`, y los
-  sumatorios con límites a un lado, no encima y debajo).
+- **Limitaciones conocidas**: `$...$` debe abrir y cerrar en la misma línea. El
+  alineado vertical de las fórmulas 2D **en línea** queda algo alto (las de bloque,
+  solas en su línea, se ven bien). Entornos poco comunes o construcciones no
+  soportadas (`\overbrace`, etc.) se aproximan en línea y pueden verse pobres.
 
 ---
 
@@ -295,26 +344,83 @@ editable. Los colores siguen al tema.
 
 ---
 
-## 13. Exportación e impresión
+## 13. Diagramas (Mermaid / PlantUML)
 
-Desde **Archivo → Exportar** / **Imprimir**:
+Los bloques de código ```` ```mermaid ```` y ```` ```plantuml ```` se pueden
+**renderizar como imagen** dentro del editor, en un bloque de previsualización
+**bajo** el bloque de código.
 
-- **PDF** (vía `QPrinter`).
-- **HTML**.
-- **ODF (.odt)** — incrusta el idioma del documento.
-- **LaTeX (.tex)** — serializador propio, preámbulo portable (`iftex` + `babel`),
-  con las fórmulas emitidas verbatim (`amsmath`/`amssymb`).
-- **Imprimir** — `Ctrl+P` (diálogo del sistema).
-
-- **Idioma del documento** (ODF y LaTeX): se pregunta al exportar; el valor por
-  defecto se toma del `lang`/`language` del front matter, en su defecto del ajuste de
-  la aplicación y, por último, del idioma del sistema.
-- Las fórmulas se conservan: en PDF/HTML/ODF como super/subíndices reales; en LaTeX,
-  verbatim.
+- **Opcional y sin dependencia enlazada**: el render se hace ejecutando la
+  herramienta externa (`mmdc` para Mermaid, `plantuml` para PlantUML) si está
+  instalada. El round-trip es transparente: la imagen nunca llega al Markdown.
+- **Degradación elegante**: si la herramienta no está instalada, en lugar de la
+  imagen se muestra un marcador con la **orden de instalación** para tu sistema
+  operativo, y se sustituye por la imagen en cuanto la herramienta aparece.
 
 ---
 
-## 14. Zoom de toda la interfaz
+## 14. Corrección ortográfica (opcional)
+
+Subraya las palabras mal escritas según el idioma del documento. Es una
+característica **opcional**: requiere **Hunspell** y sus diccionarios; sin ellos, el
+resto de la aplicación funciona igual.
+
+- **Activar/desactivar**: *Ver → Corrección ortográfica* (conmutable, se recuerda).
+- **Idioma de corrección**: *Ver → Idioma de corrección*; por defecto se elige por el
+  idioma del documento (front matter › ajuste › idioma del sistema). Si falta el
+  diccionario, se avisa en la barra de estado.
+- **Sugerencias**: clic derecho sobre una palabra subrayada ofrece correcciones y la
+  opción de añadirla al **diccionario personal**.
+
+---
+
+## 15. Exportación e impresión
+
+Desde **Archivo → Exportar** / **Imprimir**:
+
+- **PDF** (vía `QPrinter`), y **Selección a PDF** (solo el texto seleccionado).
+- **HTML**.
+- **ODF (.odt)** — incrusta el idioma del documento.
+- **DOCX (.docx)** — serializador OOXML propio; idioma/título incrustados, imágenes
+  embebidas.
+- **LaTeX (.tex)** — serializador propio, preámbulo portable (`iftex` + `babel`),
+  con las fórmulas emitidas verbatim (`amsmath`/`amssymb`).
+- **EPUB (.epub)** — libro electrónico EPUB 3.
+- **Vista previa de impresión** e **Imprimir** — `Ctrl+P` (diálogo del sistema).
+
+- **Idioma del documento** (ODF, DOCX y LaTeX): se pregunta al exportar; el valor por
+  defecto se toma del `lang`/`language` del front matter, en su defecto del ajuste de
+  la aplicación y, por último, del idioma del sistema.
+- Las fórmulas se conservan: en PDF/HTML/ODF/DOCX/EPUB como super/subíndices reales;
+  en LaTeX, verbatim.
+
+---
+
+## 16. Extensiones de Markdown
+
+Construcciones que enriquecen el documento conservando un Markdown portable:
+
+- **Listas de tareas**: `- [ ]` / `- [x]`, con casilla que se marca con un clic.
+- **Notas al pie**: referencias `[^id]` y definiciones `[^id]:`. La referencia se
+  muestra en superíndice; un clic salta a su definición. Se insertan con
+  *Insertar → Nota al pie* (`Ctrl+Shift+N`).
+- **Admoniciones** («callouts» estilo GitHub): una cita cuya primera línea es
+  `[!NOTE]`, `[!TIP]`, `[!IMPORTANT]`, `[!WARNING]` o `[!CAUTION]`, con fondo tintado
+  y título en color. Se insertan desde *Insertar → Admonición*.
+- **Shortcodes**: al teclear `:nombre:` se expande a su símbolo (`:alpha:` → α).
+- **Front matter** YAML/TOML conservado verbatim (§2).
+
+---
+
+## 17. Estadísticas del documento
+
+- *Ver → Estadísticas del documento…* muestra palabras, caracteres, párrafos, frases
+  y **tiempo estimado de lectura**, sobre todo el documento o sobre la selección.
+- El contador de palabras/caracteres también vive en la barra de estado.
+
+---
+
+## 18. Zoom de toda la interfaz
 
 - **Aumentar** `Ctrl++` / `Ctrl+=`, **Reducir** `Ctrl+-`, **Tamaño normal** `Ctrl+0`.
   También con **Ctrl + rueda del ratón** sobre el editor.
@@ -325,7 +431,7 @@ Desde **Archivo → Exportar** / **Imprimir**:
 
 ---
 
-## 15. Internacionalización
+## 19. Internacionalización
 
 - Idioma de la interfaz desde **Ver → Idioma**: Automático (sistema), Español,
   English, Deutsch, Français, Italiano, Português, Polski, Nederlands, Română.
@@ -336,7 +442,7 @@ Desde **Archivo → Exportar** / **Imprimir**:
 
 ---
 
-## 16. Ayuda
+## 20. Ayuda
 
 - **Manual** — **F1**: ventana de ayuda no modal con dos secciones, «Uso de la
   aplicación» y «Markdown», renderizadas con el mismo motor del editor y localizadas
@@ -345,26 +451,37 @@ Desde **Archivo → Exportar** / **Imprimir**:
 
 ---
 
-## 17. Persistencia de ajustes
+## 21. Persistencia de ajustes
 
 Se recuerdan entre sesiones: tema, luz cálida nocturna, nivel de zoom, idioma de la
 interfaz, geometría y estado de la ventana, posición del divisor de la vista
-dividida, lista de archivos recientes y último archivo abierto.
+dividida, lista de archivos recientes, pestañas/archivos abiertos, estado y idioma
+del corrector ortográfico y diccionario personal.
 
 ---
 
-## 18. Plataformas, requisitos y empaquetado
+## 22. Plataformas, requisitos y empaquetado
 
 ### Requisitos de compilación
 - **CMake** ≥ 3.16.
-- **Qt 6** ≥ 6.5 (módulos `Widgets`, `PrintSupport`, `LinguistTools`; `Test` para
-  las pruebas). Usa además la API privada `Qt6::GuiPrivate` (QZip) para incrustar el
-  idioma en los `.odt`. Las builds de CI/release usan Qt 6.8.2.
+- **Qt 6** ≥ 6.5 con sus **cabeceras privadas** (módulos `Widgets`, `PrintSupport`,
+  `LinguistTools`; `Test` para las pruebas). Usa la API privada `Qt6::GuiPrivate`
+  (QZip) para incrustar el idioma en los `.odt`/`.docx` y para empaquetar el `.epub`;
+  en Debian/Ubuntu vienen en `qt6-base-private-dev`, aparte de `qt6-base-dev`. Las
+  builds de CI/release usan Qt 6.8.2.
 - **C++17** (GCC 9+, Clang 10+, MSVC 19.20+).
-- Sin dependencias de terceros: solo Qt6, código portable.
+- **Hunspell** *(opcional)* para el corrector ortográfico (`libhunspell-dev`); sin él
+  el resto compila igual. Se enlaza estático por defecto en las builds de
+  distribución.
+- Para el render de **diagramas** *(opcional, en tiempo de ejecución)*: `mmdc`
+  (Mermaid) y/o `plantuml` (PlantUML) instalados en el sistema.
 
 ### Compilar, probar, instalar
 ```bash
+# Dependencias (Debian/Ubuntu)
+sudo apt-get install qt6-base-dev qt6-base-private-dev cmake g++
+sudo apt-get install libhunspell-dev          # opcional (corrector)
+
 # Compilar
 cmake -S . -B build && cmake --build build
 ./build/md-editor [archivo.md]
@@ -385,7 +502,9 @@ PREFIX="$HOME/.local" ./install.sh   # de usuario, sin sudo
 | macOS (universal arm64 + x86_64) | **DMG** | sin firmar: primer arranque con Ctrl-clic → Abrir |
 
 En Linux se integra con el escritorio (`.desktop`, categorías `Utility;TextEditor;`,
-asociación MIME `text/markdown`, iconos hicolor).
+asociación MIME `text/markdown`, iconos hicolor). El corrector se enlaza estático en
+las builds de distribución, de modo que el paquete no depende de ninguna biblioteca
+de Hunspell.
 
 ---
 
@@ -397,10 +516,13 @@ asociación MIME `text/markdown`, iconos hicolor).
 | `Ctrl+O` | Abrir |
 | `Ctrl+S` | Guardar |
 | `Ctrl+Shift+S` | Guardar como |
+| `Ctrl+W` | Cerrar pestaña |
 | `Ctrl+P` | Imprimir |
 | `Ctrl+Q` | Salir |
 | `Ctrl+Z` | Deshacer |
 | `Ctrl+Y` / `Ctrl+Shift+Z` | Rehacer |
+| `Ctrl+Shift+V` | Pegar como texto plano |
+| `Ctrl+Alt+V` | Pegar como Markdown |
 | `Ctrl+F` | Buscar |
 | `Ctrl+H` | Reemplazar |
 | `Ctrl+B` | Negrita |
@@ -417,22 +539,30 @@ asociación MIME `text/markdown`, iconos hicolor).
 | `Ctrl+Shift+Q` | Cita |
 | `Ctrl+Shift+K` | Bloque de código |
 | `Ctrl+Shift+F` | Insertar fórmula |
+| `Ctrl+Shift+N` | Insertar nota al pie |
 | `Ctrl+Shift+M` | Vista de código fuente |
 | `Ctrl+Shift+D` | Vista dividida |
 | `F11` | Modo sin distracciones (ESC para salir) |
 | `F9` | Esquema |
+| `Ctrl+G` | Ir a encabezado |
 | `Ctrl++` / `Ctrl+-` / `Ctrl+0` | Zoom (también Ctrl + rueda) |
 | `F1` | Manual |
 
 ## Apéndice B — Estructura de menús
 
-- **Archivo**: Nuevo · Abrir · Abrir recientes · Guardar · Guardar como · Exportar
-  (PDF / HTML / ODF / LaTeX) · Imprimir · Salir
-- **Editar**: Deshacer · Rehacer · Buscar · Reemplazar
+- **Archivo**: Nuevo · Nuevo desde plantilla · Abrir · Abrir recientes · Guardar ·
+  Guardar como · Cerrar pestaña · Exportar (PDF / HTML / ODF / DOCX / LaTeX / EPUB /
+  Selección a PDF) · Vista previa de impresión · Imprimir · Salir
+- **Editar**: Deshacer · Rehacer · Pegar como texto plano · Pegar como Markdown ·
+  Transformar texto (MAYÚSCULAS / minúsculas / Capitalizar / Tipografía inteligente /
+  Ordenar líneas) · Buscar · Reemplazar
 - **Formato**: marcas de carácter · Enlace · Encabezados H1–H6 · listas · sangrías ·
   Cita · Bloque de código · Lenguaje del bloque
-- **Insertar**: Enlace · Imagen · Pegar imagen · Tabla · Regla horizontal · Fórmula
+- **Insertar**: Enlace · Imagen · Pegar imagen · Tabla · Regla horizontal ·
+  Índice (TOC) · Fórmula · Nota al pie · Admonición · Símbolos especiales · Fecha ·
+  Fecha y hora
 - **Tabla** (contextual): filas · columnas · alinear columna
-- **Ver**: Código fuente · Vista dividida · Sin distracciones · Esquema · zoom · Tema
-  (6 temas + Luz cálida nocturna) · Idioma
+- **Ver**: Código fuente · Vista dividida · Sin distracciones · Esquema · Ir a
+  encabezado · Estadísticas del documento · Corrección ortográfica · Idioma de
+  corrección · zoom · Tema (6 temas + Luz cálida nocturna) · Idioma
 - **Ayuda**: Manual · Acerca de

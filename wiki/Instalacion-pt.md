@@ -15,10 +15,22 @@ O md-editor funciona em Linux, Windows e macOS.
 ### Requisitos
 
 - **CMake** ≥ 3.16
-- **Qt 6** ≥ 6.5 (módulos *Widgets*, *PrintSupport*, *LinguistTools*)
+- **Qt 6** ≥ 6.5 com os seus **cabeçalhos privados** (módulos *Widgets*, *PrintSupport*,
+  *LinguistTools*). Os cabeçalhos privados (`Qt6::GuiPrivate`, o QZip do Qt) são
+  necessários para exportar para ODF/DOCX/EPUB. No Debian/Ubuntu vêm em `qt6-base-private-dev`,
+  à parte de `qt6-base-dev`.
 - Compilador **C++17** (GCC 9+, Clang 10+ ou MSVC 19.20+)
+- **Hunspell** *(opcional)* para o corretor ortográfico (`libhunspell-dev`); sem ele,
+  o resto compila na mesma.
 
-Não há dependências de terceiros para além do Qt.
+```bash
+# Debian/Ubuntu
+sudo apt-get install qt6-base-dev qt6-base-private-dev cmake g++
+sudo apt-get install libhunspell-dev          # opcional (corretor)
+```
+
+Para a renderização de **diagramas** (opcional, em tempo de execução) é necessário ter
+instalado `mmdc` (Mermaid) e/ou `plantuml` (PlantUML).
 
 ### Compilar
 

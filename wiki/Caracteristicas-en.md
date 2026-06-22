@@ -7,7 +7,12 @@ An overview of everything md-editor offers. For the complete, technical referenc
 
 You edit on the rendered text and, on save, it is serialized to clean Markdown in
 UTF-8. What you open is what you save: tables with alignment, nested lists, task lists,
-quotes, code blocks and formulas are all preserved faithfully.
+quotes, code blocks, footnotes, admonitions and formulas are all preserved faithfully.
+
+## Tabbed editing
+
+Open several documents at once, each in its own tab, and switch between them. Close a
+tab with Ctrl+W. The session reopens the tabs on the next launch.
 
 ## View modes
 
@@ -31,7 +36,8 @@ or F11 exit.
 
 ## Document outline
 
-A side panel (F9) with the heading index; a click jumps to the section.
+A side panel (F9) with the heading index; a click jumps to the section. "Go to
+heading" (Ctrl+G) opens a quick heading finder.
 
 ## TeX formulas
 
@@ -39,10 +45,28 @@ Inline (`$...$`) and block (`$$...$$`) formulas with LaTeX syntax, with no exter
 dependencies:
 
 - Insertion with a live preview (Ctrl+Shift+F) and editing with a double-click.
-- Real super/subscripts, Greek letters, operators, `\frac`, `\sqrt`, `\mathbb`…
-- They are atomic in the editor and survive the round-trip and export.
-- Limitations: `$...$` must open and close on the same line; there is no 2D *layout*
-  (large fractions appear as `(a)/(b)`).
+- **Real 2D layout**: stacked fractions (`\frac`), roots with a vinculum (`\sqrt`),
+  binomials (`\binom`), matrices and environments (`matrix`, `pmatrix`, `cases`…),
+  large operators with limits above and below (`\sum`, `\int`, `\prod`…), accents
+  (`\hat`, `\vec`…), real super/subscripts, Greek letters and `\mathbb`.
+- They are atomic in the editor, scale with the zoom and survive the round-trip and
+  export. `$$...$$` blocks can span several lines.
+- Limitations: `$...$` must open and close on the same line; inline 2D formulas sit a
+  bit high (block ones look fine).
+
+## Spell checking (optional)
+
+Underlines misspelled words according to the document language (View → Spell checking).
+The language is chosen automatically (front matter, setting or system) or by hand (View
+→ Spell-check language). Right-click offers suggestions and adding to your personal
+dictionary. Requires Hunspell; without it, everything else works the same.
+
+## Diagrams (optional)
+
+```` ```mermaid ```` and ```` ```plantuml ```` blocks are rendered as an image below
+the block, by running the external tool (`mmdc` / `plantuml`) if it is installed. If it
+is missing, the install command for your system is shown. The image is not saved in the
+Markdown.
 
 ## Syntax highlighting
 
@@ -54,10 +78,20 @@ Python, shell/YAML/TOML… and a generic mode).
 Pasting or dropping an image saves it as PNG next to the document and inserts it as
 `![](path)` —it is not embedded—, so the Markdown stays portable.
 
+## Insert and transform
+
+- Insert: link, image, table, rule, table of contents (TOC), formula, footnote,
+  admonition (note/warning…), special symbols and date/time.
+- Paste as Markdown (Ctrl+Alt+V) converts the clipboard HTML to Markdown.
+- Transform text: UPPERCASE/lowercase, capitalize, sort lines and smart typography
+  (—, –, …, typographic quotes).
+- Document statistics: words, characters, paragraphs, sentences and reading time.
+
 ## Export and print
 
-PDF, HTML, ODF (.odt) and LaTeX (.tex), plus printing (Ctrl+P). ODF and LaTeX embed the
-document language (from the front matter, the app setting or the system).
+PDF, HTML, ODF (.odt), DOCX (.docx), LaTeX (.tex) and EPUB (.epub), plus print preview
+and printing (Ctrl+P). ODF, DOCX and LaTeX embed the document language (from the front
+matter, the app setting or the system).
 
 ## Full-interface zoom
 
@@ -71,6 +105,7 @@ Ctrl+F / Ctrl+H, with previous/next, replace all and case sensitivity.
 ## Files and the safety of your data
 
 - **Recent files**, drag-to-open and confirmation of unsaved changes.
+- **Document templates** (File → New from template).
 - **Front matter** YAML/TOML kept verbatim.
 - **Disk file watching**: detects external changes and offers to reload.
 - **Autosave and recovery** after an abnormal close.

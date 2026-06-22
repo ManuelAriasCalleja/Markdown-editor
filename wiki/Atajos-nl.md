@@ -8,6 +8,7 @@
 | `Ctrl+O` | Openen |
 | `Ctrl+S` | Opslaan |
 | `Ctrl+Shift+S` | Opslaan als |
+| `Ctrl+W` | Tabblad sluiten |
 | `Ctrl+P` | Afdrukken |
 | `Ctrl+Q` | Afsluiten |
 
@@ -17,6 +18,8 @@
 |---|---|
 | `Ctrl+Z` | Ongedaan maken |
 | `Ctrl+Y` / `Ctrl+Shift+Z` | Opnieuw |
+| `Ctrl+Shift+V` | Plakken als platte tekst |
+| `Ctrl+Alt+V` | Plakken als Markdown |
 | `Ctrl+F` | Zoeken |
 | `Ctrl+H` | Vervangen |
 
@@ -43,6 +46,7 @@
 | Sneltoets | Actie |
 |---|---|
 | `Ctrl+Shift+F` | Formule invoegen |
+| `Ctrl+Shift+N` | Voetnoot invoegen |
 
 ## Beeld
 
@@ -52,6 +56,7 @@
 | `Ctrl+Shift+D` | Gesplitste weergave |
 | `F11` | Afleidingsvrije modus (ESC om af te sluiten) |
 | `F9` | Overzicht |
+| `Ctrl+G` | Ga naar kop |
 | `Ctrl++` / `Ctrl+-` / `Ctrl+0` | Zoom (ook Ctrl + wiel) |
 
 ## Help

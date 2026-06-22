@@ -8,6 +8,7 @@
 | `Ctrl+O` | Öffnen |
 | `Ctrl+S` | Speichern |
 | `Ctrl+Shift+S` | Speichern unter |
+| `Ctrl+W` | Tab schließen |
 | `Ctrl+P` | Drucken |
 | `Ctrl+Q` | Beenden |
 
@@ -17,6 +18,8 @@
 |---|---|
 | `Ctrl+Z` | Rückgängig |
 | `Ctrl+Y` / `Ctrl+Shift+Z` | Wiederholen |
+| `Ctrl+Shift+V` | Als reinen Text einfügen |
+| `Ctrl+Alt+V` | Als Markdown einfügen |
 | `Ctrl+F` | Suchen |
 | `Ctrl+H` | Ersetzen |
 
@@ -43,6 +46,7 @@
 | Tastenkürzel | Aktion |
 |---|---|
 | `Ctrl+Shift+F` | Formel einfügen |
+| `Ctrl+Shift+N` | Fußnote einfügen |
 
 ## Ansicht
 
@@ -52,6 +56,7 @@
 | `Ctrl+Shift+D` | Geteilte Ansicht |
 | `F11` | Ablenkungsfreier Modus (ESC zum Verlassen) |
 | `F9` | Gliederung |
+| `Ctrl+G` | Zu Überschrift springen |
 | `Ctrl++` / `Ctrl+-` / `Ctrl+0` | Zoom (auch Ctrl + Mausrad) |
 
 ## Hilfe

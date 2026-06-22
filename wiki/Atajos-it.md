@@ -8,6 +8,7 @@
 | `Ctrl+O` | Apri |
 | `Ctrl+S` | Salva |
 | `Ctrl+Shift+S` | Salva con nome |
+| `Ctrl+W` | Chiudi scheda |
 | `Ctrl+P` | Stampa |
 | `Ctrl+Q` | Esci |
 
@@ -17,6 +18,8 @@
 |---|---|
 | `Ctrl+Z` | Annulla |
 | `Ctrl+Y` / `Ctrl+Shift+Z` | Ripeti |
+| `Ctrl+Shift+V` | Incolla come testo semplice |
+| `Ctrl+Alt+V` | Incolla come Markdown |
 | `Ctrl+F` | Trova |
 | `Ctrl+H` | Sostituisci |
 
@@ -43,6 +46,7 @@
 | Scorciatoia | Azione |
 |---|---|
 | `Ctrl+Shift+F` | Inserisci formula |
+| `Ctrl+Shift+N` | Inserisci nota a piè di pagina |
 
 ## Visualizza
 
@@ -52,6 +56,7 @@
 | `Ctrl+Shift+D` | Vista divisa |
 | `F11` | Modalità senza distrazioni (ESC per uscire) |
 | `F9` | Struttura |
+| `Ctrl+G` | Vai a intestazione |
 | `Ctrl++` / `Ctrl+-` / `Ctrl+0` | Zoom (anche Ctrl + rotellina) |
 
 ## Aiuto

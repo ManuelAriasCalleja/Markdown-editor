@@ -10,17 +10,21 @@ wird stets sauberes Markdown serialisiert.
 
 - **Echtes WYSIWYG**: Du siehst das Ergebnis, nicht die Symbole.
 - **Originalgetreuer Round-Trip**: Was du öffnest, speicherst du auch – mit
-  ausgerichteten Tabellen, Aufgabenlisten, Zitaten, Codeblöcken und Formeln.
+  ausgerichteten Tabellen, Aufgabenlisten, Zitaten, Codeblöcken, Fußnoten,
+  Admonitions und Formeln.
+- **Bearbeitung mit Tabs**: mehrere Dokumente gleichzeitig geöffnet, jedes in seinem
+  eigenen Tab.
 - **Drei Arbeitsweisen**: nur gerendert (Standard), nur Code oder beides nebeneinander
   (synchronisierte geteilte Ansicht).
 - **Ablenkungsfreier Modus**: zentrierte Lesespalte, ohne Leisten (F11), mit optionalem
-  Inhaltsverzeichnis (das du ein- oder ausblendest).
+  Inhaltsverzeichnis.
 - **Augenschonung**: Das *Warme Nachtlicht* dämpft das Blau des Hintergrunds je nach
   Tageszeit schrittweise, um die Ermüdung der Augen in der Nacht zu verringern.
-- **TeX-Formeln**: [inline](Caracteristicas-de#tex-formeln) und [als Block](Caracteristicas-de#tex-formeln),
-  mit echten Hoch-/Tiefstellungen und Live-Vorschau, ohne externe Abhängigkeiten.
-- **Export** nach PDF, HTML, ODF (.odt) und LaTeX (.tex), unter Beibehaltung der
-  Dokumentsprache und der Formatierung der Formeln.
+- **TeX-Formeln** mit echtem 2D-Layout (gestapelte Brüche, Wurzeln, Matrizen,
+  Summenzeichen mit Grenzen…) und Live-Vorschau, ohne externe Abhängigkeiten.
+- **Rechtschreibprüfung** optional (Hunspell) und **Diagramme** Mermaid/PlantUML.
+- **Export** nach PDF, HTML, ODF (.odt), DOCX (.docx), LaTeX (.tex) und EPUB (.epub),
+  unter Beibehaltung der Dokumentsprache und der Formatierung der Formeln.
 - **Darstellung**: 1) 6 helle und dunkle Designs, 2) Zoom der gesamten Oberfläche, 3)
   Oberfläche in 9 Sprachen übersetzt.
 

@@ -8,6 +8,7 @@
 | `Ctrl+O` | Ouvrir |
 | `Ctrl+S` | Enregistrer |
 | `Ctrl+Shift+S` | Enregistrer sous |
+| `Ctrl+W` | Fermer l'onglet |
 | `Ctrl+P` | Imprimer |
 | `Ctrl+Q` | Quitter |
 
@@ -17,6 +18,8 @@
 |---|---|
 | `Ctrl+Z` | Annuler |
 | `Ctrl+Y` / `Ctrl+Shift+Z` | Rétablir |
+| `Ctrl+Shift+V` | Coller comme texte brut |
+| `Ctrl+Alt+V` | Coller comme Markdown |
 | `Ctrl+F` | Rechercher |
 | `Ctrl+H` | Remplacer |
 
@@ -43,6 +46,7 @@
 | Raccourci | Action |
 |---|---|
 | `Ctrl+Shift+F` | Insérer une formule |
+| `Ctrl+Shift+N` | Insérer une note de bas de page |
 
 ## Affichage
 
@@ -52,6 +56,7 @@
 | `Ctrl+Shift+D` | Vue divisée |
 | `F11` | Mode sans distraction (ESC pour sortir) |
 | `F9` | Plan |
+| `Ctrl+G` | Aller au titre |
 | `Ctrl++` / `Ctrl+-` / `Ctrl+0` | Zoom (aussi Ctrl + molette) |
 
 ## Aide

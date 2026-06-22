@@ -8,6 +8,7 @@
 | `Ctrl+O` | Deschide |
 | `Ctrl+S` | Salvează |
 | `Ctrl+Shift+S` | Salvează ca |
+| `Ctrl+W` | Închide fila |
 | `Ctrl+P` | Tipărește |
 | `Ctrl+Q` | Ieșire |
 
@@ -17,6 +18,8 @@
 |---|---|
 | `Ctrl+Z` | Anulează |
 | `Ctrl+Y` / `Ctrl+Shift+Z` | Refă |
+| `Ctrl+Shift+V` | Lipește ca text simplu |
+| `Ctrl+Alt+V` | Lipește ca Markdown |
 | `Ctrl+F` | Caută |
 | `Ctrl+H` | Înlocuiește |
 
@@ -43,6 +46,7 @@
 | Scurtătură | Acțiune |
 |---|---|
 | `Ctrl+Shift+F` | Inserează formulă |
+| `Ctrl+Shift+N` | Inserează notă de subsol |
 
 ## Vizualizare
 
@@ -52,6 +56,7 @@
 | `Ctrl+Shift+D` | Vizualizare divizată |
 | `F11` | Mod fără distrageri (ESC pentru a ieși) |
 | `F9` | Schiță |
+| `Ctrl+G` | Mergi la titlu |
 | `Ctrl++` / `Ctrl+-` / `Ctrl+0` | Zoom (de asemenea Ctrl + rotiță) |
 
 ## Ajutor
