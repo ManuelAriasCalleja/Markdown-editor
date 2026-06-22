@@ -1,0 +1,58 @@
+name: 🐞 Reporte de fallo / Bug report
+description: Informa de un comportamiento incorrecto. / Report incorrect behaviour.
+title: "[Bug] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Gracias por ayudar a mejorar md-editor. Rellena lo que puedas. / Thanks for helping improve md-editor. Fill in what you can.
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: ¿Qué ocurre? / What happens?
+      description: Qué esperabas y qué pasó en realidad. / What you expected vs. what actually happened.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Pasos para reproducir / Steps to reproduce
+      placeholder: |
+        1. ...
+        2. ...
+        3. ...
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Versión / Version
+      placeholder: "p. ej. 2.0.0"
+    validations:
+      required: true
+  - type: dropdown
+    id: os
+    attributes:
+      label: Sistema operativo / Operating system
+      options:
+        - Linux
+        - Windows
+        - macOS
+        - Otro / Other
+    validations:
+      required: true
+  - type: input
+    id: install
+    attributes:
+      label: ¿Cómo lo instalaste? / How did you install it?
+      placeholder: "AppImage / ZIP / DMG / compilado desde el código / built from source"
+    validations:
+      required: false
+  - type: textarea
+    id: extra
+    attributes:
+      label: Capturas o registro / Screenshots or logs
+      description: Opcional pero útil. / Optional but helpful.
+    validations:
+      required: false

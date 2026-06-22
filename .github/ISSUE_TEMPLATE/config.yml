@@ -1,0 +1,10 @@
+# Las propuestas abiertas y preguntas van a Discussions; los issues quedan para
+# fallos concretos y sugerencias accionables.
+blank_issues_enabled: false
+contact_links:
+  - name: 💡 Sugerencia o idea (Discussions) / Idea (Discussions)
+    url: https://github.com/ManuelAriasCalleja/Markdown-editor/discussions/new?category=ideas
+    about: ¿Una idea de mejora para debatir y que otros voten? Ábrela aquí. / Want to propose and discuss an improvement? Start it here.
+  - name: ❓ Pregunta / Question (Discussions)
+    url: https://github.com/ManuelAriasCalleja/Markdown-editor/discussions/new?category=q-a
+    about: Dudas de uso o instalación. / Usage or installation questions.

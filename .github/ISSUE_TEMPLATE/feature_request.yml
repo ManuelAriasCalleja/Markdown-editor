@@ -1,0 +1,42 @@
+name: 💡 Sugerencia de mejora / Feature request
+description: Propón una mejora concreta y accionable. / Propose a concrete, actionable improvement.
+title: "[Sugerencia] "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Gracias por tu sugerencia. Para ideas abiertas a debate, considera abrir una
+        [Discusión](https://github.com/ManuelAriasCalleja/Markdown-editor/discussions/categories/ideas)
+        en su lugar. / Thanks! For open-ended ideas, consider a
+        [Discussion](https://github.com/ManuelAriasCalleja/Markdown-editor/discussions/categories/ideas) instead.
+
+        > **Nota / Note:** el proyecto no acepta *pull requests* (ver [CONTRIBUTING](../blob/main/CONTRIBUTING.md)); el autor valorará la idea. / The project does not accept pull requests; the author will consider the idea.
+  - type: textarea
+    id: problem
+    attributes:
+      label: ¿Qué problema o necesidad resuelve? / What problem or need does it solve?
+      description: Describe el caso de uso, no solo la solución. / Describe the use case, not just the solution.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Propuesta / Proposed solution
+      description: ¿Cómo debería funcionar? / How should it work?
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternativas consideradas / Alternatives considered
+      description: Otras formas de lograr lo mismo, si las hay. / Other ways to achieve the same, if any.
+    validations:
+      required: false
+  - type: input
+    id: version
+    attributes:
+      label: Versión / Version
+      placeholder: "p. ej. 2.0.0"
+    validations:
+      required: false
