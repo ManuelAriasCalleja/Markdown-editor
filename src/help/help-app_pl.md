@@ -29,7 +29,7 @@ serializowany do czystego Markdown.
 
 ## Otwieranie i zapisywanie
 
-- **Plik → Nowy** (Ctrl+N) tworzy pusty dokument.
+- **Plik → Nowy** (Ctrl+N) tworzy pusty dokument w nowej karcie.
 - **Plik → Nowy z szablonu** tworzy dokument na podstawie szkieletu (list,
   protokół, egzamin…) gotowego do wypełnienia.
 - **Plik → Otwórz…** (Ctrl+O) otwiera istniejący `.md`. Aplikacja zapamiętuje
@@ -39,6 +39,21 @@ serializowany do czystego Markdown.
 - Jeśli plik zmieni się poza edytorem, aplikacja to wykryje i — jeśli nie masz
   niezapisanych zmian — przeładuje go; jeśli masz, zapyta, co zrobić.
 - Plik możesz też **przeciągnąć i upuścić** na okno, aby go otworzyć.
+
+### Karty (wiele dokumentów)
+
+Możesz mieć otwartych kilka dokumentów naraz, każdy w osobnej **karcie**:
+
+- **Nowy** (Ctrl+N), **Nowy z szablonu** i **Otwórz** (Ctrl+O) tworzą kartę (lub
+  używają początkowej pustej karty). Upuszczenie pliku również otwiera go w karcie;
+  jeśli jest już otwarty, następuje przejście do jego karty.
+- Zmieniaj dokument, klikając jego kartę; przeciągaj karty, aby zmienić ich
+  kolejność.
+- **Zamknij kartę** (Ctrl+W) zamyka bieżącą, pytając o niezapisane zmiany. Ostatnia
+  karta nie jest zamykana: staje się nowym dokumentem.
+- Etykieta pokazuje nazwę pliku i kropkę (•), gdy są niezapisane zmiany.
+- Przy zamykaniu aplikacji otwarte dokumenty są zapamiętywane i wszystkie otwierane
+  ponownie przy następnym uruchomieniu.
 
 ### *Front matter*
 
@@ -266,6 +281,7 @@ proponuje odzyskanie tego, co pisałeś.
 | Akcja                     | Skrót            |
 |---------------------------|------------------|
 | Nowy                      | Ctrl+N           |
+| Zamknij kartę             | Ctrl+W           |
 | Otwórz                    | Ctrl+O           |
 | Zapisz                    | Ctrl+S           |
 | Zapisz jako               | Ctrl+Shift+S     |

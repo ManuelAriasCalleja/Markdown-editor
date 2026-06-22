@@ -29,7 +29,7 @@ serializat înapoi în Markdown pur.
 
 ## Deschidere și salvare
 
-- **Fișier → Nou** (Ctrl+N) creează un document gol.
+- **Fișier → Nou** (Ctrl+N) creează un document gol într-o filă nouă.
 - **Fișier → Nou din șablon** creează un document pornind de la un schelet
   (scrisoare, proces-verbal, examen…) gata de completat.
 - **Fișier → Deschide…** (Ctrl+O) deschide un `.md` existent. Aplicația reține
@@ -40,6 +40,21 @@ serializat înapoi în Markdown pur.
 - Dacă fișierul se schimbă în afara editorului, aplicația detectează asta și, dacă
   nu ai modificări nesalvate, îl reîncarcă; dacă ai, întreabă ce să facă.
 - Poți de asemenea **trage și plasa** un fișier pe fereastră pentru a-l deschide.
+
+### File (mai multe documente)
+
+Poți avea mai multe documente deschise în același timp, fiecare în **fila** sa:
+
+- **Nou** (Ctrl+N), **Nou din șablon** și **Deschide** (Ctrl+O) creează o filă (sau
+  refolosesc fila goală inițială). Plasarea unui fișier îl deschide tot într-o
+  filă; dacă este deja deschis, sare la fila lui.
+- Schimbă documentul făcând clic pe fila sa; trage filele pentru a le reordona.
+- **Închide fila** (Ctrl+W) o închide pe cea curentă, întrebând dacă are modificări
+  nesalvate. Ultima filă nu se închide: devine un document nou.
+- Eticheta arată numele fișierului și un punct (•) când există modificări
+  nesalvate.
+- La închiderea aplicației, documentele deschise sunt reținute și toate redeschise
+  la următoarea pornire.
 
 ### *Front matter*
 
@@ -272,6 +287,7 @@ ce scriai.
 | Acțiune                   | Scurtătură       |
 |---------------------------|------------------|
 | Nou                       | Ctrl+N           |
+| Închide fila              | Ctrl+W           |
 | Deschide                  | Ctrl+O           |
 | Salvează                  | Ctrl+S           |
 | Salvează ca               | Ctrl+Shift+S     |

@@ -29,7 +29,7 @@ serializa de vuelta a Markdown puro.
 
 ## Abrir y guardar
 
-- **Archivo → Nuevo** (Ctrl+N) crea un documento vacío.
+- **Archivo → Nuevo** (Ctrl+N) crea un documento vacío en una pestaña nueva.
 - **Archivo → Nuevo desde plantilla** crea un documento a partir de un esqueleto
   (carta, acta, examen…) listo para rellenar.
 - **Archivo → Abrir…** (Ctrl+O) abre un `.md` existente. La aplicación
@@ -41,6 +41,21 @@ serializa de vuelta a Markdown puro.
   tienes cambios sin guardar, lo recarga; si los tienes, pregunta qué hacer.
 - También puedes **arrastrar y soltar** un archivo sobre la ventana para
   abrirlo.
+
+### Pestañas (varios documentos)
+
+Puedes tener varios documentos abiertos a la vez, cada uno en su **pestaña**:
+
+- **Nuevo** (Ctrl+N), **Nuevo desde plantilla** y **Abrir** (Ctrl+O) crean una
+  pestaña (o reutilizan la pestaña vacía inicial). Arrastrar y soltar un archivo
+  también lo abre en una pestaña; si ya está abierto, salta a la suya.
+- Cambia de documento pulsando en su pestaña; arrástralas para reordenarlas.
+- **Cerrar pestaña** (Ctrl+W) cierra la actual y pregunta si tiene cambios sin
+  guardar. La última no se cierra: queda como documento nuevo.
+- La etiqueta muestra el nombre del archivo y un punto (•) si hay cambios sin
+  guardar.
+- Al cerrar la aplicación se recuerdan los documentos abiertos y se reabren todos
+  al volver a arrancar.
 
 ### *Front matter*
 
@@ -273,6 +288,7 @@ ofrece recuperar lo que estabas escribiendo.
 |---------------------------|------------------|
 | Nuevo                     | Ctrl+N           |
 | Abrir                     | Ctrl+O           |
+| Cerrar pestaña            | Ctrl+W           |
 | Guardar                   | Ctrl+S           |
 | Guardar como              | Ctrl+Shift+S     |
 | Imprimir                  | Ctrl+P           |

@@ -29,7 +29,7 @@ document est sérialisé de nouveau en Markdown pur.
 
 ## Ouvrir et enregistrer
 
-- **Fichier → Nouveau** (Ctrl+N) crée un document vide.
+- **Fichier → Nouveau** (Ctrl+N) crée un document vide dans un nouvel onglet.
 - **Fichier → Nouveau à partir d'un modèle** crée un document à partir d'un
   squelette (lettre, compte rendu, examen…) prêt à remplir.
 - **Fichier → Ouvrir…** (Ctrl+O) ouvre un `.md` existant. L'application retient
@@ -41,6 +41,23 @@ document est sérialisé de nouveau en Markdown pur.
   n'avez pas de modifications non enregistrées, le recharge ; sinon, elle demande
   quoi faire.
 - Vous pouvez aussi **glisser-déposer** un fichier sur la fenêtre pour l'ouvrir.
+
+### Onglets (plusieurs documents)
+
+Vous pouvez avoir plusieurs documents ouverts à la fois, chacun dans son **onglet** :
+
+- **Nouveau** (Ctrl+N), **Nouveau à partir d'un modèle** et **Ouvrir** (Ctrl+O)
+  créent un onglet (ou réutilisent l'onglet vide initial). Déposer un fichier
+  l'ouvre aussi dans un onglet ; s'il est déjà ouvert, on saute à son onglet.
+- Changez de document en cliquant sur son onglet ; faites glisser les onglets pour
+  les réordonner.
+- **Fermer l'onglet** (Ctrl+W) ferme l'onglet courant en demandant s'il a des
+  modifications non enregistrées. Le dernier onglet ne se ferme pas : il devient un
+  nouveau document.
+- L'étiquette affiche le nom du fichier et un point (•) en cas de modifications non
+  enregistrées.
+- À la fermeture de l'application, les documents ouverts sont mémorisés et tous
+  rouverts au prochain démarrage.
 
 ### *Front matter*
 
@@ -276,6 +293,7 @@ elle propose à la réouverture de récupérer ce que vous étiez en train d'éc
 | Action                    | Raccourci        |
 |---------------------------|------------------|
 | Nouveau                   | Ctrl+N           |
+| Fermer l'onglet           | Ctrl+W           |
 | Ouvrir                    | Ctrl+O           |
 | Enregistrer               | Ctrl+S           |
 | Enregistrer sous          | Ctrl+Maj+S       |

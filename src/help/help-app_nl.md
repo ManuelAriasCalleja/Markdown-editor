@@ -29,7 +29,7 @@ document weer naar pure Markdown geserialiseerd.
 
 ## Openen en opslaan
 
-- **Bestand → Nieuw** (Ctrl+N) maakt een leeg document.
+- **Bestand → Nieuw** (Ctrl+N) maakt een leeg document in een nieuw tabblad.
 - **Bestand → Nieuw op basis van sjabloon** maakt een document op basis van een
   skelet (brief, verslag, examen…) klaar om in te vullen.
 - **Bestand → Openen…** (Ctrl+O) opent een bestaand `.md`. De toepassing onthoudt
@@ -42,6 +42,21 @@ document weer naar pure Markdown geserialiseerd.
   te doen.
 - Je kunt ook een bestand op het venster **slepen en neerzetten** om het te
   openen.
+
+### Tabbladen (meerdere documenten)
+
+Je kunt meerdere documenten tegelijk open hebben, elk in zijn eigen **tabblad**:
+
+- **Nieuw** (Ctrl+N), **Nieuw op basis van sjabloon** en **Openen** (Ctrl+O) maken
+  een tabblad (of hergebruiken het lege begintabblad). Een bestand neerzetten opent
+  het ook in een tabblad; als het al open is, springt het naar dat tabblad.
+- Wissel van document door op het tabblad te klikken; sleep tabbladen om ze te
+  herordenen.
+- **Tabblad sluiten** (Ctrl+W) sluit het huidige en vraagt of er niet-opgeslagen
+  wijzigingen zijn. Het laatste tabblad sluit niet: het wordt een nieuw document.
+- Het label toont de bestandsnaam en een punt (•) bij niet-opgeslagen wijzigingen.
+- Bij het sluiten van de toepassing worden de open documenten onthouden en de
+  volgende keer allemaal heropend.
 
 ### *Front matter*
 
@@ -276,6 +291,7 @@ openen aan om te herstellen wat je aan het schrijven was.
 | Actie                     | Sneltoets        |
 |---------------------------|------------------|
 | Nieuw                     | Ctrl+N           |
+| Tabblad sluiten           | Ctrl+W           |
 | Openen                    | Ctrl+O           |
 | Opslaan                   | Ctrl+S           |
 | Opslaan als               | Ctrl+Shift+S     |

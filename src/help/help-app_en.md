@@ -29,7 +29,7 @@ serialized back to plain Markdown.
 
 ## Opening and saving
 
-- **File → New** (Ctrl+N) creates an empty document.
+- **File → New** (Ctrl+N) creates an empty document in a new tab.
 - **File → New from template** creates a document from a skeleton (letter,
   minutes, exam…) ready to fill in.
 - **File → Open…** (Ctrl+O) opens an existing `.md`. The application remembers
@@ -39,6 +39,20 @@ serialized back to plain Markdown.
 - If the file changes outside the editor, the application detects it and, if you
   have no unsaved changes, reloads it; if you do, it asks what to do.
 - You can also **drag and drop** a file onto the window to open it.
+
+### Tabs (multiple documents)
+
+You can have several documents open at once, each in its own **tab**:
+
+- **New** (Ctrl+N), **New from template** and **Open** (Ctrl+O) create a tab (or
+  reuse the empty initial tab). Dropping a file also opens it in a tab; if it is
+  already open, it jumps to its tab.
+- Switch documents by clicking their tab; drag tabs to reorder them.
+- **Close tab** (Ctrl+W) closes the current one, asking whether it has unsaved
+  changes. The last tab is not closed: it becomes a new document.
+- The label shows the file name and a dot (•) when there are unsaved changes.
+- On closing the application the open documents are remembered and all reopened
+  the next time you start.
 
 ### *Front matter*
 
@@ -264,6 +278,7 @@ were writing.
 | Action                    | Shortcut         |
 |---------------------------|------------------|
 | New                       | Ctrl+N           |
+| Close tab                 | Ctrl+W           |
 | Open                      | Ctrl+O           |
 | Save                      | Ctrl+S           |
 | Save as                   | Ctrl+Shift+S     |

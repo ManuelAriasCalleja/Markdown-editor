@@ -29,7 +29,7 @@ il documento viene serializzato di nuovo in Markdown puro.
 
 ## Aprire e salvare
 
-- **File → Nuovo** (Ctrl+N) crea un documento vuoto.
+- **File → Nuovo** (Ctrl+N) crea un documento vuoto in una nuova scheda.
 - **File → Nuovo da modello** crea un documento a partire da uno scheletro
   (lettera, verbale, esame…) pronto da compilare.
 - **File → Apri…** (Ctrl+O) apre un `.md` esistente. L'applicazione ricorda gli
@@ -40,6 +40,22 @@ il documento viene serializzato di nuovo in Markdown puro.
 - Se il file cambia fuori dall'editor, l'applicazione lo rileva e, se non hai
   modifiche non salvate, lo ricarica; altrimenti chiede cosa fare.
 - Puoi anche **trascinare e rilasciare** un file sulla finestra per aprirlo.
+
+### Schede (più documenti)
+
+Puoi avere più documenti aperti contemporaneamente, ciascuno nella propria **scheda**:
+
+- **Nuovo** (Ctrl+N), **Nuovo da modello** e **Apri** (Ctrl+O) creano una scheda (o
+  riutilizzano la scheda vuota iniziale). Trascinare un file lo apre anch'esso in
+  una scheda; se è già aperto, salta alla sua scheda.
+- Cambia documento facendo clic sulla sua scheda; trascina le schede per
+  riordinarle.
+- **Chiudi scheda** (Ctrl+W) chiude quella corrente, chiedendo se ha modifiche non
+  salvate. L'ultima scheda non si chiude: diventa un documento nuovo.
+- L'etichetta mostra il nome del file e un punto (•) se ci sono modifiche non
+  salvate.
+- Alla chiusura dell'applicazione i documenti aperti vengono ricordati e tutti
+  riaperti al successivo avvio.
 
 ### *Front matter*
 
@@ -274,6 +290,7 @@ propone di recuperare ciò che stavi scrivendo.
 | Azione                    | Scorciatoia      |
 |---------------------------|------------------|
 | Nuovo                     | Ctrl+N           |
+| Chiudi scheda             | Ctrl+W           |
 | Apri                      | Ctrl+O           |
 | Salva                     | Ctrl+S           |
 | Salva come                | Ctrl+Maiusc+S    |

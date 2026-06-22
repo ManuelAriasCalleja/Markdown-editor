@@ -29,7 +29,7 @@ Speichern wird das Dokument wieder als reines Markdown serialisiert.
 
 ## Öffnen und Speichern
 
-- **Datei → Neu** (Strg+N) erstellt ein leeres Dokument.
+- **Datei → Neu** (Strg+N) erstellt ein leeres Dokument in einem neuen Tab.
 - **Datei → Neu aus Vorlage** erstellt ein Dokument aus einem Gerüst (Brief,
   Protokoll, Prüfung…), das nur noch ausgefüllt werden muss.
 - **Datei → Öffnen…** (Strg+O) öffnet eine vorhandene `.md`. Die Anwendung merkt
@@ -41,6 +41,24 @@ Speichern wird das Dokument wieder als reines Markdown serialisiert.
   sie neu, wenn keine ungespeicherten Änderungen vorliegen; andernfalls fragt sie
   nach.
 - Sie können eine Datei auch per **Ziehen und Ablegen** auf das Fenster öffnen.
+
+### Tabs (mehrere Dokumente)
+
+Sie können mehrere Dokumente gleichzeitig geöffnet haben, jedes in seinem eigenen **Tab**:
+
+- **Neu** (Strg+N), **Neu aus Vorlage** und **Öffnen** (Strg+O) erstellen einen
+  Tab (oder verwenden den anfänglich leeren Tab wieder). Eine abgelegte Datei wird
+  ebenfalls in einem Tab geöffnet; ist sie bereits offen, wird zu ihrem Tab
+  gesprungen.
+- Wechseln Sie das Dokument per Klick auf seinen Tab; ziehen Sie Tabs, um sie neu
+  anzuordnen.
+- **Tab schließen** (Strg+W) schließt den aktuellen und fragt bei ungespeicherten
+  Änderungen nach. Der letzte Tab wird nicht geschlossen: er wird zu einem neuen
+  Dokument.
+- Die Beschriftung zeigt den Dateinamen und einen Punkt (•) bei ungespeicherten
+  Änderungen.
+- Beim Schließen der Anwendung werden die offenen Dokumente gemerkt und beim
+  nächsten Start alle wieder geöffnet.
 
 ### *Front Matter*
 
@@ -279,6 +297,7 @@ automatisch gespeichert. Schließt die Anwendung unerwartet, bietet sie beim ern
 | Aktion                    | Kürzel           |
 |---------------------------|------------------|
 | Neu                       | Strg+N           |
+| Tab schließen             | Strg+W           |
 | Öffnen                    | Strg+O           |
 | Speichern                 | Strg+S           |
 | Speichern unter           | Strg+Umschalt+S  |

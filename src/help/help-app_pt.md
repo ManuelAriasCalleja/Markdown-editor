@@ -29,7 +29,7 @@ documento é serializado de volta para Markdown puro.
 
 ## Abrir e guardar
 
-- **Ficheiro → Novo** (Ctrl+N) cria um documento vazio.
+- **Ficheiro → Novo** (Ctrl+N) cria um documento vazio num separador novo.
 - **Ficheiro → Novo a partir de modelo** cria um documento a partir de um
   esqueleto (carta, ata, exame…) pronto a preencher.
 - **Ficheiro → Abrir…** (Ctrl+O) abre um `.md` existente. A aplicação recorda os
@@ -40,6 +40,21 @@ documento é serializado de volta para Markdown puro.
 - Se o ficheiro mudar fora do editor, a aplicação deteta-o e, se não tiver
   alterações por guardar, recarrega-o; se tiver, pergunta o que fazer.
 - Também pode **arrastar e largar** um ficheiro sobre a janela para o abrir.
+
+### Separadores (vários documentos)
+
+Pode ter vários documentos abertos ao mesmo tempo, cada um no seu **separador**:
+
+- **Novo** (Ctrl+N), **Novo a partir de modelo** e **Abrir** (Ctrl+O) criam um
+  separador (ou reutilizam o separador vazio inicial). Largar um ficheiro também o
+  abre num separador; se já estiver aberto, salta para o seu.
+- Mude de documento clicando no seu separador; arraste-os para os reordenar.
+- **Fechar separador** (Ctrl+W) fecha o atual, perguntando se tem alterações por
+  guardar. O último não se fecha: fica como documento novo.
+- A etiqueta mostra o nome do ficheiro e um ponto (•) se houver alterações por
+  guardar.
+- Ao fechar a aplicação, os documentos abertos são recordados e todos reabertos no
+  arranque seguinte.
 
 ### *Front matter*
 
@@ -271,6 +286,7 @@ recuperar o que estava a escrever.
 | Ação                      | Atalho           |
 |---------------------------|------------------|
 | Novo                      | Ctrl+N           |
+| Fechar separador          | Ctrl+W           |
 | Abrir                     | Ctrl+O           |
 | Guardar                   | Ctrl+S           |
 | Guardar como              | Ctrl+Shift+S     |
