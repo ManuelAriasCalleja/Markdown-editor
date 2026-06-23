@@ -64,6 +64,7 @@
 #include <QPolygonF>
 #include <QRectF>
 #include <QResizeEvent>
+#include <QShowEvent>
 #include <QToolButton>
 #include <QLabel>
 
@@ -554,6 +555,35 @@ void MainWindow::resizeEvent(QResizeEvent *event)
     // m_distraction puede no existir aún durante la construcción.
     if (m_distraction && m_distraction->isActive())
         m_distraction->updateLayout();  // el tamaño en pantalla completa llega aquí
+}
+
+void MainWindow::showEvent(QShowEvent *event)
+{
+    QMainWindow::showEvent(event);
+    // Ya con la ventana en su pantalla, regenera los iconos a la dpr real (ver el
+    // comentario de la declaración). Es idempotente y barato (7 pixmaps pequeños),
+    // así que rehacerlo en cada show también cubre mover la ventana a un monitor
+    // de distinta densidad y reaparecer tras minimizar.
+    updateToolBarIcons();
+}
+
+void MainWindow::changeEvent(QEvent *event)
+{
+    QMainWindow::changeEvent(event);
+    // Los iconos de la barra van horneados con un color e impresos a una dpr
+    // concretos, así que hay que rehacerlos cuando cambia cualquiera de los dos.
+    // Punto ÚNICO y robusto (independiente de qué pestaña/controlador disparó el
+    // tema): el texto de la barra sigue la paleta solo; los iconos, no, y aquí
+    // `qApp->palette()` ya está actualizada, de modo que la tinta vuelve a
+    // contrastar con el fondo de la barra. Cubre cambio de tema, de esquema del
+    // SO y luz cálida (y la dpr, en Qt 6.6+).
+    const QEvent::Type t = event->type();
+    if (t == QEvent::ApplicationPaletteChange || t == QEvent::PaletteChange
+#if QT_VERSION >= QT_VERSION_CHECK(6, 6, 0)
+        || t == QEvent::DevicePixelRatioChange
+#endif
+    )
+        updateToolBarIcons();
 }
 
 

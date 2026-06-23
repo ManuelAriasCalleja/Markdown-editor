@@ -1,17 +1,29 @@
 #include <QtTest>
 
+#include <QAction>
 #include <QApplication>
+#include <QColor>
+#include <QImage>
 #include <QKeySequence>
 #include <QMenu>
+#include <QPalette>
+#include <QPixmap>
+#include <QSettings>
+#include <QToolBar>
 
 #include "chromezoom.h"
+#include "mainwindow.h"
 
-// Pruebas de las funciones puras de zoom de la interfaz (chromezoom).
+// Pruebas de las funciones puras de zoom de la interfaz (chromezoom) y de la
+// apariencia de la barra de formato, que escala y recolorea con ellas.
 class TestChromeZoom : public QObject
 {
     Q_OBJECT
 
 private slots:
+    void initTestCase();
+    void cleanup();
+
     void scaledPointSizeAppliesDelta();
     void scaledPointSizeClampsToOne();
     void scaledPointSizePassesThroughInvalidBase();
@@ -20,7 +32,20 @@ private slots:
     void menuWidthGrowsWithLongerText();
     void shortcutColumnWidensMenu();
     void submenuArrowWidensMenu();
+
+    void toolbarIconInkContrastsWithTheme();
 };
+
+void TestChromeZoom::initTestCase()
+{
+    QCoreApplication::setOrganizationName(QStringLiteral("md-editor-test"));
+    QCoreApplication::setApplicationName(QStringLiteral("md-editor-test"));
+}
+
+void TestChromeZoom::cleanup()
+{
+    QSettings().clear();
+}
 
 void TestChromeZoom::scaledPointSizeAppliesDelta()
 {
@@ -87,6 +112,67 @@ void TestChromeZoom::submenuArrowWidensMenu()
 
     QVERIFY(chromezoom::menuMinimumWidth(withSub)
             > chromezoom::menuMinimumWidth(plain));
+}
+
+// Luminancia media de los píxeles opacos de un pixmap (la tinta del glifo del
+// icono), en [0,1]. Sirve para distinguir tinta clara de oscura.
+static double meanInkLuma(const QPixmap &pm)
+{
+    const QImage img = pm.toImage();
+    double sum = 0.0;
+    int n = 0;
+    for (int y = 0; y < img.height(); ++y) {
+        for (int x = 0; x < img.width(); ++x) {
+            const QColor c = img.pixelColor(x, y);
+            if (c.alpha() > 200) {  // píxeles de la tinta, no los bordes translúcidos
+                sum += 0.2126 * c.redF() + 0.7152 * c.greenF() + 0.0722 * c.blueF();
+                ++n;
+            }
+        }
+    }
+    return n > 0 ? sum / n : -1.0;
+}
+
+void TestChromeZoom::toolbarIconInkContrastsWithTheme()
+{
+    // Regresión: los iconos generados de la barra (negrita, listas…) van
+    // «horneados» con un color, así que deben REGENERARSE al cambiar la paleta —
+    // o quedan con la tinta del tema anterior y dejan de contrastar. Lo dispara
+    // MainWindow::changeEvent ante ApplicationPaletteChange (no la señal de un
+    // solo stack), así que `qApp->setPalette` debe bastar para recolorearlos.
+    const QPalette saved = qApp->palette();
+    MainWindow w;
+    w.show();
+    QVERIFY(QTest::qWaitForWindowExposed(&w));
+
+    QToolBar *bar = w.findChild<QToolBar *>(QStringLiteral("formatToolBar"));
+    QVERIFY(bar);
+    QAction *iconAction = nullptr;  // la primera acción con icono (negrita)
+    for (QAction *a : bar->actions())
+        if (!a->icon().isNull()) { iconAction = a; break; }
+    QVERIFY(iconAction);
+    const int px = bar->iconSize().width();
+    QVERIFY(px > 0);
+
+    // Fondo de ventana oscuro → tinta clara (luma alta). El cambio de paleta de
+    // qApp llega a la ventana como evento; hay que vaciar la cola para que
+    // changeEvent regenere los iconos.
+    QPalette dark = saved;
+    dark.setColor(QPalette::Window, QColor(0x35, 0x35, 0x35));
+    qApp->setPalette(dark);
+    qApp->processEvents();
+    QVERIFY2(meanInkLuma(iconAction->icon().pixmap(px)) > 0.5,
+             "con tema oscuro el icono debe tener tinta clara");
+
+    // Fondo claro → tinta oscura (luma baja).
+    QPalette light = saved;
+    light.setColor(QPalette::Window, QColor(0xf0, 0xf0, 0xf0));
+    qApp->setPalette(light);
+    qApp->processEvents();
+    QVERIFY2(meanInkLuma(iconAction->icon().pixmap(px)) < 0.5,
+             "con tema claro el icono debe tener tinta oscura");
+
+    qApp->setPalette(saved);
 }
 
 QTEST_MAIN(TestChromeZoom)

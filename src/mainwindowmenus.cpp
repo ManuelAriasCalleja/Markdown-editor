@@ -704,11 +704,13 @@ void MainWindow::createViewMenu()
     }
 
     // El control del tema avisa para mantener marcada la acción del tema activo.
+    // (Los iconos de la barra NO se regeneran aquí: esta conexión es de un solo
+    // stack y no seguiría a otras pestañas; lo hace MainWindow::changeEvent ante
+    // ApplicationPaletteChange, que cubre cualquier origen del cambio de tema.)
     connect(m_stack->theme(), &ThemeController::themeChanged, this,
             [this](mdtheme::ThemeId id) {
         if (QAction *action = m_themeActions.value(id))
             action->setChecked(true);
-        updateToolBarIcons();  // los iconos generados siguen el color del tema
     });
 
     themeMenu->addSeparator();

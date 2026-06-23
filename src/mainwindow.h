@@ -110,6 +110,16 @@ protected:
     // Recoloca el esquema y la columna en el modo sin distracciones al cambiar
     // de tamaño (en pantalla completa, al entrar/salir y al redimensionar).
     void resizeEvent(QResizeEvent *event) override;
+    // Regenera los iconos de la barra de formato cuando la ventana ya está en
+    // pantalla. Durante la construcción la ventana aún no tiene pantalla asignada,
+    // así que en monitores HiDPI los iconos se hornean a devicePixelRatio = 1 y se
+    // ven borrosos/«aguados» (sin contraste) hasta el primer relayout; aquí, ya
+    // mostrada, la dpr es la definitiva.
+    void showEvent(QShowEvent *event) override;
+    // Rehornea los iconos de la barra cuando cambia la paleta (tema, esquema del
+    // SO, luz cálida) o la densidad de pantalla (otro monitor / Wayland tras el
+    // show). Es el punto único que mantiene su tinta contrastando con el fondo.
+    void changeEvent(QEvent *event) override;
     // Captura Ctrl+rueda sobre el editor para hacer zoom de la fuente.
     bool eventFilter(QObject *watched, QEvent *event) override;
     // Sub-manejadores del eventFilter (cada uno devuelve true si consume el
