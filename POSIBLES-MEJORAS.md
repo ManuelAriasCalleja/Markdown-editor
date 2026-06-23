@@ -236,6 +236,33 @@ Sin dependencias nuevas y con el patrón habitual (función pura + `tst_`).
   el HTML de Qt saneado a XHTML (`htmlBodyToXhtml`) e incrustando las imágenes como
   PNG. Idioma y título del front matter. *Archivo → Exportar → A EPUB*.
 
+### Pulidos de edición pendientes (Qt puro, sin dependencias)
+
+Lo poco barato/mediano que aún encaja con la filosofía tras la comparación con
+otros editores (Typora, Ghostwriter…). El grueso de funcionalidad está maduro: el
+mayor margen restante es de **distribución** (puntos 2-4 de arriba), no de features.
+
+- ⬜ **Snippets de usuario** — fragmentos reutilizables que el usuario define e
+  inserta por nombre o atajo (complementan las plantillas de documento, que son de
+  archivo entero). Encaja con el patrón habitual (catálogo + función pura + `tst_`)
+  y se persiste en `AppSettings`. Ya estaba anotado como pendiente bajo «Plantillas».
+- ⬜ **Modo máquina de escribir / foco de línea** — mantener la línea del cursor
+  centrada verticalmente al escribir (*typewriter scrolling*) y, opcional, atenuar
+  todo salvo el párrafo/frase actual. Complementa el modo sin distracciones; es Qt
+  puro (reposicionar el scroll en cada `cursorPositionChanged` para fijar el cursor
+  en el centro del viewport). Lo tienen Typora y Ghostwriter.
+- ⬜ **Limpieza/normalización del Markdown** — un «lint» ligero opcional sobre el
+  texto fuente: marcadores de lista consistentes, espaciado uniforme, colapsar
+  líneas en blanco múltiples, quitar espacios finales. Función pura + `tst_`,
+  encaja como las transformaciones de `mdtext`.
+- ⬜ **Auto-emparejado** — al teclear `(`/`[`/`{`/`` ` ``/`*` insertar el cierre con
+  el cursor dentro, y envolver la selección si la hay. Barato; cuidar de no
+  estorbar dentro de fórmulas y bloques de código.
+
+*Con tensión de filosofía, dejados fuera a propósito:* árbol de carpetas lateral
+(empuja hacia «workspace»/PKM) e importar `.docx`/`.odt` a Markdown vía Pandoc
+opcional (añadiría otra herramienta externa, como los diagramas).
+
 ### Robustez
 
 - ✅ **ASAN/UBSAN + clang-tidy en CI** — *Hecho:* opción CMake `ENABLE_SANITIZERS`
