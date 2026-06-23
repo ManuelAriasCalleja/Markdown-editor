@@ -326,10 +326,19 @@ solo incluyen `mathblocks.h`. Piezas clave:
   que permiten reconocerlos como grupo.
 - *Render TeX → runs.* `mdmath::renderTexAsRuns(tex, baseFmt)` es el parser que
   produce esa lista de `MathRun = {QString text, QTextCharFormat fmt}`. Maneja:
-  letras griegas y operadores (tabla `singleCharCommands`), `^`/`_` con argumento
-  de carácter / grupo / comando, `\frac{a}{b}` (fraction slash `⁄` si num y den son
-  de un solo carácter; si no, `(num)/(den)`), `\sqrt{x}`, `\mathbb{R}`.
-  `texToUnicode` es solo un thin-flatten encima para los exports sin formato rico.
+  letras griegas y operadores (tabla `singleCharCommands`: griego, relaciones,
+  conjuntos, lógica, flechas, grandes operadores, delimitadores como `\langle`/
+  `\lceil`, símbolos varios), `^`/`_` con argumento de carácter / grupo / comando,
+  `\frac{a}{b}` (fraction slash `⁄` si num y den son de un solo carácter; si no,
+  `(num)/(den)`), `\sqrt{x}`, `\mathbb{R}`. Además: `\left`/`\right` emiten su
+  delimitador (sin escalarlo; `.` = delimitador nulo), `\not X` lo niega con el
+  combinante U+0338, `\quad`/`\qquad` dan espacios em y `\mathcal`/`\mathscr`/
+  `\mathfrak{X}` mapean cada letra a su variante matemática Unicode
+  (`styledMathAlphabet`, con las sustituciones de «Letterlike Symbols» del bloque
+  astral). `\left`/`\right`/`\not`/`\mathcal`/… se manejan igual en el motor 2D
+  (`mathlayout`), reusando los helpers `readTokenAsUnicode`/`styledMathAlphabet` de
+  `mathblocks.h`. `texToUnicode` es solo un thin-flatten encima para los exports
+  sin formato rico.
 - *Edición.* `Insertar → Fórmula…` (Ctrl+Shift+F) abre un diálogo con previsuali-
   zación en vivo e inserta los runs en el cursor. Doble clic sobre una fórmula
   reabre el diálogo precargado y la sustituye. Las fórmulas son **atómicas** frente
@@ -354,8 +363,9 @@ solo incluyen `mathblocks.h`. Piezas clave:
   `commandToUnicode`). Los **acentos** (`\hat`/`\bar`/`\vec`/`\tilde`/`\dot`/
   `\ddot`…) NO fuerzan 2D: se resuelven con caracteres combinantes Unicode
   (`accentCombiningChar`, p. ej. `x̂`) tanto en los runs inline como en el 2D, así
-  que `$\hat{x}$` se queda en línea y exporta solo. `\text{…}`/`\mathrm{…}` emiten
-  su argumento literal; `\binom` inline (y en export) se aproxima como `C(n, k)`
+  que `$\hat{x}$` se queda en línea y exporta solo. `\underline` es un acento más
+  (combinante U+0332). `\text{…}`/`\mathrm{…}` emiten su argumento literal;
+  `\binom` inline (y en export) se aproxima como `C(n, k)`
   (en LaTeX se emite nativo). Una de esas fórmulas vive en
   el documento como **un carácter** `ObjectReplacementCharacter` con
   `setObjectType(MathObjectType)` + las propiedades de math; lo dibuja el
@@ -392,8 +402,11 @@ solo incluyen `mathblocks.h`. Piezas clave:
   delimitadoras, descarte si no cierra, ignorado dentro de un fence).
 - *Limitaciones.* El motor 2D cubre fracciones, raíces, binomios, matrices,
   `cases`, acentos y grandes operadores con límites; lo no soportado (entornos
-  raros, `\overbrace`, layout de límites de integral propios…) se aproxima inline
-  y puede verse pobre. El alineado vertical de las fórmulas 2D
+  multilínea con `&` como `align`/`aligned`, `\overbrace`/`\underbrace`,
+  `\xrightarrow`, layout de límites de integral propios…) se aproxima inline o se
+  ve pobre. Los delimitadores de `\left`/`\right` se emiten pero **no se escalan**
+  al contenido (limitación asumida). `\mathcal`/`\mathfrak` dependen de que la
+  fuente tenga los glifos matemáticos del plano astral. El alineado vertical de las fórmulas 2D
   **inline** queda alto: el `QTextObjectInterface` de Qt ancla el objeto por su
   borde inferior al baseline y su API (`intrinsicSize` da un `QSizeF`, sin
   separar ascenso/descenso) no permite descender bajo el baseline, así que no se

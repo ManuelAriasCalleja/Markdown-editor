@@ -32,6 +32,8 @@ private slots:
     void texToUnicodeFrac();
     void texToUnicodeFunctionsAndSpacing();
     void texToUnicodeAccentsBinomText();
+    void texToUnicodeNewSymbolsDelimsLeftRight();
+    void texToUnicodeNotAndStyledAlphabets();
     void replaceMathReplacesDollars();
     void renderConvertsInlineCodeToFormattedFragments();
     void renderIsIdempotent();
@@ -168,6 +170,53 @@ void TestMathBlocks::texToUnicodeAccentsBinomText()
              QStringLiteral("C(n, k)"));
     QCOMPARE(mdmath::texToUnicode(QStringLiteral("\\text{si } x")),
              QStringLiteral("si  x"));
+}
+
+void TestMathBlocks::texToUnicodeNewSymbolsDelimsLeftRight()
+{
+    // Símbolos y delimitadores recién añadidos a la tabla.
+    QCOMPARE(mdmath::texToUnicode(QStringLiteral("\\langle x \\rangle")),
+             QStringLiteral("⟨ x ⟩"));
+    QCOMPARE(mdmath::texToUnicode(QStringLiteral("a \\perp b")),
+             QStringLiteral("a ⊥ b"));
+    QCOMPARE(mdmath::texToUnicode(QStringLiteral("\\bigcup_i A_i")),
+             QStringLiteral("⋃ᵢ Aᵢ"));
+    // \quad / \qquad → espacios em (el espacio que sigue al nombre del comando
+    // se conserva literal, igual que en «\sin x»).
+    QCOMPARE(mdmath::texToUnicode(QStringLiteral("a\\quad b")),
+             QStringLiteral("a") + QChar(0x2003) + QStringLiteral(" b"));
+    QCOMPARE(mdmath::texToUnicode(QStringLiteral("a\\qquad b")),
+             QStringLiteral("a") + QString(2, QChar(0x2003)) + QStringLiteral(" b"));
+    // \left( … \right): el delimitador se emite, la palabra clave no; `.` es nulo.
+    QCOMPARE(mdmath::texToUnicode(QStringLiteral("\\left( x \\right)")),
+             QStringLiteral("( x )"));
+    QCOMPARE(mdmath::texToUnicode(QStringLiteral("\\left\\langle x \\right\\rangle")),
+             QStringLiteral("⟨ x ⟩"));
+    QCOMPARE(mdmath::texToUnicode(QStringLiteral("\\left. x \\right|")),
+             QStringLiteral(" x |"));
+    // \underline → combinante de línea inferior (U+0332), como \overline.
+    QCOMPARE(mdmath::texToUnicode(QStringLiteral("\\underline{x}")),
+             QStringLiteral("x") + QChar(0x0332));
+}
+
+void TestMathBlocks::texToUnicodeNotAndStyledAlphabets()
+{
+    // \not X → operando + combinante de negación (U+0338).
+    QCOMPARE(mdmath::texToUnicode(QStringLiteral("a \\not= b")),
+             QStringLiteral("a =") + QChar(0x0338) + QStringLiteral(" b"));
+    QCOMPARE(mdmath::texToUnicode(QStringLiteral("x \\not\\in S")),
+             QStringLiteral("x ∈") + QChar(0x0338) + QStringLiteral(" S"));
+    // \mathcal: letras script (con sustituciones de «Letterlike Symbols»).
+    // L tiene excepción BMP (U+2112); A no (bloque astral U+1D49C).
+    QCOMPARE(mdmath::texToUnicode(QStringLiteral("\\mathcal{L}")),
+             QString::fromUcs4(U"ℒ"));
+    QCOMPARE(mdmath::texToUnicode(QStringLiteral("\\mathcal{A}")),
+             QString::fromUcs4(U"\U0001D49C"));
+    // \mathfrak: fraktur (R tiene excepción BMP U+211C).
+    QCOMPARE(mdmath::texToUnicode(QStringLiteral("\\mathfrak{R}")),
+             QString::fromUcs4(U"ℜ"));
+    QCOMPARE(mdmath::texToUnicode(QStringLiteral("\\mathfrak{a}")),
+             QString::fromUcs4(U"\U0001D51E"));
 }
 
 void TestMathBlocks::texToUnicodeFrac()

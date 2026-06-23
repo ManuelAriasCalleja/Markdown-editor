@@ -155,6 +155,78 @@ const QHash<QString, QChar> &singleCharCommands()
         {QStringLiteral("cdots"),   QChar(0x22EF)},
         {QStringLiteral("vdots"),   QChar(0x22EE)},
         {QStringLiteral("ddots"),   QChar(0x22F1)},
+        {QStringLiteral("dagger"),  QChar(0x2020)},
+        {QStringLiteral("ddagger"), QChar(0x2021)},
+        {QStringLiteral("wp"),      QChar(0x2118)},
+        {QStringLiteral("therefore"), QChar(0x2234)},
+        {QStringLiteral("because"),   QChar(0x2235)},
+        // Delimitadores (los que no son un carácter ASCII directo). Los
+        // autoescalables \left/\right se tratan aparte en el parser.
+        {QStringLiteral("langle"),  QChar(0x27E8)},
+        {QStringLiteral("rangle"),  QChar(0x27E9)},
+        {QStringLiteral("lceil"),   QChar(0x2308)},
+        {QStringLiteral("rceil"),   QChar(0x2309)},
+        {QStringLiteral("lfloor"),  QChar(0x230A)},
+        {QStringLiteral("rfloor"),  QChar(0x230B)},
+        {QStringLiteral("Vert"),    QChar(0x2016)},
+        {QStringLiteral("vert"),    QChar(0x007C)},
+        {QStringLiteral("mid"),     QChar(0x2223)},
+        {QStringLiteral("nmid"),    QChar(0x2224)},
+        // Más relaciones y operadores de conjuntos/orden
+        {QStringLiteral("perp"),       QChar(0x22A5)},
+        {QStringLiteral("parallel"),   QChar(0x2225)},
+        {QStringLiteral("angle"),      QChar(0x2220)},
+        {QStringLiteral("setminus"),   QChar(0x2216)},
+        {QStringLiteral("triangle"),   QChar(0x25B3)},
+        {QStringLiteral("prec"),       QChar(0x227A)},
+        {QStringLiteral("succ"),       QChar(0x227B)},
+        {QStringLiteral("preceq"),     QChar(0x227C)},
+        {QStringLiteral("succeq"),     QChar(0x227D)},
+        {QStringLiteral("subsetneq"),  QChar(0x228A)},
+        {QStringLiteral("supsetneq"),  QChar(0x228B)},
+        {QStringLiteral("sqsubseteq"), QChar(0x2291)},
+        {QStringLiteral("sqsupseteq"), QChar(0x2292)},
+        {QStringLiteral("sqcup"),      QChar(0x2294)},
+        {QStringLiteral("sqcap"),      QChar(0x2293)},
+        {QStringLiteral("vdash"),      QChar(0x22A2)},
+        {QStringLiteral("dashv"),      QChar(0x22A3)},
+        {QStringLiteral("models"),     QChar(0x22A8)},
+        {QStringLiteral("top"),        QChar(0x22A4)},
+        {QStringLiteral("bot"),        QChar(0x22A5)},
+        {QStringLiteral("asymp"),      QChar(0x224D)},
+        {QStringLiteral("doteq"),      QChar(0x2250)},
+        {QStringLiteral("odot"),       QChar(0x2299)},
+        {QStringLiteral("nleq"),       QChar(0x2270)},
+        {QStringLiteral("ngeq"),       QChar(0x2271)},
+        {QStringLiteral("nless"),      QChar(0x226E)},
+        {QStringLiteral("ngtr"),       QChar(0x226F)},
+        {QStringLiteral("nsubseteq"),  QChar(0x2288)},
+        {QStringLiteral("nsupseteq"),  QChar(0x2289)},
+        // Grandes operadores adicionales (en \sum/\int conviven con isBigOp del
+        // motor 2D; aquí dan su glifo inline).
+        {QStringLiteral("bigcup"),     QChar(0x22C3)},
+        {QStringLiteral("bigcap"),     QChar(0x22C2)},
+        {QStringLiteral("bigvee"),     QChar(0x22C1)},
+        {QStringLiteral("bigwedge"),   QChar(0x22C0)},
+        {QStringLiteral("bigoplus"),   QChar(0x2A01)},
+        {QStringLiteral("bigotimes"),  QChar(0x2A02)},
+        {QStringLiteral("bigodot"),    QChar(0x2A00)},
+        {QStringLiteral("bigsqcup"),   QChar(0x2A06)},
+        // Más flechas
+        {QStringLiteral("Uparrow"),            QChar(0x21D1)},
+        {QStringLiteral("Downarrow"),          QChar(0x21D3)},
+        {QStringLiteral("updownarrow"),        QChar(0x2195)},
+        {QStringLiteral("Updownarrow"),        QChar(0x21D5)},
+        {QStringLiteral("hookrightarrow"),     QChar(0x21AA)},
+        {QStringLiteral("hookleftarrow"),      QChar(0x21A9)},
+        {QStringLiteral("longrightarrow"),     QChar(0x27F6)},
+        {QStringLiteral("longleftarrow"),      QChar(0x27F5)},
+        {QStringLiteral("longleftrightarrow"), QChar(0x27F7)},
+        {QStringLiteral("Longrightarrow"),     QChar(0x27F9)},
+        {QStringLiteral("Longleftarrow"),      QChar(0x27F8)},
+        {QStringLiteral("Longleftrightarrow"), QChar(0x27FA)},
+        {QStringLiteral("rightharpoonup"),     QChar(0x21C0)},
+        {QStringLiteral("leftharpoonup"),      QChar(0x21BC)},
         // Conjuntos numéricos (Blackboard bold) — útiles aunque no son
         // mayúsculas latinas estándar.
         {QStringLiteral("mathbb{R}"), QChar(0x211D)},
@@ -172,6 +244,8 @@ const QHash<QString, QString> &multiCharCommands()
 {
     static const QHash<QString, QString> m = {
         {QStringLiteral("sqrt"), QString(QChar(0x221A))},   // se trata aparte si lleva arg
+        {QStringLiteral("quad"),  QString(QChar(0x2003))},              // espacio em
+        {QStringLiteral("qquad"), QString(2, QChar(0x2003))},          // doble em
     };
     return m;
 }
@@ -321,6 +395,7 @@ QChar accentCombiningChar(const QString &cmd)
     static const QHash<QString, QChar> m = {
         {QStringLiteral("hat"),       QChar(0x0302)}, {QStringLiteral("widehat"),   QChar(0x0302)},
         {QStringLiteral("bar"),       QChar(0x0304)}, {QStringLiteral("overline"),  QChar(0x0304)},
+        {QStringLiteral("underline"), QChar(0x0332)},
         {QStringLiteral("tilde"),     QChar(0x0303)}, {QStringLiteral("widetilde"), QChar(0x0303)},
         {QStringLiteral("vec"),       QChar(0x20D7)},
         {QStringLiteral("dot"),       QChar(0x0307)}, {QStringLiteral("ddot"),      QChar(0x0308)},
@@ -328,6 +403,78 @@ QChar accentCombiningChar(const QString &cmd)
         {QStringLiteral("check"),     QChar(0x030C)}, {QStringLiteral("breve"),     QChar(0x0306)},
     };
     return m.value(cmd, QChar());
+}
+
+QString readTokenAsUnicode(const QString &tex, int &i)
+{
+    const int n = tex.size();
+    if (i >= n)
+        return QString();
+    if (tex.at(i) == QLatin1Char('\\')) {
+        ++i;
+        if (i < n && tex.at(i).isLetter())
+            return commandToUnicode(readCommand(tex, i));
+        if (i < n) {
+            const QChar e = tex.at(i);
+            ++i;
+            return QString(e);   // \{ \} \| \/ y demás delimitadores con escape
+        }
+        return QStringLiteral("\\");
+    }
+    const QChar e = tex.at(i);
+    ++i;
+    return QString(e);
+}
+
+bool isStyledAlphabetCommand(const QString &cmd)
+{
+    return cmd == QLatin1String("mathcal") || cmd == QLatin1String("mathscr")
+           || cmd == QLatin1String("mathfrak");
+}
+
+namespace {
+// Letra latina A-Z/a-z en su variante matemática Unicode (script o fraktur). El
+// bloque astral de letras matemáticas (U+1D49C…) tiene «huecos»: varias letras se
+// reservaron antes en «Letterlike Symbols» (BMP), así que hay que sustituirlas o
+// el glifo sale en blanco. Las no latinas se devuelven sin tocar.
+QString styledLetter(QChar c, bool fraktur)
+{
+    auto ucs4 = [](char32_t cp) { return QString::fromUcs4(&cp, 1); };
+    const ushort u = c.unicode();
+    if (fraktur) {
+        static const QHash<ushort, char32_t> upperExc = {
+            {'C', 0x212D}, {'H', 0x210C}, {'I', 0x2111}, {'R', 0x211C}, {'Z', 0x2128},
+        };
+        if (u >= 'A' && u <= 'Z')
+            return ucs4(upperExc.value(u, 0x1D504 + (u - 'A')));
+        if (u >= 'a' && u <= 'z')
+            return ucs4(0x1D51E + (u - 'a'));
+        return QString(c);
+    }
+    // Script / caligráfica (mathcal, mathscr).
+    static const QHash<ushort, char32_t> upperExc = {
+        {'B', 0x212C}, {'E', 0x2130}, {'F', 0x2131}, {'H', 0x210B}, {'I', 0x2110},
+        {'L', 0x2112}, {'M', 0x2133}, {'R', 0x211B},
+    };
+    static const QHash<ushort, char32_t> lowerExc = {
+        {'e', 0x212F}, {'g', 0x210A}, {'o', 0x2134},
+    };
+    if (u >= 'A' && u <= 'Z')
+        return ucs4(upperExc.value(u, 0x1D49C + (u - 'A')));
+    if (u >= 'a' && u <= 'z')
+        return ucs4(lowerExc.value(u, 0x1D4B6 + (u - 'a')));
+    return QString(c);
+}
+} // namespace
+
+QString styledMathAlphabet(const QString &cmd, const QString &arg)
+{
+    const bool fraktur = (cmd == QLatin1String("mathfrak"));
+    QString out;
+    out.reserve(arg.size());
+    for (const QChar c : arg)
+        out += styledLetter(c, fraktur);
+    return out;
 }
 
 // Vuelca el texto acumulado en `buffer` (si lo hay) como un run con `baseFmt` y lo
@@ -487,6 +634,35 @@ QList<MathRun> renderTexAsRuns(const QString &tex, const QTextCharFormat &baseFm
                 if (i < n && tex.at(i) == QLatin1Char('{')) b = readGroup(tex, i);
                 buffer += QStringLiteral("C(") + texToUnicode(a) + QStringLiteral(", ")
                           + texToUnicode(b) + QLatin1Char(')');
+                continue;
+            }
+
+            // \left( … \right): delimitadores autoescalables. Inline no se
+            // escalan, así que basta con emitir el delimitador y descartar la
+            // palabra clave (antes salía el literal «\left»). `.` = delim. nulo.
+            if (cmd == QLatin1String("left") || cmd == QLatin1String("right")) {
+                int j = after;
+                if (j < n && tex.at(j) == QLatin1Char('.'))
+                    ++j;                                  // delimitador nulo: nada
+                else
+                    buffer += readTokenAsUnicode(tex, j);
+                i = j;
+                continue;
+            }
+
+            // \not X: negación genérica (combinante U+0338 sobre el operando).
+            if (cmd == QLatin1String("not")) {
+                int j = after;
+                buffer += readTokenAsUnicode(tex, j) + QChar(0x0338);
+                i = j;
+                continue;
+            }
+
+            // \mathcal/\mathscr/\mathfrak{...}: cada letra a su variante
+            // matemática Unicode (script/fraktur).
+            if (isStyledAlphabetCommand(cmd) && after < n && tex.at(after) == QLatin1Char('{')) {
+                i = after;
+                buffer += styledMathAlphabet(cmd, readGroup(tex, i));
                 continue;
             }
 

@@ -221,7 +221,16 @@ Sin dependencias nuevas y con el patrón habitual (función pura + `tst_`).
   por caracteres combinantes Unicode, también inline) y `\text{…}`/`\mathrm{…}`.
   El centrado vertical de las 2D inline **no es viable** con `QTextObjectInterface`
   (Qt ancla el objeto por su base al baseline y no expone ascenso/descenso); queda
-  como limitación.
+  como limitación. **4ª tanda (cobertura de comandos):** ampliada la tabla de
+  glifos (delimitadores `\langle`/`\lceil`/`\lfloor`/`\Vert`, relaciones y
+  conjuntos `\perp`/`\parallel`/`\prec`/`\sqsubseteq`/…, grandes operadores inline
+  `\bigcup`/`\bigvee`/`\bigoplus`/…, más flechas y `\dagger`/`\therefore`); además
+  `\left`/`\right` (emiten el delimitador, sin escalar), `\not X` (negación con
+  combinante), `\quad`/`\qquad`, `\underline` y `\mathcal`/`\mathscr`/`\mathfrak`
+  (letras script/fraktur del plano astral). Todo inline + 2D, con tests en
+  `tst_mathblocks`. *Descartado por coste/encaje:* entornos multilínea con `&`
+  (`align`/`aligned`, exigen layout nuevo), `\overbrace`/`\underbrace` y
+  `\xrightarrow` (2D propio), y el escalado real de `\left`/`\right`.
 - ✅ **Export a EPUB** — *Hecho:* `mdexport::writeEpub` empaqueta un EPUB 3
   (mimetype + OPF + nav.xhtml + toc.ncx + XHTML) con el QZip privado, reutilizando
   el HTML de Qt saneado a XHTML (`htmlBodyToXhtml`) e incrustando las imágenes como
@@ -237,7 +246,9 @@ Sin dependencias nuevas y con el patrón habitual (función pura + `tst_`).
 - ⬜ **Fuzzing del round-trip** Markdown.
 - ⬜ **Golden tests de exportadores** — fijar HTML/LaTeX/ODF/DOCX de referencia
   para detectar regresiones de salida.
-- ⬜ **Accesibilidad** — desarrollado en su propia sección, [♿ Accesibilidad](#-accesibilidad).
+- ✅ **Accesibilidad** — desarrollado en su propia sección, [♿ Accesibilidad](#-accesibilidad)
+  (los dos únicos puntos sin cerrar quedaron descartados: foco explícito por coste y
+  prueba con lector real por falta de medios).
 
 ### Hechas en esta tanda
 
@@ -254,9 +265,10 @@ de teclado, 25 tooltips y el alt text de las imágenes—, pero un lector de pan
 (NVDA/JAWS en Windows, Orca en Linux, VoiceOver en macOS) todavía recibe poca
 información semántica en algunos puntos. Todo lo de abajo es **Qt6 puro, sin
 dependencias nuevas**: Qt traduce sola su API de accesibilidad a AT-SPI/UIA/
-NSAccessibility en cada SO, así que encaja con la filosofía del proyecto. *Pendiente
-transversal: validar todo lo ✅ con un lector real (Orca/NVDA/VoiceOver), ya que
-hasta ahora solo está cableado contra la API de Qt, no probado en vivo.*
+NSAccessibility en cada SO, así que encaja con la filosofía del proyecto. *La
+validación con un lector real (Orca/NVDA/VoiceOver) queda **descartada** por falta de
+medios: todo está cableado contra la API de Qt, que es lo máximo verificable sin AT en
+vivo.*
 
 > Leyenda: ✅ ya existe · 🚧 parcial · ⬜ pendiente · 🚫 descartado (no viable / no-objetivo).
 
@@ -322,16 +334,16 @@ hasta ahora solo está cableado contra la API de Qt, no probado en vivo.*
   revisar: la **vista previa** de la fórmula (solo lectura) ya no roba el Tab
   (`Qt::ClickFocus`), y el campo de ruta del diálogo de imagen recupera su nombre
   accesible (al ir envuelto en un contenedor perdía la asociación con su etiqueta).
-- 🚧 **Indicador de foco visible** — *Revisado:* el foco lo dibuja el `QStyle`
-  usando el rol `Highlight` de cada tema, que el verificador de contraste ya
-  garantiza legible (en alto contraste, amarillo puro sobre negro — muy visible en
-  botones, menús, listas y el árbol del esquema). En los editores el foco se ve por
-  el cursor (como en cualquier editor de texto). *Pendiente (riesgo estético):* un
-  *focus ring* explícito más fuerte chocaría con la arquitectura —el theming es
-  **100 % por paleta, sin un solo `setStyleSheet` en el proyecto**— y obligaría a
-  pintarlo a mano sobre `QAbstractScrollArea` o a introducir stylesheets; además
-  necesita validación visual por plataforma/estilo. Se deja para una pasada con
-  pruebas visuales reales (ver «validación con lector/visual» abajo).
+- 🚫 **Indicador de foco visible** — *Descartado (coste/beneficio):* el foco lo
+  dibuja el `QStyle` usando el rol `Highlight` de cada tema, que el verificador de
+  contraste ya garantiza legible (en alto contraste, amarillo puro sobre negro — muy
+  visible en botones, menús, listas y el árbol del esquema). En los editores el foco
+  se ve por el cursor (como en cualquier editor de texto). Un *focus ring* explícito
+  más fuerte chocaría con la arquitectura —el theming es **100 % por paleta, sin un
+  solo `setStyleSheet` en el proyecto**— y obligaría a pintarlo a mano sobre
+  `QAbstractScrollArea` o a introducir stylesheets, además de validación visual por
+  plataforma/estilo: demasiado coste para la ganancia marginal sobre el foco que el
+  estilo ya pinta.
 - ✅ **Auditar trampas de teclado** — *Revisado:* el `eventFilter` es un mero
   despachador que solo consume el evento si un sub-manejador lo hace, y ninguno
   bloquea navegación: `handleMathKeyPress` solo se queda teclas **imprimibles**
@@ -372,13 +384,13 @@ hasta ahora solo está cableado contra la API de Qt, no probado en vivo.*
   con teclado, alto contraste y zoom, foco), con su entrada en el índice, en los **9
   idiomas** (`help-app*.md`); y un punto de accesibilidad en la lista de
   características del README.
-- ⬜ **Prueba con lector de pantalla real** — pasada manual con Orca (Linux) / NVDA
-  (Windows) / VoiceOver (macOS): comprobar que se anuncian los nombres de los
-  controles (editor, fuente, esquema, búsqueda, contador), las descripciones y los
-  mensajes de estado, y que el orden de foco es lógico. *Único punto que no puede
-  automatizarse ni hacerse sin un lector real; queda como checklist para quien tenga
-  uno.* (Lo demás está cableado contra la API de accesibilidad de Qt, que en Linux
-  habla AT-SPI con Orca.)
+- 🚫 **Prueba con lector de pantalla real** — *Descartado (sin medios):* sería una
+  pasada manual con Orca (Linux) / NVDA (Windows) / VoiceOver (macOS) comprobando que
+  se anuncian los nombres de los controles (editor, fuente, esquema, búsqueda,
+  contador), las descripciones y los mensajes de estado, y que el orden de foco es
+  lógico. No puede automatizarse ni hacerse sin un lector real, y no se dispone de
+  uno; todo lo demás está cableado contra la API de accesibilidad de Qt (que en Linux
+  habla AT-SPI con Orca), que es lo máximo verificable sin AT en vivo.
 
 ## 📋 Proyecto / comunidad
 

@@ -380,6 +380,25 @@ Box buildHList(const QString &tex, const QFont &font)
                     i = after;
                     const QString arg = readGroup(tex, i);
                     atom = glyph(texToUnicode(arg) + QString(accentCombiningChar(cmd)), font);
+                } else if (cmd == QLatin1String("left") || cmd == QLatin1String("right")) {
+                    // Delimitador autoescalable: aquí no se estira (limitación),
+                    // pero al menos se pinta el delimitador en vez del literal.
+                    int j = after;
+                    if (j < n && tex.at(j) == QLatin1Char('.')) {
+                        i = j + 1;                 // delimitador nulo
+                        atom = glyph(QString(), font);
+                    } else {
+                        atom = glyph(readTokenAsUnicode(tex, j), font);
+                        i = j;
+                    }
+                } else if (cmd == QLatin1String("not")) {
+                    int j = after;
+                    atom = glyph(readTokenAsUnicode(tex, j) + QChar(0x0338), font);
+                    i = j;
+                } else if (isStyledAlphabetCommand(cmd) && after < n
+                           && tex.at(after) == QLatin1Char('{')) {
+                    i = after;
+                    atom = glyph(styledMathAlphabet(cmd, readGroup(tex, i)), font);
                 } else if ((cmd == QLatin1String("text") || cmd == QLatin1String("mathrm")
                             || cmd == QLatin1String("mathbf") || cmd == QLatin1String("mathit")
                             || cmd == QLatin1String("mathsf") || cmd == QLatin1String("mathtt")

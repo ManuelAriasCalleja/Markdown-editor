@@ -90,6 +90,20 @@ QString commandToUnicode(const QString &cmd);
 // por el render inline (texparser) y el 2D (mathlayout).
 QChar accentCombiningChar(const QString &cmd);
 
+// Lee un único token TeX desde `i` (un comando `\x` o un carácter) y lo devuelve
+// como Unicode; `i` avanza tras el token. Lo usan `\left`/`\right` (su
+// delimitador) y `\not` (el operando negado). Compartido inline/2D.
+QString readTokenAsUnicode(const QString &tex, int &i);
+
+// ¿Es un comando de alfabeto matemático con argumento (\mathcal/\mathscr/
+// \mathfrak)? El render lo trata como el bloque \text pero mapeando cada letra.
+bool isStyledAlphabetCommand(const QString &cmd);
+
+// Convierte cada letra latina de `arg` a su variante matemática Unicode según
+// `cmd` (script para \mathcal/\mathscr, fraktur para \mathfrak); el resto de
+// caracteres pasa sin cambios. Compartido por el render inline y el 2D.
+QString styledMathAlphabet(const QString &cmd, const QString &arg);
+
 // Char-format del carácter ObjectReplacementCharacter de una fórmula 2D: las
 // tres propiedades de math + objectType = MathObjectType.
 QTextCharFormat mathObjectFormat(const QString &tex, bool block);
