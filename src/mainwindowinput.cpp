@@ -25,6 +25,8 @@
 #include "listcontinuation.h"
 #include "gotoheadingdialog.h"
 #include "diagramcontroller.h"
+#include "autopair.h"
+#include "splitviewcontroller.h"
 #include "mathblocks.h"
 #include "outlinepanel.h"
 #include "shortcodes.h"
@@ -233,15 +235,32 @@ bool MainWindow::handleEditorKeyPress(QKeyEvent *ke)
         expandShortcodeBefore(cursor);
         return true;
     }
-    return false;
+    return applyAutoPair(m_stack->editor(), ke);
 }
 
 bool MainWindow::handleSourceKeyPress(QKeyEvent *ke)
 {
     // Continuación inteligente de listas en el editor de código fuente.
     const auto mods = ke->modifiers() & ~Qt::KeypadModifier;
-    return (ke->key() == Qt::Key_Return || ke->key() == Qt::Key_Enter)
-           && mods == Qt::NoModifier && continueSourceList();
+    if ((ke->key() == Qt::Key_Return || ke->key() == Qt::Key_Enter)
+        && mods == Qt::NoModifier && continueSourceList())
+        return true;
+    return applyAutoPair(m_stack->split()->sourceEditor(), ke);
+}
+
+bool MainWindow::applyAutoPair(QTextEdit *ed, QKeyEvent *ke)
+{
+    // Solo caracteres imprimibles sin modificadores de comando (Shift sí: hace
+    // falta para `(`, `{`…). Backspace/Enter/flechas traen texto vacío o de
+    // control y `mdautopair::apply` los ignoraría igualmente.
+    if (ke->text().isEmpty()
+        || (ke->modifiers() & (Qt::ControlModifier | Qt::AltModifier | Qt::MetaModifier)))
+        return false;
+    QTextCursor cursor = ed->textCursor();
+    if (!mdautopair::apply(cursor, ke->text().at(0), mdautopair::defaultPairs()))
+        return false;
+    ed->setTextCursor(cursor);
+    return true;
 }
 
 bool MainWindow::continueSourceList()

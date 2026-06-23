@@ -130,6 +130,9 @@ protected:
     bool handleViewportEvent(QEvent *event);
     bool handleEditorKeyPress(QKeyEvent *ke);
     bool handleSourceKeyPress(QKeyEvent *ke);
+    // Auto-emparejado: si la tecla `ke` (un carácter imprimible, sin Ctrl/Alt/Meta)
+    // dispara una acción de `mdautopair` sobre `ed`, la aplica y devuelve true.
+    bool applyAutoPair(QTextEdit *ed, QKeyEvent *ke);
 
 private slots:
 

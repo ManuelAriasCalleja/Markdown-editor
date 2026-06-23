@@ -263,9 +263,14 @@ mayor margen restante es de **distribución** (puntos 2-4 de arriba), no de feat
   texto fuente: marcadores de lista consistentes, espaciado uniforme, colapsar
   líneas en blanco múltiples, quitar espacios finales. Función pura + `tst_`,
   encaja como las transformaciones de `mdtext`.
-- ⬜ **Auto-emparejado** — al teclear `(`/`[`/`{`/`` ` ``/`*` insertar el cierre con
-  el cursor dentro, y envolver la selección si la hay. Barato; cuidar de no
-  estorbar dentro de fórmulas y bloques de código.
+- ✅ **Auto-emparejado** — *Hecho:* módulo puro `autopair` (`mdautopair::apply`
+  sobre un `QTextCursor`, con `tst_autopair`), enganchado en los dos manejadores de
+  teclado (WYSIWYG y fuente) vía `MainWindow::applyAutoPair`. Al teclear `(`/`[`/
+  `{`/`` ` `` auto-cierra (cursor en medio), envuelve la selección si la hay, y
+  hace *type-over* del cierre tecleado delante de su gemelo. No auto-cierra si lo
+  siguiente es palabra (evita «()texto»). Se omiten `*`/`_` a propósito (chocan con
+  listas, `snake_case` y la multiplicación; el énfasis va por la barra). En WYSIWYG
+  la protección de fórmulas actúa antes, así que no interfiere dentro de una math.
 
 *Con tensión de filosofía, dejados fuera a propósito:* árbol de carpetas lateral
 (empuja hacia «workspace»/PKM) e importar `.docx`/`.odt` a Markdown vía Pandoc

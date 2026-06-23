@@ -17,6 +17,10 @@ y el proyecto usa [versionado semántico](https://semver.org/lang/es/).
   nombre desde el menú. A diferencia de las plantillas (de archivo entero), se
   insertan en el punto del cursor; en la vista WYSIWYG se renderizan y en la de
   fuente se pegan como Markdown. Se recuerdan entre sesiones.
+- **Auto-emparejado** de paréntesis, corchetes, llaves y comillas invertidas: al
+  teclear `(`, `[`, `{` o `` ` `` se inserta también su cierre con el cursor en
+  medio; si hay texto seleccionado, se envuelve; y al teclear el cierre justo
+  delante del automático, se salta en vez de duplicarlo.
 
 ## [2.1.0] — 2026-06-23
 

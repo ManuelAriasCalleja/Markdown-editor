@@ -138,7 +138,9 @@ render de diagramas, ver abajo), `typewriter` (`mdtypewriter::centeredScrollValu
 calcula el scroll que centra la línea del cursor para el modo máquina de escribir,
 integrado en `EditorStack::centerCursorLine`), `snippets` (`mdsnippet`; modelo y
 (de)serialización de los snippets de usuario para `AppSettings`, con el diálogo
-`SnippetsDialog` y `EditorStack::insertSnippet` aparte).
+`SnippetsDialog` y `EditorStack::insertSnippet` aparte), `autopair`
+(`mdautopair::apply`; auto-emparejado de `()[]{}` y `` ` `` sobre un `QTextCursor`,
+enganchado por `MainWindow::applyAutoPair` en ambos editores).
 
 Patrón recurrente para lógica comprobable: separar las **funciones puras** (sin
 GUI) de la integración (qué texto y dónde reinsertarlo, que vive en `MainWindow` o
@@ -225,9 +227,11 @@ añadir lógica nueva: hay un `tst_*` por módulo.
   que consume gana): `handleViewportEvent` (zoom con Ctrl+rueda; abrir enlaces con
   Ctrl+clic/hover; arrastrar-soltar un archivo; clic sobre la casilla de una tarea
   `mdtask` y sobre una referencia de nota al pie `mdfootnote`), `handleEditorKeyPress`
-  (protección de fórmulas y shortcodes `:nombre:` en `m_editor`) y
-  `handleSourceKeyPress` (**continuación de listas** con Enter en `m_sourceEditor`
-  vía `mdlist::analyze`; en WYSIWYG la hace `QTextEdit` de serie).
+  (protección de fórmulas, shortcodes `:nombre:` y **auto-emparejado** en `m_editor`)
+  y `handleSourceKeyPress` (**continuación de listas** con Enter en `m_sourceEditor`
+  vía `mdlist::analyze` —en WYSIWYG la hace `QTextEdit` de serie— y auto-emparejado).
+  El auto-emparejado (`applyAutoPair` → `mdautopair`) corre el último, tras la
+  protección de fórmulas, así que no interfiere dentro de una math.
 - **Pegar/soltar imágenes y URLs.** El *handler* de `FocusEditor` desvía las
   imágenes del portapapeles a disco (PNG junto al `.md`, ruta relativa) e inserta
   `![](ruta)`, en vez de incrustarlas (que no round-trip-ean). También en *Insertar
