@@ -33,6 +33,7 @@
 
 #include <cmath>
 
+#include <QAccessible>
 #include <QAction>
 #include <QActionGroup>
 #include <QApplication>
@@ -111,7 +112,7 @@ MainWindow::MainWindow(QWidget *parent)
     m_findBar = new FindReplaceBar(nullptr, this);
     addToolBar(Qt::BottomToolBarArea, m_findBar);
     connect(m_findBar, &FindReplaceBar::statusMessage,
-            statusBar(), &QStatusBar::showMessage);
+            this, &MainWindow::showStatusMessage);
 
     // --- Documentos en pestañas: uno por archivo abierto ---
     m_tabs = new QTabWidget(this);
@@ -261,7 +262,7 @@ void MainWindow::connectStack(EditorStack *stack)
     // La mayoría de señales solo afectan a la VENTANA cuando provienen del
     // documento activo (título, modificado, recuento, esquema, disco): los demás
     // documentos viven en segundo plano sin tocar el cromo de la ventana.
-    connect(stack, &EditorStack::statusMessage, statusBar(), &QStatusBar::showMessage);
+    connect(stack, &EditorStack::statusMessage, this, &MainWindow::showStatusMessage);
     connect(stack, &EditorStack::windowModifiedChanged, this, [this, stack](bool m) {
         if (stack == m_stack)
             setWindowModified(m);
@@ -282,7 +283,7 @@ void MainWindow::connectStack(EditorStack *stack)
     });
     connect(stack, &EditorStack::diskVanished, this, [this, stack] {
         if (stack == m_stack)
-            statusBar()->showMessage(tr("El archivo se eliminó o movió en disco."), 6000);
+            showStatusMessage(tr("El archivo se eliminó o movió en disco."), 6000);
     });
     connect(stack, &EditorStack::documentLoaded, this, [this, stack] {
         if (stack == m_stack && !stack->split()->sourceMode())
@@ -385,6 +386,21 @@ void MainWindow::showAboutDialog()
     box.exec();
 }
 
+
+void MainWindow::showStatusMessage(const QString &text, int timeout)
+{
+    statusBar()->showMessage(text, timeout);
+    // Un lector de pantalla no lee la barra de estado cuando cambia, así que el
+    // mensaje pasaría desapercibido. QAccessibleAnnouncementEvent (Qt 6.8+) lo
+    // anuncia sin mover el foco. En Qt < 6.8 no existe el evento: degrada a solo
+    // visual (el mensaje sigue saliendo en la barra). Solo si hay un lector activo.
+#if QT_VERSION >= QT_VERSION_CHECK(6, 8, 0)
+    if (!text.isEmpty() && QAccessible::isActive()) {
+        QAccessibleAnnouncementEvent ev(this, text);
+        QAccessible::updateAccessibility(&ev);
+    }
+#endif
+}
 
 void MainWindow::updateWordCount()
 {
@@ -777,7 +793,7 @@ void MainWindow::onDiskExternalChange(const QByteArray &diskBytes)
     if (!locallyModified) {
         // Sin cambios locales: se recarga sin molestar.
         reloadFromDisk();
-        statusBar()->showMessage(tr("El archivo cambió en disco: recargado."), 4000);
+        showStatusMessage(tr("El archivo cambió en disco: recargado."), 4000);
         return;
     }
 

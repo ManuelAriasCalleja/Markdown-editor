@@ -151,6 +151,13 @@ private slots:
     // Actualiza el contador de palabras/caracteres de la barra de estado.
     void updateWordCount();
 
+    // Muestra un mensaje en la barra de estado y, además, lo anuncia a los lectores
+    // de pantalla (que no leen la barra de estado por sí sola). Punto único por el
+    // que pasa el feedback efímero importante (guardado, exportado, «no encontrado»,
+    // cambios en disco…); las pistas de hover van por showMessage directo, sin
+    // anunciarse. El anuncio accesible necesita Qt 6.8+ (degrada a solo visual).
+    void showStatusMessage(const QString &text, int timeout = 0);
+
     // Muestra un diálogo con las estadísticas del documento (palabras, caracteres,
     // párrafos, frases y tiempo de lectura estimado).
     void showDocumentStatistics();

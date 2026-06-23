@@ -315,7 +315,7 @@ void MainWindow::goToHeading()
 {
     const QList<OutlineHeading> headings = mdoutline::headingsOf(m_stack->editor()->document());
     if (headings.isEmpty()) {
-        statusBar()->showMessage(tr("El documento no tiene encabezados."));
+        showStatusMessage(tr("El documento no tiene encabezados."));
         return;
     }
     GoToHeadingDialog dialog(headings, this);
@@ -387,7 +387,7 @@ bool MainWindow::jumpToFootnoteAt(const QPoint &viewportPos)
         return false;
     const int blockNo = mdfootnote::definitionBlockNumber(m_stack->editor()->document(), id);
     if (blockNo < 0) {
-        statusBar()->showMessage(tr("La nota [^%1] no tiene definición").arg(id));
+        showStatusMessage(tr("La nota [^%1] no tiene definición").arg(id));
         return false;
     }
     const QTextBlock block = m_stack->editor()->document()->findBlockByNumber(blockNo);

@@ -246,32 +246,39 @@ Sin dependencias nuevas y con el patrón habitual (función pura + `tst_`).
 
 ## ♿ Accesibilidad
 
-Hoy el editor **no usa la API de accesibilidad de Qt** (`QAccessible`): cero
-`setAccessibleName`/`setAccessibleDescription` en `src/`. Hay base aprovechable —el
+Ya hay una **primera capa** de accesibilidad (ver lo marcado ✅ abajo): nombres
+accesibles en los widgets sin etiqueta y los mensajes de estado anunciados a los
+lectores. Sobre esa base se apoya el resto. Hay además base previa aprovechable —el
 tema de **alto contraste** real (21:1), el zoom de interfaz persistente, ~33 atajos
 de teclado, 25 tooltips y el alt text de las imágenes—, pero un lector de pantalla
-(NVDA/JAWS en Windows, Orca en Linux, VoiceOver en macOS) recibe muy poca
-información semántica de la interfaz. Todo lo de abajo es **Qt6 puro, sin
+(NVDA/JAWS en Windows, Orca en Linux, VoiceOver en macOS) todavía recibe poca
+información semántica en algunos puntos. Todo lo de abajo es **Qt6 puro, sin
 dependencias nuevas**: Qt traduce sola su API de accesibilidad a AT-SPI/UIA/
-NSAccessibility en cada SO, así que encaja con la filosofía del proyecto.
+NSAccessibility en cada SO, así que encaja con la filosofía del proyecto. *Pendiente
+transversal: validar todo lo ✅ con un lector real (Orca/NVDA/VoiceOver), ya que
+hasta ahora solo está cableado contra la API de Qt, no probado en vivo.*
 
 > Leyenda: ✅ ya existe · 🚧 parcial · ⬜ pendiente.
 
 ### Alto impacto / poco esfuerzo
 
-- ⬜ **Nombres y descripciones accesibles** — `setAccessibleName`/
-  `setAccessibleDescription` en las ~33 acciones (`mainwindowmenus.cpp`), en los
-  botones **solo-icono** de la barra de formato (negrita, cursiva, listas… que un
-  lector anuncia hoy como «botón» a secas), en los paneles (esquema, barra de
-  búsqueda, editor de fuente del modo dividido) y en los diálogos. Es la mejora de
-  mayor relación valor/coste: pasa la app de «opaca» a «navegable» para un lector
-  con cambios mecánicos y localizados (los textos por `tr()`, como el resto).
-- ⬜ **Anunciar los mensajes de estado efímeros** — los ~10
-  `statusBar()->showMessage(...)` (cambio del archivo en disco, recarga, pistas de
-  navegación) no llegan al lector de pantalla. Encaminar los importantes por un
-  `QAccessibleEvent(widget, QAccessible::Alert)` (o `QAccessible::updateAccessibility`)
-  para que se anuncien como «alerta». (Los `QMessageBox`/`QInputDialog` ya son
-  accesibles de serie; el problema es solo la barra de estado.)
+- 🚧 **Nombres y descripciones accesibles** — *Hecho (nombres):* `setAccessibleName`
+  en los widgets de los que un lector no podía derivar nombre: editor WYSIWYG y
+  editor de fuente (que comparten clase y coexisten en vista dividida), los campos
+  Buscar/Reemplazar de la barra de búsqueda, el árbol del esquema y el contador de
+  palabras. Los `QAction` (las ~33 acciones de menús y los botones **solo-icono** de
+  la barra) ya exponen su `text()` como nombre accesible de serie, así que no
+  necesitaban añadido. *Pendiente:* las **descripciones** (`setAccessibleDescription`,
+  el matiz que el lector lee tras una pausa) y los **diálogos** propios.
+- ✅ **Anunciar los mensajes de estado efímeros** — *Hecho:* helper único
+  `MainWindow::showStatusMessage` por el que pasa el feedback importante (guardado,
+  exportado, «no encontrado», nº de reemplazos, regex inválida, diccionario ausente,
+  cambios/recarga en disco, «sin encabezados», nota sin definición); además de
+  mostrarlo en la barra, lo anuncia con `QAccessibleAnnouncementEvent` (Qt 6.8+,
+  guardado con `QT_VERSION_CHECK`; degrada a solo-visual en 6.5–6.7) sin mover el
+  foco y solo si hay un lector activo. Las pistas de *hover* y el banner de arranque
+  se dejan en `showMessage` directo, sin anunciar (serían ruido). Los
+  `QMessageBox`/`QInputDialog` ya eran accesibles de serie.
 - ⬜ **Etiquetas asociadas en los diálogos** (`QLabel::setBuddy`) — diálogo de
   fórmula, *Insertar enlace/imagen*, idioma de exportación, etc.: asociar cada
   `QLabel` a su campo activa el mnemónico (Alt+letra enfoca el campo) y hace que el
