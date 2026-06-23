@@ -11,6 +11,7 @@ inline QString followSystemThemeKey() { return QStringLiteral("followSystemTheme
 inline QString zoomLevelKey()   { return QStringLiteral("zoomLevel"); }
 inline QString showWordCountKey() { return QStringLiteral("showWordCount"); }
 inline QString typewriterModeKey() { return QStringLiteral("typewriterMode"); }
+inline QString snippetsKey()    { return QStringLiteral("snippets"); }
 inline QString spellCheckKey()  { return QStringLiteral("spellCheck"); }
 inline QString spellLanguageKey() { return QStringLiteral("spellLanguage"); }
 inline QString cursorPositionsKey() { return QStringLiteral("cursorPositions"); }
@@ -198,6 +199,15 @@ QStringList AppSettings::personalDictionary()
 void AppSettings::setPersonalDictionary(const QStringList &words)
 {
     QSettings().setValue(personalDictionaryKey(), words);
+}
+
+QList<mdsnippet::Snippet> AppSettings::snippets()
+{
+    return mdsnippet::deserialize(QSettings().value(snippetsKey()).toStringList());
+}
+void AppSettings::setSnippets(const QList<mdsnippet::Snippet> &snippets)
+{
+    QSettings().setValue(snippetsKey(), mdsnippet::serialize(snippets));
 }
 
 QString AppSettings::lastFile()

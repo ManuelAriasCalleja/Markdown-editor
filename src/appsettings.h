@@ -4,6 +4,8 @@
 #include <QByteArray>
 #include <QStringList>
 
+#include "snippets.h"
+
 // Fachada sobre QSettings: centraliza las claves de persistencia y expone
 // accesores tipados. El resto del código no toca QSettings directamente, de
 // modo que las claves viven en un único sitio.
@@ -85,6 +87,11 @@ void setRecentFiles(const QStringList &files);
 // como correctas («añadir al diccionario»), compartidas entre idiomas.
 QStringList personalDictionary();
 void setPersonalDictionary(const QStringList &words);
+
+// Snippets de usuario (ver `mdsnippet`): fragmentos Markdown reutilizables que el
+// usuario define y se insertan desde *Insertar → Snippet*.
+QList<mdsnippet::Snippet> snippets();
+void setSnippets(const QList<mdsnippet::Snippet> &snippets);
 
 // Último documento abierto: ruta del archivo activo al cerrar, para reabrirlo
 // al arrancar (vacío = no había archivo, se arranca en blanco).

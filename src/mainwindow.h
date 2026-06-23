@@ -19,6 +19,7 @@ class QAction;
 class QCloseEvent;
 class QEvent;
 class QKeyEvent;
+class QMenu;
 class QMimeData;
 class QObject;
 class QLabel;
@@ -182,6 +183,10 @@ private:
     // por el menú Formato y la barra de botones, y el propio menú Formato.
     void createFormatActions();
     void createInsertMenu();
+    // Repuebla el submenú Insertar → Snippet con los snippets guardados (uno por
+    // entrada que los inserta) más «Gestionar snippets…». Se llama al construir el
+    // menú y tras editar la lista en el diálogo gestor.
+    void rebuildSnippetsMenu();
     void createTableMenu();
     // Menú Ver: vista (fuente/dividida/sin distracciones), esquema, zoom, tema e
     // idioma.
@@ -293,6 +298,7 @@ private:
 
     QAction *m_distractionAction = nullptr;   // toggle de Ver → Sin distracciones
     QAction *m_typewriterAction = nullptr;    // toggle de Ver → Máquina de escribir
+    QMenu *m_snippetsMenu = nullptr;          // submenú dinámico Insertar → Snippet
     DistractionFreeController *m_distraction = nullptr;  // modo pantalla completa/columna
 
     OutlinePanel *m_outline = nullptr;          // panel lateral con el índice (TOC)

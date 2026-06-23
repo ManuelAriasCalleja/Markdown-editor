@@ -12,6 +12,11 @@ y el proyecto usa [versionado semántico](https://semver.org/lang/es/).
   del cursor centrada en vertical mientras escribes, en vez de que el cursor baje
   hacia el borde inferior. Complementa el modo sin distracciones. Desactivado por
   defecto; el ajuste se recuerda entre sesiones.
+- **Snippets de usuario** (*Insertar → Snippet*): fragmentos de Markdown
+  reutilizables que defines una vez (con *Gestionar snippets…*) e insertas por
+  nombre desde el menú. A diferencia de las plantillas (de archivo entero), se
+  insertan en el punto del cursor; en la vista WYSIWYG se renderizan y en la de
+  fuente se pegan como Markdown. Se recuerdan entre sesiones.
 
 ## [2.1.0] — 2026-06-23
 

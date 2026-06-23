@@ -242,10 +242,15 @@ Lo poco barato/mediano que aún encaja con la filosofía tras la comparación co
 otros editores (Typora, Ghostwriter…). El grueso de funcionalidad está maduro: el
 mayor margen restante es de **distribución** (puntos 2-4 de arriba), no de features.
 
-- ⬜ **Snippets de usuario** — fragmentos reutilizables que el usuario define e
-  inserta por nombre o atajo (complementan las plantillas de documento, que son de
-  archivo entero). Encaja con el patrón habitual (catálogo + función pura + `tst_`)
-  y se persiste en `AppSettings`. Ya estaba anotado como pendiente bajo «Plantillas».
+- ✅ **Snippets de usuario** — *Hecho:* fragmentos Markdown reutilizables que el
+  usuario define e inserta por nombre. Módulo puro `snippets` (`mdsnippet`:
+  modelo + (de)serialización para QSettings, con `tst_snippets`); se persisten en
+  `AppSettings::snippets()`. Diálogo gestor `SnippetsDialog` (añadir/editar/
+  eliminar) y submenú dinámico *Insertar → Snippet* (uno por snippet +
+  «Gestionar…»). `EditorStack::insertSnippet` inserta el cuerpo crudo en la vista
+  de fuente y renderizado (`QTextDocumentFragment::fromMarkdown`) en WYSIWYG, así
+  que funciona en ambos modos. (La expansión al teclear un disparador queda como
+  posible añadido futuro; se evitó por solaparse con los shortcodes `:nombre:`.)
 - 🚧 **Modo máquina de escribir / foco de línea** — *Hecho (máquina de escribir):*
   *Ver → Máquina de escribir* mantiene la línea del cursor centrada en vertical
   mientras se escribe. Lógica pura en `typewriter` (`mdtypewriter::centeredScrollValue`,

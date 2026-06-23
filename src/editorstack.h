@@ -83,6 +83,10 @@ public:
     // activarlo, centra ya el editor activo.
     void setTypewriterMode(bool on);
 
+    // Inserta el cuerpo Markdown de un snippet en el editor activo: crudo en la
+    // vista de fuente (es texto Markdown) y renderizado como fragmento en WYSIWYG.
+    void insertSnippet(const QString &body);
+
 signals:
     // Mensaje para la barra de estado de la ventana (texto, ms).
     void statusMessage(const QString &text, int timeout);

@@ -13,6 +13,7 @@
 #include "codehighlighter.h"
 #include "distractionfreecontroller.h"
 #include "documentio.h"
+#include "snippetsdialog.h"
 #include "exportcontroller.h"
 #include "exporters.h"
 #include "filecontroller.h"
@@ -524,11 +525,43 @@ void MainWindow::createInsertMenu()
     insDateTime->setToolTip(tr("Inserta la fecha y la hora actuales en formato local"));
     connect(insDateTime, &QAction::triggered, this, [this] { m_stack->insert()->insertDateTime(); });
 
+    // Snippets de usuario: submenú dinámico (uno por snippet + «Gestionar…»). NO
+    // va en m_wysiwygActions: insertSnippet funciona también en la vista de fuente
+    // (inserta el Markdown crudo), y «Gestionar» debe estar siempre disponible.
+    m_snippetsMenu = insertMenu->addMenu(tr("Snippet"));
+    rebuildSnippetsMenu();
+
     // Insertar tampoco aplica en la vista de fuente.
     m_wysiwygActions << insLink << insImage << insPasteImage << insTable << insRule
                      << insToc << insFormula << insFootnote
                      << admonitionMenu->menuAction() << insSymbol
                      << insDate << insDateTime;
+}
+
+void MainWindow::rebuildSnippetsMenu()
+{
+    if (!m_snippetsMenu)
+        return;
+    m_snippetsMenu->clear();
+    const QList<mdsnippet::Snippet> snippets = AppSettings::snippets();
+    for (const mdsnippet::Snippet &s : snippets) {
+        QAction *act = m_snippetsMenu->addAction(s.name);
+        const QString body = s.body;
+        connect(act, &QAction::triggered, this, [this, body] { m_stack->insertSnippet(body); });
+    }
+    if (snippets.isEmpty()) {
+        QAction *empty = m_snippetsMenu->addAction(tr("(sin snippets)"));
+        empty->setEnabled(false);
+    }
+    m_snippetsMenu->addSeparator();
+    QAction *manage = m_snippetsMenu->addAction(tr("Gestionar snippets..."));
+    connect(manage, &QAction::triggered, this, [this] {
+        SnippetsDialog dlg(AppSettings::snippets(), this);
+        if (dlg.exec() == QDialog::Accepted) {
+            AppSettings::setSnippets(dlg.snippets());
+            rebuildSnippetsMenu();
+        }
+    });
 }
 
 void MainWindow::createTableMenu()

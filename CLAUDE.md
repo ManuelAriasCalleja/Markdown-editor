@@ -136,7 +136,9 @@ selección de diccionario para el corrector ortográfico, ver abajo), `diagram`
 (`mddiagram`; clasifica el lenguaje de un bloque ```mermaid/plantuml para el
 render de diagramas, ver abajo), `typewriter` (`mdtypewriter::centeredScrollValue`;
 calcula el scroll que centra la línea del cursor para el modo máquina de escribir,
-integrado en `EditorStack::centerCursorLine`).
+integrado en `EditorStack::centerCursorLine`), `snippets` (`mdsnippet`; modelo y
+(de)serialización de los snippets de usuario para `AppSettings`, con el diálogo
+`SnippetsDialog` y `EditorStack::insertSnippet` aparte).
 
 Patrón recurrente para lógica comprobable: separar las **funciones puras** (sin
 GUI) de la integración (qué texto y dónde reinsertarlo, que vive en `MainWindow` o

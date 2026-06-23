@@ -8,6 +8,7 @@
 #include <QTextBlock>
 #include <QTextCursor>
 #include <QTextDocument>
+#include <QTextDocumentFragment>
 #include <QTextEdit>
 #include <QTextFragment>
 #include <QTextFrame>
@@ -266,6 +267,22 @@ void EditorStack::setTypewriterMode(bool on)
     m_typewriter = on;
     if (on)
         centerCursorLine(activeEditor());  // centra ya, sin esperar a moverse
+}
+
+void EditorStack::insertSnippet(const QString &body)
+{
+    if (body.isEmpty())
+        return;
+    QTextEdit *ed = activeEditor();
+    if (ed == m_split->sourceEditor()) {
+        ed->insertPlainText(body);  // la fuente es Markdown literal
+    } else {
+        QTextCursor cursor = ed->textCursor();
+        cursor.beginEditBlock();
+        cursor.insertFragment(QTextDocumentFragment::fromMarkdown(body));
+        cursor.endEditBlock();
+    }
+    ed->setFocus();
 }
 
 void EditorStack::centerCursorLine(QTextEdit *ed)
