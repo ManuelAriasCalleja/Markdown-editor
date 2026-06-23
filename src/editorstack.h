@@ -98,6 +98,16 @@ signals:
     void diskVanished();
 
 private:
+    // Si el cursor del editor WYSIWYG está sobre una fórmula, anuncia su TeX (vía
+    // statusMessage → QAccessibleAnnouncementEvent) una sola vez al entrar: una
+    // fórmula 2D es un único ObjectReplacementCharacter opaco para los lectores,
+    // y las inline son glifos Unicode sin estructura; el TeX es lo legible.
+    void announceFormulaUnderCursor();
+    // TeX de la fórmula bajo el cursor (vacío si no hay); deja en *start la
+    // posición de inicio de su grupo, para no repetir el anuncio al moverse dentro.
+    QString formulaAtCursor(int *start) const;
+    int m_lastFormulaStart = -1;
+
     FocusEditor *m_editor = nullptr;
     CodeBlockHighlighter *m_highlighter = nullptr;
     DocumentIo *m_documentIo = nullptr;

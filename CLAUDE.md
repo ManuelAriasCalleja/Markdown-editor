@@ -345,6 +345,13 @@ solo incluyen `mathblocks.h`. Piezas clave:
   al teclado: `MainWindow::handleMathKeyPress` (instalado como `eventFilter` en
   `m_editor`) descarta caracteres imprimibles dentro del grupo y convierte
   Backspace/Delete en el borde en borrado del grupo entero.
+- *Accesibilidad.* Una fórmula 2D es un `ObjectReplacementCharacter` opaco para los
+  lectores de pantalla (y las inline, glifos Unicode sin estructura), así que
+  `EditorStack::announceFormulaUnderCursor` (en `cursorPositionChanged` del WYSIWYG)
+  detecta la fórmula bajo el cursor por `IsMathProperty`/`MathTexProperty` y anuncia
+  su TeX con `showStatusMessage` → `QAccessibleAnnouncementEvent`. Deduplica por el
+  inicio del grupo (`formulaAtCursor`) para sonar una vez al entrar, no al moverse
+  dentro.
 - *Serialización fiel.* `mdtable::documentMarkdown` clona el documento, reemplaza
   cada grupo de fórmula por una **sentinela** en la PUA de Unicode
   (`U+F8FE…U+F8FF` envolviendo el índice en `MathSentinelTable`) — texto opaco que

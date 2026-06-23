@@ -29,6 +29,7 @@ private slots:
     void backspaceAtRightEdgeDeletesGroup();
     void printableInsideFormulaIsBlocked();
     void navigationKeysInsideFormulaPassThrough();
+    void formulaUnderCursorIsAnnouncedOnce();
 
 private:
     // Inserta la fórmula `tex` (inline) en el cursor del editor como runs de math,
@@ -132,6 +133,44 @@ void TestFormula::navigationKeysInsideFormulaPassThrough()
         QVERIFY2(!w.m_stack->formula()->handleMathKeyPress(&ev),
                  QByteArray("la tecla ") + k.name + " no debe consumirse dentro de la fórmula");
     }
+}
+
+void TestFormula::formulaUnderCursorIsAnnouncedOnce()
+{
+    // Accesibilidad: al situar el cursor sobre una fórmula, EditorStack anuncia su
+    // TeX (statusMessage → QAccessibleAnnouncementEvent) una sola vez por fórmula.
+    MainWindow w;
+    QTextEdit *ed = w.m_stack->editor();
+    QTextCursor c = ed->textCursor();
+    c.insertText(QStringLiteral("ab "));
+    const auto bounds = insertMath(ed, QStringLiteral("x^2"));
+    c = ed->textCursor();
+    c.insertText(QStringLiteral(" cd"));
+
+    // Sitúa el cursor fuera de la fórmula para partir de un estado conocido.
+    c.setPosition(0);
+    ed->setTextCursor(c);
+
+    QSignalSpy spy(w.m_stack, &EditorStack::statusMessage);
+
+    // Entrar en la fórmula la anuncia una vez, con su TeX.
+    c.setPosition(bounds.first + 1);
+    ed->setTextCursor(c);
+    QCOMPARE(spy.count(), 1);
+    QVERIFY(spy.last().at(0).toString().contains(QStringLiteral("x^2")));
+
+    // Moverse DENTRO del mismo grupo no vuelve a anunciar.
+    c.setPosition(bounds.first + 2);
+    ed->setTextCursor(c);
+    QCOMPARE(spy.count(), 1);
+
+    // Salir de la fórmula no anuncia nada (pero permite re-anunciar al volver).
+    c.setPosition(0);
+    ed->setTextCursor(c);
+    QCOMPARE(spy.count(), 1);
+    c.setPosition(bounds.first + 1);
+    ed->setTextCursor(c);
+    QCOMPARE(spy.count(), 2);
 }
 
 QTEST_MAIN(TestFormula)

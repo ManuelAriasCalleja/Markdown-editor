@@ -34,14 +34,19 @@
 <context>
     <name>EditorStack</name>
     <message>
-        <location filename="../src/editorstack.cpp" line="41"/>
+        <location filename="../src/editorstack.cpp" line="44"/>
         <source>Editor del documento</source>
         <translation>Edytor dokumentu</translation>
     </message>
     <message>
-        <location filename="../src/editorstack.cpp" line="44"/>
+        <location filename="../src/editorstack.cpp" line="47"/>
         <source>Editor visual: el formato se aplica sobre el texto renderizado, sin ver la sintaxis Markdown.</source>
         <translation>Edytor wizualny: formatowanie jest stosowane na renderowanym tekście, bez pokazywania składni Markdown.</translation>
+    </message>
+    <message>
+        <location filename="../src/editorstack.cpp" line="269"/>
+        <source>Fórmula: %1</source>
+        <translation>Wzór: %1</translation>
     </message>
 </context>
 <context>

@@ -4,9 +4,11 @@
 #include <QMimeData>
 #include <QPalette>
 #include <QSplitter>
+#include <QTextBlock>
 #include <QTextCursor>
 #include <QTextDocument>
 #include <QTextEdit>
+#include <QTextFragment>
 #include <QTextFrame>
 #include <QTextTable>
 #include <QVBoxLayout>
@@ -22,6 +24,7 @@
 #include "formulacontroller.h"
 #include "insertcontroller.h"
 #include "markdownrender.h"
+#include "mathblocks.h"
 #include "outlinepanel.h"
 #include "recoverymanager.h"
 #include "spellcontroller.h"
@@ -130,6 +133,8 @@ EditorStack::EditorStack(FindReplaceBar *findBar, OutlinePanel *outline, QWidget
             this, [this] { m_format->updateActions(); });
     connect(m_editor, &QTextEdit::cursorPositionChanged,
             this, [this] { m_format->updateActions(); });
+    connect(m_editor, &QTextEdit::cursorPositionChanged,
+            this, &EditorStack::announceFormulaUnderCursor);
     // Marca «modificado» comparando con la línea base (DocumentIo).
     connect(m_editor->document(), &QTextDocument::contentsChanged, this,
             [this] { emit windowModifiedChanged(m_documentIo->isModified()); });
@@ -205,4 +210,61 @@ void EditorStack::setBodyMarkdown(const QString &body)
     m_theme->recolorLinks();
     m_outline->rebuild(m_editor->document());
     m_split->endProgrammaticChange(wasSyncing);
+}
+
+QString EditorStack::formulaAtCursor(int *start) const
+{
+    QTextDocument *doc = m_editor->document();
+    const int pos = m_editor->textCursor().position();
+    // Formato del carácter que empieza en `p` (el que hay a la derecha de esa
+    // posición). Todos los caracteres de un mismo fragmento comparten formato.
+    const auto fmtAt = [doc](int p) -> QTextCharFormat {
+        if (p < 0)
+            return {};
+        const QTextBlock b = doc->findBlock(p);
+        for (auto it = b.begin(); it != b.end(); ++it) {
+            const QTextFragment f = it.fragment();
+            if (f.isValid() && p >= f.position() && p < f.position() + f.length())
+                return f.charFormat();
+        }
+        return {};
+    };
+    // El cursor está «sobre» la fórmula si la toca por cualquiera de sus bordes:
+    // mira el carácter a la derecha (pos) y, si no, el de la izquierda (pos-1).
+    int anchor = pos;
+    QTextCharFormat f = fmtAt(pos);
+    if (!f.property(mdmath::IsMathProperty).toBool()) {
+        anchor = pos - 1;
+        f = fmtAt(anchor);
+    }
+    if (!f.property(mdmath::IsMathProperty).toBool())
+        return QString();
+    const QString tex = f.property(mdmath::MathTexProperty).toString();
+    // Retrocede hasta el inicio del grupo (mismos IsMath + MathTex) para tener un
+    // ancla estable con la que deduplicar el anuncio.
+    int s = anchor;
+    while (s > 0) {
+        const QTextCharFormat pf = fmtAt(s - 1);
+        if (!pf.property(mdmath::IsMathProperty).toBool()
+            || pf.property(mdmath::MathTexProperty).toString() != tex)
+            break;
+        --s;
+    }
+    if (start)
+        *start = s;
+    return tex;
+}
+
+void EditorStack::announceFormulaUnderCursor()
+{
+    int start = -1;
+    const QString tex = formulaAtCursor(&start);
+    if (tex.isEmpty()) {
+        m_lastFormulaStart = -1;
+        return;
+    }
+    if (start == m_lastFormulaStart)
+        return;   // misma fórmula (solo nos movemos dentro): no repetir
+    m_lastFormulaStart = start;
+    emit statusMessage(tr("Fórmula: %1").arg(tex), 0);
 }

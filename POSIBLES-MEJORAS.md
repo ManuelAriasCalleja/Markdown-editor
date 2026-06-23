@@ -294,6 +294,14 @@ vivo.*
   foco y solo si hay un lector activo. Las pistas de *hover* y el banner de arranque
   se dejan en `showMessage` directo, sin anunciar (serían ruido). Los
   `QMessageBox`/`QInputDialog` ya eran accesibles de serie.
+- ✅ **Anunciar la fórmula bajo el cursor** — *Hecho:* una fórmula 2D vive como un
+  único `ObjectReplacementCharacter` que un lector salta en silencio, y las inline
+  son glifos Unicode sin estructura; el TeX es lo legible. `EditorStack`, en
+  `cursorPositionChanged` del editor WYSIWYG, detecta si el cursor está sobre un
+  fragmento de fórmula (`IsMathProperty`/`MathTexProperty`) y anuncia su TeX
+  («Fórmula: \frac{a}{b}») vía el mismo `showStatusMessage` → anuncio. Se deduplica
+  por el inicio del grupo (`formulaAtCursor`): suena una vez al entrar, no al
+  moverse dentro. Cubierto por `tst_formulacontroller`.
 - ✅ **Etiquetas asociadas en los diálogos** — *Hecho/verificado:* los diálogos con
   `QFormLayout` (fórmula, insertar enlace, tabla, estadísticas) ya asocian
   etiqueta↔campo **automáticamente** (`addRow(QString, campo)` crea la `QLabel` y le
