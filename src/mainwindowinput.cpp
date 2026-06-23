@@ -281,6 +281,19 @@ void MainWindow::openLink(const QString &href)
     QUrl url(href);
     if (url.isRelative())
         url = m_stack->editor()->document()->baseUrl().resolved(url);
+    // Si el enlace apunta a un archivo Markdown local existente, lo abrimos en una
+    // pestaña (como Archivo → Abrir) en vez de delegar en el SO: como md-editor es
+    // el manejador por defecto de los .md, QDesktopServices lanzaría otra instancia
+    // de la propia aplicación en lugar de reusar esta ventana.
+    if (url.isLocalFile()) {
+        const QString path = url.toLocalFile();
+        const QString suffix = QFileInfo(path).suffix().toLower();
+        if ((suffix == QLatin1String("md") || suffix == QLatin1String("markdown"))
+            && QFileInfo::exists(path)) {
+            openPathInTab(path);
+            return;
+        }
+    }
     QDesktopServices::openUrl(url);
 }
 
