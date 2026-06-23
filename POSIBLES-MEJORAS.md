@@ -322,9 +322,16 @@ hasta ahora solo está cableado contra la API de Qt, no probado en vivo.*
   revisar: la **vista previa** de la fórmula (solo lectura) ya no roba el Tab
   (`Qt::ClickFocus`), y el campo de ruta del diálogo de imagen recupera su nombre
   accesible (al ir envuelto en un contenedor perdía la asociación con su etiqueta).
-- ⬜ **Indicador de foco visible** — garantizar un *focus ring* nítido en los
-  widgets propios y, sobre todo, bajo el tema de alto contraste (borde de foco
-  explícito), para quien navega sin ratón.
+- 🚧 **Indicador de foco visible** — *Revisado:* el foco lo dibuja el `QStyle`
+  usando el rol `Highlight` de cada tema, que el verificador de contraste ya
+  garantiza legible (en alto contraste, amarillo puro sobre negro — muy visible en
+  botones, menús, listas y el árbol del esquema). En los editores el foco se ve por
+  el cursor (como en cualquier editor de texto). *Pendiente (riesgo estético):* un
+  *focus ring* explícito más fuerte chocaría con la arquitectura —el theming es
+  **100 % por paleta, sin un solo `setStyleSheet` en el proyecto**— y obligaría a
+  pintarlo a mano sobre `QAbstractScrollArea` o a introducir stylesheets; además
+  necesita validación visual por plataforma/estilo. Se deja para una pasada con
+  pruebas visuales reales (ver «validación con lector/visual» abajo).
 - ⬜ **Auditar trampas de teclado** — los filtros de evento propios (atomicidad de
   fórmulas en `handleMathKeyPress`, continuación de listas, protección de
   shortcodes) deben dejar pasar siempre Tab/Esc/flechas y no «secuestrar» el foco;
@@ -339,8 +346,14 @@ hasta ahora solo está cableado contra la API de Qt, no probado en vivo.*
 - ⬜ **Seguir el modo de alto contraste del SO** — igual que ya se sigue el modo
   claro/oscuro del sistema (`QStyleHints`), detectar el modo de alto contraste de
   Windows/Linux y proponer automáticamente el tema equivalente.
-- ⬜ **Respetar el escalado de fuente del SO** — verificar que el tamaño base parte
-  del que marca el sistema (baja visión) en lugar de un punto fijo.
+- ✅ **Respetar el escalado de fuente del SO** — *Verificado:* no hay fuente global
+  fija (`main.cpp` no llama a `setFont`) ni se desactiva el HiDPI (Qt6 lo escala
+  solo). El editor WYSIWYG no fija fuente, así que arranca con la de la aplicación
+  (que Qt deriva del sistema); el zoom se calcula como **delta** sobre
+  `m_baseFontPointSize`, capturado de esa fuente, y lo mismo para fuente de código,
+  menús, barras, estado y esquema. O sea, el tamaño base **ya** es el del SO (baja
+  visión respetada). *Limitación menor:* los tamaños base se capturan al arrancar,
+  así que cambiar la fuente del sistema en caliente requiere reiniciar la app.
 
 ### Documentación y verificación
 
