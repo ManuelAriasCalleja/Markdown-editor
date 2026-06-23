@@ -258,7 +258,7 @@ NSAccessibility en cada SO, así que encaja con la filosofía del proyecto. *Pen
 transversal: validar todo lo ✅ con un lector real (Orca/NVDA/VoiceOver), ya que
 hasta ahora solo está cableado contra la API de Qt, no probado en vivo.*
 
-> Leyenda: ✅ ya existe · 🚧 parcial · ⬜ pendiente.
+> Leyenda: ✅ ya existe · 🚧 parcial · ⬜ pendiente · 🚫 descartado (no viable / no-objetivo).
 
 ### Alto impacto / poco esfuerzo
 
@@ -332,10 +332,15 @@ hasta ahora solo está cableado contra la API de Qt, no probado en vivo.*
   pintarlo a mano sobre `QAbstractScrollArea` o a introducir stylesheets; además
   necesita validación visual por plataforma/estilo. Se deja para una pasada con
   pruebas visuales reales (ver «validación con lector/visual» abajo).
-- ⬜ **Auditar trampas de teclado** — los filtros de evento propios (atomicidad de
-  fórmulas en `handleMathKeyPress`, continuación de listas, protección de
-  shortcodes) deben dejar pasar siempre Tab/Esc/flechas y no «secuestrar» el foco;
-  conviene una pasada manual solo con teclado o un test de humo.
+- ✅ **Auditar trampas de teclado** — *Revisado:* el `eventFilter` es un mero
+  despachador que solo consume el evento si un sub-manejador lo hace, y ninguno
+  bloquea navegación: `handleMathKeyPress` solo se queda teclas **imprimibles**
+  (Tab=`\t` y Esc no son `isPrint()`, las flechas traen `text()` vacío) y
+  Backspace/Delete en los bordes; la continuación de listas solo actúa con Enter sin
+  modificadores; los shortcodes solo con `:`. El editor (Tab inserta tabulador, lo
+  normal) se abandona con F10/Alt al menú o con los atajos, así que cumple WCAG
+  2.1.2 (sin trampa). *Añadido:* `tst_formulacontroller` verifica que con el cursor
+  dentro de una fórmula las flechas, Inicio/Fin, Tab y Esc **no** se consumen.
 
 ### Sistema y preferencias
 
@@ -343,9 +348,14 @@ hasta ahora solo está cableado contra la API de Qt, no probado en vivo.*
   21:1, bordes blancos explícitos; `themespec.cpp`).
 - ✅ **Zoom de interfaz persistente** — `ChromeZoom` escala editor, menús, barras,
   estado, esquema e iconos, y se guarda en `AppSettings::zoomLevel`.
-- ⬜ **Seguir el modo de alto contraste del SO** — igual que ya se sigue el modo
-  claro/oscuro del sistema (`QStyleHints`), detectar el modo de alto contraste de
-  Windows/Linux y proponer automáticamente el tema equivalente.
+- 🚫 **Seguir el modo de alto contraste del SO** — *No viable de forma portable
+  (no-objetivo):* Qt (`QStyleHints`) expone el esquema claro/oscuro (`colorScheme`,
+  que el proyecto ya sigue) pero **no** un hint de alto contraste. Detectarlo
+  obligaría a código por plataforma (`SystemParametersInfo`/registro en Windows,
+  `NSWorkspace` en macOS, gsettings de GNOME en Linux), justo lo que el proyecto
+  evita por diseño («Qt6 puro, sin `#ifdef Q_OS_*` ni APIs nativas»). Mitigación ya
+  presente: el tema de **alto contraste** se selecciona a mano y es el de mayor
+  contraste verificado.
 - ✅ **Respetar el escalado de fuente del SO** — *Verificado:* no hay fuente global
   fija (`main.cpp` no llama a `setFont`) ni se desactiva el HiDPI (Qt6 lo escala
   solo). El editor WYSIWYG no fija fuente, así que arranca con la de la aplicación

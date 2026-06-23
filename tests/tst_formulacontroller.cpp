@@ -28,6 +28,7 @@ private slots:
     void guardExpandsSelectionInsideFormula();
     void backspaceAtRightEdgeDeletesGroup();
     void printableInsideFormulaIsBlocked();
+    void navigationKeysInsideFormulaPassThrough();
 
 private:
     // Inserta la fórmula `tex` (inline) en el cursor del editor como runs de math,
@@ -105,6 +106,32 @@ void TestFormula::printableInsideFormulaIsBlocked()
     QKeyEvent typeA(QEvent::KeyPress, Qt::Key_A, Qt::NoModifier, QStringLiteral("a"));
     QVERIFY(w.m_stack->formula()->handleMathKeyPress(&typeA));          // consumido
     QCOMPARE(w.m_stack->editor()->toPlainText(), before);    // no se insertó nada
+}
+
+void TestFormula::navigationKeysInsideFormulaPassThrough()
+{
+    // No keyboard trap: con el cursor DENTRO de una fórmula, las teclas de
+    // navegación y Tab/Esc no deben consumirse (handleMathKeyPress devuelve false),
+    // para que el foco/cursor pueda moverse y salir. Solo se bloquean las teclas
+    // imprimibles (probado arriba) y Backspace/Delete en los bordes.
+    MainWindow w;
+    const auto bounds = insertMath(w.m_stack->editor(), QStringLiteral("x^2"));
+
+    QTextCursor c = w.m_stack->editor()->textCursor();
+    c.setPosition(bounds.first + 1);  // dentro del grupo
+    w.m_stack->editor()->setTextCursor(c);
+
+    const struct { Qt::Key key; const char *name; } navKeys[] = {
+        {Qt::Key_Left, "Left"},   {Qt::Key_Right, "Right"},
+        {Qt::Key_Up, "Up"},       {Qt::Key_Down, "Down"},
+        {Qt::Key_Home, "Home"},   {Qt::Key_End, "End"},
+        {Qt::Key_Tab, "Tab"},     {Qt::Key_Escape, "Escape"},
+    };
+    for (const auto &k : navKeys) {
+        QKeyEvent ev(QEvent::KeyPress, k.key, Qt::NoModifier);
+        QVERIFY2(!w.m_stack->formula()->handleMathKeyPress(&ev),
+                 QByteArray("la tecla ") + k.name + " no debe consumirse dentro de la fórmula");
+    }
 }
 
 QTEST_MAIN(TestFormula)
