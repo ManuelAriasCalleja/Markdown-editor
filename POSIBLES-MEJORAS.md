@@ -331,6 +331,20 @@ vivo.*
   y enlaces, texto secundario, botones, selección, tooltips y los 5 colores de
   sintaxis a **AA (≥4.5:1)**, en los 6 temas. Blinda la paleta contra regresiones al
   editar el catálogo.
+- ✅ **Tinta de los iconos de la barra de formato** — *Arreglado:* los iconos
+  monocromos generados (negrita/cursiva/subrayado/tachado y los de listas) se
+  «hornean» en un `QPixmap` con un color y a una `devicePixelRatio` concretos, así
+  que hay que **regenerarlos** cuando cambia cualquiera de los dos —si no, se quedan
+  con la tinta del tema anterior (sin contraste) o, en HiDPI, borrosos hasta el
+  primer relayout—. Dos fallos cazados aquí: (a) en el arranque se generaban durante
+  la construcción, antes de que la ventana tuviera pantalla, a `dpr = 1`; ahora
+  `MainWindow::showEvent` los rehornea con la dpr definitiva. (b) solo se
+  regeneraban vía la señal `themeChanged` de un único stack (no seguía a otras
+  pestañas); ahora `MainWindow::changeEvent` los recolorea ante
+  `ApplicationPaletteChange`/`PaletteChange` (y `DevicePixelRatioChange` en Qt 6.6+),
+  leyendo `qApp` ya actualizada, de modo que su tinta **contrasta con el fondo de la
+  barra** igual que el texto en cualquier tema, esquema del SO o densidad de
+  pantalla. Test `toolbarIconInkContrastsWithTheme` en `tst_chromezoom`.
 
 ### Navegación por teclado y foco
 
