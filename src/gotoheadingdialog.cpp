@@ -16,7 +16,11 @@ GoToHeadingDialog::GoToHeadingDialog(const QList<OutlineHeading> &headings, QWid
     auto *layout = new QVBoxLayout(this);
     m_filter = new QLineEdit(this);
     m_filter->setPlaceholderText(tr("Filtrar encabezados…"));
+    // El placeholder no lo lee un lector de pantalla; lo reusamos como nombre
+    // accesible del campo (sin cadena nueva). La lista sí merece nombre propio.
+    m_filter->setAccessibleName(m_filter->placeholderText());
     m_list = new QListWidget(this);
+    m_list->setAccessibleName(tr("Encabezados"));
     layout->addWidget(m_filter);
     layout->addWidget(m_list);
 

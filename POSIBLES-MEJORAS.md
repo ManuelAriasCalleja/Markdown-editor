@@ -279,10 +279,15 @@ hasta ahora solo está cableado contra la API de Qt, no probado en vivo.*
   foco y solo si hay un lector activo. Las pistas de *hover* y el banner de arranque
   se dejan en `showMessage` directo, sin anunciar (serían ruido). Los
   `QMessageBox`/`QInputDialog` ya eran accesibles de serie.
-- ⬜ **Etiquetas asociadas en los diálogos** (`QLabel::setBuddy`) — diálogo de
-  fórmula, *Insertar enlace/imagen*, idioma de exportación, etc.: asociar cada
-  `QLabel` a su campo activa el mnemónico (Alt+letra enfoca el campo) y hace que el
-  lector lea la etiqueta al entrar en el control.
+- ✅ **Etiquetas asociadas en los diálogos** — *Hecho/verificado:* los diálogos con
+  `QFormLayout` (fórmula, insertar enlace, tabla, estadísticas) ya asocian
+  etiqueta↔campo **automáticamente** (`addRow(QString, campo)` crea la `QLabel` y le
+  fija el campo como *buddy*), así que el lector lee la etiqueta al enfocar el campo;
+  no hacía falta tocarlos. El único hueco era `GoToHeadingDialog`, que usaba solo
+  `placeholderText` (que los lectores no leen): ahora su campo de filtro toma ese
+  texto como nombre accesible y la lista de encabezados tiene nombre propio. Los
+  mnemónicos `&` (Alt+letra) se **descartan**: la posición del `&` varía por idioma
+  (coste × 9 + riesgo de conflicto) y los campos ya se alcanzan con Tab.
 
 ### Información no transmitida solo por color (daltonismo)
 
@@ -294,11 +299,13 @@ hasta ahora solo está cableado contra la API de Qt, no probado en vivo.*
   color. (Las erratas del corrector ya llevan subrayado ondulado además del rojo
   —correcto—; las fórmulas se reconocen por su forma renderizada, no solo por el
   color.)
-- ⬜ **Verificador de contraste de los temas (función pura + `tst_`)** — una función
-  que calcule el ratio de contraste WCAG (texto/fondo, enlace/fondo, resaltado…) de
-  cada `ThemeSpec` y un `tst_themecontrast` que **falle** si algún tema baja de
-  4.5:1 (nivel AA) para texto normal. Encaja con el patrón «función pura + test» del
-  proyecto y blinda la paleta contra regresiones al editar `themespec.cpp`.
+- ✅ **Verificador de contraste de los temas (función pura + `tst_`)** — *Ya existía:*
+  `mdtheme::contrastRatio` (WCAG 2.x, linealización sRGB; `themespec.cpp`) y
+  `tst_themespec` verifican el contraste de cada `ThemeSpec`, con un listón **más
+  alto** que el AA propuesto: texto de cuerpo a **AAA (≥7:1)** sobre página y cromo,
+  y enlaces, texto secundario, botones, selección, tooltips y los 5 colores de
+  sintaxis a **AA (≥4.5:1)**, en los 6 temas. Blinda la paleta contra regresiones al
+  editar el catálogo.
 
 ### Navegación por teclado y foco
 

@@ -145,6 +145,11 @@
         <source>Filtrar encabezados…</source>
         <translation>Filtrează titlurile…</translation>
     </message>
+    <message>
+        <location filename="../src/gotoheadingdialog.cpp" line="23"/>
+        <source>Encabezados</source>
+        <translation>Titluri</translation>
+    </message>
 </context>
 <context>
     <name>HelpDialog</name>
@@ -172,7 +177,7 @@
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="../src/mainwindow.cpp" line="247"/>
+        <location filename="../src/mainwindow.cpp" line="248"/>
         <source>Editor Markdown WYSIWYG — escribe y da formato con la barra superior</source>
         <translation>Editor Markdown WYSIWYG — scrie și formatează cu bara de sus</translation>
     </message>
@@ -806,7 +811,7 @@
         <translation>&amp;Despre</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="371"/>
+        <location filename="../src/mainwindow.cpp" line="372"/>
         <source>Acerca de</source>
         <translation>Despre</translation>
     </message>
@@ -815,12 +820,12 @@
         <translation type="vanished">Versiunea 1.0</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="380"/>
+        <location filename="../src/mainwindow.cpp" line="381"/>
         <source>Desarrollado por Manuel Arias Calleja</source>
         <translation>Dezvoltat de Manuel Arias Calleja</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="382"/>
+        <location filename="../src/mainwindow.cpp" line="383"/>
         <source>Editor WYSIWYG de Markdown en Qt6 + C++17.</source>
         <translation>Editor WYSIWYG Markdown în Qt6 + C++17.</translation>
     </message>
@@ -834,7 +839,7 @@
         <translation>Format</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="412"/>
+        <location filename="../src/mainwindow.cpp" line="428"/>
         <source>Selección: </source>
         <translation>Selecție: </translation>
     </message>
@@ -1100,23 +1105,23 @@
         <translation>Exportat în LaTeX: %1</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="221"/>
+        <location filename="../src/mainwindow.cpp" line="222"/>
         <source>Contador de palabras</source>
         <translation>Număr de cuvinte</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="285"/>
+        <location filename="../src/mainwindow.cpp" line="286"/>
         <source>El archivo se eliminó o movió en disco.</source>
         <translation>Fișierul a fost șters sau mutat pe disc.</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="378"/>
+        <location filename="../src/mainwindow.cpp" line="379"/>
         <source>Versión %1</source>
         <translation>Versiunea %1</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/mainwindow.cpp" line="410"/>
-        <location filename="../src/mainwindow.cpp" line="432"/>
+        <location filename="../src/mainwindow.cpp" line="426"/>
+        <location filename="../src/mainwindow.cpp" line="448"/>
         <source>~%n min</source>
         <translation>
             <numerusform>~%n min</numerusform>
@@ -1125,47 +1130,47 @@
         </translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="423"/>
+        <location filename="../src/mainwindow.cpp" line="439"/>
         <source>Estadísticas del documento</source>
         <translation>Statisticile documentului</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="425"/>
+        <location filename="../src/mainwindow.cpp" line="441"/>
         <source>Palabras:</source>
         <translation>Cuvinte:</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="426"/>
+        <location filename="../src/mainwindow.cpp" line="442"/>
         <source>Caracteres:</source>
         <translation>Caractere:</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="427"/>
+        <location filename="../src/mainwindow.cpp" line="443"/>
         <source>Caracteres (sin espacios):</source>
         <translation>Caractere (fără spații):</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="429"/>
+        <location filename="../src/mainwindow.cpp" line="445"/>
         <source>Párrafos:</source>
         <translation>Paragrafe:</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="430"/>
+        <location filename="../src/mainwindow.cpp" line="446"/>
         <source>Frases:</source>
         <translation>Propoziții:</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="431"/>
+        <location filename="../src/mainwindow.cpp" line="447"/>
         <source>Tiempo de lectura:</source>
         <translation>Timp de citire:</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="693"/>
+        <location filename="../src/mainwindow.cpp" line="709"/>
         <source>Abrir</source>
         <translation>Deschide</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="694"/>
+        <location filename="../src/mainwindow.cpp" line="710"/>
         <source>Archivos Markdown (*.md *.markdown *.txt);;Todos los archivos (*)</source>
         <translation>Fișiere Markdown (*.md *.markdown *.txt);;Toate fișierele (*)</translation>
     </message>
@@ -1205,37 +1210,37 @@
         <translation>Nota [^%1] nu are definiție</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="780"/>
+        <location filename="../src/mainwindow.cpp" line="796"/>
         <source>El archivo cambió en disco: recargado.</source>
         <translation>Fișierul s-a schimbat pe disc: reîncărcat.</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="787"/>
+        <location filename="../src/mainwindow.cpp" line="803"/>
         <source>Archivo modificado en disco</source>
         <translation>Fișier modificat pe disc</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="788"/>
+        <location filename="../src/mainwindow.cpp" line="804"/>
         <source>«%1» ha cambiado en disco y tienes cambios sin guardar.</source>
         <translation>„%1” s-a schimbat pe disc și ai modificări nesalvate.</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="791"/>
+        <location filename="../src/mainwindow.cpp" line="807"/>
         <source>¿Recargar la versión del disco (perderás tus cambios) o conservar los tuyos?</source>
         <translation>Reîncărcați versiunea de pe disc (veți pierde modificările) sau le păstrați pe ale dvs.?</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="792"/>
+        <location filename="../src/mainwindow.cpp" line="808"/>
         <source>Recargar</source>
         <translation>Reîncarcă</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="794"/>
+        <location filename="../src/mainwindow.cpp" line="810"/>
         <source>Conservar los míos</source>
         <translation>Păstrează-le pe ale mele</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="823"/>
+        <location filename="../src/mainwindow.cpp" line="839"/>
         <source>No se pudo recargar el archivo:
 %1
 
@@ -1293,7 +1298,7 @@
         <translation>HTML (*.html *.htm)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="822"/>
+        <location filename="../src/mainwindow.cpp" line="838"/>
         <location filename="../src/exportcontroller.cpp" line="152"/>
         <location filename="../src/filecontroller.cpp" line="102"/>
         <location filename="../src/filecontroller.cpp" line="164"/>
@@ -1397,17 +1402,17 @@ Doriți să le salvați?</translation>
         <translation>Document recuperat din sesiunea anterioară</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="560"/>
+        <location filename="../src/mainwindow.cpp" line="576"/>
         <source>(sin título)</source>
         <translation>(fără titlu)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="565"/>
+        <location filename="../src/mainwindow.cpp" line="581"/>
         <source>Recuperar documento</source>
         <translation>Recuperează documentul</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="566"/>
+        <location filename="../src/mainwindow.cpp" line="582"/>
         <source>Se encontró un documento con cambios sin guardar de una sesión anterior:
 %1 (%2).
 
@@ -1418,26 +1423,26 @@ Doriți să le salvați?</translation>
 Dorești să îl recuperezi?</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="569"/>
+        <location filename="../src/mainwindow.cpp" line="585"/>
         <source>Recuperar</source>
         <translation>Recuperează</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="570"/>
+        <location filename="../src/mainwindow.cpp" line="586"/>
         <source>Descartar</source>
         <translation>Renunță</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="626"/>
-        <location filename="../src/mainwindow.cpp" line="681"/>
-        <location filename="../src/mainwindow.cpp" line="740"/>
-        <location filename="../src/mainwindow.cpp" line="765"/>
+        <location filename="../src/mainwindow.cpp" line="642"/>
+        <location filename="../src/mainwindow.cpp" line="697"/>
+        <location filename="../src/mainwindow.cpp" line="756"/>
+        <location filename="../src/mainwindow.cpp" line="781"/>
         <source>Sin título</source>
         <translation>Fără titlu</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="680"/>
-        <location filename="../src/mainwindow.cpp" line="767"/>
+        <location filename="../src/mainwindow.cpp" line="696"/>
+        <location filename="../src/mainwindow.cpp" line="783"/>
         <source>%1[*] — md-editor</source>
         <translation>%1[*] — md-editor</translation>
     </message>
@@ -1468,7 +1473,7 @@ Dorești să îl recuperezi?</translation>
         <translation>Limbă</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/mainwindow.cpp" line="403"/>
+        <location filename="../src/mainwindow.cpp" line="419"/>
         <source>%n palabra(s)</source>
         <translation>
             <numerusform>%n cuvânt</numerusform>
@@ -1477,7 +1482,7 @@ Dorești să îl recuperezi?</translation>
         </translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/mainwindow.cpp" line="405"/>
+        <location filename="../src/mainwindow.cpp" line="421"/>
         <source>%n carácter(es)</source>
         <translation>
             <numerusform>%n caracter</numerusform>

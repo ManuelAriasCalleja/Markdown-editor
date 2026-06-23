@@ -144,6 +144,11 @@
         <source>Filtrar encabezados…</source>
         <translation>Filtrer les titres…</translation>
     </message>
+    <message>
+        <location filename="../src/gotoheadingdialog.cpp" line="23"/>
+        <source>Encabezados</source>
+        <translation>Titres</translation>
+    </message>
 </context>
 <context>
     <name>HelpDialog</name>
@@ -171,7 +176,7 @@
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="../src/mainwindow.cpp" line="247"/>
+        <location filename="../src/mainwindow.cpp" line="248"/>
         <source>Editor Markdown WYSIWYG — escribe y da formato con la barra superior</source>
         <translation>Éditeur Markdown WYSIWYG — saisissez et mettez en forme avec la barre du haut</translation>
     </message>
@@ -805,7 +810,7 @@
         <translation>À &amp;propos</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="371"/>
+        <location filename="../src/mainwindow.cpp" line="372"/>
         <source>Acerca de</source>
         <translation>À propos</translation>
     </message>
@@ -814,12 +819,12 @@
         <translation type="vanished">Version 1.0</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="380"/>
+        <location filename="../src/mainwindow.cpp" line="381"/>
         <source>Desarrollado por Manuel Arias Calleja</source>
         <translation>Développé par Manuel Arias Calleja</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="382"/>
+        <location filename="../src/mainwindow.cpp" line="383"/>
         <source>Editor WYSIWYG de Markdown en Qt6 + C++17.</source>
         <translation>Éditeur Markdown WYSIWYG en Qt6 + C++17.</translation>
     </message>
@@ -833,7 +838,7 @@
         <translation>Format</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="412"/>
+        <location filename="../src/mainwindow.cpp" line="428"/>
         <source>Selección: </source>
         <translation>Sélection : </translation>
     </message>
@@ -1099,23 +1104,23 @@
         <translation>Exporté en LaTeX : %1</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="221"/>
+        <location filename="../src/mainwindow.cpp" line="222"/>
         <source>Contador de palabras</source>
         <translation>Compteur de mots</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="285"/>
+        <location filename="../src/mainwindow.cpp" line="286"/>
         <source>El archivo se eliminó o movió en disco.</source>
         <translation>Le fichier a été supprimé ou déplacé sur le disque.</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="378"/>
+        <location filename="../src/mainwindow.cpp" line="379"/>
         <source>Versión %1</source>
         <translation>Version %1</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/mainwindow.cpp" line="410"/>
-        <location filename="../src/mainwindow.cpp" line="432"/>
+        <location filename="../src/mainwindow.cpp" line="426"/>
+        <location filename="../src/mainwindow.cpp" line="448"/>
         <source>~%n min</source>
         <translation>
             <numerusform>~%n min</numerusform>
@@ -1123,47 +1128,47 @@
         </translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="423"/>
+        <location filename="../src/mainwindow.cpp" line="439"/>
         <source>Estadísticas del documento</source>
         <translation>Statistiques du document</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="425"/>
+        <location filename="../src/mainwindow.cpp" line="441"/>
         <source>Palabras:</source>
         <translation>Mots :</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="426"/>
+        <location filename="../src/mainwindow.cpp" line="442"/>
         <source>Caracteres:</source>
         <translation>Caractères :</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="427"/>
+        <location filename="../src/mainwindow.cpp" line="443"/>
         <source>Caracteres (sin espacios):</source>
         <translation>Caractères (sans espaces) :</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="429"/>
+        <location filename="../src/mainwindow.cpp" line="445"/>
         <source>Párrafos:</source>
         <translation>Paragraphes :</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="430"/>
+        <location filename="../src/mainwindow.cpp" line="446"/>
         <source>Frases:</source>
         <translation>Phrases :</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="431"/>
+        <location filename="../src/mainwindow.cpp" line="447"/>
         <source>Tiempo de lectura:</source>
         <translation>Temps de lecture :</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="693"/>
+        <location filename="../src/mainwindow.cpp" line="709"/>
         <source>Abrir</source>
         <translation>Ouvrir</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="694"/>
+        <location filename="../src/mainwindow.cpp" line="710"/>
         <source>Archivos Markdown (*.md *.markdown *.txt);;Todos los archivos (*)</source>
         <translation>Fichiers Markdown (*.md *.markdown *.txt);;Tous les fichiers (*)</translation>
     </message>
@@ -1203,37 +1208,37 @@
         <translation>La note [^%1] n&apos;a pas de définition</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="780"/>
+        <location filename="../src/mainwindow.cpp" line="796"/>
         <source>El archivo cambió en disco: recargado.</source>
         <translation>Le fichier a changé sur le disque : rechargé.</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="787"/>
+        <location filename="../src/mainwindow.cpp" line="803"/>
         <source>Archivo modificado en disco</source>
         <translation>Fichier modifié sur le disque</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="788"/>
+        <location filename="../src/mainwindow.cpp" line="804"/>
         <source>«%1» ha cambiado en disco y tienes cambios sin guardar.</source>
         <translation>« %1 » a changé sur le disque et vous avez des modifications non enregistrées.</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="791"/>
+        <location filename="../src/mainwindow.cpp" line="807"/>
         <source>¿Recargar la versión del disco (perderás tus cambios) o conservar los tuyos?</source>
         <translation>Recharger la version du disque (vous perdrez vos modifications) ou conserver les vôtres ?</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="792"/>
+        <location filename="../src/mainwindow.cpp" line="808"/>
         <source>Recargar</source>
         <translation>Recharger</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="794"/>
+        <location filename="../src/mainwindow.cpp" line="810"/>
         <source>Conservar los míos</source>
         <translation>Conserver les miennes</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="823"/>
+        <location filename="../src/mainwindow.cpp" line="839"/>
         <source>No se pudo recargar el archivo:
 %1
 
@@ -1291,7 +1296,7 @@
         <translation>HTML (*.html *.htm)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="822"/>
+        <location filename="../src/mainwindow.cpp" line="838"/>
         <location filename="../src/exportcontroller.cpp" line="152"/>
         <location filename="../src/filecontroller.cpp" line="102"/>
         <location filename="../src/filecontroller.cpp" line="164"/>
@@ -1395,17 +1400,17 @@ Voulez-vous les enregistrer ?</translation>
         <translation>Document récupéré de la session précédente</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="560"/>
+        <location filename="../src/mainwindow.cpp" line="576"/>
         <source>(sin título)</source>
         <translation>(sans titre)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="565"/>
+        <location filename="../src/mainwindow.cpp" line="581"/>
         <source>Recuperar documento</source>
         <translation>Récupérer le document</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="566"/>
+        <location filename="../src/mainwindow.cpp" line="582"/>
         <source>Se encontró un documento con cambios sin guardar de una sesión anterior:
 %1 (%2).
 
@@ -1416,26 +1421,26 @@ Voulez-vous les enregistrer ?</translation>
 Voulez-vous le récupérer ?</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="569"/>
+        <location filename="../src/mainwindow.cpp" line="585"/>
         <source>Recuperar</source>
         <translation>Récupérer</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="570"/>
+        <location filename="../src/mainwindow.cpp" line="586"/>
         <source>Descartar</source>
         <translation>Abandonner</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="626"/>
-        <location filename="../src/mainwindow.cpp" line="681"/>
-        <location filename="../src/mainwindow.cpp" line="740"/>
-        <location filename="../src/mainwindow.cpp" line="765"/>
+        <location filename="../src/mainwindow.cpp" line="642"/>
+        <location filename="../src/mainwindow.cpp" line="697"/>
+        <location filename="../src/mainwindow.cpp" line="756"/>
+        <location filename="../src/mainwindow.cpp" line="781"/>
         <source>Sin título</source>
         <translation>Sans titre</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="680"/>
-        <location filename="../src/mainwindow.cpp" line="767"/>
+        <location filename="../src/mainwindow.cpp" line="696"/>
+        <location filename="../src/mainwindow.cpp" line="783"/>
         <source>%1[*] — md-editor</source>
         <translation>%1[*] — md-editor</translation>
     </message>
@@ -1466,7 +1471,7 @@ Voulez-vous le récupérer ?</translation>
         <translation>Langue</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/mainwindow.cpp" line="403"/>
+        <location filename="../src/mainwindow.cpp" line="419"/>
         <source>%n palabra(s)</source>
         <translation>
             <numerusform>%n mot</numerusform>
@@ -1474,7 +1479,7 @@ Voulez-vous le récupérer ?</translation>
         </translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/mainwindow.cpp" line="405"/>
+        <location filename="../src/mainwindow.cpp" line="421"/>
         <source>%n carácter(es)</source>
         <translation>
             <numerusform>%n caractère</numerusform>
