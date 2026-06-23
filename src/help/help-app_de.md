@@ -25,6 +25,7 @@ Speichern wird das Dokument wieder als reines Markdown serialisiert.
 - [Exportieren und Drucken](#exportieren-und-drucken)
 - [Themes und Aussehen](#themes-und-aussehen)
 - [Automatische Wiederherstellung](#automatische-wiederherstellung)
+- [Barrierefreiheit](#barrierefreiheit)
 - [Tastenkürzel](#tastenkurzel)
 
 ## Öffnen und Speichern
@@ -291,6 +292,13 @@ nur das Markierte.
 Während Sie bearbeiten, wird der Inhalt alle paar Sekunden in einer Entwurfskopie
 automatisch gespeichert. Schließt die Anwendung unerwartet, bietet sie beim erneuten
 Öffnen an, das Geschriebene wiederherzustellen.
+
+## Barrierefreiheit
+
+- **Screenreader**: Der Editor, die Gliederung, die Suchfelder und die übrigen Bedienelemente haben zugängliche Namen; außerdem werden Statusmeldungen (gespeichert, „nicht gefunden“, Änderungen auf der Festplatte …) vorgelesen.
+- **Nur Tastatur**: Jede Aktion hat ein Tastenkürzel oder einen Menüeintrag (F10 oder Alt öffnet die Menüleiste). Siehe die Tabelle [Tastenkürzel](#tastenkurzel).
+- **Kontrast und Größe**: Das Thema **Hoher Kontrast** und der **Zoom** der gesamten Oberfläche helfen bei Sehschwäche; die anfängliche Schriftgröße ist die des Systems.
+- **Fokus**: Das fokussierte Element wird mit der Auswahlfarbe des Themas hervorgehoben.
 
 ## Tastenkürzel
 

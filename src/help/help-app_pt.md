@@ -25,6 +25,7 @@ documento é serializado de volta para Markdown puro.
 - [Exportar e imprimir](#exportar-e-imprimir)
 - [Temas e aparência](#temas-e-aparencia)
 - [Recuperação automática](#recuperacao-automatica)
+- [Acessibilidade](#acessibilidade)
 - [Atalhos](#atalhos)
 
 ## Abrir e guardar
@@ -280,6 +281,13 @@ seleção** imprime apenas o que está selecionado.
 Enquanto edita, o conteúdo é guardado automaticamente a cada poucos segundos numa
 cópia de rascunho. Se a aplicação fechar de forma anómala, ao reabrir oferece
 recuperar o que estava a escrever.
+
+## Acessibilidade
+
+- **Leitores de ecrã**: o editor, o painel de esquema, os campos de pesquisa e os restantes controlos têm nome acessível; além disso, as mensagens de estado (guardado, «não encontrado», alterações no disco…) são anunciadas por voz.
+- **Apenas com teclado**: todas as ações têm atalho ou entrada de menu (F10 ou Alt abre a barra de menus). Consulta a tabela [Atalhos](#atalhos).
+- **Contraste e tamanho**: o tema **Contraste elevado** e o **zoom** de toda a interface ajudam na baixa visão; o tamanho de letra inicial é o do sistema.
+- **Foco**: o elemento focado é realçado com a cor de seleção do tema.
 
 ## Atalhos
 

@@ -25,6 +25,7 @@ serializowany do czystego Markdown.
 - [Eksport i drukowanie](#eksport-i-drukowanie)
 - [Motywy i wygląd](#motywy-i-wyglad)
 - [Automatyczne odzyskiwanie](#automatyczne-odzyskiwanie)
+- [Dostępność](#dostepnosc)
 - [Skróty](#skroty)
 
 ## Otwieranie i zapisywanie
@@ -275,6 +276,13 @@ tylko to, co zaznaczone.
 Podczas edycji treść jest automatycznie zapisywana co kilka sekund w kopii
 roboczej. Jeśli aplikacja zamknie się nieprawidłowo, przy ponownym otwarciu
 proponuje odzyskanie tego, co pisałeś.
+
+## Dostępność
+
+- **Czytniki ekranu**: edytor, panel konspektu, pola wyszukiwania i pozostałe elementy sterujące mają dostępne nazwy; ponadto komunikaty stanu (zapisano, „nie znaleziono”, zmiany na dysku…) są odczytywane na głos.
+- **Tylko klawiatura**: każda akcja ma skrót lub pozycję w menu (F10 lub Alt otwiera pasek menu). Zobacz tabelę [Skróty](#skroty).
+- **Kontrast i rozmiar**: motyw **Wysoki kontrast** oraz **powiększenie** całego interfejsu pomagają przy słabym wzroku; początkowy rozmiar czcionki pochodzi z systemu.
+- **Fokus**: element z fokusem jest wyróżniany kolorem zaznaczenia motywu.
 
 ## Skróty
 

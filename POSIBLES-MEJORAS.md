@@ -367,8 +367,11 @@ hasta ahora solo está cableado contra la API de Qt, no probado en vivo.*
 
 ### Documentación y verificación
 
-- ⬜ **Sección de accesibilidad en la ayuda (F1)** y en el README — mapa de teclado
-  completo y notas para usuarios de lector de pantalla, en los 9 idiomas.
+- ✅ **Sección de accesibilidad en la ayuda (F1)** y en el README — *Hecho:* nueva
+  sección «Accesibilidad» en el manual integrado (lectores de pantalla, manejo solo
+  con teclado, alto contraste y zoom, foco), con su entrada en el índice, en los **9
+  idiomas** (`help-app*.md`); y un punto de accesibilidad en la lista de
+  características del README.
 - ⬜ **Prueba con lector de pantalla real** — pasada con Orca / NVDA / VoiceOver tras
   lo anterior, como checklist de validación de las etiquetas y el orden de foco.
 

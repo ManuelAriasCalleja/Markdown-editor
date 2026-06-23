@@ -25,6 +25,7 @@ document weer naar pure Markdown geserialiseerd.
 - [Exporteren en afdrukken](#exporteren-en-afdrukken)
 - [Thema's en uiterlijk](#themas-en-uiterlijk)
 - [Automatisch herstel](#automatisch-herstel)
+- [Toegankelijkheid](#toegankelijkheid)
 - [Sneltoetsen](#sneltoetsen)
 
 ## Openen en opslaan
@@ -285,6 +286,13 @@ afdrukken** drukt alleen het geselecteerde af.
 Terwijl je bewerkt, wordt de inhoud om de paar seconden automatisch opgeslagen in
 een conceptkopie. Sluit de toepassing abnormaal af, dan biedt ze bij het opnieuw
 openen aan om te herstellen wat je aan het schrijven was.
+
+## Toegankelijkheid
+
+- **Schermlezers**: de editor, het overzichtspaneel, de zoekvelden en de overige bedieningselementen hebben een toegankelijke naam; bovendien worden statusberichten (opgeslagen, “niet gevonden”, wijzigingen op schijf…) hardop aangekondigd.
+- **Alleen toetsenbord**: elke actie heeft een sneltoets of een menu-item (F10 of Alt opent de menubalk). Zie de tabel [Sneltoetsen](#sneltoetsen).
+- **Contrast en grootte**: het thema **Hoog contrast** en de **zoom** van de hele interface helpen bij slechtziendheid; de aanvankelijke lettergrootte is die van het systeem.
+- **Focus**: het gefocuste element wordt gemarkeerd met de selectiekleur van het thema.
 
 ## Sneltoetsen
 

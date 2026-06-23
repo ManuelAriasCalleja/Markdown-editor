@@ -25,6 +25,7 @@ il documento viene serializzato di nuovo in Markdown puro.
 - [Esportare e stampare](#esportare-e-stampare)
 - [Temi e aspetto](#temi-e-aspetto)
 - [Recupero automatico](#recupero-automatico)
+- [Accessibilità](#accessibilita)
 - [Scorciatoie](#scorciatoie)
 
 ## Aprire e salvare
@@ -284,6 +285,13 @@ solo ciò che è selezionato.
 Mentre modifichi, il contenuto viene salvato automaticamente ogni pochi secondi in
 una copia di bozza. Se l'applicazione si chiude in modo anomalo, alla riapertura
 propone di recuperare ciò che stavi scrivendo.
+
+## Accessibilità
+
+- **Lettori di schermo**: l’editor, il pannello della struttura, i campi di ricerca e gli altri controlli hanno un nome accessibile; inoltre i messaggi di stato (salvato, «non trovato», modifiche su disco…) vengono annunciati a voce.
+- **Solo da tastiera**: ogni azione ha una scorciatoia o una voce di menu (F10 o Alt apre la barra dei menu). Vedi la tabella [Scorciatoie](#scorciatoie).
+- **Contrasto e dimensione**: il tema **Alto contrasto** e lo **zoom** dell’intera interfaccia aiutano in caso di ipovisione; la dimensione iniziale del carattere è quella di sistema.
+- **Fuoco**: l’elemento con il fuoco viene evidenziato con il colore di selezione del tema.
 
 ## Scorciatoie
 

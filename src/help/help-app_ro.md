@@ -25,6 +25,7 @@ serializat înapoi în Markdown pur.
 - [Export și tipărire](#export-si-tiparire)
 - [Teme și aspect](#teme-si-aspect)
 - [Recuperare automată](#recuperare-automata)
+- [Accesibilitate](#accesibilitate)
 - [Scurtături](#scurtaturi)
 
 ## Deschidere și salvare
@@ -281,6 +282,13 @@ tipărește doar ce este selectat.
 În timp ce editezi, conținutul este salvat automat la câteva secunde într-o copie
 ciornă. Dacă aplicația se închide anormal, la redeschidere oferă recuperarea a ceea
 ce scriai.
+
+## Accesibilitate
+
+- **Cititoare de ecran**: editorul, panoul de schiță, câmpurile de căutare și celelalte controale au nume accesibil; în plus, mesajele de stare (salvat, „negăsit”, modificări pe disc…) sunt anunțate vocal.
+- **Doar de la tastatură**: fiecare acțiune are o scurtătură sau o intrare de meniu (F10 sau Alt deschide bara de meniuri). Vezi tabelul [Scurtături](#scurtaturi).
+- **Contrast și dimensiune**: tema **Contrast ridicat** și **zoomul** întregii interfețe ajută la vedere slabă; dimensiunea inițială a fontului este cea a sistemului.
+- **Focus**: elementul focalizat este evidențiat cu culoarea de selecție a temei.
 
 ## Scurtături
 

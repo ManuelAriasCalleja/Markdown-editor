@@ -25,6 +25,7 @@ serialized back to plain Markdown.
 - [Export and print](#export-and-print)
 - [Themes and appearance](#themes-and-appearance)
 - [Automatic recovery](#automatic-recovery)
+- [Accessibility](#accessibility)
 - [Shortcuts](#shortcuts)
 
 ## Opening and saving
@@ -272,6 +273,13 @@ only what is selected.
 While you edit, the content is auto-saved every few seconds into a draft copy.
 If the application closes abnormally, on reopening it offers to recover what you
 were writing.
+
+## Accessibility
+
+- **Screen readers**: the editor, the outline panel, the search fields and the other controls have accessible names; status messages (saved, “not found”, changes on disk…) are also announced aloud.
+- **Keyboard only**: every action has a shortcut or a menu entry (F10 or Alt opens the menu bar). See the [Shortcuts](#shortcuts) table.
+- **Contrast and size**: the **High contrast** theme and the whole-interface **zoom** help with low vision; the starting font size is the system’s.
+- **Focus**: the focused element is highlighted with the theme’s selection colour.
 
 ## Shortcuts
 

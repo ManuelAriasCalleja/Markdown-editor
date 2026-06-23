@@ -77,6 +77,9 @@ Privacy & Security* and click **Open anyway**.
 - **Paste / drop images** from the clipboard straight to disk as `![](path)`.
 - **External file watching**: if the file changes on disk, the app detects it
   and offers to reload.
+- **Accessibility**: accessible names on the editor, panels and controls; status
+  messages announced to screen readers; full keyboard operation; a true
+  high-contrast theme and whole-interface zoom for low vision.
 
 ## Common shortcuts
 

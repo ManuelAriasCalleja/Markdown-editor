@@ -25,6 +25,7 @@ document est sérialisé de nouveau en Markdown pur.
 - [Exporter et imprimer](#exporter-et-imprimer)
 - [Thèmes et apparence](#themes-et-apparence)
 - [Récupération automatique](#recuperation-automatique)
+- [Accessibilité](#accessibilite)
 - [Raccourcis](#raccourcis)
 
 ## Ouvrir et enregistrer
@@ -287,6 +288,13 @@ l'**Aperçu avant impression**.
 Pendant que vous éditez, le contenu est enregistré automatiquement toutes les
 quelques secondes dans une copie brouillon. Si l'application se ferme anormalement,
 elle propose à la réouverture de récupérer ce que vous étiez en train d'écrire.
+
+## Accessibilité
+
+- **Lecteurs d’écran** : l’éditeur, le panneau de plan, les champs de recherche et les autres contrôles ont un nom accessible ; de plus, les messages d’état (enregistré, « introuvable », modifications sur le disque…) sont annoncés à voix haute.
+- **Au clavier seul** : chaque action a un raccourci ou une entrée de menu (F10 ou Alt ouvre la barre de menus). Voir le tableau [Raccourcis](#raccourcis).
+- **Contraste et taille** : le thème **Contraste élevé** et le **zoom** de toute l’interface aident en cas de basse vision ; la taille de police initiale est celle du système.
+- **Focus** : l’élément ciblé est mis en évidence avec la couleur de sélection du thème.
 
 ## Raccourcis
 
