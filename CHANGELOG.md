@@ -5,7 +5,31 @@ Todos los cambios relevantes de **md-editor** se documentan en este archivo.
 El formato sigue, a grandes rasgos, [Keep a Changelog](https://keepachangelog.com/es/),
 y el proyecto usa [versionado semántico](https://semver.org/lang/es/).
 
-## [Sin publicar]
+## [2.1.0] — 2026-06-23
+
+### Añadido
+- **Accesibilidad**: nombres y descripciones accesibles en los controles que no
+  los derivaban solos (editor WYSIWYG, vista de fuente, panel de esquema, campos
+  de Buscar/Reemplazar, contador de palabras y el diálogo «Ir a encabezado»); los
+  mensajes de estado importantes y la fórmula bajo el cursor se **anuncian** a los
+  lectores de pantalla (`QAccessibleAnnouncementEvent`); nueva sección
+  «Accesibilidad» en la ayuda (F1) y el README, en los 9 idiomas; orden de
+  tabulación y nombres revisados en los diálogos.
+- **Más comandos en las fórmulas TeX**: delimitadores (`\langle`, `\lceil`,
+  `\lfloor`, `\Vert`…), `\left`/`\right`, negación `\not`, subrayado `\underline`,
+  espaciado `\quad`/`\qquad`, alfabetos `\mathcal`/`\mathscr`/`\mathfrak` y más
+  operadores, relaciones, flechas y símbolos.
+
+### Cambiado
+- Los enlaces a archivos `.md` locales se abren en una pestaña nueva de la misma
+  ventana, en vez de lanzar otra instancia.
+
+### Arreglado
+- Los iconos de la barra de formato (negrita, cursiva, listas…) recuperan el
+  contraste al cambiar de tema y dejan de verse borrosos en pantallas HiDPI al
+  arrancar: se regeneran a la densidad de pantalla y la paleta vigentes.
+
+## [2.0.0] — 2026-06-22
 
 ### Añadido
 - **Diagramas Mermaid y PlantUML** (opcional): un bloque de código ` ```mermaid `
