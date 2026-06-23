@@ -32,6 +32,7 @@ SplitViewController::SplitViewController(FocusEditor *editor,
     // (vista dividida). WYSIWYG a la izquierda, fuente a la derecha.
     m_sourceEditor = new FocusEditor(parent);
     m_sourceEditor->setAcceptRichText(false);
+    m_sourceEditor->setAccessibleName(tr("Código fuente Markdown"));
     QFont mono = QFont(QStringLiteral("monospace"));
     mono.setStyleHint(QFont::Monospace);
     m_sourceEditor->setFont(mono);

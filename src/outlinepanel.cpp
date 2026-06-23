@@ -206,6 +206,7 @@ OutlinePanel::OutlinePanel(QWidget *parent)
     setWindowTitle(tr("Esquema"));
 
     m_tree = new OutlineTree(this);
+    m_tree->setAccessibleName(tr("Esquema"));  // el dock ya se llama así; lo hereda el árbol al enfocarlo
 
     // El árbol vive en un contenedor con un relleno izquierdo opcional (ver
     // setLeftPadding), pintado en negro puro igual que las franjas del modo sin

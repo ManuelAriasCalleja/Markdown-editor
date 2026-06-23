@@ -25,6 +25,7 @@ void FindReplaceBar::buildUi()
     addWidget(new QLabel(tr("Buscar: "), this));
     m_findEdit = new QLineEdit(this);
     m_findEdit->setObjectName(QStringLiteral("findEdit"));
+    m_findEdit->setAccessibleName(tr("Buscar"));  // sin esto, el campo no tiene nombre para el lector
     m_findEdit->setClearButtonEnabled(true);
     addWidget(m_findEdit);
 
@@ -38,6 +39,7 @@ void FindReplaceBar::buildUi()
     addWidget(new QLabel(tr("Reemplazar: "), this));
     m_replaceEdit = new QLineEdit(this);
     m_replaceEdit->setObjectName(QStringLiteral("replaceEdit"));
+    m_replaceEdit->setAccessibleName(tr("Reemplazar"));
     m_replaceEdit->setClearButtonEnabled(true);
     addWidget(m_replaceEdit);
 

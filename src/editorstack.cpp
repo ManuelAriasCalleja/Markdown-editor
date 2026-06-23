@@ -36,6 +36,9 @@ EditorStack::EditorStack(FindReplaceBar *findBar, OutlinePanel *outline, QWidget
 {
     m_editor = new FocusEditor(this);
     m_editor->setAcceptRichText(true);
+    // Nombre accesible (lectores de pantalla): distingue este editor visual del de
+    // código fuente, que comparten clase y son visibles a la vez en vista dividida.
+    m_editor->setAccessibleName(tr("Editor del documento"));
     // Resaltado de sintaxis de los bloques de código.
     m_highlighter = new CodeBlockHighlighter(m_editor->document());
 

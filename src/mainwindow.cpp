@@ -218,6 +218,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     // Contador de palabras/caracteres, anclado a la derecha de la barra de estado.
     m_countLabel = new QLabel(this);
+    m_countLabel->setAccessibleName(tr("Contador de palabras"));
     m_countLabel->setVisible(AppSettings::showWordCount());
     statusBar()->addPermanentWidget(m_countLabel);
 
