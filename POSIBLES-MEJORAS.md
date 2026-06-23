@@ -237,12 +237,94 @@ Sin dependencias nuevas y con el patrón habitual (función pura + `tst_`).
 - ⬜ **Fuzzing del round-trip** Markdown.
 - ⬜ **Golden tests de exportadores** — fijar HTML/LaTeX/ODF/DOCX de referencia
   para detectar regresiones de salida.
-- ⬜ **Accesibilidad** — nombres accesibles (Qt Accessible) en acciones/botones.
+- ⬜ **Accesibilidad** — desarrollado en su propia sección, [♿ Accesibilidad](#-accesibilidad).
 
 ### Hechas en esta tanda
 
 - ✅ **Símbolos especiales por categorías** — *Insertar → Símbolos especiales…*
   (módulo `mdsymbols` + diálogo `SymbolPicker`, 8 categorías).
+
+## ♿ Accesibilidad
+
+Hoy el editor **no usa la API de accesibilidad de Qt** (`QAccessible`): cero
+`setAccessibleName`/`setAccessibleDescription` en `src/`. Hay base aprovechable —el
+tema de **alto contraste** real (21:1), el zoom de interfaz persistente, ~33 atajos
+de teclado, 25 tooltips y el alt text de las imágenes—, pero un lector de pantalla
+(NVDA/JAWS en Windows, Orca en Linux, VoiceOver en macOS) recibe muy poca
+información semántica de la interfaz. Todo lo de abajo es **Qt6 puro, sin
+dependencias nuevas**: Qt traduce sola su API de accesibilidad a AT-SPI/UIA/
+NSAccessibility en cada SO, así que encaja con la filosofía del proyecto.
+
+> Leyenda: ✅ ya existe · 🚧 parcial · ⬜ pendiente.
+
+### Alto impacto / poco esfuerzo
+
+- ⬜ **Nombres y descripciones accesibles** — `setAccessibleName`/
+  `setAccessibleDescription` en las ~33 acciones (`mainwindowmenus.cpp`), en los
+  botones **solo-icono** de la barra de formato (negrita, cursiva, listas… que un
+  lector anuncia hoy como «botón» a secas), en los paneles (esquema, barra de
+  búsqueda, editor de fuente del modo dividido) y en los diálogos. Es la mejora de
+  mayor relación valor/coste: pasa la app de «opaca» a «navegable» para un lector
+  con cambios mecánicos y localizados (los textos por `tr()`, como el resto).
+- ⬜ **Anunciar los mensajes de estado efímeros** — los ~10
+  `statusBar()->showMessage(...)` (cambio del archivo en disco, recarga, pistas de
+  navegación) no llegan al lector de pantalla. Encaminar los importantes por un
+  `QAccessibleEvent(widget, QAccessible::Alert)` (o `QAccessible::updateAccessibility`)
+  para que se anuncien como «alerta». (Los `QMessageBox`/`QInputDialog` ya son
+  accesibles de serie; el problema es solo la barra de estado.)
+- ⬜ **Etiquetas asociadas en los diálogos** (`QLabel::setBuddy`) — diálogo de
+  fórmula, *Insertar enlace/imagen*, idioma de exportación, etc.: asociar cada
+  `QLabel` a su campo activa el mnemónico (Alt+letra enfoca el campo) y hace que el
+  lector lea la etiqueta al entrar en el control.
+
+### Información no transmitida solo por color (daltonismo)
+
+- 🚧 **Admoniciones** — hoy NOTE/TIP/IMPORTANT/WARNING/CAUTION se distinguen casi
+  **solo por color** (azul/verde/violeta/ámbar/rojo + tinte de fondo;
+  `admonitions.cpp`), que un usuario con deuteranopia/protanopia confunde. El título
+  ya muestra el texto del tipo, pero añadir un **glifo distintivo por tipo**
+  (ℹ/💡/❗/⚠/⛔ o un símbolo Unicode monocromo) lo vuelve inequívoco sin depender del
+  color. (Las erratas del corrector ya llevan subrayado ondulado además del rojo
+  —correcto—; las fórmulas se reconocen por su forma renderizada, no solo por el
+  color.)
+- ⬜ **Verificador de contraste de los temas (función pura + `tst_`)** — una función
+  que calcule el ratio de contraste WCAG (texto/fondo, enlace/fondo, resaltado…) de
+  cada `ThemeSpec` y un `tst_themecontrast` que **falle** si algún tema baja de
+  4.5:1 (nivel AA) para texto normal. Encaja con el patrón «función pura + test» del
+  proyecto y blinda la paleta contra regresiones al editar `themespec.cpp`.
+
+### Navegación por teclado y foco
+
+- 🚧 **Orden de tabulación explícito** (`setTabOrder`) en los diálogos y en la barra
+  de búsqueda: hoy se hereda el orden de creación de los widgets, que no siempre es
+  el lógico. Revisar también que el editor de fuente y **ambos** paneles del modo
+  dividido sean alcanzables solo con teclado.
+- ⬜ **Indicador de foco visible** — garantizar un *focus ring* nítido en los
+  widgets propios y, sobre todo, bajo el tema de alto contraste (borde de foco
+  explícito), para quien navega sin ratón.
+- ⬜ **Auditar trampas de teclado** — los filtros de evento propios (atomicidad de
+  fórmulas en `handleMathKeyPress`, continuación de listas, protección de
+  shortcodes) deben dejar pasar siempre Tab/Esc/flechas y no «secuestrar» el foco;
+  conviene una pasada manual solo con teclado o un test de humo.
+
+### Sistema y preferencias
+
+- ✅ **Tema de alto contraste** — ya existe (`ThemeId::HighContrast`: blanco/negro
+  21:1, bordes blancos explícitos; `themespec.cpp`).
+- ✅ **Zoom de interfaz persistente** — `ChromeZoom` escala editor, menús, barras,
+  estado, esquema e iconos, y se guarda en `AppSettings::zoomLevel`.
+- ⬜ **Seguir el modo de alto contraste del SO** — igual que ya se sigue el modo
+  claro/oscuro del sistema (`QStyleHints`), detectar el modo de alto contraste de
+  Windows/Linux y proponer automáticamente el tema equivalente.
+- ⬜ **Respetar el escalado de fuente del SO** — verificar que el tamaño base parte
+  del que marca el sistema (baja visión) en lugar de un punto fijo.
+
+### Documentación y verificación
+
+- ⬜ **Sección de accesibilidad en la ayuda (F1)** y en el README — mapa de teclado
+  completo y notas para usuarios de lector de pantalla, en los 9 idiomas.
+- ⬜ **Prueba con lector de pantalla real** — pasada con Orca / NVDA / VoiceOver tras
+  lo anterior, como checklist de validación de las etiquetas y el orden de foco.
 
 ## 📋 Proyecto / comunidad
 
