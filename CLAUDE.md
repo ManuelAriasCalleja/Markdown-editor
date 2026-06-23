@@ -134,7 +134,9 @@ parser de fuente / motor TeX→runs / maquetación 2D), `footnotes` (`mdfootnote
 (`mdoutline::headingsOf`), `spellscan` (`mdspell`; tokenización de palabras y
 selección de diccionario para el corrector ortográfico, ver abajo), `diagram`
 (`mddiagram`; clasifica el lenguaje de un bloque ```mermaid/plantuml para el
-render de diagramas, ver abajo).
+render de diagramas, ver abajo), `typewriter` (`mdtypewriter::centeredScrollValue`;
+calcula el scroll que centra la línea del cursor para el modo máquina de escribir,
+integrado en `EditorStack::centerCursorLine`).
 
 Patrón recurrente para lógica comprobable: separar las **funciones puras** (sin
 GUI) de la integración (qué texto y dónde reinsertarlo, que vive en `MainWindow` o

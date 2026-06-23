@@ -5,6 +5,14 @@ Todos los cambios relevantes de **md-editor** se documentan en este archivo.
 El formato sigue, a grandes rasgos, [Keep a Changelog](https://keepachangelog.com/es/),
 y el proyecto usa [versionado semántico](https://semver.org/lang/es/).
 
+## [Sin publicar]
+
+### Añadido
+- **Modo «máquina de escribir»** (*Ver → Máquina de escribir*): mantiene la línea
+  del cursor centrada en vertical mientras escribes, en vez de que el cursor baje
+  hacia el borde inferior. Complementa el modo sin distracciones. Desactivado por
+  defecto; el ajuste se recuerda entre sesiones.
+
 ## [2.1.0] — 2026-06-23
 
 ### Añadido

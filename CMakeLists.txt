@@ -94,6 +94,8 @@ add_library(md-editor-core STATIC
     src/docstats.h
     src/texttransform.cpp
     src/texttransform.h
+    src/typewriter.cpp
+    src/typewriter.h
     src/recentfilesmanager.cpp
     src/recentfilesmanager.h
     src/recoverymanager.cpp
@@ -376,6 +378,7 @@ if(Qt6Test_FOUND)
         tst_outline
         tst_docstats
         tst_texttransform
+        tst_typewriter
         tst_recovery
         tst_appsettings
         tst_documentio

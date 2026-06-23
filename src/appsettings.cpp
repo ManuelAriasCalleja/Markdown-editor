@@ -10,6 +10,7 @@ inline QString warmLightKey()   { return QStringLiteral("warmLight"); }
 inline QString followSystemThemeKey() { return QStringLiteral("followSystemTheme"); }
 inline QString zoomLevelKey()   { return QStringLiteral("zoomLevel"); }
 inline QString showWordCountKey() { return QStringLiteral("showWordCount"); }
+inline QString typewriterModeKey() { return QStringLiteral("typewriterMode"); }
 inline QString spellCheckKey()  { return QStringLiteral("spellCheck"); }
 inline QString spellLanguageKey() { return QStringLiteral("spellLanguage"); }
 inline QString cursorPositionsKey() { return QStringLiteral("cursorPositions"); }
@@ -108,6 +109,15 @@ bool AppSettings::showWordCount()
 void AppSettings::setShowWordCount(bool on)
 {
     QSettings().setValue(showWordCountKey(), on);
+}
+
+bool AppSettings::typewriterMode()
+{
+    return QSettings().value(typewriterModeKey(), false).toBool();  // desactivado por defecto
+}
+void AppSettings::setTypewriterMode(bool on)
+{
+    QSettings().setValue(typewriterModeKey(), on);
 }
 
 bool AppSettings::spellCheck()

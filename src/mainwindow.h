@@ -292,6 +292,7 @@ private:
     QHash<mdtheme::ThemeId, QAction *> m_themeActions;  // marca la acción del tema activo
 
     QAction *m_distractionAction = nullptr;   // toggle de Ver → Sin distracciones
+    QAction *m_typewriterAction = nullptr;    // toggle de Ver → Máquina de escribir
     DistractionFreeController *m_distraction = nullptr;  // modo pantalla completa/columna
 
     OutlinePanel *m_outline = nullptr;          // panel lateral con el índice (TOC)

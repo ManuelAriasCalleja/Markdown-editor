@@ -42,6 +42,11 @@ void setZoomLevel(int level);
 bool showWordCount();
 void setShowWordCount(bool on);
 
+// Modo «máquina de escribir»: la línea del cursor se mantiene centrada en
+// vertical mientras se escribe. Desactivado por defecto.
+bool typewriterMode();
+void setTypewriterMode(bool on);
+
 // Corrector ortográfico activo (subrayado de erratas). Activado por defecto.
 bool spellCheck();
 void setSpellCheck(bool on);

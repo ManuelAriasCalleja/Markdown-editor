@@ -78,6 +78,11 @@ public:
     // cuerpo (volcado del fuente, recuperación, reordenado del esquema).
     void setBodyMarkdown(const QString &body);
 
+    // Modo «máquina de escribir»: mantiene la línea del cursor centrada en
+    // vertical mientras se escribe. Lo activa/desactiva la ventana por ajuste; al
+    // activarlo, centra ya el editor activo.
+    void setTypewriterMode(bool on);
+
 signals:
     // Mensaje para la barra de estado de la ventana (texto, ms).
     void statusMessage(const QString &text, int timeout);
@@ -107,6 +112,11 @@ private:
     // posición de inicio de su grupo, para no repetir el anuncio al moverse dentro.
     QString formulaAtCursor(int *start) const;
     int m_lastFormulaStart = -1;
+
+    // Si el modo máquina de escribir está activo, desplaza `ed` para que la línea
+    // del cursor quede a media altura (lógica pura en `mdtypewriter`).
+    void centerCursorLine(QTextEdit *ed);
+    bool m_typewriter = false;
 
     FocusEditor *m_editor = nullptr;
     CodeBlockHighlighter *m_highlighter = nullptr;

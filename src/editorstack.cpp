@@ -4,6 +4,7 @@
 #include <QMimeData>
 #include <QPalette>
 #include <QSplitter>
+#include <QScrollBar>
 #include <QTextBlock>
 #include <QTextCursor>
 #include <QTextDocument>
@@ -25,6 +26,7 @@
 #include "insertcontroller.h"
 #include "markdownrender.h"
 #include "mathblocks.h"
+#include "typewriter.h"
 #include "outlinepanel.h"
 #include "recoverymanager.h"
 #include "spellcontroller.h"
@@ -74,6 +76,8 @@ EditorStack::EditorStack(FindReplaceBar *findBar, OutlinePanel *outline, QWidget
     m_split = new SplitViewController(m_editor, m_findBar, m_outline, m_theme, this);
     connect(m_split->sourceEditor(), &QTextEdit::cursorPositionChanged,
             this, &EditorStack::wordCountShouldUpdate);
+    connect(m_split->sourceEditor(), &QTextEdit::cursorPositionChanged,
+            this, [this] { centerCursorLine(m_split->sourceEditor()); });
     connect(m_split->sourceEditor(), &QTextEdit::selectionChanged,
             this, &EditorStack::wordCountShouldUpdate);
     connect(m_split, &SplitViewController::wordCountShouldUpdate,
@@ -135,6 +139,8 @@ EditorStack::EditorStack(FindReplaceBar *findBar, OutlinePanel *outline, QWidget
             this, [this] { m_format->updateActions(); });
     connect(m_editor, &QTextEdit::cursorPositionChanged,
             this, &EditorStack::announceFormulaUnderCursor);
+    connect(m_editor, &QTextEdit::cursorPositionChanged,
+            this, [this] { centerCursorLine(m_editor); });
     // Marca «modificado» comparando con la línea base (DocumentIo).
     connect(m_editor->document(), &QTextDocument::contentsChanged, this,
             [this] { emit windowModifiedChanged(m_documentIo->isModified()); });
@@ -253,6 +259,26 @@ QString EditorStack::formulaAtCursor(int *start) const
     if (start)
         *start = s;
     return tex;
+}
+
+void EditorStack::setTypewriterMode(bool on)
+{
+    m_typewriter = on;
+    if (on)
+        centerCursorLine(activeEditor());  // centra ya, sin esperar a moverse
+}
+
+void EditorStack::centerCursorLine(QTextEdit *ed)
+{
+    if (!m_typewriter || !ed)
+        return;
+    QScrollBar *vbar = ed->verticalScrollBar();
+    if (!vbar)
+        return;
+    const int centerY = ed->cursorRect().center().y();
+    vbar->setValue(mdtypewriter::centeredScrollValue(
+        vbar->value(), centerY, ed->viewport()->height(),
+        vbar->minimum(), vbar->maximum()));
 }
 
 void EditorStack::announceFormulaUnderCursor()

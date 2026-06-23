@@ -135,6 +135,7 @@ void MainWindow::configureStack(EditorStack *stack)
     stack->format()->setActions(m_formatActions);
     stack->table()->setActions(m_tableActions);
     stack->table()->updateActions();  // estado inicial (sin tabla bajo el cursor)
+    stack->setTypewriterMode(m_typewriterAction && m_typewriterAction->isChecked());
 }
 
 void MainWindow::createFileMenu()
@@ -593,6 +594,18 @@ void MainWindow::createViewMenu()
         tr("Pantalla completa, sin barras, con el texto centrado (ESC o F11 para salir)"));
     // La conexión con el controlador se hace en el ctor (m_distraction se crea
     // después de los menús, tras la barra de formato que oculta/muestra).
+
+    m_typewriterAction = viewMenu->addAction(tr("Máquina de escribir"));
+    m_typewriterAction->setCheckable(true);
+    m_typewriterAction->setChecked(AppSettings::typewriterMode());
+    m_typewriterAction->setToolTip(
+        tr("Mantén la línea del cursor centrada en vertical mientras escribes"));
+    connect(m_typewriterAction, &QAction::toggled, this, [this](bool on) {
+        AppSettings::setTypewriterMode(on);
+        for (int i = 0; i < m_tabs->count(); ++i)
+            if (EditorStack *s = stackAt(i))
+                s->setTypewriterMode(on);
+    });
 
     // Esquema (índice): toggleViewAction muestra/oculta el dock y mantiene su
     // marca sincronizada con la visibilidad del panel automáticamente.

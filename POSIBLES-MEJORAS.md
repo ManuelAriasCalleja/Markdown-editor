@@ -246,11 +246,14 @@ mayor margen restante es de **distribución** (puntos 2-4 de arriba), no de feat
   inserta por nombre o atajo (complementan las plantillas de documento, que son de
   archivo entero). Encaja con el patrón habitual (catálogo + función pura + `tst_`)
   y se persiste en `AppSettings`. Ya estaba anotado como pendiente bajo «Plantillas».
-- ⬜ **Modo máquina de escribir / foco de línea** — mantener la línea del cursor
-  centrada verticalmente al escribir (*typewriter scrolling*) y, opcional, atenuar
-  todo salvo el párrafo/frase actual. Complementa el modo sin distracciones; es Qt
-  puro (reposicionar el scroll en cada `cursorPositionChanged` para fijar el cursor
-  en el centro del viewport). Lo tienen Typora y Ghostwriter.
+- 🚧 **Modo máquina de escribir / foco de línea** — *Hecho (máquina de escribir):*
+  *Ver → Máquina de escribir* mantiene la línea del cursor centrada en vertical
+  mientras se escribe. Lógica pura en `typewriter` (`mdtypewriter::centeredScrollValue`,
+  con `tst_typewriter`); la integración vive en `EditorStack::centerCursorLine`
+  (reposiciona la barra de scroll en cada `cursorPositionChanged`, en ambos editores),
+  con interruptor por ventana que se aplica a todas las pestañas y se persiste en
+  `AppSettings::typewriterMode`. *Pendiente (foco de línea):* atenuar todo salvo el
+  párrafo/frase actual (`setExtraSelections`), independiente de lo anterior.
 - ⬜ **Limpieza/normalización del Markdown** — un «lint» ligero opcional sobre el
   texto fuente: marcadores de lista consistentes, espaciado uniforme, colapsar
   líneas en blanco múltiples, quitar espacios finales. Función pura + `tst_`,
