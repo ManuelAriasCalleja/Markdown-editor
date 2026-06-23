@@ -372,8 +372,13 @@ hasta ahora solo está cableado contra la API de Qt, no probado en vivo.*
   con teclado, alto contraste y zoom, foco), con su entrada en el índice, en los **9
   idiomas** (`help-app*.md`); y un punto de accesibilidad en la lista de
   características del README.
-- ⬜ **Prueba con lector de pantalla real** — pasada con Orca / NVDA / VoiceOver tras
-  lo anterior, como checklist de validación de las etiquetas y el orden de foco.
+- ⬜ **Prueba con lector de pantalla real** — pasada manual con Orca (Linux) / NVDA
+  (Windows) / VoiceOver (macOS): comprobar que se anuncian los nombres de los
+  controles (editor, fuente, esquema, búsqueda, contador), las descripciones y los
+  mensajes de estado, y que el orden de foco es lógico. *Único punto que no puede
+  automatizarse ni hacerse sin un lector real; queda como checklist para quien tenga
+  uno.* (Lo demás está cableado contra la API de accesibilidad de Qt, que en Linux
+  habla AT-SPI con Orca.)
 
 ## 📋 Proyecto / comunidad
 
