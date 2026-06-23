@@ -38,6 +38,11 @@
         <source>Editor del documento</source>
         <translation>Documenteditor</translation>
     </message>
+    <message>
+        <location filename="../src/editorstack.cpp" line="44"/>
+        <source>Editor visual: el formato se aplica sobre el texto renderizado, sin ver la sintaxis Markdown.</source>
+        <translation>Visuele editor: opmaak wordt toegepast op de gerenderde tekst, zonder de Markdown-syntaxis te tonen.</translation>
+    </message>
 </context>
 <context>
     <name>FindReplaceBar</name>
@@ -402,7 +407,7 @@
     </message>
     <message>
         <location filename="../src/mainwindowmenus.cpp" line="373"/>
-        <location filename="../src/insertcontroller.cpp" line="109"/>
+        <location filename="../src/insertcontroller.cpp" line="113"/>
         <source>Enlace</source>
         <translation>Koppeling</translation>
     </message>
@@ -503,9 +508,9 @@
     </message>
     <message>
         <location filename="../src/mainwindowmenus.cpp" line="470"/>
-        <location filename="../src/insertcontroller.cpp" line="176"/>
-        <location filename="../src/insertcontroller.cpp" line="193"/>
-        <location filename="../src/insertcontroller.cpp" line="235"/>
+        <location filename="../src/insertcontroller.cpp" line="180"/>
+        <location filename="../src/insertcontroller.cpp" line="197"/>
+        <location filename="../src/insertcontroller.cpp" line="239"/>
         <source>Pegar imagen</source>
         <translation>Afbeelding plakken</translation>
     </message>
@@ -858,64 +863,64 @@
         <translation>Taal (leeg = geen):</translation>
     </message>
     <message>
-        <location filename="../src/insertcontroller.cpp" line="110"/>
+        <location filename="../src/insertcontroller.cpp" line="114"/>
         <source>Texto:</source>
         <translation>Tekst:</translation>
     </message>
     <message>
-        <location filename="../src/insertcontroller.cpp" line="111"/>
+        <location filename="../src/insertcontroller.cpp" line="115"/>
         <source>URL:</source>
         <translation>URL:</translation>
     </message>
     <message>
-        <location filename="../src/insertcontroller.cpp" line="143"/>
+        <location filename="../src/insertcontroller.cpp" line="147"/>
         <source>imagen</source>
         <translation>afbeelding</translation>
     </message>
     <message>
-        <location filename="../src/insertcontroller.cpp" line="145"/>
+        <location filename="../src/insertcontroller.cpp" line="149"/>
         <source>Insertar imagen</source>
         <translation>Afbeelding invoegen</translation>
     </message>
     <message>
-        <location filename="../src/insertcontroller.cpp" line="146"/>
-        <location filename="../src/insertcontroller.cpp" line="194"/>
+        <location filename="../src/insertcontroller.cpp" line="150"/>
+        <location filename="../src/insertcontroller.cpp" line="198"/>
         <source>Texto alternativo:</source>
         <translation>Alternatieve tekst:</translation>
     </message>
     <message>
-        <location filename="../src/insertcontroller.cpp" line="147"/>
+        <location filename="../src/insertcontroller.cpp" line="151"/>
         <source>Ruta o URL:</source>
         <translation>Pad of URL:</translation>
     </message>
     <message>
-        <location filename="../src/insertcontroller.cpp" line="177"/>
+        <location filename="../src/insertcontroller.cpp" line="181"/>
         <source>El portapapeles no contiene ninguna imagen.</source>
         <translation>Het klembord bevat geen afbeelding.</translation>
     </message>
     <message>
-        <location filename="../src/insertcontroller.cpp" line="225"/>
+        <location filename="../src/insertcontroller.cpp" line="229"/>
         <source>Guardar imagen pegada</source>
         <translation>Geplakte afbeelding opslaan</translation>
     </message>
     <message>
-        <location filename="../src/insertcontroller.cpp" line="227"/>
+        <location filename="../src/insertcontroller.cpp" line="231"/>
         <source>Imagen PNG (*.png)</source>
         <translation>PNG-afbeelding (*.png)</translation>
     </message>
     <message>
-        <location filename="../src/insertcontroller.cpp" line="236"/>
+        <location filename="../src/insertcontroller.cpp" line="240"/>
         <source>No se pudo guardar la imagen en «%1».</source>
         <translation>Kan de afbeelding niet opslaan in “%1”.</translation>
     </message>
     <message>
-        <location filename="../src/insertcontroller.cpp" line="303"/>
+        <location filename="../src/insertcontroller.cpp" line="307"/>
         <source>Insertar índice</source>
         <translation>Inhoudsopgave invoegen</translation>
     </message>
     <message>
         <location filename="../src/mainwindowinput.cpp" line="318"/>
-        <location filename="../src/insertcontroller.cpp" line="304"/>
+        <location filename="../src/insertcontroller.cpp" line="308"/>
         <source>El documento no tiene encabezados.</source>
         <translation>Het document bevat geen koppen.</translation>
     </message>
@@ -940,22 +945,22 @@
         <translation>Blok ($$...$$)</translation>
     </message>
     <message>
-        <location filename="../src/formulacontroller.cpp" line="78"/>
+        <location filename="../src/formulacontroller.cpp" line="81"/>
         <source>TeX:</source>
         <translation>TeX:</translation>
     </message>
     <message>
-        <location filename="../src/formulacontroller.cpp" line="79"/>
+        <location filename="../src/formulacontroller.cpp" line="82"/>
         <source>Tipo:</source>
         <translation>Type:</translation>
     </message>
     <message>
-        <location filename="../src/formulacontroller.cpp" line="80"/>
+        <location filename="../src/formulacontroller.cpp" line="83"/>
         <source>Vista previa:</source>
         <translation>Voorbeeld:</translation>
     </message>
     <message>
-        <location filename="../src/formulacontroller.cpp" line="240"/>
+        <location filename="../src/formulacontroller.cpp" line="243"/>
         <source>Doble clic en la fórmula para editarla (Ctrl+Shift+F para insertar otra).</source>
         <translation>Dubbelklik op de formule om deze te bewerken (Ctrl+Shift+F om er een andere in te voegen).</translation>
     </message>
@@ -1249,22 +1254,22 @@
 %2</translation>
     </message>
     <message>
-        <location filename="../src/insertcontroller.cpp" line="195"/>
+        <location filename="../src/insertcontroller.cpp" line="199"/>
         <source>imagen pegada</source>
         <translation>geplakte afbeelding</translation>
     </message>
     <message>
-        <location filename="../src/insertcontroller.cpp" line="254"/>
+        <location filename="../src/insertcontroller.cpp" line="258"/>
         <source>Insertar tabla</source>
         <translation>Tabel invoegen</translation>
     </message>
     <message>
-        <location filename="../src/insertcontroller.cpp" line="262"/>
+        <location filename="../src/insertcontroller.cpp" line="266"/>
         <source>Columnas:</source>
         <translation>Kolommen:</translation>
     </message>
     <message>
-        <location filename="../src/insertcontroller.cpp" line="263"/>
+        <location filename="../src/insertcontroller.cpp" line="267"/>
         <source>Filas de datos:</source>
         <translation>Gegevensrijen:</translation>
     </message>
@@ -1899,7 +1904,12 @@ date: [datum]
         <translation>Overzicht</translation>
     </message>
     <message>
-        <location filename="../src/outlinepanel.cpp" line="245"/>
+        <location filename="../src/outlinepanel.cpp" line="211"/>
+        <source>Encabezados del documento; actívalos para saltar a esa sección.</source>
+        <translation>Koppen van het document; activeer er een om naar die sectie te springen.</translation>
+    </message>
+    <message>
+        <location filename="../src/outlinepanel.cpp" line="247"/>
         <source>Sin encabezados</source>
         <translation>Geen koppen</translation>
     </message>
@@ -1907,17 +1917,17 @@ date: [datum]
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../src/insertcontroller.cpp" line="64"/>
+        <location filename="../src/insertcontroller.cpp" line="68"/>
         <source>...</source>
         <translation>...</translation>
     </message>
     <message>
-        <location filename="../src/insertcontroller.cpp" line="67"/>
+        <location filename="../src/insertcontroller.cpp" line="71"/>
         <source>Elegir imagen</source>
         <translation>Afbeelding kiezen</translation>
     </message>
     <message>
-        <location filename="../src/insertcontroller.cpp" line="68"/>
+        <location filename="../src/insertcontroller.cpp" line="72"/>
         <source>Imágenes (*.png *.jpg *.jpeg *.gif *.bmp *.svg);;Todos (*)</source>
         <translation>Afbeeldingen (*.png *.jpg *.jpeg *.gif *.bmp *.svg);;Alle (*)</translation>
     </message>

@@ -262,14 +262,17 @@ hasta ahora solo está cableado contra la API de Qt, no probado en vivo.*
 
 ### Alto impacto / poco esfuerzo
 
-- 🚧 **Nombres y descripciones accesibles** — *Hecho (nombres):* `setAccessibleName`
+- ✅ **Nombres y descripciones accesibles** — *Hecho (nombres):* `setAccessibleName`
   en los widgets de los que un lector no podía derivar nombre: editor WYSIWYG y
   editor de fuente (que comparten clase y coexisten en vista dividida), los campos
-  Buscar/Reemplazar de la barra de búsqueda, el árbol del esquema y el contador de
-  palabras. Los `QAction` (las ~33 acciones de menús y los botones **solo-icono** de
-  la barra) ya exponen su `text()` como nombre accesible de serie, así que no
-  necesitaban añadido. *Pendiente:* las **descripciones** (`setAccessibleDescription`,
-  el matiz que el lector lee tras una pausa) y los **diálogos** propios.
+  Buscar/Reemplazar de la barra de búsqueda, el árbol del esquema, el contador de
+  palabras y el filtro/lista del diálogo «Ir a encabezado». Los `QAction` (las ~33
+  acciones de menús y los botones **solo-icono** de la barra) ya exponen su `text()`
+  como nombre accesible de serie. *Hecho (descripciones):* `setAccessibleDescription`
+  donde el nombre se queda corto — el editor WYSIWYG (aclara que el formato se aplica
+  sobre el texto renderizado) y el árbol del esquema (pista de uso). Los **diálogos**
+  propios quedan cubiertos por el *buddy* automático de `QFormLayout` (ver punto de
+  abajo).
 - ✅ **Anunciar los mensajes de estado efímeros** — *Hecho:* helper único
   `MainWindow::showStatusMessage` por el que pasa el feedback importante (guardado,
   exportado, «no encontrado», nº de reemplazos, regex inválida, diccionario ausente,
@@ -291,14 +294,16 @@ hasta ahora solo está cableado contra la API de Qt, no probado en vivo.*
 
 ### Información no transmitida solo por color (daltonismo)
 
-- 🚧 **Admoniciones** — hoy NOTE/TIP/IMPORTANT/WARNING/CAUTION se distinguen casi
-  **solo por color** (azul/verde/violeta/ámbar/rojo + tinte de fondo;
-  `admonitions.cpp`), que un usuario con deuteranopia/protanopia confunde. El título
-  ya muestra el texto del tipo, pero añadir un **glifo distintivo por tipo**
-  (ℹ/💡/❗/⚠/⛔ o un símbolo Unicode monocromo) lo vuelve inequívoco sin depender del
-  color. (Las erratas del corrector ya llevan subrayado ondulado además del rojo
-  —correcto—; las fórmulas se reconocen por su forma renderizada, no solo por el
-  color.)
+- ✅ **Admoniciones** — *Revisado:* el render colorea la línea del marcador pero
+  **no la oculta**, así que el tipo lo transmite el propio **texto** visible
+  (`[!NOTE]`, `[!WARNING]`…), no solo el color (`admonitions.cpp`): la distinción no
+  depende del color y un usuario con deuteranopia/protanopia lee igual el tipo. El
+  **glifo** decorativo por tipo (estilo GitHub) se **descarta**: exigiría insertar
+  en el documento texto que no es Markdown, lo que rompería la regex que detecta el
+  marcador (`^\s*\[!…\]\s*$`), la detección de límites del callout, el flujo de
+  inserción y el round-trip — coste/riesgo alto para una ganancia marginal sobre el
+  keyword que ya se ve. (Las erratas del corrector ya llevan subrayado ondulado
+  además del rojo; las fórmulas se reconocen por su forma renderizada.)
 - ✅ **Verificador de contraste de los temas (función pura + `tst_`)** — *Ya existía:*
   `mdtheme::contrastRatio` (WCAG 2.x, linealización sRGB; `themespec.cpp`) y
   `tst_themespec` verifican el contraste de cada `ThemeSpec`, con un listón **más

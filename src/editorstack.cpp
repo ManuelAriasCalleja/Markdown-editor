@@ -39,6 +39,10 @@ EditorStack::EditorStack(FindReplaceBar *findBar, OutlinePanel *outline, QWidget
     // Nombre accesible (lectores de pantalla): distingue este editor visual del de
     // código fuente, que comparten clase y son visibles a la vez en vista dividida.
     m_editor->setAccessibleName(tr("Editor del documento"));
+    // La descripción aclara que el nombre no transmite: es un editor WYSIWYG.
+    m_editor->setAccessibleDescription(
+        tr("Editor visual: el formato se aplica sobre el texto renderizado, sin ver "
+           "la sintaxis Markdown."));
     // Resaltado de sintaxis de los bloques de código.
     m_highlighter = new CodeBlockHighlighter(m_editor->document());
 

@@ -38,6 +38,11 @@
         <source>Editor del documento</source>
         <translation>Editor de document</translation>
     </message>
+    <message>
+        <location filename="../src/editorstack.cpp" line="44"/>
+        <source>Editor visual: el formato se aplica sobre el texto renderizado, sin ver la sintaxis Markdown.</source>
+        <translation>Editor vizual: formatarea se aplică pe textul randat, fără a afișa sintaxa Markdown.</translation>
+    </message>
 </context>
 <context>
     <name>FindReplaceBar</name>
@@ -403,7 +408,7 @@
     </message>
     <message>
         <location filename="../src/mainwindowmenus.cpp" line="373"/>
-        <location filename="../src/insertcontroller.cpp" line="109"/>
+        <location filename="../src/insertcontroller.cpp" line="113"/>
         <source>Enlace</source>
         <translation>Legătură</translation>
     </message>
@@ -504,9 +509,9 @@
     </message>
     <message>
         <location filename="../src/mainwindowmenus.cpp" line="470"/>
-        <location filename="../src/insertcontroller.cpp" line="176"/>
-        <location filename="../src/insertcontroller.cpp" line="193"/>
-        <location filename="../src/insertcontroller.cpp" line="235"/>
+        <location filename="../src/insertcontroller.cpp" line="180"/>
+        <location filename="../src/insertcontroller.cpp" line="197"/>
+        <location filename="../src/insertcontroller.cpp" line="239"/>
         <source>Pegar imagen</source>
         <translation>Lipește imaginea</translation>
     </message>
@@ -859,64 +864,64 @@
         <translation>Limbaj (gol = niciunul):</translation>
     </message>
     <message>
-        <location filename="../src/insertcontroller.cpp" line="110"/>
+        <location filename="../src/insertcontroller.cpp" line="114"/>
         <source>Texto:</source>
         <translation>Text:</translation>
     </message>
     <message>
-        <location filename="../src/insertcontroller.cpp" line="111"/>
+        <location filename="../src/insertcontroller.cpp" line="115"/>
         <source>URL:</source>
         <translation>URL:</translation>
     </message>
     <message>
-        <location filename="../src/insertcontroller.cpp" line="143"/>
+        <location filename="../src/insertcontroller.cpp" line="147"/>
         <source>imagen</source>
         <translation>imagine</translation>
     </message>
     <message>
-        <location filename="../src/insertcontroller.cpp" line="145"/>
+        <location filename="../src/insertcontroller.cpp" line="149"/>
         <source>Insertar imagen</source>
         <translation>Inserează imagine</translation>
     </message>
     <message>
-        <location filename="../src/insertcontroller.cpp" line="146"/>
-        <location filename="../src/insertcontroller.cpp" line="194"/>
+        <location filename="../src/insertcontroller.cpp" line="150"/>
+        <location filename="../src/insertcontroller.cpp" line="198"/>
         <source>Texto alternativo:</source>
         <translation>Text alternativ:</translation>
     </message>
     <message>
-        <location filename="../src/insertcontroller.cpp" line="147"/>
+        <location filename="../src/insertcontroller.cpp" line="151"/>
         <source>Ruta o URL:</source>
         <translation>Cale sau URL:</translation>
     </message>
     <message>
-        <location filename="../src/insertcontroller.cpp" line="177"/>
+        <location filename="../src/insertcontroller.cpp" line="181"/>
         <source>El portapapeles no contiene ninguna imagen.</source>
         <translation>Clipboardul nu conține nicio imagine.</translation>
     </message>
     <message>
-        <location filename="../src/insertcontroller.cpp" line="225"/>
+        <location filename="../src/insertcontroller.cpp" line="229"/>
         <source>Guardar imagen pegada</source>
         <translation>Salvează imaginea lipită</translation>
     </message>
     <message>
-        <location filename="../src/insertcontroller.cpp" line="227"/>
+        <location filename="../src/insertcontroller.cpp" line="231"/>
         <source>Imagen PNG (*.png)</source>
         <translation>Imagine PNG (*.png)</translation>
     </message>
     <message>
-        <location filename="../src/insertcontroller.cpp" line="236"/>
+        <location filename="../src/insertcontroller.cpp" line="240"/>
         <source>No se pudo guardar la imagen en «%1».</source>
         <translation>Imaginea nu a putut fi salvată în „%1”.</translation>
     </message>
     <message>
-        <location filename="../src/insertcontroller.cpp" line="303"/>
+        <location filename="../src/insertcontroller.cpp" line="307"/>
         <source>Insertar índice</source>
         <translation>Inserează cuprins</translation>
     </message>
     <message>
         <location filename="../src/mainwindowinput.cpp" line="318"/>
-        <location filename="../src/insertcontroller.cpp" line="304"/>
+        <location filename="../src/insertcontroller.cpp" line="308"/>
         <source>El documento no tiene encabezados.</source>
         <translation>Documentul nu conține titluri.</translation>
     </message>
@@ -941,22 +946,22 @@
         <translation>Bloc ($$...$$)</translation>
     </message>
     <message>
-        <location filename="../src/formulacontroller.cpp" line="78"/>
+        <location filename="../src/formulacontroller.cpp" line="81"/>
         <source>TeX:</source>
         <translation>TeX:</translation>
     </message>
     <message>
-        <location filename="../src/formulacontroller.cpp" line="79"/>
+        <location filename="../src/formulacontroller.cpp" line="82"/>
         <source>Tipo:</source>
         <translation>Tip:</translation>
     </message>
     <message>
-        <location filename="../src/formulacontroller.cpp" line="80"/>
+        <location filename="../src/formulacontroller.cpp" line="83"/>
         <source>Vista previa:</source>
         <translation>Previzualizare:</translation>
     </message>
     <message>
-        <location filename="../src/formulacontroller.cpp" line="240"/>
+        <location filename="../src/formulacontroller.cpp" line="243"/>
         <source>Doble clic en la fórmula para editarla (Ctrl+Shift+F para insertar otra).</source>
         <translation>Faceți dublu clic pe formulă pentru a o edita (Ctrl+Shift+F pentru a insera alta).</translation>
     </message>
@@ -1251,22 +1256,22 @@
 %2</translation>
     </message>
     <message>
-        <location filename="../src/insertcontroller.cpp" line="195"/>
+        <location filename="../src/insertcontroller.cpp" line="199"/>
         <source>imagen pegada</source>
         <translation>imagine lipită</translation>
     </message>
     <message>
-        <location filename="../src/insertcontroller.cpp" line="254"/>
+        <location filename="../src/insertcontroller.cpp" line="258"/>
         <source>Insertar tabla</source>
         <translation>Inserează tabel</translation>
     </message>
     <message>
-        <location filename="../src/insertcontroller.cpp" line="262"/>
+        <location filename="../src/insertcontroller.cpp" line="266"/>
         <source>Columnas:</source>
         <translation>Coloane:</translation>
     </message>
     <message>
-        <location filename="../src/insertcontroller.cpp" line="263"/>
+        <location filename="../src/insertcontroller.cpp" line="267"/>
         <source>Filas de datos:</source>
         <translation>Rânduri de date:</translation>
     </message>
@@ -1903,7 +1908,12 @@ date: [data]
         <translation>Schiță</translation>
     </message>
     <message>
-        <location filename="../src/outlinepanel.cpp" line="245"/>
+        <location filename="../src/outlinepanel.cpp" line="211"/>
+        <source>Encabezados del documento; actívalos para saltar a esa sección.</source>
+        <translation>Titlurile documentului; activează unul pentru a sări la acea secțiune.</translation>
+    </message>
+    <message>
+        <location filename="../src/outlinepanel.cpp" line="247"/>
         <source>Sin encabezados</source>
         <translation>Fără titluri</translation>
     </message>
@@ -1911,17 +1921,17 @@ date: [data]
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../src/insertcontroller.cpp" line="64"/>
+        <location filename="../src/insertcontroller.cpp" line="68"/>
         <source>...</source>
         <translation>...</translation>
     </message>
     <message>
-        <location filename="../src/insertcontroller.cpp" line="67"/>
+        <location filename="../src/insertcontroller.cpp" line="71"/>
         <source>Elegir imagen</source>
         <translation>Alege imagine</translation>
     </message>
     <message>
-        <location filename="../src/insertcontroller.cpp" line="68"/>
+        <location filename="../src/insertcontroller.cpp" line="72"/>
         <source>Imágenes (*.png *.jpg *.jpeg *.gif *.bmp *.svg);;Todos (*)</source>
         <translation>Imagini (*.png *.jpg *.jpeg *.gif *.bmp *.svg);;Toate (*)</translation>
     </message>

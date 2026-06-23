@@ -38,6 +38,11 @@
         <source>Editor del documento</source>
         <translation>Editor do documento</translation>
     </message>
+    <message>
+        <location filename="../src/editorstack.cpp" line="44"/>
+        <source>Editor visual: el formato se aplica sobre el texto renderizado, sin ver la sintaxis Markdown.</source>
+        <translation>Editor visual: a formatação é aplicada sobre o texto renderizado, sem mostrar a sintaxe Markdown.</translation>
+    </message>
 </context>
 <context>
     <name>FindReplaceBar</name>
@@ -402,7 +407,7 @@
     </message>
     <message>
         <location filename="../src/mainwindowmenus.cpp" line="373"/>
-        <location filename="../src/insertcontroller.cpp" line="109"/>
+        <location filename="../src/insertcontroller.cpp" line="113"/>
         <source>Enlace</source>
         <translation>Link</translation>
     </message>
@@ -503,9 +508,9 @@
     </message>
     <message>
         <location filename="../src/mainwindowmenus.cpp" line="470"/>
-        <location filename="../src/insertcontroller.cpp" line="176"/>
-        <location filename="../src/insertcontroller.cpp" line="193"/>
-        <location filename="../src/insertcontroller.cpp" line="235"/>
+        <location filename="../src/insertcontroller.cpp" line="180"/>
+        <location filename="../src/insertcontroller.cpp" line="197"/>
+        <location filename="../src/insertcontroller.cpp" line="239"/>
         <source>Pegar imagen</source>
         <translation>Colar imagem</translation>
     </message>
@@ -858,64 +863,64 @@
         <translation>Linguagem (vazio = nenhuma):</translation>
     </message>
     <message>
-        <location filename="../src/insertcontroller.cpp" line="110"/>
+        <location filename="../src/insertcontroller.cpp" line="114"/>
         <source>Texto:</source>
         <translation>Texto:</translation>
     </message>
     <message>
-        <location filename="../src/insertcontroller.cpp" line="111"/>
+        <location filename="../src/insertcontroller.cpp" line="115"/>
         <source>URL:</source>
         <translation>URL:</translation>
     </message>
     <message>
-        <location filename="../src/insertcontroller.cpp" line="143"/>
+        <location filename="../src/insertcontroller.cpp" line="147"/>
         <source>imagen</source>
         <translation>imagem</translation>
     </message>
     <message>
-        <location filename="../src/insertcontroller.cpp" line="145"/>
+        <location filename="../src/insertcontroller.cpp" line="149"/>
         <source>Insertar imagen</source>
         <translation>Inserir imagem</translation>
     </message>
     <message>
-        <location filename="../src/insertcontroller.cpp" line="146"/>
-        <location filename="../src/insertcontroller.cpp" line="194"/>
+        <location filename="../src/insertcontroller.cpp" line="150"/>
+        <location filename="../src/insertcontroller.cpp" line="198"/>
         <source>Texto alternativo:</source>
         <translation>Texto alternativo:</translation>
     </message>
     <message>
-        <location filename="../src/insertcontroller.cpp" line="147"/>
+        <location filename="../src/insertcontroller.cpp" line="151"/>
         <source>Ruta o URL:</source>
         <translation>Caminho ou URL:</translation>
     </message>
     <message>
-        <location filename="../src/insertcontroller.cpp" line="177"/>
+        <location filename="../src/insertcontroller.cpp" line="181"/>
         <source>El portapapeles no contiene ninguna imagen.</source>
         <translation>A área de transferência não contém nenhuma imagem.</translation>
     </message>
     <message>
-        <location filename="../src/insertcontroller.cpp" line="225"/>
+        <location filename="../src/insertcontroller.cpp" line="229"/>
         <source>Guardar imagen pegada</source>
         <translation>Salvar imagem colada</translation>
     </message>
     <message>
-        <location filename="../src/insertcontroller.cpp" line="227"/>
+        <location filename="../src/insertcontroller.cpp" line="231"/>
         <source>Imagen PNG (*.png)</source>
         <translation>Imagem PNG (*.png)</translation>
     </message>
     <message>
-        <location filename="../src/insertcontroller.cpp" line="236"/>
+        <location filename="../src/insertcontroller.cpp" line="240"/>
         <source>No se pudo guardar la imagen en «%1».</source>
         <translation>Não foi possível salvar a imagem em «%1».</translation>
     </message>
     <message>
-        <location filename="../src/insertcontroller.cpp" line="303"/>
+        <location filename="../src/insertcontroller.cpp" line="307"/>
         <source>Insertar índice</source>
         <translation>Inserir índice</translation>
     </message>
     <message>
         <location filename="../src/mainwindowinput.cpp" line="318"/>
-        <location filename="../src/insertcontroller.cpp" line="304"/>
+        <location filename="../src/insertcontroller.cpp" line="308"/>
         <source>El documento no tiene encabezados.</source>
         <translation>O documento não tem títulos.</translation>
     </message>
@@ -940,22 +945,22 @@
         <translation>Bloco ($$...$$)</translation>
     </message>
     <message>
-        <location filename="../src/formulacontroller.cpp" line="78"/>
+        <location filename="../src/formulacontroller.cpp" line="81"/>
         <source>TeX:</source>
         <translation>TeX:</translation>
     </message>
     <message>
-        <location filename="../src/formulacontroller.cpp" line="79"/>
+        <location filename="../src/formulacontroller.cpp" line="82"/>
         <source>Tipo:</source>
         <translation>Tipo:</translation>
     </message>
     <message>
-        <location filename="../src/formulacontroller.cpp" line="80"/>
+        <location filename="../src/formulacontroller.cpp" line="83"/>
         <source>Vista previa:</source>
         <translation>Pré-visualização:</translation>
     </message>
     <message>
-        <location filename="../src/formulacontroller.cpp" line="240"/>
+        <location filename="../src/formulacontroller.cpp" line="243"/>
         <source>Doble clic en la fórmula para editarla (Ctrl+Shift+F para insertar otra).</source>
         <translation>Clique duas vezes na fórmula para editá-la (Ctrl+Shift+F para inserir outra).</translation>
     </message>
@@ -1249,22 +1254,22 @@
 %2</translation>
     </message>
     <message>
-        <location filename="../src/insertcontroller.cpp" line="195"/>
+        <location filename="../src/insertcontroller.cpp" line="199"/>
         <source>imagen pegada</source>
         <translation>imagem colada</translation>
     </message>
     <message>
-        <location filename="../src/insertcontroller.cpp" line="254"/>
+        <location filename="../src/insertcontroller.cpp" line="258"/>
         <source>Insertar tabla</source>
         <translation>Inserir tabela</translation>
     </message>
     <message>
-        <location filename="../src/insertcontroller.cpp" line="262"/>
+        <location filename="../src/insertcontroller.cpp" line="266"/>
         <source>Columnas:</source>
         <translation>Colunas:</translation>
     </message>
     <message>
-        <location filename="../src/insertcontroller.cpp" line="263"/>
+        <location filename="../src/insertcontroller.cpp" line="267"/>
         <source>Filas de datos:</source>
         <translation>Linhas de dados:</translation>
     </message>
@@ -1899,7 +1904,12 @@ date: [data]
         <translation>Estrutura</translation>
     </message>
     <message>
-        <location filename="../src/outlinepanel.cpp" line="245"/>
+        <location filename="../src/outlinepanel.cpp" line="211"/>
+        <source>Encabezados del documento; actívalos para saltar a esa sección.</source>
+        <translation>Títulos do documento; ative um para saltar para essa secção.</translation>
+    </message>
+    <message>
+        <location filename="../src/outlinepanel.cpp" line="247"/>
         <source>Sin encabezados</source>
         <translation>Sem títulos</translation>
     </message>
@@ -1907,17 +1917,17 @@ date: [data]
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../src/insertcontroller.cpp" line="64"/>
+        <location filename="../src/insertcontroller.cpp" line="68"/>
         <source>...</source>
         <translation>...</translation>
     </message>
     <message>
-        <location filename="../src/insertcontroller.cpp" line="67"/>
+        <location filename="../src/insertcontroller.cpp" line="71"/>
         <source>Elegir imagen</source>
         <translation>Escolher imagem</translation>
     </message>
     <message>
-        <location filename="../src/insertcontroller.cpp" line="68"/>
+        <location filename="../src/insertcontroller.cpp" line="72"/>
         <source>Imágenes (*.png *.jpg *.jpeg *.gif *.bmp *.svg);;Todos (*)</source>
         <translation>Imagens (*.png *.jpg *.jpeg *.gif *.bmp *.svg);;Todos (*)</translation>
     </message>
