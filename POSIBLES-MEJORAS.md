@@ -309,10 +309,14 @@ hasta ahora solo está cableado contra la API de Qt, no probado en vivo.*
 
 ### Navegación por teclado y foco
 
-- 🚧 **Orden de tabulación explícito** (`setTabOrder`) en los diálogos y en la barra
-  de búsqueda: hoy se hereda el orden de creación de los widgets, que no siempre es
-  el lógico. Revisar también que el editor de fuente y **ambos** paneles del modo
-  dividido sean alcanzables solo con teclado.
+- ✅ **Orden de tabulación** — *Verificado:* en todos los diálogos propios (fórmula,
+  insertar enlace/imagen, tabla, ir a encabezado), en la barra de búsqueda y en la
+  vista dividida el orden de **construcción** de los widgets ya coincide con el orden
+  lógico/visual, así que el Tab fluye bien sin `setTabOrder`; ambos editores son
+  `StrongFocus` y alcanzables con teclado. Dos arreglos puntuales encontrados al
+  revisar: la **vista previa** de la fórmula (solo lectura) ya no roba el Tab
+  (`Qt::ClickFocus`), y el campo de ruta del diálogo de imagen recupera su nombre
+  accesible (al ir envuelto en un contenedor perdía la asociación con su etiqueta).
 - ⬜ **Indicador de foco visible** — garantizar un *focus ring* nítido en los
   widgets propios y, sobre todo, bajo el tema de alto contraste (borde de foco
   explícito), para quien navega sin ratón.

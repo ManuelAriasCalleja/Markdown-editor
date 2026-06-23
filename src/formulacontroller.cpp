@@ -55,6 +55,9 @@ bool FormulaController::askFormula(QString *tex, bool *block,
     preview->setFrameStyle(QFrame::StyledPanel | QFrame::Sunken);
     preview->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     preview->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    // La vista previa es de solo lectura: fuera del recorrido del Tab (no tiene
+    // sentido tabular a ella), pero sigue enfocable con clic por si se copia.
+    preview->setFocusPolicy(Qt::ClickFocus);
     // Las fórmulas 2D del preview las pinta el mismo handler que el editor.
     MathObject::registerOn(preview->document(), m_mathObject);
     QFont previewFont = preview->font();

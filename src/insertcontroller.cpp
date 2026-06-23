@@ -61,6 +61,10 @@ bool twoFieldDialog(QWidget *parent, const QString &title,
         auto *h = new QHBoxLayout(row);
         h->setContentsMargins(0, 0, 0, 0);
         h->addWidget(edit2);
+        // Al envolver el campo en un contenedor, addRow asocia la etiqueta al
+        // contenedor, no al QLineEdit; le damos nombre accesible para que el lector
+        // siga leyendo la etiqueta al enfocar el campo (reusa la cadena, sin nueva).
+        edit2->setAccessibleName(label2);
         auto *browse = new QPushButton(QObject::tr("..."), row);
         QObject::connect(browse, &QPushButton::clicked, [parent, edit2] {
             const QString f = QFileDialog::getOpenFileName(
