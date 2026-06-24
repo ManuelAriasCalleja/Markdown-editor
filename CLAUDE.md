@@ -90,11 +90,13 @@ cambiar de pestaña, y el borrador de autoguardado/recuperación es de ruta fija
 reabre todas las pestañas al arrancar y tras un cambio de idioma.
 
 `MainWindow` delega en **colaboradores autocontenidos**, cada uno una clase
-pequeña con su propia responsabilidad. Su implementación está repartida en tres
-unidades de traducción para no inflar un único fichero: `mainwindow.cpp`
-(constructor, ciclo de vida, pestañas, zoom, glue), `mainwindowmenus.cpp`
-(construcción de menús y barra de formato) y `mainwindowinput.cpp` (el filtro de
-eventos `eventFilter` y sus sub-manejadores de entrada) — todos son métodos de
+pequeña con su propia responsabilidad. Su implementación está repartida en cinco
+unidades de traducción para no inflar un único fichero: `mainwindow.cpp` (el
+*shell*: constructor, ciclo de vida, pestañas, idioma, glue), `mainwindowmenus.cpp`
+(construcción de menús y barra de formato), `mainwindowinput.cpp` (el filtro de
+eventos `eventFilter` y sus sub-manejadores de entrada), `mainwindowzoom.cpp`
+(zoom/escalado de toda la interfaz) y `mainwindowsession.cpp` (arranque de sesión,
+recuperación de borrador y recarga del archivo en disco) — todos son métodos de
 `MainWindow`, solo en `.cpp` distintos. Los iconos monocromos de la barra viven
 en el módulo puro `formaticons`. Los colaboradores temáticos (la mayoría miembros
 de `EditorStack` o `MainWindow`):

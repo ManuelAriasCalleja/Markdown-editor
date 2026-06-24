@@ -44,6 +44,7 @@ add_library(md-editor-core STATIC
     src/mainwindowmenus.cpp
     src/mainwindowinput.cpp
     src/mainwindowzoom.cpp
+    src/mainwindowsession.cpp
     src/mainwindow.h
     src/splitviewcontroller.cpp
     src/splitviewcontroller.h
