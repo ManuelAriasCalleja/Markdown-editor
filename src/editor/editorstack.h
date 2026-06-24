@@ -54,11 +54,9 @@ public:
     EditorStack(FindReplaceBar *findBar, OutlinePanel *outline, QWidget *parent = nullptr);
 
     FocusEditor *editor() const { return m_editor; }
-    CodeBlockHighlighter *highlighter() const { return m_highlighter; }
     DocumentIo *documentIo() const { return m_documentIo; }
     ThemeController *theme() const { return m_theme; }
     SpellController *spell() const { return m_spell; }
-    DiagramController *diagrams() const { return m_diagrams; }
     SplitViewController *split() const { return m_split; }
     FormatController *format() const { return m_format; }
     TableController *table() const { return m_table; }

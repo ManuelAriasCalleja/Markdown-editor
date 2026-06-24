@@ -64,12 +64,8 @@ public:
     void rememberCursorPosition();
 
 public slots:
-    /// \brief Empieza un documento nuevo y vacío (preguntando antes si hay cambios).
-    void newFile();
     /// \brief Documento nuevo prerrellenado con el cuerpo Markdown de una plantilla.
     void newFromTemplate(const QString &body);
-    /// \brief Pide un archivo con un diálogo y lo abre.
-    void openFileDialog();
     /// \brief Carga y renderiza `path` (preguntando antes si hay cambios sin guardar).
     void openFile(const QString &path);
     /// \brief Guarda en la ruta actual, o pide una con «Guardar como» si no la hay.

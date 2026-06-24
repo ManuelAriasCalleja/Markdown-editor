@@ -56,15 +56,6 @@ QString FileController::currentBody() const
                                     : mdtable::documentMarkdown(m_editor->document());
 }
 
-void FileController::newFile()
-{
-    m_split->toggleSourceMode(false);  // un documento nuevo se edita en WYSIWYG
-    if (!maybeSave())
-        return;
-    rememberCursorPosition();  // guarda dónde estaba el documento que se reemplaza
-    m_documentIo->reset();
-}
-
 void FileController::newFromTemplate(const QString &body)
 {
     m_split->toggleSourceMode(false);  // la plantilla se edita en WYSIWYG
@@ -72,24 +63,6 @@ void FileController::newFromTemplate(const QString &body)
         return;
     rememberCursorPosition();  // guarda dónde estaba el documento que se reemplaza
     m_documentIo->loadFromString(body);
-}
-
-void FileController::openFileDialog()
-{
-    const QString currentFile = m_documentIo->currentFile();
-    const QString startDir = currentFile.isEmpty()
-        ? QDir::homePath()
-        : QFileInfo(currentFile).absolutePath();
-
-    const QString path = QFileDialog::getOpenFileName(
-        m_parent,
-        QCoreApplication::translate("MainWindow", "Abrir archivo Markdown"),
-        startDir,
-        QCoreApplication::translate("MainWindow",
-            "Archivos Markdown (*.md *.markdown *.mdown *.mkd);;Todos los archivos (*)"));
-
-    if (!path.isEmpty())
-        openFile(path);
 }
 
 void FileController::openFile(const QString &path)

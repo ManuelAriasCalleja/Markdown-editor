@@ -34,8 +34,6 @@ public:
     /// `es-ES`…). Devuelve true si quedó un diccionario activo. Si no hay
     /// diccionario para ese idioma, descarga el actual y devuelve false.
     bool setLanguage(const QString &lang);
-    /// \brief Código del idioma actualmente cargado (basename del diccionario), o vacío.
-    QString language() const;
 
     /// \brief ¿Hay soporte compilado Y un diccionario cargado?
     bool isAvailable() const;

@@ -32,8 +32,6 @@ public:
     SpellController(QTextEdit *editor, CodeBlockHighlighter *highlighter,
                     DocumentIo *documentIo, QObject *parent = nullptr);
 
-    /// \brief ¿Está activado el corrector?
-    bool isEnabled() const { return m_enabled; }
     /// \brief Activa/desactiva el corrector (persiste el ajuste y recarga/limpia).
     void setEnabled(bool on);
     /// \brief Fija el idioma de corrección (basename de diccionario); vacío = automático.

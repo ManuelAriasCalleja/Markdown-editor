@@ -119,11 +119,6 @@ bool SpellChecker::setLanguage(const QString &lang)
 #endif
 }
 
-QString SpellChecker::language() const
-{
-    return d->language;
-}
-
 bool SpellChecker::isAvailable() const
 {
 #ifdef HAVE_HUNSPELL
