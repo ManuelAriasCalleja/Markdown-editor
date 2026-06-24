@@ -1,6 +1,7 @@
 #include "tableedit.h"
 
 #include "admonitions.h"
+#include "codespanfix.h"
 #include "diagramdoc.h"
 #include "mathblocks.h"
 
@@ -121,7 +122,11 @@ QString documentMarkdown(const QTextDocument *doc)
     const mdmath::MathSentinelTable table = mdmath::replaceMathWithSentinels(clone.get());
     const QString md = injectAlignments(clone->toMarkdown(), columnAlignments(clone.get()));
     // Reinyecta fórmulas y deshace el escape `> \[!NOTE]` de las admoniciones.
-    return mdadmonition::unescapeMarkers(mdmath::restoreMathFromSentinels(md, table));
+    const QString restored =
+        mdadmonition::unescapeMarkers(mdmath::restoreMathFromSentinels(md, table));
+    // Deshace el sobre-escapado de Qt dentro de los code spans en línea (`\`, `&`…
+    // se duplicarían en cada guardado si no; ver mdcodespan).
+    return mdcodespan::unescapeInlineCode(restored);
 }
 
 } // namespace mdtable

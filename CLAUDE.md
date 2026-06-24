@@ -169,8 +169,11 @@ añadir lógica nueva: hay un `tst_*` por módulo.
   (no `toMarkdown` directo): `DocumentIo` (línea base, `isModified`, `write`) y
   `MainWindow` (vista de fuente, `currentBody` de recuperación, recarga). Si añades
   otra ruta de serialización, usa `mdtable::documentMarkdown()`. Esta misma función
-  es además la que reinyecta las fórmulas (ver «Fórmulas TeX») y deshace el escape
-  `> \[!NOTE]` de las admoniciones (`mdadmonition::unescapeMarkers`, ver abajo).
+  es además la que reinyecta las fórmulas (ver «Fórmulas TeX»), deshace el escape
+  `> \[!NOTE]` de las admoniciones (`mdadmonition::unescapeMarkers`, ver abajo) y
+  revierte el sobre-escapado de Qt dentro de los code spans en línea
+  (`mdcodespan::unescapeInlineCode`: Qt antepone `\` a `\ & < * [ !` dentro del
+  código, que `setMarkdown` re-lee literal y se duplicaría en cada guardado).
 - **Front matter.** Si el archivo empieza por `---…---`/`+++…+++`, `DocumentIo` lo
   separa antes de `setMarkdown` (para que no se tome por una regla horizontal), lo
   conserva verbatim y lo reescribe al guardar. No se renderiza ni se edita. Se

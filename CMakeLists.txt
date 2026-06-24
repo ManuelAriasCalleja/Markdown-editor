@@ -104,6 +104,8 @@ add_library(md-editor-core STATIC
     src/autopair.h
     src/markdowntidy.cpp
     src/markdowntidy.h
+    src/codespanfix.cpp
+    src/codespanfix.h
     src/recentfilesmanager.cpp
     src/recentfilesmanager.h
     src/recoverymanager.cpp
@@ -391,6 +393,7 @@ if(Qt6Test_FOUND)
         tst_snippets
         tst_autopair
         tst_markdowntidy
+        tst_codespanfix
         tst_recovery
         tst_appsettings
         tst_documentio

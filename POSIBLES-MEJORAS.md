@@ -302,9 +302,10 @@ opcional (añadiría otra herramienta externa, como los diagramas).
   app (la maquinaria propia —fórmulas, tablas, notas, admoniciones— sí converge en
   aislamiento; lo verifica `tst_markdownroundtrip`). Limitaciones de Qt halladas,
   por si compensa mitigarlas algún día en `documentMarkdown`:
-  - **Code spans con `\` o `&`**: Qt los escapa al serializar pero los re-lee
-    literales → se **duplican en cada guardado** (`` `C:\x` `` se corrompe). Bug de
-    round-trip puro de Qt, reproducible sin la app.
+  - **Code spans con `\` o `&` — *mitigado*.** Qt los escapa al serializar pero los
+    re-lee literales → se duplicaban en cada guardado (`` `C:\x` `` se corrompía).
+    `mdcodespan::unescapeInlineCode` (en `documentMarkdown`) revierte ese
+    sobre-escapado dentro de los code spans en línea; ya converge.
   - **`<...>`**: Qt lo trata como HTML en línea y **se traga el contenido** (pérdida
     de datos al guardar).
   - **Line-wrapping** a ~80 columnas: el corte puede caer dentro de un `*…*` y
