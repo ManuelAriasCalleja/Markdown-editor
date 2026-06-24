@@ -124,6 +124,10 @@ private:
     // Si el modo máquina de escribir está activo, desplaza `ed` para que la línea
     // del cursor quede a media altura (lógica pura en `mdtypewriter`).
     void centerCursorLine(QTextEdit *ed);
+    // «Foco de línea» (misma palanca que la máquina de escribir): atenúa con
+    // QTextEdit::extraSelections todo `ed` salvo el párrafo del cursor. Si el modo
+    // está apagado, limpia las selecciones. Los tramos los calcula `mdtypewriter`.
+    void applyLineFocus(QTextEdit *ed);
     bool m_typewriter = false;
 
     FocusEditor *m_editor = nullptr;

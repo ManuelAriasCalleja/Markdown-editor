@@ -44,7 +44,7 @@
         <translation>Visueller Editor: Die Formatierung wird auf den gerenderten Text angewendet, ohne die Markdown-Syntax anzuzeigen.</translation>
     </message>
     <message>
-        <location filename="../src/editorstack.cpp" line="334"/>
+        <location filename="../src/editorstack.cpp" line="387"/>
         <source>Fórmula: %1</source>
         <translation>Formel: %1</translation>
     </message>
@@ -730,14 +730,12 @@
         <translation>Vollbild, ohne Leisten, mit zentriertem Text (ESC oder F11 zum Beenden)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindowmenus.cpp" line="636"/>
         <source>Máquina de escribir</source>
-        <translation>Schreibmaschinenmodus</translation>
+        <translation type="vanished">Schreibmaschinenmodus</translation>
     </message>
     <message>
-        <location filename="../src/mainwindowmenus.cpp" line="640"/>
         <source>Mantén la línea del cursor centrada en vertical mientras escribes</source>
-        <translation>Hält die Cursorzeile beim Tippen vertikal zentriert</translation>
+        <translation type="vanished">Hält die Cursorzeile beim Tippen vertikal zentriert</translation>
     </message>
     <message>
         <location filename="../src/mainwindowmenus.cpp" line="651"/>
@@ -1509,6 +1507,16 @@ Möchtest du es wiederherstellen?</translation>
         <location filename="../src/doctemplates.cpp" line="134"/>
         <source>Lista de tareas</source>
         <translation>Aufgabenliste</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindowmenus.cpp" line="636"/>
+        <source>Modo foco</source>
+        <translation>Fokusmodus</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindowmenus.cpp" line="640"/>
+        <source>Centra la línea del cursor y atenúa todo salvo el párrafo actual</source>
+        <translation>Zentriert die Cursorzeile und dimmt alles außer dem aktuellen Absatz</translation>
     </message>
     <message>
         <location filename="../src/mainwindowmenus.cpp" line="812"/>

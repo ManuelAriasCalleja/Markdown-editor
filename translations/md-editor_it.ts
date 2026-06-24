@@ -44,7 +44,7 @@
         <translation>Editor visivo: la formattazione si applica sul testo renderizzato, senza mostrare la sintassi Markdown.</translation>
     </message>
     <message>
-        <location filename="../src/editorstack.cpp" line="334"/>
+        <location filename="../src/editorstack.cpp" line="387"/>
         <source>Fórmula: %1</source>
         <translation>Formula: %1</translation>
     </message>
@@ -730,14 +730,12 @@
         <translation>Schermo intero, senza barre, con il testo centrato (ESC o F11 per uscire)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindowmenus.cpp" line="636"/>
         <source>Máquina de escribir</source>
-        <translation>Modalità macchina da scrivere</translation>
+        <translation type="vanished">Modalità macchina da scrivere</translation>
     </message>
     <message>
-        <location filename="../src/mainwindowmenus.cpp" line="640"/>
         <source>Mantén la línea del cursor centrada en vertical mientras escribes</source>
-        <translation>Mantiene la riga del cursore centrata verticalmente mentre scrivi</translation>
+        <translation type="vanished">Mantiene la riga del cursore centrata verticalmente mentre scrivi</translation>
     </message>
     <message>
         <location filename="../src/mainwindowmenus.cpp" line="651"/>
@@ -1509,6 +1507,16 @@ Vuoi recuperarlo?</translation>
         <location filename="../src/doctemplates.cpp" line="134"/>
         <source>Lista de tareas</source>
         <translation>Elenco attività</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindowmenus.cpp" line="636"/>
+        <source>Modo foco</source>
+        <translation>Modalità focus</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindowmenus.cpp" line="640"/>
+        <source>Centra la línea del cursor y atenúa todo salvo el párrafo actual</source>
+        <translation>Centra la riga del cursore e attenua tutto tranne il paragrafo corrente</translation>
     </message>
     <message>
         <location filename="../src/mainwindowmenus.cpp" line="812"/>

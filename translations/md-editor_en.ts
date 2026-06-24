@@ -44,7 +44,7 @@
         <translation>Visual editor: formatting is applied to the rendered text, without showing the Markdown syntax.</translation>
     </message>
     <message>
-        <location filename="../src/editorstack.cpp" line="334"/>
+        <location filename="../src/editorstack.cpp" line="387"/>
         <source>Fórmula: %1</source>
         <translation>Formula: %1</translation>
     </message>
@@ -730,14 +730,12 @@
         <translation>Fullscreen, no bars, with the text centred (ESC or F11 to exit)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindowmenus.cpp" line="636"/>
         <source>Máquina de escribir</source>
-        <translation>Typewriter mode</translation>
+        <translation type="vanished">Typewriter mode</translation>
     </message>
     <message>
-        <location filename="../src/mainwindowmenus.cpp" line="640"/>
         <source>Mantén la línea del cursor centrada en vertical mientras escribes</source>
-        <translation>Keep the cursor line vertically centred as you type</translation>
+        <translation type="vanished">Keep the cursor line vertically centred as you type</translation>
     </message>
     <message>
         <location filename="../src/mainwindowmenus.cpp" line="651"/>
@@ -1509,6 +1507,16 @@ Do you want to recover it?</translation>
         <location filename="../src/doctemplates.cpp" line="134"/>
         <source>Lista de tareas</source>
         <translation>Task list</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindowmenus.cpp" line="636"/>
+        <source>Modo foco</source>
+        <translation>Focus Mode</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindowmenus.cpp" line="640"/>
+        <source>Centra la línea del cursor y atenúa todo salvo el párrafo actual</source>
+        <translation>Centres the cursor line and dims everything except the current paragraph</translation>
     </message>
     <message>
         <location filename="../src/mainwindowmenus.cpp" line="812"/>

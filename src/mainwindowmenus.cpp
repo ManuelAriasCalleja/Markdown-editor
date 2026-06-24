@@ -633,11 +633,11 @@ void MainWindow::createViewMenu()
     // La conexión con el controlador se hace en el ctor (m_distraction se crea
     // después de los menús, tras la barra de formato que oculta/muestra).
 
-    m_typewriterAction = viewMenu->addAction(tr("Máquina de escribir"));
+    m_typewriterAction = viewMenu->addAction(tr("Modo foco"));
     m_typewriterAction->setCheckable(true);
     m_typewriterAction->setChecked(AppSettings::typewriterMode());
     m_typewriterAction->setToolTip(
-        tr("Mantén la línea del cursor centrada en vertical mientras escribes"));
+        tr("Centra la línea del cursor y atenúa todo salvo el párrafo actual"));
     connect(m_typewriterAction, &QAction::toggled, this, [this](bool on) {
         AppSettings::setTypewriterMode(on);
         for (int i = 0; i < m_tabs->count(); ++i)

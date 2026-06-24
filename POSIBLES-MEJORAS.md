@@ -251,14 +251,17 @@ mayor margen restante es de **distribución** (puntos 2-4 de arriba), no de feat
   de fuente y renderizado (`QTextDocumentFragment::fromMarkdown`) en WYSIWYG, así
   que funciona en ambos modos. (La expansión al teclear un disparador queda como
   posible añadido futuro; se evitó por solaparse con los shortcodes `:nombre:`.)
-- 🚧 **Modo máquina de escribir / foco de línea** — *Hecho (máquina de escribir):*
-  *Ver → Máquina de escribir* mantiene la línea del cursor centrada en vertical
-  mientras se escribe. Lógica pura en `typewriter` (`mdtypewriter::centeredScrollValue`,
-  con `tst_typewriter`); la integración vive en `EditorStack::centerCursorLine`
-  (reposiciona la barra de scroll en cada `cursorPositionChanged`, en ambos editores),
-  con interruptor por ventana que se aplica a todas las pestañas y se persiste en
-  `AppSettings::typewriterMode`. *Pendiente (foco de línea):* atenuar todo salvo el
-  párrafo/frase actual (`setExtraSelections`), independiente de lo anterior.
+- ✅ **Modo foco (máquina de escribir + foco de línea)** — *Hecho:* *Ver → Modo
+  foco* es un único interruptor que (a) mantiene la línea del cursor centrada en
+  vertical mientras se escribe y (b) atenúa todo el documento salvo el párrafo del
+  cursor. Lógica pura en `typewriter` (`mdtypewriter::centeredScrollValue` para el
+  scroll y `mdtypewriter::dimRanges` para los tramos a apagar, con `tst_typewriter`);
+  la integración vive en `EditorStack::centerCursorLine` y `applyLineFocus`
+  (recalculan en cada `cursorPositionChanged` y tras cargar, en ambos editores). El
+  color apagado es la mezcla a medias del texto con el fondo (se rehace al cambiar
+  de tema); la atenuación usa `QTextEdit::extraSelections`, así que no toca el
+  documento ni el round-trip. Interruptor por ventana aplicado a todas las pestañas
+  y persistido en `AppSettings::typewriterMode`.
 - ✅ **Limpieza/normalización del Markdown** — *Hecho:* módulo puro `markdowntidy`
   (`mdtidy::tidy`, con `tst_markdowntidy`), acción *Editar → «Limpiar Markdown»*
   vía `EditorStack::cleanMarkdown` (en vista fuente sobre su texto; en WYSIWYG

@@ -44,7 +44,7 @@
         <translation>Edytor wizualny: formatowanie jest stosowane na renderowanym tekście, bez pokazywania składni Markdown.</translation>
     </message>
     <message>
-        <location filename="../src/editorstack.cpp" line="334"/>
+        <location filename="../src/editorstack.cpp" line="387"/>
         <source>Fórmula: %1</source>
         <translation>Wzór: %1</translation>
     </message>
@@ -731,14 +731,12 @@
         <translation>Pełny ekran, bez pasków, z wyśrodkowanym tekstem (ESC lub F11, aby wyjść)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindowmenus.cpp" line="636"/>
         <source>Máquina de escribir</source>
-        <translation>Tryb maszyny do pisania</translation>
+        <translation type="vanished">Tryb maszyny do pisania</translation>
     </message>
     <message>
-        <location filename="../src/mainwindowmenus.cpp" line="640"/>
         <source>Mantén la línea del cursor centrada en vertical mientras escribes</source>
-        <translation>Utrzymuje wiersz kursora wyśrodkowany w pionie podczas pisania</translation>
+        <translation type="vanished">Utrzymuje wiersz kursora wyśrodkowany w pionie podczas pisania</translation>
     </message>
     <message>
         <location filename="../src/mainwindowmenus.cpp" line="651"/>
@@ -1511,6 +1509,16 @@ Czy chcesz go odzyskać?</translation>
         <location filename="../src/doctemplates.cpp" line="134"/>
         <source>Lista de tareas</source>
         <translation>Lista zadań</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindowmenus.cpp" line="636"/>
+        <source>Modo foco</source>
+        <translation>Tryb skupienia</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindowmenus.cpp" line="640"/>
+        <source>Centra la línea del cursor y atenúa todo salvo el párrafo actual</source>
+        <translation>Wyśrodkowuje wiersz kursora i przygasza wszystko poza bieżącym akapitem</translation>
     </message>
     <message>
         <location filename="../src/mainwindowmenus.cpp" line="812"/>

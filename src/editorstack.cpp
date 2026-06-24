@@ -62,6 +62,12 @@ EditorStack::EditorStack(FindReplaceBar *findBar, OutlinePanel *outline, QWidget
     // E/S del documento y control del tema (recolorea enlaces de ESTE editor).
     m_documentIo = new DocumentIo(m_editor, this);
     m_theme = new ThemeController(m_editor, m_highlighter, this);
+    // El color de atenuación del foco de línea se deriva de la paleta; al cambiar
+    // de tema hay que rehacerlo (si no, se quedaría con el color del tema anterior).
+    connect(m_theme, &ThemeController::themeChanged, this, [this] {
+        applyLineFocus(m_editor);
+        applyLineFocus(m_split->sourceEditor());
+    });
 
     // Corrector ortográfico: posee el motor (lo enchufa al highlighter) y el menú
     // contextual de sugerencias.
@@ -80,7 +86,8 @@ EditorStack::EditorStack(FindReplaceBar *findBar, OutlinePanel *outline, QWidget
     connect(m_split->sourceEditor(), &QTextEdit::cursorPositionChanged,
             this, &EditorStack::wordCountShouldUpdate);
     connect(m_split->sourceEditor(), &QTextEdit::cursorPositionChanged,
-            this, [this] { centerCursorLine(m_split->sourceEditor()); });
+            this, [this] { centerCursorLine(m_split->sourceEditor());
+                           applyLineFocus(m_split->sourceEditor()); });
     connect(m_split->sourceEditor(), &QTextEdit::selectionChanged,
             this, &EditorStack::wordCountShouldUpdate);
     connect(m_split, &SplitViewController::wordCountShouldUpdate,
@@ -143,7 +150,7 @@ EditorStack::EditorStack(FindReplaceBar *findBar, OutlinePanel *outline, QWidget
     connect(m_editor, &QTextEdit::cursorPositionChanged,
             this, &EditorStack::announceFormulaUnderCursor);
     connect(m_editor, &QTextEdit::cursorPositionChanged,
-            this, [this] { centerCursorLine(m_editor); });
+            this, [this] { centerCursorLine(m_editor); applyLineFocus(m_editor); });
     // Marca «modificado» comparando con la línea base (DocumentIo).
     connect(m_editor->document(), &QTextDocument::contentsChanged, this,
             [this] { emit windowModifiedChanged(m_documentIo->isModified()); });
@@ -172,6 +179,12 @@ EditorStack::EditorStack(FindReplaceBar *findBar, OutlinePanel *outline, QWidget
     connect(m_documentIo, &DocumentIo::documentLoaded, this, [this] { styleTables(); });
     connect(m_documentIo, &DocumentIo::documentLoaded,
             m_spell, &SpellController::applyLanguage);
+    // Tras cargar, reaplica el foco de línea: setTypewriterMode pudo correr con el
+    // documento aún vacío (al configurar la pestaña), antes de tener contenido.
+    connect(m_documentIo, &DocumentIo::documentLoaded, this, [this] {
+        applyLineFocus(m_editor);
+        applyLineFocus(m_split->sourceEditor());
+    });
 }
 
 QTextEdit *EditorStack::activeEditor() const
@@ -270,11 +283,56 @@ QString EditorStack::formulaAtCursor(int *start) const
     return tex;
 }
 
+void EditorStack::applyLineFocus(QTextEdit *ed)
+{
+    if (!ed)
+        return;
+
+    // Apagado: quita la atenuación de ambos editores (este método se llama por
+    // editor; el toggle lo invoca para los dos).
+    if (!m_typewriter) {
+        ed->setExtraSelections({});
+        return;
+    }
+
+    // Color apagado: el texto mezclado a medias con el fondo del editor. Funciona
+    // igual en temas claros y oscuros (acerca el texto al fondo, sin fijar gris).
+    const QColor text = ed->palette().color(QPalette::Text);
+    const QColor base = ed->palette().color(QPalette::Base);
+    const QColor dim(
+        (text.red() + base.red()) / 2,
+        (text.green() + base.green()) / 2,
+        (text.blue() + base.blue()) / 2);
+
+    const QTextCursor cur = ed->textCursor();
+    const QTextBlock block = cur.block();
+    // El total es la última posición de cursor VÁLIDA: characterCount() incluye el
+    // separador final de bloque, pero setPosition(characterCount()) está fuera de
+    // rango (la posición máxima es characterCount()-1). Pasarlo entero dejaría el
+    // último tramo con un setPosition fallido → selección vacía → sin atenuar.
+    const int lastPos = ed->document()->characterCount() - 1;
+    QList<QTextEdit::ExtraSelection> selections;
+    for (const mdtypewriter::Range &r :
+         mdtypewriter::dimRanges(lastPos,
+                                 block.position(), block.position() + block.length())) {
+        QTextEdit::ExtraSelection sel;
+        sel.cursor = QTextCursor(ed->document());
+        sel.cursor.setPosition(r.start);
+        sel.cursor.setPosition(r.start + r.length, QTextCursor::KeepAnchor);
+        sel.format.setForeground(dim);
+        selections.append(sel);
+    }
+    ed->setExtraSelections(selections);
+}
+
 void EditorStack::setTypewriterMode(bool on)
 {
     m_typewriter = on;
-    if (on)
-        centerCursorLine(activeEditor());  // centra ya, sin esperar a moverse
+    centerCursorLine(activeEditor());  // centra ya, sin esperar a moverse
+    // Aplica/limpia la atenuación en ambos editores (cualquiera puede estar visible
+    // en la vista dividida).
+    applyLineFocus(m_editor);
+    applyLineFocus(m_split->sourceEditor());
 }
 
 void EditorStack::cleanMarkdown()

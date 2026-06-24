@@ -14,6 +14,11 @@ private slots:
     void cursorAtCenterDoesNotMove();
     void clampsAtTop();
     void clampsAtBottom();
+    void dimRangesMiddleParagraph();
+    void dimRangesAtStart();
+    void dimRangesAtEnd();
+    void dimRangesWholeDocFocused();
+    void dimRangesDegenerateInputs();
 };
 
 void TestTypewriter::cursorBelowCenterScrollsDown()
@@ -46,6 +51,55 @@ void TestTypewriter::clampsAtBottom()
 {
     // Cerca del final: centrar exigiría pasar del máximo → se acota al máximo.
     QCOMPARE(mdtypewriter::centeredScrollValue(1000, 350, 400, 0, 1000), 1000);
+}
+
+// «Foco de línea»: los tramos a atenuar son el complemento del párrafo enfocado.
+void TestTypewriter::dimRangesMiddleParagraph()
+{
+    // Documento de 100; párrafo enfocado [40, 60): se atenúa [0,40) y [60,40).
+    const QList<mdtypewriter::Range> r = mdtypewriter::dimRanges(100, 40, 60);
+    QCOMPARE(r.size(), 2);
+    QCOMPARE(r[0].start, 0);
+    QCOMPARE(r[0].length, 40);
+    QCOMPARE(r[1].start, 60);
+    QCOMPARE(r[1].length, 40);
+}
+
+void TestTypewriter::dimRangesAtStart()
+{
+    // Párrafo al principio: solo hay tramo posterior.
+    const QList<mdtypewriter::Range> r = mdtypewriter::dimRanges(100, 0, 30);
+    QCOMPARE(r.size(), 1);
+    QCOMPARE(r[0].start, 30);
+    QCOMPARE(r[0].length, 70);
+}
+
+void TestTypewriter::dimRangesAtEnd()
+{
+    // Párrafo al final: solo hay tramo anterior.
+    const QList<mdtypewriter::Range> r = mdtypewriter::dimRanges(100, 70, 100);
+    QCOMPARE(r.size(), 1);
+    QCOMPARE(r[0].start, 0);
+    QCOMPARE(r[0].length, 70);
+}
+
+void TestTypewriter::dimRangesWholeDocFocused()
+{
+    // Todo el documento es el párrafo: no se atenúa nada.
+    QCOMPARE(mdtypewriter::dimRanges(100, 0, 100).size(), 0);
+}
+
+void TestTypewriter::dimRangesDegenerateInputs()
+{
+    QCOMPARE(mdtypewriter::dimRanges(0, 0, 0).size(), 0);    // documento vacío
+    QCOMPARE(mdtypewriter::dimRanges(-5, 0, 0).size(), 0);   // total negativo
+    // Fuera de rango y orden invertido: se acota/ordena, no produce basura.
+    const QList<mdtypewriter::Range> r = mdtypewriter::dimRanges(50, 80, 20);
+    for (const mdtypewriter::Range &x : r) {
+        QVERIFY(x.start >= 0);
+        QVERIFY(x.length > 0);
+        QVERIFY(x.start + x.length <= 50);
+    }
 }
 
 QTEST_APPLESS_MAIN(TestTypewriter)
