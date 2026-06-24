@@ -81,8 +81,11 @@ jobs:
       - name: Configure
         run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -DENABLE_SANITIZERS=ON
 
+      # `--parallel 2` (no todos los núcleos): compilar con ASan instrumenta cada
+      # TU y dispara mucho la RAM por cc1plus; con todos los núcleos a la vez el
+      # runner se queda sin memoria (cc1plus «Killed») en las TUs más pesadas.
       - name: Build
-        run: cmake --build build --parallel
+        run: cmake --build build --parallel 2
 
       # detect_leaks=0: el ruido de fugas a la salida es de Qt/fontconfig, no
       # nuestro; nos interesan los errores de memoria y el UB.
@@ -125,6 +128,7 @@ jobs:
 
       # Análisis estático con los checks del .clang-tidy del repo; falla ante
       # cualquier aviso (el código está limpio, así que es una guardia de
-      # regresión). Solo sobre src/*.cpp (no las pruebas ni el código generado).
+      # regresión). Sobre todos los .cpp de src/ (recursivo: viven en
+      # subdirectorios por componente); no las pruebas ni el código generado.
       - name: clang-tidy
-        run: clang-tidy -p build --warnings-as-errors='*' src/*.cpp
+        run: clang-tidy -p build --warnings-as-errors='*' $(find src -name '*.cpp')

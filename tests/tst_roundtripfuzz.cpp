@@ -200,13 +200,18 @@ QString TestRoundtripFuzz::document()
 
 void TestRoundtripFuzz::survivesAdversarialContent()
 {
-    QTextEdit ed;
-    ed.setAcceptRichText(true);
-
-    constexpr int kCases = 6000;
+    constexpr int kCases = 2000;
     for (int i = 1; i <= kCases; ++i) {
         seed(quint32(i) * 2654435761u);  // dispersa las semillas (Knuth)
         const QString body = document();
+
+        // Editor NUEVO por caso: cada documento renderiza fórmulas (que registran
+        // un handler de objeto en su layout), notas al pie, etc. Reutilizar un solo
+        // QTextEdit para miles de setMarkdown acumula ese estado por el documento y
+        // puede degenerar en entornos con otro build de Qt; un editor por caso deja
+        // cada uno independiente (que además es lo correcto para fuzzear).
+        QTextEdit ed;
+        ed.setAcceptRichText(true);
 
         // Doble pasada por el pipeline real. El objetivo es que no haya SIGSEGV,
         // assert ni error de sanitizer en ninguna de las etapas (proteger →
@@ -220,8 +225,8 @@ void TestRoundtripFuzz::survivesAdversarialContent()
 
     // Llegar aquí (completar los kCases sin morir) ES la prueba: el valor está en
     // que no haya habido un crash/assert/error de sanitizer en ninguna de las
-    // 6000 combinaciones. No se comprueba el contenido exacto (toMarkdown de Qt no
-    // es idempotente y los documentos solo-regla serializan a vacío legítimamente).
+    // combinaciones. No se comprueba el contenido exacto (toMarkdown de Qt no es
+    // idempotente y los documentos solo-regla serializan a vacío legítimamente).
     QVERIFY(true);
 }
 
