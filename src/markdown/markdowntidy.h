@@ -9,7 +9,8 @@
 
 /// Limpieza/normalización del texto Markdown (acción «Limpiar Markdown»). Puro y
 /// deliberadamente conservador: NO toca el interior de los bloques de código
-/// cercados (```/~~~), preserva los saltos de línea duros (2+ espacios al final) y
+/// cercados (delimitados por tres acentos graves o por `~~~`), preserva los saltos
+/// de línea duros (2+ espacios al final) y
 /// los separadores temáticos / reglas (`---`, `***`, `* * *`). Sobre el resto:
 ///   - recorta los espacios finales,
 ///   - colapsa varias líneas en blanco seguidas en una sola,

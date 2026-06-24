@@ -98,12 +98,12 @@ QChar accentCombiningChar(const QString &cmd);
 /// delimitador) y `\not` (el operando negado). Compartido inline/2D.
 QString readTokenAsUnicode(const QString &tex, int &i);
 
-/// \brief ¿Es un comando de alfabeto matemático con argumento (\mathcal/\mathscr/
-/// \mathfrak)? El render lo trata como el bloque \text pero mapeando cada letra.
+/// \brief ¿Es un comando de alfabeto matemático con argumento (`\mathcal`/`\mathscr`/
+/// `\mathfrak`)? El render lo trata como el bloque `\text` pero mapeando cada letra.
 bool isStyledAlphabetCommand(const QString &cmd);
 
 /// \brief Convierte cada letra latina de `arg` a su variante matemática Unicode según
-/// `cmd` (script para \mathcal/\mathscr, fraktur para \mathfrak); el resto de
+/// `cmd` (script para `\mathcal`/`\mathscr`, fraktur para `\mathfrak`); el resto de
 /// caracteres pasa sin cambios. Compartido por el render inline y el 2D.
 QString styledMathAlphabet(const QString &cmd, const QString &arg);
 

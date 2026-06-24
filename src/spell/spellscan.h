@@ -23,7 +23,8 @@ struct Word {
 };
 
 /// Extrae las palabras candidatas a corregir de `text`: runs maximales de letras
-/// Unicode con apóstrofos internos (`don't`, `l'eau`; sirve `'` y `’`). Reglas:
+/// Unicode con apóstrofos internos (`don't`, `l'eau`; valen el apóstrofo recto y el
+/// tipográfico). Reglas:
 ///   - se descartan los tokens que contienen dígitos (`h2o`, `v1`, `utf8`): no
 ///     son palabras de un idioma natural;
 ///   - el guion separa (`bien-venido` → `bien`, `venido`), como hacen los

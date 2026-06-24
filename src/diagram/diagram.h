@@ -19,8 +19,8 @@ enum class Kind {
     PlantUml,  // ```plantuml / ```puml / ```uml
 };
 
-/// Tipo de diagrama para la etiqueta de lenguaje de un bloque ```lang (sin
-/// distinguir mayúsculas; se ignoran espacios). `None` si no es un diagrama.
+/// Tipo de diagrama para la etiqueta de lenguaje de un bloque de código cercado
+/// (sin distinguir mayúsculas; se ignoran espacios). `None` si no es un diagrama.
 Kind kindForLanguage(const QString &lang);
 
 /// ¿Esta etiqueta de lenguaje corresponde a un diagrama renderizable?

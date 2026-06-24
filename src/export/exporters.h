@@ -41,7 +41,7 @@ Language languageForCode(const QString &code);
 QString frontMatterValue(const QString &frontMatter, const QString &key);
 
 /// \brief Serializa el documento a un .tex completo (preámbulo + cuerpo), con babel del
-/// idioma dado y, si `title` no está vacío, \maketitle. Función pura.
+/// idioma dado y, si `title` no está vacío, `\maketitle`. Función pura.
 QString toLatex(const QTextDocument *doc, const Language &language, const QString &title);
 
 /// \brief Devuelve el XML `styles.xml` que fija el idioma del ODF. Pura y testeable.
@@ -90,7 +90,7 @@ bool writeDocx(const QTextDocument *doc, const QString &path, const Language &la
 // OPF + navegación. Lo empaquetamos con el mismo QZip privado de Qt, reutilizando
 // el HTML de Qt como cuerpo (saneado a XHTML). Sin dependencias externas.
 
-/// \brief Extrae el interior de <body> del HTML de Qt y lo deja apto para XHTML (arregla
+/// \brief Extrae el interior de `<body>` del HTML de Qt y lo deja apto para XHTML (arregla
 /// `&nbsp;` y elementos vacíos sin cerrar). Función pura.
 QString htmlBodyToXhtml(const QString &fullHtml);
 
