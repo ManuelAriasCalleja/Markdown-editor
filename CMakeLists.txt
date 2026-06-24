@@ -40,134 +40,157 @@ find_package(Qt6 REQUIRED COMPONENTS Widgets PrintSupport LinguistTools)
 # Toda la lógica vive en una biblioteca estática para poder enlazarla tanto
 # desde el ejecutable como desde las pruebas. El ejecutable es solo main().
 add_library(md-editor-core STATIC
-    src/mainwindow.cpp
-    src/mainwindowmenus.cpp
-    src/mainwindowinput.cpp
-    src/mainwindowzoom.cpp
-    src/mainwindowsession.cpp
-    src/mainwindow.h
-    src/splitviewcontroller.cpp
-    src/splitviewcontroller.h
-    src/diskwatcher.cpp
-    src/diskwatcher.h
-    src/exportcontroller.cpp
-    src/exportcontroller.h
-    src/filecontroller.cpp
-    src/filecontroller.h
-    src/tablecontroller.cpp
-    src/tablecontroller.h
-    src/formatcontroller.cpp
-    src/formatcontroller.h
-    src/formulacontroller.cpp
-    src/formulacontroller.h
-    src/insertcontroller.cpp
-    src/insertcontroller.h
-    src/symbolcatalog.cpp
-    src/symbolcatalog.h
-    src/symbolpicker.cpp
-    src/symbolpicker.h
-    src/urldetect.cpp
-    src/urldetect.h
-    src/richpaste.cpp
-    src/richpaste.h
-    src/doctemplates.cpp
-    src/doctemplates.h
-    src/admonitions.cpp
-    src/admonitions.h
-    src/markdownrender.cpp
-    src/markdownrender.h
-    src/distractionfreecontroller.cpp
-    src/distractionfreecontroller.h
-    src/chromezoom.cpp
-    src/chromezoom.h
-    src/codehighlighter.cpp
-    src/codehighlighter.h
-    src/findreplacebar.cpp
-    src/findreplacebar.h
-    src/focuseditor.cpp
-    src/focuseditor.h
-    src/helpdialog.cpp
-    src/helpdialog.h
-    src/outlinepanel.cpp
-    src/outlinepanel.h
-    src/gotoheadingdialog.cpp
-    src/gotoheadingdialog.h
-    src/docstats.cpp
-    src/docstats.h
-    src/texttransform.cpp
-    src/texttransform.h
-    src/typewriter.cpp
-    src/typewriter.h
-    src/snippets.cpp
-    src/snippets.h
-    src/snippetsdialog.cpp
-    src/snippetsdialog.h
-    src/autopair.cpp
-    src/autopair.h
-    src/markdowntidy.cpp
-    src/markdowntidy.h
-    src/codespanfix.cpp
-    src/codespanfix.h
-    src/recentfilesmanager.cpp
-    src/recentfilesmanager.h
-    src/recoverymanager.cpp
-    src/recoverymanager.h
-    src/languageregistry.cpp
-    src/languageregistry.h
-    src/blockconstructs.cpp
-    src/blockconstructs.h
-    src/listcontinuation.cpp
-    src/listcontinuation.h
-    src/tasklist.cpp
-    src/tasklist.h
-    src/footnotes.cpp
-    src/footnotes.h
-    src/shortcodes.cpp
-    src/shortcodes.h
-    src/mathblocks.cpp
-    src/mathblocks.h
-    src/texparser.cpp
-    src/mathlayout.cpp
-    src/mathlayout.h
-    src/mathobject.cpp
-    src/mathobject.h
-    src/spellscan.cpp
-    src/spellscan.h
-    src/spellchecker.cpp
-    src/spellchecker.h
-    src/spellcontroller.cpp
-    src/spellcontroller.h
-    src/diagram.cpp
-    src/diagram.h
-    src/diagramdoc.cpp
-    src/diagramdoc.h
-    src/diagramrenderer.cpp
-    src/diagramrenderer.h
-    src/diagramcontroller.cpp
-    src/diagramcontroller.h
-    src/editorstack.cpp
-    src/editorstack.h
-    src/formaticons.cpp
-    src/formaticons.h
-    src/tableedit.cpp
-    src/tableedit.h
-    src/exporters.cpp
-    src/exporters.h
-    src/appsettings.cpp
-    src/appsettings.h
-    src/documentio.cpp
-    src/documentio.h
-    src/themecontroller.cpp
-    src/themecontroller.h
-    src/themespec.cpp
-    src/themespec.h
+    # --- app ---
+    src/app/appsettings.cpp
+    src/app/appsettings.h
+    src/app/chromezoom.cpp
+    src/app/chromezoom.h
+    src/app/mainwindow.cpp
+    src/app/mainwindow.h
+    src/app/mainwindowinput.cpp
+    src/app/mainwindowmenus.cpp
+    src/app/mainwindowsession.cpp
+    src/app/mainwindowzoom.cpp
+    # --- editor ---
+    src/editor/autopair.cpp
+    src/editor/autopair.h
+    src/editor/blockconstructs.cpp
+    src/editor/blockconstructs.h
+    src/editor/editorstack.cpp
+    src/editor/editorstack.h
+    src/editor/focuseditor.cpp
+    src/editor/focuseditor.h
+    src/editor/formatcontroller.cpp
+    src/editor/formatcontroller.h
+    src/editor/insertcontroller.cpp
+    src/editor/insertcontroller.h
+    src/editor/listcontinuation.cpp
+    src/editor/listcontinuation.h
+    src/editor/tablecontroller.cpp
+    src/editor/tablecontroller.h
+    src/editor/typewriter.cpp
+    src/editor/typewriter.h
+    # --- view ---
+    src/view/distractionfreecontroller.cpp
+    src/view/distractionfreecontroller.h
+    src/view/splitviewcontroller.cpp
+    src/view/splitviewcontroller.h
+    src/view/themecontroller.cpp
+    src/view/themecontroller.h
+    src/view/themespec.cpp
+    src/view/themespec.h
+    # --- io ---
+    src/io/diskwatcher.cpp
+    src/io/diskwatcher.h
+    src/io/documentio.cpp
+    src/io/documentio.h
+    src/io/filecontroller.cpp
+    src/io/filecontroller.h
+    src/io/recentfilesmanager.cpp
+    src/io/recentfilesmanager.h
+    src/io/recoverymanager.cpp
+    src/io/recoverymanager.h
+    # --- markdown ---
+    src/markdown/admonitions.cpp
+    src/markdown/admonitions.h
+    src/markdown/codespanfix.cpp
+    src/markdown/codespanfix.h
+    src/markdown/docstats.cpp
+    src/markdown/docstats.h
+    src/markdown/doctemplates.cpp
+    src/markdown/doctemplates.h
+    src/markdown/footnotes.cpp
+    src/markdown/footnotes.h
+    src/markdown/markdownrender.cpp
+    src/markdown/markdownrender.h
+    src/markdown/markdowntidy.cpp
+    src/markdown/markdowntidy.h
+    src/markdown/richpaste.cpp
+    src/markdown/richpaste.h
+    src/markdown/shortcodes.cpp
+    src/markdown/shortcodes.h
+    src/markdown/snippets.cpp
+    src/markdown/snippets.h
+    src/markdown/symbolcatalog.cpp
+    src/markdown/symbolcatalog.h
+    src/markdown/tableedit.cpp
+    src/markdown/tableedit.h
+    src/markdown/tasklist.cpp
+    src/markdown/tasklist.h
+    src/markdown/texttransform.cpp
+    src/markdown/texttransform.h
+    src/markdown/urldetect.cpp
+    src/markdown/urldetect.h
+    # --- highlight ---
+    src/highlight/codehighlighter.cpp
+    src/highlight/codehighlighter.h
+    src/highlight/languageregistry.cpp
+    src/highlight/languageregistry.h
+    # --- math ---
+    src/math/formulacontroller.cpp
+    src/math/formulacontroller.h
+    src/math/mathblocks.cpp
+    src/math/mathblocks.h
+    src/math/mathlayout.cpp
+    src/math/mathlayout.h
+    src/math/mathobject.cpp
+    src/math/mathobject.h
+    src/math/texparser.cpp
+    # --- diagram ---
+    src/diagram/diagramcontroller.cpp
+    src/diagram/diagramcontroller.h
+    src/diagram/diagram.cpp
+    src/diagram/diagramdoc.cpp
+    src/diagram/diagramdoc.h
+    src/diagram/diagram.h
+    src/diagram/diagramrenderer.cpp
+    src/diagram/diagramrenderer.h
+    # --- spell ---
+    src/spell/spellchecker.cpp
+    src/spell/spellchecker.h
+    src/spell/spellcontroller.cpp
+    src/spell/spellcontroller.h
+    src/spell/spellscan.cpp
+    src/spell/spellscan.h
+    # --- export ---
+    src/export/exportcontroller.cpp
+    src/export/exportcontroller.h
+    src/export/exporters.cpp
+    src/export/exporters.h
+    # --- widgets ---
+    src/widgets/findreplacebar.cpp
+    src/widgets/findreplacebar.h
+    src/widgets/formaticons.cpp
+    src/widgets/formaticons.h
+    src/widgets/gotoheadingdialog.cpp
+    src/widgets/gotoheadingdialog.h
+    src/widgets/helpdialog.cpp
+    src/widgets/helpdialog.h
+    src/widgets/outlinepanel.cpp
+    src/widgets/outlinepanel.h
+    src/widgets/snippetsdialog.cpp
+    src/widgets/snippetsdialog.h
+    src/widgets/symbolpicker.cpp
+    src/widgets/symbolpicker.h
 )
 # Qt6::GuiPrivate da acceso al QZip privado (QZipReader/QZipWriter), con el que
 # exporters.cpp reempaqueta el ODF para incrustarle el idioma sin dependencias
 # externas. Es API privada de Qt (puede cambiar entre versiones), pero no añade
 # ninguna biblioteca de terceros.
 target_link_libraries(md-editor-core PUBLIC Qt6::Widgets Qt6::PrintSupport Qt6::GuiPrivate)
-target_include_directories(md-editor-core PUBLIC src)
+target_include_directories(md-editor-core PUBLIC
+    src
+    src/app
+    src/editor
+    src/view
+    src/io
+    src/markdown
+    src/highlight
+    src/math
+    src/diagram
+    src/spell
+    src/export
+    src/widgets)
 # Versión del proyecto disponible en el código (p. ej. el diálogo «Acerca de»),
 # para no tenerla escrita a mano en dos sitios. PUBLIC: la ven el ejecutable y los tests.
 target_compile_definitions(md-editor-core PUBLIC APP_VERSION="${PROJECT_VERSION}")
@@ -250,7 +273,7 @@ endif()
 # MACOSX_BUNDLE: en macOS genera un .app. Cada flag lo ignora la plataforma que
 # no corresponde, así que la build de Linux es idéntica a antes.
 add_executable(md-editor WIN32 MACOSX_BUNDLE
-    src/main.cpp
+    src/app/main.cpp
     src/resources.qrc
     ${app_icon_sources})
 target_link_libraries(md-editor PRIVATE md-editor-core)
