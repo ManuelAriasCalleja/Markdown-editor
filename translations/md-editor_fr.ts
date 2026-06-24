@@ -4,9 +4,14 @@
 <context>
     <name>DiagramController</name>
     <message>
-        <location filename="../src/diagram/diagramcontroller.cpp" line="105"/>
+        <location filename="../src/diagram/diagramcontroller.cpp" line="113"/>
         <source>%1 no está instalado. Para previsualizar este diagrama: %2</source>
         <translation>%1 n’est pas installé. Pour prévisualiser ce diagramme : %2</translation>
+    </message>
+    <message>
+        <location filename="../src/diagram/diagramcontroller.cpp" line="231"/>
+        <source>No se pudo previsualizar el diagrama %1: %2</source>
+        <translation>Impossible de prévisualiser le diagramme %1 : %2</translation>
     </message>
 </context>
 <context>
@@ -40,7 +45,7 @@
         <translation>Éditeur visuel : la mise en forme s&apos;applique sur le texte rendu, sans afficher la syntaxe Markdown.</translation>
     </message>
     <message>
-        <location filename="../src/editor/editorstack.cpp" line="401"/>
+        <location filename="../src/editor/editorstack.cpp" line="403"/>
         <source>Fórmula: %1</source>
         <translation>Formule : %1</translation>
     </message>

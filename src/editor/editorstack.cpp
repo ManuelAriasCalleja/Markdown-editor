@@ -61,6 +61,8 @@ EditorStack::EditorStack(FindReplaceBar *findBar, OutlinePanel *outline, QWidget
     m_diagrams = new DiagramController(m_editor, this);
     connect(m_editor->document(), &QTextDocument::contentsChanged,
             m_diagrams, &DiagramController::scheduleRefresh);
+    // Los fallos de render «asentados» avisan al usuario en la barra de estado.
+    connect(m_diagrams, &DiagramController::statusMessage, this, &EditorStack::statusMessage);
 
     // E/S del documento y control del tema (recolorea enlaces de ESTE editor).
     m_documentIo = new DocumentIo(m_editor, this);

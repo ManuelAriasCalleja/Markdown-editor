@@ -54,9 +54,17 @@ DiagramController::DiagramController(QTextEdit *editor, QObject *parent)
     m_debounce->setInterval(600);  // no renderizar en cada tecla
     connect(m_debounce, &QTimer::timeout, this, &DiagramController::refresh);
     connect(m_renderer, &DiagramRenderer::rendered, this, &DiagramController::onRendered);
-    // Los fallos (sintaxis incompleta al teclear) son normales: no molestamos con
-    // mensajes; la preview simplemente no se actualiza. El caso «falta la
-    // herramienta» se avisa con un MARCADOR inline bajo el bloque (ver refresh).
+
+    // Aviso de fallo de render. Un diagrama a medio teclear falla todo el rato
+    // (sintaxis incompleta), así que NO se avisa en crudo: el fallo se «asienta» en
+    // m_failNotify y solo se avisa si la fuente rota se queda quieta este tiempo.
+    // (El caso «falta la herramienta» no llega aquí: refresh pone un MARCADOR inline
+    // y ni siquiera llama a render() — ver refresh.)
+    m_failNotify = new QTimer(this);
+    m_failNotify->setSingleShot(true);
+    m_failNotify->setInterval(1500);
+    connect(m_failNotify, &QTimer::timeout, this, &DiagramController::notifyPendingFailure);
+    connect(m_renderer, &DiagramRenderer::failed, this, &DiagramController::onFailed);
 }
 
 void DiagramController::scheduleRefresh()
@@ -178,6 +186,14 @@ void DiagramController::removeOrphanPreviews(const QList<Region> &regions)
 
 void DiagramController::onRendered(mddiagram::Kind, const QString &source, const QImage &image)
 {
+    // Render OK: esta fuente ya no está en fallo. La saca del dedup (si vuelve a
+    // romperse, se volverá a avisar) y cancela un aviso pendiente sobre ella.
+    m_notifiedFailures.remove(sourceHash(source));
+    if (m_pendingFailSource == source) {
+        m_failNotify->stop();
+        m_pendingFailSource.clear();
+    }
+
     // Encuentra el grupo de diagrama cuya fuente coincide (el documento pudo
     // cambiar desde que se pidió el render) y coloca la imagen bajo él.
     for (const Region &r : scanRegions()) {
@@ -187,6 +203,34 @@ void DiagramController::onRendered(mddiagram::Kind, const QString &source, const
                         image, QString());
         return;
     }
+}
+
+void DiagramController::onFailed(mddiagram::Kind kind, const QString &source,
+                                 const QString &error)
+{
+    // No avisar de inmediato (ver la cabecera): un diagrama a medio teclear falla en
+    // cada pausa. Guarda el fallo y (re)arranca el temporizador de «asentamiento»;
+    // si esta misma fuente ya se avisó, no insiste.
+    if (m_notifiedFailures.contains(sourceHash(source)))
+        return;
+    m_pendingFailKind = kind;
+    m_pendingFailSource = source;
+    m_pendingFailError = error;
+    m_failNotify->start();
+}
+
+void DiagramController::notifyPendingFailure()
+{
+    // La fuente rota lleva quieta el intervalo de m_failNotify: avisa una vez.
+    if (m_pendingFailSource.isEmpty())
+        return;
+    const QString hash = sourceHash(m_pendingFailSource);
+    if (m_notifiedFailures.contains(hash))
+        return;
+    m_notifiedFailures.insert(hash);
+    emit statusMessage(tr("No se pudo previsualizar el diagrama %1: %2")
+                           .arg(toolDisplayName(m_pendingFailKind), m_pendingFailError),
+                       6000);
 }
 
 void DiagramController::setPreviewBlock(int lastBlockNumber, const QString &hash,

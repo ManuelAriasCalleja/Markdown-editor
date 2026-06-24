@@ -3,6 +3,7 @@
 
 #include <QImage>
 #include <QObject>
+#include <QSet>
 #include <QString>
 
 #include "diagram.h"
@@ -35,6 +36,11 @@ public slots:
     /// Re-escanea ya: pide renders de los diagramas y limpia previews huérfanas.
     void refresh();
 
+signals:
+    /// \brief Mensaje para la barra de estado de la ventana (texto, ms). Lo emite,
+    /// p. ej., un fallo de render de diagrama; EditorStack lo relaya a MainWindow.
+    void statusMessage(const QString &text, int timeout);
+
 private:
     struct Region {
         int lastBlockPos;     // posición del último bloque de código del grupo
@@ -44,6 +50,13 @@ private:
     };
     QList<Region> scanRegions() const;
     void onRendered(mddiagram::Kind kind, const QString &source, const QImage &image);
+    /// Render fallido. NO avisa de inmediato: un diagrama a medio teclear falla todo
+    /// el rato (sintaxis incompleta), y avisar en cada pausa sería molesto. Guarda el
+    /// fallo y arranca/reinicia `m_failNotify`; solo si la fuente rota se queda quieta
+    /// (sin más fallos) ~1,5 s salta el aviso, una sola vez por fuente (dedup con
+    /// m_notifiedFailures, que se rearma al renderizar bien la misma fuente).
+    void onFailed(mddiagram::Kind kind, const QString &source, const QString &error);
+    void notifyPendingFailure();  // lo dispara m_failNotify cuando el fallo se asienta
     void removeOrphanPreviews(const QList<Region> &regions);
     // Coloca/actualiza el bloque de preview bajo el grupo (imagen o marcador de
     // texto). No hace nada si ya está al día (mismo hash y mismo tipo).
@@ -56,6 +69,13 @@ private:
     DiagramRenderer *m_renderer = nullptr;
     QTimer *m_debounce = nullptr;
     bool m_updating = false;  // cambios propios: no re-disparar refresh
+
+    // Aviso de fallo de render «asentado» (ver onFailed).
+    QTimer *m_failNotify = nullptr;
+    mddiagram::Kind m_pendingFailKind {};
+    QString m_pendingFailSource;
+    QString m_pendingFailError;
+    QSet<QString> m_notifiedFailures;  // hashes ya avisados (dedup; se rearma al renderizar bien)
 };
 
 #endif // DIAGRAMCONTROLLER_H
