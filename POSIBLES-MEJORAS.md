@@ -293,7 +293,22 @@ opcional (añadiría otra herramienta externa, como los diagramas).
   checks de alta señal; dos *jobs* en `ci.yml` que corren la suite bajo sanitizers
   y clang-tidy (fail-on-warning) en cada push/PR. La primera pasada cazó un bug de
   un test (`QChar` de un carácter astral) y 3 avisos de clang-tidy, ya corregidos.
-- ⬜ **Fuzzing del round-trip** Markdown.
+- ✅ **Fuzzing del round-trip** Markdown — *Hecho:* `tst_roundtripfuzz` genera 6000
+  documentos adversarios con un PRNG determinista (semillas fijas → reproducible) y
+  los pasa, dos veces, por la ruta real `setMarkdownWithExtensions` →
+  `documentMarkdown`, exigiendo que **no crashee** (la red de verdad bajo
+  ASan/UBSan, lo corre CI). *No* exige convergencia: el fuzzeo destapó que
+  `QTextDocument::toMarkdown` de Qt **no es idempotente** por motivos ajenos a la
+  app (la maquinaria propia —fórmulas, tablas, notas, admoniciones— sí converge en
+  aislamiento; lo verifica `tst_markdownroundtrip`). Limitaciones de Qt halladas,
+  por si compensa mitigarlas algún día en `documentMarkdown`:
+  - **Code spans con `\` o `&`**: Qt los escapa al serializar pero los re-lee
+    literales → se **duplican en cada guardado** (`` `C:\x` `` se corrompe). Bug de
+    round-trip puro de Qt, reproducible sin la app.
+  - **`<...>`**: Qt lo trata como HTML en línea y **se traga el contenido** (pérdida
+    de datos al guardar).
+  - **Line-wrapping** a ~80 columnas: el corte puede caer dentro de un `*…*` y
+    romperlo; y un *fence* tras una lista se indenta como continuación perezosa.
 - ⬜ **Golden tests de exportadores** — fijar HTML/LaTeX/ODF/DOCX de referencia
   para detectar regresiones de salida.
 - ✅ **Accesibilidad** — desarrollado en su propia sección, [♿ Accesibilidad](#-accesibilidad)

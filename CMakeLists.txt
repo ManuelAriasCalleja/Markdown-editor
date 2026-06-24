@@ -383,6 +383,7 @@ if(Qt6Test_FOUND)
         tst_tableedit
         tst_exporters
         tst_markdownroundtrip
+        tst_roundtripfuzz
         tst_outline
         tst_docstats
         tst_texttransform
