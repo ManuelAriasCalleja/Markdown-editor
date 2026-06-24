@@ -165,7 +165,12 @@ jobs:
   # -----------------------------------------------------------------
   build-macos:
     name: macOS (DMG universal)
-    runs-on: macos-latest
+    # macos-14 (no macos-latest): la imagen reciente de macos-latest rodó a un SDK
+    # nuevo (AppleClang 21) que ELIMINÓ el framework AGL (OpenGL legacy) que la
+    # interfaz de enlace de los binarios de Qt 6.8.2 todavía referencia →
+    # `ld: framework 'AGL' not found`. macos-14 es la imagen con la que compiló la
+    # release v2.1.0 (aún tiene AGL) y construye el universal (x86_64;arm64).
+    runs-on: macos-14
     # --- Firma + notarización (opcional, REQUIERE Apple Developer Program, 99 $/año) ---
     # No hay vía gratuita para notarizar; sin esto, el DMG viaja SIN firmar y el
     # usuario lo abre con Ctrl+clic → Abrir (ver «Installing on macOS» en el README).
