@@ -1,0 +1,53 @@
+\documentclass[11pt]{article}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[utf8]{inputenc}
+  \usepackage[T1]{fontenc}
+\else
+  \usepackage{fontspec}
+\fi
+\usepackage[spanish]{babel}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage[normalem]{ulem}
+\usepackage{graphicx}
+\usepackage[export]{adjustbox}
+\usepackage{hyperref}
+\title{Documento de prueba}
+\author{}
+\date{}
+\begin{document}
+\maketitle
+\section{Título principal}
+Párrafo con \textbf{negrita}, \textit{cursiva}, \texttt{código} y un \href{http://e.com}{enlace}.
+
+\subsection{Sección}
+\begin{itemize}
+\item uno
+\item dos
+\item tres
+\end{itemize}
+\begin{enumerate}
+\item primero
+\item segundo
+\end{enumerate}
+\begin{quote}
+una cita a dos líneas
+\end{quote}
+\begin{tabular}{lr}
+\hline
+Col A & \textbf{Col B} \\
+\hline
+1 & 2 \\
+\hline
+3 & 4 \\
+\hline
+\end{tabular}
+
+\begin{verbatim}
+int x = 0;
+return x;
+\end{verbatim}
+Caracteres especiales: 100\% de a \& b, \#1, \$5 y \uline{guion}.
+
+\end{document}

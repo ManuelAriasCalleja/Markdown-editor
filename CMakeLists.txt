@@ -394,6 +394,7 @@ if(Qt6Test_FOUND)
         tst_autopair
         tst_markdowntidy
         tst_codespanfix
+        tst_goldenexport
         tst_recovery
         tst_appsettings
         tst_documentio
@@ -411,6 +412,10 @@ if(Qt6Test_FOUND)
         set_tests_properties(${test} PROPERTIES
             ENVIRONMENT "QT_QPA_PLATFORM=offscreen")
     endforeach()
+
+    # Los golden tests necesitan la ruta a las referencias en el árbol fuente.
+    target_compile_definitions(tst_goldenexport PRIVATE
+        GOLDEN_DIR="${CMAKE_CURRENT_SOURCE_DIR}/tests/golden")
 
     # Guard de i18n: las traducciones deben estar completas y al día con el
     # código. Usa el lupdate de Qt6 (no el del PATH, que suele ser de Qt5).

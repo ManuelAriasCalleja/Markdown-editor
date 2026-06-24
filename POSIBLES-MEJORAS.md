@@ -316,8 +316,13 @@ opcional (añadiría otra herramienta externa, como los diagramas).
     el cierre de un *fence* que sigue a una lista. Ambos **se estabilizan en una
     pasada** (no crecen, no hay pérdida de datos); arreglarlos exigiría des-wrappear
     la salida de Qt, con riesgo alto y valor casi nulo.
-- ⬜ **Golden tests de exportadores** — fijar HTML/LaTeX/ODF/DOCX de referencia
-  para detectar regresiones de salida.
+- ✅ **Golden tests de exportadores** — *Hecho:* `tst_goldenexport` fija la salida
+  exacta de los serializadores propios y deterministas para un documento canónico,
+  contra referencias en `tests/golden/` (LaTeX, el XML de DOCX/ODF, las piezas del
+  EPUB con uuid/fecha fijos, el saneado HTML→XHTML). Falla ante cualquier cambio de
+  salida; se regeneran con `UPDATE_GOLDEN=1`. No se fija el HTML de
+  `QTextDocument::toHtml` (es de Qt y cambia entre versiones: avisaría de cambios de
+  Qt, no de regresiones nuestras).
 - ✅ **Accesibilidad** — desarrollado en su propia sección, [♿ Accesibilidad](#-accesibilidad)
   (los dos únicos puntos sin cerrar quedaron descartados: foco explícito por coste y
   prueba con lector real por falta de medios).
