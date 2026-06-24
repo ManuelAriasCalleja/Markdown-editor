@@ -259,10 +259,13 @@ mayor margen restante es de **distribución** (puntos 2-4 de arriba), no de feat
   con interruptor por ventana que se aplica a todas las pestañas y se persiste en
   `AppSettings::typewriterMode`. *Pendiente (foco de línea):* atenuar todo salvo el
   párrafo/frase actual (`setExtraSelections`), independiente de lo anterior.
-- ⬜ **Limpieza/normalización del Markdown** — un «lint» ligero opcional sobre el
-  texto fuente: marcadores de lista consistentes, espaciado uniforme, colapsar
-  líneas en blanco múltiples, quitar espacios finales. Función pura + `tst_`,
-  encaja como las transformaciones de `mdtext`.
+- ✅ **Limpieza/normalización del Markdown** — *Hecho:* módulo puro `markdowntidy`
+  (`mdtidy::tidy`, con `tst_markdowntidy`), acción *Editar → «Limpiar Markdown»*
+  vía `EditorStack::cleanMarkdown` (en vista fuente sobre su texto; en WYSIWYG
+  re-serializa, limpia y recarga). Conservador: recorta espacios finales
+  (preservando el salto duro de 2+ espacios), colapsa líneas en blanco múltiples,
+  normaliza viñetas a `- ` y el espacio tras los `#`, y deja un único salto final.
+  No toca el interior de fences ``` ``` ```/`~~~` ni las reglas temáticas.
 - ✅ **Auto-emparejado** — *Hecho:* módulo puro `autopair` (`mdautopair::apply`
   sobre un `QTextCursor`, con `tst_autopair`), enganchado en los dos manejadores de
   teclado (WYSIWYG y fuente) vía `MainWindow::applyAutoPair`. Al teclear `(`/`[`/

@@ -87,6 +87,10 @@ public:
     // vista de fuente (es texto Markdown) y renderizado como fragmento en WYSIWYG.
     void insertSnippet(const QString &body);
 
+    // Limpia/normaliza el Markdown del documento (`mdtidy::tidy`): en la vista de
+    // fuente, sobre su texto; en WYSIWYG, re-serializa, limpia y recarga.
+    void cleanMarkdown();
+
 signals:
     // Mensaje para la barra de estado de la ventana (texto, ms).
     void statusMessage(const QString &text, int timeout);

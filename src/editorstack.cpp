@@ -26,7 +26,9 @@
 #include "formulacontroller.h"
 #include "insertcontroller.h"
 #include "markdownrender.h"
+#include "markdowntidy.h"
 #include "mathblocks.h"
+#include "tableedit.h"
 #include "typewriter.h"
 #include "outlinepanel.h"
 #include "recoverymanager.h"
@@ -273,6 +275,26 @@ void EditorStack::setTypewriterMode(bool on)
     m_typewriter = on;
     if (on)
         centerCursorLine(activeEditor());  // centra ya, sin esperar a moverse
+}
+
+void EditorStack::cleanMarkdown()
+{
+    QTextEdit *active = activeEditor();
+    if (active == m_split->sourceEditor()) {
+        const QString cleaned = mdtidy::tidy(active->toPlainText());
+        if (cleaned == active->toPlainText())
+            return;
+        QTextCursor c = active->textCursor();
+        c.beginEditBlock();
+        c.select(QTextCursor::Document);
+        c.insertText(cleaned);
+        c.endEditBlock();
+    } else {
+        const QString md = mdtable::documentMarkdown(m_editor->document());
+        const QString cleaned = mdtidy::tidy(md);
+        if (cleaned != md)
+            setBodyMarkdown(cleaned);  // re-render desde el Markdown normalizado
+    }
 }
 
 void EditorStack::insertSnippet(const QString &body)

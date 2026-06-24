@@ -313,6 +313,11 @@ void MainWindow::createEditMenu()
         c.insertText(out);
     });
 
+    QAction *cleanAction = editMenu->addAction(tr("Limpiar Markdown"));
+    cleanAction->setToolTip(
+        tr("Normaliza viñetas, espacios y líneas en blanco (sin tocar el código)"));
+    connect(cleanAction, &QAction::triggered, this, [this] { m_stack->cleanMarkdown(); });
+
     editMenu->addSeparator();
 
     QAction *findAction = editMenu->addAction(tr("Buscar..."));
