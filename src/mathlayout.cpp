@@ -16,6 +16,19 @@ namespace mdmath {
 
 namespace {
 
+// Tope de profundidad de recursión del maquetador 2D. buildHList se llama a sí
+// mismo por cada grupo/sub-fórmula (\frac, \sqrt, matrices, scripts), así que TeX
+// muy anidado desbordaba la pila (SIGSEGV). 256 es de sobra para fórmulas reales;
+// al excederlo, buildHList devuelve el TeX restante como un glifo de texto literal.
+constexpr int kMaxLayoutDepth = 256;
+thread_local int g_layoutDepth = 0;
+
+struct LayoutDepthGuard {
+    LayoutDepthGuard() { ++g_layoutDepth; }
+    ~LayoutDepthGuard() { --g_layoutDepth; }
+    bool overflow() const { return g_layoutDepth > kMaxLayoutDepth; }
+};
+
 // Conjunto de «grandes operadores» que en estilo display llevan sus límites
 // (`_`/`^`) apilados encima/debajo en vez de a la derecha.
 bool isBigOp(const QString &cmd)
@@ -315,6 +328,13 @@ void matrixMetrics(const Box &b, QList<qreal> &colW, QList<qreal> &rowAsc, QList
 
 Box buildHList(const QString &tex, const QFont &font)
 {
+    const LayoutDepthGuard depth;
+
+    // Anidamiento patológico: en vez de seguir recurriendo (y desbordar la pila),
+    // se cae a un glifo de texto con el TeX en crudo. Se verá mal pero no crashea.
+    if (depth.overflow())
+        return glyph(tex, font);
+
     Box list;
     list.kind = Box::HList;
     list.font = font;

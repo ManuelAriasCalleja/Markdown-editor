@@ -14,6 +14,26 @@
 
 namespace mdmath {
 
+// Tope de profundidad de recursión del parser. TeX arbitrario (tecleado o pegado)
+// puede anidar grupos sin límite (`\frac{\frac{...}}`, `x^{y^{z^{...}}}`), y como
+// renderTexAsRuns/parseFrac/parseSqrt/parseScript/texToUnicode se llaman entre sí
+// por cada nivel, sin tope reventaban la pila (SIGSEGV) con suficientes niveles.
+// 256 es holgadísimo para cualquier fórmula real y corta de raíz el desbordamiento.
+// Al excederlo, renderTexAsRuns devuelve el TeX restante como texto literal.
+constexpr int kMaxTexDepth = 256;
+
+// Contador de profundidad con RAII. thread_local por si en el futuro se parsea
+// fuera del hilo de la GUI; hoy el parseo es monohilo.
+namespace {
+thread_local int g_texDepth = 0;
+
+struct TexDepthGuard {
+    TexDepthGuard() { ++g_texDepth; }
+    ~TexDepthGuard() { --g_texDepth; }
+    bool overflow() const { return g_texDepth > kMaxTexDepth; }
+};
+}  // namespace
+
 // ---------------------------------------------------------------------------
 // TeX → Unicode (aproximación)
 // ---------------------------------------------------------------------------
@@ -576,8 +596,18 @@ QString wrapTex(const QString &tex, bool block)
 
 QList<MathRun> renderTexAsRuns(const QString &tex, const QTextCharFormat &baseFmt)
 {
+    const TexDepthGuard depth;
+
     QList<MathRun> runs;
     QString buffer;
+
+    // Anidamiento patológico: en vez de seguir recurriendo (y desbordar la pila),
+    // se deja el resto del TeX como texto literal. La fórmula se verá «en crudo»
+    // pero la app no cae.
+    if (depth.overflow()) {
+        runs.append({tex, baseFmt});
+        return runs;
+    }
 
     int i = 0;
     const int n = tex.size();

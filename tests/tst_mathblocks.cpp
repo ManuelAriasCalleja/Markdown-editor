@@ -5,9 +5,11 @@
 #include <QTextDocument>
 #include <QTextFragment>
 
+#include <QFont>
 #include <memory>
 
 #include "mathblocks.h"
+#include "mathlayout.h"
 #include "tableedit.h"
 
 // Pruebas del módulo mdmath: localización de fórmulas en el Markdown fuente,
@@ -44,6 +46,7 @@ private slots:
     void findIgnoresMultilineOpenInsideFence();
     void findDiscardsUnclosedMultilineBlock();
     void roundTripPreservesMultilineMath();
+    void deeplyNestedTexDoesNotOverflowStack();
     void renderFormulaRunsPicksObjectFor2D();
 };
 
@@ -395,6 +398,41 @@ void TestMathBlocks::renderFormulaRunsPicksObjectFor2D()
         QVERIFY(r.fmt.objectType() != mdmath::MathObjectType);
         QVERIFY(!r.text.contains(QChar(QChar::ObjectReplacementCharacter)));
     }
+}
+
+// El TeX lo escribe/pega el usuario, así que puede anidar grupos sin límite
+// (`\frac{\frac{...}}`, `x^{y^{z^{...}}}`, `\sqrt{\sqrt{...}}`). Como el parser
+// inline (renderTexAsRuns/texToUnicode) y el maquetador 2D (buildHList, vía
+// measureFormula) son recursivos por nivel, sin un tope de profundidad reventaban
+// la pila (SIGSEGV). Estas entradas patológicas deben procesarse sin caer; el
+// resultado puede ser una aproximación pobre (texto en crudo), pero nunca un crash.
+void TestMathBlocks::deeplyNestedTexDoesNotOverflowStack()
+{
+    const int depth = 6000;  // muy por encima del tope (256) y del antiguo umbral de crash
+
+    const QString fracs = QStringLiteral("\\frac{").repeated(depth)
+        + QStringLiteral("x") + QStringLiteral("}").repeated(depth);
+    const QString sups = QStringLiteral("x")
+        + QStringLiteral("^{").repeated(depth) + QStringLiteral("1")
+        + QStringLiteral("}").repeated(depth);
+    const QString sqrts = QStringLiteral("\\sqrt{").repeated(depth)
+        + QStringLiteral("x") + QStringLiteral("}").repeated(depth);
+
+    // Ruta inline (texparser): si desbordara, el proceso moriría antes del COMPARE.
+    QTextCharFormat fmt;
+    QVERIFY(!mdmath::renderTexAsRuns(sups, fmt).isEmpty());
+    QVERIFY(!mdmath::texToUnicode(fracs).isNull());
+
+    // Ruta 2D (mathlayout vía measureFormula): debe medir sin desbordar.
+    const QFont f;
+    QVERIFY(mdmath::measureFormula(fracs, f).width() >= 0.0);
+    QVERIFY(mdmath::measureFormula(sqrts, f).width() >= 0.0);
+
+    // Despachador completo (el que usa la carga real del documento).
+    QVERIFY(!mdmath::renderFormulaRuns(fracs, true).isEmpty());
+
+    // Llegar aquí ya prueba que no hubo SIGSEGV.
+    QVERIFY(true);
 }
 
 QTEST_MAIN(TestMathBlocks)
