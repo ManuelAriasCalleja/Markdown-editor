@@ -88,7 +88,11 @@ proyecto es sólido (~9k LOC, 23 ficheros de test, arquitectura por controllers,
 6. ✅ **Contador de palabras / tiempo de lectura / estadísticas** del documento.
    *Hecho:* módulo puro `docstats`, contador con tiempo de lectura en la barra de
    estado y diálogo *Ver → Estadísticas del documento…*.
-7. **Pestañas o multi-documento** — `mainwindow` es de documento único.
+7. ✅ **Pestañas o multi-documento** — *Hecho:* `MainWindow` es un *shell* con un
+   `QTabWidget` de `EditorStack` (un documento por pestaña, cada uno dueño de sus
+   ~15 colaboradores); `addTab`/`closeTab`/`openPathInTab` gestionan el ciclo de
+   vida y la sesión (`AppSettings::openFiles`) reabre todas las pestañas al
+   arrancar. Ver «Edición por pestañas» en `CLAUDE.md`.
 8. ✅ **Export a DOCX** — ya hay PDF/HTML/ODT/LaTeX; `.docx` es el formato que más
    pide quien no usa Markdown. *Hecho:* serializador OOXML propio
    (`mdexport::writeDocx`) empaquetado con el QZip privado de Qt (sin
@@ -97,7 +101,7 @@ proyecto es sólido (~9k LOC, 23 ficheros de test, arquitectura por controllers,
    incrustados. *Archivo → Exportar → A DOCX (Word)*.
 9. **Diagramas** (Mermaid/PlantUML) — complementaría el soporte TeX existente.
 
-   **🚧 En curso.** Enfoque elegido: **CLI externo opcional** (degradación
+   **✅ Hecho.** Enfoque elegido: **CLI externo opcional** (degradación
    elegante, como el corrector), ambos motores. *Hecho (backend):* módulo puro
    `diagram` (`mddiagram::kindForLanguage` clasifica ```mermaid/plantuml/puml/uml)
    y `DiagramRenderer` (ejecuta `plantuml`/`mmdc` async vía `QProcess`, cachea por

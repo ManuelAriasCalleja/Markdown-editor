@@ -134,13 +134,21 @@ parser de fuente / motor TeX→runs / maquetación 2D), `footnotes` (`mdfootnote
 (`mdoutline::headingsOf`), `spellscan` (`mdspell`; tokenización de palabras y
 selección de diccionario para el corrector ortográfico, ver abajo), `diagram`
 (`mddiagram`; clasifica el lenguaje de un bloque ```mermaid/plantuml para el
-render de diagramas, ver abajo), `typewriter` (`mdtypewriter::centeredScrollValue`;
-calcula el scroll que centra la línea del cursor para el modo máquina de escribir,
-integrado en `EditorStack::centerCursorLine`), `snippets` (`mdsnippet`; modelo y
+render de diagramas, ver abajo), `typewriter` (`mdtypewriter`; lógica pura del
+**modo foco** —*Ver → Modo foco*—: `centeredScrollValue` calcula el scroll que
+centra la línea del cursor y `dimRanges` los tramos a atenuar fuera del párrafo del
+cursor; la integración es `EditorStack::centerCursorLine` y `applyLineFocus` —esta
+última pinta con `QTextEdit::extraSelections`, sin tocar el documento—), `snippets`
+(`mdsnippet`; modelo y
 (de)serialización de los snippets de usuario para `AppSettings`, con el diálogo
 `SnippetsDialog` y `EditorStack::insertSnippet` aparte), `autopair`
 (`mdautopair::apply`; auto-emparejado de `()[]{}` y `` ` `` sobre un `QTextCursor`,
-enganchado por `MainWindow::applyAutoPair` en ambos editores).
+enganchado por `MainWindow::applyAutoPair` en ambos editores), `markdowntidy`
+(`mdtidy::tidy`; normalización conservadora del Markdown fuente para *Editar →
+Limpiar Markdown* —recorta espacios finales preservando el salto duro, colapsa
+líneas en blanco, uniforma viñetas a `- ` y el espacio tras los `#`, sin tocar el
+interior de los fences ni las reglas temáticas—, integrado en
+`EditorStack::cleanMarkdown`).
 
 Patrón recurrente para lógica comprobable: separar las **funciones puras** (sin
 GUI) de la integración (qué texto y dónde reinsertarlo, que vive en `MainWindow` o
@@ -321,7 +329,12 @@ lo orquesta todo y es **puro** (lo prueban `tst_mathblocks`). Vive en un header
 del Markdown fuente — `findMath`/`protectMath` — e integración con `QTextDocument`)
 y `texparser.cpp` (el motor de parseo TeX→runs/Unicode: `renderTexAsRuns`,
 `texToUnicode`, `wrapTex` y sus tablas). Mismo namespace `mdmath`; los consumidores
-solo incluyen `mathblocks.h`. Piezas clave:
+solo incluyen `mathblocks.h`. **El parseo es recursivo por nivel de anidamiento**
+(`renderTexAsRuns`/`parseFrac`/`parseScript`/`texToUnicode` se llaman entre sí, y
+`mathlayout::buildHList` consigo mismo), así que ambos *hubs* llevan un **tope de
+profundidad (256, guard RAII)**: como el TeX lo escribe/pega el usuario, sin tope
+una fórmula muy anidada (`\frac{\frac{…}}`, `x^{y^{…}}`) desbordaba la pila
+(SIGSEGV); al excederlo se devuelve el TeX restante como texto literal. Piezas clave:
 
 - *Carga.* `DocumentIo::load` aplica `mdmath::protectMath` al texto fuente antes de
   `setMarkdown`: envuelve cada `$tex$`/`$$tex$$` en inline-code ``` ``$tex$`` ```
