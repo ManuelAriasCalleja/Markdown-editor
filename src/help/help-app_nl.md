@@ -13,6 +13,7 @@ document weer naar pure Markdown geserialiseerd.
 - [Koppelingen en afbeeldingen](#koppelingen-en-afbeeldingen)
 - [Voetnoten](#voetnoten)
 - [Aandachtsblokken, symbolen en tekstsnelkoppelingen](#aandachtsblokken-symbolen-en-tekstsnelkoppelingen)
+- [Snippets (herbruikbare fragmenten)](#snippets-herbruikbare-fragmenten)
 - [Tabellen](#tabellen)
 - [Wiskundige formules](#wiskundige-formules)
 - [Diagrammen](#diagrammen)
@@ -21,6 +22,7 @@ document weer naar pure Markdown geserialiseerd.
 - [Documentoverzicht](#documentoverzicht)
 - [Documentstatistieken](#documentstatistieken)
 - [Afleidingsvrije modus](#afleidingsvrije-modus)
+- [Focusmodus](#focusmodus)
 - [Codeweergave](#codeweergave)
 - [Exporteren en afdrukken](#exporteren-en-afdrukken)
 - [Thema's en uiterlijk](#themas-en-uiterlijk)
@@ -77,6 +79,11 @@ Selecteer een fragment en pas opmaak toe met de werkbalk of het menu **Opmaak**:
 
 De werkbalkknoppen weerspiegelen de actieve opmaak onder de cursor.
 
+**Automatisch koppelen.** Bij het typen van `(`, `[`, `{` of `` ` `` wordt het
+paar vanzelf gesloten en blijft de cursor ertussen staan; is er tekst
+geselecteerd, dan wordt die omsloten. Typ je het sluitteken net vóór zijn
+tegenhanger, dan "springt" de editor eroverheen in plaats van het te verdubbelen.
+
 ## Koppen, lijsten en blokken
 
 - **Koppen** H1–H6 via **Opmaak → Kop** of met Ctrl+1 … Ctrl+6.
@@ -85,7 +92,9 @@ De werkbalkknoppen weerspiegelen de actieve opmaak onder de cursor.
   verlaat de lijst. Een **klik op het selectievakje** van een taak schakelt deze
   om.
 - **Citaat** (`>` aan het begin van een alinea) en **codeblok** pas je toe via de
-  werkbalk; beide gaan correct heen en terug naar Markdown.
+  werkbalk; beide gaan correct heen en terug naar Markdown. Met **Opmaak → Taal
+  van het blok…** kies je de taal van een codeblok (met de cursor erin) zodat de
+  syntaxis ervan wordt gemarkeerd.
 - **Inspringen**: **Opmaak → Inspringen vergroten/verkleinen** nestelt lijsten en
   citaten.
 
@@ -103,6 +112,11 @@ De werkbalkknoppen weerspiegelen de actieve opmaak onder de cursor.
   e-mail, een CMS enz. te plakken.
 - Als je een **URL** over een tekstselectie plakt, wordt de tekst automatisch
   gekoppeld.
+- **Bewerken → Markdown opschonen** normaliseert het hele document in één keer:
+  het maakt de opsommingstekens uniform met `-`, snijdt de spaties aan het einde
+  van elke regel weg, vouwt overtollige lege regels samen en past de spatie na de
+  `#` van de koppen aan. Het is voorzichtig: het raakt de inhoud van de codeblokken
+  niet aan.
 
 ## Koppelingen en afbeeldingen
 
@@ -138,6 +152,21 @@ De werkbalkknoppen weerspiegelen de actieve opmaak onder de cursor.
   `:euro:` wordt deze uitgebreid tot het bijbehorende symbool (α, €…).
 - **Invoegen → Datum** en **Datum en tijd** voegen de huidige datum (en tijd) in
   gelokaliseerde notatie in.
+
+## Snippets (herbruikbare fragmenten)
+
+Een **snippet** is een stuk Markdown dat je onder een naam opslaat om het later
+met een paar klikken in te voegen: een handtekening, een tabelsjabloon, een
+melding die je vaak herhaalt…
+
+- **Invoegen → Snippet** klapt de lijst uit van de snippets die je hebt; kies je
+  er een, dan wordt de inhoud ervan ingevoegd waar de cursor staat (werkt ook in
+  de codeweergave).
+- **Invoegen → Snippet → Snippets beheren…** opent een dialoog om je snippets te
+  maken, te bewerken en te verwijderen. Elk heeft een **naam** (die je in het menu
+  ziet) en een **inhoud** in Markdown.
+- Ze worden in de instellingen van de toepassing opgeslagen, dus ze zijn in al je
+  documenten beschikbaar, niet alleen in het huidige.
 
 ## Tabellen
 
@@ -245,6 +274,21 @@ door een deel van de tekst te typen.
 **Beeld → Afleidingsvrij** (F11) gaat naar volledig scherm met het menu en de
 balken verborgen en de tekst gecentreerd in een leeskolom. Het overzicht blijft,
 indien zichtbaar, tegen het centrale blok. ESC of F11 verlaten.
+
+## Focusmodus
+
+**Beeld → Focusmodus** helpt je je te concentreren op wat je schrijft zonder het
+normale venster te verlaten. Eén enkele schakelaar activeert twee dingen tegelijk:
+
+- **Typemachine**: de regel met de cursor blijft verticaal gecentreerd. Terwijl je
+  typt, verschuift de tekst zodat de actieve regel op halve hoogte blijft, in
+  plaats van tegen de onderrand aan te kruipen.
+- **Dimmen**: het hele document wordt gedempt weergegeven, behalve de alinea waar
+  de cursor staat, die helder oplicht.
+
+Het werkt in de visuele editor en in de codeweergave, en is **onafhankelijk** van
+de afleidingsvrije modus (F11): je kunt beide tegelijk gebruiken of elk
+afzonderlijk.
 
 ## Codeweergave
 

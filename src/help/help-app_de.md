@@ -13,6 +13,7 @@ Speichern wird das Dokument wieder als reines Markdown serialisiert.
 - [Links und Bilder](#links-und-bilder)
 - [Fußnoten](#fußnoten)
 - [Hinweise, Symbole und Textkürzel](#hinweise-symbole-und-textkurzel)
+- [Snippets (wiederverwendbare Bausteine)](#snippets-wiederverwendbare-bausteine)
 - [Tabellen](#tabellen)
 - [Mathematische Formeln](#mathematische-formeln)
 - [Diagramme](#diagramme)
@@ -21,6 +22,7 @@ Speichern wird das Dokument wieder als reines Markdown serialisiert.
 - [Dokumentgliederung](#dokumentgliederung)
 - [Dokumentstatistik](#dokumentstatistik)
 - [Ablenkungsfreier Modus](#ablenkungsfreier-modus)
+- [Fokusmodus](#fokusmodus)
 - [Quelltextansicht](#quelltextansicht)
 - [Exportieren und Drucken](#exportieren-und-drucken)
 - [Themes und Aussehen](#themes-und-aussehen)
@@ -81,6 +83,11 @@ Symbolleiste oder das Menü **Format** an:
 Die Schaltflächen der Symbolleiste zeigen die aktive Formatierung unter dem
 Cursor an.
 
+**Automatisches Paaren.** Tippen Sie `(`, `[`, `{` oder einen Backtick, wird das
+Paar automatisch geschlossen und der Cursor steht in der Mitte; ist Text
+markiert, wird er umschlossen. Tippen Sie das schließende Zeichen direkt vor
+seinem Gegenstück, „überspringt“ der Editor es, statt es zu verdoppeln.
+
 ## Überschriften, Listen und Blöcke
 
 - **Überschriften** H1–H6 über **Format → Überschrift** oder mit Strg+1 … Strg+6.
@@ -90,6 +97,8 @@ Cursor an.
   Aufgabe schaltet sie um.
 - **Zitat** (`>` am Anfang eines Absatzes) und **Codeblock** werden über die
   Symbolleiste angewendet; beide werden korrekt nach Markdown zurückgewandelt.
+  Mit **Format → Sprache des Blocks…** wählen Sie die Sprache eines Codeblocks
+  (mit dem Cursor darin), damit dessen Syntax hervorgehoben wird.
 - **Einrückung**: **Format → Einzug vergrößern/verkleinern** verschachtelt Listen
   und Zitate.
 
@@ -107,6 +116,11 @@ Cursor an.
   Einfügen in E-Mail, ein CMS usw.
 - Wenn Sie eine **URL** über eine Textauswahl einfügen, wird der Text automatisch
   verlinkt.
+- **Bearbeiten → Markdown bereinigen** normalisiert das gesamte Dokument in einem
+  Durchgang: Es vereinheitlicht die Aufzählungszeichen zu -, entfernt die
+  Leerzeichen am Zeilenende, fasst überzählige Leerzeilen zusammen und passt den
+  Abstand nach den # der Überschriften an. Es ist behutsam: Das Innere von
+  Codeblöcken wird nicht angetastet.
 
 ## Links und Bilder
 
@@ -142,6 +156,21 @@ Cursor an.
   zum entsprechenden Symbol erweitert (α, €…).
 - **Einfügen → Datum** und **Datum und Uhrzeit** fügen das aktuelle Datum (und die
   Uhrzeit) im lokalisierten Format ein.
+
+## Snippets (wiederverwendbare Bausteine)
+
+Ein **Snippet** ist ein Stück Markdown, das Sie unter einem Namen speichern, um
+es später mit ein paar Klicks einzufügen: eine Signatur, eine Tabellenvorlage,
+ein Hinweis, den Sie oft wiederholen…
+
+- **Einfügen → Snippet** klappt die Liste der vorhandenen auf; wählen Sie eines,
+  wird sein Inhalt an der Cursorposition eingefügt (funktioniert auch in der
+  Quelltextansicht).
+- **Einfügen → Snippet → Snippets verwalten…** öffnet einen Dialog zum Erstellen,
+  Bearbeiten und Löschen Ihrer Snippets. Jedes hat einen **Namen** (den Sie im
+  Menü sehen) und einen **Inhalt** in Markdown.
+- Sie werden in den Anwendungseinstellungen gespeichert, sind also in allen Ihren
+  Dokumenten verfügbar, nicht nur im aktuellen.
 
 ## Tabellen
 
@@ -250,6 +279,22 @@ Teils ihres Textes.
 **Ansicht → Ablenkungsfrei** (F11) wechselt in den Vollbildmodus mit
 ausgeblendetem Menü und Leisten und dem Text zentriert in einer Lesespalte. Die
 Gliederung bleibt, falls sichtbar, am zentralen Block. ESC oder F11 beenden.
+
+## Fokusmodus
+
+**Ansicht → Fokusmodus** hilft Ihnen, sich auf das Geschriebene zu
+konzentrieren, ohne das normale Fenster zu verlassen. Ein einziger Schalter
+aktiviert zwei Dinge zugleich:
+
+- **Schreibmaschine**: Die Cursorzeile bleibt vertikal zentriert. Während Sie
+  schreiben, verschiebt sich der Text, sodass die aktive Zeile auf halber Höhe
+  bleibt, statt an den unteren Rand zu rücken.
+- **Abdunkeln**: Das gesamte Dokument erscheint gedämpft, außer dem Absatz, in
+  dem der Cursor steht, der klar hervorgehoben wird.
+
+Es funktioniert im visuellen Editor und in der Quelltextansicht und ist
+**unabhängig** vom ablenkungsfreien Modus (F11): Sie können beide gleichzeitig
+oder jeden für sich verwenden.
 
 ## Quelltextansicht
 

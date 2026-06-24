@@ -13,6 +13,7 @@ serializa de vuelta a Markdown puro.
 - [Enlaces e imágenes](#enlaces-e-imagenes)
 - [Notas al pie](#notas-al-pie)
 - [Admoniciones, símbolos y atajos de texto](#admoniciones-simbolos-y-atajos-de-texto)
+- [Snippets (fragmentos reutilizables)](#snippets-fragmentos-reutilizables)
 - [Tablas](#tablas)
 - [Fórmulas matemáticas](#formulas-matematicas)
 - [Diagramas](#diagramas)
@@ -21,6 +22,7 @@ serializa de vuelta a Markdown puro.
 - [Esquema del documento](#esquema-del-documento)
 - [Estadísticas del documento](#estadisticas-del-documento)
 - [Modo sin distracciones](#modo-sin-distracciones)
+- [Modo foco](#modo-foco)
 - [Vista de código](#vista-de-codigo)
 - [Exportar e imprimir](#exportar-e-imprimir)
 - [Temas y apariencia](#temas-y-apariencia)
@@ -76,6 +78,10 @@ menú **Formato**:
 
 Los botones de la barra reflejan el formato activo bajo el cursor.
 
+**Auto-emparejado.** Al teclear `(`, `[`, `{` o `` ` `` se cierra solo el par y el
+cursor queda en medio; si hay texto seleccionado, lo envuelve. Si tecleas el cierre
+justo delante de su pareja, el editor lo «salta» en vez de duplicarlo.
+
 ## Encabezados, listas y bloques
 
 - **Encabezados** H1–H6 desde **Formato → Encabezado** o con
@@ -85,7 +91,9 @@ Los botones de la barra reflejan el formato activo bajo el cursor.
   punto vacío se sale de la lista. Un **clic sobre la casilla** de una tarea la
   marca o desmarca.
 - **Cita** (`>` al principio de un párrafo) y **bloque de código** se aplican
-  desde la barra; ambos round-trip-ean a Markdown correctamente.
+  desde la barra; ambos round-trip-ean a Markdown correctamente. Con **Formato →
+  Lenguaje del bloque…** eliges el lenguaje de un bloque de código (estando el
+  cursor dentro) para que se le resalte la sintaxis.
 - **Sangría**: **Formato → Aumentar/Disminuir sangría** anida listas y citas.
 
 ## Transformar texto y portapapeles
@@ -102,6 +110,10 @@ Los botones de la barra reflejan el formato activo bajo el cursor.
   pegarla en correo, un CMS, etc.
 - Al pegar una **URL** sobre una selección de texto, el texto queda enlazado
   automáticamente.
+- **Editar → Limpiar Markdown** normaliza todo el documento de una pasada:
+  uniforma las viñetas a `-`, recorta los espacios al final de cada línea, colapsa
+  las líneas en blanco de más y ajusta el espacio tras los `#` de los encabezados.
+  Es conservador: no toca el interior de los bloques de código.
 
 ## Enlaces e imágenes
 
@@ -137,6 +149,21 @@ Los botones de la barra reflejan el formato activo bajo el cursor.
   expande al símbolo correspondiente (α, €…).
 - **Insertar → Fecha** y **Fecha y hora** insertan la fecha (y hora) actual en
   formato localizado.
+
+## Snippets (fragmentos reutilizables)
+
+Un **snippet** es un trozo de Markdown que guardas con un nombre para insertarlo
+luego con un par de clics: una firma, una plantilla de tabla, un aviso que repites
+a menudo…
+
+- **Insertar → Snippet** despliega la lista de los que tienes; al elegir uno, su
+  contenido se inserta donde está el cursor (funciona también en la vista de
+  código).
+- **Insertar → Snippet → Gestionar snippets…** abre un diálogo para crear, editar
+  y borrar tus snippets. Cada uno tiene un **nombre** (el que ves en el menú) y un
+  **cuerpo** en Markdown.
+- Se guardan en los ajustes de la aplicación, así que están disponibles en todos
+  tus documentos, no solo en el actual.
 
 ## Tablas
 
@@ -244,6 +271,20 @@ un encabezado escribiendo parte de su texto.
 **Ver → Sin distracciones** (F11) entra en pantalla completa con menú y
 barras ocultas y el texto centrado en una columna de lectura. El esquema,
 si está visible, queda pegado al bloque central. ESC o F11 salen.
+
+## Modo foco
+
+**Ver → Modo foco** te ayuda a concentrarte en lo que escribes sin salir de la
+ventana normal. Un único interruptor activa dos cosas a la vez:
+
+- **Máquina de escribir**: la línea del cursor se mantiene centrada en vertical.
+  Según escribes, el texto se desplaza para que la línea activa quede a media
+  altura, en lugar de irse pegando al borde inferior.
+- **Atenuado**: todo el documento se ve apagado salvo el párrafo donde está el
+  cursor, que destaca nítido.
+
+Funciona en el editor visual y en la vista de código, y es **independiente** del
+modo sin distracciones (F11): puedes usar los dos a la vez o cada uno por su lado.
 
 ## Vista de código
 

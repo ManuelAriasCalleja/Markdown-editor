@@ -13,6 +13,7 @@ il documento viene serializzato di nuovo in Markdown puro.
 - [Collegamenti e immagini](#collegamenti-e-immagini)
 - [Note a piè di pagina](#note-a-pie-di-pagina)
 - [Riquadri, simboli e scorciatoie di testo](#riquadri-simboli-e-scorciatoie-di-testo)
+- [Snippet (frammenti riutilizzabili)](#snippet-frammenti-riutilizzabili)
 - [Tabelle](#tabelle)
 - [Formule matematiche](#formule-matematiche)
 - [Diagrammi](#diagrammi)
@@ -21,6 +22,7 @@ il documento viene serializzato di nuovo in Markdown puro.
 - [Struttura del documento](#struttura-del-documento)
 - [Statistiche del documento](#statistiche-del-documento)
 - [Modalità senza distrazioni](#modalita-senza-distrazioni)
+- [Modalità focus](#modalita-focus)
 - [Vista del codice](#vista-del-codice)
 - [Esportare e stampare](#esportare-e-stampare)
 - [Temi e aspetto](#temi-e-aspetto)
@@ -76,6 +78,11 @@ il menu **Formato**:
 
 I pulsanti della barra riflettono la formattazione attiva sotto il cursore.
 
+**Accoppiamento automatico.** Digitando `(`, `[`, `{` o `` ` `` la coppia si
+chiude da sola e il cursore resta in mezzo; se c'è del testo selezionato, lo
+avvolge. Se digiti il carattere di chiusura proprio davanti al suo compagno,
+l'editor lo «salta» invece di duplicarlo.
+
 ## Titoli, elenchi e blocchi
 
 - **Titoli** H1–H6 da **Formato → Titolo** o con Ctrl+1 … Ctrl+6.
@@ -84,7 +91,9 @@ I pulsanti della barra riflettono la formattazione attiva sotto il cursore.
   esce dall'elenco. Un **clic sulla casella** di un'attività la spunta o la
   deseleziona.
 - **Citazione** (`>` all'inizio di un paragrafo) e **blocco di codice** si
-  applicano dalla barra; entrambi tornano correttamente a Markdown.
+  applicano dalla barra; entrambi tornano correttamente a Markdown. Con
+  **Formato → Linguaggio del blocco…** scegli il linguaggio di un blocco di
+  codice (con il cursore al suo interno) per evidenziarne la sintassi.
 - **Rientro**: **Formato → Aumenta/Riduci rientro** annida elenchi e citazioni.
 
 ## Trasformare il testo e gli appunti
@@ -101,6 +110,10 @@ I pulsanti della barra riflettono la formattazione attiva sotto il cursore.
   incollarla in un'email, un CMS, ecc.
 - Quando incolli un **URL** su una selezione di testo, il testo viene collegato
   automaticamente.
+- **Modifica → Pulisci Markdown** normalizza l'intero documento in un'unica
+  passata: uniforma i punti elenco a `-`, elimina gli spazi a fine riga, riduce
+  le righe vuote in eccesso e regola lo spazio dopo i `#` dei titoli. È
+  conservativo: non tocca l'interno dei blocchi di codice.
 
 ## Collegamenti e immagini
 
@@ -136,6 +149,21 @@ I pulsanti della barra riflettono la formattazione attiva sotto il cursore.
   espanso al simbolo corrispondente (α, €…).
 - **Inserisci → Data** e **Data e ora** inseriscono la data (e l'ora) attuale in
   formato localizzato.
+
+## Snippet (frammenti riutilizzabili)
+
+Uno **snippet** è un frammento di Markdown che salvi con un nome per inserirlo
+poi con un paio di clic: una firma, un modello di tabella, un avviso che ripeti
+spesso…
+
+- **Inserisci → Snippet** apre l'elenco di quelli che hai; scegliendone uno, il
+  suo contenuto viene inserito dove si trova il cursore (funziona anche nella
+  vista del codice).
+- **Inserisci → Snippet → Gestisci snippet…** apre una finestra per creare,
+  modificare ed eliminare i tuoi snippet. Ognuno ha un **nome** (quello che vedi
+  nel menu) e un **corpo** in Markdown.
+- Vengono salvati nelle impostazioni dell'applicazione, quindi sono disponibili
+  in tutti i tuoi documenti, non solo in quello corrente.
 
 ## Tabelle
 
@@ -243,6 +271,21 @@ titolo digitando parte del suo testo.
 **Visualizza → Senza distrazioni** (F11) passa a schermo intero con menu e barre
 nascosti e il testo centrato in una colonna di lettura. La struttura, se visibile,
 resta accostata al blocco centrale. ESC o F11 escono.
+
+## Modalità focus
+
+**Visualizza → Modalità focus** ti aiuta a concentrarti su ciò che scrivi senza
+uscire dalla finestra normale. Un unico interruttore attiva due cose insieme:
+
+- **Macchina da scrivere**: la riga del cursore resta centrata in verticale.
+  Mentre scrivi, il testo scorre in modo che la riga attiva rimanga a metà
+  altezza, invece di accostarsi via via al bordo inferiore.
+- **Attenuazione**: tutto il documento appare smorzato tranne il paragrafo in
+  cui si trova il cursore, che spicca nitido.
+
+Funziona nell'editor visuale e nella vista del codice, ed è **indipendente**
+dalla modalità senza distrazioni (F11): puoi usarle entrambe insieme o ciascuna
+per conto suo.
 
 ## Vista del codice
 

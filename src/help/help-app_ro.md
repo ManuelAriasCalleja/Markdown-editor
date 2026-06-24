@@ -13,6 +13,7 @@ serializat înapoi în Markdown pur.
 - [Linkuri și imagini](#linkuri-si-imagini)
 - [Note de subsol](#note-de-subsol)
 - [Casete, simboluri și scurtături de text](#casete-simboluri-si-scurtaturi-de-text)
+- [Snippeturi (fragmente reutilizabile)](#snippeturi-fragmente-reutilizabile)
 - [Tabele](#tabele)
 - [Formule matematice](#formule-matematice)
 - [Diagrame](#diagrame)
@@ -21,6 +22,7 @@ serializat înapoi în Markdown pur.
 - [Structura documentului](#structura-documentului)
 - [Statistici despre document](#statistici-despre-document)
 - [Mod fără distrageri](#mod-fara-distrageri)
+- [Mod de concentrare](#mod-de-concentrare)
 - [Vizualizarea codului](#vizualizarea-codului)
 - [Export și tipărire](#export-si-tiparire)
 - [Teme și aspect](#teme-si-aspect)
@@ -74,6 +76,11 @@ Selectează un fragment și aplică formatarea din bara de instrumente sau din m
 
 Butoanele din bară reflectă formatarea activă sub cursor.
 
+**Împerechere automată.** Când tastezi `(`, `[`, `{` sau `` ` ``, perechea se
+închide singură și cursorul rămâne la mijloc; dacă ai text selectat, acesta este
+încadrat. Dacă tastezi caracterul de închidere chiar în fața perechii sale,
+editorul îl „sare” în loc să-l dubleze.
+
 ## Titluri, liste și blocuri
 
 - **Titluri** H1–H6 din **Format → Titlu** sau cu Ctrl+1 … Ctrl+6.
@@ -81,7 +88,9 @@ Butoanele din bară reflectă formatarea activă sub cursor.
   unui punct creează automat următorul; Enter pe un punct gol iese din listă. Un
   **clic pe caseta** unei sarcini o bifează sau o debifează.
 - **Citat** (`>` la începutul unui paragraf) și **bloc de cod** se aplică din bară;
-  ambele revin corect la Markdown.
+  ambele revin corect la Markdown. Cu **Format → Limbajul blocului…** alegi
+  limbajul unui bloc de cod (având cursorul în interior) pentru a-i evidenția
+  sintaxa.
 - **Indentare**: **Format → Mărește/Micșorează indentarea** imbrică listele și
   citatele.
 
@@ -99,6 +108,10 @@ Butoanele din bară reflectă formatarea activă sub cursor.
   într-un e-mail, un CMS etc.
 - Când lipești o **adresă URL** peste o selecție de text, textul devine link
   automat.
+- **Editare → Curăță Markdown** normalizează tot documentul dintr-o singură
+  trecere: uniformizează marcatorii la `-`, taie spațiile de la sfârșitul fiecărei
+  linii, comprimă liniile goale în plus și ajustează spațiul de după `#`-urile
+  titlurilor. Este conservatoare: nu atinge interiorul blocurilor de cod.
 
 ## Linkuri și imagini
 
@@ -134,6 +147,21 @@ Butoanele din bară reflectă formatarea activă sub cursor.
   extins la simbolul corespunzător (α, €…).
 - **Inserare → Dată** și **Dată și oră** inserează data (și ora) curentă în format
   localizat.
+
+## Snippeturi (fragmente reutilizabile)
+
+Un **snippet** este o bucată de Markdown pe care o salvezi cu un nume pentru a o
+insera apoi cu câteva clicuri: o semnătură, un șablon de tabel, un avertisment pe
+care îl repeți des…
+
+- **Inserare → Snippet** desfășoară lista celor pe care îi ai; la alegerea unuia,
+  conținutul lui se inserează acolo unde este cursorul (funcționează și în
+  vizualizarea codului).
+- **Inserare → Snippet → Gestionează snippeturile…** deschide o fereastră pentru a
+  crea, edita și șterge snippeturile tale. Fiecare are un **nume** (cel pe care îl
+  vezi în meniu) și un **corp** în Markdown.
+- Sunt salvate în setările aplicației, așa că sunt disponibile în toate
+  documentele tale, nu doar în cel curent.
 
 ## Tabele
 
@@ -240,6 +268,22 @@ textul lui.
 **Vizualizare → Fără distrageri** (F11) intră pe ecran complet cu meniul și barele
 ascunse și textul centrat într-o coloană de citire. Structura, dacă este vizibilă,
 rămâne lipită de blocul central. ESC sau F11 ies.
+
+## Mod de concentrare
+
+**Vizualizare → Mod de concentrare** te ajută să te concentrezi pe ceea ce scrii
+fără a ieși din fereastra normală. Un singur comutator activează două lucruri
+deodată:
+
+- **Mașină de scris**: linia cursorului se menține centrată pe verticală. Pe
+  măsură ce scrii, textul se deplasează pentru ca linia activă să rămână la
+  jumătatea înălțimii, în loc să se lipească de marginea de jos.
+- **Estompare**: tot documentul se vede stins, cu excepția paragrafului în care
+  se află cursorul, care iese în evidență clar.
+
+Funcționează în editorul vizual și în vizualizarea codului și este
+**independent** de modul fără distrageri (F11): le poți folosi pe ambele
+simultan sau pe fiecare separat.
 
 ## Vizualizarea codului
 

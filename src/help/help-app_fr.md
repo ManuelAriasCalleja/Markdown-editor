@@ -13,6 +13,7 @@ document est sérialisé de nouveau en Markdown pur.
 - [Liens et images](#liens-et-images)
 - [Notes de bas de page](#notes-de-bas-de-page)
 - [Encadrés, symboles et raccourcis de texte](#encadres-symboles-et-raccourcis-de-texte)
+- [Snippets (fragments réutilisables)](#snippets-fragments-reutilisables)
 - [Tableaux](#tableaux)
 - [Formules mathématiques](#formules-mathematiques)
 - [Diagrammes](#diagrammes)
@@ -21,6 +22,7 @@ document est sérialisé de nouveau en Markdown pur.
 - [Plan du document](#plan-du-document)
 - [Statistiques du document](#statistiques-du-document)
 - [Mode sans distraction](#mode-sans-distraction)
+- [Mode focus](#mode-focus)
 - [Vue du code](#vue-du-code)
 - [Exporter et imprimer](#exporter-et-imprimer)
 - [Thèmes et apparence](#themes-et-apparence)
@@ -78,6 +80,11 @@ le menu **Format** :
 
 Les boutons de la barre reflètent la mise en forme active sous le curseur.
 
+**Appariement automatique.** En tapant `(`, `[`, `{` ou `` ` ``, la paire se ferme
+toute seule et le curseur reste au milieu ; si du texte est sélectionné, il est
+entouré. Si vous tapez le caractère de fermeture juste devant son homologue,
+l'éditeur le « saute » au lieu de le dupliquer.
+
 ## Titres, listes et blocs
 
 - **Titres** H1–H6 depuis **Format → Titre** ou avec Ctrl+1 … Ctrl+6.
@@ -85,7 +92,9 @@ Les boutons de la barre reflètent la mise en forme active sous le curseur.
   point crée automatiquement le suivant ; Entrée sur un point vide quitte la
   liste. Un **clic sur la case** d'une tâche la coche ou la décoche.
 - **Citation** (`>` au début d'un paragraphe) et **bloc de code** s'appliquent
-  depuis la barre ; les deux font correctement l'aller-retour vers Markdown.
+  depuis la barre ; les deux font correctement l'aller-retour vers Markdown. Avec
+  **Format → Langage du bloc…** vous choisissez le langage d'un bloc de code (le
+  curseur étant à l'intérieur) pour que sa syntaxe soit colorée.
 - **Indentation** : **Format → Augmenter/Diminuer l'indentation** imbrique listes
   et citations.
 
@@ -103,6 +112,10 @@ Les boutons de la barre reflètent la mise en forme active sous le curseur.
   coller dans un courriel, un CMS, etc.
 - Quand vous collez une **URL** sur une sélection de texte, le texte est lié
   automatiquement.
+- **Édition → Nettoyer le Markdown** normalise tout le document en une passe :
+  il uniformise les puces en `-`, supprime les espaces en fin de chaque ligne,
+  réduit les lignes vides en trop et ajuste l'espace après les `#` des titres.
+  C'est conservateur : il ne touche pas à l'intérieur des blocs de code.
 
 ## Liens et images
 
@@ -138,6 +151,21 @@ Les boutons de la barre reflètent la mise en forme active sous le curseur.
   remplacé par le symbole correspondant (α, €…).
 - **Insérer → Date** et **Date et heure** insèrent la date (et l'heure) actuelle
   au format localisé.
+
+## Snippets (fragments réutilisables)
+
+Un **snippet** est un morceau de Markdown que vous enregistrez sous un nom pour
+l'insérer ensuite en deux clics : une signature, un modèle de tableau, un avis que
+vous répétez souvent…
+
+- **Insérer → Snippet** déroule la liste de ceux que vous avez ; en en choisissant
+  un, son contenu est inséré là où se trouve le curseur (cela fonctionne aussi dans
+  la vue du code).
+- **Insérer → Snippet → Gérer les snippets…** ouvre une boîte de dialogue pour
+  créer, modifier et supprimer vos snippets. Chacun a un **nom** (celui que vous
+  voyez dans le menu) et un **corps** en Markdown.
+- Ils sont enregistrés dans les réglages de l'application : ils sont donc
+  disponibles dans tous vos documents, pas seulement le document courant.
 
 ## Tableaux
 
@@ -248,6 +276,21 @@ tapant une partie de son texte.
 **Affichage → Sans distraction** (F11) passe en plein écran avec le menu et les
 barres masqués et le texte centré dans une colonne de lecture. Le plan, s'il est
 visible, reste accolé au bloc central. ESC ou F11 quittent.
+
+## Mode focus
+
+**Affichage → Mode focus** vous aide à vous concentrer sur ce que vous écrivez sans
+quitter la fenêtre normale. Un seul interrupteur active deux choses à la fois :
+
+- **Machine à écrire** : la ligne du curseur reste centrée verticalement. Au fil de
+  la frappe, le texte défile pour que la ligne active demeure à mi-hauteur, au lieu
+  de se coller au bord inférieur.
+- **Estompage** : tout le document apparaît atténué, sauf le paragraphe où se trouve
+  le curseur, qui ressort net.
+
+Cela fonctionne dans l'éditeur visuel et dans la vue du code, et c'est
+**indépendant** du mode sans distraction (F11) : vous pouvez utiliser les deux à la
+fois ou chacun de son côté.
 
 ## Vue du code
 

@@ -13,6 +13,7 @@ serializowany do czystego Markdown.
 - [Odnośniki i obrazy](#odnosniki-i-obrazy)
 - [Przypisy](#przypisy)
 - [Wyróżnienia, symbole i skróty tekstowe](#wyroznienia-symbole-i-skroty-tekstowe)
+- [Snippety (fragmenty wielokrotnego użytku)](#snippety-fragmenty-wielokrotnego-uzytku)
 - [Tabele](#tabele)
 - [Wzory matematyczne](#wzory-matematyczne)
 - [Diagramy](#diagramy)
@@ -21,6 +22,7 @@ serializowany do czystego Markdown.
 - [Struktura dokumentu](#struktura-dokumentu)
 - [Statystyki dokumentu](#statystyki-dokumentu)
 - [Tryb bez rozpraszania](#tryb-bez-rozpraszania)
+- [Tryb skupienia](#tryb-skupienia)
 - [Widok kodu](#widok-kodu)
 - [Eksport i drukowanie](#eksport-i-drukowanie)
 - [Motywy i wygląd](#motywy-i-wyglad)
@@ -73,6 +75,11 @@ Zaznacz fragment i nadaj formatowanie paskiem narzędzi lub menu **Format**:
 
 Przyciski paska odzwierciedlają formatowanie aktywne pod kursorem.
 
+**Automatyczne parowanie.** Po wpisaniu `(`, `[`, `{` lub `` ` `` para domyka się
+sama, a kursor zostaje w środku; jeśli tekst jest zaznaczony, zostaje nim otoczony.
+Gdy wpiszesz znak zamykający tuż przed jego parą, edytor go „przeskakuje” zamiast
+duplikować.
+
 ## Nagłówki, listy i bloki
 
 - **Nagłówki** H1–H6 z **Format → Nagłówek** lub przez Ctrl+1 … Ctrl+6.
@@ -80,7 +87,9 @@ Przyciski paska odzwierciedlają formatowanie aktywne pod kursorem.
   punktu tworzy automatycznie następny; Enter na pustym punkcie opuszcza listę.
   **Kliknięcie pola wyboru** zadania zaznacza je lub odznacza.
 - **Cytat** (`>` na początku akapitu) i **blok kodu** stosuje się z paska; oba
-  poprawnie wracają do Markdown.
+  poprawnie wracają do Markdown. Za pomocą **Format → Język bloku…** wybierasz
+  język bloku kodu (gdy kursor jest w jego wnętrzu), aby jego składnia została
+  podświetlona.
 - **Wcięcie**: **Format → Zwiększ/Zmniejsz wcięcie** zagnieżdża listy i cytaty.
 
 ## Przekształcanie tekstu i schowek
@@ -97,6 +106,10 @@ Przyciski paska odzwierciedlają formatowanie aktywne pod kursorem.
   w e-mailu, CMS-ie itp.
 - Po wklejeniu **adresu URL** na zaznaczonym tekście tekst zostaje automatycznie
   podlinkowany.
+- **Edycja → Oczyść Markdown** normalizuje cały dokument za jednym razem: ujednolica
+  punkty list do `-`, przycina spacje na końcu każdego wiersza, łączy nadmiarowe
+  puste wiersze i poprawia odstęp po `#` w nagłówkach. Działa zachowawczo: nie
+  rusza wnętrza bloków kodu.
 
 ## Odnośniki i obrazy
 
@@ -132,6 +145,19 @@ Przyciski paska odzwierciedlają formatowanie aktywne pod kursorem.
   rozwijany do odpowiedniego symbolu (α, €…).
 - **Wstaw → Data** i **Data i godzina** wstawiają bieżącą datę (i godzinę) w
   formacie lokalnym.
+
+## Snippety (fragmenty wielokrotnego użytku)
+
+**Snippet** to fragment Markdown, który zapisujesz pod nazwą, aby później wstawić go
+za pomocą paru kliknięć: podpis, szablon tabeli, często powtarzane ostrzeżenie…
+
+- **Wstaw → Snippet** rozwija listę tych, które masz; po wybraniu jednego jego
+  zawartość zostaje wstawiona w miejscu kursora (działa też w widoku kodu).
+- **Wstaw → Snippet → Zarządzaj snippetami…** otwiera okno do tworzenia, edycji i
+  usuwania Twoich snippetów. Każdy ma **nazwę** (tę widoczną w menu) oraz **treść**
+  w Markdown.
+- Są zapisywane w ustawieniach aplikacji, więc są dostępne we wszystkich Twoich
+  dokumentach, nie tylko w bieżącym.
 
 ## Tabele
 
@@ -237,6 +263,20 @@ tekstu.
 **Widok → Bez rozpraszania** (F11) przechodzi na pełny ekran z ukrytym menu i
 paskami oraz tekstem wyśrodkowanym w kolumnie do czytania. Struktura, jeśli jest
 widoczna, pozostaje przy środkowym bloku. ESC lub F11 wychodzą.
+
+## Tryb skupienia
+
+**Widok → Tryb skupienia** pomaga skoncentrować się na tym, co piszesz, bez
+opuszczania zwykłego okna. Jeden przełącznik włącza dwie rzeczy naraz:
+
+- **Maszyna do pisania**: wiersz kursora pozostaje wyśrodkowany w pionie. W miarę
+  pisania tekst przewija się tak, aby aktywny wiersz znajdował się na połowie
+  wysokości, zamiast przylegać do dolnej krawędzi.
+- **Przyciemnienie**: cały dokument jest wygaszony z wyjątkiem akapitu, w którym
+  znajduje się kursor — ten pozostaje wyraźny.
+
+Działa w edytorze wizualnym i w widoku kodu oraz jest **niezależny** od trybu bez
+rozpraszania (F11): możesz używać obu naraz albo każdego z osobna.
 
 ## Widok kodu
 

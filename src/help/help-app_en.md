@@ -13,6 +13,7 @@ serialized back to plain Markdown.
 - [Links and images](#links-and-images)
 - [Footnotes](#footnotes)
 - [Admonitions, symbols and text shortcuts](#admonitions-symbols-and-text-shortcuts)
+- [Snippets (reusable fragments)](#snippets-reusable-fragments)
 - [Tables](#tables)
 - [Math formulas](#math-formulas)
 - [Diagrams](#diagrams)
@@ -21,6 +22,7 @@ serialized back to plain Markdown.
 - [Document outline](#document-outline)
 - [Document statistics](#document-statistics)
 - [Distraction-free mode](#distraction-free-mode)
+- [Focus mode](#focus-mode)
 - [Source view](#source-view)
 - [Export and print](#export-and-print)
 - [Themes and appearance](#themes-and-appearance)
@@ -72,6 +74,11 @@ Select a fragment and apply formatting with the toolbar or the **Format** menu:
 
 The toolbar buttons reflect the active formatting under the cursor.
 
+**Auto-pairing.** When you type `(`, `[`, `{` or `` ` `` the pair is closed
+automatically and the cursor stays in the middle; if there is a selection, it is
+wrapped. If you type the closing character right in front of its match, the
+editor "skips over" it instead of duplicating it.
+
 ## Headings, lists and blocks
 
 - **Headings** H1–H6 from **Format → Heading** or with Ctrl+1 … Ctrl+6.
@@ -79,7 +86,9 @@ The toolbar buttons reflect the active formatting under the cursor.
   at the end of an item automatically creates the next one; Enter on an empty
   item leaves the list. A **click on the checkbox** of a task toggles it.
 - **Quote** (`>` at the start of a paragraph) and **code block** are applied
-  from the toolbar; both round-trip to Markdown correctly.
+  from the toolbar; both round-trip to Markdown correctly. With **Format → Block
+  language…** you choose the language of a code block (with the cursor inside it)
+  so its syntax gets highlighted.
 - **Indentation**: **Format → Increase/Decrease indent** nests lists and quotes.
 
 ## Transforming text and the clipboard
@@ -96,6 +105,10 @@ The toolbar buttons reflect the active formatting under the cursor.
   email, a CMS, etc.
 - When you paste a **URL** over a text selection, the text is linked
   automatically.
+- **Edit → Clean up Markdown** normalizes the whole document in one pass: it
+  unifies bullets to `-`, trims trailing spaces at the end of each line,
+  collapses extra blank lines and fixes the spacing after the `#` of headings.
+  It is conservative: it does not touch the inside of code blocks.
 
 ## Links and images
 
@@ -131,6 +144,21 @@ The toolbar buttons reflect the active formatting under the cursor.
   the corresponding symbol (α, €…).
 - **Insert → Date** and **Date and time** insert the current date (and time) in
   localized format.
+
+## Snippets (reusable fragments)
+
+A **snippet** is a piece of Markdown that you save under a name to insert it
+later with a couple of clicks: a signature, a table template, a notice you often
+repeat…
+
+- **Insert → Snippet** unfolds the list of the ones you have; when you choose
+  one, its content is inserted where the cursor is (it also works in the source
+  view).
+- **Insert → Snippet → Manage snippets…** opens a dialog to create, edit and
+  delete your snippets. Each one has a **name** (the one you see in the menu) and
+  a **body** in Markdown.
+- They are saved in the application settings, so they are available in all your
+  documents, not just the current one.
 
 ## Tables
 
@@ -235,6 +263,20 @@ typing part of its text.
 **View → Distraction-free** (F11) enters full screen with the menu and toolbars
 hidden and the text centered in a reading column. The outline, if visible, stays
 attached to the central block. ESC or F11 leave.
+
+## Focus mode
+
+**View → Focus mode** helps you concentrate on what you are writing without
+leaving the normal window. A single switch turns on two things at once:
+
+- **Typewriter**: the cursor's line stays vertically centered. As you write, the
+  text scrolls so the active line stays at mid-height, instead of creeping toward
+  the bottom edge.
+- **Dimming**: the whole document looks faded except for the paragraph where the
+  cursor is, which stands out crisply.
+
+It works in the visual editor and in the source view, and it is **independent**
+of distraction-free mode (F11): you can use both at once or each on its own.
 
 ## Source view
 
