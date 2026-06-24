@@ -85,6 +85,12 @@ void mdadmonition::renderAdmonitionsInDocument(QTextDocument *doc)
     if (!doc)
         return;
 
+    // Un solo edit block para todos los callouts: cada mergeBlockFormat/
+    // mergeCharFormat sería si no un re-trazado y un undo independientes (parpadeo
+    // con varias admoniciones). Anidado bajo renderPasses al cargar; suelto al
+    // insertar desde insertcontroller. beginEditBlock anida sin problema.
+    QTextCursor guard(doc);
+    guard.beginEditBlock();
     for (QTextBlock block = doc->begin(); block != doc->end(); block = block.next()) {
         if (!isBlockquote(block.blockFormat()))
             continue;
@@ -128,4 +134,5 @@ void mdadmonition::renderAdmonitionsInDocument(QTextDocument *doc)
             }
         }
     }
+    guard.endEditBlock();
 }

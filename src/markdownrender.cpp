@@ -1,5 +1,6 @@
 #include "markdownrender.h"
 
+#include <QTextCursor>
 #include <QTextDocument>
 #include <QTextEdit>
 
@@ -17,9 +18,15 @@ void mdrender::renderPasses(QTextDocument *doc)
 {
     if (!doc)
         return;
+    // Las tres pasadas reformatean fragmentos por todo el documento. Agruparlas en
+    // un único edit block evita que cada una provoque un re-trazado intermedio
+    // (parpadeo visible al cargar un archivo grande) y las fusiona en un solo undo.
+    QTextCursor cursor(doc);
+    cursor.beginEditBlock();
     mdmath::renderMathInDocument(doc);
     mdfootnote::renderFootnotesInDocument(doc);
     mdadmonition::renderAdmonitionsInDocument(doc);
+    cursor.endEditBlock();
 }
 
 void mdrender::setMarkdownWithExtensions(QTextEdit *editor, const QString &markdown)

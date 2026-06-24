@@ -168,6 +168,13 @@ void ThemeController::applyTheme(mdtheme::ThemeId id)
 {
     m_current = id;
 
+    // Sin esto, el editor parpadea al cambiar de tema: primero repinta con la
+    // paleta nueva (colores viejos del texto), luego con los enlaces recoloreados
+    // y de nuevo con el resaltado rehecho. Suspendemos su repintado para que las
+    // tres cosas lleguen a pantalla en un único trazado.
+    const bool wasUpdating = m_editor->updatesEnabled();
+    m_editor->setUpdatesEnabled(false);
+
     applyPaletteWithWarmth(id);
 
     AppSettings::setThemeKey(mdtheme::keyForId(id));
@@ -177,6 +184,8 @@ void ThemeController::applyTheme(mdtheme::ThemeId id)
     // Reajusta los colores del resaltado de sintaxis al tema.
     if (m_highlighter)
         m_highlighter->setSyntaxColors(mdtheme::specFor(id).syntax);
+
+    m_editor->setUpdatesEnabled(wasUpdating);
 
     emit themeChanged(id);
 }

@@ -212,9 +212,15 @@ void EditorStack::setBodyMarkdown(const QString &body)
     // contentsChanged que provoca (incluido el de recolorLinks) no realimenten la
     // sincronización de la vista dividida. Se guarda/restaura por reentrancia.
     const bool wasSyncing = m_split->beginProgrammaticChange();
+    // Suspendemos el repintado mientras se reconstruye: setMarkdown, las pasadas
+    // de render, el estilo de tablas y el recoloreado de enlaces repintarían cada
+    // uno por separado (parpadeo al volver al WYSIWYG desde la vista de fuente).
+    const bool wasUpdating = m_editor->updatesEnabled();
+    m_editor->setUpdatesEnabled(false);
     mdrender::setMarkdownWithExtensions(m_editor, body);
     styleTables();
     m_theme->recolorLinks();
+    m_editor->setUpdatesEnabled(wasUpdating);
     m_outline->rebuild(m_editor->document());
     m_split->endProgrammaticChange(wasSyncing);
 }
