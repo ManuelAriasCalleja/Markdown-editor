@@ -261,7 +261,11 @@ añadir lógica nueva: hay un `tst_*` por módulo.
   `renderPasses` separables). La usan `DocumentIo::load`, `DocumentIo::loadFromString`
   y `MainWindow::setBodyMarkdown`. **Añadir una extensión ligera nueva = tocar solo
   `mdrender`**, no esos tres sitios (antes estaba duplicado y era fácil olvidarse de
-  uno).
+  uno). El dialecto Markdown único de carga **y** guardado es
+  `mdrender::kMarkdownFeatures` = GitHub + **`MarkdownNoHTML`**: sin NoHTML, Qt trata
+  `<algo>` como HTML en línea y se traga ese texto y el de alrededor al cargar
+  (pérdida de datos); con NoHTML son texto literal y el round-trip converge. Lo usan
+  `setMarkdownWithExtensions` (carga) y `mdtable::documentMarkdown` (`toMarkdown`).
 - **Tareas, notas al pie, shortcodes, tipografía y admoniciones (extensiones
   ligeras).** Módulos puros que Qt no entiende pero **tampoco estorba** al
   round-trip (sus pasadas de render las orquesta `mdrender`, arriba):

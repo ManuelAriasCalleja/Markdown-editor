@@ -3,6 +3,7 @@
 #include "admonitions.h"
 #include "codespanfix.h"
 #include "diagramdoc.h"
+#include "markdownrender.h"
 #include "mathblocks.h"
 
 #include <QStringList>
@@ -120,7 +121,8 @@ QString documentMarkdown(const QTextDocument *doc)
     // «modificado», porque isModified compara la salida de esta función).
     mddiagram::removePreviewBlocks(clone.get());
     const mdmath::MathSentinelTable table = mdmath::replaceMathWithSentinels(clone.get());
-    const QString md = injectAlignments(clone->toMarkdown(), columnAlignments(clone.get()));
+    const QString md = injectAlignments(clone->toMarkdown(mdrender::kMarkdownFeatures),
+                                        columnAlignments(clone.get()));
     // Reinyecta fórmulas y deshace el escape `> \[!NOTE]` de las admoniciones.
     const QString restored =
         mdadmonition::unescapeMarkers(mdmath::restoreMathFromSentinels(md, table));

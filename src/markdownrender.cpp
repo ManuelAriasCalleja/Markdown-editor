@@ -33,6 +33,8 @@ void mdrender::setMarkdownWithExtensions(QTextEdit *editor, const QString &markd
 {
     if (!editor)
         return;
-    editor->setMarkdown(protect(markdown));
+    // document()->setMarkdown (no editor->setMarkdown) para poder fijar las
+    // features (NoHTML); el QTextEdit refleja el documento igual.
+    editor->document()->setMarkdown(protect(markdown), kMarkdownFeatures);
     renderPasses(editor->document());
 }

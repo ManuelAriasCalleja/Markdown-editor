@@ -306,10 +306,16 @@ opcional (añadiría otra herramienta externa, como los diagramas).
     re-lee literales → se duplicaban en cada guardado (`` `C:\x` `` se corrompía).
     `mdcodespan::unescapeInlineCode` (en `documentMarkdown`) revierte ese
     sobre-escapado dentro de los code spans en línea; ya converge.
-  - **`<...>`**: Qt lo trata como HTML en línea y **se traga el contenido** (pérdida
-    de datos al guardar).
-  - **Line-wrapping** a ~80 columnas: el corte puede caer dentro de un `*…*` y
-    romperlo; y un *fence* tras una lista se indenta como continuación perezosa.
+  - **`<...>` — *mitigado*.** Qt lo trataba como HTML en línea y **se tragaba ese
+    texto y el de alrededor** al cargar (pérdida de datos). El editor carga y guarda
+    con el flag `MarkdownNoHTML` (`mdrender::kMarkdownFeatures`): los `<...>` son
+    texto literal —lo correcto en un WYSIWYG que no ejecuta HTML— y el round-trip
+    converge.
+  - **Line-wrapping / fence tras lista — *no se tocan* (cosmético).** Qt parte las
+    líneas a ~80 columnas (un corte dentro de un `*…*` lo vuelve literal) e indenta
+    el cierre de un *fence* que sigue a una lista. Ambos **se estabilizan en una
+    pasada** (no crecen, no hay pérdida de datos); arreglarlos exigiría des-wrappear
+    la salida de Qt, con riesgo alto y valor casi nulo.
 - ⬜ **Golden tests de exportadores** — fijar HTML/LaTeX/ODF/DOCX de referencia
   para detectar regresiones de salida.
 - ✅ **Accesibilidad** — desarrollado en su propia sección, [♿ Accesibilidad](#-accesibilidad)

@@ -2,6 +2,7 @@
 
 #include <QTextDocument>
 
+#include "markdownrender.h"  // kMarkdownFeatures
 #include "tableedit.h"
 
 // Pruebas de la preservación de alineación de columnas de tablas: la inyección
@@ -17,6 +18,7 @@ private slots:
     void injectHandlesMultipleTables();
     void documentMarkdownRoundTripsAlignment();
     void documentMarkdownStableOnReopen();
+    void preservesHtmlLikeTextWithoutDataLoss();
 };
 
 void TestTableEdit::injectNoTablesLeavesTextUntouched()
@@ -72,6 +74,25 @@ void TestTableEdit::documentMarkdownStableOnReopen()
     QTextDocument doc2;
     doc2.setMarkdown(first);
     QCOMPARE(mdtable::documentMarkdown(&doc2), first);  // idempotente al reabrir
+}
+
+// Con las features del editor (NoHTML), un `<algo>` es texto literal y se conserva.
+// Sin NoHTML, Qt lo tomaría por HTML en línea y se tragaría ese texto y el de
+// alrededor al cargar (pérdida de datos); ver mdrender::kMarkdownFeatures.
+void TestTableEdit::preservesHtmlLikeTextWithoutDataLoss()
+{
+    QTextDocument doc;
+    doc.setMarkdown(QStringLiteral("texto <tag> mas texto aqui"),
+                    mdrender::kMarkdownFeatures);
+    const QString md = mdtable::documentMarkdown(&doc);
+    QVERIFY2(md.contains(QStringLiteral("mas texto aqui")),
+             qPrintable(QStringLiteral("se perdió contenido: <%1>").arg(md)));
+    QVERIFY(md.contains(QStringLiteral("<tag>")));  // el tag sobrevive como literal
+
+    // Idempotente al reabrir con las mismas features.
+    QTextDocument doc2;
+    doc2.setMarkdown(md, mdrender::kMarkdownFeatures);
+    QCOMPARE(mdtable::documentMarkdown(&doc2), md);
 }
 
 QTEST_MAIN(TestTableEdit)

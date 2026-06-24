@@ -2,9 +2,9 @@
 #define MARKDOWNRENDER_H
 
 #include <QString>
+#include <QTextDocument>
 
 class QTextEdit;
-class QTextDocument;
 
 // Pipeline único de carga de Markdown en el editor WYSIWYG. Centraliza la
 // secuencia que antes estaba duplicada en `DocumentIo::load`,
@@ -18,6 +18,15 @@ class QTextDocument;
 //
 // Añadir una extensión ligera nueva = tocar SOLO este módulo, no los tres sitios.
 namespace mdrender {
+
+// Dialecto Markdown único del editor, en carga (`setMarkdown`) y guardado
+// (`toMarkdown`, en `mdtable::documentMarkdown`). GitHub + **NoHTML**: sin NoHTML,
+// Qt trata `<algo>` como HTML en línea y se **traga ese texto y el de alrededor**
+// al cargar (pérdida de datos). Con NoHTML los `<...>` son texto literal —lo
+// correcto en un editor WYSIWYG que no ejecuta HTML— y el round-trip converge.
+inline constexpr QTextDocument::MarkdownFeatures kMarkdownFeatures =
+    QTextDocument::MarkdownFeatures(QTextDocument::MarkdownDialectGitHub
+                                    | QTextDocument::MarkdownNoHTML);
 
 // Aplica a `markdown` los protectores de las extensiones, en el orden correcto,
 // y devuelve el texto listo para `setMarkdown`. Función pura.
