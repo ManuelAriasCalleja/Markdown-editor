@@ -5,13 +5,14 @@ Todos los cambios relevantes de **md-editor** se documentan en este archivo.
 El formato sigue, a grandes rasgos, [Keep a Changelog](https://keepachangelog.com/es/),
 y el proyecto usa [versionado semántico](https://semver.org/lang/es/).
 
-## [Sin publicar]
+## [2.2.0] — 2026-06-24
 
 ### Añadido
-- **Modo «máquina de escribir»** (*Ver → Máquina de escribir*): mantiene la línea
-  del cursor centrada en vertical mientras escribes, en vez de que el cursor baje
-  hacia el borde inferior. Complementa el modo sin distracciones. Desactivado por
-  defecto; el ajuste se recuerda entre sesiones.
+- **Modo foco** (*Ver → Modo foco*): un interruptor que (a) mantiene la línea del
+  cursor centrada en vertical mientras escribes («máquina de escribir») y (b)
+  atenúa todo el documento salvo el párrafo del cursor, para concentrar la vista.
+  Independiente del modo sin distracciones; desactivado por defecto y recordado
+  entre sesiones.
 - **Snippets de usuario** (*Insertar → Snippet*): fragmentos de Markdown
   reutilizables que defines una vez (con *Gestionar snippets…*) e insertas por
   nombre desde el menú. A diferencia de las plantillas (de archivo entero), se
@@ -21,6 +22,36 @@ y el proyecto usa [versionado semántico](https://semver.org/lang/es/).
   teclear `(`, `[`, `{` o `` ` `` se inserta también su cierre con el cursor en
   medio; si hay texto seleccionado, se envuelve; y al teclear el cierre justo
   delante del automático, se salta en vez de duplicarlo.
+- **Limpiar Markdown** (*Editar → Limpiar Markdown*): normaliza el documento de una
+  pasada (viñetas a `-`, espacios finales, líneas en blanco de más, espacio tras
+  los `#`), sin tocar el interior de los bloques de código.
+- **Aviso de fallos de diagrama**: cuando un diagrama Mermaid/PlantUML no se puede
+  renderizar (sintaxis inválida, error de la herramienta…), se avisa en la barra de
+  estado con el error. El aviso espera a que el diagrama se asiente, para no
+  molestar mientras se teclea.
+
+### Cambiado
+- **Menos parpadeo** al cargar un documento, cambiar de tema y sincronizar la vista
+  dividida: las operaciones que reconstruían el documento ahora se agrupan en un
+  único trazado.
+- La carga y el guardado usan el dialecto Markdown con `MarkdownNoHTML`: un `<algo>`
+  se trata como texto literal (lo correcto en un editor WYSIWYG) en vez de como HTML.
+
+### Arreglado
+- **Fórmulas TeX**: una fórmula con anidamiento extremo (`\frac{\frac{…}}`,
+  `x^{y^{…}}`) ya no desborda la pila ni cierra la aplicación (tope de profundidad
+  del parser).
+- **Round-trip de Markdown**: un *code span* con `\` o `&` (p. ej. `` `C:\ruta` ``)
+  ya no duplica esos caracteres en cada guardado; y un `<algo>` ya no se traga ese
+  texto y el de alrededor al cargar (antes era pérdida de datos).
+
+### Interno
+- Reorganizado `src/` en subdirectorios por componente (app, editor, view, io,
+  markdown, math, diagram, spell, export, widgets…), sin cambios de comportamiento.
+- Documentado el código con **Doxygen** (`Doxyfile`), sin warnings de generación.
+- `mainwindow.cpp` repartido en más unidades de traducción (zoom, sesión); eliminado
+  código muerto; nuevas redes de pruebas: **fuzzing del round-trip** (bajo
+  ASan/UBSan) y **golden tests** de los exportadores.
 
 ## [2.1.0] — 2026-06-23
 

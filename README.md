@@ -5,7 +5,7 @@ TeX formulas, aligned tables, highlighted code, document templates, and export t
 PDF/DOCX/ODT/LaTeX — lightweight, portable (Qt6/C++17, zero external
 dependencies), in 9 languages.
 
-![Version](https://img.shields.io/badge/version-2.0.0-blue)
+![Version](https://img.shields.io/badge/version-2.2.0-blue)
 ![License](https://img.shields.io/badge/license-GPL--3.0-blue)
 ![Platforms](https://img.shields.io/badge/platforms-Linux%20%7C%20Windows%20%7C%20macOS-green)
 
@@ -17,9 +17,9 @@ dependencies), in 9 languages.
 
 | System | File | Notes |
 |--------|------|-------|
-| **Linux** (x86_64) | [`md-editor-2.0.0-x86_64.AppImage`](https://github.com/ManuelAriasCalleja/Markdown-editor/releases/latest) | Single-file executable. `chmod +x` and double-click. |
-| **Windows** (x64) | [`md-editor-2.0.0-windows-x64.zip`](https://github.com/ManuelAriasCalleja/Markdown-editor/releases/latest) | Portable: unzip and run `md-editor.exe`. |
-| **macOS** (Apple Silicon + Intel) | [`md-editor-2.0.0-macos-universal.dmg`](https://github.com/ManuelAriasCalleja/Markdown-editor/releases/latest) | First launch: Ctrl-click → *Open* (binary not signed). |
+| **Linux** (x86_64) | [`md-editor-2.2.0-x86_64.AppImage`](https://github.com/ManuelAriasCalleja/Markdown-editor/releases/latest) | Single-file executable. `chmod +x` and double-click. |
+| **Windows** (x64) | [`md-editor-2.2.0-windows-x64.zip`](https://github.com/ManuelAriasCalleja/Markdown-editor/releases/latest) | Portable: unzip and run `md-editor.exe`. |
+| **macOS** (Apple Silicon + Intel) | [`md-editor-2.2.0-macos-universal.dmg`](https://github.com/ManuelAriasCalleja/Markdown-editor/releases/latest) | First launch: Ctrl-click → *Open* (binary not signed). |
 
 > All downloads, including previous versions, on the
 > [releases page](https://github.com/ManuelAriasCalleja/Markdown-editor/releases).
@@ -56,22 +56,29 @@ Privacy & Security* and click **Open anyway**.
 
 - **True WYSIWYG**: you never see the Markdown syntax, you see the rendered
   output.
+- **Multiple documents in tabs**: open several files at once, each in its own
+  tab; the open tabs reopen on the next launch.
 - **Clean round-trip**: what you open is what you save. Aligned tables, quotes,
-  nested lists, task lists, code blocks with syntax highlighting.
+  nested lists, task lists, footnotes, code blocks with syntax highlighting.
 - **TeX formulas** `$…$` and `$$…$$` with real super- and subscripts and a
   live preview — no external dependencies. Double-click to edit.
+- **Diagrams**: `mermaid` and `plantuml` code blocks are previewed as an image
+  below the block (needs the external `mmdc` / `plantuml` tool; degrades
+  gracefully with an install hint if it is missing).
 - **Admonitions / callouts** (`> [!NOTE]`, `[!TIP]`, `[!IMPORTANT]`, `[!WARNING]`,
   `[!CAUTION]`) shown as coloured boxes, round-trip compatible with GitHub.
-- **Document templates** (*File → New from template*): meeting minutes, report,
-  letter, README, certificate, exam and more.
+- **Spell checking** (Hunspell): misspellings underlined in the document's
+  language, with suggestions and a personal dictionary.
+- **Document templates** (*File → New from template*) and **reusable snippets**
+  (*Insert → Snippet*) for content you write often.
 - **Export** to PDF, HTML, ODF (`.odt`), LaTeX (`.tex`), DOCX (`.docx`) and EPUB
   (`.epub`), preserving the document language and the formula formatting.
 - **YAML / TOML front matter** preserved verbatim on save.
 - **Navigable outline panel** (F9), find and replace (Ctrl+F / Ctrl+H),
   autosave and crash recovery.
-- **Distraction-free mode** (F11), full-interface zoom (Ctrl+wheel), 6 light
-  and dark themes including a warm night light, Markdown source view
-  (Ctrl+Shift+M).
+- **Distraction-free mode** (F11) and **focus mode** (typewriter scrolling +
+  dimming), full-interface zoom (Ctrl+wheel), 6 light and dark themes including a
+  warm night light, Markdown source view (Ctrl+Shift+M).
 - **9 languages**: Spanish, English, German, French, Italian, Portuguese,
   Polish, Dutch and Romanian.
 - **Paste / drop images** from the clipboard straight to disk as `![](path)`.
