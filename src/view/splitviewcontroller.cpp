@@ -1,3 +1,6 @@
+/// \file
+/// \brief Implementación de la vista de fuente, la vista dividida y su sincronización con debounce.
+
 #include "splitviewcontroller.h"
 
 #include <QAction>

@@ -1,3 +1,6 @@
+/// \file
+/// \brief Implementación del cálculo de estadísticas del documento.
+
 #include "docstats.h"
 
 #include <QChar>

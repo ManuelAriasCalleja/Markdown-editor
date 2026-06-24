@@ -1,3 +1,6 @@
+/// \file
+/// \brief Implementación de los serializadores de exportación a ODF, LaTeX, DOCX y EPUB.
+
 #include "exporters.h"
 
 #include "mathblocks.h"

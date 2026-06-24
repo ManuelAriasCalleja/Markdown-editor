@@ -1,6 +1,9 @@
 #ifndef DISKWATCHER_H
 #define DISKWATCHER_H
 
+/// \file
+/// \brief Vigila el archivo abierto en disco para detectar cambios externos.
+
 #include <QByteArray>
 #include <QObject>
 #include <QString>
@@ -8,12 +11,12 @@
 class QFileSystemWatcher;
 class QTimer;
 
-// Vigila el archivo abierto para detectar cambios hechos por otra herramienta
-// (git, otro editor…). Posee el QFileSystemWatcher, el temporizador de debounce y
-// la instantánea de bytes que distingue el propio guardado de un cambio externo.
-//
-// No decide qué hacer ante el cambio (recargar, preguntar): solo lo señala. La
-// reacción —que toca los editores y puede mostrar un diálogo— vive en MainWindow.
+/// \brief Vigila el archivo abierto para detectar cambios hechos por otra herramienta
+/// (git, otro editor…). Posee el QFileSystemWatcher, el temporizador de debounce y
+/// la instantánea de bytes que distingue el propio guardado de un cambio externo.
+///
+/// No decide qué hacer ante el cambio (recargar, preguntar): solo lo señala. La
+/// reacción —que toca los editores y puede mostrar un diálogo— vive en MainWindow.
 class DiskWatcher : public QObject
 {
     Q_OBJECT
@@ -21,23 +24,23 @@ class DiskWatcher : public QObject
 public:
     explicit DiskWatcher(QObject *parent = nullptr);
 
-    // Empieza a vigilar `path` (deja de vigilar el anterior) y toma la instantánea
-    // de sus bytes, de modo que un guardado/carga propios no se confundan luego con
-    // un cambio externo. path vacío = no vigilar nada. Conéctalo a
-    // DocumentIo::currentFileChanged (se emite también al guardar).
+    /// \brief Empieza a vigilar `path` (deja de vigilar el anterior) y toma la instantánea
+    /// de sus bytes, de modo que un guardado/carga propios no se confundan luego con
+    /// un cambio externo. path vacío = no vigilar nada. Conéctalo a
+    /// DocumentIo::currentFileChanged (se emite también al guardar).
     void watch(const QString &path);
-    // Fija la instantánea de referencia a estos bytes: tras decidir conservar los
-    // cambios locales ante un conflicto, para no volver a avisar del mismo cambio.
+    /// \brief Fija la instantánea de referencia a estos bytes: tras decidir conservar los
+    /// cambios locales ante un conflicto, para no volver a avisar del mismo cambio.
     void setSnapshot(const QByteArray &bytes) { m_snapshot = bytes; }
-    // Suspende/reactiva la comprobación mientras hay un diálogo de conflicto
-    // abierto, para no apilar otro (su exec corre un bucle de eventos anidado).
+    /// \brief Suspende/reactiva la comprobación mientras hay un diálogo de conflicto
+    /// abierto, para no apilar otro (su exec corre un bucle de eventos anidado).
     void setSuspended(bool suspended) { m_suspended = suspended; }
 
 signals:
-    // El archivo vigilado cambió en disco respecto a la instantánea; `diskBytes` es
-    // su contenido actual.
+    /// \brief El archivo vigilado cambió en disco respecto a la instantánea; `diskBytes` es
+    /// su contenido actual.
     void externalChange(const QByteArray &diskBytes);
-    // El archivo vigilado se eliminó o movió.
+    /// \brief El archivo vigilado se eliminó o movió.
     void vanished();
 
 private:

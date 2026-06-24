@@ -1,6 +1,9 @@
 #ifndef FORMATCONTROLLER_H
 #define FORMATCONTROLLER_H
 
+/// \file
+/// \brief Comandos de formato del editor WYSIWYG (marcas, encabezados, listas, sangría) y estado de sus acciones.
+
 #include <QObject>
 #include <QTextListFormat>
 
@@ -12,22 +15,22 @@ class QTextEdit;
 class QWidget;
 class CodeBlockHighlighter;
 
-// Comandos de formato del editor WYSIWYG: negrita/cursiva/…, encabezados, listas
-// (viñetas, numeradas, tareas), citas y bloques de código, lenguaje del bloque y
-// sangría. Y la sincronización de las acciones de la barra/menú con el formato
-// bajo el cursor (updateActions).
-//
-// Aplica formatos de Qt que round-trip-ean limpiamente a Markdown; las citas y
-// bloques de código se reescriben con BlockConstructs. No posee las QAction (las
-// comparten menú y barra de botones): se le pasan con setActions para poder
-// reflejar su estado. Los mensajes de estado van por señal.
+/// Comandos de formato del editor WYSIWYG: negrita/cursiva/…, encabezados, listas
+/// (viñetas, numeradas, tareas), citas y bloques de código, lenguaje del bloque y
+/// sangría. Y la sincronización de las acciones de la barra/menú con el formato
+/// bajo el cursor (updateActions).
+///
+/// Aplica formatos de Qt que round-trip-ean limpiamente a Markdown; las citas y
+/// bloques de código se reescriben con BlockConstructs. No posee las QAction (las
+/// comparten menú y barra de botones): se le pasan con setActions para poder
+/// reflejar su estado. Los mensajes de estado van por señal.
 class FormatController : public QObject
 {
     Q_OBJECT
 
 public:
-    // Acciones de formato que updateActions mantiene marcadas/habilitadas según el
-    // contexto. Las crea MainWindow (las comparten el menú Formato y la barra).
+    /// Acciones de formato que updateActions mantiene marcadas/habilitadas según el
+    /// contexto. Las crea MainWindow (las comparten el menú Formato y la barra).
     struct Actions {
         QAction *bold = nullptr;
         QAction *italic = nullptr;
@@ -53,18 +56,19 @@ public:
 
     FormatController(QTextEdit *editor, CodeBlockHighlighter *highlighter, QWidget *parent);
 
+    /// \brief Fija las acciones cuyo estado refresca updateActions.
     void setActions(const Actions &actions) { m_actions = actions; }
 
-    // Aplica un toggle de formato de carácter: `mutate` recibe el formato a
-    // rellenar y el formato actual bajo el cursor (Strategy de los botones
-    // negrita/cursiva/tachado/código). Público porque lo invocan las lambdas de
-    // las acciones que crea MainWindow.
+    /// Aplica un toggle de formato de carácter: `mutate` recibe el formato a
+    /// rellenar y el formato actual bajo el cursor (Strategy de los botones
+    /// negrita/cursiva/tachado/código). Público porque lo invocan las lambdas de
+    /// las acciones que crea MainWindow.
     void toggleCharFormat(
         const std::function<void(QTextCharFormat &, const QTextCharFormat &)> &mutate);
 
-    // Mantiene las acciones reflejando el formato bajo el cursor. Emite
-    // actionsUpdated al terminar (para encadenar el refresco de otras acciones
-    // contextuales, p. ej. las de tabla).
+    /// Mantiene las acciones reflejando el formato bajo el cursor. Emite
+    /// actionsUpdated al terminar (para encadenar el refresco de otras acciones
+    /// contextuales, p. ej. las de tabla).
     void updateActions();
 
 public slots:
@@ -78,7 +82,9 @@ public slots:
     void outdentList();
 
 signals:
+    /// Mensaje para la barra de estado de la ventana.
     void statusMessage(const QString &text, int timeoutMs);
+    /// Se refrescó el estado de las acciones de formato (encadena otras contextuales).
     void actionsUpdated();
 
 private:

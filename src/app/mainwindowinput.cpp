@@ -1,3 +1,6 @@
+/// \file
+/// \brief Filtro de eventos y manejo de entrada de MainWindow (eventFilter y sus sub-manejadores).
+
 // Filtro de eventos y manejo de entrada de MainWindow: el despachador
 // eventFilter y sus sub-manejadores (rueda+Ctrl para zoom, arrastrar-soltar,
 // enlaces, tareas, notas al pie, menú contextual del corrector, continuación de

@@ -1,3 +1,6 @@
+/// \file
+/// \brief Implementación del registro de lenguajes: tabla alias -> LangSpec.
+
 #include "languageregistry.h"
 
 #include <QHash>

@@ -1,3 +1,6 @@
+/// \file
+/// \brief Implementación del des-escapado del contenido de los code spans en línea.
+
 #include "codespanfix.h"
 
 #include <QStringList>

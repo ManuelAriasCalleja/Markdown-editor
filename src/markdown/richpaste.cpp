@@ -1,3 +1,6 @@
+/// \file
+/// \brief Implementación de la conversión HTML→Markdown del portapapeles.
+
 #include "richpaste.h"
 
 #include "tableedit.h"

@@ -1,3 +1,6 @@
+/// \file
+/// \brief Implementación del render asíncrono de diagramas vía QProcess (plantuml/mmdc).
+
 #include "diagramrenderer.h"
 
 #include <QCryptographicHash>

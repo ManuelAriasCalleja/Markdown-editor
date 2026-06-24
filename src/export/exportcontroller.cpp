@@ -1,3 +1,6 @@
+/// \file
+/// \brief Implementación de ExportController: diálogos de exportación/impresión y escritura a disco.
+
 #include "exportcontroller.h"
 
 #include <memory>

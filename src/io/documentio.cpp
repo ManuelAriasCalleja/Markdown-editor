@@ -1,3 +1,6 @@
+/// \file
+/// \brief Implementación de DocumentIo: carga/guardado, front matter y línea base.
+
 #include "documentio.h"
 
 #include "markdownrender.h"

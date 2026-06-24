@@ -1,3 +1,6 @@
+/// \file
+/// \brief Construcción de la barra de menús y la barra de formato de MainWindow.
+
 // Construcción de menús y barra de formato de MainWindow. Separado de
 // mainwindow.cpp (que se había hecho enorme) para agrupar todo el cableado de
 // acciones en un sitio; son métodos de MainWindow, solo que definidos en otra

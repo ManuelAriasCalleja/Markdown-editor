@@ -1,3 +1,6 @@
+/// \file
+/// \brief Implementación del resaltador de código, fórmulas y ortografía (CodeBlockHighlighter).
+
 #include "codehighlighter.h"
 
 #include "mathblocks.h"

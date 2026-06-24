@@ -1,3 +1,6 @@
+/// \file
+/// \brief Implementación del diálogo «quick open» de encabezados.
+
 #include "gotoheadingdialog.h"
 
 #include <QApplication>

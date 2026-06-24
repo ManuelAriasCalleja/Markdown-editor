@@ -1,3 +1,6 @@
+/// \file
+/// \brief Implementación del controlador del corrector: idioma, resaltado y menú de sugerencias.
+
 #include "spellcontroller.h"
 
 #include <QAction>

@@ -1,3 +1,6 @@
+/// \file
+/// \brief Definición de las plantillas de documento (esqueletos Markdown traducidos).
+
 #include "doctemplates.h"
 
 #include <QCoreApplication>

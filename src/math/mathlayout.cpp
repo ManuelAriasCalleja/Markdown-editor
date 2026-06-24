@@ -1,3 +1,6 @@
+/// \file
+/// \brief Implementación del motor de maquetación 2D: árbol de cajas, medición y pintado de fórmulas.
+
 #include "mathlayout.h"
 
 #include <QColor>

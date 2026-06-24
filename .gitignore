@@ -34,3 +34,6 @@ Thumbs.db
 # Notas internas y archivos de prueba que no se publican
 posibles-mejoras.md
 test-formulas.md
+
+# Documentación Doxygen generada (no se versiona; se regenera con `doxygen Doxyfile`)
+docs/doxygen/

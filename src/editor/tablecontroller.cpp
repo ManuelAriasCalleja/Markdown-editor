@@ -1,3 +1,6 @@
+/// \file
+/// \brief Implementación de TableController: edición de la tabla bajo el cursor y estado de sus acciones.
+
 #include "tablecontroller.h"
 
 #include <QAction>

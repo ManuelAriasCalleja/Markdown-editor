@@ -1,3 +1,6 @@
+/// \file
+/// \brief Implementación de la fachada AppSettings sobre QSettings (lectura/escritura tipada).
+
 #include "appsettings.h"
 
 #include <QSettings>

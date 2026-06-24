@@ -1,3 +1,6 @@
+/// \file
+/// \brief Implementación de FormatController: comandos de formato WYSIWYG y estado de sus acciones.
+
 #include "formatcontroller.h"
 
 #include <QAction>

@@ -1,3 +1,6 @@
+/// \file
+/// \brief Implementación del diálogo de gestión de snippets.
+
 #include "snippetsdialog.h"
 
 #include <QDialogButtonBox>

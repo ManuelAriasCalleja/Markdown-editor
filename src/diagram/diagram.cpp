@@ -1,3 +1,6 @@
+/// \file
+/// \brief Implementación de la clasificación de lenguaje de diagrama (`kindForLanguage`).
+
 #include "diagram.h"
 
 namespace mddiagram {

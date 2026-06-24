@@ -1,3 +1,6 @@
+/// \file
+/// \brief Implementación de las funciones puras de zoom de la interfaz (chromezoom).
+
 #include "chromezoom.h"
 
 #include <QAction>

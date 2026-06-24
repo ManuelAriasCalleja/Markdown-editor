@@ -1,3 +1,6 @@
+/// \file
+/// \brief Tabla de expansión de los shortcodes `:nombre:` a sus símbolos Unicode.
+
 #include "shortcodes.h"
 
 #include <QHash>

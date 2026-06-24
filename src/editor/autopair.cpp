@@ -1,3 +1,6 @@
+/// \file
+/// \brief Implementación del auto-emparejado de paréntesis, corchetes, llaves y comillas invertidas.
+
 #include "autopair.h"
 
 #include <QTextCursor>

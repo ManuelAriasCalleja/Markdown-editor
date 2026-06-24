@@ -1,3 +1,6 @@
+/// \file
+/// \brief Implementación del motor de corrección: carga de diccionarios y consulta a Hunspell.
+
 #include "spellchecker.h"
 
 #include "spellscan.h"

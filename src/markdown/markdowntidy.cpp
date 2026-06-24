@@ -1,3 +1,6 @@
+/// \file
+/// \brief Implementación de la limpieza/normalización del texto Markdown.
+
 #include "markdowntidy.h"
 
 #include <QRegularExpression>

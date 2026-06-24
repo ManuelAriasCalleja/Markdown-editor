@@ -1,3 +1,6 @@
+/// \file
+/// \brief Implementación de las casillas de tarea: geometría del clic y alternado.
+
 #include "tasklist.h"
 
 #include <QTextBlock>

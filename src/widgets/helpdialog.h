@@ -1,16 +1,19 @@
 #ifndef HELPDIALOG_H
 #define HELPDIALOG_H
 
+/// \file
+/// \brief Ventana de ayuda integrada (manual de uso y guía de Markdown).
+
 #include <QDialog>
 
 class QListWidget;
 class QTextBrowser;
 
-// Ventana de ayuda con dos secciones: «Uso de la aplicación» y «Markdown».
-// El contenido vive en dos .md empaquetados en el recurso /help, que se
-// renderizan con QTextBrowser::setMarkdown (el mismo motor que el editor),
-// así que la guía de Markdown se demuestra a sí misma. Es no modal: el
-// usuario puede dejarla abierta a un lado mientras escribe.
+/// \brief Ventana de ayuda con dos secciones: «Uso de la aplicación» y «Markdown».
+/// El contenido vive en dos .md empaquetados en el recurso /help, que se
+/// renderizan con QTextBrowser::setMarkdown (el mismo motor que el editor),
+/// así que la guía de Markdown se demuestra a sí misma. Es no modal: el
+/// usuario puede dejarla abierta a un lado mientras escribe.
 class HelpDialog : public QDialog
 {
     Q_OBJECT

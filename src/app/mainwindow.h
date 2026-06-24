@@ -1,6 +1,9 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+/// \file
+/// \brief Ventana principal (shell): pestañas, menús, barra de formato, zoom y sesión del editor WYSIWYG.
+
 #include <QMainWindow>
 #include <QByteArray>
 #include <QHash>
@@ -48,13 +51,13 @@ class DocumentIo;
 class ThemeController;
 namespace mdexport { struct Language; }
 
-// Ventana principal del editor de Markdown WYSIWYG.
-//
-// El usuario edita siempre sobre el texto ya renderizado (nunca ve el código
-// Markdown). La barra de formato activa/desactiva cada elemento Markdown
-// aplicando formatos de Qt que round-trip-ean limpiamente a Markdown:
-//   negrita, cursiva, tachado, código en línea, encabezados H1-H3 y listas.
-// Al guardar, el documento se serializa con QTextDocument::toMarkdown().
+/// \brief Ventana principal del editor de Markdown WYSIWYG.
+///
+/// El usuario edita siempre sobre el texto ya renderizado (nunca ve el código
+/// Markdown). La barra de formato activa/desactiva cada elemento Markdown
+/// aplicando formatos de Qt que round-trip-ean limpiamente a Markdown:
+/// negrita, cursiva, tachado, código en línea, encabezados H1-H3 y listas.
+/// Al guardar, el documento se serializa con QTextDocument::toMarkdown().
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -68,22 +71,26 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = nullptr);
 
-    // Decide qué mostrar al arrancar (se invoca diferido desde main()): un
-    // archivo de la línea de comandos tiene prioridad; si no, se ofrece recuperar
-    // un borrador de un cierre anómalo; en su defecto, se reabre el último
-    // documento de la sesión anterior. `cmdLineFile` vacío = sin argumento.
+    /// \brief Decide qué mostrar al arrancar (se invoca diferido desde main()): un
+    /// archivo de la línea de comandos tiene prioridad; si no, se ofrece recuperar
+    /// un borrador de un cierre anómalo; en su defecto, se reabre el último
+    /// documento de la sesión anterior.
+    /// \param cmdLineFile ruta del archivo de la línea de comandos; vacío = sin argumento.
     void startSession(const QString &cmdLineFile);
 
-    // Arranque de una ventana recreada tras cambiar de idioma: reabre `reopenPath`
-    // (si no está vacío) sin pasar por la recuperación de borrador ni el reabrir
-    // del último documento, y arranca el autoguardado. La diferencia con
-    // startSession() es que aquí el estado ya lo decidió la ventana anterior.
+    /// \brief Arranque de una ventana recreada tras cambiar de idioma: reabre `reopenPath`
+    /// (si no está vacío) sin pasar por la recuperación de borrador ni el reabrir
+    /// del último documento, y arranca el autoguardado.
+    ///
+    /// La diferencia con startSession() es que aquí el estado ya lo decidió la
+    /// ventana anterior.
     void relaunchSession(const QString &reopenPath);
 
 signals:
-    // El usuario eligió otro idioma. main() intercambia los traductores y recrea
-    // la ventana (rehaciendo todos los tr()) reabriendo `reopenPath`. Se emite
-    // solo tras confirmar que no hay cambios sin guardar que perder.
+    /// \brief El usuario eligió otro idioma. main() intercambia los traductores y recrea
+    /// la ventana (rehaciendo todos los tr()) reabriendo `reopenPath`.
+    ///
+    /// Se emite solo tras confirmar que no hay cambios sin guardar que perder.
     void languageChangeRequested(const QString &reopenPath);
 
 private:
@@ -108,30 +115,36 @@ private:
 
 protected:
     void closeEvent(QCloseEvent *event) override;
-    // Recoloca el esquema y la columna en el modo sin distracciones al cambiar
-    // de tamaño (en pantalla completa, al entrar/salir y al redimensionar).
+    /// \brief Recoloca el esquema y la columna en el modo sin distracciones al cambiar
+    /// de tamaño (en pantalla completa, al entrar/salir y al redimensionar).
     void resizeEvent(QResizeEvent *event) override;
-    // Regenera los iconos de la barra de formato cuando la ventana ya está en
-    // pantalla. Durante la construcción la ventana aún no tiene pantalla asignada,
-    // así que en monitores HiDPI los iconos se hornean a devicePixelRatio = 1 y se
-    // ven borrosos/«aguados» (sin contraste) hasta el primer relayout; aquí, ya
-    // mostrada, la dpr es la definitiva.
+    /// \brief Regenera los iconos de la barra de formato cuando la ventana ya está en
+    /// pantalla.
+    ///
+    /// Durante la construcción la ventana aún no tiene pantalla asignada, así que
+    /// en monitores HiDPI los iconos se hornean a devicePixelRatio = 1 y se ven
+    /// borrosos/«aguados» (sin contraste) hasta el primer relayout; aquí, ya
+    /// mostrada, la dpr es la definitiva.
     void showEvent(QShowEvent *event) override;
-    // Rehornea los iconos de la barra cuando cambia la paleta (tema, esquema del
-    // SO, luz cálida) o la densidad de pantalla (otro monitor / Wayland tras el
-    // show). Es el punto único que mantiene su tinta contrastando con el fondo.
+    /// \brief Rehornea los iconos de la barra cuando cambia la paleta (tema, esquema del
+    /// SO, luz cálida) o la densidad de pantalla (otro monitor / Wayland tras el
+    /// show). Es el punto único que mantiene su tinta contrastando con el fondo.
     void changeEvent(QEvent *event) override;
-    // Captura Ctrl+rueda sobre el editor para hacer zoom de la fuente.
+    /// \brief Despachador de eventos: delega en los tres sub-manejadores de abajo
+    /// (viewport, teclado WYSIWYG, teclado de fuente); el primero que consume gana.
     bool eventFilter(QObject *watched, QEvent *event) override;
-    // Sub-manejadores del eventFilter (cada uno devuelve true si consume el
-    // evento). Separan las tres responsabilidades que antes convivían en él:
-    // ratón/rueda/arrastre sobre el viewport, teclado del editor WYSIWYG y
-    // teclado del editor de fuente.
+    /// \brief Sub-manejador del viewport: zoom con Ctrl+rueda, enlaces, arrastrar-soltar,
+    /// tareas y notas al pie. \return true si consume el evento.
     bool handleViewportEvent(QEvent *event);
+    /// \brief Sub-manejador del teclado del editor WYSIWYG (fórmulas, shortcodes,
+    /// auto-emparejado). \return true si consume la pulsación.
     bool handleEditorKeyPress(QKeyEvent *ke);
+    /// \brief Sub-manejador del teclado del editor de fuente (continuación de listas,
+    /// auto-emparejado). \return true si consume la pulsación.
     bool handleSourceKeyPress(QKeyEvent *ke);
-    // Auto-emparejado: si la tecla `ke` (un carácter imprimible, sin Ctrl/Alt/Meta)
-    // dispara una acción de `mdautopair` sobre `ed`, la aplica y devuelve true.
+    /// \brief Auto-emparejado: si la tecla `ke` (un carácter imprimible, sin Ctrl/Alt/Meta)
+    /// dispara una acción de `mdautopair` sobre `ed`, la aplica.
+    /// \return true si aplicó el emparejado.
     bool applyAutoPair(QTextEdit *ed, QKeyEvent *ke);
 
 private slots:

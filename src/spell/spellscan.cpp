@@ -1,3 +1,6 @@
+/// \file
+/// \brief Implementación de la tokenización de palabras y la selección de diccionario.
+
 #include "spellscan.h"
 
 #include <QChar>

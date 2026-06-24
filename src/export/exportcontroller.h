@@ -1,6 +1,9 @@
 #ifndef EXPORTCONTROLLER_H
 #define EXPORTCONTROLLER_H
 
+/// \file
+/// \brief Controlador de exportación e impresión del documento (PDF, HTML, ODF, LaTeX, DOCX, EPUB, imprimir).
+
 #include <QObject>
 #include <QString>
 
@@ -13,46 +16,56 @@ class DocumentIo;
 class SplitViewController;
 namespace mdexport { struct Language; }
 
-// Exportación e impresión del documento: PDF, HTML, ODF (.odt), LaTeX (.tex),
-// DOCX (.docx), EPUB (.epub) e imprimir. Orquesta los serializadores puros de
-// `mdexport` con los diálogos de archivo/idioma y la escritura a disco. Los
-// formatos basados en archivo comparten `runExport` (dirigido por `FileExporter`).
-//
-// No posee estado: lee el documento del editor WYSIWYG y los metadatos del
-// DocumentIo (front matter), vuelca antes el panel de fuente a través del
-// SplitViewController, y usa `parent` como padre de los diálogos. Los mensajes de
-// estado se piden por señal (como FindReplaceBar).
+/// \brief Exportación e impresión del documento: PDF, HTML, ODF (.odt), LaTeX (.tex),
+/// DOCX (.docx), EPUB (.epub) e imprimir. Orquesta los serializadores puros de
+/// `mdexport` con los diálogos de archivo/idioma y la escritura a disco. Los
+/// formatos basados en archivo comparten `runExport` (dirigido por `FileExporter`).
+///
+/// No posee estado: lee el documento del editor WYSIWYG y los metadatos del
+/// DocumentIo (front matter), vuelca antes el panel de fuente a través del
+/// SplitViewController, y usa `parent` como padre de los diálogos. Los mensajes de
+/// estado se piden por señal (como FindReplaceBar).
 class ExportController : public QObject
 {
     Q_OBJECT
 
 public:
+    /// \brief Construye el controlador sobre el editor WYSIWYG, su DocumentIo (front
+    /// matter), el SplitViewController (para volcar el panel de fuente) y `parent`
+    /// como padre de los diálogos. No toma propiedad de ninguno.
     ExportController(QTextEdit *editor, DocumentIo *documentIo,
                      SplitViewController *split, QWidget *parent);
 
 public slots:
+    /// \brief Exporta el documento a PDF (a un archivo).
     bool exportPdf();
+    /// \brief Exporta el documento a HTML.
     bool exportHtml();
+    /// \brief Exporta el documento a ODF (.odt), con el idioma incrustado.
     bool exportOdf();
+    /// \brief Exporta el documento a LaTeX (.tex), con babel del idioma elegido.
     bool exportLatex();
+    /// \brief Exporta el documento a DOCX (.docx).
     bool exportDocx();
+    /// \brief Exporta el documento a EPUB (.epub).
     bool exportEpub();
-    // Imprime el documento renderizado con el diálogo de impresión del sistema
-    // (distinto de exportar a PDF, que escribe a un archivo).
+    /// \brief Imprime el documento renderizado con el diálogo de impresión del sistema
+    /// (distinto de exportar a PDF, que escribe a un archivo).
     bool print();
-    // Abre una vista previa de impresión (QPrintPreviewDialog) con el documento
-    // renderizado; desde ahí se puede ajustar e imprimir.
+    /// \brief Abre una vista previa de impresión (QPrintPreviewDialog) con el documento
+    /// renderizado; desde ahí se puede ajustar e imprimir.
     bool printPreview();
-    // Imprime / exporta a PDF solo el texto seleccionado (avisa si no hay
-    // selección). Construye un documento con el fragmento seleccionado.
+    /// \brief Imprime / exporta a PDF solo el texto seleccionado (avisa si no hay
+    /// selección). Construye un documento con el fragmento seleccionado.
     bool printSelection();
+    /// \brief Exporta a PDF solo el texto seleccionado.
     bool exportSelectionPdf();
-    // Copia el documento completo al portapapeles como HTML (con texto plano de
-    // reserva), para pegarlo con formato en Word, correo, etc.
+    /// \brief Copia el documento completo al portapapeles como HTML (con texto plano de
+    /// reserva), para pegarlo con formato en Word, correo, etc.
     void copyHtmlToClipboard();
 
 signals:
-    // Mensaje para la barra de estado (texto, milisegundos visible).
+    /// \brief Mensaje para la barra de estado (texto, milisegundos visible).
     void statusMessage(const QString &text, int timeoutMs);
 
 private:

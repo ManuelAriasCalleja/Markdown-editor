@@ -1,3 +1,7 @@
+/// \file
+/// \brief Implementación del pipeline de carga de Markdown (protección y pasadas
+///        de render de fórmulas, notas al pie y admoniciones).
+
 #include "markdownrender.h"
 
 #include <QTextCursor>

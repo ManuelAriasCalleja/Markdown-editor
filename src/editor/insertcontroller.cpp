@@ -1,3 +1,6 @@
+/// \file
+/// \brief Implementación de InsertController: inserción de enlaces, imágenes, tablas, notas al pie y símbolos.
+
 #include "insertcontroller.h"
 
 #include <QApplication>

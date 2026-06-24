@@ -1,3 +1,6 @@
+/// \file
+/// \brief Implementación del gestor de temas, recoloreado de enlaces y tinte cálido por hora.
+
 #include "themecontroller.h"
 
 #include "appsettings.h"

@@ -1,6 +1,9 @@
 #ifndef FINDREPLACEBAR_H
 #define FINDREPLACEBAR_H
 
+/// \file
+/// \brief Barra inferior de buscar/reemplazar sobre un QTextEdit.
+
 #include <QToolBar>
 
 class QTextEdit;
@@ -9,9 +12,9 @@ class QCheckBox;
 class QRegularExpression;
 class QTextCursor;
 
-// Barra inferior de buscar/reemplazar. Encapsula sus propios campos y opera
-// sobre el QTextEdit que se le pasa. No conoce la ventana: reporta resultados
-// por la señal statusMessage() para que quien la aloje los muestre donde quiera.
+/// \brief Barra inferior de buscar/reemplazar. Encapsula sus propios campos y opera
+/// sobre el QTextEdit que se le pasa. No conoce la ventana: reporta resultados
+/// por la señal statusMessage() para que quien la aloje los muestre donde quiera.
 class FindReplaceBar : public QToolBar
 {
     Q_OBJECT
@@ -19,14 +22,17 @@ class FindReplaceBar : public QToolBar
 public:
     explicit FindReplaceBar(QTextEdit *editor, QWidget *parent = nullptr);
 
-    // Cambia el editor sobre el que actúa (p. ej. al pasar a la vista de fuente).
+    /// \brief Cambia el editor sobre el que actúa (p. ej. al pasar a la vista de fuente).
     void setEditor(QTextEdit *editor);
 
 public slots:
-    void showFind();      // muestra la barra y enfoca el campo de búsqueda
-    void showReplace();   // como showFind() pero enfoca el campo de reemplazo
+    void showFind();      ///< muestra la barra y enfoca el campo de búsqueda
+    void showReplace();   ///< como showFind() pero enfoca el campo de reemplazo
 
 signals:
+    /// \brief Reporta un mensaje de resultado para mostrar en la barra de estado.
+    /// \param text texto del mensaje.
+    /// \param timeout milisegundos que permanece visible.
     void statusMessage(const QString &text, int timeout);
 
 private:

@@ -1,3 +1,6 @@
+/// \file
+/// \brief Implementación del pintado de los iconos monocromos de la barra de formato.
+
 #include "formaticons.h"
 
 #include <QFont>

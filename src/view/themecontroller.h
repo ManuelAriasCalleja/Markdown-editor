@@ -1,6 +1,9 @@
 #ifndef THEMECONTROLLER_H
 #define THEMECONTROLLER_H
 
+/// \file
+/// \brief Gestión del tema claro/oscuro, recoloreado de enlaces y luz cálida nocturna.
+
 #include "themespec.h"
 
 #include <QObject>
@@ -14,14 +17,14 @@ class QColor;
 class QTime;
 class QTimer;
 
-// Gestiona el tema claro/oscuro: aplica la paleta de la aplicación, recolorea
-// los enlaces para que sigan siendo legibles, sincroniza el resaltador de
-// código y persiste la elección (vía AppSettings).
-//
-// Además ofrece una "luz cálida nocturna": tiñe el fondo del editor de un tono
-// ámbar cuya intensidad depende de la hora (neutro de día, máximo de noche).
-// Un temporizador la refresca periódicamente para que cambie sola al pasar las
-// horas.
+/// Gestiona el tema claro/oscuro: aplica la paleta de la aplicación, recolorea
+/// los enlaces para que sigan siendo legibles, sincroniza el resaltador de
+/// código y persiste la elección (vía AppSettings).
+///
+/// Además ofrece una "luz cálida nocturna": tiñe el fondo del editor de un tono
+/// ámbar cuya intensidad depende de la hora (neutro de día, máximo de noche).
+/// Un temporizador la refresca periódicamente para que cambie sola al pasar las
+/// horas.
 class ThemeController : public QObject
 {
     Q_OBJECT
@@ -30,31 +33,36 @@ public:
     ThemeController(QTextEdit *editor, CodeBlockHighlighter *highlighter,
                     QObject *parent = nullptr);
 
+    /// \brief Tema actualmente aplicado.
     mdtheme::ThemeId currentTheme() const;
+    /// \brief Indica si el tema actual es oscuro.
     bool isDark() const;
+    /// \brief Indica si la luz cálida nocturna está activada.
     bool isWarmLight() const;
+    /// \brief Indica si se está siguiendo el tema claro/oscuro del SO.
     bool followsSystem() const;
 
-    // Tema que corresponde al esquema de color actual del sistema operativo
-    // (Oscuro si el SO está en oscuro; Claro si está en claro o es desconocido).
+    /// Tema que corresponde al esquema de color actual del sistema operativo
+    /// (Oscuro si el SO está en oscuro; Claro si está en claro o es desconocido).
     mdtheme::ThemeId systemTheme() const;
 
-    // Aplica el tema (paleta + enlaces + resaltado) y lo persiste.
+    /// \brief Aplica el tema (paleta + enlaces + resaltado) y lo persiste.
     void applyTheme(mdtheme::ThemeId id);
 
-    // Activa/desactiva la luz cálida nocturna, la persiste y reaplica el tema.
+    /// \brief Activa/desactiva la luz cálida nocturna, la persiste y reaplica el tema.
     void setWarmLight(bool on);
 
-    // Activa/desactiva el seguimiento del tema del SO y lo persiste. Al activarlo
-    // aplica de inmediato el tema que corresponde al esquema actual; al
-    // desactivarlo conserva el tema vigente.
+    /// Activa/desactiva el seguimiento del tema del SO y lo persiste. Al activarlo
+    /// aplica de inmediato el tema que corresponde al esquema actual; al
+    /// desactivarlo conserva el tema vigente.
     void setFollowSystem(bool on);
 
-    // Recolorea los enlaces del documento con el color del tema actual. Útil
-    // tras cargar un archivo, cuyos enlaces traen un color fijo del Markdown.
+    /// Recolorea los enlaces del documento con el color del tema actual. Útil
+    /// tras cargar un archivo, cuyos enlaces traen un color fijo del Markdown.
     void recolorLinks();
 
 signals:
+    /// \brief El tema cambió al indicado por `id`.
     void themeChanged(mdtheme::ThemeId id);
 
 private:

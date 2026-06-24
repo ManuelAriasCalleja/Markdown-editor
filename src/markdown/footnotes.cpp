@@ -1,3 +1,7 @@
+/// \file
+/// \brief Implementación de las notas al pie: detección, protección de las
+///        definiciones y renderizado de las referencias.
+
 #include "footnotes.h"
 
 #include <QRegularExpression>

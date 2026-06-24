@@ -1,3 +1,6 @@
+/// \file
+/// \brief Implementación del diálogo «mapa de caracteres» de símbolos especiales.
+
 #include "symbolpicker.h"
 
 #include <QDialogButtonBox>

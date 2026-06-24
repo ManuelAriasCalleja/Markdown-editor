@@ -1,0 +1,74 @@
+# Configuración de Doxygen para md-editor.
+# Genera la documentación de la API (HTML) a partir del código de src/.
+#   doxygen Doxyfile        # -> docs/doxygen/html/index.html
+# La salida generada no se versiona (ver .gitignore).
+
+PROJECT_NAME           = "md-editor"
+PROJECT_NUMBER         = 2.1.0
+PROJECT_BRIEF          = "Editor/visor WYSIWYG de Markdown en Qt6 + C++17"
+OUTPUT_DIRECTORY       = docs/doxygen
+OUTPUT_LANGUAGE        = Spanish
+
+# Entrada: solo el código fuente (no tests, recursos ni build).
+INPUT                  = src
+RECURSIVE              = YES
+FILE_PATTERNS          = *.h *.cpp
+EXCLUDE_PATTERNS       = */build/* */build-san/*
+
+# Extracción: documenta todo lo accesible (también lo no comentado, para una API
+# completa), incluidos los miembros estáticos de fichero; nada privado ni interno.
+EXTRACT_ALL            = YES
+EXTRACT_STATIC         = YES
+EXTRACT_PRIVATE        = NO
+EXTRACT_ANON_NSPACES   = NO
+HIDE_UNDOC_MEMBERS     = NO
+INTERNAL_DOCS          = NO
+
+# Estilo de comentarios: el proyecto usa prosa breve; la primera frase es el
+# resumen (brief) tanto en estilo Javadoc /** */ como Qt /*! */ y ///.
+JAVADOC_AUTOBRIEF      = YES
+QT_AUTOBRIEF           = YES
+MULTILINE_CPP_IS_BRIEF = NO
+BUILTIN_STL_SUPPORT    = YES
+DISTRIBUTE_GROUP_DOC   = YES
+
+# C++ (no C). Ordena por lo que importa al lector.
+OPTIMIZE_OUTPUT_FOR_C  = NO
+SORT_MEMBER_DOCS       = NO
+SORT_BRIEF_DOCS        = NO
+
+# Avisos: útiles al documentar, sin abortar la build de docs.
+QUIET                  = YES
+WARNINGS               = YES
+WARN_IF_UNDOCUMENTED   = NO
+WARN_IF_DOC_ERROR      = YES
+WARN_NO_PARAMDOC       = NO
+WARN_LOGFILE           = docs/doxygen/doxygen-warnings.log
+
+# Salida: HTML con árbol de navegación; sin LaTeX.
+GENERATE_HTML          = YES
+GENERATE_LATEX         = NO
+HTML_OUTPUT            = html
+GENERATE_TREEVIEW      = YES
+DISABLE_INDEX          = NO
+FULL_SIDEBAR           = NO
+
+# Diagramas con Graphviz (disponible): herencia y colaboración entre clases.
+HAVE_DOT               = YES
+DOT_IMAGE_FORMAT       = svg
+CLASS_GRAPH            = YES
+COLLABORATION_GRAPH    = YES
+INCLUDE_GRAPH          = NO
+INCLUDED_BY_GRAPH      = NO
+CALL_GRAPH             = NO
+CALLER_GRAPH           = NO
+
+# Resuelve macros de Qt habituales para que no confundan al parser.
+MACRO_EXPANSION        = YES
+EXPAND_ONLY_PREDEF     = YES
+PREDEFINED             = Q_OBJECT= \
+                         Q_GADGET= \
+                         Q_SLOTS=slots \
+                         Q_SIGNALS=signals \
+                         QT_VERSION_CHECK(a,b,c)=0 \
+                         HAVE_HUNSPELL

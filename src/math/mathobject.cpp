@@ -1,3 +1,6 @@
+/// \file
+/// \brief Implementación de MathObject: medición y dibujo del objeto de fórmula 2D del documento.
+
 #include "mathobject.h"
 
 #include <QAbstractTextDocumentLayout>

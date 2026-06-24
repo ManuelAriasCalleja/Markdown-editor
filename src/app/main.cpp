@@ -1,3 +1,6 @@
+/// \file
+/// \brief Punto de entrada de la aplicación: arranque de QApplication, i18n y ciclo de vida de la ventana.
+
 #include "mainwindow.h"
 
 #include "appsettings.h"

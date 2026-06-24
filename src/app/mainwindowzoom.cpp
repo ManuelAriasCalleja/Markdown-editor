@@ -1,3 +1,6 @@
+/// \file
+/// \brief Zoom/escalado de toda la interfaz de MainWindow (editor, menús, barras, esquema, iconos).
+
 // Zoom/escalado de toda la interfaz de MainWindow: el editor y, al mismo desfase,
 // cada superficie de chrome (menús —con sus workarounds de Qt 6.8 + gtk3—, barras,
 // estado, esquema, iconos). Son métodos de MainWindow, separados de mainwindow.cpp

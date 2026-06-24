@@ -1,6 +1,9 @@
 #ifndef INSERTCONTROLLER_H
 #define INSERTCONTROLLER_H
 
+/// \file
+/// \brief Comandos de inserción del editor WYSIWYG: enlaces, imágenes, tablas, reglas, notas al pie, símbolos.
+
 #include <QObject>
 
 class QMimeData;
@@ -9,15 +12,15 @@ class QWidget;
 class DocumentIo;
 class SymbolPicker;
 
-// Comandos de inserción del editor WYSIWYG: enlaces, imágenes (con diálogo o
-// pegadas del portapapeles), tablas y reglas horizontales. Las imágenes locales
-// se referencian con ruta relativa al .md cuando es posible; las pegadas se
-// guardan a disco como PNG (no se incrustan, para que el Markdown round-trip-ee).
-//
-// Recibe el editor y el DocumentIo (para la ruta del documento); usa `parent`
-// como padre de los diálogos. Pide por señal los refrescos que tocan a otros
-// colaboradores (estado de las acciones de formato tras un enlace, borde de las
-// tablas recién insertadas).
+/// Comandos de inserción del editor WYSIWYG: enlaces, imágenes (con diálogo o
+/// pegadas del portapapeles), tablas y reglas horizontales. Las imágenes locales
+/// se referencian con ruta relativa al .md cuando es posible; las pegadas se
+/// guardan a disco como PNG (no se incrustan, para que el Markdown round-trip-ee).
+///
+/// Recibe el editor y el DocumentIo (para la ruta del documento); usa `parent`
+/// como padre de los diálogos. Pide por señal los refrescos que tocan a otros
+/// colaboradores (estado de las acciones de formato tras un enlace, borde de las
+/// tablas recién insertadas).
 class InsertController : public QObject
 {
     Q_OBJECT
@@ -25,14 +28,14 @@ class InsertController : public QObject
 public:
     InsertController(QTextEdit *editor, DocumentIo *documentIo, QWidget *parent);
 
-    // Si los datos del portapapeles/arrastre traen una imagen, la guarda a disco e
-    // inserta `![](ruta)`. Devuelve true si la gestionó (para que el editor no la
-    // incruste). Lo invoca el handler de pegado/soltado de FocusEditor.
+    /// Si los datos del portapapeles/arrastre traen una imagen, la guarda a disco e
+    /// inserta `![](ruta)`. Devuelve true si la gestionó (para que el editor no la
+    /// incruste). Lo invoca el handler de pegado/soltado de FocusEditor.
     bool handlePastedImage(const QMimeData *source);
 
-    // Si se pega una sola URL habiendo una selección (de un único bloque), la
-    // envuelve como `[selección](url)`. Devuelve true si lo gestionó. Encadenado
-    // tras handlePastedImage en el handler de pegado.
+    /// Si se pega una sola URL habiendo una selección (de un único bloque), la
+    /// envuelve como `[selección](url)`. Devuelve true si lo gestionó. Encadenado
+    /// tras handlePastedImage en el handler de pegado.
     bool handlePastedUrl(const QMimeData *source);
 
 public slots:
@@ -49,9 +52,9 @@ public slots:
     void pasteImageFromClipboard();  // acción del menú Insertar
 
 signals:
-    // Tras insertar un enlace: refrescar el estado de las acciones de formato.
+    /// Tras insertar un enlace: refrescar el estado de las acciones de formato.
     void formatActionsShouldRefresh();
-    // Tras insertar una tabla: aplicarle borde visible (styleTables).
+    /// Tras insertar una tabla: aplicarle borde visible (styleTables).
     void tableInserted();
 
 private:

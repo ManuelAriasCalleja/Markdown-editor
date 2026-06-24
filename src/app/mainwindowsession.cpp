@@ -1,3 +1,6 @@
+/// \file
+/// \brief Arranque de sesión, reapertura tras cambio de idioma y vigilancia del archivo en disco.
+
 // Sesión y recarga de disco de MainWindow: arranque de sesión (archivo de línea de
 // comandos › recuperar borrador › reabrir las pestañas anteriores), reapertura tras
 // cambio de idioma, y la vigilancia del archivo en disco (recarga silenciosa o

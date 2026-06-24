@@ -1,3 +1,6 @@
+/// \file
+/// \brief Implementación de FileController: nuevo/abrir/guardar, maybeSave y autoguardado.
+
 #include "filecontroller.h"
 
 #include <QCoreApplication>

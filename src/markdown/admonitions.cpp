@@ -1,3 +1,7 @@
+/// \file
+/// \brief Implementación de las admoniciones: detección de marcadores, estilo de
+///        «callout» en el documento y des-escapado para la serialización.
+
 #include "admonitions.h"
 
 #include <QRegularExpression>

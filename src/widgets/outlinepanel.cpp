@@ -1,3 +1,6 @@
+/// \file
+/// \brief Implementación del panel del índice y de las funciones puras de `mdoutline`.
+
 #include "outlinepanel.h"
 
 #include <QDropEvent>

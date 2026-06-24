@@ -1,3 +1,6 @@
+/// \file
+/// \brief Implementación de `removePreviewBlocks`: borra del documento los bloques de preview.
+
 #include "diagramdoc.h"
 
 #include <QTextBlock>

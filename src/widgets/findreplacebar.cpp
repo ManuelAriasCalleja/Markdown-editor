@@ -1,3 +1,7 @@
+/// \file
+/// \brief Implementación de la barra de buscar/reemplazar (búsqueda con envoltura,
+/// regex, reemplazar uno/todos).
+
 #include "findreplacebar.h"
 
 #include <QAction>

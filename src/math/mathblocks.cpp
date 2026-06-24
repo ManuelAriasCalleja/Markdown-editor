@@ -1,3 +1,6 @@
+/// \file
+/// \brief Implementación de mdmath: scanning del Markdown e integración de fórmulas con el QTextDocument.
+
 #include "mathblocks.h"
 #include "mathlayout.h"  // needsTwoDLayout
 

@@ -1,3 +1,6 @@
+/// \file
+/// \brief Implementación de la continuación inteligente de listas/tareas (análisis de línea Markdown).
+
 #include "listcontinuation.h"
 
 #include <QRegularExpression>

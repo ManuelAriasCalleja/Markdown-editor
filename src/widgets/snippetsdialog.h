@@ -1,6 +1,9 @@
 #ifndef SNIPPETSDIALOG_H
 #define SNIPPETSDIALOG_H
 
+/// \file
+/// \brief Diálogo de gestión de los snippets de usuario.
+
 #include <QDialog>
 #include <QList>
 
@@ -11,10 +14,10 @@ class QLineEdit;
 class QPlainTextEdit;
 class QPushButton;
 
-// Diálogo para gestionar los snippets de usuario: lista de nombres a la izquierda
-// y, a la derecha, el nombre y el cuerpo Markdown del seleccionado, más botones
-// para añadir/eliminar. Trabaja sobre una copia; el llamador recoge el resultado
-// con `snippets()` si el diálogo se acepta.
+/// \brief Diálogo para gestionar los snippets de usuario: lista de nombres a la izquierda
+/// y, a la derecha, el nombre y el cuerpo Markdown del seleccionado, más botones
+/// para añadir/eliminar. Trabaja sobre una copia; el llamador recoge el resultado
+/// con `snippets()` si el diálogo se acepta.
 class SnippetsDialog : public QDialog
 {
     Q_OBJECT
@@ -22,6 +25,7 @@ class SnippetsDialog : public QDialog
 public:
     explicit SnippetsDialog(const QList<mdsnippet::Snippet> &initial, QWidget *parent = nullptr);
 
+    /// \brief Lista de snippets editada; léela tras aceptar el diálogo.
     QList<mdsnippet::Snippet> snippets() const { return m_snippets; }
 
 private:

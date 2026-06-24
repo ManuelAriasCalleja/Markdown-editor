@@ -1,3 +1,6 @@
+/// \file
+/// \brief Implementación del shell MainWindow: constructor, pestañas, zoom y glue de colaboradores.
+
 #include "mainwindow.h"
 
 #include "appsettings.h"

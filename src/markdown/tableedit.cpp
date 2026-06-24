@@ -1,3 +1,7 @@
+/// \file
+/// \brief Implementación de la serialización canónica del documento: alineación
+///        de tablas, fórmulas y admoniciones reinyectadas sobre `toMarkdown`.
+
 #include "tableedit.h"
 
 #include "admonitions.h"

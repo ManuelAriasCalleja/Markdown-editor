@@ -1,3 +1,6 @@
+/// \file
+/// \brief Implementación del modo sin distracciones (pantalla completa y columna de lectura centrada).
+
 #include "distractionfreecontroller.h"
 
 #include <QKeySequence>

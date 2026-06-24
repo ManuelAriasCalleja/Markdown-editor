@@ -1,3 +1,6 @@
+/// \file
+/// \brief Implementación de la ventana de ayuda (selección de idioma y carga de páginas).
+
 #include "helpdialog.h"
 
 #include "appsettings.h"

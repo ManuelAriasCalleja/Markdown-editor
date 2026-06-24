@@ -1,3 +1,6 @@
+/// \file
+/// \brief Implementación de DiskWatcher: vigilancia con debounce e instantánea de bytes.
+
 #include "diskwatcher.h"
 
 #include <QFile>

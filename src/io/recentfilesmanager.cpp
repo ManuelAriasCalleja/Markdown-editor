@@ -1,3 +1,6 @@
+/// \file
+/// \brief Implementación de RecentFilesManager: persistencia, depuración y reconstrucción del menú.
+
 #include "recentfilesmanager.h"
 
 #include "appsettings.h"

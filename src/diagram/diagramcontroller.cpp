@@ -1,3 +1,6 @@
+/// \file
+/// \brief Implementación del controlador de previsualización de diagramas en el editor.
+
 #include "diagramcontroller.h"
 
 #include <QCryptographicHash>

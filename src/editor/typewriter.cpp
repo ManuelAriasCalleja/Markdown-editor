@@ -1,3 +1,6 @@
+/// \file
+/// \brief Implementación de la lógica pura del modo máquina de escribir (scroll centrado y tramos a atenuar).
+
 #include "typewriter.h"
 
 namespace mdtypewriter {

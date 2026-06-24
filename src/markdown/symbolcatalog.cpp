@@ -1,3 +1,6 @@
+/// \file
+/// \brief Definición de las categorías de símbolos especiales y sus puntos de código.
+
 #include "symbolcatalog.h"
 
 #include <QCoreApplication>

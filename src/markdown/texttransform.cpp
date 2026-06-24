@@ -1,3 +1,6 @@
+/// \file
+/// \brief Implementación de las transformaciones de texto sobre la selección.
+
 #include "texttransform.h"
 
 #include <QStringList>

@@ -1,3 +1,6 @@
+/// \file
+/// \brief Implementación de los constructos de bloque (cita, bloque de código) y sus transformaciones de texto.
+
 #include "blockconstructs.h"
 
 #include <QChar>

@@ -1,3 +1,6 @@
+/// \file
+/// \brief Implementación de la detección de URLs «pegables».
+
 #include "urldetect.h"
 
 #include <QRegularExpression>

@@ -1,3 +1,6 @@
+/// \file
+/// \brief Motor de parseo TeX→runs/Unicode: tablas de glifos, super/subíndices, fracciones y alfabetos matemáticos.
+
 #include "mathblocks.h"
 
 #include <QChar>

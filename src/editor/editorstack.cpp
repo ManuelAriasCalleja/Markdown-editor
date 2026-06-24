@@ -1,3 +1,6 @@
+/// \file
+/// \brief Implementación de EditorStack: cableado del editor y sus colaboradores por documento.
+
 #include "editorstack.h"
 
 #include <QColor>

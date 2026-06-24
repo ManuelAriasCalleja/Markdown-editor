@@ -1,3 +1,6 @@
+/// \file
+/// \brief Implementación de FocusEditor: columna de lectura centrada y handler de pegado/soltado.
+
 #include "focuseditor.h"
 
 #include <QApplication>

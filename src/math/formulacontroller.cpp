@@ -1,3 +1,6 @@
+/// \file
+/// \brief Implementación de FormulaController: diálogo de fórmula, inserción y protección con el teclado.
+
 #include "formulacontroller.h"
 
 #include <QComboBox>

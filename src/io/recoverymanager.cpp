@@ -1,3 +1,6 @@
+/// \file
+/// \brief Implementación de RecoveryManager: persistencia del borrador en AppDataLocation.
+
 #include "recoverymanager.h"
 
 #include <QDir>

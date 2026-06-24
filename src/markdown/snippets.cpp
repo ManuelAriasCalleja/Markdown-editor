@@ -1,3 +1,6 @@
+/// \file
+/// \brief Implementación de la (de)serialización de los snippets de usuario.
+
 #include "snippets.h"
 
 namespace mdsnippet {

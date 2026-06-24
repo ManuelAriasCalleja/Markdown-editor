@@ -1,3 +1,6 @@
+/// \file
+/// \brief Definición de los seis temas y utilidades de contraste WCAG.
+
 #include "themespec.h"
 
 #include <cmath>
