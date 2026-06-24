@@ -67,8 +67,43 @@ binario instalado (`/usr/local/bin/md-editor`) **no** se actualiza al recompilar
 
 Toda la lógica vive en una **biblioteca estática `md-editor-core`** que enlazan
 tanto el ejecutable (`main.cpp`, solo arranque + i18n) como las pruebas. Añadir un
-`.cpp/.h` nuevo = añadirlo a la lista de `md-editor-core` en `CMakeLists.txt` (y, si
-trae lógica pura, su `tst_*` a la lista de tests del mismo archivo).
+`.cpp/.h` nuevo = colocarlo en el subdirectorio de `src/` que le corresponda por
+componente (ver abajo) y añadirlo a la lista de `md-editor-core` en `CMakeLists.txt`
+(y, si trae lógica pura, su `tst_*` a la lista de tests del mismo archivo). Todos
+los subdirectorios de `src/` están en `target_include_directories(... PUBLIC)`, así
+que los `#include "foo.h"` no llevan prefijo de carpeta.
+
+**Distribución de `src/` por componente** (el código no es plano; cada fichero vive
+en su carpeta):
+
+- `app/` — el *shell* de ventana: `MainWindow` y sus 5 unidades de traducción
+  (`mainwindow`/`menus`/`input`/`zoom`/`session`), `main`, `appsettings`
+  (persistencia), `chromezoom`.
+- `editor/` — núcleo de edición: `EditorStack`, `FocusEditor`, los controladores de
+  formato/inserción/tabla y los gestos puros (`autopair`, `listcontinuation`,
+  `blockconstructs`, `typewriter`).
+- `view/` — apariencia y modos de vista: `SplitViewController`,
+  `DistractionFreeController`, `ThemeController`, `themespec`/`mdtheme`.
+- `io/` — E/S y persistencia en disco: `DocumentIo`, `FileController`,
+  `DiskWatcher`, `RecoveryManager`, `RecentFilesManager`.
+- `markdown/` — lógica Markdown pura compartida: `markdownrender` (pipeline de
+  carga), `tableedit` (serialización canónica), y las extensiones ligeras
+  (`footnotes`, `tasklist`, `shortcodes`, `admonitions`, `texttransform`,
+  `markdowntidy`, `codespanfix`, `urldetect`, `richpaste`, `doctemplates`,
+  `docstats`, `symbolcatalog`, `snippets`).
+- `highlight/` — resaltado: `CodeBlockHighlighter`, `languageregistry`.
+- `math/` — motor TeX (`mathblocks`/`texparser`/`mathlayout`/`mathobject`) +
+  `FormulaController`.
+- `diagram/` — Mermaid/PlantUML: `diagram`, `diagramdoc`, `DiagramRenderer`,
+  `DiagramController`.
+- `spell/` — corrector: `spellscan`, `SpellChecker`, `SpellController`.
+- `export/` — `mdexport`/`exporters` + `ExportController`.
+- `widgets/` — diálogos y widgets sueltos (`FindReplaceBar`, `GoToHeadingDialog`,
+  `HelpDialog`, `SymbolPicker`, `SnippetsDialog`, `OutlinePanel`) + `formaticons`.
+
+`src/` conserva además `resources.qrc`, `icons/` y `help/` (recursos Qt, fuera de
+las carpetas de código). El código está documentado con Doxygen (`Doxyfile` en la
+raíz; `doxygen Doxyfile` → `docs/doxygen/html`).
 
 **Edición por pestañas (`EditorStack`).** Cada documento abierto vive en un
 `EditorStack` (un `QWidget`, una pestaña) que **posee** el editor WYSIWYG/fuente y
