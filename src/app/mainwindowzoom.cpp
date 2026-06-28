@@ -18,6 +18,7 @@
 
 #include "appsettings.h"
 #include "chromezoom.h"
+#include "distractionfreecontroller.h"
 #include "editorstack.h"
 #include "findreplacebar.h"   // upcast m_findBar → QWidget* (tipo completo)
 #include "focuseditor.h"
@@ -53,6 +54,13 @@ void MainWindow::applyZoom()
 
     applyChromeZoom();
     AppSettings::setZoomLevel(m_zoomDelta);  // se recuerda para la próxima sesión
+}
+
+qreal MainWindow::uiScaleFactor() const
+{
+    if (m_baseFontPointSize <= 0)
+        return 1.0;
+    return chromezoom::scaledPointSize(m_baseFontPointSize, m_zoomDelta) / m_baseFontPointSize;
 }
 
 void MainWindow::applyMenuFontScale()
@@ -111,4 +119,7 @@ void MainWindow::applyChromeZoom()
     scale(statusBar(), m_baseStatusBarPointSize);
     scale(m_stack->split()->sourceEditor(), m_baseSourceFontPointSize);
     scale(m_outline, m_baseOutlinePointSize);
+    // La columna del modo sin distracciones es en px: escálala como la fuente.
+    if (m_distraction)
+        m_distraction->setUiScale(uiScaleFactor());
 }

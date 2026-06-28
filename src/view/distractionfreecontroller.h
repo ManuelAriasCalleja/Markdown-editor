@@ -46,6 +46,20 @@ public:
     /// redimensionar y al mostrar/ocultar el esquema.
     void updateLayout();
 
+    /// Reapunta el modo al editor y la vista dividida de la pestaña activa. El
+    /// controlador es de la ventana (único), pero el editor y el `split` son de
+    /// cada documento, así que al cambiar de pestaña hay que reorientarlo o el
+    /// modo aplicaría la columna sobre el editor de la pestaña anterior (oculto) y
+    /// el visible quedaría a todo el ancho. Llámalo con el modo ya inactivo.
+    void setTargets(FocusEditor *editor, SplitViewController *split);
+
+    /// Factor de escala de la interfaz (1.0 sin zoom). La columna de lectura y el
+    /// ancho del esquema están en píxeles, pero la fuente crece con el zoom; sin
+    /// escalarlos la columna se queda demasiado estrecha al ampliar. MainWindow lo
+    /// fija al arrancar y en cada cambio de zoom; si el modo está activo, recoloca
+    /// en el acto.
+    void setUiScale(qreal scale);
+
 public slots:
     /// \brief Entra/sale del modo (conéctalo a la acción F11).
     void setActive(bool on);
@@ -65,6 +79,7 @@ private:
     QTabBar *m_tabBar = nullptr;          // barra de pestañas (se oculta en el modo)
     QShortcut *m_escShortcut = nullptr;  // ESC para salir (solo activo en el modo)
 
+    qreal m_uiScale = 1.0;                // factor de zoom de la interfaz (1.0 = sin zoom)
     bool m_active = false;
     bool m_wasMaximized = false;          // estado de ventana previo, para restaurar
     bool m_findBarWasVisible = false;     // visibilidad previa de la barra de búsqueda

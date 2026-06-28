@@ -77,7 +77,7 @@ void DistractionFreeController::setActive(bool on)
         // vuelve a un ancho cómodo en vez de ocupar casi toda la ventana.
         m_normalOutlineWidth = (m_outline->isVisible() && !m_outline->isFloating())
                                    ? m_outline->width()
-                                   : kOutlineTreeWidth;
+                                   : qRound(kOutlineTreeWidth * m_uiScale);
         m_preGeometry = m_window->saveGeometry();
         m_preState = m_window->saveState();
 
@@ -98,8 +98,9 @@ void DistractionFreeController::setActive(bool on)
         // dejarla visible la estiraría hasta el borde de la pantalla.
         m_outline->setTitleBarWidget(new QWidget(m_outline));
 
-        m_editor->setReadingColumnWidth(kReadingColumn);
-        m_split->sourceEditor()->setReadingColumnWidth(kReadingColumn);
+        const int column = qRound(kReadingColumn * m_uiScale);
+        m_editor->setReadingColumnWidth(column);
+        m_split->sourceEditor()->setReadingColumnWidth(column);
 
         m_escShortcut->setEnabled(true);
         m_window->showFullScreen();
@@ -129,6 +130,26 @@ void DistractionFreeController::setActive(bool on)
     }
     updateLayout();
     emit activeChanged(on);
+}
+
+void DistractionFreeController::setTargets(FocusEditor *editor, SplitViewController *split)
+{
+    m_editor = editor;
+    m_split = split;
+}
+
+void DistractionFreeController::setUiScale(qreal scale)
+{
+    if (scale <= 0 || qFuzzyCompare(scale, m_uiScale))
+        return;
+    m_uiScale = scale;
+    // Si el zoom cambia con el modo ya activo, reescala la columna y recoloca.
+    if (m_active) {
+        const int column = qRound(kReadingColumn * m_uiScale);
+        m_editor->setReadingColumnWidth(column);
+        m_split->sourceEditor()->setReadingColumnWidth(column);
+        updateLayout();
+    }
 }
 
 void DistractionFreeController::updateLayout()
@@ -162,9 +183,11 @@ void DistractionFreeController::updateLayout()
         return;
     }
 
+    const int tree = qRound(kOutlineTreeWidth * m_uiScale);
+    const int column = qRound(kReadingColumn * m_uiScale);
     const int total = m_outline->width() + m_split->splitView()->width();  // dock+central
-    const int leftPad = qMax(0, (total - kOutlineTreeWidth - kReadingColumn) / 2);
-    const int dockWidth = leftPad + kOutlineTreeWidth;
+    const int leftPad = qMax(0, (total - tree - column) / 2);
+    const int dockWidth = leftPad + tree;
 
     m_outline->setLeftPadding(leftPad);
     if (m_outline->width() != dockWidth)  // evita reentrar en el layout sin necesidad

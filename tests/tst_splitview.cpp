@@ -5,6 +5,7 @@
 #include <QSettings>
 #include <QTextEdit>
 
+#include "distractionfreecontroller.h"
 #include "focuseditor.h"
 #include "mainwindow.h"
 #include "editorstack.h"
@@ -33,6 +34,7 @@ private slots:
     void splitAndSourceAreExclusive();
     void commitSourceUpdatesDocument();
     void syncSourceFromDocumentRefreshesPanel();
+    void distractionFreeFollowsActiveTab();
 
 private:
     // Markdown actual del documento WYSIWYG (serialización canónica, igual que
@@ -144,6 +146,29 @@ void TestSplitView::syncSourceFromDocumentRefreshesPanel()
     w.m_stack->editor()->setMarkdown(QStringLiteral("# Cambiado\n"));
     w.m_stack->split()->syncSourceFromDocument();
     QCOMPARE(w.m_stack->split()->sourceEditor()->toPlainText(), docMarkdown(w));
+}
+
+// El modo sin distracciones es de la ventana, pero opera sobre el editor de la
+// pestaña activa. Al cambiar o cerrar pestañas debe reapuntarse: si no, aplica la
+// columna sobre el editor de la pestaña anterior (que queda a todo el ancho) y, si
+// esa pestaña se cerró, deja un puntero colgante que crashea al entrar al modo.
+void TestSplitView::distractionFreeFollowsActiveTab()
+{
+    MainWindow w;
+    w.show();
+    w.addTab();         // segunda pestaña (queda activa)
+    w.closeTab(0);      // cierra la primera (con la que se construyó el controlador)
+    // Procesa el deleteLater para liberar de verdad el EditorStack cerrado: así, si
+    // el controlador siguiera apuntándolo, entrar al modo accedería a memoria libre.
+    qApp->processEvents();
+    qApp->sendPostedEvents(nullptr, QEvent::DeferredDelete);
+
+    w.m_distraction->setActive(true);     // F11: no debe crashear
+    QVERIFY(w.m_distraction->isActive());
+    // La columna se aplicó al editor de la pestaña ACTIVA (sin marco al activarse).
+    QCOMPARE(w.m_stack->editor()->frameShape(), QFrame::NoFrame);
+    w.m_distraction->setActive(false);
+    QCOMPARE(w.m_stack->editor()->frameShape(), QFrame::StyledPanel);
 }
 
 QTEST_MAIN(TestSplitView)

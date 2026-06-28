@@ -220,6 +220,7 @@ MainWindow::MainWindow(QWidget *parent)
             m_distraction, &DistractionFreeController::setActive);
     connect(m_distraction, &DistractionFreeController::activeChanged,
             m_distractionAction, &QAction::setChecked);
+    m_distraction->setUiScale(uiScaleFactor());  // zoom guardado ya aplicado arriba
 
     // Contador de palabras/caracteres, anclado a la derecha de la barra de estado.
     m_countLabel = new QLabel(this);
@@ -560,9 +561,14 @@ void MainWindow::setActiveStack(EditorStack *stack)
         stack->table()->updateActions();
     }
     // El modo sin distracciones apunta a un editor concreto; al cambiar de
-    // documento se sale (reorientarlo no compensa la complejidad).
-    if (m_distraction && m_distraction->isActive())
-        m_distraction->setActive(false);
+    // documento se sale y se reorienta al editor/split del documento activo (si no,
+    // la próxima entrada aplicaría la columna sobre el editor de la pestaña anterior
+    // y el visible quedaría a todo el ancho).
+    if (m_distraction) {
+        if (m_distraction->isActive())
+            m_distraction->setActive(false);
+        m_distraction->setTargets(stack->editor(), stack->split());
+    }
 
     // Título, indicador de modificado y recuento del documento activo.
     setWindowModified(stack->documentIo()->isModified());

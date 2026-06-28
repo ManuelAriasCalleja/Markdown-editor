@@ -163,6 +163,11 @@ private slots:
     // de estado y vista de código fuente) al nivel de zoom actual, para que
     // crezca/encoja junto con el texto del editor.
     void applyChromeZoom();
+    // Factor de escala de la interfaz al nivel de zoom actual (1.0 sin zoom). Es
+    // el cociente entre la fuente escalada del editor y su base; lo usa el modo
+    // sin distracciones para escalar la columna de lectura (en px) como crece la
+    // fuente. Devuelve 1.0 si la fuente base no usa puntos.
+    qreal uiScaleFactor() const;
     // Fija la fuente por defecto de QApplication para las clases QMenuBar y
     // QMenu al tamaño objetivo del zoom actual. Se invoca antes de crear los
     // menús y desde applyChromeZoom: Qt cachea anchuras de QAction en la
