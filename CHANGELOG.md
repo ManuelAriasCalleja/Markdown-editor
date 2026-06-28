@@ -5,6 +5,29 @@ Todos los cambios relevantes de **md-editor** se documentan en este archivo.
 El formato sigue, a grandes rasgos, [Keep a Changelog](https://keepachangelog.com/es/),
 y el proyecto usa [versionado semántico](https://semver.org/lang/es/).
 
+## [2.3.0] — 2026-06-29
+
+### Añadido
+- **Interlineado configurable** (*Ver → Interlineado*): elige entre Sencillo, Medio
+  y Amplio. Se aplica solo en pantalla (no se serializa, no afecta al round-trip) y
+  se recuerda entre sesiones.
+- **Temas Solarized**: dos temas nuevos, Solarized Light y Solarized Dark, que se
+  suman al catálogo existente.
+
+### Cambiado
+- **El modo sin distracciones ya no se sale al cambiar de pestaña**: se traslada al
+  documento activo en vez de desactivarse, y escala correctamente con el zoom de la
+  interfaz.
+- **La exportación conserva el resaltado de sintaxis** de los bloques de código:
+  HTML, PDF, ODF y DOCX salen con el código coloreado como en pantalla.
+- **Recuperación por pestaña**: el borrador de autoguardado pasa a indexarse por
+  documento (un slot único por pestaña), así que un cierre inesperado conserva
+  TODOS los documentos con cambios, no solo el último; al arrancar se ofrecen todos
+  para recuperar en sus pestañas.
+- **Atajos**: el modo foco pasa a **F12** y el foco al panel de esquema a **F6**
+  (antes Ctrl+Shift+O, que era ambiguo). El manual integrado documenta los atajos
+  de pestaña y de foco del esquema en los 8 idiomas, con anclas navegables.
+
 ## [2.2.0] — 2026-06-24
 
 ### Añadido
