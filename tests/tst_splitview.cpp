@@ -1,4 +1,5 @@
 #include <QtTest>
+#include <QShortcut>
 
 #include <QAction>
 #include <QApplication>
@@ -45,6 +46,7 @@ private slots:
     void keyboardCyclesTabs();
     void outlineFocusToggleShortcut();
     void focusModeHasShortcut();
+    void noConflictingShortcuts();
     void lineSpacingAppliesToBlocks();
 
 private:
@@ -265,6 +267,39 @@ void TestSplitView::focusModeHasShortcut()
     QCOMPARE(AppSettings::typewriterMode(), !before);
     w.m_typewriterAction->trigger();
     QCOMPARE(AppSettings::typewriterMode(), before);
+}
+
+// Guardia sistemática: ningún atajo de teclado debe estar asignado a dos sitios.
+// Todos los atajos de la app son de ventana (QAction o QShortcut hijos de
+// MainWindow), así que un duplicado = colisión real (Qt lo volvería ambiguo y no
+// dispararía). Esto caza el fallo de Ctrl+Shift+O sin tener que probar cada tecla.
+void TestSplitView::noConflictingShortcuts()
+{
+    MainWindow w;  // construir la ventana crea todas las acciones y QShortcut
+    QHash<QString, QStringList> byKey;  // clave portable: QKeySequence::toString()
+
+    for (QAction *a : w.findChildren<QAction *>())
+        for (const QKeySequence &k : a->shortcuts())
+            if (!k.isEmpty())
+                byKey[k.toString()] << (a->text().isEmpty() ? QStringLiteral("(acción)")
+                                                            : a->text());
+    for (QShortcut *s : w.findChildren<QShortcut *>())
+        if (!s->key().isEmpty())
+            byKey[s->key().toString()] << QStringLiteral("QShortcut");
+
+    // Lista blanca: teclas duplicadas a propósito porque sus QShortcut están
+    // separados por contexto (solo uno activo a la vez), no en conflicto real.
+    // - Esc: la barra de búsqueda (activa solo cuando es visible) y el modo sin
+    //   distracciones (habilitado solo en ese modo).
+    const QStringList allowed = {QKeySequence(Qt::Key_Escape).toString()};
+
+    QStringList conflicts;
+    for (auto it = byKey.cbegin(); it != byKey.cend(); ++it)
+        if (it.value().size() > 1 && !allowed.contains(it.key()))
+            conflicts << QStringLiteral("%1 → %2").arg(it.key(), it.value().join(QStringLiteral(", ")));
+    if (!conflicts.isEmpty())
+        qWarning("Atajos en conflicto:\n%s", qPrintable(conflicts.join(QLatin1Char('\n'))));
+    QVERIFY2(conflicts.isEmpty(), "Hay atajos de teclado duplicados (ver el aviso)");
 }
 
 // El interlineado se aplica como altura proporcional a todos los bloques del
