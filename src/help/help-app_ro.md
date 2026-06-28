@@ -249,10 +249,10 @@ De exemplu, un bloc de cod etichetat `mermaid` care conține `flowchart LR  A --
 
 Panoul lateral din stânga arată structura titlurilor (cuprins): se actualizează pe
 măsură ce scrii și, la clic pe o intrare, cursorul sare la acel titlu. Se
-afișează/ascunde cu F9. Cu **Ctrl+Shift+O** muți focalizarea tastaturii pe
+afișează/ascunde cu F9. Cu **F6** muți focalizarea tastaturii pe
 structură (afișând-o dacă este ascunsă); acolo, tastele săgeți se deplasează prin
 titluri, iar **Enter** sare la cel selectat și readuce focalizarea în editor.
-Apăsând din nou **Ctrl+Shift+O** revii pur și simplu cu focalizarea în editor.
+Apăsând din nou **F6** revii pur și simplu cu focalizarea în editor.
 
 Poți **trage** o intrare din structură pentru a **reordona** acea secțiune —titlul,
 conținutul și subsecțiunile ei— în document, fără a schimba nivelul. În plus,
@@ -362,7 +362,7 @@ ce scriai.
 | Inserează formulă         | Ctrl+Shift+F     |
 | Inserează notă de subsol  | Ctrl+Shift+N     |
 | Mergi la titlu            | Ctrl+G           |
-| Focus structură / editor  | Ctrl+Shift+O     |
+| Focus structură / editor  | F6     |
 | Vizualizare sursă Markdown | Ctrl+Shift+M    |
 | Vizualizare divizată      | Ctrl+Shift+D     |
 | Structură                 | F9               |

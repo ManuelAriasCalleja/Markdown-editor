@@ -256,10 +256,10 @@ Par exemple, un bloc de code étiqueté `mermaid` contenant `flowchart LR  A -->
 
 Le panneau latéral gauche affiche le plan des titres (sommaire) : il se met à jour
 à la frappe et, au clic sur une entrée, le curseur saute à ce titre. On
-l'affiche/masque avec F9. Avec **Ctrl+Maj+O**, vous déplacez le focus clavier
+l'affiche/masque avec F9. Avec **F6**, vous déplacez le focus clavier
 vers le plan (en l'affichant s'il est masqué) ; là, les flèches parcourent les
 titres et **Entrée** saute au titre sélectionné en rendant le focus à l'éditeur.
-Appuyer de nouveau sur **Ctrl+Maj+O** rend simplement le focus à l'éditeur.
+Appuyer de nouveau sur **F6** rend simplement le focus à l'éditeur.
 
 Vous pouvez **glisser** une entrée du plan pour **réordonner** cette section —son
 titre, son contenu et ses sous-sections— dans le document, sans changer le niveau.
@@ -365,7 +365,7 @@ elle propose à la réouverture de récupérer ce que vous étiez en train d'éc
 | Insérer une formule       | Ctrl+Maj+F       |
 | Insérer une note          | Ctrl+Maj+N       |
 | Aller au titre            | Ctrl+G           |
-| Plan / retour à l'éditeur | Ctrl+Maj+O       |
+| Plan / retour à l'éditeur | F6       |
 | Vue source Markdown       | Ctrl+Maj+M       |
 | Vue partagée              | Ctrl+Maj+D       |
 | Plan                      | F9               |

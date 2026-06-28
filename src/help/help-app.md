@@ -253,10 +253,10 @@ correspondiente.
 
 El panel lateral izquierdo muestra el índice de encabezados (TOC): se
 actualiza al escribir y, al hacer clic en una entrada, el cursor salta a ese
-encabezado. Se muestra/oculta con F9. Con **Ctrl+Shift+O** llevas el foco del
+encabezado. Se muestra/oculta con F9. Con **F6** llevas el foco del
 teclado al esquema (lo muestra si estaba oculto); ahí, las flechas recorren los
 encabezados y **Enter** salta al elegido y devuelve el foco al editor. Pulsar
-**Ctrl+Shift+O** de nuevo, sin más, devuelve el foco al editor.
+**F6** de nuevo, sin más, devuelve el foco al editor.
 
 Puedes **arrastrar** una entrada del esquema para **reordenar** esa sección
 —su encabezado, su contenido y sus subsecciones— dentro del documento, sin
@@ -361,7 +361,7 @@ ofrece recuperar lo que estabas escribiendo.
 | Insertar fórmula          | Ctrl+Shift+F     |
 | Insertar nota al pie      | Ctrl+Shift+N     |
 | Ir a encabezado           | Ctrl+G           |
-| Foco al esquema / volver al editor | Ctrl+Shift+O |
+| Foco al esquema / volver al editor | F6 |
 | Vista de código Markdown  | Ctrl+Shift+M     |
 | Vista dividida            | Ctrl+Shift+D     |
 | Esquema                   | F9               |

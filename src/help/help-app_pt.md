@@ -250,10 +250,10 @@ Por exemplo, um bloco de código etiquetado `mermaid` com `flowchart LR  A --> B
 
 O painel lateral esquerdo mostra a estrutura de títulos (TOC): atualiza-se ao
 escrever e, ao clicar numa entrada, o cursor salta para esse título.
-Mostra-se/oculta-se com F9. Com **Ctrl+Shift+O** move o foco do teclado para a
+Mostra-se/oculta-se com F9. Com **F6** move o foco do teclado para a
 estrutura (mostrando-a se estiver oculta); aí, as teclas de seta percorrem os
 títulos e **Enter** salta para o selecionado e devolve o foco ao editor. Premir
-**Ctrl+Shift+O** novamente devolve simplesmente o foco ao editor.
+**F6** novamente devolve simplesmente o foco ao editor.
 
 Pode **arrastar** uma entrada da estrutura para **reordenar** essa secção —o seu
 título, o seu conteúdo e as suas subsecções— dentro do documento, sem mudar o
@@ -357,7 +357,7 @@ recuperar o que estava a escrever.
 | Inserir fórmula           | Ctrl+Shift+F     |
 | Inserir nota de rodapé    | Ctrl+Shift+N     |
 | Ir para título            | Ctrl+G           |
-| Focar estrutura / voltar ao editor | Ctrl+Shift+O     |
+| Focar estrutura / voltar ao editor | F6     |
 | Vista de código Markdown  | Ctrl+Shift+M     |
 | Vista dividida            | Ctrl+Shift+D     |
 | Estrutura                 | F9               |

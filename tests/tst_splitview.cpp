@@ -226,24 +226,29 @@ void TestSplitView::keyboardCyclesTabs()
     QCOMPARE(w.m_tabs->currentIndex(), 2);
 }
 
-// Ctrl+Shift+O alterna el foco esquema↔editor, mostrando el esquema si está oculto.
+// F6 alterna el foco esquema↔editor, mostrando el esquema si está oculto. Se
+// envía la TECLA real (no se llama a toggleOutlineFocus): así el evento pasa por
+// el mapa de atajos de Qt y la prueba detecta colisiones (un atajo ambiguo emite
+// activatedAmbiguously y NO dispara, que es justo el fallo que tuvo Ctrl+Shift+O).
 void TestSplitView::outlineFocusToggleShortcut()
 {
     MainWindow w;
     w.show();
     w.m_stack->editor()->setMarkdown(QStringLiteral("# Uno\n\nTexto\n\n# Dos\n"));
     w.activateWindow();
-    QApplication::processEvents();
     w.m_outline->setVisible(false);
-
-    w.toggleOutlineFocus();                     // muestra y enfoca el esquema
-    QApplication::processEvents();
-    QVERIFY(!w.m_outline->isHidden());          // se mostró (isHidden refleja el hide explícito)
-    QTRY_VERIFY(w.m_outline->treeHasFocus());   // y recibió el foco
-
-    w.toggleOutlineFocus();                     // devuelve el foco al editor
+    w.m_stack->editor()->setFocus();
     QApplication::processEvents();
     QVERIFY(!w.m_outline->treeHasFocus());
+
+    QTest::keyClick(w.m_stack->editor(), Qt::Key_F6);   // muestra y enfoca el esquema
+    QApplication::processEvents();
+    QVERIFY(!w.m_outline->isHidden());          // se mostró (isHidden refleja el hide explícito)
+    QTRY_VERIFY(w.m_outline->treeHasFocus());   // y recibió el foco (vía el atajo real)
+
+    QTest::keyClick(&w, Qt::Key_F6);            // devuelve el foco al editor
+    QApplication::processEvents();
+    QTRY_VERIFY(!w.m_outline->treeHasFocus());
 }
 
 // El «Modo foco» tiene atajo F12 y alterna (persistido en AppSettings).

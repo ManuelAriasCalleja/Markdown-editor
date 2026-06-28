@@ -246,10 +246,10 @@ For example, a code block tagged `mermaid` containing `flowchart LR  A --> B
 
 The left side panel shows the heading outline (TOC): it updates as you type and,
 when you click an entry, the cursor jumps to that heading. It is shown/hidden
-with F9. With **Ctrl+Shift+O** you move keyboard focus to the outline (showing
+with F9. With **F6** you move keyboard focus to the outline (showing
 it if hidden); there, the arrow keys move through the headings and **Enter**
 jumps to the selected one and returns focus to the editor. Pressing
-**Ctrl+Shift+O** again simply returns focus to the editor.
+**F6** again simply returns focus to the editor.
 
 You can **drag** an outline entry to **reorder** that section —its heading, its
 content and its subsections— within the document, without changing its level.
@@ -350,7 +350,7 @@ were writing.
 | Insert formula            | Ctrl+Shift+F     |
 | Insert footnote           | Ctrl+Shift+N     |
 | Go to heading             | Ctrl+G           |
-| Focus outline / back to editor | Ctrl+Shift+O     |
+| Focus outline / back to editor | F6     |
 | Markdown source view      | Ctrl+Shift+M     |
 | Split view                | Ctrl+Shift+D     |
 | Outline                   | F9               |

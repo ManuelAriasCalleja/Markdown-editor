@@ -245,10 +245,10 @@ Na przykład blok kodu oznaczony `mermaid` zawierający `flowchart LR  A --> B
 
 Lewy panel boczny pokazuje strukturę nagłówków (spis treści): aktualizuje się
 podczas pisania, a po kliknięciu pozycji kursor przeskakuje do tego nagłówka.
-Pokazuje się/ukrywa klawiszem F9. Za pomocą **Ctrl+Shift+O** przenosisz fokus
+Pokazuje się/ukrywa klawiszem F9. Za pomocą **F6** przenosisz fokus
 klawiatury na konspekt (pokazując go, jeśli jest ukryty); tam klawisze strzałek
 przesuwają się po nagłówkach, a **Enter** przeskakuje do wybranego i przywraca
-fokus do edytora. Ponowne naciśnięcie **Ctrl+Shift+O** po prostu przywraca fokus
+fokus do edytora. Ponowne naciśnięcie **F6** po prostu przywraca fokus
 do edytora.
 
 Pozycję struktury możesz **przeciągnąć**, aby **zmienić kolejność** tej sekcji —jej
@@ -351,7 +351,7 @@ proponuje odzyskanie tego, co pisałeś.
 | Wstaw wzór                | Ctrl+Shift+F     |
 | Wstaw przypis             | Ctrl+Shift+N     |
 | Przejdź do nagłówka       | Ctrl+G           |
-| Fokus na konspekt / powrót do edytora | Ctrl+Shift+O     |
+| Fokus na konspekt / powrót do edytora | F6     |
 | Widok źródła Markdown     | Ctrl+Shift+M     |
 | Widok podzielony          | Ctrl+Shift+D     |
 | Struktura                 | F9               |

@@ -145,8 +145,10 @@ MainWindow::MainWindow(QWidget *parent)
     addTabShortcut(QKeySequence(Qt::CTRL | Qt::Key_PageUp), -1);
     addTabShortcut(QKeySequence(Qt::CTRL | Qt::Key_Tab), +1);
     addTabShortcut(QKeySequence(QStringLiteral("Ctrl+Shift+Tab")), -1);
-    // Alterna el foco entre el esquema y el editor (mostrando el esquema si hace falta).
-    auto *outlineFocus = new QShortcut(QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_O), this);
+    // Alterna el foco entre el esquema y el editor (mostrando el esquema si hace
+    // falta). F6 es la convención de «mover el foco entre paneles»; Ctrl+Shift+O ya
+    // lo usa la lista numerada (colisionaba: atajo ambiguo, no disparaba ninguno).
+    auto *outlineFocus = new QShortcut(QKeySequence(Qt::Key_F6), this);
     connect(outlineFocus, &QShortcut::activated, this, &MainWindow::toggleOutlineFocus);
 
     // Esquema: mostrar/ocultar (F9) recoloca la columna sin distracciones; clic

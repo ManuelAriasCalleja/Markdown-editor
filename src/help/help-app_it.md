@@ -252,10 +252,10 @@ Ad esempio, un blocco di codice etichettato `mermaid` contenente `flowchart LR  
 
 Il pannello laterale sinistro mostra la struttura dei titoli (TOC): si aggiorna
 mentre scrivi e, facendo clic su una voce, il cursore salta a quel titolo. Si
-mostra/nasconde con F9. Con **Ctrl+Maiusc+O** sposti il fuoco della tastiera
+mostra/nasconde con F9. Con **F6** sposti il fuoco della tastiera
 sulla struttura (mostrandola se è nascosta); lì i tasti freccia scorrono tra i
 titoli e **Invio** salta a quello selezionato riportando il fuoco all'editor.
-Premendo di nuovo **Ctrl+Maiusc+O** il fuoco torna semplicemente all'editor.
+Premendo di nuovo **F6** il fuoco torna semplicemente all'editor.
 
 Puoi **trascinare** una voce della struttura per **riordinare** quella sezione —il
 suo titolo, il suo contenuto e le sue sottosezioni— nel documento, senza cambiare
@@ -362,7 +362,7 @@ propone di recuperare ciò che stavi scrivendo.
 | Inserisci formula         | Ctrl+Maiusc+F    |
 | Inserisci nota            | Ctrl+Maiusc+N    |
 | Vai al titolo             | Ctrl+G           |
-| Struttura (fuoco) / editor | Ctrl+Maiusc+O    |
+| Struttura (fuoco) / editor | F6    |
 | Vista sorgente Markdown   | Ctrl+Maiusc+M    |
 | Vista divisa              | Ctrl+Maiusc+D    |
 | Struttura                 | F9               |

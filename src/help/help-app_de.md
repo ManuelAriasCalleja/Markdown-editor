@@ -259,10 +259,10 @@ Zum Beispiel wird ein als `mermaid` markierter Codeblock mit `flowchart LR  A
 
 Das linke Seitenpanel zeigt die Überschriftengliederung (Inhaltsverzeichnis): Sie
 aktualisiert sich beim Tippen, und beim Klick auf einen Eintrag springt der Cursor
-zu dieser Überschrift. Ein-/ausblenden mit F9. Mit **Strg+Umschalt+O** verschieben
+zu dieser Überschrift. Ein-/ausblenden mit F9. Mit **F6** verschieben
 Sie den Tastaturfokus auf die Gliederung (sie wird eingeblendet, falls verborgen);
 dort bewegen die Pfeiltasten durch die Überschriften und **Enter** springt zur
-ausgewählten und gibt den Fokus an den Editor zurück. Ein erneutes **Strg+Umschalt+O**
+ausgewählten und gibt den Fokus an den Editor zurück. Ein erneutes **F6**
 gibt den Fokus einfach an den Editor zurück.
 
 Sie können einen Gliederungseintrag **ziehen**, um diesen Abschnitt —seine
@@ -372,7 +372,7 @@ automatisch gespeichert. Schließt die Anwendung unerwartet, bietet sie beim ern
 | Formel einfügen           | Strg+Umschalt+F  |
 | Fußnote einfügen          | Strg+Umschalt+N  |
 | Zu Überschrift gehen      | Strg+G           |
-| Fokus auf Gliederung / zurück zum Editor | Strg+Umschalt+O  |
+| Fokus auf Gliederung / zurück zum Editor | F6  |
 | Markdown-Quelltextansicht | Strg+Umschalt+M  |
 | Geteilte Ansicht          | Strg+Umschalt+D  |
 | Gliederung                | F9               |

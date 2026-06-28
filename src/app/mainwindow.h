@@ -264,7 +264,7 @@ private:
     // Cambia a la pestaña +delta/-delta (con envoltura), si hay más de una.
     // Atajos Ctrl+AvPág/RePág y Ctrl+Tab/Ctrl+Shift+Tab.
     void cycleTab(int delta);
-    // Alterna el foco de teclado entre el esquema (TOC) y el editor (Ctrl+Shift+O):
+    // Alterna el foco de teclado entre el esquema (TOC) y el editor (F6):
     // muestra el esquema si está oculto, lo enfoca; si ya lo tiene, vuelve al editor.
     void toggleOutlineFocus();
     // Diálogo de abrir → abre en pestaña (reusa la actual si está vacía).
