@@ -138,6 +138,33 @@ void DistractionFreeController::setTargets(FocusEditor *editor, SplitViewControl
     m_split = split;
 }
 
+void DistractionFreeController::retarget(FocusEditor *editor, SplitViewController *split)
+{
+    // Con el modo inactivo basta recordar el nuevo destino (lo usará la próxima
+    // entrada). Si está activo, trasladamos el modo a la pestaña entrante sin salir
+    // de él: quitamos la columna del editor saliente y la ponemos en el nuevo.
+    if (!m_active) {
+        setTargets(editor, split);
+        return;
+    }
+    if (editor == m_editor)
+        return;
+    m_editor->setReadingColumnWidth(0);
+    m_editor->setColumnLeftAligned(false);
+    m_split->sourceEditor()->setReadingColumnWidth(0);
+
+    setTargets(editor, split);
+
+    // El modo es de columna única: si la pestaña entrante estaba en vista dividida,
+    // salimos de ella, igual que al entrar al modo.
+    if (m_split->splitMode())
+        m_split->toggleSplitView(false);
+    const int column = qRound(kReadingColumn * m_uiScale);
+    m_editor->setReadingColumnWidth(column);
+    m_split->sourceEditor()->setReadingColumnWidth(column);
+    updateLayout();
+}
+
 void DistractionFreeController::setUiScale(qreal scale)
 {
     if (scale <= 0 || qFuzzyCompare(scale, m_uiScale))

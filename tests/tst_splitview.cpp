@@ -41,6 +41,7 @@ private slots:
     void commitSourceUpdatesDocument();
     void syncSourceFromDocumentRefreshesPanel();
     void distractionFreeFollowsActiveTab();
+    void distractionFreeSurvivesTabSwitch();
     void keyboardCyclesTabs();
     void outlineFocusToggleShortcut();
     void focusModeHasShortcut();
@@ -179,6 +180,29 @@ void TestSplitView::distractionFreeFollowsActiveTab()
     QCOMPARE(w.m_stack->editor()->frameShape(), QFrame::NoFrame);
     w.m_distraction->setActive(false);
     QCOMPARE(w.m_stack->editor()->frameShape(), QFrame::StyledPanel);
+}
+
+// El modo sin distracciones no se sale al cambiar de pestaña: se traslada al
+// editor de la pestaña entrante (columna fuera del saliente, dentro del nuevo).
+void TestSplitView::distractionFreeSurvivesTabSwitch()
+{
+    MainWindow w;
+    w.show();
+    EditorStack *first = w.m_stack;
+    EditorStack *second = w.addTab();   // segunda pestaña, queda activa
+    QVERIFY(second && first != second);
+
+    w.m_distraction->setActive(true);   // entra al modo en la segunda
+    QVERIFY(w.m_distraction->isActive());
+    QCOMPARE(second->editor()->frameShape(), QFrame::NoFrame);  // columna aplicada
+
+    w.m_tabs->setCurrentWidget(first);  // cambia de pestaña (dispara retarget)
+    QVERIFY(w.m_distraction->isActive());                          // sigue en el modo
+    QCOMPARE(first->editor()->frameShape(), QFrame::NoFrame);      // columna en la nueva
+    QCOMPARE(second->editor()->frameShape(), QFrame::StyledPanel); // y fuera de la anterior
+
+    w.m_distraction->setActive(false);
+    QCOMPARE(first->editor()->frameShape(), QFrame::StyledPanel);
 }
 
 // Ctrl+AvPág/RePág y Ctrl+Tab rotan entre pestañas (con envoltura). Probamos la

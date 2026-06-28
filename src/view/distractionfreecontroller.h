@@ -53,6 +53,12 @@ public:
     /// el visible quedaría a todo el ancho. Llámalo con el modo ya inactivo.
     void setTargets(FocusEditor *editor, SplitViewController *split);
 
+    /// Traslada el modo a la pestaña activa al cambiar de documento. Si el modo
+    /// está activo, lo mantiene: quita la columna del editor saliente y la aplica
+    /// al entrante (sin salir de pantalla completa). Si está inactivo, equivale a
+    /// setTargets(). Sustituye al antiguo «salir del modo al cambiar de pestaña».
+    void retarget(FocusEditor *editor, SplitViewController *split);
+
     /// Factor de escala de la interfaz (1.0 sin zoom). La columna de lectura y el
     /// ancho del esquema están en píxeles, pero la fuente crece con el zoom; sin
     /// escalarlos la columna se queda demasiado estrecha al ampliar. MainWindow lo

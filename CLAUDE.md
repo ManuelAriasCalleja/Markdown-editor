@@ -118,8 +118,9 @@ cambiar de pestaña. Las acciones de menú/barra son **únicas** y compartidas: 
 *triggers* despachan a `m_stack` (el activo) con lambdas; su estado lo refresca el
 documento activo (`configureStack()` les entrega las acciones a cada pestaña). El
 esquema y la barra de búsqueda son de la ventana (compartidos): solo el documento
-activo los alimenta. *Limitaciones conocidas:* el modo sin distracciones se sale al
-cambiar de pestaña, y el borrador de autoguardado/recuperación es de ruta fija
+activo los alimenta. El modo sin distracciones se **traslada** a la pestaña activa
+al cambiar de documento (`DistractionFreeController::retarget`), sin salir del modo.
+*Limitación conocida:* el borrador de autoguardado/recuperación es de ruta fija
 (las pestañas lo comparten; recupera el último editado). `addTab`/`closeTab`/
 `openPathInTab` gestionan el ciclo de vida; la sesión (`AppSettings::openFiles`)
 reabre todas las pestañas al arrancar y tras un cambio de idioma.

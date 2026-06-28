@@ -9,7 +9,7 @@ Lista de mejoras pendientes, ordenadas por relación valor/coste y riesgo
   a los bloques al cargar/formatear. No afecta al round-trip (no se serializa).
   Coste bajo.
 
-- [ ] **El modo sin distracciones no debería salirse al cambiar de pestaña.**
+- [x] **El modo sin distracciones no debería salirse al cambiar de pestaña.**
   Limitación documentada: F11 se desactiva al cambiar de documento. Como el
   controlador ya es de la ventana (`DistractionFreeController::setTargets`),
   reengancharlo a la nueva pestaña en vez de salir. Coste bajo-medio.

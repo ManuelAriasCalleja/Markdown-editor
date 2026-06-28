@@ -575,15 +575,11 @@ void MainWindow::setActiveStack(EditorStack *stack)
         stack->format()->updateActions();
         stack->table()->updateActions();
     }
-    // El modo sin distracciones apunta a un editor concreto; al cambiar de
-    // documento se sale y se reorienta al editor/split del documento activo (si no,
-    // la próxima entrada aplicaría la columna sobre el editor de la pestaña anterior
-    // y el visible quedaría a todo el ancho).
-    if (m_distraction) {
-        if (m_distraction->isActive())
-            m_distraction->setActive(false);
-        m_distraction->setTargets(stack->editor(), stack->split());
-    }
+    // El modo sin distracciones es de la ventana pero opera sobre el editor de una
+    // pestaña: al cambiar de documento se traslada al editor/split del activo en
+    // vez de salirse (si está activo lo mantiene; si no, solo recuerda el destino).
+    if (m_distraction)
+        m_distraction->retarget(stack->editor(), stack->split());
 
     // Título, indicador de modificado y recuento del documento activo.
     setWindowModified(stack->documentIo()->isModified());
