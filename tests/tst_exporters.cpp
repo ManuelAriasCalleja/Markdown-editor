@@ -6,8 +6,10 @@
 #include <QTextDocument>
 #include <QXmlStreamReader>
 
+#include "codehighlighter.h"
 #include "exporters.h"
 #include "mathblocks.h"
+#include "themespec.h"
 
 // Pruebas de la exportación: el serializador LaTeX puro, la lectura del front
 // matter y los XML de idioma del ODF. El empaquetado real del ODT (QZip) se
@@ -37,6 +39,7 @@ private slots:
     void epubContentXhtmlWrapsBody();
     void epubWriteProducesZipPackage();
     void twoDFormulaExpandsForHtmlAndLatex();
+    void codeHighlightingBakedIntoExport();
 };
 
 // ¿`xml` es XML bien formado? (para validar las piezas del EPUB).
@@ -317,6 +320,27 @@ void TestExporters::twoDFormulaExpandsForHtmlAndLatex()
     const QString latex = mdexport::toLatex(&doc, mdexport::Language{}, QString());
     QVERIFY(latex.contains(QStringLiteral("\\sum_{i=1}^n")));
     QVERIFY(latex.contains(QStringLiteral("\\frac{x_i}{2}")));
+}
+
+// El resaltado de sintaxis (overlay del QSyntaxHighlighter) se hornea en el clon
+// de exportación como color de carácter real, para que el código exporte con color
+// (HTML/ODF/DOCX/EPUB/PDF). El clon directo no lo lleva.
+void TestExporters::codeHighlightingBakedIntoExport()
+{
+    QTextDocument doc;
+    doc.setMarkdown(QStringLiteral("```cpp\nint main() { return 42; }\n```\n"));
+    CodeBlockHighlighter hl(&doc);
+    hl.setSyntaxColors(mdtheme::specFor(mdtheme::ThemeId::Light).syntax);
+    hl.rehighlight();
+
+    std::unique_ptr<QTextDocument> plain(doc.clone());
+    QVERIFY2(!plain->toHtml().contains(QStringLiteral("color:#")),
+             "el clon directo no lleva el color del resaltado (es overlay)");
+
+    std::unique_ptr<QTextDocument> baked(mdexport::cloneForExport(&doc));
+    // El azul de keyword del tema claro (#0000ff) del «int»/«return».
+    QVERIFY2(baked->toHtml().contains(QStringLiteral("color:#0000ff"), Qt::CaseInsensitive),
+             "el resaltado de código debe conservarse en la exportación");
 }
 
 QTEST_MAIN(TestExporters)

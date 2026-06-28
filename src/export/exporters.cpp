@@ -21,6 +21,7 @@
 #include <QTextDocument>
 #include <QTextDocumentWriter>
 #include <QTextFragment>
+#include <QTextLayout>
 #include <QTextList>
 #include <QTextTable>
 #include <QTextTableCell>
@@ -1228,6 +1229,37 @@ bool writeEpub(const QTextDocument *doc, const QString &path, const Language &la
     return true;
 }
 
+namespace {
+// El resaltado de sintaxis lo pinta un QSyntaxHighlighter como overlay de la
+// maqueta (block.layout()->formats()), no como formato de carácter del documento,
+// así que clone() no lo copia y el código se exportaría sin color. Lo «horneamos»
+// en el clon copiando esos formatos como formato de carácter real, SOLO en los
+// bloques de código (BlockCodeFence): así no arrastramos el subrayado ortográfico
+// (que vive en la prosa) ni el color de las fórmulas (que se expanden aparte). Se
+// hace antes de las ediciones de math: solo cambia formatos, no longitudes, así
+// que las posiciones siguen coincidiendo con `src`.
+void bakeCodeHighlighting(const QTextDocument *src, QTextDocument *out)
+{
+    QTextCursor cursor(out);
+    for (QTextBlock b = src->begin(); b.isValid(); b = b.next()) {
+        if (!b.blockFormat().hasProperty(QTextFormat::BlockCodeFence))
+            continue;
+        const QTextLayout *layout = b.layout();
+        if (!layout)
+            continue;
+        const int base = b.position();
+        const QList<QTextLayout::FormatRange> ranges = layout->formats();
+        for (const QTextLayout::FormatRange &r : ranges) {
+            if (r.length <= 0)
+                continue;
+            cursor.setPosition(base + r.start);
+            cursor.setPosition(base + r.start + r.length, QTextCursor::KeepAnchor);
+            cursor.mergeCharFormat(r.format);
+        }
+    }
+}
+} // namespace
+
 QTextDocument *cloneForExport(const QTextDocument *src)
 {
     // Clon directo: preserva fragmentos, formatos y vertical-align (lo que
@@ -1241,6 +1273,7 @@ QTextDocument *cloneForExport(const QTextDocument *src)
     // Recolectamos primero y aplicamos en orden descendente para no invalidar
     // posiciones (las expansiones cambian la longitud).
     QTextDocument *out = src->clone();
+    bakeCodeHighlighting(src, out);  // conserva el color del código (overlay -> char format)
     QTextCursor c(out);
     struct MathEdit { int start; int end; bool isObject; QString tex; QTextCharFormat cleared; };
     QList<MathEdit> edits;

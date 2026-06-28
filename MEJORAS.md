@@ -14,7 +14,7 @@ Lista de mejoras pendientes, ordenadas por relación valor/coste y riesgo
   controlador ya es de la ventana (`DistractionFreeController::setTargets`),
   reengancharlo a la nueva pestaña en vez de salir. Coste bajo-medio.
 
-- [ ] **Resaltado de sintaxis en los bloques de código al exportar.** En pantalla
+- [x] **Resaltado de sintaxis en los bloques de código al exportar.** En pantalla
   se resaltan; revisar si HTML/PDF/DOCX/ODF lo conservan y, si no, emitir el
   código con color. Coste medio.
 

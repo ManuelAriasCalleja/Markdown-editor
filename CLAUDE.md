@@ -464,7 +464,12 @@ una fórmula muy anidada (`\frac{\frac{…}}`, `x^{y^{…}}`) desbordaba la pila
   clona el documento, limpia las propiedades custom de los runs inline y
   **expande** cada carácter objeto 2D a esos runs inline (cursiva + super/sub),
   dejando que Qt serialice el vertical-align a CSS/ODF/PDF (la maquetación 2D es
-  solo de pantalla).
+  solo de pantalla). `cloneForExport` además **hornea el resaltado de sintaxis**
+  (`bakeCodeHighlighting`): el color del código lo pinta el `QSyntaxHighlighter`
+  como overlay de la maqueta (`block.layout()->formats()`), que `clone()` no copia;
+  se copia como formato de carácter real **solo en los bloques de código**
+  (`BlockCodeFence`), para no arrastrar el subrayado ortográfico de la prosa. Así el
+  código exporta con color (no-op si no hay resaltador, p. ej. en tests).
 - *Multilínea.* `$$...$$` de bloque puede cruzar varias líneas en la fuente
   (estilo Pandoc/Obsidian): `findMath` rastrea la apertura entre líneas y
   `protectMath` codifica los saltos internos en un placeholder PUA
