@@ -1,10 +1,13 @@
 #include <QtTest>
 
+#include <QAction>
 #include <QApplication>
 #include <QCoreApplication>
+#include <QKeySequence>
 #include <QSettings>
 #include <QTextEdit>
 
+#include "appsettings.h"
 #include "distractionfreecontroller.h"
 #include "focuseditor.h"
 #include "mainwindow.h"
@@ -38,6 +41,7 @@ private slots:
     void distractionFreeFollowsActiveTab();
     void keyboardCyclesTabs();
     void outlineFocusToggleShortcut();
+    void focusModeHasShortcut();
 
 private:
     // Markdown actual del documento WYSIWYG (serialización canónica, igual que
@@ -213,6 +217,22 @@ void TestSplitView::outlineFocusToggleShortcut()
     w.toggleOutlineFocus();                     // devuelve el foco al editor
     QApplication::processEvents();
     QVERIFY(!w.m_outline->treeHasFocus());
+}
+
+// El «Modo foco» tiene atajo F12 y alterna (persistido en AppSettings).
+void TestSplitView::focusModeHasShortcut()
+{
+    MainWindow w;
+    w.show();
+    QVERIFY(w.m_typewriterAction);
+    QCOMPARE(w.m_typewriterAction->shortcut(), QKeySequence(Qt::Key_F12));
+    QVERIFY(w.m_typewriterAction->isCheckable());
+
+    const bool before = AppSettings::typewriterMode();
+    w.m_typewriterAction->trigger();
+    QCOMPARE(AppSettings::typewriterMode(), !before);
+    w.m_typewriterAction->trigger();
+    QCOMPARE(AppSettings::typewriterMode(), before);
 }
 
 QTEST_MAIN(TestSplitView)

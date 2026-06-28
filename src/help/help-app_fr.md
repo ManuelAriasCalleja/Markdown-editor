@@ -283,7 +283,7 @@ visible, reste accolé au bloc central. ESC ou F11 quittent.
 
 ## Mode focus
 
-**Affichage → Mode focus** vous aide à vous concentrer sur ce que vous écrivez sans
+**Affichage → Mode focus** (F12) vous aide à vous concentrer sur ce que vous écrivez sans
 quitter la fenêtre normale. Un seul interrupteur active deux choses à la fois :
 
 - **Machine à écrire** : la ligne du curseur reste centrée verticalement. Au fil de
@@ -369,5 +369,6 @@ elle propose à la réouverture de récupérer ce que vous étiez en train d'éc
 | Vue partagée              | Ctrl+Maj+D       |
 | Plan                      | F9               |
 | Sans distraction          | F11              |
+| Mode focus                | F12              |
 | Zoom + / − / Normal       | Ctrl++ / Ctrl+− / Ctrl+0 |
 | Aide                      | F1               |

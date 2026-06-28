@@ -282,7 +282,7 @@ indien zichtbaar, tegen het centrale blok. ESC of F11 verlaten.
 
 ## Focusmodus
 
-**Beeld → Focusmodus** helpt je je te concentreren op wat je schrijft zonder het
+**Beeld → Focusmodus** (F12) helpt je je te concentreren op wat je schrijft zonder het
 normale venster te verlaten. Eén enkele schakelaar activeert twee dingen tegelijk:
 
 - **Typemachine**: de regel met de cursor blijft verticaal gecentreerd. Terwijl je
@@ -369,5 +369,6 @@ openen aan om te herstellen wat je aan het schrijven was.
 | Gesplitste weergave       | Ctrl+Shift+D     |
 | Overzicht                 | F9               |
 | Afleidingsvrij            | F11              |
+| Focusmodus                | F12              |
 | Zoom + / − / Normaal      | Ctrl++ / Ctrl+− / Ctrl+0 |
 | Help                      | F1               |

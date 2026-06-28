@@ -278,7 +278,7 @@ resta accostata al blocco centrale. ESC o F11 escono.
 
 ## Modalità focus
 
-**Visualizza → Modalità focus** ti aiuta a concentrarti su ciò che scrivi senza
+**Visualizza → Modalità focus** (F12) ti aiuta a concentrarti su ciò che scrivi senza
 uscire dalla finestra normale. Un unico interruttore attiva due cose insieme:
 
 - **Macchina da scrivere**: la riga del cursore resta centrata in verticale.
@@ -366,5 +366,6 @@ propone di recuperare ciò che stavi scrivendo.
 | Vista divisa              | Ctrl+Maiusc+D    |
 | Struttura                 | F9               |
 | Senza distrazioni         | F11              |
+| Modalità focus            | F12              |
 | Zoom + / − / Normale      | Ctrl++ / Ctrl+− / Ctrl+0 |
 | Aiuto                     | F1               |

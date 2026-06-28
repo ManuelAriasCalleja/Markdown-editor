@@ -271,7 +271,7 @@ widoczna, pozostaje przy środkowym bloku. ESC lub F11 wychodzą.
 
 ## Tryb skupienia
 
-**Widok → Tryb skupienia** pomaga skoncentrować się na tym, co piszesz, bez
+**Widok → Tryb skupienia** (F12) pomaga skoncentrować się na tym, co piszesz, bez
 opuszczania zwykłego okna. Jeden przełącznik włącza dwie rzeczy naraz:
 
 - **Maszyna do pisania**: wiersz kursora pozostaje wyśrodkowany w pionie. W miarę
@@ -355,5 +355,6 @@ proponuje odzyskanie tego, co pisałeś.
 | Widok podzielony          | Ctrl+Shift+D     |
 | Struktura                 | F9               |
 | Bez rozpraszania          | F11              |
+| Tryb skupienia            | F12              |
 | Powiększenie + / − / Normalne | Ctrl++ / Ctrl+− / Ctrl+0 |
 | Pomoc                     | F1               |

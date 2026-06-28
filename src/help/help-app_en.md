@@ -271,7 +271,7 @@ attached to the central block. ESC or F11 leave.
 
 ## Focus mode
 
-**View → Focus mode** helps you concentrate on what you are writing without
+**View → Focus mode** (F12) helps you concentrate on what you are writing without
 leaving the normal window. A single switch turns on two things at once:
 
 - **Typewriter**: the cursor's line stays vertically centered. As you write, the
@@ -354,5 +354,6 @@ were writing.
 | Split view                | Ctrl+Shift+D     |
 | Outline                   | F9               |
 | Distraction-free          | F11              |
+| Focus Mode                | F12              |
 | Zoom + / − / Normal       | Ctrl++ / Ctrl+− / Ctrl+0 |
 | Help                      | F1               |

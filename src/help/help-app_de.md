@@ -287,7 +287,7 @@ Gliederung bleibt, falls sichtbar, am zentralen Block. ESC oder F11 beenden.
 
 ## Fokusmodus
 
-**Ansicht → Fokusmodus** hilft Ihnen, sich auf das Geschriebene zu
+**Ansicht → Fokusmodus** (F12) hilft Ihnen, sich auf das Geschriebene zu
 konzentrieren, ohne das normale Fenster zu verlassen. Ein einziger Schalter
 aktiviert zwei Dinge zugleich:
 
@@ -376,5 +376,6 @@ automatisch gespeichert. Schließt die Anwendung unerwartet, bietet sie beim ern
 | Geteilte Ansicht          | Strg+Umschalt+D  |
 | Gliederung                | F9               |
 | Ablenkungsfrei            | F11              |
+| Fokusmodus                | F12              |
 | Zoom + / − / Normal       | Strg++ / Strg+− / Strg+0 |
 | Hilfe                     | F1               |

@@ -639,8 +639,12 @@ void MainWindow::createViewMenu()
     m_typewriterAction = viewMenu->addAction(tr("Modo foco"));
     m_typewriterAction->setCheckable(true);
     m_typewriterAction->setChecked(AppSettings::typewriterMode());
-    m_typewriterAction->setToolTip(
-        tr("Centra la línea del cursor y atenúa todo salvo el párrafo actual"));
+    // F12: junto a F11 (sin distracciones), agrupa los dos modos inmersivos. F10
+    // no se usa: la reserva Qt para abrir la barra de menús.
+    m_typewriterAction->setShortcut(QKeySequence(Qt::Key_F12));
+    m_typewriterAction->setToolTip(withShortcut(
+        tr("Centra la línea del cursor y atenúa todo salvo el párrafo actual"),
+        m_typewriterAction->shortcut()));
     connect(m_typewriterAction, &QAction::toggled, this, [this](bool on) {
         AppSettings::setTypewriterMode(on);
         for (int i = 0; i < m_tabs->count(); ++i)

@@ -276,7 +276,7 @@ rămâne lipită de blocul central. ESC sau F11 ies.
 
 ## Mod de concentrare
 
-**Vizualizare → Mod de concentrare** te ajută să te concentrezi pe ceea ce scrii
+**Vizualizare → Mod de concentrare** (F12) te ajută să te concentrezi pe ceea ce scrii
 fără a ieși din fereastra normală. Un singur comutator activează două lucruri
 deodată:
 
@@ -366,5 +366,6 @@ ce scriai.
 | Vizualizare divizată      | Ctrl+Shift+D     |
 | Structură                 | F9               |
 | Fără distrageri           | F11              |
+| Mod focalizare            | F12              |
 | Zoom + / − / Normal       | Ctrl++ / Ctrl+− / Ctrl+0 |
 | Ajutor                    | F1               |

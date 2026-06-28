@@ -276,7 +276,7 @@ encostada ao bloco central. ESC ou F11 saem.
 
 ## Modo foco
 
-**Ver → Modo foco** ajuda-o a concentrar-se no que escreve sem sair da janela
+**Ver → Modo foco** (F12) ajuda-o a concentrar-se no que escreve sem sair da janela
 normal. Um único interruptor ativa duas coisas ao mesmo tempo:
 
 - **Máquina de escrever**: a linha do cursor mantém-se centrada na vertical. À
@@ -361,5 +361,6 @@ recuperar o que estava a escrever.
 | Vista dividida            | Ctrl+Shift+D     |
 | Estrutura                 | F9               |
 | Sem distrações            | F11              |
+| Modo de foco              | F12              |
 | Zoom + / − / Normal       | Ctrl++ / Ctrl+− / Ctrl+0 |
 | Ajuda                     | F1               |
