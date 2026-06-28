@@ -54,7 +54,8 @@ Sie können mehrere Dokumente gleichzeitig geöffnet haben, jedes in seinem eige
   ebenfalls in einem Tab geöffnet; ist sie bereits offen, wird zu ihrem Tab
   gesprungen.
 - Wechseln Sie das Dokument per Klick auf seinen Tab; ziehen Sie Tabs, um sie neu
-  anzuordnen.
+  anzuordnen. Mit der Tastatur springen **Strg+Bild ab / Strg+Bild auf** (oder
+  **Strg+Tab / Strg+Umschalt+Tab**) zum nächsten oder vorherigen Tab.
 - **Tab schließen** (Strg+W) schließt den aktuellen und fragt bei ungespeicherten
   Änderungen nach. Der letzte Tab wird nicht geschlossen: er wird zu einem neuen
   Dokument.
@@ -258,7 +259,11 @@ Zum Beispiel wird ein als `mermaid` markierter Codeblock mit `flowchart LR  A
 
 Das linke Seitenpanel zeigt die Überschriftengliederung (Inhaltsverzeichnis): Sie
 aktualisiert sich beim Tippen, und beim Klick auf einen Eintrag springt der Cursor
-zu dieser Überschrift. Ein-/ausblenden mit F9.
+zu dieser Überschrift. Ein-/ausblenden mit F9. Mit **Strg+Umschalt+O** verschieben
+Sie den Tastaturfokus auf die Gliederung (sie wird eingeblendet, falls verborgen);
+dort bewegen die Pfeiltasten durch die Überschriften und **Enter** springt zur
+ausgewählten und gibt den Fokus an den Editor zurück. Ein erneutes **Strg+Umschalt+O**
+gibt den Fokus einfach an den Editor zurück.
 
 Sie können einen Gliederungseintrag **ziehen**, um diesen Abschnitt —seine
 Überschrift, seinen Inhalt und seine Unterabschnitte— im Dokument **umzuordnen**,
@@ -351,6 +356,7 @@ automatisch gespeichert. Schließt die Anwendung unerwartet, bietet sie beim ern
 |---------------------------|------------------|
 | Neu                       | Strg+N           |
 | Tab schließen             | Strg+W           |
+| Nächster / vorheriger Tab | Strg+Bild ab / Strg+Bild auf (oder Strg+Tab / Strg+Umschalt+Tab) |
 | Öffnen                    | Strg+O           |
 | Speichern                 | Strg+S           |
 | Speichern unter           | Strg+Umschalt+S  |
@@ -366,6 +372,7 @@ automatisch gespeichert. Schließt die Anwendung unerwartet, bietet sie beim ern
 | Formel einfügen           | Strg+Umschalt+F  |
 | Fußnote einfügen          | Strg+Umschalt+N  |
 | Zu Überschrift gehen      | Strg+G           |
+| Fokus auf Gliederung / zurück zum Editor | Strg+Umschalt+O  |
 | Markdown-Quelltextansicht | Strg+Umschalt+M  |
 | Geteilte Ansicht          | Strg+Umschalt+D  |
 | Gliederung                | F9               |

@@ -52,7 +52,8 @@ Puoi avere più documenti aperti contemporaneamente, ciascuno nella propria **sc
   riutilizzano la scheda vuota iniziale). Trascinare un file lo apre anch'esso in
   una scheda; se è già aperto, salta alla sua scheda.
 - Cambia documento facendo clic sulla sua scheda; trascina le schede per
-  riordinarle.
+  riordinarle. Da tastiera, **Ctrl+PagGiù / Ctrl+PagSu** (o **Ctrl+Tab /
+  Ctrl+Maiusc+Tab**) passano alla scheda successiva o precedente.
 - **Chiudi scheda** (Ctrl+W) chiude quella corrente, chiedendo se ha modifiche non
   salvate. L'ultima scheda non si chiude: diventa un documento nuovo.
 - L'etichetta mostra il nome del file e un punto (•) se ci sono modifiche non
@@ -251,7 +252,10 @@ Ad esempio, un blocco di codice etichettato `mermaid` contenente `flowchart LR  
 
 Il pannello laterale sinistro mostra la struttura dei titoli (TOC): si aggiorna
 mentre scrivi e, facendo clic su una voce, il cursore salta a quel titolo. Si
-mostra/nasconde con F9.
+mostra/nasconde con F9. Con **Ctrl+Maiusc+O** sposti il fuoco della tastiera
+sulla struttura (mostrandola se è nascosta); lì i tasti freccia scorrono tra i
+titoli e **Invio** salta a quello selezionato riportando il fuoco all'editor.
+Premendo di nuovo **Ctrl+Maiusc+O** il fuoco torna semplicemente all'editor.
 
 Puoi **trascinare** una voce della struttura per **riordinare** quella sezione —il
 suo titolo, il suo contenuto e le sue sottosezioni— nel documento, senza cambiare
@@ -342,6 +346,7 @@ propone di recuperare ciò che stavi scrivendo.
 |---------------------------|------------------|
 | Nuovo                     | Ctrl+N           |
 | Chiudi scheda             | Ctrl+W           |
+| Scheda successiva / precedente | Ctrl+PagGiù / Ctrl+PagSu (o Ctrl+Tab / Ctrl+Maiusc+Tab) |
 | Apri                      | Ctrl+O           |
 | Salva                     | Ctrl+S           |
 | Salva come                | Ctrl+Maiusc+S    |
@@ -357,6 +362,7 @@ propone di recuperare ciò che stavi scrivendo.
 | Inserisci formula         | Ctrl+Maiusc+F    |
 | Inserisci nota            | Ctrl+Maiusc+N    |
 | Vai al titolo             | Ctrl+G           |
+| Struttura (fuoco) / editor | Ctrl+Maiusc+O    |
 | Vista sorgente Markdown   | Ctrl+Maiusc+M    |
 | Vista divisa              | Ctrl+Maiusc+D    |
 | Struttura                 | F9               |

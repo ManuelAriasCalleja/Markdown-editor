@@ -54,7 +54,8 @@ Je kunt meerdere documenten tegelijk open hebben, elk in zijn eigen **tabblad**:
   een tabblad (of hergebruiken het lege begintabblad). Een bestand neerzetten opent
   het ook in een tabblad; als het al open is, springt het naar dat tabblad.
 - Wissel van document door op het tabblad te klikken; sleep tabbladen om ze te
-  herordenen.
+  herordenen. Met het toetsenbord springen **Ctrl+PageDown / Ctrl+PageUp** (of
+  **Ctrl+Tab / Ctrl+Shift+Tab**) naar het volgende of vorige tabblad.
 - **Tabblad sluiten** (Ctrl+W) sluit het huidige en vraagt of er niet-opgeslagen
   wijzigingen zijn. Het laatste tabblad sluit niet: het wordt een nieuw document.
 - Het label toont de bestandsnaam en een punt (•) bij niet-opgeslagen wijzigingen.
@@ -254,7 +255,11 @@ bijvoorbeeld voorvertoond als het bijbehorende stroomschema.
 
 Het linker zijpaneel toont het koppenoverzicht (inhoudsopgave): het werkt bij
 tijdens het typen en, bij een klik op een item, springt de cursor naar die kop.
-Het wordt getoond/verborgen met F9.
+Het wordt getoond/verborgen met F9. Met **Ctrl+Shift+O** verplaats je de
+toetsenbordfocus naar het overzicht (dat zo nodig wordt getoond); daar verplaatsen
+de pijltjestoetsen je door de koppen en springt **Enter** naar de geselecteerde kop
+en keert de focus terug naar de editor. Druk je nogmaals op **Ctrl+Shift+O**, dan
+keert de focus simpelweg terug naar de editor.
 
 Je kunt een overzichtsitem **slepen** om die sectie —de kop, de inhoud en de
 subsecties— in het document te **herordenen**, zonder het niveau te wijzigen.
@@ -344,6 +349,7 @@ openen aan om te herstellen wat je aan het schrijven was.
 |---------------------------|------------------|
 | Nieuw                     | Ctrl+N           |
 | Tabblad sluiten           | Ctrl+W           |
+| Volgend / vorig tabblad   | Ctrl+PageDown / Ctrl+PageUp (of Ctrl+Tab / Ctrl+Shift+Tab) |
 | Openen                    | Ctrl+O           |
 | Opslaan                   | Ctrl+S           |
 | Opslaan als               | Ctrl+Shift+S     |
@@ -359,6 +365,7 @@ openen aan om te herstellen wat je aan het schrijven was.
 | Formule invoegen          | Ctrl+Shift+F     |
 | Voetnoot invoegen         | Ctrl+Shift+N     |
 | Ga naar kop               | Ctrl+G           |
+| Overzicht focussen / terug| Ctrl+Shift+O     |
 | Markdown-bronweergave     | Ctrl+Shift+M     |
 | Gesplitste weergave       | Ctrl+Shift+D     |
 | Overzicht                 | F9               |

@@ -53,7 +53,8 @@ Vous pouvez avoir plusieurs documents ouverts à la fois, chacun dans son **ongl
   créent un onglet (ou réutilisent l'onglet vide initial). Déposer un fichier
   l'ouvre aussi dans un onglet ; s'il est déjà ouvert, on saute à son onglet.
 - Changez de document en cliquant sur son onglet ; faites glisser les onglets pour
-  les réordonner.
+  les réordonner. Au clavier, **Ctrl+Page suiv. / Ctrl+Page préc.** (ou
+  **Ctrl+Tab / Ctrl+Maj+Tab**) passent à l'onglet suivant ou précédent.
 - **Fermer l'onglet** (Ctrl+W) ferme l'onglet courant en demandant s'il a des
   modifications non enregistrées. Le dernier onglet ne se ferme pas : il devient un
   nouveau document.
@@ -255,7 +256,10 @@ Par exemple, un bloc de code étiqueté `mermaid` contenant `flowchart LR  A -->
 
 Le panneau latéral gauche affiche le plan des titres (sommaire) : il se met à jour
 à la frappe et, au clic sur une entrée, le curseur saute à ce titre. On
-l'affiche/masque avec F9.
+l'affiche/masque avec F9. Avec **Ctrl+Maj+O**, vous déplacez le focus clavier
+vers le plan (en l'affichant s'il est masqué) ; là, les flèches parcourent les
+titres et **Entrée** saute au titre sélectionné en rendant le focus à l'éditeur.
+Appuyer de nouveau sur **Ctrl+Maj+O** rend simplement le focus à l'éditeur.
 
 Vous pouvez **glisser** une entrée du plan pour **réordonner** cette section —son
 titre, son contenu et ses sous-sections— dans le document, sans changer le niveau.
@@ -345,6 +349,7 @@ elle propose à la réouverture de récupérer ce que vous étiez en train d'éc
 |---------------------------|------------------|
 | Nouveau                   | Ctrl+N           |
 | Fermer l'onglet           | Ctrl+W           |
+| Onglet suivant / précédent| Ctrl+Page suiv. / Ctrl+Page préc. (ou Ctrl+Tab / Ctrl+Maj+Tab) |
 | Ouvrir                    | Ctrl+O           |
 | Enregistrer               | Ctrl+S           |
 | Enregistrer sous          | Ctrl+Maj+S       |
@@ -360,6 +365,7 @@ elle propose à la réouverture de récupérer ce que vous étiez en train d'éc
 | Insérer une formule       | Ctrl+Maj+F       |
 | Insérer une note          | Ctrl+Maj+N       |
 | Aller au titre            | Ctrl+G           |
+| Plan / retour à l'éditeur | Ctrl+Maj+O       |
 | Vue source Markdown       | Ctrl+Maj+M       |
 | Vue partagée              | Ctrl+Maj+D       |
 | Plan                      | F9               |

@@ -50,7 +50,9 @@ You can have several documents open at once, each in its own **tab**:
 - **New** (Ctrl+N), **New from template** and **Open** (Ctrl+O) create a tab (or
   reuse the empty initial tab). Dropping a file also opens it in a tab; if it is
   already open, it jumps to its tab.
-- Switch documents by clicking their tab; drag tabs to reorder them.
+- Switch documents by clicking their tab; drag tabs to reorder them. With the
+  keyboard, **Ctrl+PageDown / Ctrl+PageUp** (or **Ctrl+Tab / Ctrl+Shift+Tab**)
+  jump to the next or previous tab.
 - **Close tab** (Ctrl+W) closes the current one, asking whether it has unsaved
   changes. The last tab is not closed: it becomes a new document.
 - The label shows the file name and a dot (•) when there are unsaved changes.
@@ -244,7 +246,10 @@ For example, a code block tagged `mermaid` containing `flowchart LR  A --> B
 
 The left side panel shows the heading outline (TOC): it updates as you type and,
 when you click an entry, the cursor jumps to that heading. It is shown/hidden
-with F9.
+with F9. With **Ctrl+Shift+O** you move keyboard focus to the outline (showing
+it if hidden); there, the arrow keys move through the headings and **Enter**
+jumps to the selected one and returns focus to the editor. Pressing
+**Ctrl+Shift+O** again simply returns focus to the editor.
 
 You can **drag** an outline entry to **reorder** that section —its heading, its
 content and its subsections— within the document, without changing its level.
@@ -329,6 +334,7 @@ were writing.
 |---------------------------|------------------|
 | New                       | Ctrl+N           |
 | Close tab                 | Ctrl+W           |
+| Next / previous tab       | Ctrl+PageDown / Ctrl+PageUp (or Ctrl+Tab / Ctrl+Shift+Tab) |
 | Open                      | Ctrl+O           |
 | Save                      | Ctrl+S           |
 | Save as                   | Ctrl+Shift+S     |
@@ -344,6 +350,7 @@ were writing.
 | Insert formula            | Ctrl+Shift+F     |
 | Insert footnote           | Ctrl+Shift+N     |
 | Go to heading             | Ctrl+G           |
+| Focus outline / back to editor | Ctrl+Shift+O     |
 | Markdown source view      | Ctrl+Shift+M     |
 | Split view                | Ctrl+Shift+D     |
 | Outline                   | F9               |

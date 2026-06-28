@@ -51,7 +51,8 @@ Możesz mieć otwartych kilka dokumentów naraz, każdy w osobnej **karcie**:
   używają początkowej pustej karty). Upuszczenie pliku również otwiera go w karcie;
   jeśli jest już otwarty, następuje przejście do jego karty.
 - Zmieniaj dokument, klikając jego kartę; przeciągaj karty, aby zmienić ich
-  kolejność.
+  kolejność. Z klawiatury **Ctrl+Page Down / Ctrl+Page Up** (lub **Ctrl+Tab /
+  Ctrl+Shift+Tab**) przechodzą do następnej lub poprzedniej karty.
 - **Zamknij kartę** (Ctrl+W) zamyka bieżącą, pytając o niezapisane zmiany. Ostatnia
   karta nie jest zamykana: staje się nowym dokumentem.
 - Etykieta pokazuje nazwę pliku i kropkę (•), gdy są niezapisane zmiany.
@@ -244,7 +245,11 @@ Na przykład blok kodu oznaczony `mermaid` zawierający `flowchart LR  A --> B
 
 Lewy panel boczny pokazuje strukturę nagłówków (spis treści): aktualizuje się
 podczas pisania, a po kliknięciu pozycji kursor przeskakuje do tego nagłówka.
-Pokazuje się/ukrywa klawiszem F9.
+Pokazuje się/ukrywa klawiszem F9. Za pomocą **Ctrl+Shift+O** przenosisz fokus
+klawiatury na konspekt (pokazując go, jeśli jest ukryty); tam klawisze strzałek
+przesuwają się po nagłówkach, a **Enter** przeskakuje do wybranego i przywraca
+fokus do edytora. Ponowne naciśnięcie **Ctrl+Shift+O** po prostu przywraca fokus
+do edytora.
 
 Pozycję struktury możesz **przeciągnąć**, aby **zmienić kolejność** tej sekcji —jej
 nagłówka, treści i podsekcji— w dokumencie, bez zmiany poziomu. Ponadto **Wstaw →
@@ -330,6 +335,7 @@ proponuje odzyskanie tego, co pisałeś.
 |---------------------------|------------------|
 | Nowy                      | Ctrl+N           |
 | Zamknij kartę             | Ctrl+W           |
+| Następna / poprzednia karta | Ctrl+Page Down / Ctrl+Page Up (lub Ctrl+Tab / Ctrl+Shift+Tab) |
 | Otwórz                    | Ctrl+O           |
 | Zapisz                    | Ctrl+S           |
 | Zapisz jako               | Ctrl+Shift+S     |
@@ -345,6 +351,7 @@ proponuje odzyskanie tego, co pisałeś.
 | Wstaw wzór                | Ctrl+Shift+F     |
 | Wstaw przypis             | Ctrl+Shift+N     |
 | Przejdź do nagłówka       | Ctrl+G           |
+| Fokus na konspekt / powrót do edytora | Ctrl+Shift+O     |
 | Widok źródła Markdown     | Ctrl+Shift+M     |
 | Widok podzielony          | Ctrl+Shift+D     |
 | Struktura                 | F9               |

@@ -51,7 +51,9 @@ Poți avea mai multe documente deschise în același timp, fiecare în **fila** 
 - **Nou** (Ctrl+N), **Nou din șablon** și **Deschide** (Ctrl+O) creează o filă (sau
   refolosesc fila goală inițială). Plasarea unui fișier îl deschide tot într-o
   filă; dacă este deja deschis, sare la fila lui.
-- Schimbă documentul făcând clic pe fila sa; trage filele pentru a le reordona.
+- Schimbă documentul făcând clic pe fila sa; trage filele pentru a le reordona. De
+  la tastatură, **Ctrl+PageDown / Ctrl+PageUp** (sau **Ctrl+Tab / Ctrl+Shift+Tab**)
+  sar la fila următoare sau anterioară.
 - **Închide fila** (Ctrl+W) o închide pe cea curentă, întrebând dacă are modificări
   nesalvate. Ultima filă nu se închide: devine un document nou.
 - Eticheta arată numele fișierului și un punct (•) când există modificări
@@ -247,7 +249,10 @@ De exemplu, un bloc de cod etichetat `mermaid` care conține `flowchart LR  A --
 
 Panoul lateral din stânga arată structura titlurilor (cuprins): se actualizează pe
 măsură ce scrii și, la clic pe o intrare, cursorul sare la acel titlu. Se
-afișează/ascunde cu F9.
+afișează/ascunde cu F9. Cu **Ctrl+Shift+O** muți focalizarea tastaturii pe
+structură (afișând-o dacă este ascunsă); acolo, tastele săgeți se deplasează prin
+titluri, iar **Enter** sare la cel selectat și readuce focalizarea în editor.
+Apăsând din nou **Ctrl+Shift+O** revii pur și simplu cu focalizarea în editor.
 
 Poți **trage** o intrare din structură pentru a **reordona** acea secțiune —titlul,
 conținutul și subsecțiunile ei— în document, fără a schimba nivelul. În plus,
@@ -340,6 +345,7 @@ ce scriai.
 |---------------------------|------------------|
 | Nou                       | Ctrl+N           |
 | Închide fila              | Ctrl+W           |
+| Fila următoare / anterioară | Ctrl+PageDown / Ctrl+PageUp (sau Ctrl+Tab / Ctrl+Shift+Tab) |
 | Deschide                  | Ctrl+O           |
 | Salvează                  | Ctrl+S           |
 | Salvează ca               | Ctrl+Shift+S     |
@@ -355,6 +361,7 @@ ce scriai.
 | Inserează formulă         | Ctrl+Shift+F     |
 | Inserează notă de subsol  | Ctrl+Shift+N     |
 | Mergi la titlu            | Ctrl+G           |
+| Focus structură / editor  | Ctrl+Shift+O     |
 | Vizualizare sursă Markdown | Ctrl+Shift+M    |
 | Vizualizare divizată      | Ctrl+Shift+D     |
 | Structură                 | F9               |
