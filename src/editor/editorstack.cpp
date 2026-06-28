@@ -182,6 +182,8 @@ EditorStack::EditorStack(FindReplaceBar *findBar, OutlinePanel *outline, QWidget
             m_theme, &ThemeController::recolorLinks);
     connect(m_documentIo, &DocumentIo::documentLoaded, this, &EditorStack::documentLoaded);
     connect(m_documentIo, &DocumentIo::documentLoaded, this, [this] { styleTables(); });
+    connect(m_documentIo, &DocumentIo::documentLoaded, this,
+            [this] { applyLineSpacing(m_editor); });
     connect(m_documentIo, &DocumentIo::documentLoaded,
             m_spell, &SpellController::applyLanguage);
     // Tras cargar, reaplica el foco de línea: setTypewriterMode pudo correr con el
@@ -226,6 +228,31 @@ void EditorStack::styleTables()
     doc->setModified(wasModified);
 }
 
+void EditorStack::applyLineSpacing(QTextEdit *ed)
+{
+    QTextDocument *doc = ed->document();
+    // Presentación pura: el interlineado no lo serializa toMarkdown(), así que ni
+    // el round-trip ni «modificado» se ven afectados. Preservamos la marca de Qt
+    // como en styleTables()/recolorLinks().
+    const bool wasModified = doc->isModified();
+    QTextCursor cursor(doc);
+    cursor.beginEditBlock();
+    QTextBlockFormat fmt;
+    fmt.setLineHeight(m_lineSpacing, QTextBlockFormat::ProportionalHeight);
+    cursor.select(QTextCursor::Document);
+    cursor.mergeBlockFormat(fmt);
+    cursor.endEditBlock();
+    doc->setModified(wasModified);
+}
+
+void EditorStack::setLineSpacing(int percent)
+{
+    // Solo el editor WYSIWYG: el de fuente repuebla su texto plano en cada
+    // sincronización de la vista dividida y perdería el formato de bloque.
+    m_lineSpacing = percent;
+    applyLineSpacing(m_editor);
+}
+
 void EditorStack::setBodyMarkdown(const QString &body)
 {
     // El flag anti-bucle del controlador envuelve la sustitución para que los
@@ -239,6 +266,7 @@ void EditorStack::setBodyMarkdown(const QString &body)
     m_editor->setUpdatesEnabled(false);
     mdrender::setMarkdownWithExtensions(m_editor, body);
     styleTables();
+    applyLineSpacing(m_editor);
     m_theme->recolorLinks();
     m_editor->setUpdatesEnabled(wasUpdating);
     m_outline->rebuild(m_editor->document());

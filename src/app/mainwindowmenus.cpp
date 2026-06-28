@@ -140,6 +140,7 @@ void MainWindow::configureStack(EditorStack *stack)
     stack->table()->setActions(m_tableActions);
     stack->table()->updateActions();  // estado inicial (sin tabla bajo el cursor)
     stack->setTypewriterMode(m_typewriterAction && m_typewriterAction->isChecked());
+    stack->setLineSpacing(AppSettings::lineSpacing());
 }
 
 void MainWindow::createFileMenu()
@@ -651,6 +652,33 @@ void MainWindow::createViewMenu()
             if (EditorStack *s = stackAt(i))
                 s->setTypewriterMode(on);
     });
+
+    // Interlineado del editor (presentación pura, no afecta al Markdown). Submenú
+    // de opciones excluyentes; el valor se persiste y se empuja a todas las
+    // pestañas. Los rótulos van por QT_TRANSLATE_NOOP para que lupdate los extraiga
+    // (el bucle los traduce con tr() en runtime, como los nombres de tema).
+    QMenu *spacingMenu = viewMenu->addMenu(tr("Interlineado"));
+    auto *spacingGroup = new QActionGroup(this);
+    spacingGroup->setExclusive(true);
+    const struct { const char *label; int percent; } kSpacingOptions[] = {
+        {QT_TRANSLATE_NOOP("MainWindow", "Sencillo"), 100},
+        {QT_TRANSLATE_NOOP("MainWindow", "1,5 líneas"), 150},
+        {QT_TRANSLATE_NOOP("MainWindow", "Doble"), 200},
+    };
+    const int currentSpacing = AppSettings::lineSpacing();
+    for (const auto &opt : kSpacingOptions) {
+        QAction *action = spacingMenu->addAction(tr(opt.label));
+        action->setCheckable(true);
+        action->setChecked(opt.percent == currentSpacing);
+        spacingGroup->addAction(action);
+        const int percent = opt.percent;
+        connect(action, &QAction::triggered, this, [this, percent] {
+            AppSettings::setLineSpacing(percent);
+            for (int i = 0; i < m_tabs->count(); ++i)
+                if (EditorStack *s = stackAt(i))
+                    s->setLineSpacing(percent);
+        });
+    }
 
     // Esquema (índice): toggleViewAction muestra/oculta el dock y mantiene su
     // marca sincronizada con la visibilidad del panel automáticamente.

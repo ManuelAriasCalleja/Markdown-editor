@@ -324,6 +324,7 @@ l'**Aperçu avant impression**.
 - **Affichage → Thème** propose Clair, Sombre, GitHub Light, GitHub Dark, Monokai, Contraste élevé, Solarized Light et Solarized Dark. **Suivre le système** aligne le thème clair/sombre sur celui
   du système.
 - **Affichage → Lumière chaude nocturne** atténue les bleus du fond selon l'heure.
+- **Affichage → Interligne** règle la hauteur de ligne de l'éditeur : Simple, 1,5 ligne ou Double.
 - **Zoom** : Ctrl+molette, Ctrl++ / Ctrl+- et **Taille normale** (Ctrl+0) mettent
   à l'échelle toute l'interface (pas seulement le texte de l'éditeur).
 - **Affichage → Langue** change la langue de l'interface ; elle s'applique

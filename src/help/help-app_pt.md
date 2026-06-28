@@ -316,6 +316,7 @@ seleção** imprime apenas o que está selecionado.
 - **Ver → Tema** oferece Claro, Escuro, GitHub Light, GitHub Dark, Monokai, Alto contraste, Solarized Light e Solarized Dark. **Seguir o sistema** ajusta o tema claro/escuro ao do sistema
   operativo.
 - **Ver → Luz quente noturna** atenua os azuis do fundo conforme a hora.
+- **Ver → Entrelinha** define a altura de linha do editor: Simples, 1,5 linhas ou Duplo.
 - **Zoom**: Ctrl+roda do rato, Ctrl++ / Ctrl+- e **Tamanho normal** (Ctrl+0)
   escalam toda a interface (não só o texto do editor).
 - **Ver → Idioma** muda o idioma da interface; aplica-se de imediato (a janela é

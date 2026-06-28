@@ -331,6 +331,7 @@ nur das Markierte.
   Betriebssystems an.
 - **Ansicht → Nächtliches warmes Licht** dimmt die Blautöne des Hintergrunds je
   nach Uhrzeit.
+- **Ansicht → Zeilenabstand** stellt den Zeilenabstand des Editors ein: Einfach, 1,5 Zeilen oder Doppelt.
 - **Zoom**: Strg+Mausrad, Strg++ / Strg+- und **Normale Größe** (Strg+0)
   skalieren die gesamte Oberfläche (nicht nur den Editortext).
 - **Ansicht → Sprache** ändert die Oberflächensprache; sie wird sofort angewendet

@@ -84,6 +84,11 @@ public:
     /// activarlo, centra ya el editor activo.
     void setTypewriterMode(bool on);
 
+    /// Interlineado del editor en porcentaje de la altura natural (100 = sencillo).
+    /// Es presentación pura (no se serializa); se reaplica tras cargar y en cada
+    /// sustitución del cuerpo, porque setMarkdown rehace los formatos de bloque.
+    void setLineSpacing(int percent);
+
     /// Inserta el cuerpo Markdown de un snippet en el editor activo: crudo en la
     /// vista de fuente (es texto Markdown) y renderizado como fragmento en WYSIWYG.
     void insertSnippet(const QString &body);
@@ -131,6 +136,11 @@ private:
     // está apagado, limpia las selecciones. Los tramos los calcula `mdtypewriter`.
     void applyLineFocus(QTextEdit *ed);
     bool m_typewriter = false;
+
+    // Aplica el interlineado actual (m_lineSpacing) a todos los bloques de `ed`.
+    // Presentación pura: preserva la marca «modificado» de Qt (como styleTables).
+    void applyLineSpacing(QTextEdit *ed);
+    int m_lineSpacing = 100;  // porcentaje; 100 = sencillo
 
     FocusEditor *m_editor = nullptr;
     CodeBlockHighlighter *m_highlighter = nullptr;

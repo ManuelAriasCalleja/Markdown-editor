@@ -5,6 +5,8 @@
 #include <QCoreApplication>
 #include <QKeySequence>
 #include <QSettings>
+#include <QTextBlock>
+#include <QTextBlockFormat>
 #include <QTextEdit>
 
 #include "appsettings.h"
@@ -42,6 +44,7 @@ private slots:
     void keyboardCyclesTabs();
     void outlineFocusToggleShortcut();
     void focusModeHasShortcut();
+    void lineSpacingAppliesToBlocks();
 
 private:
     // Markdown actual del documento WYSIWYG (serialización canónica, igual que
@@ -233,6 +236,27 @@ void TestSplitView::focusModeHasShortcut()
     QCOMPARE(AppSettings::typewriterMode(), !before);
     w.m_typewriterAction->trigger();
     QCOMPARE(AppSettings::typewriterMode(), before);
+}
+
+// El interlineado se aplica como altura proporcional a todos los bloques del
+// editor WYSIWYG (presentación pura, no afecta al Markdown).
+void TestSplitView::lineSpacingAppliesToBlocks()
+{
+    MainWindow w;
+    w.show();
+    w.m_stack->editor()->setMarkdown(QStringLiteral("# Uno\n\nUn párrafo.\n\n# Dos\n"));
+
+    w.m_stack->setLineSpacing(150);
+    for (QTextBlock b = w.m_stack->editor()->document()->begin();
+         b != w.m_stack->editor()->document()->end(); b = b.next()) {
+        QCOMPARE(b.blockFormat().lineHeightType(),
+                 int(QTextBlockFormat::ProportionalHeight));
+        QCOMPARE(b.blockFormat().lineHeight(), 150.0);
+    }
+
+    w.m_stack->setLineSpacing(100);  // sencillo de nuevo
+    QCOMPARE(w.m_stack->editor()->document()->firstBlock().blockFormat().lineHeight(),
+             100.0);
 }
 
 QTEST_MAIN(TestSplitView)

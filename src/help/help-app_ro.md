@@ -321,6 +321,7 @@ tipărește doar ce este selectat.
   luminoasă/întunecată cu cea a sistemului de operare.
 - **Vizualizare → Lumină caldă nocturnă** atenuează albastrurile fundalului în
   funcție de oră.
+- **Vizualizare → Spațiere între rânduri** stabilește înălțimea rândului în editor: Simplă, 1,5 rânduri sau Dublă.
 - **Zoom**: Ctrl+rotița mouse-ului, Ctrl++ / Ctrl+- și **Dimensiune normală**
   (Ctrl+0) scalează întreaga interfață (nu doar textul editorului).
 - **Vizualizare → Limbă** schimbă limba interfeței; se aplică imediat (fereastra

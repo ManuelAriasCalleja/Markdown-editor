@@ -320,6 +320,8 @@ selección** imprime solo lo seleccionado.
   Alto contraste, Solarized Light y Solarized Dark. **Seguir el sistema** ajusta
   el tema claro/oscuro al del SO.
 - **Ver → Luz cálida nocturna** atenúa los azules del fondo según la hora.
+- **Ver → Interlineado** ajusta la altura de línea del editor: Sencillo, 1,5
+  líneas o Doble.
 - **Zoom**: Ctrl+rueda del ratón, Ctrl++ / Ctrl+- y **Tamaño normal** (Ctrl+0)
   escalan toda la interfaz (no sólo el texto del editor).
 - **Ver → Idioma** cambia el idioma de la interfaz; se aplica al instante (recrea la ventana).

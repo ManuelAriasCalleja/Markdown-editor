@@ -56,6 +56,12 @@ void setShowWordCount(bool on);
 bool typewriterMode();
 void setTypewriterMode(bool on);
 
+/// \brief Interlineado del editor, en porcentaje de la altura de línea natural
+/// (100 = sencillo, valor por defecto; 150 = 1,5 líneas; 200 = doble). Es
+/// presentación pura: no se serializa al Markdown.
+int lineSpacing();
+void setLineSpacing(int percent);
+
 /// \brief Corrector ortográfico activo (subrayado de erratas). Activado por defecto.
 bool spellCheck();
 void setSpellCheck(bool on);

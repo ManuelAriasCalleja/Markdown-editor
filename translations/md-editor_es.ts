@@ -4,7 +4,7 @@
 <context>
     <name>FindReplaceBar</name>
     <message numerus="yes">
-        <location filename="../../src/findreplacebar.cpp" line="244"/>
+        <location filename="../../src/widgets/findreplacebar.cpp" line="248"/>
         <source>%n reemplazo(s)</source>
         <translation>
             <numerusform>%n reemplazo</numerusform>
@@ -15,7 +15,7 @@
 <context>
     <name>MainWindow</name>
     <message numerus="yes">
-        <location filename="../../src/mainwindow.cpp" line="420"/>
+        <location filename="../../src/app/mainwindow.cpp" line="424"/>
         <source>%n palabra(s)</source>
         <translation>
             <numerusform>%n palabra</numerusform>
@@ -23,7 +23,7 @@
         </translation>
     </message>
     <message numerus="yes">
-        <location filename="../../src/mainwindow.cpp" line="422"/>
+        <location filename="../../src/app/mainwindow.cpp" line="426"/>
         <source>%n carácter(es)</source>
         <translation>
             <numerusform>%n carácter</numerusform>
@@ -31,8 +31,8 @@
         </translation>
     </message>
     <message numerus="yes">
-        <location filename="../../src/mainwindow.cpp" line="427"/>
-        <location filename="../../src/mainwindow.cpp" line="449"/>
+        <location filename="../../src/app/mainwindow.cpp" line="431"/>
+        <location filename="../../src/app/mainwindow.cpp" line="453"/>
         <source>~%n min</source>
         <translation>
             <numerusform>~%n min</numerusform>
