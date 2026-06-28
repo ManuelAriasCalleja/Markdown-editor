@@ -18,7 +18,7 @@ Lista de mejoras pendientes, ordenadas por relación valor/coste y riesgo
   se resaltan; revisar si HTML/PDF/DOCX/ODF lo conservan y, si no, emitir el
   código con color. Coste medio.
 
-- [ ] **Recuperación por pestaña.** El borrador de autoguardado es de ruta fija
+- [x] **Recuperación por pestaña.** El borrador de autoguardado es de ruta fija
   (`recovery-draft.md`, compartido por todas las pestañas: recupera solo el último
   editado). Con varias pestañas y un cierre inesperado se pierde el resto.
   Indexar los borradores por pestaña/ruta y ofrecer recuperar todos al arrancar.

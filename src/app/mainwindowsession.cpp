@@ -49,37 +49,46 @@ void MainWindow::startSession(const QString &cmdLineFile)
     // asentado). Si arranca oculto, lo hará el primer F9 (visibilityChanged).
     normalizeOutlineWidth();
 
-    // Prioridad: archivo de la línea de comandos > recuperar borrador > reabrir
-    // el último documento. Sin returns prematuros: todas las ramas confluyen en
-    // el arranque del autoguardado al final.
-    bool recovered = false;
+    // Prioridad: archivo de la línea de comandos > recuperar borradores > reabrir
+    // la sesión. Sin returns prematuros: todas las ramas confluyen en el arranque
+    // del autoguardado al final.
     if (!cmdLineFile.isEmpty()) {
         m_stack->file()->openFile(cmdLineFile);
-    } else if (m_stack->recovery()->hasDraft()) {
-        // ¿Quedó un borrador de un cierre anómalo? Ofrecer recuperarlo.
-        const QString original = m_stack->recovery()->draftOriginalPath();
-        const QString name = original.isEmpty() ? tr("(sin título)")
-                                                : QFileInfo(original).fileName();
-        const QString when = m_stack->recovery()->draftTimestamp().toString(QStringLiteral("yyyy-MM-dd HH:mm"));
+    } else if (const QList<RecoveryManager::Draft> drafts = RecoveryManager::leftoverDrafts();
+               !drafts.isEmpty()) {
+        // Quedaron borradores de un cierre anómalo (uno por pestaña con cambios sin
+        // guardar): ofrecer recuperarlos TODOS, no solo el último.
+        QStringList names;
+        for (const RecoveryManager::Draft &d : drafts)
+            names << (d.originalPath.isEmpty() ? tr("(sin título)")
+                                               : QFileInfo(d.originalPath).fileName());
         QMessageBox box(this);
         box.setIcon(QMessageBox::Question);
-        box.setWindowTitle(tr("Recuperar documento"));
-        box.setText(tr("Se encontró un documento con cambios sin guardar de una "
-                       "sesión anterior:\n%1 (%2).\n\n¿Quieres recuperarlo?")
-                        .arg(name, when));
+        box.setWindowTitle(tr("Recuperar documentos"));
+        box.setText(tr("Se encontraron documentos con cambios sin guardar de una "
+                       "sesión anterior:\n%1\n\n¿Quieres recuperarlos?")
+                        .arg(names.join(QLatin1Char('\n'))));
         QPushButton *recoverBtn = box.addButton(tr("Recuperar"), QMessageBox::AcceptRole);
         box.addButton(tr("Descartar"), QMessageBox::DestructiveRole);
         box.exec();
-        if (box.clickedButton() == recoverBtn)
-            recovered = m_stack->file()->recoverDraft();
-        else
-            m_stack->recovery()->clearDraft();  // descartado: seguir con el flujo normal
+        if (box.clickedButton() == recoverBtn) {
+            // El primero reusa la pestaña inicial; los demás, una pestaña nueva.
+            for (int i = 0; i < drafts.size(); ++i) {
+                EditorStack *s = (i == 0) ? m_stack : addTab();
+                s->file()->loadRecoveredDraft(drafts[i].originalPath, drafts[i].body);
+            }
+        }
+        // Recuperados o descartados, los borradores viejos salen del disco (los
+        // recuperados se re-autoguardan ya bajo el slot nuevo de su pestaña).
+        for (const RecoveryManager::Draft &d : drafts)
+            RecoveryManager::removeDraft(d);
     }
 
-    // Reabrir la sesión de pestañas anterior (todos los documentos abiertos),
-    // salvo que ya se abriera/recuperara algo. openPathInTab reusa la pestaña
-    // vacía inicial para el primero y añade una por cada documento siguiente.
-    if (cmdLineFile.isEmpty() && !recovered) {
+    // Reabrir la sesión de pestañas anterior (documentos guardados). openPathInTab
+    // deduplica —si un documento ya está abierto (p. ej. un borrador recuperado con
+    // su ruta), salta a él— y reusa la pestaña vacía inicial solo si sigue vacía;
+    // así, tras recuperar, se restauran también las pestañas que estaban guardadas.
+    if (cmdLineFile.isEmpty()) {
         QStringList session = AppSettings::openFiles();
         if (session.isEmpty()) {
             const QString last = AppSettings::lastFile();  // compatibilidad: una sola

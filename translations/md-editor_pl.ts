@@ -1213,12 +1213,12 @@
         <translation>Czas czytania:</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="627"/>
+        <location filename="../src/app/mainwindow.cpp" line="623"/>
         <source>Abrir</source>
         <translation>Otwórz</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="628"/>
+        <location filename="../src/app/mainwindow.cpp" line="624"/>
         <source>Archivos Markdown (*.md *.markdown *.txt);;Todos los archivos (*)</source>
         <translation>Pliki Markdown (*.md *.markdown *.txt);;Wszystkie pliki (*)</translation>
     </message>
@@ -1258,37 +1258,53 @@
         <translation>Przypis [^%1] nie ma definicji</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowsession.cpp" line="136"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="67"/>
+        <source>Recuperar documentos</source>
+        <translation>Odzyskaj dokumenty</translation>
+    </message>
+    <message>
+        <location filename="../src/app/mainwindowsession.cpp" line="68"/>
+        <source>Se encontraron documentos con cambios sin guardar de una sesión anterior:
+%1
+
+¿Quieres recuperarlos?</source>
+        <translation>Znaleziono dokumenty z niezapisanymi zmianami z poprzedniej sesji:
+%1
+
+Czy chcesz je odzyskać?</translation>
+    </message>
+    <message>
+        <location filename="../src/app/mainwindowsession.cpp" line="145"/>
         <source>El archivo cambió en disco: recargado.</source>
         <translation>Plik zmienił się na dysku: wczytano ponownie.</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowsession.cpp" line="143"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="152"/>
         <source>Archivo modificado en disco</source>
         <translation>Plik zmieniony na dysku</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowsession.cpp" line="144"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="153"/>
         <source>«%1» ha cambiado en disco y tienes cambios sin guardar.</source>
         <translation>„%1” zmienił się na dysku, a masz niezapisane zmiany.</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowsession.cpp" line="147"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="156"/>
         <source>¿Recargar la versión del disco (perderás tus cambios) o conservar los tuyos?</source>
         <translation>Wczytać ponownie wersję z dysku (utracisz swoje zmiany) czy zachować swoje?</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowsession.cpp" line="148"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="157"/>
         <source>Recargar</source>
         <translation>Wczytaj ponownie</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowsession.cpp" line="150"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="159"/>
         <source>Conservar los míos</source>
         <translation>Zachowaj moje</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowsession.cpp" line="179"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="188"/>
         <source>No se pudo recargar el archivo:
 %1
 
@@ -1346,7 +1362,7 @@
         <translation>HTML (*.html *.htm)</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowsession.cpp" line="178"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="187"/>
         <location filename="../src/io/filecontroller.cpp" line="78"/>
         <location filename="../src/io/filecontroller.cpp" line="140"/>
         <location filename="../src/export/exportcontroller.cpp" line="155"/>
@@ -1435,52 +1451,50 @@
 Czy chcesz je zapisać?</translation>
     </message>
     <message>
-        <location filename="../src/io/filecontroller.cpp" line="237"/>
+        <location filename="../src/io/filecontroller.cpp" line="238"/>
         <source>Documento recuperado de la sesión anterior</source>
         <translation>Odzyskano dokument z poprzedniej sesji</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowsession.cpp" line="61"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="63"/>
         <source>(sin título)</source>
         <translation>(bez tytułu)</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowsession.cpp" line="66"/>
         <source>Recuperar documento</source>
-        <translation>Odzyskaj dokument</translation>
+        <translation type="vanished">Odzyskaj dokument</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowsession.cpp" line="67"/>
         <source>Se encontró un documento con cambios sin guardar de una sesión anterior:
 %1 (%2).
 
 ¿Quieres recuperarlo?</source>
-        <translation>Znaleziono dokument z niezapisanymi zmianami z poprzedniej sesji:
+        <translation type="vanished">Znaleziono dokument z niezapisanymi zmianami z poprzedniej sesji:
 %1 (%2).
 
 Czy chcesz go odzyskać?</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowsession.cpp" line="70"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="71"/>
         <source>Recuperar</source>
         <translation>Odzyskaj</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowsession.cpp" line="71"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="72"/>
         <source>Descartar</source>
         <translation>Odrzuć</translation>
     </message>
     <message>
         <location filename="../src/app/mainwindow.cpp" line="532"/>
-        <location filename="../src/app/mainwindow.cpp" line="592"/>
-        <location filename="../src/app/mainwindow.cpp" line="674"/>
-        <location filename="../src/app/mainwindowsession.cpp" line="121"/>
+        <location filename="../src/app/mainwindow.cpp" line="588"/>
+        <location filename="../src/app/mainwindow.cpp" line="670"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="130"/>
         <source>Sin título</source>
         <translation>Bez tytułu</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="591"/>
-        <location filename="../src/app/mainwindowsession.cpp" line="123"/>
+        <location filename="../src/app/mainwindow.cpp" line="587"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="132"/>
         <source>%1[*] — md-editor</source>
         <translation>%1[*] — md-editor</translation>
     </message>

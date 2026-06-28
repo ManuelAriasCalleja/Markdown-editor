@@ -47,9 +47,15 @@ public:
     /// \brief Si hay cambios sin guardar, pregunta. Devuelve false solo si el usuario
     /// cancela (true si guarda o descarta). Llámalo antes de descartar el documento.
     bool maybeSave();
-    /// \brief Recupera el borrador de la sesión anterior, si lo hay. Devuelve false si no
+    /// \brief Recupera el borrador de ESTA pestaña, si lo hay. Devuelve false si no
     /// había borrador.
     bool recoverDraft();
+
+    /// \brief Carga en este documento un cuerpo de borrador recuperado y su ruta
+    /// original ("" = sin título): abre el archivo asociado (si existe) y le
+    /// superpone el cuerpo, dejándolo marcado como modificado. Lo usa el arranque
+    /// para repartir varios borradores huérfanos entre pestañas.
+    bool loadRecoveredDraft(const QString &originalPath, const QString &body);
 
     /// \brief Marca que hubo cambios desde el último autoguardado (lo conecta MainWindow a
     /// los textChanged de los editores).

@@ -9,13 +9,15 @@
 #include <QStandardPaths>
 #include <QStringConverter>
 #include <QTextStream>
+#include <QUuid>
 
 RecoveryManager::RecoveryManager(QObject *parent)
     : QObject(parent)
+    , m_slot(QUuid::createUuid().toString(QUuid::WithoutBraces))  // único por pestaña
 {
 }
 
-QString RecoveryManager::baseDir() const
+QString RecoveryManager::baseDir()
 {
     // AppDataLocation: ~/.local/share/md-editor en Linux. En tests, QStandardPaths
     // en modo de prueba lo redirige a un directorio temporal.
@@ -24,12 +26,45 @@ QString RecoveryManager::baseDir() const
 
 QString RecoveryManager::draftFilePath() const
 {
-    return baseDir() + QStringLiteral("/recovery-draft.md");
+    return baseDir() + QStringLiteral("/recovery-draft-") + m_slot + QStringLiteral(".md");
 }
 
 QString RecoveryManager::metaFilePath() const
 {
-    return baseDir() + QStringLiteral("/recovery-draft.path");
+    return baseDir() + QStringLiteral("/recovery-draft-") + m_slot + QStringLiteral(".path");
+}
+
+QList<RecoveryManager::Draft> RecoveryManager::leftoverDrafts()
+{
+    QList<Draft> drafts;
+    const QString dir = baseDir();
+    if (dir.isEmpty())
+        return drafts;
+    // recovery-draft-<uuid>.md (por pestaña) y el antiguo recovery-draft.md (de una
+    // versión previa con borrador único); el patrón cubre ambos.
+    const QStringList names = QDir(dir).entryList(
+        {QStringLiteral("recovery-draft*.md")}, QDir::Files, QDir::Time);
+    for (const QString &name : names) {
+        Draft d;
+        d.bodyFile = dir + QLatin1Char('/') + name;
+        d.metaFile = d.bodyFile;
+        d.metaFile.chop(3);  // ".md"
+        d.metaFile += QStringLiteral(".path");
+        d.body = readFile(d.bodyFile);
+        QString path = readFile(d.metaFile);
+        while (path.endsWith(QLatin1Char('\n')) || path.endsWith(QLatin1Char('\r')))
+            path.chop(1);
+        d.originalPath = path;
+        d.timestamp = QFileInfo(d.bodyFile).lastModified();
+        drafts.append(d);
+    }
+    return drafts;
+}
+
+void RecoveryManager::removeDraft(const Draft &draft)
+{
+    QFile::remove(draft.bodyFile);
+    QFile::remove(draft.metaFile);
 }
 
 bool RecoveryManager::hasDraft() const

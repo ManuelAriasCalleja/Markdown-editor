@@ -36,6 +36,7 @@ private slots:
     void currentBodyComesFromDocument();
     void currentBodyComesFromSourcePanel();
     void saveToExistingFileUpdatesDisk();
+    void loadRecoveredDraftMarksModified();
 
 private:
     static QString readFile(const QString &path);
@@ -133,6 +134,19 @@ void TestFileController::saveToExistingFileUpdatesDisk()
     QVERIFY(w.m_stack->file()->save());
     QVERIFY(readFile(path).contains(QStringLiteral("versión 2 corregida")));
     QVERIFY(!w.m_stack->documentIo()->isModified());
+}
+
+// loadRecoveredDraft (lo usa el arranque para repartir varios borradores entre
+// pestañas) carga el cuerpo recuperado y lo deja marcado como modificado, para
+// que un cierre posterior no lo pierda sin avisar.
+void TestFileController::loadRecoveredDraftMarksModified()
+{
+    MainWindow w;
+    QVERIFY(w.m_stack->file()->loadRecoveredDraft(
+        QString(), QStringLiteral("# Recuperado\n\nTexto rescatado.\n")));
+    QVERIFY(w.m_stack->editor()->toPlainText().contains(QStringLiteral("Recuperado")));
+    QVERIFY(w.m_stack->editor()->toPlainText().contains(QStringLiteral("Texto rescatado")));
+    QVERIFY(w.m_stack->documentIo()->isModified());  // difiere del disco: no se pierde
 }
 
 QTEST_MAIN(TestFileController)

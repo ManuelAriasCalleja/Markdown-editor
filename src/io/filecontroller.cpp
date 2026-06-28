@@ -214,10 +214,11 @@ bool FileController::recoverDraft()
 {
     if (!m_recovery->hasDraft())
         return false;
+    return loadRecoveredDraft(m_recovery->draftOriginalPath(), m_recovery->draftBody());
+}
 
-    const QString body = m_recovery->draftBody();
-    const QString original = m_recovery->draftOriginalPath();
-
+bool FileController::loadRecoveredDraft(const QString &original, const QString &body)
+{
     if (!original.isEmpty() && QFileInfo::exists(original)) {
         // Abre el documento guardado (fija ruta, baseUrl y la línea base) y le
         // superpone el cuerpo del borrador: así queda asociado a su archivo pero

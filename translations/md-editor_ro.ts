@@ -1213,12 +1213,12 @@
         <translation>Timp de citire:</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="627"/>
+        <location filename="../src/app/mainwindow.cpp" line="623"/>
         <source>Abrir</source>
         <translation>Deschide</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="628"/>
+        <location filename="../src/app/mainwindow.cpp" line="624"/>
         <source>Archivos Markdown (*.md *.markdown *.txt);;Todos los archivos (*)</source>
         <translation>Fișiere Markdown (*.md *.markdown *.txt);;Toate fișierele (*)</translation>
     </message>
@@ -1258,37 +1258,53 @@
         <translation>Nota [^%1] nu are definiție</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowsession.cpp" line="136"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="67"/>
+        <source>Recuperar documentos</source>
+        <translation>Recuperează documentele</translation>
+    </message>
+    <message>
+        <location filename="../src/app/mainwindowsession.cpp" line="68"/>
+        <source>Se encontraron documentos con cambios sin guardar de una sesión anterior:
+%1
+
+¿Quieres recuperarlos?</source>
+        <translation>Au fost găsite documente cu modificări nesalvate dintr-o sesiune anterioară:
+%1
+
+Vrei să le recuperezi?</translation>
+    </message>
+    <message>
+        <location filename="../src/app/mainwindowsession.cpp" line="145"/>
         <source>El archivo cambió en disco: recargado.</source>
         <translation>Fișierul s-a schimbat pe disc: reîncărcat.</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowsession.cpp" line="143"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="152"/>
         <source>Archivo modificado en disco</source>
         <translation>Fișier modificat pe disc</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowsession.cpp" line="144"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="153"/>
         <source>«%1» ha cambiado en disco y tienes cambios sin guardar.</source>
         <translation>„%1” s-a schimbat pe disc și ai modificări nesalvate.</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowsession.cpp" line="147"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="156"/>
         <source>¿Recargar la versión del disco (perderás tus cambios) o conservar los tuyos?</source>
         <translation>Reîncărcați versiunea de pe disc (veți pierde modificările) sau le păstrați pe ale dvs.?</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowsession.cpp" line="148"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="157"/>
         <source>Recargar</source>
         <translation>Reîncarcă</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowsession.cpp" line="150"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="159"/>
         <source>Conservar los míos</source>
         <translation>Păstrează-le pe ale mele</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowsession.cpp" line="179"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="188"/>
         <source>No se pudo recargar el archivo:
 %1
 
@@ -1346,7 +1362,7 @@
         <translation>HTML (*.html *.htm)</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowsession.cpp" line="178"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="187"/>
         <location filename="../src/io/filecontroller.cpp" line="78"/>
         <location filename="../src/io/filecontroller.cpp" line="140"/>
         <location filename="../src/export/exportcontroller.cpp" line="155"/>
@@ -1435,52 +1451,50 @@
 Doriți să le salvați?</translation>
     </message>
     <message>
-        <location filename="../src/io/filecontroller.cpp" line="237"/>
+        <location filename="../src/io/filecontroller.cpp" line="238"/>
         <source>Documento recuperado de la sesión anterior</source>
         <translation>Document recuperat din sesiunea anterioară</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowsession.cpp" line="61"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="63"/>
         <source>(sin título)</source>
         <translation>(fără titlu)</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowsession.cpp" line="66"/>
         <source>Recuperar documento</source>
-        <translation>Recuperează documentul</translation>
+        <translation type="vanished">Recuperează documentul</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowsession.cpp" line="67"/>
         <source>Se encontró un documento con cambios sin guardar de una sesión anterior:
 %1 (%2).
 
 ¿Quieres recuperarlo?</source>
-        <translation>A fost găsit un document cu modificări nesalvate dintr-o sesiune anterioară:
+        <translation type="vanished">A fost găsit un document cu modificări nesalvate dintr-o sesiune anterioară:
 %1 (%2).
 
 Dorești să îl recuperezi?</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowsession.cpp" line="70"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="71"/>
         <source>Recuperar</source>
         <translation>Recuperează</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowsession.cpp" line="71"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="72"/>
         <source>Descartar</source>
         <translation>Renunță</translation>
     </message>
     <message>
         <location filename="../src/app/mainwindow.cpp" line="532"/>
-        <location filename="../src/app/mainwindow.cpp" line="592"/>
-        <location filename="../src/app/mainwindow.cpp" line="674"/>
-        <location filename="../src/app/mainwindowsession.cpp" line="121"/>
+        <location filename="../src/app/mainwindow.cpp" line="588"/>
+        <location filename="../src/app/mainwindow.cpp" line="670"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="130"/>
         <source>Sin título</source>
         <translation>Fără titlu</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="591"/>
-        <location filename="../src/app/mainwindowsession.cpp" line="123"/>
+        <location filename="../src/app/mainwindow.cpp" line="587"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="132"/>
         <source>%1[*] — md-editor</source>
         <translation>%1[*] — md-editor</translation>
     </message>
