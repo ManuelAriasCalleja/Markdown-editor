@@ -9,6 +9,7 @@
 #include "focuseditor.h"
 #include "mainwindow.h"
 #include "editorstack.h"
+#include "outlinepanel.h"
 #include "splitviewcontroller.h"
 #include "tableedit.h"
 
@@ -35,6 +36,8 @@ private slots:
     void commitSourceUpdatesDocument();
     void syncSourceFromDocumentRefreshesPanel();
     void distractionFreeFollowsActiveTab();
+    void keyboardCyclesTabs();
+    void outlineFocusToggleShortcut();
 
 private:
     // Markdown actual del documento WYSIWYG (serialización canónica, igual que
@@ -169,6 +172,47 @@ void TestSplitView::distractionFreeFollowsActiveTab()
     QCOMPARE(w.m_stack->editor()->frameShape(), QFrame::NoFrame);
     w.m_distraction->setActive(false);
     QCOMPARE(w.m_stack->editor()->frameShape(), QFrame::StyledPanel);
+}
+
+// Ctrl+AvPág/RePág y Ctrl+Tab rotan entre pestañas (con envoltura). Probamos la
+// lógica de cycleTab, a la que despachan los atajos.
+void TestSplitView::keyboardCyclesTabs()
+{
+    MainWindow w;
+    w.show();
+    w.addTab();
+    w.addTab();
+    QCOMPARE(w.m_tabs->count(), 3);
+
+    w.m_tabs->setCurrentIndex(0);
+    w.cycleTab(1);
+    QCOMPARE(w.m_tabs->currentIndex(), 1);
+    w.cycleTab(1);
+    QCOMPARE(w.m_tabs->currentIndex(), 2);
+    w.cycleTab(1);                              // envuelve al principio
+    QCOMPARE(w.m_tabs->currentIndex(), 0);
+    w.cycleTab(-1);                             // envuelve al final
+    QCOMPARE(w.m_tabs->currentIndex(), 2);
+}
+
+// Ctrl+Shift+O alterna el foco esquema↔editor, mostrando el esquema si está oculto.
+void TestSplitView::outlineFocusToggleShortcut()
+{
+    MainWindow w;
+    w.show();
+    w.m_stack->editor()->setMarkdown(QStringLiteral("# Uno\n\nTexto\n\n# Dos\n"));
+    w.activateWindow();
+    QApplication::processEvents();
+    w.m_outline->setVisible(false);
+
+    w.toggleOutlineFocus();                     // muestra y enfoca el esquema
+    QApplication::processEvents();
+    QVERIFY(!w.m_outline->isHidden());          // se mostró (isHidden refleja el hide explícito)
+    QTRY_VERIFY(w.m_outline->treeHasFocus());   // y recibió el foco
+
+    w.toggleOutlineFocus();                     // devuelve el foco al editor
+    QApplication::processEvents();
+    QVERIFY(!w.m_outline->treeHasFocus());
 }
 
 QTEST_MAIN(TestSplitView)

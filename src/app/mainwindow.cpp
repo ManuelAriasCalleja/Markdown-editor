@@ -60,6 +60,7 @@
 #include <QFormLayout>
 #include <QKeyEvent>
 #include <QKeySequence>
+#include <QShortcut>
 #include <QLocale>
 #include <QPainter>
 #include <QPixmap>
@@ -133,6 +134,20 @@ MainWindow::MainWindow(QWidget *parent)
             setActiveStack(s);
     });
     connect(m_tabs, &QTabWidget::tabCloseRequested, this, &MainWindow::closeTab);
+
+    // Navegación de pestañas por teclado (sin entrada de menú): siguiente/anterior
+    // con Ctrl+AvPág/RePág y, como alternativa habitual, Ctrl+Tab/Ctrl+Shift+Tab.
+    const auto addTabShortcut = [this](const QKeySequence &seq, int delta) {
+        auto *sc = new QShortcut(seq, this);
+        connect(sc, &QShortcut::activated, this, [this, delta] { cycleTab(delta); });
+    };
+    addTabShortcut(QKeySequence(Qt::CTRL | Qt::Key_PageDown), +1);
+    addTabShortcut(QKeySequence(Qt::CTRL | Qt::Key_PageUp), -1);
+    addTabShortcut(QKeySequence(Qt::CTRL | Qt::Key_Tab), +1);
+    addTabShortcut(QKeySequence(QStringLiteral("Ctrl+Shift+Tab")), -1);
+    // Alterna el foco entre el esquema y el editor (mostrando el esquema si hace falta).
+    auto *outlineFocus = new QShortcut(QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_O), this);
+    connect(outlineFocus, &QShortcut::activated, this, &MainWindow::toggleOutlineFocus);
 
     // Esquema: mostrar/ocultar (F9) recoloca la columna sin distracciones; clic
     // lleva el cursor al encabezado; arrastre reordena la sección. Operan sobre el
@@ -581,6 +596,29 @@ void MainWindow::setActiveStack(EditorStack *stack)
 void MainWindow::newTab()
 {
     addTab();  // documento nuevo vacío en una pestaña nueva
+}
+
+void MainWindow::cycleTab(int delta)
+{
+    const int n = m_tabs->count();
+    if (n <= 1)
+        return;  // una sola pestaña: nada que rotar
+    const int idx = (m_tabs->currentIndex() + delta % n + n) % n;
+    m_tabs->setCurrentIndex(idx);  // dispara setActiveStack
+}
+
+void MainWindow::toggleOutlineFocus()
+{
+    // Si el esquema ya tiene el foco, devuélvelo al editor activo (alternancia).
+    if (m_outline->treeHasFocus()) {
+        m_stack->activeEditor()->setFocus(Qt::TabFocusReason);
+        return;
+    }
+    // Si está oculto, muéstralo (toggleViewAction sincroniza su marca con la
+    // visibilidad del dock, así que F9 sigue reflejando el estado).
+    if (m_outline->isHidden())
+        m_outline->show();
+    m_outline->focusTree();
 }
 
 void MainWindow::openInTab()

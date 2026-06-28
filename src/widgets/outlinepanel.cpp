@@ -11,6 +11,7 @@
 #include <QTextBlock>
 #include <QTextDocument>
 #include <QTreeWidgetItem>
+#include <QTreeWidgetItemIterator>
 #include <QVector>
 #include <QWidget>
 
@@ -202,6 +203,26 @@ void OutlinePanel::setLeftPadding(int px)
     m_layout->setContentsMargins(qMax(0, px), 0, 0, 0);
 }
 
+void OutlinePanel::focusTree()
+{
+    // Si no hay entrada seleccionada, elige la primera navegable (con número de
+    // bloque): así las flechas tienen un punto de partida y Enter activa algo.
+    if (!m_tree->currentItem()) {
+        for (QTreeWidgetItemIterator it(m_tree); *it; ++it) {
+            if ((*it)->data(0, Qt::UserRole).isValid()) {
+                m_tree->setCurrentItem(*it);
+                break;
+            }
+        }
+    }
+    m_tree->setFocus(Qt::TabFocusReason);
+}
+
+bool OutlinePanel::treeHasFocus() const
+{
+    return m_tree->hasFocus();
+}
+
 OutlinePanel::OutlinePanel(QWidget *parent)
     : QDockWidget(parent)
 {
@@ -228,13 +249,15 @@ OutlinePanel::OutlinePanel(QWidget *parent)
     m_layout->addWidget(m_tree);
     setWidget(container);
 
-    // Un clic en un encabezado lleva el cursor a su bloque (los ítems de relleno
-    // no llevan número de bloque, así que no navegan).
-    connect(m_tree, &QTreeWidget::itemClicked, this, [this](QTreeWidgetItem *item) {
+    // Un clic (o Enter con el teclado) en un encabezado lleva el cursor a su bloque
+    // (los ítems de relleno no llevan número de bloque, así que no navegan).
+    const auto activate = [this](QTreeWidgetItem *item) {
         const QVariant blockNumber = item->data(0, Qt::UserRole);
         if (blockNumber.isValid())
             emit headingActivated(blockNumber.toInt());
-    });
+    };
+    connect(m_tree, &QTreeWidget::itemClicked, this, activate);
+    connect(m_tree, &QTreeWidget::itemActivated, this, activate);
     // Reenvía la petición de mover sección que origina el arrastre en el árbol.
     connect(m_tree, &OutlineTree::sectionMoveRequested,
             this, &OutlinePanel::sectionMoveRequested);

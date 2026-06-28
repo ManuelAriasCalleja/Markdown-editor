@@ -261,6 +261,12 @@ private:
     EditorStack *stackAt(int index) const;
     // Documento nuevo en una pestaña nueva (Archivo → Nuevo).
     void newTab();
+    // Cambia a la pestaña +delta/-delta (con envoltura), si hay más de una.
+    // Atajos Ctrl+AvPág/RePág y Ctrl+Tab/Ctrl+Shift+Tab.
+    void cycleTab(int delta);
+    // Alterna el foco de teclado entre el esquema (TOC) y el editor (Ctrl+Shift+O):
+    // muestra el esquema si está oculto, lo enfoca; si ya lo tiene, vuelve al editor.
+    void toggleOutlineFocus();
     // Diálogo de abrir → abre en pestaña (reusa la actual si está vacía).
     void openInTab();
     // Abre `path` en una pestaña: si ya está abierto salta a él; reusa la actual si

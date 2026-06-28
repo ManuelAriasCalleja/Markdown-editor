@@ -52,7 +52,9 @@ Puedes tener varios documentos abiertos a la vez, cada uno en su **pestaña**:
 - **Nuevo** (Ctrl+N), **Nuevo desde plantilla** y **Abrir** (Ctrl+O) crean una
   pestaña (o reutilizan la pestaña vacía inicial). Arrastrar y soltar un archivo
   también lo abre en una pestaña; si ya está abierto, salta a la suya.
-- Cambia de documento pulsando en su pestaña; arrástralas para reordenarlas.
+- Cambia de documento pulsando en su pestaña; arrástralas para reordenarlas. Con
+  el teclado, **Ctrl+AvPág / Ctrl+RePág** (o **Ctrl+Tab / Ctrl+Shift+Tab**) saltan
+  a la pestaña siguiente o anterior.
 - **Cerrar pestaña** (Ctrl+W) cierra la actual y pregunta si tiene cambios sin
   guardar. La última no se cierra: queda como documento nuevo.
 - La etiqueta muestra el nombre del archivo y un punto (•) si hay cambios sin
@@ -251,7 +253,10 @@ correspondiente.
 
 El panel lateral izquierdo muestra el índice de encabezados (TOC): se
 actualiza al escribir y, al hacer clic en una entrada, el cursor salta a ese
-encabezado. Se muestra/oculta con F9.
+encabezado. Se muestra/oculta con F9. Con **Ctrl+Shift+O** llevas el foco del
+teclado al esquema (lo muestra si estaba oculto); ahí, las flechas recorren los
+encabezados y **Enter** salta al elegido y devuelve el foco al editor. Pulsar
+**Ctrl+Shift+O** de nuevo, sin más, devuelve el foco al editor.
 
 Puedes **arrastrar** una entrada del esquema para **reordenar** esa sección
 —su encabezado, su contenido y sus subsecciones— dentro del documento, sin
@@ -338,6 +343,7 @@ ofrece recuperar lo que estabas escribiendo.
 | Nuevo                     | Ctrl+N           |
 | Abrir                     | Ctrl+O           |
 | Cerrar pestaña            | Ctrl+W           |
+| Pestaña siguiente / anterior | Ctrl+AvPág / Ctrl+RePág (o Ctrl+Tab / Ctrl+Shift+Tab) |
 | Guardar                   | Ctrl+S           |
 | Guardar como              | Ctrl+Shift+S     |
 | Imprimir                  | Ctrl+P           |
@@ -352,6 +358,7 @@ ofrece recuperar lo que estabas escribiendo.
 | Insertar fórmula          | Ctrl+Shift+F     |
 | Insertar nota al pie      | Ctrl+Shift+N     |
 | Ir a encabezado           | Ctrl+G           |
+| Foco al esquema / volver al editor | Ctrl+Shift+O |
 | Vista de código Markdown  | Ctrl+Shift+M     |
 | Vista dividida            | Ctrl+Shift+D     |
 | Esquema                   | F9               |

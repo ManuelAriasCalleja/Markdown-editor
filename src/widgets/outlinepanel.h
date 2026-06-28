@@ -88,6 +88,15 @@ public:
     /// queda pegado a la columna de texto). 0 = sin relleno (modo normal).
     void setLeftPadding(int px);
 
+    /// \brief Pone el foco de teclado en el árbol del índice; si no hay entrada
+    /// seleccionada, selecciona la primera navegable. Para saltar al esquema desde
+    /// el editor con el teclado (las flechas recorren, Enter activa la entrada).
+    void focusTree();
+
+    /// \brief Indica si el árbol del índice tiene el foco de teclado (para alternar
+    /// el foco esquema↔editor con el mismo atajo).
+    bool treeHasFocus() const;
+
 signals:
     /// \brief Emite el número de bloque del encabezado activado, para navegar hasta él.
     void headingActivated(int blockNumber);

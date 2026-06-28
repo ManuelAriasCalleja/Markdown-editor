@@ -10,7 +10,11 @@
 #include <QListWidget>
 #include <QLocale>
 #include <QScrollBar>
+#include <QTextBlock>
 #include <QTextBrowser>
+#include <QTextCharFormat>
+#include <QTextCursor>
+#include <QTextDocument>
 #include <QTextStream>
 
 namespace {
@@ -35,6 +39,35 @@ QString helpSuffix()
     case QLocale::Romanian:   return QStringLiteral("_ro");
     default:                  return QStringLiteral("_en");
     }
+}
+
+// Ancla (slug) de un encabezado, con la misma regla que usan los enlaces del
+// índice en los .md de ayuda: minúsculas, sin acentos (se descomponen y se
+// descartan las marcas), la puntuación se borra y los espacios/guiones colapsan a
+// un único guion. Así `## Enlaces e imágenes` → `enlaces-e-imagenes`, que es el
+// destino que escribe `[Enlaces e imágenes](#enlaces-e-imagenes)`.
+QString headingSlug(const QString &text)
+{
+    const QString decomposed = text.normalized(QString::NormalizationForm_D);
+    QString slug;
+    slug.reserve(decomposed.size());
+    bool pendingSeparator = false;
+    for (const QChar c : decomposed) {
+        if (c.category() == QChar::Mark_NonSpacing
+            || c.category() == QChar::Mark_SpacingCombining
+            || c.category() == QChar::Mark_Enclosing)
+            continue;  // diacrítico: á → a
+        if (c.isLetterOrNumber()) {
+            if (pendingSeparator && !slug.isEmpty())
+                slug += QLatin1Char('-');
+            pendingSeparator = false;
+            slug += c.toLower();
+        } else if (c.isSpace() || c == QLatin1Char('-')) {
+            pendingSeparator = true;  // separador (colapsa runs a un guion)
+        }
+        // El resto de puntuación se descarta (no genera guion).
+    }
+    return slug;
 }
 
 } // namespace
@@ -80,6 +113,27 @@ void HelpDialog::loadPage(const QString &resourcePath)
     QTextStream in(&file);
     in.setEncoding(QStringConverter::Utf8);
     m_viewer->setMarkdown(in.readAll());
+    // Qt no genera anclas con nombre para los encabezados al renderizar Markdown,
+    // así que los enlaces internos del índice (#seccion) no tendrían destino y al
+    // pulsarlos el visor no se desplazaría. Recorremos los encabezados y a cada uno
+    // le ponemos como ancla su slug, para que QTextBrowser::scrollToAnchor (que
+    // dispara el clic) encuentre el destino.
+    QTextDocument *doc = m_viewer->document();
+    for (QTextBlock b = doc->begin(); b != doc->end(); b = b.next()) {
+        if (b.blockFormat().headingLevel() <= 0)
+            continue;
+        const QString slug = headingSlug(b.text());
+        if (slug.isEmpty())
+            continue;
+        QTextCursor cur(b);
+        cur.movePosition(QTextCursor::EndOfBlock, QTextCursor::KeepAnchor);
+        QTextCharFormat fmt;
+        // scrollToAnchor solo localiza fragmentos con isAnchor(); un ancla con
+        // nombre pero sin href no se pinta como enlace (el encabezado no cambia).
+        fmt.setAnchor(true);
+        fmt.setAnchorNames({slug});
+        cur.mergeCharFormat(fmt);
+    }
     // Vuelve arriba al cambiar de página (si no, conservaría el scroll
     // de la página anterior, que confunde).
     m_viewer->verticalScrollBar()->setValue(0);
