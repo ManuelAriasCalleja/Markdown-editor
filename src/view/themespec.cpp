@@ -199,6 +199,78 @@ QList<ThemeSpec> makeThemes()
         themes.append(t);
     }
 
+    // --- Solarized Light ---
+    // Paleta Solarized de Ethan Schoonover (base3/base2 de fondo, base02/base03 de
+    // tinta). El cuerpo Solarized clásico (base00) queda en ~4:1 sobre base3, por
+    // debajo del objetivo AAA del proyecto; como con Monokai, se oscurecen los
+    // tonos conservando el matiz hasta cumplir el contraste (verificado en
+    // tst_themespec): texto base02, y acentos/tinta oscurecidos a ≥4.5:1.
+    {
+        ThemeSpec t;
+        t.id = ThemeId::SolarizedLight;
+        t.key = QStringLiteral("solarized-light");
+        t.displayName = QStringLiteral("Solarized Light");
+        t.nameTranslated = false;
+        t.isDark = false;
+        t.window = QColor(0xee, 0xe8, 0xd5);           // base2
+        t.windowText = QColor(0x00, 0x2b, 0x36);       // base03
+        t.base = QColor(0xfd, 0xf6, 0xe3);             // base3
+        t.altBase = QColor(0xee, 0xe8, 0xd5);          // base2
+        t.text = QColor(0x07, 0x36, 0x42);             // base02
+        t.textSecondary = QColor(0x54, 0x69, 0x6f);    // base01 oscurecido
+        t.button = QColor(0xee, 0xe8, 0xd5);           // base2
+        t.buttonText = QColor(0x00, 0x2b, 0x36);       // base03
+        t.brightText = QColor(0xd7, 0x27, 0x24);       // red oscurecido
+        t.link = QColor(0x20, 0x74, 0xaf);             // blue oscurecido
+        t.highlight = QColor(0x20, 0x74, 0xaf);        // blue oscurecido
+        t.highlightedText = QColor(0xfd, 0xf6, 0xe3);  // base3
+        t.tooltipBase = QColor(0xee, 0xe8, 0xd5);      // base2
+        t.tooltipText = QColor(0x00, 0x2b, 0x36);      // base03
+        t.disabledText = QColor(0x93, 0xa1, 0xa1);     // base1
+        t.border = QColor(0xca, 0xbf, 0xa0);           // base2 algo más oscuro
+        // keyword=green, string=cyan, comment=base01, number=violet, math=blue,
+        // todos oscurecidos a ≥4.5:1 sobre base3.
+        t.syntax = {QColor(0x66, 0x75, 0x00), QColor(0x1f, 0x79, 0x72),
+                    QColor(0x58, 0x6e, 0x75), QColor(0x61, 0x66, 0xc0),
+                    QColor(0x20, 0x74, 0xaf)};
+        themes.append(t);
+    }
+
+    // --- Solarized Dark ---
+    // Variante oscura (base03/base02 de fondo, base2 de tinta). El cuerpo clásico
+    // (base0) queda en ~4.75:1; se usa base2 para el texto (AAA) y se aclaran los
+    // acentos que no llegan a 4.5:1 sobre base03 (azul, violeta…).
+    {
+        ThemeSpec t;
+        t.id = ThemeId::SolarizedDark;
+        t.key = QStringLiteral("solarized-dark");
+        t.displayName = QStringLiteral("Solarized Dark");
+        t.nameTranslated = false;
+        t.isDark = true;
+        t.window = QColor(0x07, 0x36, 0x42);           // base02
+        t.windowText = QColor(0xee, 0xe8, 0xd5);       // base2
+        t.base = QColor(0x00, 0x2b, 0x36);             // base03
+        t.altBase = QColor(0x07, 0x36, 0x42);          // base02
+        t.text = QColor(0xee, 0xe8, 0xd5);             // base2
+        t.textSecondary = QColor(0x93, 0xa1, 0xa1);    // base1
+        t.button = QColor(0x07, 0x36, 0x42);           // base02
+        t.buttonText = QColor(0xee, 0xe8, 0xd5);       // base2
+        t.brightText = QColor(0xe6, 0x6a, 0x68);       // red aclarado
+        t.link = QColor(0x32, 0x95, 0xda);             // blue aclarado
+        t.highlight = QColor(0x58, 0x6e, 0x75);        // base01 (selección)
+        t.highlightedText = QColor(0xfd, 0xf6, 0xe3);  // base3
+        t.tooltipBase = QColor(0x07, 0x36, 0x42);      // base02
+        t.tooltipText = QColor(0xee, 0xe8, 0xd5);      // base2
+        t.disabledText = QColor(0x65, 0x7b, 0x83);     // base00
+        t.border = QColor(0x58, 0x6e, 0x75);           // base01
+        // keyword=green, string=cyan, comment=base1, number=violet, math=blue,
+        // los que no llegaban a 4.5:1 sobre base03 se aclaran conservando el matiz.
+        t.syntax = {QColor(0x85, 0x99, 0x00), QColor(0x2a, 0xa1, 0x98),
+                    QColor(0x93, 0xa1, 0xa1), QColor(0x85, 0x8a, 0xce),
+                    QColor(0x32, 0x95, 0xda)};
+        themes.append(t);
+    }
+
     return themes;
 }
 

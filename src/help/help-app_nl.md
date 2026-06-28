@@ -320,8 +320,7 @@ afdrukken** drukt alleen het geselecteerde af.
 
 ## Thema's en uiterlijk
 
-- **Beeld → Thema** biedt Licht, Donker, GitHub Light, GitHub Dark, Monokai en
-  Hoog contrast. **Systeem volgen** stemt het lichte/donkere thema af op dat van
+- **Beeld → Thema** biedt Licht, Donker, GitHub Light, GitHub Dark, Monokai, Hoog contrast, Solarized Light en Solarized Dark. **Systeem volgen** stemt het lichte/donkere thema af op dat van
   het besturingssysteem.
 - **Beeld → Nachtelijk warm licht** dempt de blauwtinten van de achtergrond
   afhankelijk van het tijdstip.

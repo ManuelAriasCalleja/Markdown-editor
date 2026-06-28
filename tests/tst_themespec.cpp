@@ -88,7 +88,7 @@ void TestThemeSpec::everyThemeHasReadableSyntax()
 void TestThemeSpec::catalogIsWellFormed()
 {
     const QList<ThemeSpec> &themes = allThemes();
-    QCOMPARE(themes.size(), 6);
+    QCOMPARE(themes.size(), 8);
 
     QSet<QString> keys;
     for (const ThemeSpec &t : themes) {
@@ -105,6 +105,8 @@ void TestThemeSpec::catalogIsWellFormed()
     QVERIFY(specFor(ThemeId::GitHubDark).isDark);
     QVERIFY(specFor(ThemeId::Monokai).isDark);
     QVERIFY(specFor(ThemeId::HighContrast).isDark);
+    QVERIFY(specFor(ThemeId::SolarizedLight).isDark == false);
+    QVERIFY(specFor(ThemeId::SolarizedDark).isDark);
 }
 
 void TestThemeSpec::keyRoundTrip()

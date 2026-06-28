@@ -307,8 +307,7 @@ only what is selected.
 
 ## Themes and appearance
 
-- **View → Theme** offers Light, Dark, GitHub Light, GitHub Dark, Monokai and
-  High contrast. **Follow the system** matches the light/dark theme to the OS.
+- **View → Theme** offers Light, Dark, GitHub Light, GitHub Dark, Monokai, High contrast, Solarized Light and Solarized Dark. **Follow the system** matches the light/dark theme to the OS.
 - **View → Night warm light** dims the background blues according to the time.
 - **Zoom**: Ctrl+mouse wheel, Ctrl++ / Ctrl+- and **Normal size** (Ctrl+0) scale
   the whole interface (not just the editor text).

@@ -318,8 +318,7 @@ solo ciò che è selezionato.
 
 ## Temi e aspetto
 
-- **Visualizza → Tema** offre Chiaro, Scuro, GitHub Light, GitHub Dark, Monokai e
-  Alto contrasto. **Segui il sistema** allinea il tema chiaro/scuro a quello del
+- **Visualizza → Tema** offre Chiaro, Scuro, GitHub Light, GitHub Dark, Monokai, Alto contrasto, Solarized Light e Solarized Dark. **Segui il sistema** allinea il tema chiaro/scuro a quello del
   sistema operativo.
 - **Visualizza → Luce calda notturna** attenua i blu dello sfondo in base all'ora.
 - **Zoom**: Ctrl+rotellina, Ctrl++ / Ctrl+- e **Dimensione normale** (Ctrl+0)

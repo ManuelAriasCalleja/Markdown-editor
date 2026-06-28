@@ -327,8 +327,7 @@ nur das Markierte.
 
 ## Themes und Aussehen
 
-- **Ansicht → Theme** bietet Hell, Dunkel, GitHub Light, GitHub Dark, Monokai und
-  Hoher Kontrast. **Dem System folgen** passt das helle/dunkle Theme an das des
+- **Ansicht → Theme** bietet Hell, Dunkel, GitHub Light, GitHub Dark, Monokai, Hoher Kontrast, Solarized Light und Solarized Dark. **Dem System folgen** passt das helle/dunkle Theme an das des
   Betriebssystems an.
 - **Ansicht → Nächtliches warmes Licht** dimmt die Blautöne des Hintergrunds je
   nach Uhrzeit.

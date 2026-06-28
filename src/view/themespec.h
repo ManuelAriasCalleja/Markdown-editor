@@ -28,6 +28,8 @@ enum class ThemeId {
     GitHubDark,
     Monokai,
     HighContrast,
+    SolarizedLight,
+    SolarizedDark,
 };
 
 /// Colores del resaltado de código y de las fórmulas matemáticas (los consume

@@ -317,7 +317,7 @@ tipărește doar ce este selectat.
 ## Teme și aspect
 
 - **Vizualizare → Temă** oferă Luminoasă, Întunecată, GitHub Light, GitHub Dark,
-  Monokai și Contrast ridicat. **Urmează sistemul** potrivește tema
+  Monokai, Contrast ridicat, Solarized Light și Solarized Dark. **Urmează sistemul** potrivește tema
   luminoasă/întunecată cu cea a sistemului de operare.
 - **Vizualizare → Lumină caldă nocturnă** atenuează albastrurile fundalului în
   funcție de oră.

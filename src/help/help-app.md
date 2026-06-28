@@ -316,8 +316,9 @@ selección** imprime solo lo seleccionado.
 
 ## Temas y apariencia
 
-- **Ver → Tema** ofrece Claro, Oscuro, GitHub Light, GitHub Dark, Monokai y
-  Alto contraste. **Seguir el sistema** ajusta el tema claro/oscuro al del SO.
+- **Ver → Tema** ofrece Claro, Oscuro, GitHub Light, GitHub Dark, Monokai,
+  Alto contraste, Solarized Light y Solarized Dark. **Seguir el sistema** ajusta
+  el tema claro/oscuro al del SO.
 - **Ver → Luz cálida nocturna** atenúa los azules del fondo según la hora.
 - **Zoom**: Ctrl+rueda del ratón, Ctrl++ / Ctrl+- y **Tamaño normal** (Ctrl+0)
   escalan toda la interfaz (no sólo el texto del editor).

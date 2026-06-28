@@ -321,8 +321,7 @@ l'**Aperçu avant impression**.
 
 ## Thèmes et apparence
 
-- **Affichage → Thème** propose Clair, Sombre, GitHub Light, GitHub Dark, Monokai
-  et Contraste élevé. **Suivre le système** aligne le thème clair/sombre sur celui
+- **Affichage → Thème** propose Clair, Sombre, GitHub Light, GitHub Dark, Monokai, Contraste élevé, Solarized Light et Solarized Dark. **Suivre le système** aligne le thème clair/sombre sur celui
   du système.
 - **Affichage → Lumière chaude nocturne** atténue les bleus du fond selon l'heure.
 - **Zoom** : Ctrl+molette, Ctrl++ / Ctrl+- et **Taille normale** (Ctrl+0) mettent
