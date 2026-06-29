@@ -40,8 +40,10 @@
 #include "tablecontroller.h"
 #include "themecontroller.h"
 
-EditorStack::EditorStack(FindReplaceBar *findBar, OutlinePanel *outline, QWidget *parent)
+EditorStack::EditorStack(FindReplaceBar *findBar, OutlinePanel *outline,
+                         ThemeController *theme, QWidget *parent)
     : QWidget(parent)
+    , m_theme(theme)
     , m_findBar(findBar)
     , m_outline(outline)
 {
@@ -64,9 +66,10 @@ EditorStack::EditorStack(FindReplaceBar *findBar, OutlinePanel *outline, QWidget
     // Los fallos de render «asentados» avisan al usuario en la barra de estado.
     connect(m_diagrams, &DiagramController::statusMessage, this, &EditorStack::statusMessage);
 
-    // E/S del documento y control del tema (recolorea enlaces de ESTE editor).
+    // E/S del documento. El control del tema es ÚNICO de la ventana (lo pasa
+    // MainWindow); aquí solo se guarda el puntero —no se posee— y se reapunta a este
+    // editor cuando la pestaña se activa (ThemeController::retarget).
     m_documentIo = new DocumentIo(m_editor, this);
-    m_theme = new ThemeController(m_editor, m_highlighter, this);
     // El color de atenuación del foco de línea se deriva de la paleta; al cambiar
     // de tema hay que rehacerlo (si no, se quedaría con el color del tema anterior).
     connect(m_theme, &ThemeController::themeChanged, this, [this] {
@@ -178,8 +181,8 @@ EditorStack::EditorStack(FindReplaceBar *findBar, OutlinePanel *outline, QWidget
     // Al cargar: recolorear enlaces, avisar a la ventana (reconstruye el esquema),
     // dar borde a las tablas y reajustar el idioma del corrector. El orden importa
     // (recolor › esquema › tablas › corrector), por eso van en esta secuencia.
-    connect(m_documentIo, &DocumentIo::documentLoaded,
-            m_theme, &ThemeController::recolorLinks);
+    connect(m_documentIo, &DocumentIo::documentLoaded, this,
+            [this] { m_theme->recolorLinks(m_editor); });
     connect(m_documentIo, &DocumentIo::documentLoaded, this, &EditorStack::documentLoaded);
     connect(m_documentIo, &DocumentIo::documentLoaded, this, [this] { styleTables(); });
     connect(m_documentIo, &DocumentIo::documentLoaded, this,
@@ -267,7 +270,7 @@ void EditorStack::setBodyMarkdown(const QString &body)
     mdrender::setMarkdownWithExtensions(m_editor, body);
     styleTables();
     applyLineSpacing(m_editor);
-    m_theme->recolorLinks();
+    m_theme->recolorLinks(m_editor);
     m_editor->setUpdatesEnabled(wasUpdating);
     m_outline->rebuild(m_editor->document());
     m_split->endProgrammaticChange(wasSyncing);

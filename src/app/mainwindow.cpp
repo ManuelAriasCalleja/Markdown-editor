@@ -193,6 +193,12 @@ MainWindow::MainWindow(QWidget *parent)
             m_outline->rebuild(m_stack->editor()->document());
     });
 
+    // Control del tema: ÚNICO de la ventana. La paleta y el tinte cálido nocturno son
+    // de la aplicación (globales); una sola instancia con un solo temporizador los
+    // lleva, en vez de uno por pestaña peleándose por la paleta global. Se crea antes
+    // que las pestañas; setActiveStack lo reapunta al editor de la activa.
+    m_theme = new ThemeController(nullptr, nullptr, this);
+
     // Primer documento. addTab lo crea, lo cablea y lo hace activo (setActiveStack,
     // que de momento omite lo dependiente de los menús, aún por crear).
     addTab();
@@ -273,9 +279,9 @@ MainWindow::MainWindow(QWidget *parent)
 
     // Restaura el tema de la sesión anterior (la señal themeChanged marca la acción
     // del menú). Si se sigue el SO, se deriva de su esquema actual.
-    m_stack->theme()->applyTheme(
-        m_stack->theme()->followsSystem()
-            ? m_stack->theme()->systemTheme()
+    m_theme->applyTheme(
+        m_theme->followsSystem()
+            ? m_theme->systemTheme()
             : mdtheme::idFromKey(AppSettings::themeKey(), mdtheme::ThemeId::Light));
 }
 
@@ -517,7 +523,7 @@ EditorStack *MainWindow::stackAt(int index) const
 
 EditorStack *MainWindow::addTab()
 {
-    auto *stack = new EditorStack(m_findBar, m_outline, this);
+    auto *stack = new EditorStack(m_findBar, m_outline, m_theme, this);
     // El filtro de eventos de la ventana consulta m_stack; fíjalo ya (aún antes de
     // añadir la pestaña) para que ningún evento de layout llegue con m_stack a un
     // documento previo o nulo. setActiveStack lo reconfirmará al activarse.
@@ -541,6 +547,11 @@ void MainWindow::setActiveStack(EditorStack *stack)
     if (!stack)
         return;
     m_stack = stack;
+
+    // El control del tema (único de la ventana) se reapunta al editor/resaltador de
+    // la pestaña activa: recolorea sus enlaces y fija su resaltado al tema vigente.
+    if (m_theme)
+        m_theme->retarget(stack->editor(), stack->highlighter());
 
     // «Editar → reconstruir esquema» se reengancha al documento activo (solo él
     // alimenta el esquema compartido).

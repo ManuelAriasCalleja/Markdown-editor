@@ -278,6 +278,9 @@ private:
 
     QTabWidget *m_tabs = nullptr;    // un documento por pestaña
     EditorStack *m_stack = nullptr;  // documento ACTIVO (pestaña actual)
+    // Tema/paleta/tinte cálido: ÚNICO de la ventana (global a la app). Se reapunta al
+    // editor de la pestaña activa en setActiveStack; las pestañas no lo poseen.
+    ThemeController *m_theme = nullptr;
     // Acciones compartidas cuyo estado sincroniza el documento activo con el
     // cursor; se entregan a cada pestaña en configureStack().
     FormatController::Actions m_formatActions;

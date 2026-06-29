@@ -107,10 +107,10 @@ raíz; `doxygen Doxyfile` → `docs/doxygen/html`).
 
 **Edición por pestañas (`EditorStack`).** Cada documento abierto vive en un
 `EditorStack` (un `QWidget`, una pestaña) que **posee** el editor WYSIWYG/fuente y
-los ~15 colaboradores ligados a ESE documento (E/S, tema, corrector, diagramas,
+los ~14 colaboradores ligados a ESE documento (E/S, corrector, diagramas,
 vista dividida, formato, tablas, fórmulas, inserción, exportación, autoguardado,
 archivo, vigilancia de disco). `MainWindow` es el *shell*: un `QTabWidget` de
-`EditorStack` más lo que es de ventana (menús, barra de formato, zoom, panel de
+`EditorStack` más lo que es de ventana (menús, barra de formato, zoom, tema, panel de
 esquema, barra de búsqueda, estado, modo sin distracciones, sesión). `m_stack`
 apunta al documento **activo**; `setActiveStack()` re-vincula al activo la barra de
 búsqueda, el esquema, el estado de las acciones, el título y el modo de vista al
@@ -120,6 +120,12 @@ documento activo (`configureStack()` les entrega las acciones a cada pestaña). 
 esquema y la barra de búsqueda son de la ventana (compartidos): solo el documento
 activo los alimenta. El modo sin distracciones se **traslada** a la pestaña activa
 al cambiar de documento (`DistractionFreeController::retarget`), sin salir del modo.
+El **control del tema** (`ThemeController`) es igualmente único de la ventana —la
+paleta y el tinte cálido nocturno son globales de la aplicación—: `setActiveStack()`
+lo reapunta al editor/resaltador activo (`ThemeController::retarget`) para recolorear
+sus enlaces y fijar su resaltado, y un único `QTimer` lleva el tinte. Tenerlo por
+pestaña era un error: varios temporizadores escribían la paleta global con estado
+desfasado y el tinte parecía activarse/desactivarse solo.
 El borrador de autoguardado/recuperación es **por pestaña**: cada `RecoveryManager`
 usa un slot único (`recovery-draft-<uuid>.md`), así que un cierre anómalo conserva
 TODOS los documentos con cambios; al arrancar, `RecoveryManager::leftoverDrafts()`
@@ -145,8 +151,8 @@ de `EditorStack` o `MainWindow`):
   `DiskWatcher` (vigila cambios externos del archivo).
 - **Vista y apariencia**: `SplitViewController` (los tres modos de vista
   WYSIWYG/fuente/dividida y su sincronización), `DistractionFreeController`
-  (pantalla completa + columna), `ThemeController` (tema, luz cálida nocturna y
-  recoloreado de enlaces), `ThemeSpec`/`mdtheme` (catálogo declarativo de los 6
+  (pantalla completa + columna), `ThemeController` (único de la ventana: tema, luz
+  cálida nocturna y recoloreado de enlaces), `ThemeSpec`/`mdtheme` (catálogo declarativo de los 6
   temas), `ChromeZoom` (zoom de toda la interfaz), `OutlinePanel` (índice TOC),
   `GoToHeadingDialog` (quick open sobre los encabezados, Ctrl+G), `FindReplaceBar`,
   `HelpDialog` (manual integrado, F1).
@@ -253,7 +259,12 @@ añadir lógica nueva: hay un `tst_*` por módulo.
   rampa descendente 06→07) y `applyWarmth` la aplica como filtro multiplicativo solo
   sobre `QPalette::Base`/`AlternateBase` (azul −16 %·w, verde −5 %·w, rojo intacto).
   Un `QTimer` refresca cada 60 s y solo repinta si `w` cambió ≥0.02. No afecta a
-  enlaces ni resaltado.
+  enlaces ni resaltado. El controlador es **único de la ventana** (no uno por
+  pestaña, que se pisarían sobre la paleta global): `setActiveStack` lo reapunta al
+  editor activo (`retarget`); reaplicar el tema al activar una pestaña es barato
+  porque `recolorLinks` no edita si los enlaces ya están al día y
+  `CodeBlockHighlighter::setSyntaxColors` es idempotente (no rehace el resaltado si
+  los colores no cambian). El menú es *Ver → Tema → «Luz cálida nocturna»*.
 - **«Modificado».** `DocumentIo::isModified()` compara la serialización canónica
   con una línea base, no usa `QTextDocument::isModified()` (que `QTextEdit` ensucia
   de forma espuria al trazar la primera vez).

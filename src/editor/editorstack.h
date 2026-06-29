@@ -51,9 +51,14 @@ public:
     /// son los compartidos de la ventana (los usa SplitViewController). Los
     /// colaboradores se parentan a este widget: así sus diálogos se centran sobre
     /// la ventana y se destruyen al cerrar la pestaña.
-    EditorStack(FindReplaceBar *findBar, OutlinePanel *outline, QWidget *parent = nullptr);
+    /// `theme` es el control de tema ÚNICO de la ventana (paleta y tinte cálido son
+    /// globales): se comparte entre pestañas y no lo posee este widget; se reapunta
+    /// a este editor cuando la pestaña se activa.
+    EditorStack(FindReplaceBar *findBar, OutlinePanel *outline, ThemeController *theme,
+                QWidget *parent = nullptr);
 
     FocusEditor *editor() const { return m_editor; }
+    CodeBlockHighlighter *highlighter() const { return m_highlighter; }
     DocumentIo *documentIo() const { return m_documentIo; }
     ThemeController *theme() const { return m_theme; }
     SpellController *spell() const { return m_spell; }

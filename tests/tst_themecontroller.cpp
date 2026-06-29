@@ -30,6 +30,7 @@ private slots:
     void warmLightOffLeavesBaseUntinted();
     void followSystemTogglePersists();
     void followSystemAppliesSystemTheme();
+    void retargetRecolorsNewEditor();
 
 private:
     static QColor firstAnchorColor(QTextEdit &edit);
@@ -150,6 +151,28 @@ void TestThemeController::followSystemAppliesSystemTheme()
                                                    : mdtheme::ThemeId::Dark);
     theme.setFollowSystem(true);
     QCOMPARE(theme.currentTheme(), sys);
+}
+
+void TestThemeController::retargetRecolorsNewEditor()
+{
+    // Un solo control de tema (como en la ventana) sirve a varias pestañas: al
+    // cambiar de pestaña, retarget() reapunta al editor de la activa y le reaplica
+    // el tema vigente. Antes había un control por pestaña, cada uno con su propio
+    // temporizador escribiendo la paleta global: se pisaban y el tinte parecía
+    // activarse/desactivarse solo.
+    QTextEdit a;
+    CodeBlockHighlighter ha(a.document());
+    ThemeController theme(&a, &ha);
+    theme.applyTheme(mdtheme::ThemeId::Dark);
+
+    // Otra "pestaña" (su propio editor/resaltador) con enlaces del Markdown: al
+    // activarse debe tomar el color de enlace del tema vigente.
+    QTextEdit b;
+    CodeBlockHighlighter hb(b.document());
+    b.setMarkdown(QStringLiteral("[enlace](https://example.com)"));
+    theme.retarget(&b, &hb);
+
+    QCOMPARE(firstAnchorColor(b), mdtheme::specFor(mdtheme::ThemeId::Dark).link);
 }
 
 QTEST_MAIN(TestThemeController)

@@ -25,6 +25,14 @@ void CodeBlockHighlighter::setSpellChecker(SpellChecker *checker)
 
 void CodeBlockHighlighter::setSyntaxColors(const mdtheme::SyntaxColors &colors)
 {
+    // Idempotente: si los colores no cambian, no rehacemos el resaltado (caro). Esto
+    // hace barato reaplicar el tema al activar una pestaña (ThemeController::retarget):
+    // solo la primera activación tras un cambio de tema real cuesta un rehighlight.
+    if (m_keywordColor == colors.keyword && m_stringColor == colors.string
+        && m_commentColor == colors.comment && m_numberColor == colors.number
+        && m_mathColor == colors.math)
+        return;
+
     m_keywordColor = colors.keyword;
     m_stringColor = colors.string;
     m_commentColor = colors.comment;

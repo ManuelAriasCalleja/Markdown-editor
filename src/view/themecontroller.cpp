@@ -171,26 +171,48 @@ void ThemeController::applyTheme(mdtheme::ThemeId id)
 {
     m_current = id;
 
-    // Sin esto, el editor parpadea al cambiar de tema: primero repinta con la
-    // paleta nueva (colores viejos del texto), luego con los enlaces recoloreados
-    // y de nuevo con el resaltado rehecho. Suspendemos su repintado para que las
-    // tres cosas lleguen a pantalla en un único trazado.
-    const bool wasUpdating = m_editor->updatesEnabled();
-    m_editor->setUpdatesEnabled(false);
+    // Sin esto, el editor activo parpadea al cambiar de tema: primero repinta con la
+    // paleta nueva (colores viejos del texto), luego con los enlaces recoloreados y
+    // de nuevo con el resaltado rehecho. Suspendemos su repintado para que las tres
+    // cosas lleguen a pantalla en un único trazado. Las demás pestañas no son
+    // visibles; se ponen al día al activarse (retarget).
+    const bool wasUpdating = m_editor && m_editor->updatesEnabled();
+    if (m_editor)
+        m_editor->setUpdatesEnabled(false);
 
-    applyPaletteWithWarmth(id);
+    applyPaletteWithWarmth(id);  // paleta global: afecta a todas las pestañas
 
     AppSettings::setThemeKey(mdtheme::keyForId(id));
 
-    recolorLinks();
+    applyThemeToTarget();  // enlaces + resaltado del editor activo
 
-    // Reajusta los colores del resaltado de sintaxis al tema.
-    if (m_highlighter)
-        m_highlighter->setSyntaxColors(mdtheme::specFor(id).syntax);
-
-    m_editor->setUpdatesEnabled(wasUpdating);
+    if (m_editor)
+        m_editor->setUpdatesEnabled(wasUpdating);
 
     emit themeChanged(id);
+}
+
+void ThemeController::applyThemeToTarget()
+{
+    recolorLinks(m_editor);  // no-op si no hay objetivo
+    // Reajusta los colores del resaltado de sintaxis al tema.
+    if (m_highlighter)
+        m_highlighter->setSyntaxColors(mdtheme::specFor(m_current).syntax);
+}
+
+void ThemeController::retarget(QTextEdit *editor, CodeBlockHighlighter *highlighter)
+{
+    m_editor = editor;
+    m_highlighter = highlighter;
+
+    // La paleta global ya está puesta; solo hay que poner al día los enlaces y el
+    // resaltado de la pestaña recién activada (pudieron quedar con el tema anterior).
+    const bool wasUpdating = m_editor && m_editor->updatesEnabled();
+    if (m_editor)
+        m_editor->setUpdatesEnabled(false);
+    applyThemeToTarget();
+    if (m_editor)
+        m_editor->setUpdatesEnabled(wasUpdating);
 }
 
 void ThemeController::setWarmLight(bool on)
@@ -220,22 +242,31 @@ void ThemeController::refreshWarmth()
     applyPaletteWithWarmth(m_current);
 }
 
-void ThemeController::recolorLinks()
+void ThemeController::recolorLinks(QTextEdit *editor)
 {
+    if (!editor)
+        return;
     const QColor color = linkColor();
-    QTextDocument *doc = m_editor->document();
+    QTextDocument *doc = editor->document();
 
     // Primero recogemos los rangos de los enlaces (modificar mientras se itera
-    // invalidaría los iteradores de fragmentos).
+    // invalidaría los iteradores de fragmentos). De paso anotamos si alguno tiene
+    // ya un color distinto del de destino: como esto se llama también al cambiar de
+    // pestaña (retarget), si todos están al día evitamos un editBlock —y el
+    // contentsChanged que arrastra— innecesario.
     QList<QPair<int, int>> ranges;
+    bool anyDiffers = false;
     for (QTextBlock b = doc->begin(); b.isValid(); b = b.next()) {
         for (auto it = b.begin(); !it.atEnd(); ++it) {
             const QTextFragment frag = it.fragment();
-            if (frag.isValid() && frag.charFormat().isAnchor())
+            if (frag.isValid() && frag.charFormat().isAnchor()) {
                 ranges.append({frag.position(), frag.length()});
+                if (frag.charFormat().foreground().color() != color)
+                    anyDiffers = true;
+            }
         }
     }
-    if (ranges.isEmpty())
+    if (ranges.isEmpty() || !anyDiffers)
         return;
 
     const bool wasModified = doc->isModified();

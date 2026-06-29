@@ -203,7 +203,7 @@ void SplitViewController::toggleSourceMode(bool on)
         // Salir: aplica los cambios del fuente y vuelve al WYSIWYG.
         commitSourceToDocument();
         m_findBar->setEditor(m_editor);
-        m_theme->recolorLinks();  // los enlaces recargados toman el color del tema
+        m_theme->recolorLinks(m_editor);  // los enlaces recargados toman el color del tema
     }
     m_sourceMode = on;
     m_sourceDirty = false;
@@ -244,7 +244,7 @@ void SplitViewController::toggleSplitView(bool on)
     } else {
         // Salir: vuelca cualquier edición pendiente del fuente al documento.
         commitSourceToDocument();
-        m_theme->recolorLinks();
+        m_theme->recolorLinks(m_editor);
     }
     m_splitMode = on;
     updateEditorVisibility();
