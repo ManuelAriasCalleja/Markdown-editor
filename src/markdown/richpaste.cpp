@@ -5,7 +5,9 @@
 
 #include "tableedit.h"
 
+#include <QTextCursor>
 #include <QTextDocument>
+#include <QTextDocumentFragment>
 
 namespace mdrichpaste {
 
@@ -27,6 +29,25 @@ QString htmlToMarkdown(const QString &html)
     // `toMarkdown()` cierra siempre con un salto de línea; al insertar en el punto
     // del cursor no queremos forzar un párrafo extra.
     while (md.endsWith(u'\n'))
+        md.chop(1);
+    return md;
+}
+
+QString fragmentToMarkdown(const QTextDocumentFragment &fragment)
+{
+    if (fragment.isEmpty())
+        return QString();
+
+    // Volcamos el fragmento en un documento auxiliar para reusar la ruta canónica
+    // (que opera sobre un QTextDocument). insertFragment conserva los formatos de
+    // carácter del original, incluidas las propiedades de los grupos de math, así
+    // que documentMarkdown puede reinyectar `$tex$`.
+    QTextDocument doc;
+    QTextCursor cursor(&doc);
+    cursor.insertFragment(fragment);
+
+    QString md = mdtable::documentMarkdown(&doc);
+    while (md.endsWith(u'\n'))  // sin el salto final que añade toMarkdown()
         md.chop(1);
     return md;
 }

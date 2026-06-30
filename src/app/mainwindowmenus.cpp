@@ -274,6 +274,9 @@ void MainWindow::createEditMenu()
     QAction *copyHtmlAction = editMenu->addAction(tr("Copiar como HTML"));
     connect(copyHtmlAction, &QAction::triggered, this, [this] { m_stack->exporter()->copyHtmlToClipboard(); });
 
+    QAction *copyMdAction = editMenu->addAction(tr("Copiar como Markdown"));
+    connect(copyMdAction, &QAction::triggered, this, [this] { m_stack->exporter()->copyMarkdownToClipboard(); });
+
     editMenu->addSeparator();
 
     // Transformaciones de texto sobre la selección (o la palabra bajo el cursor,

@@ -9,6 +9,7 @@
 
 #include <functional>
 
+class QMimeData;
 class QTextEdit;
 class QTextDocument;
 class QWidget;
@@ -63,6 +64,9 @@ public slots:
     /// \brief Copia el documento completo al portapapeles como HTML (con texto plano de
     /// reserva), para pegarlo con formato en Word, correo, etc.
     void copyHtmlToClipboard();
+    /// \brief Copia al portapapeles como Markdown la selección (si la hay) o el
+    /// documento completo, usando la serialización canónica del proyecto.
+    void copyMarkdownToClipboard();
 
 signals:
     /// \brief Mensaje para la barra de estado (texto, milisegundos visible).
@@ -83,6 +87,10 @@ private:
     // Escribe `contents` en `path` en UTF-8; devuelve false y rellena *error si no
     // se pudo (el aviso lo muestra runExport, uniforme para todos los formatos).
     static bool writeUtf8File(const QString &path, const QString &contents, QString *error);
+    // Pone `mime` en el portapapeles (toma su propiedad) y anuncia `statusMsg` (un
+    // literal QT_TRANSLATE_NOOP("MainWindow", ...)). Sumidero común de los «Copiar
+    // como …».
+    void setClipboardMime(QMimeData *mime, const char *statusMsg);
 
     // Descriptor de un formato de exportación basado en archivo (HTML/ODF/LaTeX/
     // DOCX/EPUB). Los textos van como QT_TRANSLATE_NOOP("MainWindow", ...) para que

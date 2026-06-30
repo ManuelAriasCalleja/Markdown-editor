@@ -29,7 +29,9 @@
 #include "appsettings.h"
 #include "documentio.h"
 #include "exporters.h"
+#include "richpaste.h"
 #include "splitviewcontroller.h"
+#include "tableedit.h"
 
 // Los textos visibles conservan el contexto de traducción "MainWindow": se usan
 // con QCoreApplication::translate("MainWindow", ...) en vez de tr() (cuyo contexto
@@ -247,18 +249,36 @@ bool ExportController::printPreview()
     return dialog.exec() == QDialog::Accepted;
 }
 
+void ExportController::setClipboardMime(QMimeData *mime, const char *statusMsg)
+{
+    QApplication::clipboard()->setMimeData(mime);  // toma propiedad de `mime`
+    emit statusMessage(QCoreApplication::translate("MainWindow", statusMsg), 4000);
+}
+
 void ExportController::copyHtmlToClipboard()
 {
     m_split->commitSourceToDocument();  // en modo fuente, copia lo último
     std::unique_ptr<QTextDocument> flat(
         mdexport::cloneForExport(m_editor->document()));
-    auto *mime = new QMimeData;  // el portapapeles toma su propiedad
+    auto *mime = new QMimeData;
     mime->setHtml(flat->toHtml());
     mime->setText(flat->toPlainText());  // reserva para destinos sin formato
-    QApplication::clipboard()->setMimeData(mime);
-    emit statusMessage(
-        QCoreApplication::translate("MainWindow", "Copiado como HTML al portapapeles."),
-        4000);
+    setClipboardMime(mime, QT_TRANSLATE_NOOP("MainWindow", "Copiado como HTML al portapapeles."));
+}
+
+void ExportController::copyMarkdownToClipboard()
+{
+    m_split->commitSourceToDocument();  // en modo fuente, copia lo último
+    const QTextCursor cursor = m_editor->textCursor();
+    // Con selección, solo el fragmento; sin ella, el documento entero por la ruta
+    // canónica directa (la probada para guardar). El Markdown va como texto plano:
+    // es lo que se pega en otro editor de Markdown o en un campo de código.
+    const QString md = cursor.hasSelection()
+        ? mdrichpaste::fragmentToMarkdown(cursor.selection())
+        : mdtable::documentMarkdown(m_editor->document());
+    auto *mime = new QMimeData;
+    mime->setText(md);
+    setClipboardMime(mime, QT_TRANSLATE_NOOP("MainWindow", "Copiado como Markdown al portapapeles."));
 }
 
 bool ExportController::exportPdf()
