@@ -287,6 +287,112 @@ mayor margen restante es de **distribución** (puntos 2-4 de arriba), no de feat
 (empuja hacia «workspace»/PKM) e importar `.docx`/`.odt` a Markdown vía Pandoc
 opcional (añadiría otra herramienta externa, como los diagramas).
 
+### Nueva auditoría (2026-06-30): oportunidades Qt puro, coste bajo/medio, pendientes
+
+Resultado de una auditoría sistemática del código (8 exploradores por subsistema +
+verificación adversarial contra el repo: 47 candidatos en bruto → 18 confirmados, 0
+rechazados). Las 18 se comprobaron como **no implementadas, sin dependencias nuevas
+(ni enlazadas ni en runtime) y con el round-trip a salvo**; ninguna estaba ya
+descartada. Patrón habitual: módulo puro + `tst_` + integración en el controller.
+Coste y confianza según la verificación.
+
+#### Coste bajo, confianza alta (primera tanda recomendada)
+
+- ⬜ **Copiar como Markdown** (selección o documento) — contrapartida de «Pegar como
+  Markdown» y «Copiar como HTML». *Impl.:* `mdrichpaste::fragmentToMarkdown` (crea un
+  `QTextDocument` con el fragmento y lo pasa por `mdtable::documentMarkdown`) +
+  `ExportController::copyMarkdownToClipboard` (clon de `copyHtmlToClipboard`) + acción
+  en *Editar* junto a «Copiar como HTML». `tst_richpaste`.
+- ⬜ **Exportar a texto plano (.txt)** — encaja en el patrón declarativo
+  `FileExporter`/`runExport`. *Impl.:* `ExportController::exportPlainText` con lambda
+  `writeUtf8File(path, doc->toPlainText())`; entrada en *Archivo → Exportar*.
+- ⬜ **Metadatos del PDF (título/autor) desde el front matter** — hoy el PDF no usa
+  `title`/`author`. *Impl.:* `mdexport::pdfDocumentInfo(frontMatter)` +
+  `printer.setDocName()/setCreator()` en `exportPdf`/`exportSelectionPdf` (`author` →
+  `setCreator`; Qt6 no tiene `setAuthor`). `tst_exporters`.
+- ⬜ **Revertir a lo guardado** (recarga manual con confirmación) — la lógica ya
+  existe: `MainWindow::reloadFromDisk()`, hoy solo la invoca el `DiskWatcher`. *Impl.:*
+  acción en *Archivo* → `revertToSaved()` con `QMessageBox` de confirmación; habilitada
+  solo si hay archivo y cambios.
+- ⬜ **Ir a línea (Ctrl+L)** — complementa «Ir a encabezado» (Ctrl+G). *Impl.:*
+  `mdnav::clampLine` + `QInputDialog::getInt` + `findBlockByNumber` sobre
+  `activeEditor()`; **no** añadir a `m_wysiwygActions` (útil en fuente/dividida).
+  `tst_gotoline`.
+- ⬜ **Indicador Ln/Col en la barra de estado** — engancha a la señal ya cableada
+  `wordCountShouldUpdate`. *Impl.:* `mdstats::lineColumnOf` + `QLabel` permanente espejo
+  de `m_countLabel`; conmutable en *Ver* y persistido. `tst_docstats`.
+- ⬜ **Pegar TSV/CSV del portapapeles como tabla** — *matiz:* el HTML de hojas de
+  cálculo ya lo cubre «Pegar como Markdown»; el hueco real es **texto plano** TSV/CSV.
+  *Impl.:* módulo puro `mdcsvtable` (`detectDelimited` conservador + `toMarkdownTable`
+  escapando `|`), inserta con `fromMarkdown`; acción *Insertar → Tabla desde
+  portapapeles* y, opcional, en la cadena de pegado solo para TAB. `tst_csvtable`.
+- ⬜ **Reabrir pestaña cerrada** — *matiz:* `Ctrl+Shift+T` está ocupado (Lista de
+  tareas) → usar otro atajo. *Impl.:* pila pura `session::pushClosed/popClosed`;
+  `closeTab` apila la ruta y un slot la desapila con `openPathInTab`. Solo recupera
+  documentos con ruta en disco. `tst_closedtabstack`.
+
+#### Coste medio, confianza alta
+
+- ⬜ **Paleta de comandos (Ctrl+Shift+P)** — acceso por teclado a las ~80 acciones sin
+  memorizar atajos; la de mayor impacto en usabilidad. *Impl.:* módulo puro
+  `mdcommands` (`collectCommands` recorre `menuBar()->actions()` recursivamente, salta
+  separadores/contenedores/deshabilitadas, arma ruta+atajo; `filterCommands` difuso) +
+  `CommandPaletteDialog` (clon de `GoToHeadingDialog`) que dispara `action->trigger()`.
+  `tst_commands`.
+- ⬜ **Ordenar filas de tabla por columna** (numérica/alfabética, contextual en menú
+  Tabla). *Impl.:* módulo puro `mdtablesort::sortedOrder` + `TableController::sortRows`;
+  preservar formato/fórmulas moviendo `QTextDocumentFragment` por celda;
+  `m_tableActions` habilita por contexto. `tst_tablesort`.
+- ⬜ **Promover/degradar nivel de encabezado** (relativo, p. ej. Ctrl+[ / Ctrl+]) — hoy
+  `applyHeading` solo fija niveles absolutos. *Impl.:* `mdoutline::shiftHeadingLevels`
+  (clamp [1,6] y subárbol opcional) + variante cursor en `FormatController` **sin** la
+  semántica *toggle* (que borraría el encabezado al promover). `tst_outline`.
+- ⬜ **Resaltar la línea actual del cursor** — *Impl.:* `linehighlight::currentLineColor`
+  (mezcla `Base`→`Highlight`) + `ExtraSelection` con `FullWidthSelection`; **refactor**
+  de `applyLineFocus` a una lista fusionada (hoy es el dueño único de `extraSelections`).
+  Conmutable en *Ver*. `tst_linehighlight`.
+- ⬜ **Búsqueda «N de M» + resaltar todas las coincidencias** — el contador es de coste
+  bajo (reusa el bucle de `replaceAll`); resaltar-todas es medio porque comparte
+  `extraSelections` con el modo foco (mismo refactor a lista fusionada). *Impl.:*
+  `mdfind::matchOrdinal` + `QLabel` en la barra; señal `highlightMatches` de
+  `FindReplaceBar` al `EditorStack` activo. `tst_findmatches`.
+- ⬜ **Cabecera/pie con número de página al imprimir y en PDF** («3 / 10», título,
+  fecha). *Impl.:* módulo puro `mdprintdecor` (`headerFooterText` + `bodyRect`) + helper
+  `paintPaginated(QPrinter*, QTextDocument*)` con `QPainter`/`newPage()` que sustituye
+  los 5 `print()` actuales; flags en `AppSettings`. `tst_printdecor`.
+
+#### Extensiones Markdown inline (round-trip con matiz, confianza media)
+
+- ⬜ **Marca `==texto==`** (resaltado) — `=` no es delimitador en md4c, así que
+  round-trip-ea como texto literal; solo presentación por `QPalette::Highlight` (sin
+  `setStyleSheet`). Coste bajo. *Impl.:* módulo puro `mdmark::spansIn` + pasada de
+  render en `mdrender::renderPasses` + acción que **inserta** los `==` literales (no un
+  char-format). `tst_markhighlight` + caso en `tst_markdownroundtrip`.
+- ⬜ **Superíndice/subíndice de texto `^x^` / `~x~`** — *matiz:* `~x~` choca con
+  `~~tachado~~` de GFM → proteger el `~` simple con centinela PUA antes de `setMarkdown`
+  (sobrescribe el tachado de tilde simple; precedente en Typora); `AlignSuperScript`
+  pasaría a compartirse entre 3 features → desambiguar con una `UserProperty` nueva.
+  *Impl.:* módulo puro `mdsupsub` (proteger + render + reinyección en
+  `documentMarkdown`). `tst_supersub`.
+
+#### Coste medio, confianza media
+
+- ⬜ **Comandos de línea: mover / duplicar / borrar / unir** (Alt+↑/↓, Ctrl+J…) —
+  *matiz crítico:* reordenar `QTextBlock`s en crudo en el editor WYSIWYG es arriesgado
+  (tablas, objetos `MathObject`, notas) → operar sobre el **cuerpo Markdown** y recargar
+  con `setBodyMarkdown` (patrón de `cleanMarkdown`/`moveSection`); en la vista de fuente
+  es trivial. `Ctrl+Shift+K` (Bloque) y `Ctrl+K` (Enlace) están ocupados → usar
+  `Alt+↑/↓`, `Ctrl+J`, etc. *Impl.:* módulo puro `mdmoveline` que respeta los fences y
+  no toca el front matter. `tst_moveline`.
+- ⬜ **Panel de esquema: filtro en vivo + plegado persistente** — hoy `rebuild()` hace
+  `expandAll()` incondicional en cada edición (molesto en documentos largos). *Impl.:*
+  `mdoutline::visibleOrdinals` (conserva ancestros) + `QLineEdit` de filtro; recordar
+  las ramas plegadas entre reconstrucciones; acciones «Expandir/Plegar todo».
+  `tst_outline`.
+
+*Fuera de alcance por ser distribución/infra (no feature Qt pura):* los puntos 2–4 de
+arriba (packaging nativo, firma/notarización, auto-update) y la analítica (#18).
+
 ### Robustez
 
 - ✅ **ASAN/UBSAN + clang-tidy en CI** — *Hecho:* opción CMake `ENABLE_SANITIZERS`
@@ -508,5 +614,7 @@ vivo.*
 > **Prioridad sugerida:** en distribución, el mayor desbloqueo pendiente es la #3
 > (firma/notarización de binarios), que elimina la fricción de
 > Gatekeeper/SmartScreen en la instalación, seguida de la #2 (packaging nativo).
-> En funcionalidad, las nuevas ideas de la sección «pendiente» son las de mejor
-> encaje con la filosofía; en calidad, #14 (ASAN/UBSAN + clang-tidy en CI).
+> En funcionalidad, ver «Nueva auditoría (2026-06-30)»: la primera tanda recomendada
+> son las de coste bajo y confianza alta (copiar como Markdown, exportar a .txt,
+> metadatos del PDF, revertir a lo guardado, ir a línea, Ln/Col, pegar CSV), y la
+> **paleta de comandos** la de mayor impacto en usabilidad.
