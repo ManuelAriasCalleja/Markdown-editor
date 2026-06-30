@@ -163,6 +163,15 @@ bool ExportController::runExport(const FileExporter &exp)
     return true;
 }
 
+void ExportController::applyPdfMetadata(QPrinter *printer) const
+{
+    const mdexport::PdfInfo info = mdexport::pdfDocumentInfo(m_documentIo->frontMatter());
+    if (!info.title.isEmpty())
+        printer->setDocName(info.title);
+    if (!info.creator.isEmpty())
+        printer->setCreator(info.creator);  // Qt6 no tiene setAuthor; el autor va a «Creator»
+}
+
 bool ExportController::print()
 {
     m_split->commitSourceToDocument();  // en modo fuente, imprime el contenido al día
@@ -228,6 +237,7 @@ bool ExportController::exportSelectionPdf()
     QPrinter printer(QPrinter::HighResolution);
     printer.setOutputFormat(QPrinter::PdfFormat);
     printer.setOutputFileName(path);
+    applyPdfMetadata(&printer);
     doc->print(&printer);
     emit statusMessage(QCoreApplication::translate("MainWindow", "Exportado a PDF: %1").arg(path), 4000);
     return true;
@@ -292,6 +302,7 @@ bool ExportController::exportPdf()
     QPrinter printer(QPrinter::HighResolution);
     printer.setOutputFormat(QPrinter::PdfFormat);
     printer.setOutputFileName(path);
+    applyPdfMetadata(&printer);
     std::unique_ptr<QTextDocument> flat(
         mdexport::cloneForExport(m_editor->document()));
     flat->print(&printer);

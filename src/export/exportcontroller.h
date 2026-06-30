@@ -10,6 +10,7 @@
 #include <functional>
 
 class QMimeData;
+class QPrinter;
 class QTextEdit;
 class QTextDocument;
 class QWidget;
@@ -93,6 +94,9 @@ private:
     // literal QT_TRANSLATE_NOOP("MainWindow", ...)). Sumidero común de los «Copiar
     // como …».
     void setClipboardMime(QMimeData *mime, const char *statusMsg);
+    // Incrusta en el PDF el título y el autor del front matter (setDocName/setCreator).
+    // Solo tiene efecto con la salida en PdfFormat. Punto único de los dos exportadores PDF.
+    void applyPdfMetadata(QPrinter *printer) const;
 
     // Descriptor de un formato de exportación basado en archivo (HTML/ODF/LaTeX/
     // DOCX/EPUB). Los textos van como QT_TRANSLATE_NOOP("MainWindow", ...) para que

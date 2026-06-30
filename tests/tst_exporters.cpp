@@ -21,6 +21,7 @@ class TestExporters : public QObject
 private slots:
     void languageLookupNormalizesCode();
     void frontMatterValueReadsKeys();
+    void pdfInfoReadsTitleAndAuthor();
     void latexHasBabelAndTitle();
     void latexEscapesSpecialChars();
     void latexConstructs();
@@ -69,6 +70,23 @@ void TestExporters::frontMatterValueReadsKeys()
     QCOMPARE(mdexport::frontMatterValue(fm, QStringLiteral("title")),
              QStringLiteral("Mi Título"));
     QVERIFY(mdexport::frontMatterValue(fm, QStringLiteral("author")).isEmpty());
+}
+
+void TestExporters::pdfInfoReadsTitleAndAuthor()
+{
+    const mdexport::PdfInfo info = mdexport::pdfDocumentInfo(
+        QStringLiteral("---\ntitle: \"Mi Doc\"\nauthor: Ada Lovelace\n---\n"));
+    QCOMPARE(info.title, QStringLiteral("Mi Doc"));
+    QCOMPARE(info.creator, QStringLiteral("Ada Lovelace"));
+
+    // Sin `author`, cae a `creator`.
+    const mdexport::PdfInfo alt = mdexport::pdfDocumentInfo(
+        QStringLiteral("+++\ntitle = T\ncreator = Babbage\n+++\n"));
+    QCOMPARE(alt.creator, QStringLiteral("Babbage"));
+
+    // Sin front matter, ambos vacíos.
+    const mdexport::PdfInfo none = mdexport::pdfDocumentInfo(QString());
+    QVERIFY(none.title.isEmpty() && none.creator.isEmpty());
 }
 
 void TestExporters::latexHasBabelAndTitle()

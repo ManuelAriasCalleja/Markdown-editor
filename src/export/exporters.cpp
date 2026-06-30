@@ -78,6 +78,16 @@ QString frontMatterValue(const QString &frontMatter, const QString &key)
     return value;
 }
 
+PdfInfo pdfDocumentInfo(const QString &frontMatter)
+{
+    PdfInfo info;
+    info.title = frontMatterValue(frontMatter, QStringLiteral("title"));
+    info.creator = frontMatterValue(frontMatter, QStringLiteral("author"));
+    if (info.creator.isEmpty())
+        info.creator = frontMatterValue(frontMatter, QStringLiteral("creator"));
+    return info;
+}
+
 // --------------------------------------------------------------------------
 // LaTeX
 // --------------------------------------------------------------------------

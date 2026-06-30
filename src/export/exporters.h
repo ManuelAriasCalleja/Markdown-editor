@@ -40,6 +40,17 @@ Language languageForCode(const QString &code);
 /// Función pura.
 QString frontMatterValue(const QString &frontMatter, const QString &key);
 
+/// \brief Metadatos del PDF tomados del front matter: `title`, y `author` (o, en su
+/// defecto, `creator`) como autor/creador. Cualquiera puede ir vacío.
+struct PdfInfo {
+    QString title;
+    QString creator;
+};
+
+/// \brief Lee de `frontMatter` el título y el autor para incrustarlos en el PDF.
+/// Función pura (los campos van a QPrinter::setDocName/setCreator).
+PdfInfo pdfDocumentInfo(const QString &frontMatter);
+
 /// \brief Serializa el documento a un .tex completo (preámbulo + cuerpo), con babel del
 /// idioma dado y, si `title` no está vacío, `\maketitle`. Función pura.
 QString toLatex(const QTextDocument *doc, const Language &language, const QString &title);
