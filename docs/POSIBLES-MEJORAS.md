@@ -289,6 +289,10 @@ opcional (añadiría otra herramienta externa, como los diagramas).
 
 ### Nueva auditoría (2026-06-30): oportunidades Qt puro, coste bajo/medio, pendientes
 
+> **Plan de ejecución:** el *cómo* de estas 18 mejoras (orden por riesgo, dependencias,
+> módulos/tests, puntos de integración y refactorizaciones previas) vive en
+> [`PLAN-IMPLEMENTACION.md`](PLAN-IMPLEMENTACION.md).
+
 Resultado de una auditoría sistemática del código (8 exploradores por subsistema +
 verificación adversarial contra el repo: 47 candidatos en bruto → 18 confirmados, 0
 rechazados). Las 18 se comprobaron como **no implementadas, sin dependencias nuevas
