@@ -71,8 +71,9 @@ Privacy & Security* and click **Open anyway**.
   language, with suggestions and a personal dictionary.
 - **Document templates** (*File → New from template*) and **reusable snippets**
   (*Insert → Snippet*) for content you write often.
-- **Export** to PDF, HTML, ODF (`.odt`), LaTeX (`.tex`), DOCX (`.docx`) and EPUB
-  (`.epub`), preserving the document language and the formula formatting.
+- **Export** to PDF, HTML, ODF (`.odt`), LaTeX (`.tex`), DOCX (`.docx`), EPUB
+  (`.epub`) and plain text (`.txt`), preserving the document language and the
+  formula formatting; the PDF embeds the title and author from the front matter.
 - **YAML / TOML front matter** preserved verbatim on save.
 - **Navigable outline panel** (F9), find and replace (Ctrl+F / Ctrl+H),
   autosave and crash recovery.

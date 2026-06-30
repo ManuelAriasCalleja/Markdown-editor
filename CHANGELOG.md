@@ -5,6 +5,19 @@ Todos los cambios relevantes de **md-editor** se documentan en este archivo.
 El formato sigue, a grandes rasgos, [Keep a Changelog](https://keepachangelog.com/es/),
 y el proyecto usa [versionado semántico](https://semver.org/lang/es/).
 
+## [Sin publicar]
+
+### Añadido
+- **Copiar como Markdown** (*Editar*): copia al portapapeles la selección o el
+  documento entero como texto Markdown, por la serialización canónica.
+- **Exportación a texto plano** (*Archivo → Exportar → A texto plano*).
+- **Revertir a lo guardado** (*Archivo*): descarta los cambios sin guardar y
+  recarga el archivo del disco, con confirmación.
+
+### Cambiado
+- **El PDF incrusta el título y el autor** del front matter (`title`, `author`)
+  al exportar e imprimir a PDF.
+
 ## [2.3.0] — 2026-06-29
 
 ### Añadido
