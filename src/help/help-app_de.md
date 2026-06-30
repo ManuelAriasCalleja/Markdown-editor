@@ -40,6 +40,9 @@ Speichern wird das Dokument wieder als reines Markdown serialisiert.
 - **Speichern** (Strg+S) und **Speichern unter…** (Strg+Umschalt+S) schreiben das
   Dokument als UTF-8. **Enthaltenden Ordner öffnen** öffnet den Ordner des
   Dokuments im Dateimanager.
+- **Auf gespeicherte Version zurücksetzen** verwirft die ungespeicherten
+  Änderungen und lädt die Datei neu von der Festplatte (mit Rückfrage). Nur
+  verfügbar, wenn das Dokument eine Datei und ausstehende Änderungen hat.
 - Ändert sich die Datei außerhalb des Editors, erkennt die Anwendung das und lädt
   sie neu, wenn keine ungespeicherten Änderungen vorliegen; andernfalls fragt sie
   nach.
@@ -115,6 +118,8 @@ seinem Gegenstück, „überspringt“ der Editor es, statt es zu verdoppeln.
   (HTML) in Markdown um, statt die Formatierung der Quelle einzubetten.
 - **Als HTML kopieren** kopiert die Auswahl (oder das Dokument) als HTML, zum
   Einfügen in E-Mail, ein CMS usw.
+- **Als Markdown kopieren** kopiert die Auswahl (oder das gesamte Dokument) als
+  Markdown-Text, zum Einfügen in einen anderen Markdown-Editor oder ein Codefeld.
 - Wenn Sie eine **URL** über eine Textauswahl einfügen, wird der Text automatisch
   verlinkt.
 - **Bearbeiten → Markdown bereinigen** normalisiert das gesamte Dokument in einem
@@ -315,9 +320,10 @@ gegenseitig aus.
 ## Exportieren und Drucken
 
 **Datei → Exportieren** bietet **PDF**, **HTML**, **ODF (.odt)**, **DOCX (.docx)**,
-**LaTeX (.tex)** und **EPUB (.epub)**. In ODF, DOCX, LaTeX und EPUB wird die
-Dokumentsprache eingebettet (aus dem `lang`/`language`-Front-Matter, der
-Anwendungseinstellung oder zuletzt der Systemsprache).
+**LaTeX (.tex)**, **EPUB (.epub)** und **Klartext (.txt)**. In ODF, DOCX, LaTeX und
+EPUB wird die Dokumentsprache eingebettet (aus dem `lang`/`language`-Front-Matter,
+der Anwendungseinstellung oder zuletzt der Systemsprache). Im PDF werden der Titel
+und der Autor eingebettet, wenn sie im front matter stehen (`title`, `author`).
 
 Sie können auch **nur die Auswahl als PDF** exportieren und die
 **Druckvorschau** verwenden.

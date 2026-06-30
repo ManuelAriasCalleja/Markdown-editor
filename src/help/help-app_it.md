@@ -40,6 +40,9 @@ il documento viene serializzato di nuovo in Markdown puro.
 - **Salva** (Ctrl+S) e **Salva come…** (Ctrl+Maiusc+S) scrivono il documento in
   UTF-8. **Apri cartella contenitore** apre la cartella del documento nel gestore
   file.
+- **Ripristina alla versione salvata** scarta le modifiche non salvate e ricarica
+  il file dal disco (chiede conferma). Disponibile solo se il documento ha un file
+  e modifiche in sospeso.
 - Se il file cambia fuori dall'editor, l'applicazione lo rileva e, se non hai
   modifiche non salvate, lo ricarica; altrimenti chiede cosa fare.
 - Puoi anche **trascinare e rilasciare** un file sulla finestra per aprirlo.
@@ -109,6 +112,8 @@ l'editor lo «salta» invece di duplicarlo.
   appunti (HTML) in Markdown invece di incorporare la formattazione di origine.
 - **Copia come HTML** copia la selezione (o il documento) come HTML, per
   incollarla in un'email, un CMS, ecc.
+- **Copia come Markdown** copia la selezione (o il documento intero) come testo
+  Markdown, per incollarla in un altro editor di Markdown o in un campo di codice.
 - Quando incolli un **URL** su una selezione di testo, il testo viene collegato
   automaticamente.
 - **Modifica → Pulisci Markdown** normalizza l'intero documento in un'unica
@@ -305,10 +310,11 @@ riflette nell'altro). È esclusiva con la modalità sorgente a schermo intero.
 ## Esportare e stampare
 
 **File → Esporta** offre **PDF**, **HTML**, **ODF (.odt)**, **DOCX (.docx)**,
-**LaTeX (.tex)** ed **EPUB (.epub)**. In ODF, DOCX, LaTeX ed EPUB viene incorporata
-la lingua del documento (presa dal front matter `lang`/`language`,
-dall'impostazione dell'applicazione o, in ultima istanza, dalla lingua del
-sistema).
+**LaTeX (.tex)**, **EPUB (.epub)** e **testo semplice (.txt)**. In ODF, DOCX, LaTeX
+ed EPUB viene incorporata la lingua del documento (presa dal front matter
+`lang`/`language`, dall'impostazione dell'applicazione o, in ultima istanza, dalla
+lingua del sistema). In PDF vengono incorporati il titolo e l'autore quando sono
+presenti nel front matter (`title`, `author`).
 
 Puoi anche esportare **solo la selezione in PDF** e usare l'**Anteprima di
 stampa**.

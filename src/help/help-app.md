@@ -40,6 +40,9 @@ serializa de vuelta a Markdown puro.
 - **Guardar** (Ctrl+S) y **Guardar como…** (Ctrl+Shift+S) escriben el
   documento en UTF-8. **Abrir carpeta contenedora** abre en el gestor de
   archivos la carpeta del documento actual.
+- **Revertir a lo guardado** descarta los cambios sin guardar y recarga el
+  archivo desde el disco (pide confirmación). Disponible solo si el documento
+  tiene archivo y cambios pendientes.
 - Si el archivo cambia fuera del editor, la aplicación lo detecta y, si no
   tienes cambios sin guardar, lo recarga; si los tienes, pregunta qué hacer.
 - También puedes **arrastrar y soltar** un archivo sobre la ventana para
@@ -110,6 +113,8 @@ justo delante de su pareja, el editor lo «salta» en vez de duplicarlo.
   (HTML) a Markdown en vez de incrustar el formato del origen.
 - **Copiar como HTML** copia la selección (o el documento) como HTML, para
   pegarla en correo, un CMS, etc.
+- **Copiar como Markdown** copia la selección (o el documento entero) como texto
+  Markdown, para pegarlo en otro editor de Markdown o en un campo de código.
 - Al pegar una **URL** sobre una selección de texto, el texto queda enlazado
   automáticamente.
 - **Editar → Limpiar Markdown** normaliza todo el documento de una pasada:
@@ -304,9 +309,10 @@ en el otro). Es excluyente con el modo fuente a pantalla completa.
 ## Exportar e imprimir
 
 **Archivo → Exportar** ofrece **PDF**, **HTML**, **ODF (.odt)**, **DOCX (.docx)**,
-**LaTeX (.tex)** y **EPUB (.epub)**. En ODF, DOCX, LaTeX y EPUB se incrusta el
-idioma del documento (tomado del front matter `lang`/`language`, del ajuste de la
-aplicación o, en último caso, del idioma del sistema).
+**LaTeX (.tex)**, **EPUB (.epub)** y **texto plano (.txt)**. En ODF, DOCX, LaTeX y
+EPUB se incrusta el idioma del documento (tomado del front matter `lang`/`language`,
+del ajuste de la aplicación o, en último caso, del idioma del sistema). En **PDF** se
+incrustan el título y el autor cuando están en el front matter (`title`, `author`).
 
 También puedes exportar **solo la selección a PDF** y usar la **Vista previa de
 impresión**.

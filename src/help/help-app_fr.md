@@ -40,6 +40,9 @@ document est sérialisé de nouveau en Markdown pur.
 - **Enregistrer** (Ctrl+S) et **Enregistrer sous…** (Ctrl+Maj+S) écrivent le
   document en UTF-8. **Ouvrir le dossier contenant** ouvre le dossier du document
   dans le gestionnaire de fichiers.
+- **Revenir à la version enregistrée** abandonne les modifications non enregistrées
+  et recharge le fichier depuis le disque (avec confirmation). Disponible seulement
+  si le document a un fichier et des modifications en attente.
 - Si le fichier change hors de l'éditeur, l'application le détecte et, si vous
   n'avez pas de modifications non enregistrées, le recharge ; sinon, elle demande
   quoi faire.
@@ -111,6 +114,8 @@ l'éditeur le « saute » au lieu de le dupliquer.
   (HTML) en Markdown au lieu d'incruster la mise en forme de la source.
 - **Copier comme HTML** copie la sélection (ou le document) en HTML, pour la
   coller dans un courriel, un CMS, etc.
+- **Copier comme Markdown** copie la sélection (ou le document entier) comme texte
+  Markdown, pour le coller dans un autre éditeur Markdown ou dans un champ de code.
 - Quand vous collez une **URL** sur une sélection de texte, le texte est lié
   automatiquement.
 - **Édition → Nettoyer le Markdown** normalise tout le document en une passe :
@@ -309,9 +314,11 @@ dans l'autre). Elle est exclusive avec le mode source en plein écran.
 ## Exporter et imprimer
 
 **Fichier → Exporter** propose **PDF**, **HTML**, **ODF (.odt)**, **DOCX (.docx)**,
-**LaTeX (.tex)** et **EPUB (.epub)**. En ODF, DOCX, LaTeX et EPUB, la langue du
-document est incorporée (issue du front matter `lang`/`language`, du réglage de
-l'application ou, en dernier recours, de la langue du système).
+**LaTeX (.tex)**, **EPUB (.epub)** et **texte brut (.txt)**. En ODF, DOCX, LaTeX et
+EPUB, la langue du document est incorporée (issue du front matter `lang`/`language`,
+du réglage de l'application ou, en dernier recours, de la langue du système). En PDF,
+le titre et l'auteur sont incorporés lorsqu'ils figurent dans le front matter
+(`title`, `author`).
 
 Vous pouvez aussi exporter **seulement la sélection en PDF** et utiliser
 l'**Aperçu avant impression**.

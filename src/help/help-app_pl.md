@@ -39,6 +39,9 @@ serializowany do czystego Markdown.
   ostatnio otwarte w **Plik → Otwórz ostatnie**.
 - **Zapisz** (Ctrl+S) i **Zapisz jako…** (Ctrl+Shift+S) zapisują dokument w UTF-8.
   **Otwórz folder dokumentu** otwiera folder dokumentu w menedżerze plików.
+- **Przywróć do zapisanej wersji** odrzuca niezapisane zmiany i przeładowuje plik
+  z dysku (pyta o potwierdzenie). Dostępne tylko, gdy dokument ma plik i oczekujące
+  zmiany.
 - Jeśli plik zmieni się poza edytorem, aplikacja to wykryje i — jeśli nie masz
   niezapisanych zmian — przeładuje go; jeśli masz, zapyta, co zrobić.
 - Plik możesz też **przeciągnąć i upuścić** na okno, aby go otworzyć.
@@ -105,6 +108,8 @@ duplikować.
   Markdown zamiast osadzać formatowanie źródła.
 - **Kopiuj jako HTML** kopiuje zaznaczenie (lub dokument) jako HTML, do wklejenia
   w e-mailu, CMS-ie itp.
+- **Kopiuj jako Markdown** kopiuje zaznaczenie (lub cały dokument) jako tekst
+  Markdown, do wklejenia w innym edytorze Markdown lub w polu kodu.
 - Po wklejeniu **adresu URL** na zaznaczonym tekście tekst zostaje automatycznie
   podlinkowany.
 - **Edycja → Oczyść Markdown** normalizuje cały dokument za jednym razem: ujednolica
@@ -296,9 +301,10 @@ drugim). Wyklucza się z trybem źródła na pełnym ekranie.
 ## Eksport i drukowanie
 
 **Plik → Eksportuj** oferuje **PDF**, **HTML**, **ODF (.odt)**, **DOCX (.docx)**,
-**LaTeX (.tex)** i **EPUB (.epub)**. W ODF, DOCX, LaTeX i EPUB osadzany jest język
-dokumentu (z front matter `lang`/`language`, ustawienia aplikacji lub, w ostatniej
-kolejności, języka systemu).
+**LaTeX (.tex)**, **EPUB (.epub)** i **zwykły tekst (.txt)**. W ODF, DOCX, LaTeX i
+EPUB osadzany jest język dokumentu (z front matter `lang`/`language`, ustawienia
+aplikacji lub, w ostatniej kolejności, języka systemu). W PDF osadzane są tytuł i
+autor, gdy znajdują się we front matter (`title`, `author`).
 
 Możesz też wyeksportować **tylko zaznaczenie do PDF** i użyć **Podglądu wydruku**.
 

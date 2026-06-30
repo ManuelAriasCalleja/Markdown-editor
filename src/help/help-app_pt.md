@@ -40,6 +40,9 @@ documento é serializado de volta para Markdown puro.
 - **Guardar** (Ctrl+S) e **Guardar como…** (Ctrl+Shift+S) escrevem o documento em
   UTF-8. **Abrir pasta do documento** abre a pasta do documento no gestor de
   ficheiros.
+- **Reverter para o guardado** descarta as alterações por guardar e recarrega o
+  ficheiro a partir do disco (pede confirmação). Só está disponível se o documento
+  tiver ficheiro e alterações pendentes.
 - Se o ficheiro mudar fora do editor, a aplicação deteta-o e, se não tiver
   alterações por guardar, recarrega-o; se tiver, pergunta o que fazer.
 - Também pode **arrastar e largar** um ficheiro sobre a janela para o abrir.
@@ -109,6 +112,8 @@ duplicar.
   (HTML) em Markdown em vez de incorporar a formatação da origem.
 - **Copiar como HTML** copia a seleção (ou o documento) como HTML, para colar num
   email, num CMS, etc.
+- **Copiar como Markdown** copia a seleção (ou o documento inteiro) como texto
+  Markdown, para colar noutro editor de Markdown ou num campo de código.
 - Ao colar um **URL** sobre uma seleção de texto, o texto fica ligado
   automaticamente.
 - **Editar → Limpar Markdown** normaliza todo o documento de uma só vez: uniformiza
@@ -301,9 +306,11 @@ outro). É exclusiva com o modo de código em ecrã inteiro.
 ## Exportar e imprimir
 
 **Ficheiro → Exportar** oferece **PDF**, **HTML**, **ODF (.odt)**, **DOCX
-(.docx)**, **LaTeX (.tex)** e **EPUB (.epub)**. Em ODF, DOCX, LaTeX e EPUB é
-incorporado o idioma do documento (obtido do front matter `lang`/`language`, da
-definição da aplicação ou, em último caso, do idioma do sistema).
+(.docx)**, **LaTeX (.tex)**, **EPUB (.epub)** e **texto simples (.txt)**. Em ODF,
+DOCX, LaTeX e EPUB é incorporado o idioma do documento (obtido do front matter
+`lang`/`language`, da definição da aplicação ou, em último caso, do idioma do
+sistema). No PDF são incorporados o título e o autor quando constam do front
+matter (`title`, `author`).
 
 Também pode exportar **apenas a seleção para PDF** e usar a **Pré-visualização de
 impressão**.

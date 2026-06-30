@@ -39,6 +39,9 @@ serialized back to plain Markdown.
   the most recent ones in **File → Open recent**.
 - **Save** (Ctrl+S) and **Save as…** (Ctrl+Shift+S) write the document in UTF-8.
   **Open containing folder** opens the document's folder in the file manager.
+- **Revert to saved** discards unsaved changes and reloads the file from disk
+  (asks for confirmation). Available only when the document has a file and
+  pending changes.
 - If the file changes outside the editor, the application detects it and, if you
   have no unsaved changes, reloads it; if you do, it asks what to do.
 - You can also **drag and drop** a file onto the window to open it.
@@ -105,6 +108,8 @@ editor "skips over" it instead of duplicating it.
   Markdown instead of embedding the source's formatting.
 - **Copy as HTML** copies the selection (or the document) as HTML, to paste into
   email, a CMS, etc.
+- **Copy as Markdown** copies the selection (or the whole document) as Markdown
+  text, to paste into another Markdown editor or a code field.
 - When you paste a **URL** over a text selection, the text is linked
   automatically.
 - **Edit → Clean up Markdown** normalizes the whole document in one pass: it
@@ -296,9 +301,11 @@ the other). It is mutually exclusive with the full-screen source mode.
 ## Export and print
 
 **File → Export** offers **PDF**, **HTML**, **ODF (.odt)**, **DOCX (.docx)**,
-**LaTeX (.tex)** and **EPUB (.epub)**. In ODF, DOCX, LaTeX and EPUB the document
-language is embedded (taken from the `lang`/`language` front matter, the
-application setting or, as a last resort, the system language).
+**LaTeX (.tex)**, **EPUB (.epub)** and **plain text (.txt)**. In ODF, DOCX, LaTeX
+and EPUB the document language is embedded (taken from the `lang`/`language`
+front matter, the application setting or, as a last resort, the system language).
+In **PDF**, the title and author are embedded when present in the front matter
+(`title`, `author`).
 
 You can also export **only the selection to PDF** and use the **Print preview**.
 

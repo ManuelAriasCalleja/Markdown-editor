@@ -40,6 +40,9 @@ document weer naar pure Markdown geserialiseerd.
 - **Opslaan** (Ctrl+S) en **Opslaan als…** (Ctrl+Shift+S) schrijven het document
   in UTF-8. **Bevattende map openen** opent de map van het document in de
   bestandsbeheerder.
+- **Terugzetten naar opgeslagen versie** verwerpt de niet-opgeslagen wijzigingen
+  en herlaadt het bestand van schijf (vraagt om bevestiging). Alleen beschikbaar
+  als het document een bestand en openstaande wijzigingen heeft.
 - Als het bestand buiten de editor verandert, detecteert de toepassing dat en
   herlaadt het als je geen niet-opgeslagen wijzigingen hebt; anders vraagt ze wat
   te doen.
@@ -111,6 +114,8 @@ tegenhanger, dan "springt" de editor eroverheen in plaats van het te verdubbelen
   in plaats van de opmaak van de bron in te bedden.
 - **Kopiëren als HTML** kopieert de selectie (of het document) als HTML, om in een
   e-mail, een CMS enz. te plakken.
+- **Kopiëren als Markdown** kopieert de selectie (of het hele document) als
+  Markdown-tekst, om in een andere Markdown-editor of een codeveld te plakken.
 - Als je een **URL** over een tekstselectie plakt, wordt de tekst automatisch
   gekoppeld.
 - **Bewerken → Markdown opschonen** normaliseert het hele document in één keer:
@@ -308,9 +313,11 @@ in de andere). Ze sluit elkaar uit met de bronmodus op volledig scherm.
 ## Exporteren en afdrukken
 
 **Bestand → Exporteren** biedt **PDF**, **HTML**, **ODF (.odt)**, **DOCX
-(.docx)**, **LaTeX (.tex)** en **EPUB (.epub)**. In ODF, DOCX, LaTeX en EPUB wordt
-de documenttaal ingebed (uit de `lang`/`language`-front-matter, de
-toepassingsinstelling of, als laatste, de systeemtaal).
+(.docx)**, **LaTeX (.tex)**, **EPUB (.epub)** en **platte tekst (.txt)**. In ODF,
+DOCX, LaTeX en EPUB wordt de documenttaal ingebed (uit de
+`lang`/`language`-front-matter, de toepassingsinstelling of, als laatste, de
+systeemtaal). In PDF worden de titel en de auteur ingebed wanneer ze in de
+front matter staan (`title`, `author`).
 
 Je kunt ook **alleen de selectie naar PDF** exporteren en het **Afdrukvoorbeeld**
 gebruiken.

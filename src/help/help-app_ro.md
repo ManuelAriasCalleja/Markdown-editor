@@ -40,6 +40,9 @@ serializat înapoi în Markdown pur.
 - **Salvează** (Ctrl+S) și **Salvează ca…** (Ctrl+Shift+S) scriu documentul în
   UTF-8. **Deschide folderul documentului** deschide folderul documentului în
   managerul de fișiere.
+- **Revino la versiunea salvată** renunță la modificările nesalvate și reîncarcă
+  fișierul de pe disc (cere confirmare). Disponibil doar dacă documentul are fișier
+  și modificări în așteptare.
 - Dacă fișierul se schimbă în afara editorului, aplicația detectează asta și, dacă
   nu ai modificări nesalvate, îl reîncarcă; dacă ai, întreabă ce să facă.
 - Poți de asemenea **trage și plasa** un fișier pe fereastră pentru a-l deschide.
@@ -108,6 +111,8 @@ editorul îl „sare” în loc să-l dubleze.
   Markdown în loc să încorporeze formatarea sursei.
 - **Copiază ca HTML** copiază selecția (sau documentul) ca HTML, pentru a o lipi
   într-un e-mail, un CMS etc.
+- **Copiază ca Markdown** copiază selecția (sau întregul document) ca text
+  Markdown, pentru a o lipi în alt editor de Markdown sau într-un câmp de cod.
 - Când lipești o **adresă URL** peste o selecție de text, textul devine link
   automat.
 - **Editare → Curăță Markdown** normalizează tot documentul dintr-o singură
@@ -304,9 +309,10 @@ complet.
 ## Export și tipărire
 
 **Fișier → Exportă** oferă **PDF**, **HTML**, **ODF (.odt)**, **DOCX (.docx)**,
-**LaTeX (.tex)** și **EPUB (.epub)**. În ODF, DOCX, LaTeX și EPUB este încorporată
-limba documentului (din front matter `lang`/`language`, din setarea aplicației sau,
-în ultimă instanță, din limba sistemului).
+**LaTeX (.tex)**, **EPUB (.epub)** și **text simplu (.txt)**. În ODF, DOCX, LaTeX și
+EPUB este încorporată limba documentului (din front matter `lang`/`language`, din
+setarea aplicației sau, în ultimă instanță, din limba sistemului). În PDF sunt
+încorporate titlul și autorul când se află în front matter (`title`, `author`).
 
 Poți, de asemenea, să exporți **doar selecția în PDF** și să folosești
 **Previzualizarea tipăririi**.
