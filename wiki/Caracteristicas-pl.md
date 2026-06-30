@@ -1,7 +1,7 @@
 # Funkcje
 
 Podsumowanie wszystkiego, co oferuje md-editor. Pełną i techniczną dokumentację
-znajdziesz w pliku `especificacion.md` w repozytorium.
+znajdziesz w pliku `docs/REQUISITOS.md` w repozytorium.
 
 ## Edycja WYSIWYG i round-trip
 

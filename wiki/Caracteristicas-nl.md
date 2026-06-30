@@ -1,7 +1,7 @@
 # Functies
 
 Overzicht van alles wat md-editor biedt. Voor de volledige en technische referentie,
-raadpleeg `especificacion.md` in de repository.
+raadpleeg `docs/REQUISITOS.md` in de repository.
 
 ## WYSIWYG-bewerking en round-trip
 

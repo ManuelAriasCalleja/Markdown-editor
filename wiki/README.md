@@ -3,7 +3,7 @@
 Esta carpeta contiene las páginas de la **wiki de GitHub** de md-editor. No forma
 parte del programa: son los `.md` que se copian al repositorio de la wiki.
 
-Se generan a partir de [`../especificacion.md`](../especificacion.md), que es la
+Se generan a partir de [`../docs/REQUISITOS.md`](../docs/REQUISITOS.md), que es la
 descripción completa del producto. Si actualizas la especificación, refleja aquí los
 cambios relevantes.
 
@@ -38,7 +38,7 @@ cd <repo>.wiki
 cp /ruta/a/md-editor/wiki/*.md .          # incluye _Sidebar.md y _Footer.md
 rm README.md                              # este archivo es la guía, no una página
 git add .
-git commit -m "Actualizar la wiki desde especificacion.md"
+git commit -m "Actualizar la wiki desde docs/REQUISITOS.md"
 git push
 ```
 

@@ -1,7 +1,7 @@
 # Fonctionnalités
 
 Récapitulatif de tout ce que propose md-editor. Pour la référence complète et
-technique, consultez `especificacion.md` dans le dépôt.
+technique, consultez `docs/REQUISITOS.md` dans le dépôt.
 
 ## Édition WYSIWYG et round-trip
 

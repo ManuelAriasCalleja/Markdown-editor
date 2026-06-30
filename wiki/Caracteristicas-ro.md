@@ -1,7 +1,7 @@
 # Caracteristici
 
 Rezumat al tot ceea ce oferă md-editor. Pentru referința completă și tehnică,
-consultă `especificacion.md` în depozit.
+consultă `docs/REQUISITOS.md` în depozit.
 
 ## Editare WYSIWYG și round-trip
 

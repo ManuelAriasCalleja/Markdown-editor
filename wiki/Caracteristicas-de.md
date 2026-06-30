@@ -1,7 +1,7 @@
 # Funktionen
 
 Überblick über alles, was md-editor bietet. Die vollständige technische Referenz findest
-du in `especificacion.md` im Repository.
+du in `docs/REQUISITOS.md` im Repository.
 
 ## WYSIWYG-Bearbeitung und Round-Trip
 

@@ -1,7 +1,7 @@
 # Features
 
 An overview of everything md-editor offers. For the complete, technical reference see
-`especificacion.md` in the repository.
+`docs/REQUISITOS.md` in the repository.
 
 ## WYSIWYG editing and round-trip
 

@@ -1,7 +1,7 @@
 # Caratteristiche
 
 Riepilogo di tutto ciò che offre md-editor. Per il riferimento completo e tecnico,
-consulta `especificacion.md` nel repository.
+consulta `docs/REQUISITOS.md` nel repository.
 
 ## Editing WYSIWYG e round-trip
 
