@@ -198,3 +198,27 @@ void MainWindow::reloadFromDisk()
     cursor.setPosition(qMin(caret, ed->document()->characterCount() - 1));
     ed->setTextCursor(cursor);
 }
+
+void MainWindow::revertToSaved()
+{
+    if (!m_stack)
+        return;
+    const QString path = m_stack->documentIo()->currentFile();
+    if (path.isEmpty())
+        return;  // sin archivo no hay nada a lo que revertir
+
+    const bool dirty =
+        m_stack->documentIo()->isModified() || m_stack->split()->isSourceDirty();
+    if (dirty) {
+        const auto answer = QMessageBox::question(
+            this, tr("Revertir a lo guardado"),
+            tr("Se descartarán los cambios sin guardar de «%1» y se recargará la "
+               "versión del disco. ¿Continuar?")
+                .arg(QFileInfo(path).fileName()),
+            QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
+        if (answer != QMessageBox::Yes)
+            return;
+    }
+    reloadFromDisk();
+    showStatusMessage(tr("Revertido a la versión guardada."), 4000);
+}

@@ -239,6 +239,9 @@ private:
     void onDiskExternalChange(const QByteArray &diskBytes);
     // Recarga el archivo actual desde disco descartando el contenido en memoria.
     void reloadFromDisk();
+    // Acción «Revertir a lo guardado»: pide confirmación (si hay cambios) y recarga
+    // del disco vía reloadFromDisk(). No hace nada si no hay archivo.
+    void revertToSaved();
 
     // Conecta las señales de un EditorStack (mensajes de estado, marca de
     // modificado, archivo actual, recargas de disco, recuento, esquema) a la

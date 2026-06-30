@@ -176,6 +176,17 @@ void MainWindow::createFileMenu()
     saveAsAction->setShortcut(QKeySequence::SaveAs);
     connect(saveAsAction, &QAction::triggered, this, [this] { m_stack->file()->saveAs(); });
 
+    QAction *revertAction = fileMenu->addAction(tr("&Revertir a lo guardado"));
+    revertAction->setToolTip(tr("Descarta los cambios y recarga el archivo del disco"));
+    connect(revertAction, &QAction::triggered, this, &MainWindow::revertToSaved);
+    // Habilitada solo si el documento activo tiene archivo y cambios sin guardar; se
+    // recalcula al abrir el menú (sin cablear señales por acción).
+    connect(fileMenu, &QMenu::aboutToShow, this, [this, revertAction] {
+        revertAction->setEnabled(
+            m_stack && !m_stack->documentIo()->currentFile().isEmpty()
+            && (m_stack->documentIo()->isModified() || m_stack->split()->isSourceDirty()));
+    });
+
     QAction *openFolderAction = fileMenu->addAction(tr("Abrir &carpeta contenedora"));
     connect(openFolderAction, &QAction::triggered, this, [this] { m_stack->file()->openContainingFolder(); });
 
