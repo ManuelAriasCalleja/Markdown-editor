@@ -30,6 +30,13 @@
 - **Transversales por mejora:** traducir las cadenas nuevas (`update_translations` + 8
   `.ts`, `tst_translations` falla con `unfinished`); registrar `.cpp/.h` y `tst_*` en
   `CMakeLists.txt`; los atajos nuevos los valida `tst_splitview::noConflictingShortcuts`.
+- **Documentación en el MISMO commit de la mejora** (no al final, en una pasada aparte):
+  toda mejora con superficie visible para el usuario actualiza, junto al código, la
+  **ayuda integrada** (`src/help/help-app*.md`, **los 9 idiomas**, etiquetas idénticas a
+  las del menú), y, si procede, la **lista de funciones del README** y una entrada en
+  `CHANGELOG.md` (sección `## [Sin publicar]`). Una nueva acción de menú, formato de
+  exportación o atajo casi siempre toca la ayuda; verificar tras editar que las 9 copias
+  quedan paralelas (grep de la etiqueta nueva en cada fichero).
 
 ---
 
