@@ -263,7 +263,8 @@ Poți **trage** o intrare din structură pentru a **reordona** acea secțiune �
 conținutul și subsecțiunile ei— în document, fără a schimba nivelul. În plus,
 **Inserare → Cuprins (TOC)** plasează în document o listă imbricată a titlurilor.
 **Vizualizare → Mergi la titlu…** (Ctrl+G) sare la un titlu tastând o parte din
-textul lui.
+textul lui, iar **Salt la linie…** (Ctrl+L) duce cursorul la un anumit număr de
+linie (în vizualizarea sursă, la linia din Markdown).
 
 ## Statistici despre document
 
@@ -368,6 +369,7 @@ ce scriai.
 | Inserează formulă         | Ctrl+Shift+F     |
 | Inserează notă de subsol  | Ctrl+Shift+N     |
 | Mergi la titlu            | Ctrl+G           |
+| Salt la linie             | Ctrl+L           |
 | Focus structură / editor  | F6     |
 | Vizualizare sursă Markdown | Ctrl+Shift+M    |
 | Vizualizare divizată      | Ctrl+Shift+D     |

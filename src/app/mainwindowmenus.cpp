@@ -710,6 +710,12 @@ void MainWindow::createViewMenu()
         tr("Salta a un encabezado del documento"), goToHeadingAction->shortcut()));
     connect(goToHeadingAction, &QAction::triggered, this, &MainWindow::goToHeading);
 
+    QAction *goToLineAction = viewMenu->addAction(tr("Ir a línea..."));
+    goToLineAction->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_L));
+    goToLineAction->setToolTip(withShortcut(
+        tr("Salta a un número de línea"), goToLineAction->shortcut()));
+    connect(goToLineAction, &QAction::triggered, this, &MainWindow::goToLine);
+
     viewMenu->addSeparator();
 
     QAction *zoomInAction = viewMenu->addAction(tr("Aumentar letra"));

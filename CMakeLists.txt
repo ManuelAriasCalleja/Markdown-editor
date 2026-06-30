@@ -101,6 +101,8 @@ add_library(md-editor-core STATIC
     src/markdown/doctemplates.h
     src/markdown/footnotes.cpp
     src/markdown/footnotes.h
+    src/markdown/nav.cpp
+    src/markdown/nav.h
     src/markdown/markdownrender.cpp
     src/markdown/markdownrender.h
     src/markdown/markdowntidy.cpp
@@ -412,6 +414,7 @@ if(Qt6Test_FOUND)
         tst_markdownroundtrip
         tst_outline
         tst_docstats
+        tst_nav
         tst_texttransform
         tst_typewriter
         tst_snippets

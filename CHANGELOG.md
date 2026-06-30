@@ -8,6 +8,8 @@ y el proyecto usa [versionado semántico](https://semver.org/lang/es/).
 ## [Sin publicar]
 
 ### Añadido
+- **Ir a línea** (*Ver → Ir a línea*, Ctrl+L): lleva el cursor a un número de
+  línea del editor activo (en la vista de fuente, a la línea del Markdown).
 - **Copiar como Markdown** (*Editar*): copia al portapapeles la selección o el
   documento entero como texto Markdown, por la serialización canónica.
 - **Exportación a texto plano** (*Archivo → Exportar → A texto plano*).

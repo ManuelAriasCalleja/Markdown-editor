@@ -27,6 +27,7 @@
 #include "markdownrender.h"
 #include "listcontinuation.h"
 #include "gotoheadingdialog.h"
+#include "nav.h"
 #include "diagramcontroller.h"
 #include "autopair.h"
 #include "splitviewcontroller.h"
@@ -75,6 +76,7 @@
 #include <QMimeData>
 #include <QPushButton>
 #include <QRegularExpression>
+#include <QInputDialog>
 #include <QSplitter>
 #include <QTextDocumentFragment>
 #include <QStatusBar>
@@ -351,6 +353,31 @@ void MainWindow::goToHeading()
     m_stack->editor()->setTextCursor(cursor);
     m_stack->editor()->ensureCursorVisible();
     m_stack->editor()->setFocus();
+}
+
+void MainWindow::goToLine()
+{
+    // Sobre el editor activo (no solo el WYSIWYG): en la vista de fuente las líneas
+    // son las del Markdown, en la WYSIWYG son los bloques renderizados.
+    QTextEdit *ed = m_stack->activeEditor();
+    const int lineCount = ed->document()->blockCount();
+    const int current = ed->textCursor().blockNumber() + 1;  // 1-based para el usuario
+
+    bool ok = false;
+    const int requested = QInputDialog::getInt(
+        this, tr("Ir a línea"), tr("Número de línea (1–%1):").arg(lineCount),
+        current, 1, lineCount, /*step=*/1, &ok);
+    if (!ok)
+        return;
+
+    const QTextBlock block =
+        ed->document()->findBlockByNumber(mdnav::clampLine(requested, lineCount) - 1);
+    if (!block.isValid())
+        return;
+    QTextCursor cursor(block);
+    ed->setTextCursor(cursor);
+    ed->ensureCursorVisible();
+    ed->setFocus();
 }
 
 void MainWindow::expandShortcodeBefore(const QTextCursor &cursor)

@@ -264,7 +264,7 @@ Pode **arrastar** uma entrada da estrutura para **reordenar** essa secção —o
 título, o seu conteúdo e as suas subsecções— dentro do documento, sem mudar o
 nível. Além disso, **Inserir → Índice (TOC)** insere no documento uma lista
 aninhada dos títulos. **Ver → Ir para título…** (Ctrl+G) salta para um título
-escrevendo parte do seu texto.
+escrevendo parte do seu texto, e **Ir para a linha…** (Ctrl+L) leva o cursor para um número de linha (na vista de código, para a linha do Markdown).
 
 ## Estatísticas do documento
 
@@ -364,6 +364,7 @@ recuperar o que estava a escrever.
 | Inserir fórmula           | Ctrl+Shift+F     |
 | Inserir nota de rodapé    | Ctrl+Shift+N     |
 | Ir para título            | Ctrl+G           |
+| Ir para a linha           | Ctrl+L           |
 | Focar estrutura / voltar ao editor | F6     |
 | Vista de código Markdown  | Ctrl+Shift+M     |
 | Vista dividida            | Ctrl+Shift+D     |

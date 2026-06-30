@@ -266,7 +266,8 @@ Puoi **trascinare** una voce della struttura per **riordinare** quella sezione �
 suo titolo, il suo contenuto e le sue sottosezioni— nel documento, senza cambiare
 il livello. Inoltre, **Inserisci → Indice (TOC)** inserisce nel documento un
 elenco annidato dei titoli. **Visualizza → Vai al titolo…** (Ctrl+G) salta a un
-titolo digitando parte del suo testo.
+titolo digitando parte del suo testo, e **Vai alla riga…** (Ctrl+L) porta il
+cursore a un numero di riga (nella vista sorgente, alla riga del Markdown).
 
 ## Statistiche del documento
 
@@ -368,6 +369,7 @@ propone di recuperare ciò che stavi scrivendo.
 | Inserisci formula         | Ctrl+Maiusc+F    |
 | Inserisci nota            | Ctrl+Maiusc+N    |
 | Vai al titolo             | Ctrl+G           |
+| Vai alla riga             | Ctrl+L           |
 | Struttura (fuoco) / editor | F6    |
 | Vista sorgente Markdown   | Ctrl+Maiusc+M    |
 | Vista divisa              | Ctrl+Maiusc+D    |

@@ -260,7 +260,8 @@ You can **drag** an outline entry to **reorder** that section —its heading, it
 content and its subsections— within the document, without changing its level.
 Also, **Insert → Table of contents (TOC)** dumps a nested list of the headings
 into the document. **View → Go to heading…** (Ctrl+G) jumps to a heading by
-typing part of its text.
+typing part of its text, and **Go to line…** (Ctrl+L) takes the cursor to a line
+number (in the source view, to the Markdown line).
 
 ## Document statistics
 
@@ -357,6 +358,7 @@ were writing.
 | Insert formula            | Ctrl+Shift+F     |
 | Insert footnote           | Ctrl+Shift+N     |
 | Go to heading             | Ctrl+G           |
+| Go to line                | Ctrl+L           |
 | Focus outline / back to editor | F6     |
 | Markdown source view      | Ctrl+Shift+M     |
 | Split view                | Ctrl+Shift+D     |

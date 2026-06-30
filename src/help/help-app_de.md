@@ -275,7 +275,8 @@ Sie können einen Gliederungseintrag **ziehen**, um diesen Abschnitt —seine
 ohne die Ebene zu ändern. Außerdem schreibt **Einfügen → Inhaltsverzeichnis (TOC)**
 eine verschachtelte Liste der Überschriften ins Dokument. **Ansicht → Zu
 Überschrift gehen…** (Strg+G) springt zu einer Überschrift durch Eingabe eines
-Teils ihres Textes.
+Teils ihres Textes, und **Zu Zeile springen…** (Strg+L) bewegt den Cursor zu
+einer Zeilennummer (in der Quelltextansicht zur Zeile des Markdowns).
 
 ## Dokumentstatistik
 
@@ -378,6 +379,7 @@ automatisch gespeichert. Schließt die Anwendung unerwartet, bietet sie beim ern
 | Formel einfügen           | Strg+Umschalt+F  |
 | Fußnote einfügen          | Strg+Umschalt+N  |
 | Zu Überschrift gehen      | Strg+G           |
+| Zu Zeile springen         | Strg+L           |
 | Fokus auf Gliederung / zurück zum Editor | F6  |
 | Markdown-Quelltextansicht | Strg+Umschalt+M  |
 | Geteilte Ansicht          | Strg+Umschalt+D  |

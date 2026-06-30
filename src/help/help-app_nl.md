@@ -270,7 +270,8 @@ Je kunt een overzichtsitem **slepen** om die sectie —de kop, de inhoud en de
 subsecties— in het document te **herordenen**, zonder het niveau te wijzigen.
 Bovendien plaatst **Invoegen → Inhoudsopgave (TOC)** een geneste lijst van de
 koppen in het document. **Beeld → Ga naar kop…** (Ctrl+G) springt naar een kop
-door een deel van de tekst te typen.
+door een deel van de tekst te typen, en **Ga naar regel…** (Ctrl+L) brengt de
+cursor naar een regelnummer (in de bronweergave, naar de regel van de Markdown).
 
 ## Documentstatistieken
 
@@ -372,6 +373,7 @@ openen aan om te herstellen wat je aan het schrijven was.
 | Formule invoegen          | Ctrl+Shift+F     |
 | Voetnoot invoegen         | Ctrl+Shift+N     |
 | Ga naar kop               | Ctrl+G           |
+| Ga naar regel             | Ctrl+L           |
 | Overzicht focussen / terug| F6     |
 | Markdown-bronweergave     | Ctrl+Shift+M     |
 | Gesplitste weergave       | Ctrl+Shift+D     |

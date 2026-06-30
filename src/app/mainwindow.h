@@ -102,6 +102,10 @@ private:
     // Abre el diálogo «Ir a encabezado» (Ctrl+G) y lleva el cursor al elegido.
     void goToHeading();
 
+    // Pide un número de línea (Ctrl+L) y lleva el cursor a esa línea del editor
+    // activo (sirve también en la vista de fuente y dividida).
+    void goToLine();
+
     // Tras teclear el ':' de cierre (en `cursor`), si justo antes hay un shortcode
     // `:nombre:` conocido, lo sustituye por su símbolo (ver mdshortcode).
     void expandShortcodeBefore(const QTextCursor &cursor);

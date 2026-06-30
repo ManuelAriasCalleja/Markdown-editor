@@ -267,7 +267,8 @@ Puedes **arrastrar** una entrada del esquema para **reordenar** esa sección
 —su encabezado, su contenido y sus subsecciones— dentro del documento, sin
 cambiar el nivel. Además, **Insertar → Índice (TOC)** vuelca en el documento una
 lista anidada con los encabezados. **Ver → Ir a encabezado…** (Ctrl+G) salta a
-un encabezado escribiendo parte de su texto.
+un encabezado escribiendo parte de su texto, e **Ir a línea…** (Ctrl+L) lleva el
+cursor a un número de línea (en la vista de fuente, a la línea del Markdown).
 
 ## Estadísticas del documento
 
@@ -367,6 +368,7 @@ ofrece recuperar lo que estabas escribiendo.
 | Insertar fórmula          | Ctrl+Shift+F     |
 | Insertar nota al pie      | Ctrl+Shift+N     |
 | Ir a encabezado           | Ctrl+G           |
+| Ir a línea                | Ctrl+L           |
 | Foco al esquema / volver al editor | F6 |
 | Vista de código Markdown  | Ctrl+Shift+M     |
 | Vista dividida            | Ctrl+Shift+D     |

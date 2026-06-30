@@ -260,7 +260,8 @@ Pozycję struktury możesz **przeciągnąć**, aby **zmienić kolejność** tej 
 nagłówka, treści i podsekcji— w dokumencie, bez zmiany poziomu. Ponadto **Wstaw →
 Spis treści (TOC)** wstawia do dokumentu zagnieżdżoną listę nagłówków. **Widok →
 Przejdź do nagłówka…** (Ctrl+G) przeskakuje do nagłówka po wpisaniu części jego
-tekstu.
+tekstu, a **Przejdź do wiersza…** (Ctrl+L) przenosi kursor do podanego numeru
+wiersza (w widoku kodu — do wiersza Markdown).
 
 ## Statystyki dokumentu
 
@@ -357,6 +358,7 @@ proponuje odzyskanie tego, co pisałeś.
 | Wstaw wzór                | Ctrl+Shift+F     |
 | Wstaw przypis             | Ctrl+Shift+N     |
 | Przejdź do nagłówka       | Ctrl+G           |
+| Przejdź do wiersza        | Ctrl+L           |
 | Fokus na konspekt / powrót do edytora | F6     |
 | Widok źródła Markdown     | Ctrl+Shift+M     |
 | Widok podzielony          | Ctrl+Shift+D     |
