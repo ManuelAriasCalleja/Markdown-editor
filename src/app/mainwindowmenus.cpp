@@ -198,6 +198,8 @@ void MainWindow::createFileMenu()
     connect(exportLatexAction, &QAction::triggered, this, [this] { m_stack->exporter()->exportLatex(); });
     QAction *exportEpubAction = exportMenu->addAction(tr("A EPUB..."));
     connect(exportEpubAction, &QAction::triggered, this, [this] { m_stack->exporter()->exportEpub(); });
+    QAction *exportTxtAction = exportMenu->addAction(tr("A texto plano (TXT)..."));
+    connect(exportTxtAction, &QAction::triggered, this, [this] { m_stack->exporter()->exportPlainText(); });
     exportMenu->addSeparator();
     QAction *exportSelPdfAction = exportMenu->addAction(tr("Selección a PDF..."));
     exportSelPdfAction->setToolTip(tr("Exporta a PDF solo el texto seleccionado"));

@@ -50,6 +50,8 @@ public slots:
     bool exportDocx();
     /// \brief Exporta el documento a EPUB (.epub).
     bool exportEpub();
+    /// \brief Exporta el documento a texto plano (.txt), sin formato Markdown.
+    bool exportPlainText();
     /// \brief Imprime el documento renderizado con el diálogo de impresión del sistema
     /// (distinto de exportar a PDF, que escribe a un archivo).
     bool print();

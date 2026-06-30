@@ -39,6 +39,7 @@ private slots:
     void epubContentXhtmlWrapsBody();
     void epubWriteProducesZipPackage();
     void twoDFormulaExpandsForHtmlAndLatex();
+    void plainTextFlattensTwoDFormula();
     void codeHighlightingBakedIntoExport();
 };
 
@@ -320,6 +321,24 @@ void TestExporters::twoDFormulaExpandsForHtmlAndLatex()
     const QString latex = mdexport::toLatex(&doc, mdexport::Language{}, QString());
     QVERIFY(latex.contains(QStringLiteral("\\sum_{i=1}^n")));
     QVERIFY(latex.contains(QStringLiteral("\\frac{x_i}{2}")));
+}
+
+// exportPlainText() escribe doc->toPlainText() sobre el clon plano. cloneForExport
+// debe expandir la fórmula 2D a runs para que su texto aparezca en el .txt, no el
+// U+FFFC del carácter objeto sin pintar.
+void TestExporters::plainTextFlattensTwoDFormula()
+{
+    QTextDocument doc;
+    doc.setMarkdown(mdmath::protectMath(
+        QStringLiteral("Sea $$\\sum_{i=1}^n \\frac{x_i}{2}$$ fin\n")));
+    mdmath::renderMathInDocument(&doc);
+
+    std::unique_ptr<QTextDocument> flat(mdexport::cloneForExport(&doc));
+    const QString text = flat->toPlainText();
+    QVERIFY2(!text.contains(QChar(0xFFFC)),
+             "el carácter objeto no debe llegar al texto plano sin expandir");
+    QVERIFY(text.contains(QChar(0x2211)));  // Σ del sumatorio expandido a runs
+    QVERIFY(text.contains(QStringLiteral("Sea")) && text.contains(QStringLiteral("fin")));
 }
 
 // El resaltado de sintaxis (overlay del QSyntaxHighlighter) se hornea en el clon

@@ -355,6 +355,23 @@ bool ExportController::exportEpub()
     });
 }
 
+bool ExportController::exportPlainText()
+{
+    return runExport({
+        QT_TRANSLATE_NOOP("MainWindow", "Exportar a texto plano"),
+        QT_TRANSLATE_NOOP("MainWindow", "Texto plano (*.txt)"),
+        QStringLiteral("txt"),
+        QT_TRANSLATE_NOOP("MainWindow", "No se pudo escribir:\n%1\n\n%2"),
+        QT_TRANSLATE_NOOP("MainWindow", "Exportado a texto plano: %1"),
+        // Clon plano: expande las fórmulas 2D a runs, así toPlainText() recoge su texto.
+        /*needsLanguage=*/false, /*useFlatClone=*/true, /*needsBaseUrl=*/false,
+        [](const QTextDocument *doc, const QString &path, const mdexport::Language &,
+           const QString &, QString *error) {
+            return writeUtf8File(path, doc->toPlainText(), error);
+        },
+    });
+}
+
 bool ExportController::exportLatex()
 {
     return runExport({
