@@ -27,6 +27,7 @@
 #include "markdownrender.h"
 #include "listcontinuation.h"
 #include "gotoheadingdialog.h"
+#include "commandpalettedialog.h"
 #include "nav.h"
 #include "diagramcontroller.h"
 #include "autopair.h"
@@ -378,6 +379,20 @@ void MainWindow::goToLine()
     ed->setTextCursor(cursor);
     ed->ensureCursorVisible();
     ed->setFocus();
+}
+
+void MainWindow::commandPalette()
+{
+    // Se recolectan las acciones EN EL MOMENTO de abrir: así la lista refleja el
+    // contexto actual (solo las visibles y habilitadas del editor activo).
+    const QList<mdcommands::Command> commands = mdcommands::collectCommands(menuBar());
+    if (commands.isEmpty())
+        return;
+    CommandPaletteDialog dialog(commands, this);
+    if (dialog.exec() != QDialog::Accepted)
+        return;
+    if (QAction *action = dialog.selectedAction())
+        action->trigger();
 }
 
 void MainWindow::expandShortcodeBefore(const QTextCursor &cursor)

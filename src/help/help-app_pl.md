@@ -265,7 +265,9 @@ nagłówka, treści i podsekcji— w dokumencie, bez zmiany poziomu. Ponadto **W
 Spis treści (TOC)** wstawia do dokumentu zagnieżdżoną listę nagłówków. **Widok →
 Przejdź do nagłówka…** (Ctrl+G) przeskakuje do nagłówka po wpisaniu części jego
 tekstu, a **Przejdź do wiersza…** (Ctrl+L) przenosi kursor do podanego numeru
-wiersza (w widoku kodu — do wiersza Markdown).
+wiersza (w widoku kodu — do wiersza Markdown). **Paleta poleceń**
+(Ctrl+Shift+P) znajduje i wykonuje dowolne polecenie menu po wpisaniu części
+jego nazwy.
 
 ## Statystyki dokumentu
 
@@ -366,6 +368,7 @@ proponuje odzyskanie tego, co pisałeś.
 | Wstaw przypis             | Ctrl+Shift+N     |
 | Przejdź do nagłówka       | Ctrl+G           |
 | Przejdź do wiersza        | Ctrl+L           |
+| Paleta poleceń            | Ctrl+Shift+P     |
 | Fokus na konspekt / powrót do edytora | F6     |
 | Widok źródła Markdown     | Ctrl+Shift+M     |
 | Widok podzielony          | Ctrl+Shift+D     |

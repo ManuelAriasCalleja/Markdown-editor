@@ -106,6 +106,10 @@ private:
     // activo (sirve también en la vista de fuente y dividida).
     void goToLine();
 
+    // Abre la paleta de comandos (Ctrl+Shift+P): busca cualquier acción de los
+    // menús por su nombre (filtro difuso) y la dispara al aceptar.
+    void commandPalette();
+
     // Tras teclear el ':' de cierre (en `cursor`), si justo antes hay un shortcode
     // `:nombre:` conocido, lo sustituye por su símbolo (ver mdshortcode).
     void expandShortcodeBefore(const QTextCursor &cursor);

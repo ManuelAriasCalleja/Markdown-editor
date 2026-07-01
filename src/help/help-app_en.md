@@ -265,7 +265,8 @@ content and its subsections— within the document, without changing its level.
 Also, **Insert → Table of contents (TOC)** dumps a nested list of the headings
 into the document. **View → Go to heading…** (Ctrl+G) jumps to a heading by
 typing part of its text, and **Go to line…** (Ctrl+L) takes the cursor to a line
-number (in the source view, to the Markdown line).
+number (in the source view, to the Markdown line). The **Command palette**
+(Ctrl+Shift+P) finds and runs any menu action by typing part of its name.
 
 ## Document statistics
 
@@ -366,6 +367,7 @@ were writing.
 | Insert footnote           | Ctrl+Shift+N     |
 | Go to heading             | Ctrl+G           |
 | Go to line                | Ctrl+L           |
+| Command palette           | Ctrl+Shift+P     |
 | Focus outline / back to editor | F6     |
 | Markdown source view      | Ctrl+Shift+M     |
 | Split view                | Ctrl+Shift+D     |

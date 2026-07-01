@@ -277,6 +277,8 @@ Bovendien plaatst **Invoegen → Inhoudsopgave (TOC)** een geneste lijst van de
 koppen in het document. **Beeld → Ga naar kop…** (Ctrl+G) springt naar een kop
 door een deel van de tekst te typen, en **Ga naar regel…** (Ctrl+L) brengt de
 cursor naar een regelnummer (in de bronweergave, naar de regel van de Markdown).
+Het **Opdrachtenpalet** (Ctrl+Shift+P) zoekt en voert elke menu-actie uit door
+een deel van de naam te typen.
 
 ## Documentstatistieken
 
@@ -382,6 +384,7 @@ openen aan om te herstellen wat je aan het schrijven was.
 | Voetnoot invoegen         | Ctrl+Shift+N     |
 | Ga naar kop               | Ctrl+G           |
 | Ga naar regel             | Ctrl+L           |
+| Opdrachtenpalet           | Ctrl+Shift+P     |
 | Overzicht focussen / terug| F6     |
 | Markdown-bronweergave     | Ctrl+Shift+M     |
 | Gesplitste weergave       | Ctrl+Shift+D     |

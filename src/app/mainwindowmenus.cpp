@@ -736,6 +736,13 @@ void MainWindow::createViewMenu()
         tr("Salta a un número de línea"), goToLineAction->shortcut()));
     connect(goToLineAction, &QAction::triggered, this, &MainWindow::goToLine);
 
+    QAction *commandPaletteAction = viewMenu->addAction(tr("Paleta de comandos..."));
+    commandPaletteAction->setShortcut(QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_P));
+    commandPaletteAction->setToolTip(withShortcut(
+        tr("Busca y ejecuta cualquier acción por su nombre"),
+        commandPaletteAction->shortcut()));
+    connect(commandPaletteAction, &QAction::triggered, this, &MainWindow::commandPalette);
+
     viewMenu->addSeparator();
 
     QAction *zoomInAction = viewMenu->addAction(tr("Aumentar letra"));

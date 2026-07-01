@@ -164,6 +164,8 @@ add_library(md-editor-core STATIC
     src/export/exporters.cpp
     src/export/exporters.h
     # --- widgets ---
+    src/widgets/commandpalettedialog.cpp
+    src/widgets/commandpalettedialog.h
     src/widgets/findreplacebar.cpp
     src/widgets/findreplacebar.h
     src/widgets/formaticons.cpp
@@ -421,6 +423,7 @@ if(Qt6Test_FOUND)
         tst_nav
         tst_csvtable
         tst_closedtabstack
+        tst_commands
         tst_texttransform
         tst_typewriter
         tst_snippets

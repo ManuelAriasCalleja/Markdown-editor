@@ -15,7 +15,12 @@ proyecto es sólido (~9k LOC, 23 ficheros de test, arquitectura por controllers,
    `.github/workflows/release.yml` compila al empujar un tag `vX.Y.Z` (Linux
    AppImage, Windows ZIP portable, macOS DMG universal) y publica la Release con
    notas autogeneradas; `ci.yml` compila y pasa los tests en cada push/PR. Las
-   actions están ya en Node.js 24 (`@v5`).
+   actions están ya en Node.js 24 (`@v5`). *Corregido (v2.4.0):* el job de Linux
+   moría por OOM del runner al compilar los ~44 ejecutables de test en paralelo
+   (`cmake --build --parallel` sin tope de trabajos → SIGTERM, `exit 143`); ahora
+   los tres jobs de release compilan solo `--target md-editor` (los tests ya los
+   ejecuta `ci.yml`, la release no los necesita). La primera release v2.4.0 falló
+   por esto y se rehízo re-etiquetando el tag sobre el commit del arreglo.
 2. **Packaging para gestores nativos** — Flatpak/AppStream o AUR (Linux),
    winget/Chocolatey (Windows), Homebrew cask (macOS). Multiplica la visibilidad
    frente al `.AppImage`/`.zip` suelto y mejora la confianza.

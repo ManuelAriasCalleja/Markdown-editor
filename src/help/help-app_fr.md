@@ -276,7 +276,9 @@ titre, son contenu et ses sous-sections— dans le document, sans changer le niv
 De plus, **Insérer → Table des matières (TOC)** insère dans le document une liste
 imbriquée des titres. **Affichage → Aller au titre…** (Ctrl+G) saute à un titre en
 tapant une partie de son texte, et **Aller à la ligne…** (Ctrl+L) place le curseur
-sur un numéro de ligne (dans la vue source, sur la ligne du Markdown).
+sur un numéro de ligne (dans la vue source, sur la ligne du Markdown). La
+**Palette de commandes** (Ctrl+Maj+P) recherche et exécute n'importe quelle
+action des menus en tapant une partie de son nom.
 
 ## Statistiques du document
 
@@ -382,6 +384,7 @@ elle propose à la réouverture de récupérer ce que vous étiez en train d'éc
 | Insérer une note          | Ctrl+Maj+N       |
 | Aller au titre            | Ctrl+G           |
 | Aller à la ligne          | Ctrl+L           |
+| Palette de commandes      | Ctrl+Maj+P       |
 | Plan / retour à l'éditeur | F6       |
 | Vue source Markdown       | Ctrl+Maj+M       |
 | Vue partagée              | Ctrl+Maj+D       |

@@ -273,7 +273,9 @@ Puedes **arrastrar** una entrada del esquema para **reordenar** esa sección
 cambiar el nivel. Además, **Insertar → Índice (TOC)** vuelca en el documento una
 lista anidada con los encabezados. **Ver → Ir a encabezado…** (Ctrl+G) salta a
 un encabezado escribiendo parte de su texto, e **Ir a línea…** (Ctrl+L) lleva el
-cursor a un número de línea (en la vista de fuente, a la línea del Markdown).
+cursor a un número de línea (en la vista de fuente, a la línea del Markdown). La
+**Paleta de comandos** (Ctrl+Shift+P) busca y ejecuta cualquier acción de los
+menús escribiendo parte de su nombre.
 
 ## Estadísticas del documento
 
@@ -377,6 +379,7 @@ ofrece recuperar lo que estabas escribiendo.
 | Insertar nota al pie      | Ctrl+Shift+N     |
 | Ir a encabezado           | Ctrl+G           |
 | Ir a línea                | Ctrl+L           |
+| Paleta de comandos        | Ctrl+Shift+P     |
 | Foco al esquema / volver al editor | F6 |
 | Vista de código Markdown  | Ctrl+Shift+M     |
 | Vista dividida            | Ctrl+Shift+D     |

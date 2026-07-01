@@ -269,7 +269,9 @@ conținutul și subsecțiunile ei— în document, fără a schimba nivelul. În
 **Inserare → Cuprins (TOC)** plasează în document o listă imbricată a titlurilor.
 **Vizualizare → Mergi la titlu…** (Ctrl+G) sare la un titlu tastând o parte din
 textul lui, iar **Salt la linie…** (Ctrl+L) duce cursorul la un anumit număr de
-linie (în vizualizarea sursă, la linia din Markdown).
+linie (în vizualizarea sursă, la linia din Markdown). **Paleta de comenzi**
+(Ctrl+Shift+P) găsește și execută orice acțiune din meniuri tastând o parte din
+numele ei.
 
 ## Statistici despre document
 
@@ -378,6 +380,7 @@ ce scriai.
 | Inserează notă de subsol  | Ctrl+Shift+N     |
 | Mergi la titlu            | Ctrl+G           |
 | Salt la linie             | Ctrl+L           |
+| Paletă de comenzi         | Ctrl+Shift+P     |
 | Focus structură / editor  | F6     |
 | Vizualizare sursă Markdown | Ctrl+Shift+M    |
 | Vizualizare divizată      | Ctrl+Shift+D     |

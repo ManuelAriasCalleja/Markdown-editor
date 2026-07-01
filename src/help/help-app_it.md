@@ -272,7 +272,9 @@ suo titolo, il suo contenuto e le sue sottosezioni— nel documento, senza cambi
 il livello. Inoltre, **Inserisci → Indice (TOC)** inserisce nel documento un
 elenco annidato dei titoli. **Visualizza → Vai al titolo…** (Ctrl+G) salta a un
 titolo digitando parte del suo testo, e **Vai alla riga…** (Ctrl+L) porta il
-cursore a un numero di riga (nella vista sorgente, alla riga del Markdown).
+cursore a un numero di riga (nella vista sorgente, alla riga del Markdown). La
+**Palette dei comandi** (Ctrl+Maiusc+P) trova ed esegue qualsiasi azione dei
+menu digitando parte del suo nome.
 
 ## Statistiche del documento
 
@@ -378,6 +380,7 @@ propone di recuperare ciò che stavi scrivendo.
 | Inserisci nota            | Ctrl+Maiusc+N    |
 | Vai al titolo             | Ctrl+G           |
 | Vai alla riga             | Ctrl+L           |
+| Palette dei comandi       | Ctrl+Maiusc+P    |
 | Struttura (fuoco) / editor | F6    |
 | Vista sorgente Markdown   | Ctrl+Maiusc+M    |
 | Vista divisa              | Ctrl+Maiusc+D    |

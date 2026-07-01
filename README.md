@@ -99,6 +99,7 @@ Privacy & Security* and click **Open anyway**.
 | `Ctrl+K` / `Ctrl+Shift+F` | Insert link / formula |
 | `Ctrl++` / `Ctrl+-` / `Ctrl+0` | Zoom in / out / reset |
 | `Ctrl+Shift+M` | View / edit the Markdown source |
+| `Ctrl+Shift+P` | Command palette (find & run any action) |
 | `F11` / `F9` / `F1` | Distraction-free / Outline / Help |
 
 Full list under *Help → Manual* inside the app.
