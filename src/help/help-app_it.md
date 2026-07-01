@@ -174,6 +174,9 @@ spesso…
 ## Tabelle
 
 - **Tabella → Inserisci tabella…** chiede righe e colonne.
+- **Inserisci → Tabella dagli appunti** converte in una tabella i dati TSV/CSV
+  (colonne separate da tabulazioni o virgole) copiati da un foglio di calcolo o da
+  un file CSV.
 - Le azioni del menu **Tabella** (aggiungi/rimuovi riga o colonna, allinea
   colonna) sono attive solo quando il cursore è dentro una tabella.
 - L'allineamento della colonna (sinistra/centro/destra) viene conservato al

@@ -29,6 +29,7 @@
 #include "focuseditor.h"
 #include "texttransform.h"
 #include "richpaste.h"
+#include "csvtable.h"
 #include "doctemplates.h"
 #include "markdownrender.h"
 #include "diagramcontroller.h"
@@ -500,6 +501,18 @@ void MainWindow::createInsertMenu()
 
     QAction *insTable = insertMenu->addAction(tr("Tabla..."));
     connect(insTable, &QAction::triggered, this, [this] { m_stack->insert()->insertTable(); });
+
+    QAction *insTableClip = insertMenu->addAction(tr("Tabla desde el portapapeles"));
+    insTableClip->setToolTip(tr("Convierte los datos TSV/CSV del portapapeles en una tabla"));
+    connect(insTableClip, &QAction::triggered, this, [this] {
+        const mdcsvtable::Delimited data =
+            mdcsvtable::detectDelimited(QApplication::clipboard()->text());
+        if (!data.ok) {
+            showStatusMessage(tr("El portapapeles no contiene datos de tabla (TSV/CSV)."));
+            return;
+        }
+        m_stack->insertMarkdown(mdcsvtable::toMarkdownTable(data.rows));
+    });
 
     QAction *insRule = insertMenu->addAction(tr("Regla horizontal"));
     connect(insRule, &QAction::triggered, this, [this] { m_stack->insert()->insertHorizontalRule(); });

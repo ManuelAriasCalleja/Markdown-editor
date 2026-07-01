@@ -94,8 +94,12 @@ public:
     /// sustitución del cuerpo, porque setMarkdown rehace los formatos de bloque.
     void setLineSpacing(int percent);
 
-    /// Inserta el cuerpo Markdown de un snippet en el editor activo: crudo en la
-    /// vista de fuente (es texto Markdown) y renderizado como fragmento en WYSIWYG.
+    /// Inserta Markdown en el editor activo: crudo en la vista de fuente (es texto
+    /// Markdown) y renderizado como fragmento en WYSIWYG. Base de insertSnippet y de
+    /// «Insertar → Tabla desde portapapeles».
+    void insertMarkdown(const QString &markdown);
+
+    /// Inserta el cuerpo Markdown de un snippet en el editor activo (vía insertMarkdown).
     void insertSnippet(const QString &body);
 
     /// Limpia/normaliza el Markdown del documento (`mdtidy::tidy`): en la vista de

@@ -177,6 +177,9 @@ melding die je vaak herhaalt…
 ## Tabellen
 
 - **Tabel → Tabel invoegen…** vraagt om rijen en kolommen.
+- **Invoegen → Tabel uit klembord** zet TSV/CSV-gegevens (kolommen gescheiden door
+  tabs of komma's) die uit een spreadsheet of een CSV-bestand zijn gekopieerd, om in
+  een tabel.
 - De acties van het menu **Tabel** (rij of kolom toevoegen/verwijderen, kolom
   uitlijnen) zijn alleen actief wanneer de cursor in een tabel staat.
 - De kolomuitlijning (links/midden/rechts) blijft bij het opslaan behouden als

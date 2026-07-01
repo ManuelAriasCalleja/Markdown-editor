@@ -173,6 +173,9 @@ care îl repeți des…
 ## Tabele
 
 - **Tabel → Inserează tabel…** cere rânduri și coloane.
+- **Inserare → Tabel din clipboard** transformă într-un tabel datele TSV/CSV
+  (coloane separate prin tabulatori sau virgule) copiate dintr-o foaie de calcul sau
+  dintr-un fișier CSV.
 - Acțiunile meniului **Tabel** (adaugă/elimină rând sau coloană, aliniază coloana)
   sunt active doar când cursorul este într-un tabel.
 - Alinierea coloanei (stânga/centru/dreapta) este păstrată la salvare ca

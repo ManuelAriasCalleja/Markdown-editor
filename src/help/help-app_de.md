@@ -181,6 +181,9 @@ ein Hinweis, den Sie oft wiederholen…
 ## Tabellen
 
 - **Tabelle → Tabelle einfügen…** fragt nach Zeilen und Spalten.
+- **Einfügen → Tabelle aus Zwischenablage** wandelt aus einer Tabellenkalkulation
+  oder einer CSV-Datei kopierte TSV/CSV-Daten (durch Tabulatoren oder Kommas
+  getrennte Spalten) in eine Tabelle um.
 - Die Aktionen des Menüs **Tabelle** (Zeile/Spalte hinzufügen/entfernen, Spalte
   ausrichten) sind nur aktiv, wenn der Cursor in einer Tabelle steht.
 - Die Spaltenausrichtung (links/zentriert/rechts) bleibt beim Speichern als

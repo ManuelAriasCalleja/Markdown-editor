@@ -168,6 +168,8 @@ za pomocą paru kliknięć: podpis, szablon tabeli, często powtarzane ostrzeże
 ## Tabele
 
 - **Tabela → Wstaw tabelę…** pyta o wiersze i kolumny.
+- **Wstaw → Tabela ze schowka** zamienia w tabelę dane TSV/CSV (kolumny rozdzielone
+  tabulatorami lub przecinkami) skopiowane z arkusza kalkulacyjnego lub pliku CSV.
 - Akcje menu **Tabela** (dodaj/usuń wiersz lub kolumnę, wyrównaj kolumnę) są
   aktywne tylko, gdy kursor jest w tabeli.
 - Wyrównanie kolumny (do lewej/środka/prawej) jest zachowywane przy zapisie jako

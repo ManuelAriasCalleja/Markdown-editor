@@ -170,6 +170,8 @@ repeat…
 ## Tables
 
 - **Table → Insert table…** asks for rows and columns.
+- **Insert → Table from clipboard** turns TSV/CSV data (columns separated by tabs
+  or commas) copied from a spreadsheet or a CSV file into a table.
 - The **Table** menu actions (add/remove row or column, align column) are only
   enabled when the cursor is inside a table.
 - Column alignment (left/center/right) is preserved on save as `:--`/`:-:`/`--:`.

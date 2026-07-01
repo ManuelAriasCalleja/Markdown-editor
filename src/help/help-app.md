@@ -175,6 +175,9 @@ a menudo…
 ## Tablas
 
 - **Tabla → Insertar tabla…** pide filas y columnas.
+- **Insertar → Tabla desde el portapapeles** convierte en una tabla los datos
+  TSV/CSV (columnas separadas por tabuladores o comas) copiados de una hoja de
+  cálculo o un archivo CSV.
 - Las acciones del menú **Tabla** (añadir/quitar fila o columna, alinear
   columna) sólo se activan cuando el cursor está dentro de una tabla.
 - La alineación de columna (izquierda/centro/derecha) se conserva al guardar

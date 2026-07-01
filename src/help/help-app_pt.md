@@ -173,6 +173,9 @@ frequência…
 ## Tabelas
 
 - **Tabela → Inserir tabela…** pede linhas e colunas.
+- **Inserir → Tabela da área de transferência** converte numa tabela os dados
+  TSV/CSV (colunas separadas por tabulações ou vírgulas) copiados de uma folha de
+  cálculo ou de um ficheiro CSV.
 - As ações do menu **Tabela** (adicionar/remover linha ou coluna, alinhar coluna)
   só ficam ativas quando o cursor está dentro de uma tabela.
 - O alinhamento da coluna (esquerda/centro/direita) é mantido ao guardar como

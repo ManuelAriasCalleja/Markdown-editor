@@ -176,6 +176,9 @@ vous répétez souvent…
 ## Tableaux
 
 - **Tableau → Insérer un tableau…** demande lignes et colonnes.
+- **Insertion → Tableau depuis le presse-papiers** convertit en tableau les données
+  TSV/CSV (colonnes séparées par des tabulations ou des virgules) copiées depuis un
+  tableur ou un fichier CSV.
 - Les actions du menu **Tableau** (ajouter/supprimer ligne ou colonne, aligner
   une colonne) ne sont actives que lorsque le curseur est dans un tableau.
 - L'alignement de colonne (gauche/centre/droite) est conservé à l'enregistrement

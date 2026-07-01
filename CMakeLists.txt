@@ -95,6 +95,8 @@ add_library(md-editor-core STATIC
     src/markdown/admonitions.h
     src/markdown/codespanfix.cpp
     src/markdown/codespanfix.h
+    src/markdown/csvtable.cpp
+    src/markdown/csvtable.h
     src/markdown/docstats.cpp
     src/markdown/docstats.h
     src/markdown/doctemplates.cpp
@@ -415,6 +417,7 @@ if(Qt6Test_FOUND)
         tst_outline
         tst_docstats
         tst_nav
+        tst_csvtable
         tst_texttransform
         tst_typewriter
         tst_snippets

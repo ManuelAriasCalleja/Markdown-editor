@@ -395,20 +395,25 @@ void EditorStack::cleanMarkdown()
     }
 }
 
-void EditorStack::insertSnippet(const QString &body)
+void EditorStack::insertMarkdown(const QString &markdown)
 {
-    if (body.isEmpty())
+    if (markdown.isEmpty())
         return;
     QTextEdit *ed = activeEditor();
     if (ed == m_split->sourceEditor()) {
-        ed->insertPlainText(body);  // la fuente es Markdown literal
+        ed->insertPlainText(markdown);  // la fuente es Markdown literal
     } else {
         QTextCursor cursor = ed->textCursor();
         cursor.beginEditBlock();
-        cursor.insertFragment(QTextDocumentFragment::fromMarkdown(body));
+        cursor.insertFragment(QTextDocumentFragment::fromMarkdown(markdown));
         cursor.endEditBlock();
     }
     ed->setFocus();
+}
+
+void EditorStack::insertSnippet(const QString &body)
+{
+    insertMarkdown(body);  // un snippet es Markdown insertado en el editor activo
 }
 
 void EditorStack::centerCursorLine(QTextEdit *ed)
