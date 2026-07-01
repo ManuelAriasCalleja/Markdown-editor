@@ -5,7 +5,7 @@ Todos los cambios relevantes de **md-editor** se documentan en este archivo.
 El formato sigue, a grandes rasgos, [Keep a Changelog](https://keepachangelog.com/es/),
 y el proyecto usa [versionado semántico](https://semver.org/lang/es/).
 
-## [Sin publicar]
+## [2.4.0] — 2026-07-01
 
 ### Añadido
 - **Ir a línea** (*Ver → Ir a línea*, Ctrl+L): lleva el cursor a un número de
