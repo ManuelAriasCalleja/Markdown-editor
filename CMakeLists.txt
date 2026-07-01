@@ -125,6 +125,8 @@ add_library(md-editor-core STATIC
     src/markdown/tablesort.h
     src/markdown/epubimport.cpp
     src/markdown/epubimport.h
+    src/markdown/codeblock.cpp
+    src/markdown/codeblock.h
     src/markdown/htmlimport.cpp
     src/markdown/htmlimport.h
     src/markdown/pandocimport.cpp
@@ -202,6 +204,8 @@ add_library(md-editor-core STATIC
     src/widgets/helpdialog.h
     src/widgets/outlinepanel.cpp
     src/widgets/outlinepanel.h
+    src/widgets/codeblockoverlay.cpp
+    src/widgets/codeblockoverlay.h
     src/widgets/snippetsdialog.cpp
     src/widgets/snippetsdialog.h
     src/widgets/usertemplatesdialog.cpp
@@ -464,6 +468,7 @@ if(Qt6Test_FOUND)
         tst_markhighlight
         tst_supersub
         tst_typography
+        tst_codeblock
         tst_htmlimport
         tst_epubimport
         tst_pandocimport

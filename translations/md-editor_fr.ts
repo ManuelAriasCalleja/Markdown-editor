@@ -2,6 +2,29 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="fr" sourcelanguage="es">
 <context>
+    <name>CodeBlockOverlay</name>
+    <message>
+        <location filename="../src/widgets/codeblockoverlay.cpp" line="20"/>
+        <source>Cambiar el lenguaje del bloque</source>
+        <translation>Changer le langage du bloc</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/codeblockoverlay.cpp" line="24"/>
+        <source>Copiar</source>
+        <translation>Copier</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/codeblockoverlay.cpp" line="25"/>
+        <source>Copiar el código</source>
+        <translation>Copier le code</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/codeblockoverlay.cpp" line="39"/>
+        <source>texto</source>
+        <translation>texte</translation>
+    </message>
+</context>
+<context>
     <name>CommandPaletteDialog</name>
     <message>
         <location filename="../src/widgets/commandpalettedialog.cpp" line="143"/>
@@ -53,22 +76,22 @@
 <context>
     <name>EditorStack</name>
     <message>
-        <location filename="../src/editor/editorstack.cpp" line="56"/>
+        <location filename="../src/editor/editorstack.cpp" line="60"/>
         <source>Editor del documento</source>
         <translation>Éditeur du document</translation>
     </message>
     <message>
-        <location filename="../src/editor/editorstack.cpp" line="59"/>
+        <location filename="../src/editor/editorstack.cpp" line="63"/>
         <source>Editor visual: el formato se aplica sobre el texto renderizado, sin ver la sintaxis Markdown.</source>
         <translation>Éditeur visuel : la mise en forme s&apos;applique sur le texte rendu, sans afficher la syntaxe Markdown.</translation>
     </message>
     <message>
-        <location filename="../src/editor/editorstack.cpp" line="63"/>
+        <location filename="../src/editor/editorstack.cpp" line="67"/>
         <source>Empieza a escribir. Da formato con la barra o tecleando Markdown.</source>
-        <translation>Commencez à écrire. Mettez en forme avec la barre d'outils ou en tapant du Markdown.</translation>
+        <translation>Commencez à écrire. Mettez en forme avec la barre d&apos;outils ou en tapant du Markdown.</translation>
     </message>
     <message>
-        <location filename="../src/editor/editorstack.cpp" line="552"/>
+        <location filename="../src/editor/editorstack.cpp" line="606"/>
         <source>Fórmula: %1</source>
         <translation>Formule : %1</translation>
     </message>
@@ -1214,7 +1237,7 @@
         <translation>Insérer une table des matières</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowinput.cpp" line="425"/>
+        <location filename="../src/app/mainwindowinput.cpp" line="428"/>
         <location filename="../src/editor/insertcontroller.cpp" line="311"/>
         <source>El documento no tiene encabezados.</source>
         <translation>Le document ne contient aucun titre.</translation>
@@ -1595,27 +1618,27 @@
         <translation>Ignorer « %1 »</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowinput.cpp" line="168"/>
+        <location filename="../src/app/mainwindowinput.cpp" line="171"/>
         <source>Clic para marcar o desmarcar la tarea</source>
         <translation>Cliquer pour cocher ou décocher la tâche</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowinput.cpp" line="174"/>
+        <location filename="../src/app/mainwindowinput.cpp" line="177"/>
         <source>Clic para ir a la nota al pie</source>
         <translation>Cliquer pour aller à la note de bas de page</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowinput.cpp" line="451"/>
+        <location filename="../src/app/mainwindowinput.cpp" line="454"/>
         <source>Ir a línea</source>
         <translation>Aller à la ligne</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowinput.cpp" line="451"/>
+        <location filename="../src/app/mainwindowinput.cpp" line="454"/>
         <source>Número de línea (1–%1):</source>
         <translation>Numéro de ligne (1–%1) :</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowinput.cpp" line="536"/>
+        <location filename="../src/app/mainwindowinput.cpp" line="539"/>
         <source>La nota [^%1] no tiene definición</source>
         <translation>La note [^%1] n&apos;a pas de définition</translation>
     </message>
@@ -1770,7 +1793,7 @@ Voulez-vous les récupérer ?</translation>
         <translation>Exporté en HTML : %1</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowinput.cpp" line="181"/>
+        <location filename="../src/app/mainwindowinput.cpp" line="184"/>
         <source>Ctrl+clic para abrir el enlace: %1</source>
         <translation>Ctrl+clic pour ouvrir le lien : %1</translation>
     </message>
@@ -2687,11 +2710,11 @@ Borra este texto y empieza a escribir.
 </source>
         <translation># Bienvenue dans md-editor !
 
-C'est un éditeur Markdown **visuel** : vous écrivez et mettez en forme sur le texte rendu, sans voir le code.
+C&apos;est un éditeur Markdown **visuel** : vous écrivez et mettez en forme sur le texte rendu, sans voir le code.
 
 ## Pour commencer
 
-- Mettez en forme avec la **barre d'outils** ou en tapant du Markdown : `## ` pour un titre, `- ` pour une liste, `**gras**`…
+- Mettez en forme avec la **barre d&apos;outils** ou en tapant du Markdown : `## ` pour un titre, `- ` pour une liste, `**gras**`…
 - Appuyez sur **F1** pour ouvrir le manuel complet.
 - Créez un document avec **Ctrl+N** ou ouvrez-en un avec **Ctrl+O**.
 

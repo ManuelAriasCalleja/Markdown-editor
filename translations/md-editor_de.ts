@@ -2,6 +2,29 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="de" sourcelanguage="es">
 <context>
+    <name>CodeBlockOverlay</name>
+    <message>
+        <location filename="../src/widgets/codeblockoverlay.cpp" line="20"/>
+        <source>Cambiar el lenguaje del bloque</source>
+        <translation>Sprache des Blocks ändern</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/codeblockoverlay.cpp" line="24"/>
+        <source>Copiar</source>
+        <translation>Kopieren</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/codeblockoverlay.cpp" line="25"/>
+        <source>Copiar el código</source>
+        <translation>Code kopieren</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/codeblockoverlay.cpp" line="39"/>
+        <source>texto</source>
+        <translation>Text</translation>
+    </message>
+</context>
+<context>
     <name>CommandPaletteDialog</name>
     <message>
         <location filename="../src/widgets/commandpalettedialog.cpp" line="143"/>
@@ -53,22 +76,22 @@
 <context>
     <name>EditorStack</name>
     <message>
-        <location filename="../src/editor/editorstack.cpp" line="56"/>
+        <location filename="../src/editor/editorstack.cpp" line="60"/>
         <source>Editor del documento</source>
         <translation>Dokument-Editor</translation>
     </message>
     <message>
-        <location filename="../src/editor/editorstack.cpp" line="59"/>
+        <location filename="../src/editor/editorstack.cpp" line="63"/>
         <source>Editor visual: el formato se aplica sobre el texto renderizado, sin ver la sintaxis Markdown.</source>
         <translation>Visueller Editor: Die Formatierung wird auf den gerenderten Text angewendet, ohne die Markdown-Syntax anzuzeigen.</translation>
     </message>
     <message>
-        <location filename="../src/editor/editorstack.cpp" line="63"/>
+        <location filename="../src/editor/editorstack.cpp" line="67"/>
         <source>Empieza a escribir. Da formato con la barra o tecleando Markdown.</source>
         <translation>Fang an zu schreiben. Formatiere mit der Symbolleiste oder durch Tippen von Markdown.</translation>
     </message>
     <message>
-        <location filename="../src/editor/editorstack.cpp" line="552"/>
+        <location filename="../src/editor/editorstack.cpp" line="606"/>
         <source>Fórmula: %1</source>
         <translation>Formel: %1</translation>
     </message>
@@ -1214,7 +1237,7 @@
         <translation>Inhaltsverzeichnis einfügen</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowinput.cpp" line="425"/>
+        <location filename="../src/app/mainwindowinput.cpp" line="428"/>
         <location filename="../src/editor/insertcontroller.cpp" line="311"/>
         <source>El documento no tiene encabezados.</source>
         <translation>Das Dokument enthält keine Überschriften.</translation>
@@ -1595,27 +1618,27 @@
         <translation>„%1“ ignorieren</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowinput.cpp" line="168"/>
+        <location filename="../src/app/mainwindowinput.cpp" line="171"/>
         <source>Clic para marcar o desmarcar la tarea</source>
         <translation>Klicken, um die Aufgabe an- oder abzuhaken</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowinput.cpp" line="174"/>
+        <location filename="../src/app/mainwindowinput.cpp" line="177"/>
         <source>Clic para ir a la nota al pie</source>
         <translation>Klicken, um zur Fußnote zu springen</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowinput.cpp" line="451"/>
+        <location filename="../src/app/mainwindowinput.cpp" line="454"/>
         <source>Ir a línea</source>
         <translation>Zu Zeile springen</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowinput.cpp" line="451"/>
+        <location filename="../src/app/mainwindowinput.cpp" line="454"/>
         <source>Número de línea (1–%1):</source>
         <translation>Zeilennummer (1–%1):</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowinput.cpp" line="536"/>
+        <location filename="../src/app/mainwindowinput.cpp" line="539"/>
         <source>La nota [^%1] no tiene definición</source>
         <translation>Die Fußnote [^%1] hat keine Definition</translation>
     </message>
@@ -1770,7 +1793,7 @@ Möchten Sie sie wiederherstellen?</translation>
         <translation>Als HTML exportiert: %1</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowinput.cpp" line="181"/>
+        <location filename="../src/app/mainwindowinput.cpp" line="184"/>
         <source>Ctrl+clic para abrir el enlace: %1</source>
         <translation>Strg+Klick zum Öffnen des Links: %1</translation>
     </message>

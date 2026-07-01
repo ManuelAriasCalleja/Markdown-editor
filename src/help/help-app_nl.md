@@ -123,6 +123,7 @@ gevolgd door een spatie de regel ter plekke (zonder de markering te laten staan)
   werkbalk; beide gaan correct heen en terug naar Markdown. Met **Opmaak → Taal
   van het blok…** kies je de taal van een codeblok (met de cursor erin) zodat de
   syntaxis ervan wordt gemarkeerd.
+- Als je met de muis **over** een codeblok gaat, verschijnen rechtsboven de **taal** (klik om te wijzigen) en een knop om de code te **kopiëren**.
 - **Inspringen**: **Opmaak → Inspringen vergroten/verkleinen** nestelt lijsten en
   citaten.
 

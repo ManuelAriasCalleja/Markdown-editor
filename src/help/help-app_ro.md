@@ -120,6 +120,7 @@ marcatori; `1.` (sau `1)`) → listă numerotată. Produce același format ca ba
   ambele revin corect la Markdown. Cu **Format → Limbajul blocului…** alegi
   limbajul unui bloc de cod (având cursorul în interior) pentru a-i evidenția
   sintaxa.
+- Când treci cu **mouse-ul** peste un bloc de cod, în colțul din dreapta sus apar **limbajul** (clic pentru a-l schimba) și un buton de **copiere**.
 - **Indentare**: **Format → Mărește/Micșorează indentarea** imbrică listele și
   citatele.
 

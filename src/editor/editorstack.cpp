@@ -3,6 +3,8 @@
 
 #include "editorstack.h"
 
+#include <QApplication>
+#include <QClipboard>
 #include <QColor>
 #include <QMimeData>
 #include <QPalette>
@@ -32,6 +34,8 @@
 #include "markdownrender.h"
 #include "markdowntidy.h"
 #include "mathblocks.h"
+#include "codeblock.h"
+#include "codeblockoverlay.h"
 #include "tableedit.h"
 #include "typography.h"
 #include "typewriter.h"
@@ -63,6 +67,30 @@ EditorStack::EditorStack(FindReplaceBar *findBar, OutlinePanel *outline,
         tr("Empieza a escribir. Da formato con la barra o tecleando Markdown."));
     // Resaltado de sintaxis de los bloques de código.
     m_highlighter = new CodeBlockHighlighter(m_editor->document());
+
+    // Overlay (etiqueta de lenguaje + copiar) que aparece al pasar el ratón por un
+    // bloque de código. Es hijo del viewport; presentación pura, no toca el documento.
+    m_codeOverlay = new CodeBlockOverlay(m_editor->viewport());
+    m_codeOverlay->hide();
+    connect(m_codeOverlay, &CodeBlockOverlay::copyRequested, this, [this] {
+        const mdcodeblock::Group g =
+            mdcodeblock::groupAt(m_editor->document(), m_codeOverlayFirstBlock);
+        if (g.valid)
+            QApplication::clipboard()->setText(
+                mdcodeblock::groupText(m_editor->document(), g));
+    });
+    connect(m_codeOverlay, &CodeBlockOverlay::languageRequested, this, [this] {
+        // Sitúa el cursor en el grupo bajo el ratón y reusa el diálogo de lenguaje.
+        const QTextBlock b = m_editor->document()->findBlockByNumber(m_codeOverlayFirstBlock);
+        if (b.isValid())
+            m_editor->setTextCursor(QTextCursor(b));
+        m_format->setCodeLanguage();
+        hideCodeBlockOverlay();
+    });
+    // Al desplazar o cambiar el texto, el overlay quedaría mal colocado: se oculta y
+    // reaparece en el próximo movimiento del ratón.
+    connect(m_editor->verticalScrollBar(), &QScrollBar::valueChanged, this,
+            [this] { hideCodeBlockOverlay(); });
 
     // Previsualización de diagramas (Mermaid/PlantUML) bajo cada bloque de código.
     m_diagrams = new DiagramController(m_editor, this);
@@ -241,6 +269,32 @@ void EditorStack::styleTables()
     }
     cursor.endEditBlock();
     doc->setModified(wasModified);
+}
+
+void EditorStack::updateCodeBlockOverlay(const QPoint &viewportPos)
+{
+    const QTextCursor cur = m_editor->cursorForPosition(viewportPos);
+    const mdcodeblock::Group g = mdcodeblock::groupAt(m_editor->document(), cur.blockNumber());
+    if (!g.valid) {
+        hideCodeBlockOverlay();
+        return;
+    }
+    m_codeOverlayFirstBlock = g.firstBlock;
+    m_codeOverlay->setLanguage(g.language);
+    // Esquina superior derecha del primer bloque del grupo (cursorRect da coordenadas
+    // de viewport, con scroll y columna centrada ya aplicados).
+    const QTextBlock top = m_editor->document()->findBlockByNumber(g.firstBlock);
+    const QRect r = m_editor->cursorRect(QTextCursor(top));
+    const int x = m_editor->viewport()->width() - m_codeOverlay->width() - 6;
+    m_codeOverlay->move(qMax(0, x), r.top() + 2);
+    m_codeOverlay->show();
+    m_codeOverlay->raise();
+}
+
+void EditorStack::hideCodeBlockOverlay()
+{
+    if (m_codeOverlay)
+        m_codeOverlay->hide();
 }
 
 void EditorStack::applyLineSpacing(QTextEdit *ed)

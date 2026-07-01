@@ -120,6 +120,7 @@ marcadores; `1.` (ou `1)`) → lista numerada. Produz o mesmo formato que a barr
   partir da barra; ambos voltam corretamente a Markdown. Com **Formato →
   Linguagem do bloco…** escolhe a linguagem de um bloco de código (com o cursor lá
   dentro) para que a sua sintaxe seja realçada.
+- Ao **passar o rato** sobre um bloco de código, aparecem no canto superior direito a sua **linguagem** (clique para a alterar) e um botão para **copiar** o código.
 - **Indentação**: **Formato → Aumentar/Diminuir indentação** aninha listas e
   citações.
 

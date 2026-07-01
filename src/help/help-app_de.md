@@ -128,6 +128,7 @@ Leerzeichen → Überschrift H1…H6; `>` → Zitat; `-`, `*` oder `+` → Aufz�
   Symbolleiste angewendet; beide werden korrekt nach Markdown zurückgewandelt.
   Mit **Format → Sprache des Blocks…** wählen Sie die Sprache eines Codeblocks
   (mit dem Cursor darin), damit dessen Syntax hervorgehoben wird.
+- Wenn du mit dem Mauszeiger über einen Codeblock fährst, erscheinen oben rechts seine **Sprache** (zum Ändern anklicken) und eine Schaltfläche zum **Kopieren**.
 - **Einrückung**: **Format → Einzug vergrößern/verkleinern** verschachtelt Listen
   und Zitate.
 

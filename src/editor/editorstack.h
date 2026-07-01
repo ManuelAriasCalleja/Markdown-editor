@@ -15,6 +15,7 @@
 class QByteArray;
 class FocusEditor;
 class CodeBlockHighlighter;
+class CodeBlockOverlay;
 class DocumentIo;
 class ThemeController;
 class SpellController;
@@ -82,6 +83,13 @@ public:
     /// Aplica un borde visible a todas las tablas del documento (no se serializa a
     /// Markdown). Lo dispara también la carga y la inserción de tablas.
     void styleTables();
+
+    /// Muestra el overlay del bloque de código (etiqueta de lenguaje + copiar) si
+    /// `viewportPos` cae sobre un fence; si no, lo oculta. Lo llama el filtro de
+    /// eventos de la ventana al mover el ratón sobre el editor visual.
+    void updateCodeBlockOverlay(const QPoint &viewportPos);
+    /// Oculta el overlay del bloque de código.
+    void hideCodeBlockOverlay();
     /// Reemplaza el cuerpo Markdown del documento WYSIWYG dejando el modelo al día
     /// (protege/renderiza fórmulas, da borde a tablas, recolorea enlaces y
     /// reconstruye el índice). Único punto por el que pasa toda sustitución del
@@ -202,6 +210,8 @@ private:
 
     FocusEditor *m_editor = nullptr;
     CodeBlockHighlighter *m_highlighter = nullptr;
+    CodeBlockOverlay *m_codeOverlay = nullptr;  // etiqueta lenguaje + copiar (al pasar el ratón)
+    int m_codeOverlayFirstBlock = -1;           // primer bloque del fence bajo el ratón
     DocumentIo *m_documentIo = nullptr;
     ThemeController *m_theme = nullptr;
     SpellController *m_spell = nullptr;

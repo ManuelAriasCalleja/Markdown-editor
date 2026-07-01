@@ -457,10 +457,13 @@ paleta/formatos, como el resto del proyecto) y con el round-trip a salvo.
   en una tabla (añadir/quitar fila-columna, alinear, mover columna, borrar), reusando
   `TableController`; y **Tab/Shift+Tab** entre celdas (Tab en la última añade fila).
   Posicionado a mano sobre el viewport, sin stylesheet. Coste medio.
-- ⬜ **Bloque de código: etiqueta de lenguaje + botón copiar** — mostrar el lenguaje en el
-  fence, un desplegable para cambiarlo (rehace el resaltado vía `LanguageRegistry`) y un
-  botón *copiar* al pasar el ratón. *Impl.:* overlay/acciones sobre el grupo de bloques de
-  código. Coste bajo-medio, alto retorno percibido.
+- ✅ **Bloque de código: etiqueta de lenguaje + botón copiar** — *Hecho:* overlay
+  `CodeBlockOverlay` (widget hijo del viewport) que aparece al pasar el ratón por un fence
+  (detección en el `eventFilter` de la ventana → `EditorStack::updateCodeBlockOverlay`,
+  posicionado con `cursorRect`): etiqueta de lenguaje (clic → reusa el diálogo
+  `FormatController::setCodeLanguage`) + botón copiar (copia el texto del grupo). Módulo
+  puro `mdcodeblock` (`groupAt`/`groupText` sobre el grupo de bloques `BlockCodeFence`
+  contiguos) con `tst_codeblock`. Presentación pura, no toca el documento.
 
 #### Toques menores de acabado
 

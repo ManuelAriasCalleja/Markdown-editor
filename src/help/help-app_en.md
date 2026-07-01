@@ -117,6 +117,7 @@ numbered list. Produces the same format as the toolbar.
   from the toolbar; both round-trip to Markdown correctly. With **Format → Block
   language…** you choose the language of a code block (with the cursor inside it)
   so its syntax gets highlighted.
+- When you **hover** over a code block, its **language** (click to change it) and a **copy** button appear in the top-right corner.
 - **Indentation**: **Format → Increase/Decrease indent** nests lists and quotes.
 
 ## Transforming text and the clipboard

@@ -162,6 +162,9 @@ bool MainWindow::handleViewportEvent(QEvent *event)
     else if (event->type() == QEvent::MouseMove) {
         auto *me = static_cast<QMouseEvent *>(event);
         if (me->buttons() == Qt::NoButton) {
+            // Overlay del bloque de código (etiqueta de lenguaje + copiar): se muestra
+            // u oculta según el ratón esté o no sobre un fence. No consume el evento.
+            m_stack->updateCodeBlockOverlay(me->position().toPoint());
             // Sobre la casilla de una tarea: cursor de mano y pista de clic.
             if (mdtask::isCheckboxAt(m_stack->editor(), me->position().toPoint())) {
                 m_stack->editor()->viewport()->setCursor(Qt::PointingHandCursor);

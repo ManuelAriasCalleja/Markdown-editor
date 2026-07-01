@@ -2,6 +2,29 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="pt" sourcelanguage="es">
 <context>
+    <name>CodeBlockOverlay</name>
+    <message>
+        <location filename="../src/widgets/codeblockoverlay.cpp" line="20"/>
+        <source>Cambiar el lenguaje del bloque</source>
+        <translation>Alterar a linguagem do bloco</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/codeblockoverlay.cpp" line="24"/>
+        <source>Copiar</source>
+        <translation>Copiar</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/codeblockoverlay.cpp" line="25"/>
+        <source>Copiar el código</source>
+        <translation>Copiar o código</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/codeblockoverlay.cpp" line="39"/>
+        <source>texto</source>
+        <translation>texto</translation>
+    </message>
+</context>
+<context>
     <name>CommandPaletteDialog</name>
     <message>
         <location filename="../src/widgets/commandpalettedialog.cpp" line="143"/>
@@ -53,22 +76,22 @@
 <context>
     <name>EditorStack</name>
     <message>
-        <location filename="../src/editor/editorstack.cpp" line="56"/>
+        <location filename="../src/editor/editorstack.cpp" line="60"/>
         <source>Editor del documento</source>
         <translation>Editor do documento</translation>
     </message>
     <message>
-        <location filename="../src/editor/editorstack.cpp" line="59"/>
+        <location filename="../src/editor/editorstack.cpp" line="63"/>
         <source>Editor visual: el formato se aplica sobre el texto renderizado, sin ver la sintaxis Markdown.</source>
         <translation>Editor visual: a formatação é aplicada sobre o texto renderizado, sem mostrar a sintaxe Markdown.</translation>
     </message>
     <message>
-        <location filename="../src/editor/editorstack.cpp" line="63"/>
+        <location filename="../src/editor/editorstack.cpp" line="67"/>
         <source>Empieza a escribir. Da formato con la barra o tecleando Markdown.</source>
         <translation>Comece a escrever. Formate com a barra de ferramentas ou escrevendo Markdown.</translation>
     </message>
     <message>
-        <location filename="../src/editor/editorstack.cpp" line="552"/>
+        <location filename="../src/editor/editorstack.cpp" line="606"/>
         <source>Fórmula: %1</source>
         <translation>Fórmula: %1</translation>
     </message>
@@ -1214,7 +1237,7 @@
         <translation>Inserir índice</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowinput.cpp" line="425"/>
+        <location filename="../src/app/mainwindowinput.cpp" line="428"/>
         <location filename="../src/editor/insertcontroller.cpp" line="311"/>
         <source>El documento no tiene encabezados.</source>
         <translation>O documento não tem títulos.</translation>
@@ -1595,27 +1618,27 @@
         <translation>Ignorar «%1»</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowinput.cpp" line="168"/>
+        <location filename="../src/app/mainwindowinput.cpp" line="171"/>
         <source>Clic para marcar o desmarcar la tarea</source>
         <translation>Clique para marcar ou desmarcar a tarefa</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowinput.cpp" line="174"/>
+        <location filename="../src/app/mainwindowinput.cpp" line="177"/>
         <source>Clic para ir a la nota al pie</source>
         <translation>Clique para ir para a nota de rodapé</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowinput.cpp" line="451"/>
+        <location filename="../src/app/mainwindowinput.cpp" line="454"/>
         <source>Ir a línea</source>
         <translation>Ir para a linha</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowinput.cpp" line="451"/>
+        <location filename="../src/app/mainwindowinput.cpp" line="454"/>
         <source>Número de línea (1–%1):</source>
         <translation>Número da linha (1–%1):</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowinput.cpp" line="536"/>
+        <location filename="../src/app/mainwindowinput.cpp" line="539"/>
         <source>La nota [^%1] no tiene definición</source>
         <translation>A nota [^%1] não tem definição</translation>
     </message>
@@ -1770,7 +1793,7 @@ Queres recuperá-los?</translation>
         <translation>Exportado para HTML: %1</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowinput.cpp" line="181"/>
+        <location filename="../src/app/mainwindowinput.cpp" line="184"/>
         <source>Ctrl+clic para abrir el enlace: %1</source>
         <translation>Ctrl+clique para abrir o link: %1</translation>
     </message>

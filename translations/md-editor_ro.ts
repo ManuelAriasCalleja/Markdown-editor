@@ -2,6 +2,29 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="ro" sourcelanguage="es">
 <context>
+    <name>CodeBlockOverlay</name>
+    <message>
+        <location filename="../src/widgets/codeblockoverlay.cpp" line="20"/>
+        <source>Cambiar el lenguaje del bloque</source>
+        <translation>Schimbă limbajul blocului</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/codeblockoverlay.cpp" line="24"/>
+        <source>Copiar</source>
+        <translation>Copiază</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/codeblockoverlay.cpp" line="25"/>
+        <source>Copiar el código</source>
+        <translation>Copiază codul</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/codeblockoverlay.cpp" line="39"/>
+        <source>texto</source>
+        <translation>text</translation>
+    </message>
+</context>
+<context>
     <name>CommandPaletteDialog</name>
     <message>
         <location filename="../src/widgets/commandpalettedialog.cpp" line="143"/>
@@ -53,22 +76,22 @@
 <context>
     <name>EditorStack</name>
     <message>
-        <location filename="../src/editor/editorstack.cpp" line="56"/>
+        <location filename="../src/editor/editorstack.cpp" line="60"/>
         <source>Editor del documento</source>
         <translation>Editor de document</translation>
     </message>
     <message>
-        <location filename="../src/editor/editorstack.cpp" line="59"/>
+        <location filename="../src/editor/editorstack.cpp" line="63"/>
         <source>Editor visual: el formato se aplica sobre el texto renderizado, sin ver la sintaxis Markdown.</source>
         <translation>Editor vizual: formatarea se aplică pe textul randat, fără a afișa sintaxa Markdown.</translation>
     </message>
     <message>
-        <location filename="../src/editor/editorstack.cpp" line="63"/>
+        <location filename="../src/editor/editorstack.cpp" line="67"/>
         <source>Empieza a escribir. Da formato con la barra o tecleando Markdown.</source>
         <translation>Începe să scrii. Formatează cu bara de instrumente sau tastând Markdown.</translation>
     </message>
     <message>
-        <location filename="../src/editor/editorstack.cpp" line="552"/>
+        <location filename="../src/editor/editorstack.cpp" line="606"/>
         <source>Fórmula: %1</source>
         <translation>Formulă: %1</translation>
     </message>
@@ -1216,7 +1239,7 @@
         <translation>Inserează cuprins</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowinput.cpp" line="425"/>
+        <location filename="../src/app/mainwindowinput.cpp" line="428"/>
         <location filename="../src/editor/insertcontroller.cpp" line="311"/>
         <source>El documento no tiene encabezados.</source>
         <translation>Documentul nu conține titluri.</translation>
@@ -1598,27 +1621,27 @@
         <translation>Ignoră „%1”</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowinput.cpp" line="168"/>
+        <location filename="../src/app/mainwindowinput.cpp" line="171"/>
         <source>Clic para marcar o desmarcar la tarea</source>
         <translation>Clic pentru a bifa sau debifa sarcina</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowinput.cpp" line="174"/>
+        <location filename="../src/app/mainwindowinput.cpp" line="177"/>
         <source>Clic para ir a la nota al pie</source>
         <translation>Clic pentru a merge la nota de subsol</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowinput.cpp" line="451"/>
+        <location filename="../src/app/mainwindowinput.cpp" line="454"/>
         <source>Ir a línea</source>
         <translation>Salt la linie</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowinput.cpp" line="451"/>
+        <location filename="../src/app/mainwindowinput.cpp" line="454"/>
         <source>Número de línea (1–%1):</source>
         <translation>Numărul liniei (1–%1):</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowinput.cpp" line="536"/>
+        <location filename="../src/app/mainwindowinput.cpp" line="539"/>
         <source>La nota [^%1] no tiene definición</source>
         <translation>Nota [^%1] nu are definiție</translation>
     </message>
@@ -1773,7 +1796,7 @@ Vrei să le recuperezi?</translation>
         <translation>Exportat în HTML: %1</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowinput.cpp" line="181"/>
+        <location filename="../src/app/mainwindowinput.cpp" line="184"/>
         <source>Ctrl+clic para abrir el enlace: %1</source>
         <translation>Ctrl+clic pentru a deschide legătura: %1</translation>
     </message>

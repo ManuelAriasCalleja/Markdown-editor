@@ -123,6 +123,7 @@ d'un espace transforme la ligne sur place (sans laisser le marqueur) : `#` …
   depuis la barre ; les deux font correctement l'aller-retour vers Markdown. Avec
   **Format → Langage du bloc…** vous choisissez le langage d'un bloc de code (le
   curseur étant à l'intérieur) pour que sa syntaxe soit colorée.
+- Lorsque vous **survolez** un bloc de code, son **langage** (cliquez pour le changer) et un bouton **copier** apparaissent en haut à droite.
 - **Indentation** : **Format → Augmenter/Diminuer l'indentation** imbrique listes
   et citations.
 

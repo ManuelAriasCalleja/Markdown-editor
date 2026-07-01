@@ -8,6 +8,9 @@ y el proyecto usa [versionado semántico](https://semver.org/lang/es/).
 ## [Sin publicar]
 
 ### Añadido
+- **Etiqueta de lenguaje y botón «Copiar» en los bloques de código**: al pasar el
+  ratón por un bloque de código aparece, arriba a la derecha, su lenguaje (clic para
+  cambiarlo) y un botón para copiar el código.
 - **Documento de bienvenida** en el primer arranque (una sola vez), con una guía breve
   para empezar; se carga sin marcar como modificado. Y un **texto de ayuda sutil**
   (*placeholder*) en el documento vacío.

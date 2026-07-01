@@ -121,6 +121,7 @@ puntato; `1.` (o `1)`) → elenco numerato. Produce lo stesso formato della barr
   applicano dalla barra; entrambi tornano correttamente a Markdown. Con
   **Formato → Linguaggio del blocco…** scegli il linguaggio di un blocco di
   codice (con il cursore al suo interno) per evidenziarne la sintassi.
+- Passando il **mouse** su un blocco di codice, in alto a destra compaiono il suo **linguaggio** (clic per cambiarlo) e un pulsante per **copiare** il codice.
 - **Rientro**: **Formato → Aumenta/Riduci rientro** annida elenchi e citazioni.
 
 ## Trasformare il testo e gli appunti

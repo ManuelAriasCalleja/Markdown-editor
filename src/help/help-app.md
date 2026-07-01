@@ -121,6 +121,7 @@ viñetas; `1.` (o `1)`) → lista numerada. Produce el mismo formato que la barr
   desde la barra; ambos round-trip-ean a Markdown correctamente. Con **Formato →
   Lenguaje del bloque…** eliges el lenguaje de un bloque de código (estando el
   cursor dentro) para que se le resalte la sintaxis.
+- Al **pasar el ratón** por un bloque de código, arriba a la derecha aparecen su **lenguaje** (clic para cambiarlo) y un botón para **copiar** el código.
 - **Sangría**: **Formato → Aumentar/Disminuir sangría** anida listas y citas.
 
 ## Transformar texto y portapapeles

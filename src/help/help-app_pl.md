@@ -117,6 +117,7 @@ spacja → nagłówek H1…H6; `>` → cytat; `-`, `*` lub `+` → lista punktow
   poprawnie wracają do Markdown. Za pomocą **Format → Język bloku…** wybierasz
   język bloku kodu (gdy kursor jest w jego wnętrzu), aby jego składnia została
   podświetlona.
+- Po **najechaniu** kursorem na blok kodu, w prawym górnym rogu pojawiają się jego **język** (kliknij, aby zmienić) i przycisk **kopiowania** kodu.
 - **Wcięcie**: **Format → Zwiększ/Zmniejsz wcięcie** zagnieżdża listy i cytaty.
 
 ## Przekształcanie tekstu i schowek
