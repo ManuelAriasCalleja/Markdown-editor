@@ -531,24 +531,6 @@ vez el coste de traducción y el problema de jurisdicción.
   de laboratorio**. Derecho/Sanidad siguen sin plantillas de fábrica (vía plantillas de
   usuario, Fase B). El catálogo pasa de 10 a 15 (`tst_doctemplates`).
 
-### Fuente configurable del documento y la exportación (2026-07-01)
-
-Elegir la **familia tipográfica global** del documento (la del editor en pantalla
-y/o la de la salida a PDF/HTML/ODF/EPUB), como preferencia de **presentación**.
-
-**Contexto.** Markdown no expresa la tipografía: solo estructura y semántica. No hay
-forma de poner «distintas fuentes» por fragmento salvo HTML incrustado —desactivado
-a propósito aquí (`MarkdownNoHTML`), no haría round-trip— o CSS de exportación. Lo
-único compatible es una fuente **global**, que no se serializa al `.md`. Por eso NO
-se contempla un selector de fuente por texto (se perdería al guardar).
-
-- ⬜ **Fuente global.** Un ajuste (en *Ver* y/o en el diálogo de exportación) para la
-  familia de cuerpo y, aparte, la de código (monoespaciada). Persistir en
-  `AppSettings`; aplicar a `document()->defaultFont()` (pantalla) y, en exportación,
-  a `cloneForExport` (que hoy ya normaliza el **tamaño** a 11 pt; añadiría la
-  **familia**). Riesgo bajo, es presentación pura. Encaja con el arreglo reciente del
-  tamaño de letra en impresión/exportación (el zoom de pantalla ya no se cuela).
-
 ### Importar desde otros formatos (2026-07-01)
 
 Hoy no hay importación real: *Abrir* acepta `.md`/`.markdown`/`.txt` pero **todo se
@@ -821,7 +803,8 @@ vivo.*
 > (firma/notarización de binarios), que elimina la fricción de
 > Gatekeeper/SmartScreen en la instalación, seguida de la #2 (packaging nativo).
 > En funcionalidad, la **«Nueva auditoría (2026-06-30)» está completada**: sus 18
-> mejoras salieron en 2.4.0 (primera tanda) y 2.5.0 (el resto). Lo siguiente, ya fuera
-> de ese plan, serían las **reglas de entrada** y la **pasada de tipografía** de
-> «Pulido de UX», la ventana de Preferencias, y las notas nuevas (fuente global,
-> importar formatos).
+> mejoras salieron en 2.4.0 (primera tanda) y 2.5.0 (el resto). Ya fuera de ese plan,
+> están hechas (acumuladas para la próxima versión) las **reglas de entrada** y la
+> **pasada de tipografía** de «Pulido de UX», las **plantillas por profesión** y la
+> **importación de HTML/EPUB**. Lo siguiente sería la **ventana de Preferencias** y
+> **Pandoc opcional** para importar más formatos. (La *fuente global* se descartó.)
