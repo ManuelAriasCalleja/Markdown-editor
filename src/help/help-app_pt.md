@@ -81,6 +81,9 @@ menu **Formato**:
   **Rasurado**.
 - **Código em linha** para fragmentos `monoespaçados`.
 - **Ligação**: adiciona `[texto](url)` sobre a seleção.
+- **Realçar** (Ctrl+Shift+H): envolve a seleção em `==marca==`; o texto aparece com
+  fundo de realce. Como `==` não é sintaxe Markdown padrão, é guardado como texto
+  literal.
 
 Os botões da barra refletem a formatação ativa sob o cursor.
 
@@ -378,6 +381,7 @@ recuperar o que estava a escrever.
 | Imprimir                  | Ctrl+P           |
 | Anular / Refazer          | Ctrl+Z / Ctrl+Y  |
 | Negrito / Itálico         | Ctrl+B / Ctrl+I  |
+| Realçar (==marca==)       | Ctrl+Shift+H     |
 | Sublinhado                | Ctrl+U           |
 | Colar como texto simples  | Ctrl+Shift+V     |
 | Colar como Markdown       | Ctrl+Alt+V       |

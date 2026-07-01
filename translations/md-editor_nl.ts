@@ -63,7 +63,7 @@
         <translation>Visuele editor: opmaak wordt toegepast op de gerenderde tekst, zonder de Markdown-syntaxis te tonen.</translation>
     </message>
     <message>
-        <location filename="../src/editor/editorstack.cpp" line="509"/>
+        <location filename="../src/editor/editorstack.cpp" line="544"/>
         <source>Fórmula: %1</source>
         <translation>Formule: %1</translation>
     </message>
@@ -560,62 +560,72 @@
         <translation>&amp;Opmaak</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="463"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="456"/>
+        <source>Resaltar</source>
+        <translation>Markeren</translation>
+    </message>
+    <message>
+        <location filename="../src/app/mainwindowmenus.cpp" line="459"/>
+        <source>Resaltar el texto seleccionado (==marca==)</source>
+        <translation>De geselecteerde tekst markeren (==markering==)</translation>
+    </message>
+    <message>
+        <location filename="../src/app/mainwindowmenus.cpp" line="472"/>
         <source>Promover encabezado</source>
         <translation>Kop promoveren</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="466"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="475"/>
         <source>Sube el encabezado un nivel (hacia H1)</source>
         <translation>Verhoogt de kop één niveau (richting H1)</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="471"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="480"/>
         <source>Degradar encabezado</source>
         <translation>Kop degraderen</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="474"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="483"/>
         <source>Baja el encabezado un nivel (hacia H6)</source>
         <translation>Verlaagt de kop één niveau (richting H6)</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="484"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="493"/>
         <source>Aumentar sangría</source>
         <translation>Inspringing vergroten</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="489"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="498"/>
         <source>Disminuir sangría</source>
         <translation>Inspringing verkleinen</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="498"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="507"/>
         <source>Lenguaje del bloque...</source>
         <translation>Bloktaal...</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="499"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="508"/>
         <source>Fija el lenguaje del bloque de código (resaltado)</source>
         <translation>Stelt de taal van het codeblok in (markering)</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="515"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="524"/>
         <source>&amp;Insertar</source>
         <translation>&amp;Invoegen</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="517"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="526"/>
         <source>Enlace...</source>
         <translation>Koppeling...</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="520"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="529"/>
         <source>Imagen...</source>
         <translation>Afbeelding...</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="523"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="532"/>
         <location filename="../src/editor/insertcontroller.cpp" line="183"/>
         <location filename="../src/editor/insertcontroller.cpp" line="200"/>
         <location filename="../src/editor/insertcontroller.cpp" line="242"/>
@@ -623,402 +633,402 @@
         <translation>Afbeelding plakken</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="524"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="533"/>
         <source>Guarda la imagen del portapapeles y la inserta</source>
         <translation>Slaat de afbeelding van het klembord op en voegt deze in</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="527"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="536"/>
         <source>Tabla...</source>
         <translation>Tabel...</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="530"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="539"/>
         <source>Tabla desde el portapapeles</source>
         <translation>Tabel uit klembord</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="531"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="540"/>
         <source>Convierte los datos TSV/CSV del portapapeles en una tabla</source>
         <translation>Zet TSV/CSV-gegevens van het klembord om in een tabel</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="536"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="545"/>
         <source>El portapapeles no contiene datos de tabla (TSV/CSV).</source>
         <translation>Het klembord bevat geen tabelgegevens (TSV/CSV).</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="542"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="551"/>
         <source>Regla horizontal</source>
         <translation>Horizontale lijn</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="545"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="554"/>
         <source>Índice (TOC)</source>
         <translation>Inhoudsopgave (TOC)</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="546"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="555"/>
         <source>Inserta un índice con los encabezados del documento</source>
         <translation>Voegt een inhoudsopgave met de koppen van het document in</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="549"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="558"/>
         <source>Fórmula...</source>
         <translation>Formule...</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="554"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="563"/>
         <source>Nota al pie</source>
         <translation>Voetnoot</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="557"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="566"/>
         <source>Inserta una referencia [^n] y su definición al final del documento</source>
         <translation>Voegt een verwijzing [^n] en de definitie ervan toe aan het einde van het document</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="563"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="572"/>
         <source>Admonición</source>
         <translation>Aandachtsblok</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="564"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="573"/>
         <source>Inserta un bloque destacado (nota, aviso, etc.)</source>
         <translation>Voeg een aandachtsblok in (notitie, waarschuwing, enz.)</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="566"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="575"/>
         <source>Nota</source>
         <translation>Notitie</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="567"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="576"/>
         <source>Consejo</source>
         <translation>Tip</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="568"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="577"/>
         <source>Importante</source>
         <translation>Belangrijk</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="569"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="578"/>
         <source>Advertencia</source>
         <translation>Waarschuwing</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="570"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="579"/>
         <source>Precaución</source>
         <translation>Let op</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="579"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="588"/>
         <source>Símbolos especiales...</source>
         <translation>Speciale tekens...</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="580"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="589"/>
         <source>Inserta símbolos no habituales, por categorías</source>
         <translation>Ongebruikelijke tekens invoegen, per categorie</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="583"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="592"/>
         <source>Fecha</source>
         <translation>Datum</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="584"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="593"/>
         <source>Inserta la fecha actual en formato local</source>
         <translation>Voeg de huidige datum in lokale notatie in</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="587"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="596"/>
         <source>Fecha y hora</source>
         <translation>Datum en tijd</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="588"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="597"/>
         <source>Inserta la fecha y la hora actuales en formato local</source>
         <translation>Voeg de huidige datum en tijd in lokale notatie in</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="594"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="603"/>
         <source>Snippet</source>
         <translation>Snippet</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="616"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="625"/>
         <source>(sin snippets)</source>
         <translation>(geen snippets)</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="620"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="629"/>
         <source>Gestionar snippets...</source>
         <translation>Snippets beheren...</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="635"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="644"/>
         <source>&amp;Tabla</source>
         <translation>&amp;Tabel</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="637"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="646"/>
         <source>Insertar fila encima</source>
         <translation>Rij hierboven invoegen</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="639"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="648"/>
         <source>Insertar fila debajo</source>
         <translation>Rij hieronder invoegen</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="641"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="650"/>
         <source>Insertar columna a la izquierda</source>
         <translation>Kolom links invoegen</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="643"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="652"/>
         <source>Insertar columna a la derecha</source>
         <translation>Kolom rechts invoegen</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="647"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="656"/>
         <source>Eliminar fila</source>
         <translation>Rij verwijderen</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="649"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="658"/>
         <source>Eliminar columna</source>
         <translation>Kolom verwijderen</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="653"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="662"/>
         <source>Alinear columna</source>
         <translation>Kolom uitlijnen</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="654"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="663"/>
         <source>Izquierda</source>
         <translation>Links</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="656"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="665"/>
         <source>Centrar</source>
         <translation>Centreren</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="658"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="667"/>
         <source>Derecha</source>
         <translation>Rechts</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="662"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="671"/>
         <source>Ordenar filas por columna</source>
         <translation>Rijen sorteren op kolom</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="663"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="672"/>
         <source>Ascendente</source>
         <translation>Oplopend</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="665"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="674"/>
         <source>Descendente</source>
         <translation>Aflopend</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="676"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="685"/>
         <source>&amp;Ver</source>
         <translation>Bee&amp;ld</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="684"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="693"/>
         <source>Vista dividida</source>
         <translation>Gesplitste weergave</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="690"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="699"/>
         <source>Editar WYSIWYG y código fuente a la vez, lado a lado</source>
         <translation>WYSIWYG en broncode tegelijk bewerken, naast elkaar</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="694"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="703"/>
         <source>Sin distracciones</source>
         <translation>Afleidingsvrije modus</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="698"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="707"/>
         <source>Pantalla completa, sin barras, con el texto centrado (ESC o F11 para salir)</source>
         <translation>Volledig scherm, zonder balken, met de tekst gecentreerd (ESC of F11 om af te sluiten)</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="718"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="727"/>
         <source>Resaltar la línea actual</source>
         <translation>Huidige regel markeren</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="721"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="730"/>
         <source>Marca con un fondo sutil la línea del cursor</source>
         <translation>Markeert de regel van de cursor met een subtiele achtergrond</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="733"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="742"/>
         <source>Interlineado</source>
         <translation>Regelafstand</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="737"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="746"/>
         <source>Sencillo</source>
         <translation>Enkel</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="738"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="747"/>
         <source>1,5 líneas</source>
         <translation>1,5 regel</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="739"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="748"/>
         <source>Doble</source>
         <translation>Dubbel</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="759"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="768"/>
         <source>Esquema</source>
         <translation>Overzicht</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="764"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="773"/>
         <source>Ir a encabezado...</source>
         <translation>Ga naar kop...</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="767"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="776"/>
         <source>Salta a un encabezado del documento</source>
         <translation>Spring naar een kop in het document</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="770"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="779"/>
         <source>Ir a línea...</source>
         <translation>Ga naar regel...</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="773"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="782"/>
         <source>Salta a un número de línea</source>
         <translation>Spring naar een regelnummer</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="776"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="785"/>
         <source>Paleta de comandos...</source>
         <translation>Opdrachtenpalet...</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="779"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="788"/>
         <source>Busca y ejecuta cualquier acción por su nombre</source>
         <translation>Zoek en voer een willekeurige actie uit op naam</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="785"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="794"/>
         <source>Aumentar letra</source>
         <translation>Inzoomen</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="790"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="799"/>
         <source>Reducir letra</source>
         <translation>Uitzoomen</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="794"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="803"/>
         <source>Tamaño normal</source>
         <translation>Normale grootte</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="800"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="809"/>
         <source>Estadísticas del documento...</source>
         <translation>Documentstatistieken...</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="803"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="812"/>
         <source>Mostrar contador de palabras</source>
         <translation>Woordteller tonen</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="813"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="822"/>
         <source>Mostrar línea y columna</source>
         <translation>Regel en kolom tonen</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="823"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="832"/>
         <source>Corrección ortográfica</source>
         <translation>Spellingcontrole</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="826"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="835"/>
         <source>Subraya las palabras mal escritas según el idioma del documento</source>
         <translation>Onderstreept verkeerd gespelde woorden in de taal van het document</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="833"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="842"/>
         <source>Idioma de corrección</source>
         <translation>Taal van spellingcontrole</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="837"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="846"/>
         <source>Automático (según el documento)</source>
         <translation>Automatisch (op basis van document)</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="858"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="867"/>
         <source>Tema</source>
         <translation>Thema</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="867"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="876"/>
         <source>Claro</source>
         <translation>Licht</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="868"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="877"/>
         <source>Oscuro</source>
         <translation>Donker</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="869"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="878"/>
         <source>Alto contraste</source>
         <translation>Hoog contrast</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="899"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="908"/>
         <source>Seguir el sistema</source>
         <translation>Systeem volgen</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="903"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="912"/>
         <source>Usa el tema claro u oscuro según la configuración del sistema operativo</source>
         <translation>Gebruikt het lichte of donkere thema volgens de instelling van het besturingssysteem</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="917"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="926"/>
         <source>Luz cálida nocturna</source>
         <translation>Warm nachtlicht</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="921"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="930"/>
         <source>Tiñe el fondo del editor de tono ámbar según la hora, más cálido de noche</source>
         <translation>Kleurt de achtergrond van de editor amberkleurig op basis van het tijdstip, &apos;s nachts warmer</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="959"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="968"/>
         <source>A&amp;yuda</source>
         <translation>&amp;Help</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="960"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="969"/>
         <source>&amp;Manual</source>
         <translation>&amp;Handleiding</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="964"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="973"/>
         <source>&amp;Acerca de</source>
         <translation>&amp;Over</translation>
     </message>
@@ -1038,7 +1048,7 @@
         <translation>WYSIWYG-Markdown-editor in Qt6 + C++17.</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="970"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="979"/>
         <source>Formato</source>
         <translation>Opmaak</translation>
     </message>
@@ -1048,17 +1058,17 @@
         <translation>Selectie: </translation>
     </message>
     <message>
-        <location filename="../src/editor/formatcontroller.cpp" line="196"/>
+        <location filename="../src/editor/formatcontroller.cpp" line="220"/>
         <source>Coloca el cursor dentro de un bloque de código</source>
         <translation>Plaats de cursor in een codeblok</translation>
     </message>
     <message>
-        <location filename="../src/editor/formatcontroller.cpp" line="214"/>
+        <location filename="../src/editor/formatcontroller.cpp" line="238"/>
         <source>Lenguaje del bloque</source>
         <translation>Bloktaal</translation>
     </message>
     <message>
-        <location filename="../src/editor/formatcontroller.cpp" line="215"/>
+        <location filename="../src/editor/formatcontroller.cpp" line="239"/>
         <source>Lenguaje (vacío = ninguno):</source>
         <translation>Taal (leeg = geen):</translation>
     </message>
@@ -1119,7 +1129,7 @@
         <translation>Inhoudsopgave invoegen</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowinput.cpp" line="343"/>
+        <location filename="../src/app/mainwindowinput.cpp" line="368"/>
         <location filename="../src/editor/insertcontroller.cpp" line="311"/>
         <source>El documento no tiene encabezados.</source>
         <translation>Het document bevat geen koppen.</translation>
@@ -1443,17 +1453,17 @@
         <translation>Klik om naar de voetnoot te gaan</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowinput.cpp" line="369"/>
+        <location filename="../src/app/mainwindowinput.cpp" line="394"/>
         <source>Ir a línea</source>
         <translation>Ga naar regel</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowinput.cpp" line="369"/>
+        <location filename="../src/app/mainwindowinput.cpp" line="394"/>
         <source>Número de línea (1–%1):</source>
         <translation>Regelnummer (1–%1):</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowinput.cpp" line="454"/>
+        <location filename="../src/app/mainwindowinput.cpp" line="479"/>
         <source>La nota [^%1] no tiene definición</source>
         <translation>Voetnoot [^%1] heeft geen definitie</translation>
     </message>
@@ -1715,7 +1725,7 @@ Wil je het herstellen?</translation>
         <translation>%1[*] — md-editor</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="931"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="940"/>
         <source>Automático (sistema)</source>
         <translation>Automatisch (systeem)</translation>
     </message>
@@ -1736,17 +1746,17 @@ Wil je het herstellen?</translation>
         <translation>Takenlijst</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="702"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="711"/>
         <source>Modo foco</source>
         <translation>Focusmodus</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="709"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="718"/>
         <source>Centra la línea del cursor y atenúa todo salvo el párrafo actual</source>
         <translation>Centreert de cursorregel en dimt alles behalve de huidige alinea</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="943"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="952"/>
         <source>Idioma</source>
         <translation>Taal</translation>
     </message>
@@ -1772,7 +1782,7 @@ Wil je het herstellen?</translation>
         <translation>%1 — front matter behouden</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="678"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="687"/>
         <source>Código fuente Markdown</source>
         <translation>Markdown-broncode</translation>
     </message>

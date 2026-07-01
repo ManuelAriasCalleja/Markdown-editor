@@ -83,6 +83,9 @@ le menu **Format** :
 - **Gras** (Ctrl+B), **Italique** (Ctrl+I), **Souligné** (Ctrl+U), **Barré**.
 - **Code en ligne** pour les fragments en `chasse fixe`.
 - **Lien** : ajoute `[texte](url)` sur la sélection.
+- **Surligner** (Ctrl+Maj+H) : entoure la sélection de `==marque==` ; le texte
+  s'affiche avec un fond de surlignage. Comme `==` n'est pas une syntaxe Markdown
+  standard, c'est enregistré comme texte littéral.
 
 Les boutons de la barre reflètent la mise en forme active sous le curseur.
 
@@ -389,6 +392,7 @@ elle propose à la réouverture de récupérer ce que vous étiez en train d'éc
 | Imprimer                  | Ctrl+P           |
 | Annuler / Rétablir        | Ctrl+Z / Ctrl+Y  |
 | Gras / Italique           | Ctrl+B / Ctrl+I  |
+| Surligner (==marque==)    | Ctrl+Maj+H       |
 | Souligné                  | Ctrl+U           |
 | Coller comme texte brut   | Ctrl+Maj+V       |
 | Coller comme Markdown     | Ctrl+Alt+V       |

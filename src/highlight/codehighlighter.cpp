@@ -3,6 +3,7 @@
 
 #include "codehighlighter.h"
 
+#include "mark.h"
 #include "mathblocks.h"
 #include "spellchecker.h"
 #include "spellscan.h"
@@ -30,7 +31,7 @@ void CodeBlockHighlighter::setSyntaxColors(const mdtheme::SyntaxColors &colors)
     // solo la primera activación tras un cambio de tema real cuesta un rehighlight.
     if (m_keywordColor == colors.keyword && m_stringColor == colors.string
         && m_commentColor == colors.comment && m_numberColor == colors.number
-        && m_mathColor == colors.math)
+        && m_mathColor == colors.math && m_markColor == colors.mark)
         return;
 
     m_keywordColor = colors.keyword;
@@ -38,6 +39,7 @@ void CodeBlockHighlighter::setSyntaxColors(const mdtheme::SyntaxColors &colors)
     m_commentColor = colors.comment;
     m_numberColor = colors.number;
     m_mathColor = colors.math;
+    m_markColor = colors.mark;
     m_cache.clear();  // los colores de las reglas cambian con el tema
     rehighlight();
 }
@@ -91,6 +93,7 @@ void CodeBlockHighlighter::highlightBlock(const QString &text)
     if (!bf.hasProperty(QTextFormat::BlockCodeFence)) {
         setCurrentBlockState(-1);
         highlightMathFragments();
+        highlightMarks();
         highlightSpelling();
         return;
     }
@@ -131,6 +134,35 @@ void CodeBlockHighlighter::highlightMathFragments()
         // setFormat solo merge-a el foreground: la cursiva, vertical-align y
         // demás del fragmento se conservan.
         setFormat(frag.position() - basePos, frag.length(), fmt);
+    }
+}
+
+void CodeBlockHighlighter::highlightMarks()
+{
+    if (!m_markColor.isValid())
+        return;
+    const QTextBlock block = currentBlock();
+    const int basePos = block.position();
+    QTextCharFormat mark;
+    mark.setBackground(m_markColor);
+    // Igual que la ortografía: recorremos fragmentos para saltar lo que no es prosa
+    // (código en línea, fórmulas, enlaces). El fondo es de la capa de presentación:
+    // no toca el Markdown (`==` viaja como texto literal).
+    for (auto it = block.begin(); it != block.end(); ++it) {
+        const QTextFragment frag = it.fragment();
+        if (!frag.isValid())
+            continue;
+        const QTextCharFormat cf = frag.charFormat();
+        if (cf.fontFixedPitch() || cf.boolProperty(mdmath::IsMathProperty) || cf.isAnchor())
+            continue;
+        const QString text = frag.text();
+        const int offset = frag.position() - basePos;
+        for (const mdmark::Span &s : mdmark::spansIn(text)) {
+            // Solo el texto interior (entre los `==`), no los delimitadores.
+            const int innerLen = s.length - 4;
+            if (innerLen > 0)
+                setFormat(offset + s.start + 2, innerLen, mark);
+        }
     }
 }
 

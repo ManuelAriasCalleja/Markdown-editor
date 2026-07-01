@@ -82,6 +82,9 @@ Selecteer een fragment en pas opmaak toe met de werkbalk of het menu **Opmaak**:
   **Doorgehaald**.
 - **Code in regel** voor `monospace`-fragmenten.
 - **Koppeling**: voegt `[tekst](url)` over de selectie toe.
+- **Markeren** (Ctrl+Shift+H): omsluit de selectie met `==markering==`; de tekst
+  krijgt een markeerachtergrond. Omdat `==` geen standaard-Markdown is, wordt het als
+  letterlijke tekst opgeslagen.
 
 De werkbalkknoppen weerspiegelen de actieve opmaak onder de cursor.
 
@@ -390,6 +393,7 @@ openen aan om te herstellen wat je aan het schrijven was.
 | Afdrukken                 | Ctrl+P           |
 | Ongedaan maken / Opnieuw  | Ctrl+Z / Ctrl+Y  |
 | Vet / Cursief             | Ctrl+B / Ctrl+I  |
+| Markeren (==markering==)   | Ctrl+Shift+H     |
 | Onderstreept              | Ctrl+U           |
 | Plakken als platte tekst  | Ctrl+Shift+V     |
 | Plakken als Markdown      | Ctrl+Alt+V       |

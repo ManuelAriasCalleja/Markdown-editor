@@ -196,8 +196,19 @@ void ThemeController::applyThemeToTarget()
 {
     recolorLinks(m_editor);  // no-op si no hay objetivo
     // Reajusta los colores del resaltado de sintaxis al tema.
-    if (m_highlighter)
-        m_highlighter->setSyntaxColors(mdtheme::specFor(m_current).syntax);
+    if (m_highlighter) {
+        const mdtheme::ThemeSpec &spec = mdtheme::specFor(m_current);
+        mdtheme::SyntaxColors sc = spec.syntax;
+        // Fondo del resaltado `==texto==`: mezcla del fondo del tema con un amarillo
+        // marcador (40 %). En temas claros da un amarillo pálido; en oscuros, un
+        // ámbar apagado. Así resalta pero el texto sigue legible en ambos.
+        const QColor marker(255, 214, 0);
+        const auto mix = [](int a, int b) { return int(a * 0.6 + b * 0.4); };
+        sc.mark = QColor(mix(spec.base.red(), marker.red()),
+                         mix(spec.base.green(), marker.green()),
+                         mix(spec.base.blue(), marker.blue()));
+        m_highlighter->setSyntaxColors(sc);
+    }
 }
 
 void ThemeController::retarget(QTextEdit *editor, CodeBlockHighlighter *highlighter)

@@ -25,6 +25,9 @@ y el proyecto usa [versionado semántico](https://semver.org/lang/es/).
 - **Comandos de línea en la vista de código**: mover la línea arriba/abajo
   (Alt+↑/↓), duplicarla (Ctrl+D), borrarla (Ctrl+Shift+K) y unirla con la siguiente
   (Ctrl+J).
+- **Resaltar texto** (*Formato → Resaltar*, Ctrl+Shift+H): marca el texto
+  seleccionado con `==marca==`, mostrado con fondo de resaltado. Se guarda como
+  texto literal (round-trip seguro).
 
 ### Cambiado
 - **Buscar** resalta ahora **todas** las coincidencias en el documento y muestra

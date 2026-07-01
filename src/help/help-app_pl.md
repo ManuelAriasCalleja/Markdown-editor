@@ -78,6 +78,9 @@ Zaznacz fragment i nadaj formatowanie paskiem narzędzi lub menu **Format**:
   **Przekreślenie**.
 - **Kod w wierszu** dla fragmentów o `stałej szerokości`.
 - **Odnośnik**: dodaje `[tekst](url)` na zaznaczeniu.
+- **Wyróżnij** (Ctrl+Shift+H): otacza zaznaczenie znacznikami `==znacznik==`; tekst
+  pojawia się z tłem wyróżnienia. Ponieważ `==` nie jest standardową składnią
+  Markdown, zapisuje się jako zwykły tekst.
 
 Przyciski paska odzwierciedlają formatowanie aktywne pod kursorem.
 
@@ -373,6 +376,7 @@ proponuje odzyskanie tego, co pisałeś.
 | Drukuj                    | Ctrl+P           |
 | Cofnij / Ponów            | Ctrl+Z / Ctrl+Y  |
 | Pogrubienie / Kursywa     | Ctrl+B / Ctrl+I  |
+| Wyróżnij (==znacznik==)    | Ctrl+Shift+H     |
 | Podkreślenie              | Ctrl+U           |
 | Wklej jako zwykły tekst   | Ctrl+Shift+V     |
 | Wklej jako Markdown       | Ctrl+Alt+V       |

@@ -78,6 +78,9 @@ Select a fragment and apply formatting with the toolbar or the **Format** menu:
   **Strikethrough**.
 - **Inline code** for `monospaced` fragments.
 - **Link**: adds `[text](url)` over the selection.
+- **Highlight** (Ctrl+Shift+H): wraps the selection in `==mark==`; the text is shown
+  with a highlight background. Since `==` isn't standard Markdown syntax, it's saved
+  as literal text.
 
 The toolbar buttons reflect the active formatting under the cursor.
 
@@ -372,6 +375,7 @@ were writing.
 | Print                     | Ctrl+P           |
 | Undo / Redo               | Ctrl+Z / Ctrl+Y  |
 | Bold / Italic             | Ctrl+B / Ctrl+I  |
+| Highlight (==mark==)      | Ctrl+Shift+H     |
 | Underline                 | Ctrl+U           |
 | Paste as plain text       | Ctrl+Shift+V     |
 | Paste as Markdown         | Ctrl+Alt+V       |

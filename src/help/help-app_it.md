@@ -81,6 +81,9 @@ il menu **Formato**:
   **Barrato**.
 - **Codice in linea** per frammenti a `spaziatura fissa`.
 - **Collegamento**: aggiunge `[testo](url)` sulla selezione.
+- **Evidenzia** (Ctrl+Maiusc+H): racchiude la selezione tra `==marca==`; il testo
+  appare con uno sfondo di evidenziazione. Poiché `==` non è sintassi Markdown
+  standard, viene salvato come testo letterale.
 
 I pulsanti della barra riflettono la formattazione attiva sotto il cursore.
 
@@ -385,6 +388,7 @@ propone di recuperare ciò che stavi scrivendo.
 | Stampa                    | Ctrl+P           |
 | Annulla / Ripeti          | Ctrl+Z / Ctrl+Y  |
 | Grassetto / Corsivo       | Ctrl+B / Ctrl+I  |
+| Evidenzia (==marca==)     | Ctrl+Maiusc+H    |
 | Sottolineato              | Ctrl+U           |
 | Incolla come testo semplice | Ctrl+Maiusc+V  |
 | Incolla come Markdown     | Ctrl+Alt+V       |

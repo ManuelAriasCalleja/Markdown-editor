@@ -105,6 +105,30 @@ void FormatController::demoteHeading()
     shiftHeading(1);  // hacia H6 (más '#')
 }
 
+void FormatController::insertHighlight()
+{
+    QTextCursor cursor = m_editor->textCursor();
+    if (cursor.hasSelection()) {
+        // Inserta `==` alrededor de la selección SIN reemplazarla (así conserva su
+        // formato). De atrás hacia delante para no invalidar la posición inicial.
+        const int start = cursor.selectionStart();
+        const int end = cursor.selectionEnd();
+        QTextCursor c(m_editor->document());
+        c.beginEditBlock();
+        c.setPosition(end);
+        c.insertText(QStringLiteral("=="));
+        c.setPosition(start);
+        c.insertText(QStringLiteral("=="));
+        c.endEditBlock();
+    } else {
+        // Sin selección: inserta `====` y deja el cursor en el centro para escribir.
+        cursor.insertText(QStringLiteral("===="));
+        cursor.movePosition(QTextCursor::PreviousCharacter, QTextCursor::MoveAnchor, 2);
+        m_editor->setTextCursor(cursor);
+    }
+    m_editor->setFocus();
+}
+
 void FormatController::applyList(QTextListFormat::Style style)
 {
     QTextCursor cursor = m_editor->textCursor();

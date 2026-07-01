@@ -63,12 +63,16 @@ private:
     // Subraya las palabras mal escritas del bloque (solo en prosa), saltando
     // fragmentos de código en línea, fórmulas y enlaces.
     void highlightSpelling();
+    // Pinta el fondo de resaltado sobre las marcas `==texto==` del bloque (solo en
+    // prosa), saltando código en línea, fórmulas y enlaces.
+    void highlightMarks();
 
     QColor m_keywordColor;
     QColor m_stringColor;
     QColor m_commentColor;
     QColor m_numberColor;
     QColor m_mathColor;
+    QColor m_markColor;  // fondo del resaltado `==texto==` (inválido = desactivado)
     QColor m_misspellColor{0xd0, 0x30, 0x30};  // rojo del subrayado ortográfico
 
     SpellChecker *m_spell = nullptr;

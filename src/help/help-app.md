@@ -82,6 +82,9 @@ menú **Formato**:
   **Tachado**.
 - **Código en línea** para fragmentos `monoespaciados`.
 - **Enlace**: añade `[texto](url)` sobre la selección.
+- **Resaltar** (Ctrl+Shift+H): envuelve la selección en `==marca==`; el texto se
+  muestra con fondo de resaltado. Como `==` no es sintaxis Markdown estándar, se
+  guarda como texto literal.
 
 Los botones de la barra reflejan el formato activo bajo el cursor.
 
@@ -386,6 +389,7 @@ ofrece recuperar lo que estabas escribiendo.
 | Imprimir                  | Ctrl+P           |
 | Deshacer / Rehacer        | Ctrl+Z / Ctrl+Y  |
 | Negrita / Cursiva         | Ctrl+B / Ctrl+I  |
+| Resaltar (==marca==)      | Ctrl+Shift+H     |
 | Subrayado                 | Ctrl+U           |
 | Pegar como texto plano    | Ctrl+Shift+V     |
 | Pegar como Markdown       | Ctrl+Alt+V       |

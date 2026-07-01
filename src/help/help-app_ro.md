@@ -80,6 +80,9 @@ Selectează un fragment și aplică formatarea din bara de instrumente sau din m
 - **Aldin** (Ctrl+B), **Cursiv** (Ctrl+I), **Subliniat** (Ctrl+U), **Tăiat**.
 - **Cod în linie** pentru fragmente `monospațiate`.
 - **Link**: adaugă `[text](url)` peste selecție.
+- **Evidențiază** (Ctrl+Shift+H): încadrează selecția în `==marcaj==`; textul apare
+  cu fundal de evidențiere. Deoarece `==` nu este sintaxă Markdown standard, se
+  salvează ca text literal.
 
 Butoanele din bară reflectă formatarea activă sub cursor.
 
@@ -385,6 +388,7 @@ ce scriai.
 | Tipărește                 | Ctrl+P           |
 | Anulează / Refă           | Ctrl+Z / Ctrl+Y  |
 | Aldin / Cursiv            | Ctrl+B / Ctrl+I  |
+| Evidențiază (==marcaj==)  | Ctrl+Shift+H     |
 | Subliniat                 | Ctrl+U           |
 | Lipește ca text simplu    | Ctrl+Shift+V     |
 | Lipește ca Markdown       | Ctrl+Alt+V       |

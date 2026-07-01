@@ -452,6 +452,15 @@ void MainWindow::createFormatActions()
     formatMenu->addAction(m_strikeAction);
     formatMenu->addAction(m_codeAction);
     formatMenu->addAction(m_linkAction);
+
+    QAction *highlightAction = formatMenu->addAction(tr("Resaltar"));
+    highlightAction->setShortcut(QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_H));
+    highlightAction->setToolTip(withShortcut(
+        tr("Resaltar el texto seleccionado (==marca==)"), highlightAction->shortcut()));
+    connect(highlightAction, &QAction::triggered, this,
+            [this] { m_stack->format()->insertHighlight(); });
+    m_wysiwygActions.append(highlightAction);
+
     formatMenu->addSeparator();
     formatMenu->addAction(m_h1Action);
     formatMenu->addAction(m_h2Action);

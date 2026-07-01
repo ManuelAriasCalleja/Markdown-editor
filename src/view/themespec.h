@@ -42,6 +42,7 @@ struct SyntaxColors {
     QColor comment;
     QColor number;
     QColor math;     // foreground de los fragmentos con IsMathProperty
+    QColor mark;     // fondo del resaltado `==texto==` (lo deriva ThemeController del tema)
 };
 
 /// \brief Descripción completa de un tema (paleta, resaltado y metadatos).

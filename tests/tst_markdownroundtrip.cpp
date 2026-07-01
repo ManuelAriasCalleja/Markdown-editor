@@ -20,6 +20,7 @@ private slots:
     void blockquote();
     void codeBlock();
     void inlineCode();
+    void highlightMark();
 
 private:
     static QString roundtrip(const QString &markdown)
@@ -88,6 +89,14 @@ void TestMarkdownRoundtrip::inlineCode()
 {
     check(QStringLiteral("usa `printf` aqui"),
           QStringLiteral("printf"), QStringLiteral("`"));
+}
+
+void TestMarkdownRoundtrip::highlightMark()
+{
+    // `==` no es delimitador en md4c: la marca viaja como texto literal, con sus
+    // delimitadores intactos (el resaltado es solo presentación, aparte).
+    check(QStringLiteral("un ==texto resaltado== aqui"),
+          QStringLiteral("texto resaltado"), QStringLiteral("=="));
 }
 
 QTEST_MAIN(TestMarkdownRoundtrip)

@@ -75,6 +75,7 @@ public slots:
     void applyHeading(int level);                  // fija/quita H`level` (toggle)
     void promoteHeading();                          // sube el encabezado del cursor un nivel (hacia H1)
     void demoteHeading();                           // baja el encabezado del cursor un nivel (hacia H6)
+    void insertHighlight();                         // envuelve la selección en `==marca==`
     void applyList(QTextListFormat::Style style);   // fija/quita lista del estilo (toggle)
     void toggleBlockquote();
     void toggleCodeBlock();
