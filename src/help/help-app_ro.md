@@ -197,6 +197,8 @@ care îl repeți des…
 
 ## Tabele
 
+- Când cursorul este **într-un tabel**, deasupra apare o **bară flotantă** cu butoane pentru a insera/șterge rânduri și coloane și a alinia coloana.
+- **Tab** trece la celula următoare, iar **Shift+Tab** la cea anterioară; **Tab** în ultima celulă adaugă un rând.
 - **Tabel → Inserează tabel…** cere rânduri și coloane.
 - **Inserare → Tabel din clipboard** transformă într-un tabel datele TSV/CSV
   (coloane separate prin tabulatori sau virgule) copiate dintr-o foaie de calcul sau

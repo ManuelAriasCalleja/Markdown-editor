@@ -206,6 +206,8 @@ ein Hinweis, den Sie oft wiederholen…
 
 ## Tabellen
 
+- Wenn der Cursor **in einer Tabelle** steht, erscheint darüber eine **schwebende Leiste** mit Schaltflächen zum Einfügen/Löschen von Zeilen und Spalten und zum Ausrichten der Spalte.
+- **Tab** springt zur nächsten Zelle und **Umschalt+Tab** zur vorherigen; **Tab** in der letzten Zelle fügt eine Zeile hinzu.
 - **Tabelle → Tabelle einfügen…** fragt nach Zeilen und Spalten.
 - **Einfügen → Tabelle aus Zwischenablage** wandelt aus einer Tabellenkalkulation
   oder einer CSV-Datei kopierte TSV/CSV-Daten (durch Tabulatoren oder Kommas

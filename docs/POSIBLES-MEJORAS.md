@@ -452,11 +452,14 @@ paleta/formatos, como el resto del proyecto) y con el round-trip a salvo.
 
 #### Affordances en el bloque
 
-- ⬜ **Barra flotante de tabla + navegación por celdas** — punto fuerte reconocido de
-  Typora. *Impl.:* un `QWidget` superpuesto al viewport que aparece cuando el cursor está
-  en una tabla (añadir/quitar fila-columna, alinear, mover columna, borrar), reusando
-  `TableController`; y **Tab/Shift+Tab** entre celdas (Tab en la última añade fila).
-  Posicionado a mano sobre el viewport, sin stylesheet. Coste medio.
+- ✅ **Barra flotante de tabla + navegación por celdas** — *Hecho:* widget `TableToolbar`
+  (hijo del viewport, iconos monocromos nuevos en `formaticons::makeTableIcon`) que
+  `EditorStack::updateTableToolbar` muestra y posiciona sobre la tabla del cursor
+  (`cursorPositionChanged`); sus botones (insertar/eliminar fila y columna, alinear
+  izq./centro/dcha.) enrutan a `TableController`. Y **Tab/Mayús+Tab** entre celdas con
+  selección del contenido (`EditorStack::navigateTableCell`, enganchado en
+  `handleEditorKeyPress`); Tab en la última celda añade fila. Presentación pura, sin
+  stylesheet. *Nota:* «mover columna» y «borrar tabla» no están (no los expone la API).
 - ✅ **Bloque de código: etiqueta de lenguaje + botón copiar** — *Hecho:* overlay
   `CodeBlockOverlay` (widget hijo del viewport) que aparece al pasar el ratón por un fence
   (detección en el `eventFilter` de la ventana → `EditorStack::updateCodeBlockOverlay`,

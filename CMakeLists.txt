@@ -208,6 +208,8 @@ add_library(md-editor-core STATIC
     src/widgets/codeblockoverlay.h
     src/widgets/snippetsdialog.cpp
     src/widgets/snippetsdialog.h
+    src/widgets/tabletoolbar.cpp
+    src/widgets/tabletoolbar.h
     src/widgets/usertemplatesdialog.cpp
     src/widgets/usertemplatesdialog.h
     src/widgets/symbolpicker.cpp

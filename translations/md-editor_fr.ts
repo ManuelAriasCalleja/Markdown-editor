@@ -76,22 +76,22 @@
 <context>
     <name>EditorStack</name>
     <message>
-        <location filename="../src/editor/editorstack.cpp" line="60"/>
+        <location filename="../src/editor/editorstack.cpp" line="62"/>
         <source>Editor del documento</source>
         <translation>Éditeur du document</translation>
     </message>
     <message>
-        <location filename="../src/editor/editorstack.cpp" line="63"/>
+        <location filename="../src/editor/editorstack.cpp" line="65"/>
         <source>Editor visual: el formato se aplica sobre el texto renderizado, sin ver la sintaxis Markdown.</source>
         <translation>Éditeur visuel : la mise en forme s&apos;applique sur le texte rendu, sans afficher la syntaxe Markdown.</translation>
     </message>
     <message>
-        <location filename="../src/editor/editorstack.cpp" line="67"/>
+        <location filename="../src/editor/editorstack.cpp" line="69"/>
         <source>Empieza a escribir. Da formato con la barra o tecleando Markdown.</source>
         <translation>Commencez à écrire. Mettez en forme avec la barre d&apos;outils ou en tapant du Markdown.</translation>
     </message>
     <message>
-        <location filename="../src/editor/editorstack.cpp" line="606"/>
+        <location filename="../src/editor/editorstack.cpp" line="683"/>
         <source>Fórmula: %1</source>
         <translation>Formule : %1</translation>
     </message>
@@ -1237,7 +1237,7 @@
         <translation>Insérer une table des matières</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowinput.cpp" line="428"/>
+        <location filename="../src/app/mainwindowinput.cpp" line="435"/>
         <location filename="../src/editor/insertcontroller.cpp" line="311"/>
         <source>El documento no tiene encabezados.</source>
         <translation>Le document ne contient aucun titre.</translation>
@@ -1628,17 +1628,17 @@
         <translation>Cliquer pour aller à la note de bas de page</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowinput.cpp" line="454"/>
+        <location filename="../src/app/mainwindowinput.cpp" line="461"/>
         <source>Ir a línea</source>
         <translation>Aller à la ligne</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowinput.cpp" line="454"/>
+        <location filename="../src/app/mainwindowinput.cpp" line="461"/>
         <source>Número de línea (1–%1):</source>
         <translation>Numéro de ligne (1–%1) :</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowinput.cpp" line="539"/>
+        <location filename="../src/app/mainwindowinput.cpp" line="546"/>
         <source>La nota [^%1] no tiene definición</source>
         <translation>La note [^%1] n&apos;a pas de définition</translation>
     </message>
@@ -2889,6 +2889,44 @@ Supprimez ce texte et commencez à écrire.
         <location filename="../src/markdown/symbolcatalog.cpp" line="53"/>
         <source>Fracciones y superíndices</source>
         <translation>Fractions et exposants/indices</translation>
+    </message>
+</context>
+<context>
+    <name>TableToolbar</name>
+    <message>
+        <location filename="../src/widgets/tabletoolbar.cpp" line="22"/>
+        <source>Insertar fila debajo</source>
+        <translation>Insérer une ligne en dessous</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/tabletoolbar.cpp" line="23"/>
+        <source>Eliminar fila</source>
+        <translation>Supprimer la ligne</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/tabletoolbar.cpp" line="24"/>
+        <source>Insertar columna a la derecha</source>
+        <translation>Insérer une colonne à droite</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/tabletoolbar.cpp" line="25"/>
+        <source>Eliminar columna</source>
+        <translation>Supprimer la colonne</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/tabletoolbar.cpp" line="26"/>
+        <source>Alinear la columna a la izquierda</source>
+        <translation>Aligner la colonne à gauche</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/tabletoolbar.cpp" line="27"/>
+        <source>Centrar la columna</source>
+        <translation>Centrer la colonne</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/tabletoolbar.cpp" line="28"/>
+        <source>Alinear la columna a la derecha</source>
+        <translation>Aligner la colonne à droite</translation>
     </message>
 </context>
 <context>

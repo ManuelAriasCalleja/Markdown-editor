@@ -241,6 +241,13 @@ bool MainWindow::handleEditorKeyPress(QKeyEvent *ke)
         m_stack->formula()->guardPasteAgainstMath();
     if (m_stack->formula()->handleMathKeyPress(ke))
         return true;
+    // Tab / Mayús+Tab dentro de una tabla: salta a la celda siguiente / anterior
+    // (en la última celda, Tab añade una fila), como en una hoja de cálculo. Fuera
+    // de una tabla devuelve false y Tab sigue su curso normal.
+    if ((ke->key() == Qt::Key_Tab || ke->key() == Qt::Key_Backtab)
+        && !(ke->modifiers() & (Qt::ControlModifier | Qt::AltModifier | Qt::MetaModifier))
+        && m_stack->navigateTableCell(ke->key() == Qt::Key_Tab))
+        return true;
     // Shortcodes `:nombre:`: al teclear el ':' de cierre, si delante hay un
     // `:nombre:` conocido se sustituye por su símbolo. Insertamos el ':' y
     // expandimos nosotros (solo en el editor WYSIWYG, solo al teclear).

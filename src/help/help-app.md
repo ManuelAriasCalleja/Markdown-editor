@@ -197,6 +197,8 @@ a menudo…
 
 ## Tablas
 
+- Con el cursor **dentro de una tabla** aparece una **barra flotante** sobre ella con botones para insertar/eliminar fila y columna y alinear la columna.
+- **Tab** salta a la celda siguiente y **Mayús+Tab** a la anterior; **Tab** en la última celda añade una fila.
 - **Tabla → Insertar tabla…** pide filas y columnas.
 - **Insertar → Tabla desde el portapapeles** convierte en una tabla los datos
   TSV/CSV (columnas separadas por tabuladores o comas) copiados de una hoja de

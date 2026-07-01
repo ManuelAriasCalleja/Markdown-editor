@@ -197,6 +197,8 @@ spesso…
 
 ## Tabelle
 
+- Con il cursore **dentro una tabella** compare sopra una **barra flottante** con pulsanti per inserire/eliminare righe e colonne e allineare la colonna.
+- **Tab** passa alla cella successiva e **Maiusc+Tab** alla precedente; **Tab** nell'ultima cella aggiunge una riga.
 - **Tabella → Inserisci tabella…** chiede righe e colonne.
 - **Inserisci → Tabella dagli appunti** converte in una tabella i dati TSV/CSV
   (colonne separate da tabulazioni o virgole) copiati da un foglio di calcolo o da

@@ -191,6 +191,8 @@ za pomocą paru kliknięć: podpis, szablon tabeli, często powtarzane ostrzeże
 
 ## Tabele
 
+- Gdy kursor jest **wewnątrz tabeli**, nad nią pojawia się **pływający pasek** z przyciskami do wstawiania/usuwania wierszy i kolumn oraz wyrównywania kolumny.
+- **Tab** przechodzi do następnej komórki, a **Shift+Tab** do poprzedniej; **Tab** w ostatniej komórce dodaje wiersz.
 - **Tabela → Wstaw tabelę…** pyta o wiersze i kolumny.
 - **Wstaw → Tabela ze schowka** zamienia w tabelę dane TSV/CSV (kolumny rozdzielone
   tabulatorami lub przecinkami) skopiowane z arkusza kalkulacyjnego lub pliku CSV.

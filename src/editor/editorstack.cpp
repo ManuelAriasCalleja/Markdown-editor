@@ -16,6 +16,7 @@
 #include <QTextDocumentFragment>
 #include <QTextEdit>
 #include <QTextFragment>
+#include <QTextTable>
 #include <QTextFrame>
 #include <QTextTable>
 #include <QVBoxLayout>
@@ -36,6 +37,7 @@
 #include "mathblocks.h"
 #include "codeblock.h"
 #include "codeblockoverlay.h"
+#include "tabletoolbar.h"
 #include "tableedit.h"
 #include "typography.h"
 #include "typewriter.h"
@@ -91,6 +93,26 @@ EditorStack::EditorStack(FindReplaceBar *findBar, OutlinePanel *outline,
     // reaparece en el próximo movimiento del ratón.
     connect(m_editor->verticalScrollBar(), &QScrollBar::valueChanged, this,
             [this] { hideCodeBlockOverlay(); });
+
+    // Barra flotante de tabla: aparece sobre la tabla en la que está el cursor.
+    m_tableBar = new TableToolbar(m_editor->viewport());
+    m_tableBar->hide();
+    connect(m_tableBar, &TableToolbar::operationRequested, this, [this](TableToolbar::Op op) {
+        switch (op) {
+        case TableToolbar::RowInsert:   m_table->insertRow(true); break;
+        case TableToolbar::RowDelete:   m_table->deleteRow(); break;
+        case TableToolbar::ColInsert:   m_table->insertColumn(true); break;
+        case TableToolbar::ColDelete:   m_table->deleteColumn(); break;
+        case TableToolbar::AlignLeft:   m_table->alignColumn(Qt::AlignLeft); break;
+        case TableToolbar::AlignCenter: m_table->alignColumn(Qt::AlignHCenter); break;
+        case TableToolbar::AlignRight:  m_table->alignColumn(Qt::AlignRight); break;
+        }
+        updateTableToolbar();  // el cambio altera la geometría: reposiciona o esconde
+    });
+    connect(m_editor, &QTextEdit::cursorPositionChanged, this,
+            &EditorStack::updateTableToolbar);
+    connect(m_editor->verticalScrollBar(), &QScrollBar::valueChanged, this,
+            [this] { m_tableBar->hide(); });
 
     // Previsualización de diagramas (Mermaid/PlantUML) bajo cada bloque de código.
     m_diagrams = new DiagramController(m_editor, this);
@@ -295,6 +317,61 @@ void EditorStack::hideCodeBlockOverlay()
 {
     if (m_codeOverlay)
         m_codeOverlay->hide();
+}
+
+void EditorStack::updateTableToolbar()
+{
+    QTextTable *table = m_editor->textCursor().currentTable();
+    if (!table) {
+        m_tableBar->hide();
+        return;
+    }
+    // Repinta los iconos solo al aparecer (no en cada movimiento del cursor); siguen
+    // al tema (color del texto) y al zoom (tamaño acorde a la fuente del editor).
+    if (!m_tableBar->isVisible()) {
+        const QColor ink = m_editor->viewport()->palette().color(QPalette::Text);
+        const int px = qMax(12, int(m_editor->fontMetrics().height() * 0.85));
+        m_tableBar->applyIcons(ink, px, m_editor->devicePixelRatioF());
+    }
+    // Sobre el borde superior de la tabla, pegada a su izquierda; si no cabe arriba
+    // (tabla al principio), justo debajo del borde.
+    const QRect r = m_editor->cursorRect(table->firstCursorPosition());
+    const int y = r.top() - m_tableBar->height() - 2;
+    m_tableBar->move(qMax(0, r.left() - 4), y < 0 ? r.top() + 2 : y);
+    m_tableBar->show();
+    m_tableBar->raise();
+}
+
+bool EditorStack::navigateTableCell(bool forward)
+{
+    QTextCursor cursor = m_editor->textCursor();
+    QTextTable *table = cursor.currentTable();
+    if (!table)
+        return false;
+
+    // Selecciona el contenido de una celda (para poder sobrescribirlo al teclear).
+    const auto selectCell = [this](const QTextTableCell &cell) {
+        QTextCursor c = cell.firstCursorPosition();
+        c.setPosition(cell.lastCursorPosition().position(), QTextCursor::KeepAnchor);
+        m_editor->setTextCursor(c);
+    };
+
+    const QTextTableCell cell = table->cellAt(cursor);
+    const int cols = table->columns();
+    int index = cell.row() * cols + cell.column();
+    if (forward) {
+        if (++index >= table->rows() * cols) {
+            // Última celda: añade una fila y baja a su primera celda.
+            const int newRow = table->rows();
+            table->appendRows(1);
+            selectCell(table->cellAt(newRow, 0));
+            return true;
+        }
+    } else if (--index < 0) {
+        return true;  // primera celda: consumido, sin salir de la tabla
+    }
+    selectCell(table->cellAt(index / cols, index % cols));
+    return true;
 }
 
 void EditorStack::applyLineSpacing(QTextEdit *ed)

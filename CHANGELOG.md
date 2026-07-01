@@ -8,6 +8,10 @@ y el proyecto usa [versionado semántico](https://semver.org/lang/es/).
 ## [Sin publicar]
 
 ### Añadido
+- **Barra flotante de tabla y navegación por celdas**: cuando el cursor está dentro
+  de una tabla aparece sobre ella una barra con botones para insertar/eliminar fila y
+  columna y alinear la columna. Además, **Tab** salta a la celda siguiente y
+  **Mayús+Tab** a la anterior; **Tab** en la última celda añade una fila.
 - **Etiqueta de lenguaje y botón «Copiar» en los bloques de código**: al pasar el
   ratón por un bloque de código aparece, arriba a la derecha, su lenguaje (clic para
   cambiarlo) y un botón para copiar el código.

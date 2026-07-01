@@ -140,4 +140,68 @@ QIcon makeFormatIcon(FormatIconKind kind, const QColor &color, int px, qreal dpr
     return QIcon(pm);
 }
 
+// Iconos de la barra flotante de tabla. Filas = barras horizontales; columnas =
+// barras verticales; el «+»/«−» (insertar/eliminar) va separado de las barras para
+// que se lea. La alineación usa las tres líneas clásicas pegadas a un lado.
+QIcon makeTableIcon(TableIconKind kind, const QColor &color, int px, qreal dpr)
+{
+    QPixmap pm(QSize(px, px) * dpr);
+    pm.setDevicePixelRatio(dpr);
+    pm.fill(Qt::transparent);
+
+    QPainter p(&pm);
+    p.setRenderHint(QPainter::Antialiasing, true);
+
+    const qreal N = px;
+    const qreal stroke = qMax(qreal(1.5), N * 0.10);
+    QPen pen(color, stroke);
+    pen.setCapStyle(Qt::RoundCap);
+    p.setPen(pen);
+
+    // Dibuja un «+» (o «−») centrado en (cx, cy).
+    const auto badge = [&](qreal cx, qreal cy, bool plus) {
+        const qreal r = N * 0.13;
+        p.drawLine(QPointF(cx - r, cy), QPointF(cx + r, cy));
+        if (plus)
+            p.drawLine(QPointF(cx, cy - r), QPointF(cx, cy + r));
+    };
+
+    switch (kind) {
+    case TableIconKind::RowInsert:
+    case TableIconKind::RowDelete: {
+        const qreal ys[3] = {N * 0.28, N * 0.5, N * 0.72};
+        for (const qreal y : ys)
+            p.drawLine(QPointF(N * 0.36, y), QPointF(N * 0.88, y));
+        badge(N * 0.16, N * 0.5, kind == TableIconKind::RowInsert);
+        break;
+    }
+    case TableIconKind::ColInsert:
+    case TableIconKind::ColDelete: {
+        const qreal xs[3] = {N * 0.28, N * 0.5, N * 0.72};
+        for (const qreal x : xs)
+            p.drawLine(QPointF(x, N * 0.36), QPointF(x, N * 0.88));
+        badge(N * 0.5, N * 0.16, kind == TableIconKind::ColInsert);
+        break;
+    }
+    case TableIconKind::AlignLeft:
+    case TableIconKind::AlignCenter:
+    case TableIconKind::AlignRight: {
+        const qreal ys[3] = {N * 0.28, N * 0.5, N * 0.72};
+        for (int i = 0; i < 3; ++i) {
+            const qreal w = (i == 1) ? N * 0.42 : N * 0.72;  // línea del medio más corta
+            qreal x0 = N * 0.14;
+            if (kind == TableIconKind::AlignRight)
+                x0 = N * 0.86 - w;
+            else if (kind == TableIconKind::AlignCenter)
+                x0 = (N - w) / 2;
+            p.drawLine(QPointF(x0, ys[i]), QPointF(x0 + w, ys[i]));
+        }
+        break;
+    }
+    }
+
+    p.end();
+    return QIcon(pm);
+}
+
 } // namespace formaticons

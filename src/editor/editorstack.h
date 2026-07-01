@@ -16,6 +16,7 @@ class QByteArray;
 class FocusEditor;
 class CodeBlockHighlighter;
 class CodeBlockOverlay;
+class TableToolbar;
 class DocumentIo;
 class ThemeController;
 class SpellController;
@@ -90,6 +91,12 @@ public:
     void updateCodeBlockOverlay(const QPoint &viewportPos);
     /// Oculta el overlay del bloque de código.
     void hideCodeBlockOverlay();
+
+    /// Si el cursor está en una tabla, salta a la celda siguiente (`forward`) o
+    /// anterior seleccionando su contenido, como una hoja de cálculo; en la última
+    /// celda, `forward` añade una fila. Devuelve false si no hay tabla bajo el cursor
+    /// (para que Tab siga su curso normal). Lo llama el manejador de teclas Tab.
+    bool navigateTableCell(bool forward);
     /// Reemplaza el cuerpo Markdown del documento WYSIWYG dejando el modelo al día
     /// (protege/renderiza fórmulas, da borde a tablas, recolorea enlaces y
     /// reconstruye el índice). Único punto por el que pasa toda sustitución del
@@ -206,12 +213,17 @@ private:
     // Aplica el interlineado actual (m_lineSpacing) a todos los bloques de `ed`.
     // Presentación pura: preserva la marca «modificado» de Qt (como styleTables).
     void applyLineSpacing(QTextEdit *ed);
+
+    // Muestra/oculta y posiciona la barra flotante de tabla según el cursor esté o no
+    // dentro de una tabla del editor visual. Se llama al mover el cursor.
+    void updateTableToolbar();
     int m_lineSpacing = 100;  // porcentaje; 100 = sencillo
 
     FocusEditor *m_editor = nullptr;
     CodeBlockHighlighter *m_highlighter = nullptr;
     CodeBlockOverlay *m_codeOverlay = nullptr;  // etiqueta lenguaje + copiar (al pasar el ratón)
     int m_codeOverlayFirstBlock = -1;           // primer bloque del fence bajo el ratón
+    TableToolbar *m_tableBar = nullptr;         // barra flotante cuando el cursor está en tabla
     DocumentIo *m_documentIo = nullptr;
     ThemeController *m_theme = nullptr;
     SpellController *m_spell = nullptr;

@@ -200,6 +200,8 @@ vous répétez souvent…
 
 ## Tableaux
 
+- Lorsque le curseur est **dans un tableau**, une **barre flottante** apparaît au-dessus avec des boutons pour insérer/supprimer des lignes et des colonnes et aligner la colonne.
+- **Tab** passe à la cellule suivante et **Maj+Tab** à la précédente ; **Tab** dans la dernière cellule ajoute une ligne.
 - **Tableau → Insérer un tableau…** demande lignes et colonnes.
 - **Insertion → Tableau depuis le presse-papiers** convertit en tableau les données
   TSV/CSV (colonnes séparées par des tabulations ou des virgules) copiées depuis un

@@ -76,22 +76,22 @@
 <context>
     <name>EditorStack</name>
     <message>
-        <location filename="../src/editor/editorstack.cpp" line="60"/>
+        <location filename="../src/editor/editorstack.cpp" line="62"/>
         <source>Editor del documento</source>
         <translation>Documenteditor</translation>
     </message>
     <message>
-        <location filename="../src/editor/editorstack.cpp" line="63"/>
+        <location filename="../src/editor/editorstack.cpp" line="65"/>
         <source>Editor visual: el formato se aplica sobre el texto renderizado, sin ver la sintaxis Markdown.</source>
         <translation>Visuele editor: opmaak wordt toegepast op de gerenderde tekst, zonder de Markdown-syntaxis te tonen.</translation>
     </message>
     <message>
-        <location filename="../src/editor/editorstack.cpp" line="67"/>
+        <location filename="../src/editor/editorstack.cpp" line="69"/>
         <source>Empieza a escribir. Da formato con la barra o tecleando Markdown.</source>
         <translation>Begin met typen. Opmaken met de werkbalk of door Markdown te typen.</translation>
     </message>
     <message>
-        <location filename="../src/editor/editorstack.cpp" line="606"/>
+        <location filename="../src/editor/editorstack.cpp" line="683"/>
         <source>Fórmula: %1</source>
         <translation>Formule: %1</translation>
     </message>
@@ -1237,7 +1237,7 @@
         <translation>Inhoudsopgave invoegen</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowinput.cpp" line="428"/>
+        <location filename="../src/app/mainwindowinput.cpp" line="435"/>
         <location filename="../src/editor/insertcontroller.cpp" line="311"/>
         <source>El documento no tiene encabezados.</source>
         <translation>Het document bevat geen koppen.</translation>
@@ -1628,17 +1628,17 @@
         <translation>Klik om naar de voetnoot te gaan</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowinput.cpp" line="454"/>
+        <location filename="../src/app/mainwindowinput.cpp" line="461"/>
         <source>Ir a línea</source>
         <translation>Ga naar regel</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowinput.cpp" line="454"/>
+        <location filename="../src/app/mainwindowinput.cpp" line="461"/>
         <source>Número de línea (1–%1):</source>
         <translation>Regelnummer (1–%1):</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowinput.cpp" line="539"/>
+        <location filename="../src/app/mainwindowinput.cpp" line="546"/>
         <source>La nota [^%1] no tiene definición</source>
         <translation>Voetnoot [^%1] heeft geen definitie</translation>
     </message>
@@ -2889,6 +2889,44 @@ Verwijder deze tekst en begin met schrijven.
         <location filename="../src/markdown/symbolcatalog.cpp" line="53"/>
         <source>Fracciones y superíndices</source>
         <translation>Breuken en super-/subscript</translation>
+    </message>
+</context>
+<context>
+    <name>TableToolbar</name>
+    <message>
+        <location filename="../src/widgets/tabletoolbar.cpp" line="22"/>
+        <source>Insertar fila debajo</source>
+        <translation>Rij eronder invoegen</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/tabletoolbar.cpp" line="23"/>
+        <source>Eliminar fila</source>
+        <translation>Rij verwijderen</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/tabletoolbar.cpp" line="24"/>
+        <source>Insertar columna a la derecha</source>
+        <translation>Kolom rechts invoegen</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/tabletoolbar.cpp" line="25"/>
+        <source>Eliminar columna</source>
+        <translation>Kolom verwijderen</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/tabletoolbar.cpp" line="26"/>
+        <source>Alinear la columna a la izquierda</source>
+        <translation>Kolom links uitlijnen</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/tabletoolbar.cpp" line="27"/>
+        <source>Centrar la columna</source>
+        <translation>Kolom centreren</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/tabletoolbar.cpp" line="28"/>
+        <source>Alinear la columna a la derecha</source>
+        <translation>Kolom rechts uitlijnen</translation>
     </message>
 </context>
 <context>

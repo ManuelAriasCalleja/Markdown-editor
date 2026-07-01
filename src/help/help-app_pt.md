@@ -196,6 +196,8 @@ frequência…
 
 ## Tabelas
 
+- Com o cursor **dentro de uma tabela**, aparece por cima uma **barra flutuante** com botões para inserir/eliminar linhas e colunas e alinhar a coluna.
+- **Tab** passa à célula seguinte e **Shift+Tab** à anterior; **Tab** na última célula adiciona uma linha.
 - **Tabela → Inserir tabela…** pede linhas e colunas.
 - **Inserir → Tabela da área de transferência** converte numa tabela os dados
   TSV/CSV (colunas separadas por tabulações ou vírgulas) copiados de uma folha de

@@ -193,6 +193,8 @@ repeat…
 
 ## Tables
 
+- When the cursor is **inside a table**, a **floating bar** appears above it with buttons to insert/delete rows and columns and align the column.
+- **Tab** moves to the next cell and **Shift+Tab** to the previous one; **Tab** in the last cell adds a row.
 - **Table → Insert table…** asks for rows and columns.
 - **Insert → Table from clipboard** turns TSV/CSV data (columns separated by tabs
   or commas) copied from a spreadsheet or a CSV file into a table.

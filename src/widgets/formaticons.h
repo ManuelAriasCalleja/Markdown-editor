@@ -29,6 +29,14 @@ enum class FormatIconKind { Bold, Italic, Underline, Strike };
 /// pintada con ese mismo efecto (N negrita, C cursiva, S subrayada, T tachada).
 QIcon makeFormatIcon(FormatIconKind kind, const QColor &color, int px, qreal dpr);
 
+enum class TableIconKind {
+    RowInsert, RowDelete, ColInsert, ColDelete, AlignLeft, AlignCenter, AlignRight
+};
+/// \brief Icono de un botón de la barra flotante de tabla: barras horizontales
+/// (filas) o verticales (columnas) con un «+»/«−» para insertar/eliminar, y las tres
+/// clásicas líneas alineadas para la alineación de columna. Monocromo, sigue al tema.
+QIcon makeTableIcon(TableIconKind kind, const QColor &color, int px, qreal dpr);
+
 } // namespace formaticons
 
 #endif // FORMATICONS_H

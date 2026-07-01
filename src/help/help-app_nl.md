@@ -201,6 +201,8 @@ melding die je vaak herhaalt…
 
 ## Tabellen
 
+- Als de cursor **in een tabel** staat, verschijnt erboven een **zwevende balk** met knoppen om rijen en kolommen in te voegen/verwijderen en de kolom uit te lijnen.
+- **Tab** gaat naar de volgende cel en **Shift+Tab** naar de vorige; **Tab** in de laatste cel voegt een rij toe.
 - **Tabel → Tabel invoegen…** vraagt om rijen en kolommen.
 - **Invoegen → Tabel uit klembord** zet TSV/CSV-gegevens (kolommen gescheiden door
   tabs of komma's) die uit een spreadsheet of een CSV-bestand zijn gekopieerd, om in
