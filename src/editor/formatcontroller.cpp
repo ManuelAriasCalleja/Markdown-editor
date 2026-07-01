@@ -48,24 +48,24 @@ void FormatController::toggleCharFormat(
     mergeCharFormatOnSelection(fmt);
 }
 
-void FormatController::applyHeading(int level)
+void FormatController::setHeadingLevel(int level)
 {
+    // Mutación NUCLEAR (absoluta, sin toggle): fija el bloque como encabezado de
+    // `level` (1..6) o como párrafo normal (0). La comparten el toggle applyHeading
+    // y promover/degradar (shiftHeading).
     QTextCursor cursor = m_editor->textCursor();
-    const int current = cursor.blockFormat().headingLevel();
-    const int target = (current == level) ? 0 : level;  // volver a pulsar = quitar
-
     cursor.beginEditBlock();
 
     // El nivel de encabezado es lo que exporta toMarkdown() como '#'.
     QTextBlockFormat bf;
-    bf.setHeadingLevel(target);
+    bf.setHeadingLevel(level);
     cursor.mergeBlockFormat(bf);
 
     // Para el WYSIWYG hay que aplicar también el tamaño y la negrita: usamos
     // FontSizeAdjustment = 4 - nivel, igual que hace setMarkdown() de Qt.
     QTextCharFormat cf;
-    cf.setProperty(QTextFormat::FontSizeAdjustment, target > 0 ? 4 - target : 0);
-    cf.setFontWeight(target > 0 ? QFont::Bold : QFont::Normal);
+    cf.setProperty(QTextFormat::FontSizeAdjustment, level > 0 ? 4 - level : 0);
+    cf.setFontWeight(level > 0 ? QFont::Bold : QFont::Normal);
 
     QTextCursor blockCursor = cursor;
     blockCursor.movePosition(QTextCursor::StartOfBlock);
@@ -77,6 +77,12 @@ void FormatController::applyHeading(int level)
     m_editor->mergeCurrentCharFormat(cf);  // para el texto que se escriba luego
     m_editor->setFocus();
     updateActions();
+}
+
+void FormatController::applyHeading(int level)
+{
+    const int current = m_editor->textCursor().blockFormat().headingLevel();
+    setHeadingLevel(current == level ? 0 : level);  // volver a pulsar = quitar
 }
 
 void FormatController::applyList(QTextListFormat::Style style)

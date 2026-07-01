@@ -88,6 +88,9 @@ signals:
     void actionsUpdated();
 
 private:
+    // Fija el bloque actual como encabezado de `level` (1..6) o párrafo (0). Núcleo
+    // absoluto (sin toggle) que comparten applyHeading y shiftHeading.
+    void setHeadingLevel(int level);
     void mergeCharFormatOnSelection(const QTextCharFormat &format);
     void changeListIndent(int delta);
 
