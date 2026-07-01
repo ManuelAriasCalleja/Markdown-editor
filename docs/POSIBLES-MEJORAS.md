@@ -513,6 +513,67 @@ vez el coste de traducción y el problema de jurisdicción.
   Académico, cada una nombre + cuerpo por `tr()`, traducidas a los 9 idiomas (la parte cara
   pero acotada); Docencia/Empresa opc. 1‑2; Derecho/Sanidad cero de fábrica.
 
+### Fuente configurable del documento y la exportación (2026-07-01)
+
+Elegir la **familia tipográfica global** del documento (la del editor en pantalla
+y/o la de la salida a PDF/HTML/ODF/EPUB), como preferencia de **presentación**.
+
+**Contexto.** Markdown no expresa la tipografía: solo estructura y semántica. No hay
+forma de poner «distintas fuentes» por fragmento salvo HTML incrustado —desactivado
+a propósito aquí (`MarkdownNoHTML`), no haría round-trip— o CSS de exportación. Lo
+único compatible es una fuente **global**, que no se serializa al `.md`. Por eso NO
+se contempla un selector de fuente por texto (se perdería al guardar).
+
+- ⬜ **Fuente global.** Un ajuste (en *Ver* y/o en el diálogo de exportación) para la
+  familia de cuerpo y, aparte, la de código (monoespaciada). Persistir en
+  `AppSettings`; aplicar a `document()->defaultFont()` (pantalla) y, en exportación,
+  a `cloneForExport` (que hoy ya normaliza el **tamaño** a 11 pt; añadiría la
+  **familia**). Riesgo bajo, es presentación pura. Encaja con el arreglo reciente del
+  tamaño de letra en impresión/exportación (el zoom de pantalla ya no se cuela).
+
+### Importar desde otros formatos (2026-07-01)
+
+Hoy no hay importación real: *Abrir* acepta `.md`/`.markdown`/`.txt` pero **todo se
+carga como Markdown** (`setMarkdownWithExtensions`); un `.html` se vería como texto
+literal (por `MarkdownNoHTML`). Un *Archivo → Importar* convertiría a Markdown y
+abriría el resultado como documento **nuevo sin título** (vía `loadFromString`, como
+las plantillas), para no pisar el original.
+
+**Piezas ya existentes que reutilizar:**
+
+- `mdrichpaste::htmlToMarkdown` (HTML → Markdown con `QTextDocument::setHtml` +
+  `mdtable::documentMarkdown`), hoy solo para *Pegar como Markdown*.
+- Patrón de herramienta externa por `QProcess` con degradación elegante
+  (`DiagramRenderer` con plantuml/mmdc).
+- QZip privado de Qt (ya usado para exportar DOCX/ODF/EPUB) sirve para **leer** esos
+  zips al importar.
+- El *handler* de pegado que guarda imágenes a disco con ruta relativa (patrón para
+  extraer las imágenes embebidas/referenciadas de lo importado).
+
+**Formatos y viabilidad:**
+
+| Formato | Mecanismo | Coste | Calidad | Deps |
+|---|---|---|---|---|
+| HTML (.html) | reusar `htmlToMarkdown` | muy bajo | buena (HTML sencillo) | Qt puro |
+| EPUB (.epub) | QZip → XHTML → `htmlToMarkdown` | bajo-medio | buena | Qt puro |
+| DOCX (.docx) | QZip → `document.xml` (`QXmlStreamReader`) → Markdown | medio-alto | media (lossy) | Qt puro |
+| ODT (.odt) | igual, `content.xml` (ODF) | medio-alto | media | Qt puro |
+| RTF, LaTeX, reST, MediaWiki, org… | `pandoc -f X -t markdown` por `QProcess` | bajo/formato | alta | Pandoc opcional |
+| PDF | — | — | muy lossy | fuera de alcance |
+
+**Recomendación (coste/beneficio):**
+
+- ⬜ **HTML → Markdown** — fruta madura: reusa `htmlToMarkdown`, Qt puro, alto valor.
+- ⬜ **Pandoc opcional** — máximo apalancamiento: una integración `QProcess` cubre
+  DOCX/ODT/RTF/LaTeX/reST/… con calidad alta y degradación elegante, sin dependencia
+  enlazada (mismo patrón que los diagramas).
+- ⬜ **Importador nativo DOCX/ODT** (sin Pandoc) — solo si se quiere sin herramientas
+  externas; más trabajo y lossy. DOCX es el más interesante (cierra el círculo con el
+  export DOCX ya existente).
+
+Caveats transversales: extraer las **imágenes** a disco junto al `.md` y abrir como
+documento nuevo modificado para no sobrescribir la fuente.
+
 ### Robustez
 
 - ✅ **ASAN/UBSAN + clang-tidy en CI** — *Hecho:* opción CMake `ENABLE_SANITIZERS`
