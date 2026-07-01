@@ -36,7 +36,11 @@ jobs:
           cmake -S . -B build \
             -DCMAKE_BUILD_TYPE=Release \
             -DCMAKE_INSTALL_PREFIX=/usr
-          cmake --build build --parallel
+          # Solo el ejecutable (arrastra md-editor-core), NO los ~44 tests: la
+          # release no los necesita (el CI ya los compila y ejecuta) y
+          # compilarlos todos con --parallel sin tope agota la RAM del runner
+          # (OOM → exit 143). Ver el mismo aprendizaje en ci.yml (sanitizers).
+          cmake --build build --parallel --target md-editor
 
       # `cmake --install` con DESTDIR=AppDir produce un árbol /usr/{bin,share}
       # listo para linuxdeploy. Las reglas install() del CMakeLists ya copian
@@ -113,7 +117,9 @@ jobs:
         shell: pwsh
         run: |
           cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
-          cmake --build build --config Release --parallel
+          # Solo el ejecutable, no los tests (los cubre el CI): evita OOM del
+          # runner al compilar las ~44 unidades de test en paralelo.
+          cmake --build build --config Release --parallel --target md-editor
 
       # windeployqt copia las DLL de Qt, los plugins de QPA, los .qm de
       # traducción y el resto de runtime junto al .exe, en dist/. (El ZIP se
@@ -219,7 +225,9 @@ jobs:
           cmake -S . -B build \
             -DCMAKE_BUILD_TYPE=Release \
             "-DCMAKE_OSX_ARCHITECTURES=arm64;x86_64"
-          cmake --build build --parallel
+          # Solo el ejecutable, no los tests (los cubre el CI): evita OOM del
+          # runner al compilar las ~44 unidades de test en paralelo.
+          cmake --build build --parallel --target md-editor
 
       # macdeployqt copia los frameworks de Qt dentro del .app y crea un .dmg
       # con un fondo y la flecha hacia /Applications. Sin firma: el usuario
