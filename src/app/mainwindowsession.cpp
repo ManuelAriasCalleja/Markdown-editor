@@ -18,6 +18,7 @@
 #include <QTextEdit>
 
 #include "appsettings.h"
+#include "doctemplates.h"
 #include "diskwatcher.h"
 #include "documentio.h"
 #include "editorstack.h"
@@ -98,6 +99,17 @@ void MainWindow::startSession(const QString &cmdLineFile)
         for (const QString &path : session)
             if (QFileInfo::exists(path))
                 openPathInTab(path);
+    }
+
+    // Primer arranque sin nada que abrir (ni archivo, ni borrador, ni sesión previa):
+    // muestra el documento de bienvenida en la pestaña inicial vacía, una sola vez. Se
+    // carga sin marcar como modificado, para que cerrar no dé la lata.
+    if (cmdLineFile.isEmpty() && !AppSettings::welcomeShown() && m_tabs->count() == 1) {
+        EditorStack *s = stackAt(0);
+        if (s && s->documentIo()->currentFile().isEmpty() && !s->documentIo()->isModified()) {
+            s->documentIo()->loadFromString(mdtemplate::welcomeDocument(), false);
+            AppSettings::setWelcomeShown(true);
+        }
     }
 
     // Decidida la sesión inicial, ya es seguro autoguardar borradores en cada

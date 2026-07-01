@@ -83,19 +83,22 @@ void DocumentIo::reset()
     setCurrentFile(QString());
 }
 
-void DocumentIo::loadFromString(const QString &content)
+void DocumentIo::loadFromString(const QString &content, bool asModified)
 {
     QString body = content;
     // Mismo tratamiento que load(): el front matter se conserva verbatim (no se
     // renderiza) y las fórmulas/notas al pie se protegen del re-parseo.
     m_frontMatter = takeFrontMatter(body);
     m_editor->document()->setBaseUrl(QUrl());  // documento sin ubicación en disco
+
     mdrender::setMarkdownWithExtensions(m_editor, body);
 
-    // Sin archivo asociado y con línea base vacía: cuenta como modificado, así
-    // cerrar sin guardar pregunta (la plantilla es trabajo que se perdería).
+    // Sin archivo asociado. Con `asModified` (plantillas), la línea base vacía hace
+    // que cuente como modificado —así cerrar sin guardar pregunta, porque es trabajo
+    // que se perdería—. Sin él (documento de bienvenida), la línea base es el propio
+    // contenido: no ensucia el documento y cerrar no da la lata.
     m_currentFile.clear();
-    m_baseline.clear();
+    m_baseline = asModified ? QString() : mdtable::documentMarkdown(m_editor->document());
     emit currentFileChanged(QString());
     emit documentLoaded();
 }

@@ -63,7 +63,12 @@
         <translation>Editor visivo: la formattazione si applica sul testo renderizzato, senza mostrare la sintassi Markdown.</translation>
     </message>
     <message>
-        <location filename="../src/editor/editorstack.cpp" line="549"/>
+        <location filename="../src/editor/editorstack.cpp" line="63"/>
+        <source>Empieza a escribir. Da formato con la barra o tecleando Markdown.</source>
+        <translation>Inizia a scrivere. Formatta con la barra degli strumenti o digitando Markdown.</translation>
+    </message>
+    <message>
+        <location filename="../src/editor/editorstack.cpp" line="552"/>
         <source>Fórmula: %1</source>
         <translation>Formula: %1</translation>
     </message>
@@ -1209,7 +1214,7 @@
         <translation>Inserisci indice</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowinput.cpp" line="419"/>
+        <location filename="../src/app/mainwindowinput.cpp" line="425"/>
         <location filename="../src/editor/insertcontroller.cpp" line="311"/>
         <source>El documento no tiene encabezados.</source>
         <translation>Il documento non contiene intestazioni.</translation>
@@ -1590,37 +1595,37 @@
         <translation>Ignora «%1»</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowinput.cpp" line="167"/>
+        <location filename="../src/app/mainwindowinput.cpp" line="168"/>
         <source>Clic para marcar o desmarcar la tarea</source>
         <translation>Fai clic per spuntare o deselezionare l&apos;attività</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowinput.cpp" line="173"/>
+        <location filename="../src/app/mainwindowinput.cpp" line="174"/>
         <source>Clic para ir a la nota al pie</source>
         <translation>Fai clic per andare alla nota a piè di pagina</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowinput.cpp" line="445"/>
+        <location filename="../src/app/mainwindowinput.cpp" line="451"/>
         <source>Ir a línea</source>
         <translation>Vai alla riga</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowinput.cpp" line="445"/>
+        <location filename="../src/app/mainwindowinput.cpp" line="451"/>
         <source>Número de línea (1–%1):</source>
         <translation>Numero di riga (1–%1):</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowinput.cpp" line="530"/>
+        <location filename="../src/app/mainwindowinput.cpp" line="536"/>
         <source>La nota [^%1] no tiene definición</source>
         <translation>La nota [^%1] non ha definizione</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowsession.cpp" line="67"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="68"/>
         <source>Recuperar documentos</source>
         <translation>Recupera i documenti</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowsession.cpp" line="68"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="69"/>
         <source>Se encontraron documentos con cambios sin guardar de una sesión anterior:
 %1
 
@@ -1631,37 +1636,37 @@
 Vuoi recuperarli?</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowsession.cpp" line="145"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="157"/>
         <source>El archivo cambió en disco: recargado.</source>
         <translation>Il file è cambiato sul disco: ricaricato.</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowsession.cpp" line="152"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="164"/>
         <source>Archivo modificado en disco</source>
         <translation>File modificato sul disco</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowsession.cpp" line="153"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="165"/>
         <source>«%1» ha cambiado en disco y tienes cambios sin guardar.</source>
         <translation>«%1» è cambiato sul disco e hai modifiche non salvate.</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowsession.cpp" line="156"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="168"/>
         <source>¿Recargar la versión del disco (perderás tus cambios) o conservar los tuyos?</source>
         <translation>Ricaricare la versione del disco (perderai le tue modifiche) o mantenere le tue?</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowsession.cpp" line="157"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="169"/>
         <source>Recargar</source>
         <translation>Ricarica</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowsession.cpp" line="159"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="171"/>
         <source>Conservar los míos</source>
         <translation>Mantieni le mie</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowsession.cpp" line="188"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="200"/>
         <source>No se pudo recargar el archivo:
 %1
 
@@ -1672,17 +1677,17 @@ Vuoi recuperarli?</translation>
 %2</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowsession.cpp" line="214"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="226"/>
         <source>Revertir a lo guardado</source>
         <translation>Ripristina alla versione salvata</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowsession.cpp" line="215"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="227"/>
         <source>Se descartarán los cambios sin guardar de «%1» y se recargará la versión del disco. ¿Continuar?</source>
         <translation>Le modifiche non salvate di «%1» verranno annullate e verrà ricaricata la versione su disco. Continuare?</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowsession.cpp" line="223"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="235"/>
         <source>Revertido a la versión guardada.</source>
         <translation>Ripristinato alla versione salvata.</translation>
     </message>
@@ -1739,7 +1744,7 @@ Vuoi recuperarli?</translation>
         <location filename="../src/app/mainwindow.cpp" line="723"/>
         <location filename="../src/app/mainwindow.cpp" line="755"/>
         <location filename="../src/app/mainwindow.cpp" line="761"/>
-        <location filename="../src/app/mainwindowsession.cpp" line="187"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="199"/>
         <location filename="../src/io/filecontroller.cpp" line="78"/>
         <location filename="../src/io/filecontroller.cpp" line="140"/>
         <location filename="../src/export/exportcontroller.cpp" line="157"/>
@@ -1765,7 +1770,7 @@ Vuoi recuperarli?</translation>
         <translation>Esportato in HTML: %1</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowinput.cpp" line="180"/>
+        <location filename="../src/app/mainwindowinput.cpp" line="181"/>
         <source>Ctrl+clic para abrir el enlace: %1</source>
         <translation>Ctrl+clic per aprire il collegamento: %1</translation>
     </message>
@@ -1834,7 +1839,7 @@ Vuoi salvarle?</translation>
         <translation>Documento recuperato dalla sessione precedente</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowsession.cpp" line="63"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="64"/>
         <source>(sin título)</source>
         <translation>(senza titolo)</translation>
     </message>
@@ -1853,12 +1858,12 @@ Vuoi salvarle?</translation>
 Vuoi recuperarlo?</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowsession.cpp" line="71"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="72"/>
         <source>Recuperar</source>
         <translation>Recupera</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowsession.cpp" line="72"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="73"/>
         <source>Descartar</source>
         <translation>Ignora</translation>
     </message>
@@ -1866,13 +1871,13 @@ Vuoi recuperarlo?</translation>
         <location filename="../src/app/mainwindow.cpp" line="575"/>
         <location filename="../src/app/mainwindow.cpp" line="641"/>
         <location filename="../src/app/mainwindow.cpp" line="852"/>
-        <location filename="../src/app/mainwindowsession.cpp" line="130"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="142"/>
         <source>Sin título</source>
         <translation>Senza titolo</translation>
     </message>
     <message>
         <location filename="../src/app/mainwindow.cpp" line="640"/>
-        <location filename="../src/app/mainwindowsession.cpp" line="132"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="144"/>
         <source>%1[*] — md-editor</source>
         <translation>%1[*] — md-editor</translation>
     </message>
@@ -2665,6 +2670,33 @@ date: [data]
         <location filename="../src/markdown/doctemplates.cpp" line="402"/>
         <source>Escritura</source>
         <translation>Scrittura</translation>
+    </message>
+    <message>
+        <location filename="../src/markdown/doctemplates.cpp" line="416"/>
+        <source># ¡Te damos la bienvenida a md-editor!
+
+Este es un editor **visual** de Markdown: escribes y das formato sobre el texto ya renderizado, sin ver el código.
+
+## Para empezar
+
+- Da formato con la **barra de herramientas** o tecleando Markdown: `## ` para un encabezado, `- ` para una lista, `**negrita**`…
+- Pulsa **F1** para abrir el manual completo.
+- Crea un documento nuevo con **Ctrl+N** o abre uno con **Ctrl+O**.
+
+Borra este texto y empieza a escribir.
+</source>
+        <translation># Benvenuto in md-editor!
+
+Questo è un editor Markdown **visuale**: scrivi e formatti sul testo già visualizzato, senza vedere il codice.
+
+## Per iniziare
+
+- Formatta con la **barra degli strumenti** o digitando Markdown: `## ` per un titolo, `- ` per un elenco, `**grassetto**`…
+- Premi **F1** per aprire il manuale completo.
+- Crea un nuovo documento con **Ctrl+N** o aprine uno con **Ctrl+O**.
+
+Elimina questo testo e inizia a scrivere.
+</translation>
     </message>
 </context>
 <context>

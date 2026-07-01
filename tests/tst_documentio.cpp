@@ -23,6 +23,7 @@ private slots:
     void isModifiedTracksContentAgainstBaseline();
     void resetClearsAndSignals();
     void loadFromStringIsUntitledModifiedAndKeepsFrontMatter();
+    void loadFromStringNotModifiedWhenAsModifiedFalse();
     void loadEmitsDocumentLoaded();
     void frontMatterIsPreserved();
     void noFrontMatterWhenNotAtStart();
@@ -154,6 +155,18 @@ void TestDocumentIo::loadFromStringIsUntitledModifiedAndKeepsFrontMatter()
     // Emite las mismas señales que una carga (para refrescar vista e índice).
     QCOMPARE(fileSpy.count(), 1);
     QCOMPARE(loadSpy.count(), 1);
+}
+
+void TestDocumentIo::loadFromStringNotModifiedWhenAsModifiedFalse()
+{
+    // El documento de bienvenida se carga con asModified=false: NO debe contar como
+    // modificado (la línea base es su propio contenido), así cerrar no da la lata.
+    QTextEdit edit;
+    DocumentIo io(&edit);
+    io.loadFromString(QStringLiteral("# Bienvenido\n\nTexto de bienvenida.\n"), false);
+    QCOMPARE(io.currentFile(), QString());
+    QVERIFY(!io.isModified());
+    QVERIFY(edit.toPlainText().contains(QStringLiteral("Bienvenido")));
 }
 
 void TestDocumentIo::frontMatterIsPreserved()

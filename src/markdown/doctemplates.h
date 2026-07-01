@@ -44,6 +44,10 @@ QString categoryName(Category category);
 /// Las categorías en el orden en que deben aparecer en el menú.
 QList<Category> categoriesInOrder();
 
+/// Documento de bienvenida (traducido) que se muestra en el primer arranque. No es
+/// una plantilla del menú: es un texto introductorio de un solo uso.
+QString welcomeDocument();
+
 }  // namespace mdtemplate
 
 #endif  // DOCTEMPLATES_H

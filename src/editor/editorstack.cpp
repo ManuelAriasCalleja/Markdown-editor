@@ -58,6 +58,9 @@ EditorStack::EditorStack(FindReplaceBar *findBar, OutlinePanel *outline,
     m_editor->setAccessibleDescription(
         tr("Editor visual: el formato se aplica sobre el texto renderizado, sin ver "
            "la sintaxis Markdown."));
+    // Pista sutil en el documento vacío (solo se ve cuando no hay texto).
+    m_editor->setPlaceholderText(
+        tr("Empieza a escribir. Da formato con la barra o tecleando Markdown."));
     // Resaltado de sintaxis de los bloques de código.
     m_highlighter = new CodeBlockHighlighter(m_editor->document());
 

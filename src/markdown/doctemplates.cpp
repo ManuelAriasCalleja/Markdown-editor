@@ -411,4 +411,22 @@ QList<Category> categoriesInOrder()
             Category::Writing};
 }
 
+QString welcomeDocument()
+{
+    return QCoreApplication::translate("MainWindow",
+        "# ¡Te damos la bienvenida a md-editor!\n"
+        "\n"
+        "Este es un editor **visual** de Markdown: escribes y das formato sobre el "
+        "texto ya renderizado, sin ver el código.\n"
+        "\n"
+        "## Para empezar\n"
+        "\n"
+        "- Da formato con la **barra de herramientas** o tecleando Markdown: `## ` para "
+        "un encabezado, `- ` para una lista, `**negrita**`…\n"
+        "- Pulsa **F1** para abrir el manual completo.\n"
+        "- Crea un documento nuevo con **Ctrl+N** o abre uno con **Ctrl+O**.\n"
+        "\n"
+        "Borra este texto y empieza a escribir.\n");
+}
+
 }  // namespace mdtemplate

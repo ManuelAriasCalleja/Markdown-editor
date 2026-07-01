@@ -20,6 +20,7 @@ inline QString printPageNumbersKey() { return QStringLiteral("printPageNumbers")
 inline QString lineSpacingKey()    { return QStringLiteral("lineSpacing"); }
 inline QString snippetsKey()    { return QStringLiteral("snippets"); }
 inline QString userTemplatesKey() { return QStringLiteral("userTemplates"); }
+inline QString welcomeShownKey() { return QStringLiteral("welcomeShown"); }
 inline QString spellCheckKey()  { return QStringLiteral("spellCheck"); }
 inline QString spellLanguageKey() { return QStringLiteral("spellLanguage"); }
 inline QString cursorPositionsKey() { return QStringLiteral("cursorPositions"); }
@@ -262,6 +263,15 @@ QList<mdusertemplate::UserTemplate> AppSettings::userTemplates()
 void AppSettings::setUserTemplates(const QList<mdusertemplate::UserTemplate> &templates)
 {
     QSettings().setValue(userTemplatesKey(), mdusertemplate::serialize(templates));
+}
+
+bool AppSettings::welcomeShown()
+{
+    return QSettings().value(welcomeShownKey(), false).toBool();
+}
+void AppSettings::setWelcomeShown(bool shown)
+{
+    QSettings().setValue(welcomeShownKey(), shown);
 }
 
 QString AppSettings::lastFile()

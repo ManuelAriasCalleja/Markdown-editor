@@ -63,7 +63,12 @@
         <translation>Éditeur visuel : la mise en forme s&apos;applique sur le texte rendu, sans afficher la syntaxe Markdown.</translation>
     </message>
     <message>
-        <location filename="../src/editor/editorstack.cpp" line="549"/>
+        <location filename="../src/editor/editorstack.cpp" line="63"/>
+        <source>Empieza a escribir. Da formato con la barra o tecleando Markdown.</source>
+        <translation>Commencez à écrire. Mettez en forme avec la barre d'outils ou en tapant du Markdown.</translation>
+    </message>
+    <message>
+        <location filename="../src/editor/editorstack.cpp" line="552"/>
         <source>Fórmula: %1</source>
         <translation>Formule : %1</translation>
     </message>
@@ -1209,7 +1214,7 @@
         <translation>Insérer une table des matières</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowinput.cpp" line="419"/>
+        <location filename="../src/app/mainwindowinput.cpp" line="425"/>
         <location filename="../src/editor/insertcontroller.cpp" line="311"/>
         <source>El documento no tiene encabezados.</source>
         <translation>Le document ne contient aucun titre.</translation>
@@ -1540,7 +1545,7 @@
         <source>Para importar estos formatos hace falta Pandoc. Instálalo con:
 
 %1</source>
-        <translation>L'import de ces formats nécessite Pandoc. Installez-le avec :
+        <translation>L&apos;import de ces formats nécessite Pandoc. Installez-le avec :
 
 %1</translation>
     </message>
@@ -1557,12 +1562,12 @@
     <message>
         <location filename="../src/app/mainwindow.cpp" line="756"/>
         <source>Pandoc no pudo convertir el archivo.</source>
-        <translation>Pandoc n'a pas pu convertir le fichier.</translation>
+        <translation>Pandoc n&apos;a pas pu convertir le fichier.</translation>
     </message>
     <message>
         <location filename="../src/app/mainwindow.cpp" line="762"/>
         <source>El archivo no produjo ningún contenido.</source>
-        <translation>Le fichier n'a produit aucun contenu.</translation>
+        <translation>Le fichier n&apos;a produit aucun contenu.</translation>
     </message>
     <message>
         <location filename="../src/app/mainwindow.cpp" line="838"/>
@@ -1590,37 +1595,37 @@
         <translation>Ignorer « %1 »</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowinput.cpp" line="167"/>
+        <location filename="../src/app/mainwindowinput.cpp" line="168"/>
         <source>Clic para marcar o desmarcar la tarea</source>
         <translation>Cliquer pour cocher ou décocher la tâche</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowinput.cpp" line="173"/>
+        <location filename="../src/app/mainwindowinput.cpp" line="174"/>
         <source>Clic para ir a la nota al pie</source>
         <translation>Cliquer pour aller à la note de bas de page</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowinput.cpp" line="445"/>
+        <location filename="../src/app/mainwindowinput.cpp" line="451"/>
         <source>Ir a línea</source>
         <translation>Aller à la ligne</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowinput.cpp" line="445"/>
+        <location filename="../src/app/mainwindowinput.cpp" line="451"/>
         <source>Número de línea (1–%1):</source>
         <translation>Numéro de ligne (1–%1) :</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowinput.cpp" line="530"/>
+        <location filename="../src/app/mainwindowinput.cpp" line="536"/>
         <source>La nota [^%1] no tiene definición</source>
         <translation>La note [^%1] n&apos;a pas de définition</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowsession.cpp" line="67"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="68"/>
         <source>Recuperar documentos</source>
         <translation>Récupérer les documents</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowsession.cpp" line="68"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="69"/>
         <source>Se encontraron documentos con cambios sin guardar de una sesión anterior:
 %1
 
@@ -1631,37 +1636,37 @@
 Voulez-vous les récupérer ?</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowsession.cpp" line="145"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="157"/>
         <source>El archivo cambió en disco: recargado.</source>
         <translation>Le fichier a changé sur le disque : rechargé.</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowsession.cpp" line="152"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="164"/>
         <source>Archivo modificado en disco</source>
         <translation>Fichier modifié sur le disque</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowsession.cpp" line="153"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="165"/>
         <source>«%1» ha cambiado en disco y tienes cambios sin guardar.</source>
         <translation>« %1 » a changé sur le disque et vous avez des modifications non enregistrées.</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowsession.cpp" line="156"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="168"/>
         <source>¿Recargar la versión del disco (perderás tus cambios) o conservar los tuyos?</source>
         <translation>Recharger la version du disque (vous perdrez vos modifications) ou conserver les vôtres ?</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowsession.cpp" line="157"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="169"/>
         <source>Recargar</source>
         <translation>Recharger</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowsession.cpp" line="159"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="171"/>
         <source>Conservar los míos</source>
         <translation>Conserver les miennes</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowsession.cpp" line="188"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="200"/>
         <source>No se pudo recargar el archivo:
 %1
 
@@ -1672,17 +1677,17 @@ Voulez-vous les récupérer ?</translation>
 %2</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowsession.cpp" line="214"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="226"/>
         <source>Revertir a lo guardado</source>
         <translation>Revenir à la version enregistrée</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowsession.cpp" line="215"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="227"/>
         <source>Se descartarán los cambios sin guardar de «%1» y se recargará la versión del disco. ¿Continuar?</source>
         <translation>Les modifications non enregistrées de « %1 » seront abandonnées et la version du disque sera rechargée. Continuer ?</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowsession.cpp" line="223"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="235"/>
         <source>Revertido a la versión guardada.</source>
         <translation>Revenu à la version enregistrée.</translation>
     </message>
@@ -1739,7 +1744,7 @@ Voulez-vous les récupérer ?</translation>
         <location filename="../src/app/mainwindow.cpp" line="723"/>
         <location filename="../src/app/mainwindow.cpp" line="755"/>
         <location filename="../src/app/mainwindow.cpp" line="761"/>
-        <location filename="../src/app/mainwindowsession.cpp" line="187"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="199"/>
         <location filename="../src/io/filecontroller.cpp" line="78"/>
         <location filename="../src/io/filecontroller.cpp" line="140"/>
         <location filename="../src/export/exportcontroller.cpp" line="157"/>
@@ -1765,7 +1770,7 @@ Voulez-vous les récupérer ?</translation>
         <translation>Exporté en HTML : %1</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowinput.cpp" line="180"/>
+        <location filename="../src/app/mainwindowinput.cpp" line="181"/>
         <source>Ctrl+clic para abrir el enlace: %1</source>
         <translation>Ctrl+clic pour ouvrir le lien : %1</translation>
     </message>
@@ -1834,7 +1839,7 @@ Voulez-vous les enregistrer ?</translation>
         <translation>Document récupéré de la session précédente</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowsession.cpp" line="63"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="64"/>
         <source>(sin título)</source>
         <translation>(sans titre)</translation>
     </message>
@@ -1853,12 +1858,12 @@ Voulez-vous les enregistrer ?</translation>
 Voulez-vous le récupérer ?</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowsession.cpp" line="71"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="72"/>
         <source>Recuperar</source>
         <translation>Récupérer</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowsession.cpp" line="72"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="73"/>
         <source>Descartar</source>
         <translation>Abandonner</translation>
     </message>
@@ -1866,13 +1871,13 @@ Voulez-vous le récupérer ?</translation>
         <location filename="../src/app/mainwindow.cpp" line="575"/>
         <location filename="../src/app/mainwindow.cpp" line="641"/>
         <location filename="../src/app/mainwindow.cpp" line="852"/>
-        <location filename="../src/app/mainwindowsession.cpp" line="130"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="142"/>
         <source>Sin título</source>
         <translation>Sans titre</translation>
     </message>
     <message>
         <location filename="../src/app/mainwindow.cpp" line="640"/>
-        <location filename="../src/app/mainwindowsession.cpp" line="132"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="144"/>
         <source>%1[*] — md-editor</source>
         <translation>%1[*] — md-editor</translation>
     </message>
@@ -2665,6 +2670,33 @@ date: [date]
         <location filename="../src/markdown/doctemplates.cpp" line="402"/>
         <source>Escritura</source>
         <translation>Écriture</translation>
+    </message>
+    <message>
+        <location filename="../src/markdown/doctemplates.cpp" line="416"/>
+        <source># ¡Te damos la bienvenida a md-editor!
+
+Este es un editor **visual** de Markdown: escribes y das formato sobre el texto ya renderizado, sin ver el código.
+
+## Para empezar
+
+- Da formato con la **barra de herramientas** o tecleando Markdown: `## ` para un encabezado, `- ` para una lista, `**negrita**`…
+- Pulsa **F1** para abrir el manual completo.
+- Crea un documento nuevo con **Ctrl+N** o abre uno con **Ctrl+O**.
+
+Borra este texto y empieza a escribir.
+</source>
+        <translation># Bienvenue dans md-editor !
+
+C'est un éditeur Markdown **visuel** : vous écrivez et mettez en forme sur le texte rendu, sans voir le code.
+
+## Pour commencer
+
+- Mettez en forme avec la **barre d'outils** ou en tapant du Markdown : `## ` pour un titre, `- ` pour une liste, `**gras**`…
+- Appuyez sur **F1** pour ouvrir le manuel complet.
+- Créez un document avec **Ctrl+N** ou ouvrez-en un avec **Ctrl+O**.
+
+Supprimez ce texte et commencez à écrire.
+</translation>
     </message>
 </context>
 <context>

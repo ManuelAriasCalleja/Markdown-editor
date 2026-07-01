@@ -131,6 +131,11 @@ void setSnippets(const QList<mdsnippet::Snippet> &snippets);
 QList<mdusertemplate::UserTemplate> userTemplates();
 void setUserTemplates(const QList<mdusertemplate::UserTemplate> &templates);
 
+/// \brief ¿Se ha mostrado ya el documento de bienvenida? Se pone a true tras el
+/// primer arranque para no repetirlo. Por defecto false (primer arranque).
+bool welcomeShown();
+void setWelcomeShown(bool shown);
+
 /// \brief Último documento abierto: ruta del archivo activo al cerrar, para reabrirlo
 /// al arrancar (vacío = no había archivo, se arranca en blanco).
 QString lastFile();

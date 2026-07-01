@@ -464,8 +464,13 @@ paleta/formatos, como el resto del proyecto) y con el round-trip a salvo.
 
 #### Toques menores de acabado
 
-- ⬜ **Documento de bienvenida en el primer arranque** (reusa `doctemplates`) y
-  **placeholder** sutil en el documento vacío. Coste bajo.
+- ✅ **Documento de bienvenida en el primer arranque** (reusa `doctemplates`) y
+  **placeholder** sutil en el documento vacío. *Hecho:* `mdtemplate::welcomeDocument()`
+  (traducido) cargado en `startSession` cuando no hay archivo/borrador/sesión y
+  `AppSettings::welcomeShown()` es false (se marca tras mostrarlo); se carga con
+  `loadFromString(..., asModified=false)` para no ensuciar el documento. Placeholder vía
+  `QTextEdit::setPlaceholderText` en el editor visual. `tst_documentio` cubre el
+  asModified.
 - ⬜ **Popover al pasar por un enlace** (hoy la URL solo sale en la barra de estado). Coste bajo.
 
 *Ya en el roadmap y también «pulido» de UX (no duplicar):* la **paleta de comandos** (#9),

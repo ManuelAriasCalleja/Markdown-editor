@@ -41,7 +41,10 @@ public:
     /// «Nuevo desde plantilla». Separa el front matter como en load(), pero deja el
     /// documento como modificado y sin ruta (Guardar pedirá nombre), de modo que la
     /// plantilla no se pierda sin avisar.
-    void loadFromString(const QString &content);
+    // Carga `content` como documento nuevo sin archivo. `asModified` true (plantillas)
+    // lo deja como modificado; false (bienvenida) fija la línea base al contenido para
+    // que no cuente como cambio sin guardar.
+    void loadFromString(const QString &content, bool asModified = true);
 
     /// \brief ¿El documento cargado tenía front matter (--- … --- o +++ … +++) al
     /// principio? Se conserva verbatim, sin renderizarlo, y se reescribe al

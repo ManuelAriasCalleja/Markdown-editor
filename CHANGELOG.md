@@ -8,6 +8,9 @@ y el proyecto usa [versionado semántico](https://semver.org/lang/es/).
 ## [Sin publicar]
 
 ### Añadido
+- **Documento de bienvenida** en el primer arranque (una sola vez), con una guía breve
+  para empezar; se carga sin marcar como modificado. Y un **texto de ayuda sutil**
+  (*placeholder*) en el documento vacío.
 - **Nuevas plantillas de fábrica** en *Nuevo desde plantilla*: **Programación** —
   Registro de cambios (CHANGELOG), Decisión de arquitectura (ADR) e Informe de error;
   **Académico** — Artículo científico (IMRyD) e Informe de laboratorio. Traducidas a
