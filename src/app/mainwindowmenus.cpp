@@ -461,6 +461,22 @@ void MainWindow::createFormatActions()
             [this] { m_stack->format()->insertHighlight(); });
     m_wysiwygActions.append(highlightAction);
 
+    QAction *superAction = formatMenu->addAction(tr("Superíndice"));
+    superAction->setShortcut(QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_Equal));
+    superAction->setToolTip(withShortcut(
+        tr("Superíndice del texto seleccionado (^x^)"), superAction->shortcut()));
+    connect(superAction, &QAction::triggered, this,
+            [this] { m_stack->format()->toggleSuperscript(); });
+    m_wysiwygActions.append(superAction);
+
+    QAction *subAction = formatMenu->addAction(tr("Subíndice"));
+    subAction->setShortcut(QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_Minus));
+    subAction->setToolTip(withShortcut(
+        tr("Subíndice del texto seleccionado (~x~)"), subAction->shortcut()));
+    connect(subAction, &QAction::triggered, this,
+            [this] { m_stack->format()->toggleSubscript(); });
+    m_wysiwygActions.append(subAction);
+
     formatMenu->addSeparator();
     formatMenu->addAction(m_h1Action);
     formatMenu->addAction(m_h2Action);

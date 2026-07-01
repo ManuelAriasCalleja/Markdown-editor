@@ -85,6 +85,8 @@ Selecteer een fragment en pas opmaak toe met de werkbalk of het menu **Opmaak**:
 - **Markeren** (Ctrl+Shift+H): omsluit de selectie met `==markering==`; de tekst
   krijgt een markeerachtergrond. Omdat `==` geen standaard-Markdown is, wordt het als
   letterlijke tekst opgeslagen.
+- **Superscript** (Ctrl+Shift++) en **Subscript** (Ctrl+Shift+-): verhogen of verlagen
+  de geselecteerde tekst; opgeslagen als `^tekst^` en `~tekst~` (Pandoc-stijl).
 
 De werkbalkknoppen weerspiegelen de actieve opmaak onder de cursor.
 
@@ -394,6 +396,7 @@ openen aan om te herstellen wat je aan het schrijven was.
 | Ongedaan maken / Opnieuw  | Ctrl+Z / Ctrl+Y  |
 | Vet / Cursief             | Ctrl+B / Ctrl+I  |
 | Markeren (==markering==)   | Ctrl+Shift+H     |
+| Superscript / Subscript   | Ctrl+Shift++ / Ctrl+Shift+- |
 | Onderstreept              | Ctrl+U           |
 | Plakken als platte tekst  | Ctrl+Shift+V     |
 | Plakken als Markdown      | Ctrl+Alt+V       |

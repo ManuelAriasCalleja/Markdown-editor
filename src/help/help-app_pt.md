@@ -84,6 +84,8 @@ menu **Formato**:
 - **Realçar** (Ctrl+Shift+H): envolve a seleção em `==marca==`; o texto aparece com
   fundo de realce. Como `==` não é sintaxe Markdown padrão, é guardado como texto
   literal.
+- **Sobrescrito** (Ctrl+Shift++) e **Subscrito** (Ctrl+Shift+-): elevam ou baixam o
+  texto selecionado; guardados como `^texto^` e `~texto~` (estilo Pandoc).
 
 Os botões da barra refletem a formatação ativa sob o cursor.
 
@@ -382,6 +384,7 @@ recuperar o que estava a escrever.
 | Anular / Refazer          | Ctrl+Z / Ctrl+Y  |
 | Negrito / Itálico         | Ctrl+B / Ctrl+I  |
 | Realçar (==marca==)       | Ctrl+Shift+H     |
+| Sobrescrito / Subscrito   | Ctrl+Shift++ / Ctrl+Shift+- |
 | Sublinhado                | Ctrl+U           |
 | Colar como texto simples  | Ctrl+Shift+V     |
 | Colar como Markdown       | Ctrl+Alt+V       |

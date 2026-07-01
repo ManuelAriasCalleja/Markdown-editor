@@ -81,6 +81,8 @@ Zaznacz fragment i nadaj formatowanie paskiem narzędzi lub menu **Format**:
 - **Wyróżnij** (Ctrl+Shift+H): otacza zaznaczenie znacznikami `==znacznik==`; tekst
   pojawia się z tłem wyróżnienia. Ponieważ `==` nie jest standardową składnią
   Markdown, zapisuje się jako zwykły tekst.
+- **Indeks górny** (Ctrl+Shift++) i **indeks dolny** (Ctrl+Shift+-): podnoszą lub
+  obniżają zaznaczony tekst; zapisywane jako `^tekst^` i `~tekst~` (styl Pandoc).
 
 Przyciski paska odzwierciedlają formatowanie aktywne pod kursorem.
 
@@ -377,6 +379,7 @@ proponuje odzyskanie tego, co pisałeś.
 | Cofnij / Ponów            | Ctrl+Z / Ctrl+Y  |
 | Pogrubienie / Kursywa     | Ctrl+B / Ctrl+I  |
 | Wyróżnij (==znacznik==)    | Ctrl+Shift+H     |
+| Indeks górny / dolny      | Ctrl+Shift++ / Ctrl+Shift+- |
 | Podkreślenie              | Ctrl+U           |
 | Wklej jako zwykły tekst   | Ctrl+Shift+V     |
 | Wklej jako Markdown       | Ctrl+Alt+V       |

@@ -83,6 +83,8 @@ Selectează un fragment și aplică formatarea din bara de instrumente sau din m
 - **Evidențiază** (Ctrl+Shift+H): încadrează selecția în `==marcaj==`; textul apare
   cu fundal de evidențiere. Deoarece `==` nu este sintaxă Markdown standard, se
   salvează ca text literal.
+- **Exponent** (Ctrl+Shift++) și **indice** (Ctrl+Shift+-): ridică sau coboară textul
+  selectat; salvate ca `^text^` și `~text~` (stil Pandoc).
 
 Butoanele din bară reflectă formatarea activă sub cursor.
 
@@ -389,6 +391,7 @@ ce scriai.
 | Anulează / Refă           | Ctrl+Z / Ctrl+Y  |
 | Aldin / Cursiv            | Ctrl+B / Ctrl+I  |
 | Evidențiază (==marcaj==)  | Ctrl+Shift+H     |
+| Exponent / Indice         | Ctrl+Shift++ / Ctrl+Shift+- |
 | Subliniat                 | Ctrl+U           |
 | Lipește ca text simplu    | Ctrl+Shift+V     |
 | Lipește ca Markdown       | Ctrl+Alt+V       |

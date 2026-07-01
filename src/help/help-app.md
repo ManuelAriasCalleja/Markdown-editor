@@ -85,6 +85,8 @@ menú **Formato**:
 - **Resaltar** (Ctrl+Shift+H): envuelve la selección en `==marca==`; el texto se
   muestra con fondo de resaltado. Como `==` no es sintaxis Markdown estándar, se
   guarda como texto literal.
+- **Superíndice** (Ctrl+Shift++) y **Subíndice** (Ctrl+Shift+-): elevan o bajan el
+  texto seleccionado; se guardan como `^texto^` y `~texto~` (estilo Pandoc).
 
 Los botones de la barra reflejan el formato activo bajo el cursor.
 
@@ -390,6 +392,7 @@ ofrece recuperar lo que estabas escribiendo.
 | Deshacer / Rehacer        | Ctrl+Z / Ctrl+Y  |
 | Negrita / Cursiva         | Ctrl+B / Ctrl+I  |
 | Resaltar (==marca==)      | Ctrl+Shift+H     |
+| Superíndice / Subíndice   | Ctrl+Shift++ / Ctrl+Shift+- |
 | Subrayado                 | Ctrl+U           |
 | Pegar como texto plano    | Ctrl+Shift+V     |
 | Pegar como Markdown       | Ctrl+Alt+V       |

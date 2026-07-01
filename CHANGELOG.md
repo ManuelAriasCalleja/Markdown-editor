@@ -28,6 +28,9 @@ y el proyecto usa [versionado semántico](https://semver.org/lang/es/).
 - **Resaltar texto** (*Formato → Resaltar*, Ctrl+Shift+H): marca el texto
   seleccionado con `==marca==`, mostrado con fondo de resaltado. Se guarda como
   texto literal (round-trip seguro).
+- **Superíndice y subíndice** (*Formato*, Ctrl+Shift++ / Ctrl+Shift+-): eleva o baja
+  el texto seleccionado, mostrándolo en su posición real; se guarda como `^texto^` y
+  `~texto~` (estilo Pandoc), con round-trip fiel.
 
 ### Cambiado
 - **Buscar** resalta ahora **todas** las coincidencias en el documento y muestra

@@ -86,6 +86,8 @@ le menu **Format** :
 - **Surligner** (Ctrl+Maj+H) : entoure la sélection de `==marque==` ; le texte
   s'affiche avec un fond de surlignage. Comme `==` n'est pas une syntaxe Markdown
   standard, c'est enregistré comme texte littéral.
+- **Exposant** (Ctrl+Maj++) et **Indice** (Ctrl+Maj+-) : montent ou descendent le
+  texte sélectionné ; enregistrés comme `^texte^` et `~texte~` (style Pandoc).
 
 Les boutons de la barre reflètent la mise en forme active sous le curseur.
 
@@ -393,6 +395,7 @@ elle propose à la réouverture de récupérer ce que vous étiez en train d'éc
 | Annuler / Rétablir        | Ctrl+Z / Ctrl+Y  |
 | Gras / Italique           | Ctrl+B / Ctrl+I  |
 | Surligner (==marque==)    | Ctrl+Maj+H       |
+| Exposant / Indice         | Ctrl+Maj++ / Ctrl+Maj+- |
 | Souligné                  | Ctrl+U           |
 | Coller comme texte brut   | Ctrl+Maj+V       |
 | Coller comme Markdown     | Ctrl+Alt+V       |

@@ -88,6 +88,9 @@ Symbolleiste oder das Menü **Format** an:
 - **Hervorheben** (Strg+Umschalt+H): umschließt die Auswahl mit `==Markierung==`; der
   Text erscheint mit Hervorhebungshintergrund. Da `==` keine Standard-Markdown-Syntax
   ist, wird es als literaler Text gespeichert.
+- **Hochgestellt** (Strg+Umschalt++) und **Tiefgestellt** (Strg+Umschalt+-): heben
+  oder senken den ausgewählten Text; werden als `^Text^` und `~Text~` (Pandoc-Stil)
+  gespeichert.
 
 Die Schaltflächen der Symbolleiste zeigen die aktive Formatierung unter dem
 Cursor an.
@@ -401,6 +404,7 @@ automatisch gespeichert. Schließt die Anwendung unerwartet, bietet sie beim ern
 | Rückgängig / Wiederholen  | Strg+Z / Strg+Y  |
 | Fett / Kursiv             | Strg+B / Strg+I  |
 | Hervorheben (==Markierung==) | Strg+Umschalt+H |
+| Hochgestellt / Tiefgestellt | Strg+Umschalt++ / Strg+Umschalt+- |
 | Unterstrichen             | Strg+U           |
 | Als Klartext einfügen     | Strg+Umschalt+V  |
 | Als Markdown einfügen     | Strg+Alt+V       |

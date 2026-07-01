@@ -76,6 +76,8 @@ public slots:
     void promoteHeading();                          // sube el encabezado del cursor un nivel (hacia H1)
     void demoteHeading();                           // baja el encabezado del cursor un nivel (hacia H6)
     void insertHighlight();                         // envuelve la selección en `==marca==`
+    void toggleSuperscript();                       // super/subíndice de texto (^x^ / ~x~)
+    void toggleSubscript();
     void applyList(QTextListFormat::Style style);   // fija/quita lista del estilo (toggle)
     void toggleBlockquote();
     void toggleCodeBlock();
@@ -97,6 +99,9 @@ private:
     // Promover (delta −1) / degradar (delta +1) el encabezado del cursor, acotado a
     // [1,6]; no hace nada si el bloque no es un encabezado o ya está en el límite.
     void shiftHeading(int delta);
+    // Aplica/quita el super/subíndice de texto (`va`) sobre la selección, marcándolo
+    // con SupSubProperty para que la serialización lo reinyecte como `^x^` / `~x~`.
+    void toggleVerticalAlign(QTextCharFormat::VerticalAlignment va);
     void mergeCharFormatOnSelection(const QTextCharFormat &format);
     void changeListIndent(int delta);
 

@@ -13,6 +13,7 @@
 #include "blockconstructs.h"
 #include "codehighlighter.h"
 #include "outlinepanel.h"  // mdoutline::shiftedLevel
+#include "supsub.h"        // mdsupsub::SupSubProperty
 
 // Los textos visibles de setCodeLanguage conservan el contexto de traducción
 // "MainWindow" (QCoreApplication::translate) para no re-hogar las cadenas ya
@@ -103,6 +104,34 @@ void FormatController::promoteHeading()
 void FormatController::demoteHeading()
 {
     shiftHeading(1);  // hacia H6 (más '#')
+}
+
+void FormatController::toggleVerticalAlign(QTextCharFormat::VerticalAlignment va)
+{
+    const QTextCharFormat cur = m_editor->currentCharFormat();
+    const bool already =
+        cur.verticalAlignment() == va && cur.boolProperty(mdsupsub::SupSubProperty);
+    QTextCharFormat fmt;
+    if (already) {
+        // Quitar: vuelve a la línea base y desmarca (false, no borra la propiedad:
+        // mergeCharFormat no puede borrarla, y la serialización mira su valor bool).
+        fmt.setVerticalAlignment(QTextCharFormat::AlignNormal);
+        fmt.setProperty(mdsupsub::SupSubProperty, false);
+    } else {
+        fmt.setVerticalAlignment(va);
+        fmt.setProperty(mdsupsub::SupSubProperty, true);
+    }
+    mergeCharFormatOnSelection(fmt);
+}
+
+void FormatController::toggleSuperscript()
+{
+    toggleVerticalAlign(QTextCharFormat::AlignSuperScript);
+}
+
+void FormatController::toggleSubscript()
+{
+    toggleVerticalAlign(QTextCharFormat::AlignSubScript);
 }
 
 void FormatController::insertHighlight()

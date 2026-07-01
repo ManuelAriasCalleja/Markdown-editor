@@ -84,6 +84,8 @@ il menu **Formato**:
 - **Evidenzia** (Ctrl+Maiusc+H): racchiude la selezione tra `==marca==`; il testo
   appare con uno sfondo di evidenziazione. Poiché `==` non è sintassi Markdown
   standard, viene salvato come testo letterale.
+- **Apice** (Ctrl+Maiusc++) e **Pedice** (Ctrl+Maiusc+-): alzano o abbassano il testo
+  selezionato; salvati come `^testo^` e `~testo~` (stile Pandoc).
 
 I pulsanti della barra riflettono la formattazione attiva sotto il cursore.
 
@@ -389,6 +391,7 @@ propone di recuperare ciò che stavi scrivendo.
 | Annulla / Ripeti          | Ctrl+Z / Ctrl+Y  |
 | Grassetto / Corsivo       | Ctrl+B / Ctrl+I  |
 | Evidenzia (==marca==)     | Ctrl+Maiusc+H    |
+| Apice / Pedice            | Ctrl+Maiusc++ / Ctrl+Maiusc+- |
 | Sottolineato              | Ctrl+U           |
 | Incolla come testo semplice | Ctrl+Maiusc+V  |
 | Incolla come Markdown     | Ctrl+Alt+V       |

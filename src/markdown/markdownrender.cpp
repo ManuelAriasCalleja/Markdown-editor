@@ -11,11 +11,13 @@
 #include "admonitions.h"
 #include "footnotes.h"
 #include "mathblocks.h"
+#include "supsub.h"
 
 QString mdrender::protect(const QString &markdown)
 {
-    // Notas al pie primero, luego fórmulas (mismo orden que tenía DocumentIo::load).
-    return mdmath::protectMath(mdfootnote::protectFootnotes(markdown));
+    // Notas al pie primero, luego fórmulas; el super/subíndice al final (sus `^`/`~`
+    // no interfieren con `$`/`[^id]`, y así sus centinelas ya no se ven como delimitadores).
+    return mdsupsub::protect(mdmath::protectMath(mdfootnote::protectFootnotes(markdown)));
 }
 
 void mdrender::renderPasses(QTextDocument *doc)
@@ -30,6 +32,7 @@ void mdrender::renderPasses(QTextDocument *doc)
     mdmath::renderMathInDocument(doc);
     mdfootnote::renderFootnotesInDocument(doc);
     mdadmonition::renderAdmonitionsInDocument(doc);
+    mdsupsub::renderInDocument(doc);
     cursor.endEditBlock();
 }
 
