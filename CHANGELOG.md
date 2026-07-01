@@ -5,6 +5,12 @@ Todos los cambios relevantes de **md-editor** se documentan en este archivo.
 El formato sigue, a grandes rasgos, [Keep a Changelog](https://keepachangelog.com/es/),
 y el proyecto usa [versionado semántico](https://semver.org/lang/es/).
 
+## [Sin publicar]
+
+### Cambiado
+- **Botón H4 en la barra de formato** (antes solo H1–H3; H4–H6 seguían disponibles
+  por el menú Formato y Ctrl+4–6).
+
 ## [2.5.0] — 2026-07-01
 
 ### Añadido

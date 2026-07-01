@@ -1013,6 +1013,7 @@ void MainWindow::createFormatToolBar()
     bar->addAction(m_h1Action);
     bar->addAction(m_h2Action);
     bar->addAction(m_h3Action);
+    bar->addAction(m_h4Action);
     bar->addSeparator();
     bar->addAction(m_bulletAction);
     bar->addAction(m_numberedAction);
