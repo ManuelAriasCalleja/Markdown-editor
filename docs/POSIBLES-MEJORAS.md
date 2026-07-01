@@ -300,37 +300,41 @@ rechazados). Las 18 se comprobaron como **no implementadas, sin dependencias nue
 descartada. Patrón habitual: módulo puro + `tst_` + integración en el controller.
 Coste y confianza según la verificación.
 
-#### Coste bajo, confianza alta (primera tanda recomendada)
+#### Coste bajo, confianza alta (primera tanda recomendada) — ✅ entregadas en 2.4.0
 
-- ⬜ **Copiar como Markdown** (selección o documento) — contrapartida de «Pegar como
+> Las 8 de esta tanda se implementaron en la versión **2.4.0** (fases 1–2 del
+> [`PLAN-IMPLEMENTACION.md`](PLAN-IMPLEMENTACION.md)): cada una con módulo puro + `tst_` +
+> ayuda en los 9 idiomas + CHANGELOG.
+
+- ✅ **Copiar como Markdown** (selección o documento) — contrapartida de «Pegar como
   Markdown» y «Copiar como HTML». *Impl.:* `mdrichpaste::fragmentToMarkdown` (crea un
   `QTextDocument` con el fragmento y lo pasa por `mdtable::documentMarkdown`) +
   `ExportController::copyMarkdownToClipboard` (clon de `copyHtmlToClipboard`) + acción
   en *Editar* junto a «Copiar como HTML». `tst_richpaste`.
-- ⬜ **Exportar a texto plano (.txt)** — encaja en el patrón declarativo
+- ✅ **Exportar a texto plano (.txt)** — encaja en el patrón declarativo
   `FileExporter`/`runExport`. *Impl.:* `ExportController::exportPlainText` con lambda
   `writeUtf8File(path, doc->toPlainText())`; entrada en *Archivo → Exportar*.
-- ⬜ **Metadatos del PDF (título/autor) desde el front matter** — hoy el PDF no usa
+- ✅ **Metadatos del PDF (título/autor) desde el front matter** — hoy el PDF no usa
   `title`/`author`. *Impl.:* `mdexport::pdfDocumentInfo(frontMatter)` +
   `printer.setDocName()/setCreator()` en `exportPdf`/`exportSelectionPdf` (`author` →
   `setCreator`; Qt6 no tiene `setAuthor`). `tst_exporters`.
-- ⬜ **Revertir a lo guardado** (recarga manual con confirmación) — la lógica ya
+- ✅ **Revertir a lo guardado** (recarga manual con confirmación) — la lógica ya
   existe: `MainWindow::reloadFromDisk()`, hoy solo la invoca el `DiskWatcher`. *Impl.:*
   acción en *Archivo* → `revertToSaved()` con `QMessageBox` de confirmación; habilitada
   solo si hay archivo y cambios.
-- ⬜ **Ir a línea (Ctrl+L)** — complementa «Ir a encabezado» (Ctrl+G). *Impl.:*
+- ✅ **Ir a línea (Ctrl+L)** — complementa «Ir a encabezado» (Ctrl+G). *Impl.:*
   `mdnav::clampLine` + `QInputDialog::getInt` + `findBlockByNumber` sobre
   `activeEditor()`; **no** añadir a `m_wysiwygActions` (útil en fuente/dividida).
   `tst_gotoline`.
-- ⬜ **Indicador Ln/Col en la barra de estado** — engancha a la señal ya cableada
+- ✅ **Indicador Ln/Col en la barra de estado** — engancha a la señal ya cableada
   `wordCountShouldUpdate`. *Impl.:* `mdstats::lineColumnOf` + `QLabel` permanente espejo
   de `m_countLabel`; conmutable en *Ver* y persistido. `tst_docstats`.
-- ⬜ **Pegar TSV/CSV del portapapeles como tabla** — *matiz:* el HTML de hojas de
+- ✅ **Pegar TSV/CSV del portapapeles como tabla** — *matiz:* el HTML de hojas de
   cálculo ya lo cubre «Pegar como Markdown»; el hueco real es **texto plano** TSV/CSV.
   *Impl.:* módulo puro `mdcsvtable` (`detectDelimited` conservador + `toMarkdownTable`
   escapando `|`), inserta con `fromMarkdown`; acción *Insertar → Tabla desde
   portapapeles* y, opcional, en la cadena de pegado solo para TAB. `tst_csvtable`.
-- ⬜ **Reabrir pestaña cerrada** — *matiz:* `Ctrl+Shift+T` está ocupado (Lista de
+- ✅ **Reabrir pestaña cerrada** — *matiz:* `Ctrl+Shift+T` está ocupado (Lista de
   tareas) → usar otro atajo. *Impl.:* pila pura `session::pushClosed/popClosed`;
   `closeTab` apila la ruta y un slot la desapila con `openPathInTab`. Solo recupera
   documentos con ruta en disco. `tst_closedtabstack`.
@@ -396,6 +400,67 @@ Coste y confianza según la verificación.
 
 *Fuera de alcance por ser distribución/infra (no feature Qt pura):* los puntos 2–4 de
 arriba (packaging nativo, firma/notarización, auto-update) y la analítica (#18).
+
+### Pulido de UX: reducir la ventaja de Typora (2026-07-01)
+
+De comparar md-editor con Typora/MarkText/Ghostwriter/Obsidian: la funcionalidad está
+madura, pero Typora se percibe **más pulido**. Esa brecha no es magia; se reduce a tres
+cosas —fluidez de entrada, tipografía del documento y *affordances* en el bloque—. Todo
+lo de abajo es Qt puro, sin dependencias, **sin `setStyleSheet`** (theming por
+paleta/formatos, como el resto del proyecto) y con el round-trip a salvo.
+
+#### Alto impacto (cierran la mayor parte de la brecha)
+
+- ⬜ **Reglas de entrada («teclea Markdown y se formatea»)** — lo que hace *mágico* a
+  Typora: teclear `## `, `**x**`, `> ` o ``` ```lang ``` y que se transforme en el sitio,
+  sin barra ni atajos. Hoy en md-editor se formatea con Ctrl+B/barra. *Impl.:* módulo puro
+  `mdinputrules` (sobre un `QTextCursor`, detecta el patrón recién tecleado y aplica el
+  formato equivalente) enganchado en `handleEditorKeyPress` —mismo patrón que `mdautopair`/
+  `mdshortcode`/continuación de listas, que ya cubren media familia—. Cubre encabezados
+  `#`…`######`, `**`/`*`/`~~`/`` ` ``, cita `> `, listas `- `/`1. `, regla `---` y fence
+  ``` ```lang ```. Produce los **mismos formatos que la barra**, así que el round-trip es
+  idéntico. `tst_inputrules`. Coste medio, confianza alta. **La que más se nota.**
+- ⬜ **Pasada de tipografía del documento renderizado** — el render de Qt sale plano; el de
+  Typora está compuesto (ritmo de encabezados, interlineado, citas, código, ancho de
+  lectura). *Impl.:* afinar los formatos **por defecto** del documento desde `ThemeSpec`/
+  `mdtheme` sin stylesheet: tamaños/márgenes de encabezados, interlineado y espacio entre
+  párrafos, sangría de listas, **cita con barra lateral** (`QTextFrameFormat` con borde
+  izquierdo de color), **bloque de código con fondo tintado** (frame) y, opcional, ancho de
+  lectura máximo. Por tema; solo presentación (no toca el Markdown). `tst_themespec` (ya
+  vigila contraste). Coste medio, confianza media. **La que más se ve.**
+- ⬜ **Ventana de Preferencias única** — hoy los ajustes están repartidos por *Ver → …* +
+  `AppSettings`. *Impl.:* diálogo `PreferencesDialog` con pestañas (General, Editor,
+  Apariencia, Exportación) que **reúne** lo que ya expone `AppSettings` (nada nuevo que
+  persistir). Mejora el descubrimiento y aparenta madurez de golpe. Coste medio, riesgo
+  bajo, confianza alta. **La que más madura aparenta.**
+
+#### Affordances en el bloque
+
+- ⬜ **Barra flotante de tabla + navegación por celdas** — punto fuerte reconocido de
+  Typora. *Impl.:* un `QWidget` superpuesto al viewport que aparece cuando el cursor está
+  en una tabla (añadir/quitar fila-columna, alinear, mover columna, borrar), reusando
+  `TableController`; y **Tab/Shift+Tab** entre celdas (Tab en la última añade fila).
+  Posicionado a mano sobre el viewport, sin stylesheet. Coste medio.
+- ⬜ **Bloque de código: etiqueta de lenguaje + botón copiar** — mostrar el lenguaje en el
+  fence, un desplegable para cambiarlo (rehace el resaltado vía `LanguageRegistry`) y un
+  botón *copiar* al pasar el ratón. *Impl.:* overlay/acciones sobre el grupo de bloques de
+  código. Coste bajo-medio, alto retorno percibido.
+
+#### Toques menores de acabado
+
+- ⬜ **Documento de bienvenida en el primer arranque** (reusa `doctemplates`) y
+  **placeholder** sutil en el documento vacío. Coste bajo.
+- ⬜ **Popover al pasar por un enlace** (hoy la URL solo sale en la barra de estado). Coste bajo.
+
+*Ya en el roadmap y también «pulido» de UX (no duplicar):* la **paleta de comandos** (#9),
+el **filtro + plegado del esquema** (#18) y **resaltar la línea actual** (#12) de la
+auditoría 2026-06-30.
+
+*Fuera de alcance a propósito (fricción con la arquitectura):* estética tipo CSS pesada
+(esquinas redondeadas, sombras, animaciones) —md-editor es paleta/formatos, sin
+`setStyleSheet`; imitar el CSS de Typora empuja hacia donde Electron gana— y **redimensionar
+imágenes con tiradores** (Typora usa `width` de CSS; en `QTextDocument` complicaría el
+round-trip; a lo sumo, alineación).
 
 ### Robustez
 
@@ -618,7 +683,7 @@ vivo.*
 > **Prioridad sugerida:** en distribución, el mayor desbloqueo pendiente es la #3
 > (firma/notarización de binarios), que elimina la fricción de
 > Gatekeeper/SmartScreen en la instalación, seguida de la #2 (packaging nativo).
-> En funcionalidad, ver «Nueva auditoría (2026-06-30)»: la primera tanda recomendada
-> son las de coste bajo y confianza alta (copiar como Markdown, exportar a .txt,
-> metadatos del PDF, revertir a lo guardado, ir a línea, Ln/Col, pegar CSV), y la
-> **paleta de comandos** la de mayor impacto en usabilidad.
+> En funcionalidad, la primera tanda de la «Nueva auditoría (2026-06-30)» (coste bajo,
+> confianza alta) ya se **entregó en 2.4.0**; lo siguiente es la **paleta de comandos**
+> (#9, la de mayor impacto en usabilidad) y, para reducir la ventaja de Typora, las
+> **reglas de entrada** y la **pasada de tipografía** de «Pulido de UX».
