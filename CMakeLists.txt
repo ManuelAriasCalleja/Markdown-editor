@@ -436,6 +436,7 @@ if(Qt6Test_FOUND)
         tst_headingshift
         tst_tablesort
         tst_tablesortui
+        tst_outlinepanel
         tst_texttransform
         tst_typewriter
         tst_snippets

@@ -7,12 +7,14 @@
 
 #include <QDockWidget>
 #include <QList>
+#include <QSet>
 #include <QString>
 #include <QTreeWidget>
 
 class QTextDocument;
 class QHBoxLayout;
 class QDropEvent;
+class QLineEdit;
 
 /// \brief Un encabezado del documento, para el índice (TOC).
 struct OutlineHeading {
@@ -109,8 +111,20 @@ signals:
     void sectionMoveRequested(int fromOrdinal, int toOrdinal, bool placeAfter);
 
 private:
-    OutlineTree *m_tree;
-    QHBoxLayout *m_layout;  // contenedor: [relleno izquierdo][árbol]
+    friend class TestOutlinePanel;
+
+    // Aplica al árbol YA CONSTRUIDO el estado de vista: el plegado recordado
+    // (m_collapsed) y, si hay filtro, oculta lo que no coincide (ni es ancestro).
+    // Separa el modelo (rebuild) del estado de vista (R7), para que el plegado
+    // sobreviva a las reconstrucciones (antes rebuild hacía expandAll incondicional).
+    void applyViewState();
+
+    OutlineTree *m_tree = nullptr;
+    QLineEdit *m_filter = nullptr;
+    QHBoxLayout *m_layout = nullptr;  // contenedor: [relleno izquierdo][columna]
+    QList<OutlineHeading> m_headings;  // encabezados actuales (para filtrar sin reconstruir)
+    QSet<QString> m_collapsed;  // texto de las ramas plegadas (persiste entre reconstrucciones)
+    bool m_applyingState = false;  // guard: no registrar los cambios de plegado programáticos
 };
 
 #endif // OUTLINEPANEL_H

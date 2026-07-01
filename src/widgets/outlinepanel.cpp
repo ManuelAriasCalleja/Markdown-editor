@@ -270,14 +270,27 @@ OutlinePanel::OutlinePanel(QWidget *parent)
     // Reenvía la petición de mover sección que origina el arrastre en el árbol.
     connect(m_tree, &OutlineTree::sectionMoveRequested,
             this, &OutlinePanel::sectionMoveRequested);
+
+    // Recuerda qué ramas pliega/expande el usuario, para reaplicarlas tras cada
+    // reconstrucción (R7). El guard evita registrar los cambios que hace el propio
+    // applyViewState al reaplicar el estado.
+    connect(m_tree, &QTreeWidget::itemCollapsed, this, [this](QTreeWidgetItem *item) {
+        if (!m_applyingState)
+            m_collapsed.insert(item->text(0));
+    });
+    connect(m_tree, &QTreeWidget::itemExpanded, this, [this](QTreeWidgetItem *item) {
+        if (!m_applyingState)
+            m_collapsed.remove(item->text(0));
+    });
 }
 
 void OutlinePanel::rebuild(const QTextDocument *doc)
 {
+    // MODELO: se reconstruye el árbol a partir del documento. El ESTADO DE VISTA
+    // (plegado, filtro) lo reaplica applyViewState al final, no aquí (R7).
     m_tree->clear();
-
-    const QList<OutlineHeading> headings = mdoutline::headingsOf(doc);
-    if (headings.isEmpty()) {
+    m_headings = mdoutline::headingsOf(doc);
+    if (m_headings.isEmpty()) {
         // Relleno cuando no hay encabezados: ítem deshabilitado, no navegable.
         auto *placeholder = new QTreeWidgetItem(m_tree, {tr("Sin encabezados")});
         placeholder->setFlags(Qt::NoItemFlags);
@@ -291,7 +304,7 @@ void OutlinePanel::rebuild(const QTextDocument *doc)
     struct Node { int level; QTreeWidgetItem *item; };
     QVector<Node> stack;
     int ordinal = 0;
-    for (const OutlineHeading &h : headings) {
+    for (const OutlineHeading &h : m_headings) {
         while (!stack.isEmpty() && stack.last().level >= h.level)
             stack.removeLast();
 
@@ -305,5 +318,19 @@ void OutlinePanel::rebuild(const QTextDocument *doc)
 
         stack.append({h.level, item});
     }
-    m_tree->expandAll();
+    applyViewState();
+}
+
+void OutlinePanel::applyViewState()
+{
+    if (m_headings.isEmpty())
+        return;
+    // El guard evita que estos cambios programáticos de plegado se registren en
+    // m_collapsed (que solo debe reflejar lo que hace el usuario).
+    m_applyingState = true;
+    for (QTreeWidgetItemIterator it(m_tree); *it; ++it) {
+        (*it)->setHidden(false);
+        (*it)->setExpanded(!m_collapsed.contains((*it)->text(0)));
+    }
+    m_applyingState = false;
 }
