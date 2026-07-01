@@ -149,7 +149,7 @@ marcatori; `1.` (sau `1)`) → listă numerotată. Produce același format ca ba
 - **Inserare → Link…** deschide o fereastră cu text și URL. O selecție existentă
   este folosită ca text.
 - **Ctrl+clic** pe un link îl deschide în browserul sistemului; la trecerea cu
-  mouse-ul, URL-ul apare în bara de stare.
+  mouse-ul, URL-ul apare într-un indiciu lângă cursor și în bara de stare.
 - **Imagini**: trage un fișier, lipește o imagine din clipboard sau folosește
   **Inserare → Lipește imagine**. Imaginea este salvată ca PNG lângă `.md` și
   inserată ca `![alt](cale-relativă)`; astfel supraviețuiește conversiei dus-întors

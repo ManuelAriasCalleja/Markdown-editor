@@ -149,7 +149,7 @@ marcadores; `1.` (ou `1)`) → lista numerada. Produz o mesmo formato que a barr
 - **Inserir → Ligação…** abre uma caixa com texto e URL. Uma seleção existente é
   usada como texto.
 - **Ctrl+clique** numa ligação abre-a no navegador do sistema; ao passar o rato
-  por cima, o URL aparece na barra de estado.
+  por cima, o URL aparece numa dica junto ao cursor e na barra de estado.
 - **Imagens**: arraste um ficheiro, cole uma imagem da área de transferência ou
   use **Inserir → Colar imagem**. A imagem é guardada como PNG ao lado do `.md` e
   inserida como `![alt](caminho-relativo)`; assim sobrevive ao round-trip para

@@ -28,6 +28,8 @@ y el proyecto usa [versionado semántico](https://semver.org/lang/es/).
   `1.`/`1)` → lista numerada.
 
 ### Cambiado
+- **Aviso con la URL al pasar el ratón por un enlace**: además de la barra de estado,
+  ahora aparece un *tooltip* con el destino junto al cursor.
 - **Plantillas agrupadas por categoría** en *Archivo → Nuevo desde plantilla*: las
   plantillas se organizan ahora en submenús por categoría profesional (Personal,
   Programación, Docencia, Empresa, Escritura…) en vez de una lista plana. Una

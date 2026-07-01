@@ -145,7 +145,7 @@ numbered list. Produces the same format as the toolbar.
 - **Insert → Link…** opens a dialog with text and URL. If you had a selection,
   it is used as the text.
 - **Ctrl+click** on a link opens it in the system browser; hovering over it
-  shows the URL in the status bar.
+  shows the URL in a tooltip next to the cursor and in the status bar.
 - **Images**: drag a file, paste an image from the clipboard or use **Insert →
   Paste image**. The image is saved as PNG next to the `.md` and inserted as
   `![alt](relative-path)`; this way it survives the round-trip to Markdown

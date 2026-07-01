@@ -145,7 +145,7 @@ spacja → nagłówek H1…H6; `>` → cytat; `-`, `*` lub `+` → lista punktow
 - **Wstaw → Odnośnik…** otwiera okno z tekstem i adresem URL. Istniejące
   zaznaczenie jest użyte jako tekst.
 - **Ctrl+kliknięcie** odnośnika otwiera go w przeglądarce systemowej; po najechaniu
-  myszą URL pojawia się na pasku stanu.
+  myszą URL pojawia się w dymku obok kursora i na pasku stanu.
 - **Obrazy**: przeciągnij plik, wklej obraz ze schowka lub użyj **Wstaw → Wklej
   obraz**. Obraz jest zapisywany jako PNG obok `.md` i wstawiany jako
   `![alt](ścieżka-względna)`; dzięki temu przetrwa konwersję do Markdown (obrazy

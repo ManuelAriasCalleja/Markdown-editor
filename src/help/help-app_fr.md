@@ -152,7 +152,7 @@ d'un espace transforme la ligne sur place (sans laisser le marqueur) : `#` …
 - **Insérer → Lien…** ouvre une boîte de dialogue avec le texte et l'URL. Une
   sélection existante est reprise comme texte.
 - **Ctrl+clic** sur un lien l'ouvre dans le navigateur du système ; au survol,
-  l'URL s'affiche dans la barre d'état.
+  l'URL s'affiche dans une info-bulle près du curseur et dans la barre d'état.
 - **Images** : glissez un fichier, collez une image du presse-papiers ou utilisez
   **Insérer → Coller l'image**. L'image est enregistrée en PNG à côté du `.md` et
   insérée comme `![alt](chemin-relatif)` ; ainsi elle survit à l'aller-retour vers

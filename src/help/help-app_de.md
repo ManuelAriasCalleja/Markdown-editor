@@ -158,7 +158,7 @@ Leerzeichen → Überschrift H1…H6; `>` → Zitat; `-`, `*` oder `+` → Aufz�
 - **Einfügen → Link…** öffnet einen Dialog mit Text und URL. Eine vorhandene
   Auswahl wird als Text übernommen.
 - **Strg+Klick** auf einen Link öffnet ihn im Systembrowser; beim Überfahren mit
-  der Maus wird die URL in der Statusleiste angezeigt.
+  der Maus wird die URL in einem Hinweis neben dem Cursor und in der Statusleiste angezeigt.
 - **Bilder**: Ziehen Sie eine Datei, fügen Sie ein Bild aus der Zwischenablage
   ein oder verwenden Sie **Einfügen → Bild einfügen**. Das Bild wird als PNG neben
   der `.md` gespeichert und als `![alt](relativer-pfad)` eingefügt; so übersteht

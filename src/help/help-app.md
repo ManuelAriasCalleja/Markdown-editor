@@ -149,7 +149,7 @@ viñetas; `1.` (o `1)`) → lista numerada. Produce el mismo formato que la barr
 - **Insertar → Enlace…** abre un diálogo con texto y URL. Si tenías selección,
   pasa como texto.
 - **Ctrl+clic** sobre un enlace lo abre en el navegador del sistema; al pasar
-  el ratón por encima se muestra la URL en la barra de estado.
+  el ratón por encima se muestra la URL en un aviso junto al cursor y en la barra de estado.
 - **Imágenes**: arrastra un archivo, pega una imagen del portapapeles o usa
   **Insertar → Pegar imagen**. La imagen se guarda como PNG junto al `.md` y
   se inserta como `![alt](ruta-relativa)`; así sobrevive al round-trip a

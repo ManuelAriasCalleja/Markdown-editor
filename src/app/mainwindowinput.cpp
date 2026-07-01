@@ -70,6 +70,7 @@
 #include <QRectF>
 #include <QResizeEvent>
 #include <QToolButton>
+#include <QToolTip>
 #include <QLabel>
 #include <QContextMenuEvent>
 #include <QMenu>
@@ -178,12 +179,17 @@ bool MainWindow::handleViewportEvent(QEvent *event)
                 m_stack->editor()->viewport()->setCursor(Qt::PointingHandCursor);
                 statusBar()->showMessage(
                     tr("Ctrl+clic para abrir el enlace: %1").arg(href));
+                // Popover junto al cursor con el destino (no hay que mirar la barra de
+                // estado). Repetir showText con el mismo texto no parpadea.
+                QToolTip::showText(me->globalPosition().toPoint(), href,
+                                   m_stack->editor()->viewport());
                 return true;  // si no, QTextEdit restablecería el cursor a I-beam
             }
             // Acabamos de salir de un enlace: restablece cursor y pista.
             if (m_stack->editor()->viewport()->cursor().shape() == Qt::PointingHandCursor) {
                 m_stack->editor()->viewport()->setCursor(Qt::IBeamCursor);
                 statusBar()->clearMessage();
+                QToolTip::hideText();
             }
         }
     }

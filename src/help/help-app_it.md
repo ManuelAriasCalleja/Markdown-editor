@@ -149,7 +149,7 @@ puntato; `1.` (o `1)`) → elenco numerato. Produce lo stesso formato della barr
 - **Inserisci → Collegamento…** apre una finestra con testo e URL. Una selezione
   esistente viene usata come testo.
 - **Ctrl+clic** su un collegamento lo apre nel browser di sistema; passandoci
-  sopra il mouse, l'URL appare nella barra di stato.
+  sopra il mouse, l'URL appare in un suggerimento accanto al cursore e nella barra di stato.
 - **Immagini**: trascina un file, incolla un'immagine dagli appunti o usa
   **Inserisci → Incolla immagine**. L'immagine viene salvata come PNG accanto al
   `.md` e inserita come `![alt](percorso-relativo)`; così sopravvive al round-trip

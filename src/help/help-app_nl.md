@@ -153,7 +153,7 @@ gevolgd door een spatie de regel ter plekke (zonder de markering te laten staan)
 - **Invoegen → Koppeling…** opent een dialoog met tekst en URL. Een bestaande
   selectie wordt als tekst gebruikt.
 - **Ctrl+klik** op een koppeling opent deze in de systeembrowser; bij het zweven
-  met de muis verschijnt de URL in de statusbalk.
+  met de muis verschijnt de URL in een tooltip naast de cursor en in de statusbalk.
 - **Afbeeldingen**: sleep een bestand, plak een afbeelding van het klembord of
   gebruik **Invoegen → Afbeelding plakken**. De afbeelding wordt als PNG naast de
   `.md` opgeslagen en ingevoegd als `![alt](relatief-pad)`; zo overleeft ze de
