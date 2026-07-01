@@ -5,7 +5,7 @@ Todos los cambios relevantes de **md-editor** se documentan en este archivo.
 El formato sigue, a grandes rasgos, [Keep a Changelog](https://keepachangelog.com/es/),
 y el proyecto usa [versionado semántico](https://semver.org/lang/es/).
 
-## [Sin publicar]
+## [2.5.0] — 2026-07-01
 
 ### Añadido
 - **Paleta de comandos** (*Ver → Paleta de comandos*, Ctrl+Shift+P): busca y
