@@ -1,6 +1,13 @@
-# Plan de implementación — mejoras pendientes (auditoría 2026-06-30)
+# Plan de implementación — mejoras de la auditoría 2026-06-30
 
-> Plan de ejecución de las 18 mejoras pendientes de la sección «Nueva auditoría
+> **✅ COMPLETADO (2026-07-01).** Las 18 mejoras y los refactors R1–R9 están
+> implementados, probados y publicados: la primera tanda en la 2.4.0 y el resto en la
+> 2.5.0 (una mejora por commit en `main`, con módulo puro + `tst_` + integración +
+> traducciones + ayuda + CHANGELOG). Este documento se conserva como registro del
+> *cómo*. Las ideas futuras (fuera de este plan) están en
+> [`POSIBLES-MEJORAS.md`](POSIBLES-MEJORAS.md).
+
+> Plan de ejecución de las 18 mejoras de la sección «Nueva auditoría
 > (2026-06-30)» de [`POSIBLES-MEJORAS.md`](POSIBLES-MEJORAS.md). Aquí está el *cómo*
 > (orden, dependencias, módulos, tests, puntos de integración y refactorizaciones
 > previas); en la auditoría está el *qué* y el *porqué*.

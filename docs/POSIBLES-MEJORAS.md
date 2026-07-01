@@ -292,8 +292,11 @@ mayor margen restante es de **distribución** (puntos 2-4 de arriba), no de feat
 (empuja hacia «workspace»/PKM) e importar `.docx`/`.odt` a Markdown vía Pandoc
 opcional (añadiría otra herramienta externa, como los diagramas).
 
-### Nueva auditoría (2026-06-30): oportunidades Qt puro, coste bajo/medio, pendientes
+### Nueva auditoría (2026-06-30): oportunidades Qt puro, coste bajo/medio — ✅ COMPLETADA
 
+> **✅ Las 18 mejoras (+ refactors R1–R9) están hechas y publicadas** (2.4.0 y 2.5.0,
+> 2026-07-01). Las marcas de abajo lo reflejan.
+>
 > **Plan de ejecución:** el *cómo* de estas 18 mejoras (orden por riesgo, dependencias,
 > módulos/tests, puntos de integración y refactorizaciones previas) vive en
 > [`PLAN-IMPLEMENTACION.md`](PLAN-IMPLEMENTACION.md).
@@ -346,42 +349,42 @@ Coste y confianza según la verificación.
 
 #### Coste medio, confianza alta
 
-- ⬜ **Paleta de comandos (Ctrl+Shift+P)** — acceso por teclado a las ~80 acciones sin
+- ✅ **Paleta de comandos (Ctrl+Shift+P)** *(2.5.0)* — acceso por teclado a las ~80 acciones sin
   memorizar atajos; la de mayor impacto en usabilidad. *Impl.:* módulo puro
   `mdcommands` (`collectCommands` recorre `menuBar()->actions()` recursivamente, salta
   separadores/contenedores/deshabilitadas, arma ruta+atajo; `filterCommands` difuso) +
   `CommandPaletteDialog` (clon de `GoToHeadingDialog`) que dispara `action->trigger()`.
   `tst_commands`.
-- ⬜ **Ordenar filas de tabla por columna** (numérica/alfabética, contextual en menú
+- ✅ **Ordenar filas de tabla por columna** *(2.5.0)* (numérica/alfabética, contextual en menú
   Tabla). *Impl.:* módulo puro `mdtablesort::sortedOrder` + `TableController::sortRows`;
   preservar formato/fórmulas moviendo `QTextDocumentFragment` por celda;
   `m_tableActions` habilita por contexto. `tst_tablesort`.
-- ⬜ **Promover/degradar nivel de encabezado** (relativo, p. ej. Ctrl+[ / Ctrl+]) — hoy
+- ✅ **Promover/degradar nivel de encabezado** *(2.5.0)* (relativo, p. ej. Ctrl+[ / Ctrl+]) — hoy
   `applyHeading` solo fija niveles absolutos. *Impl.:* `mdoutline::shiftHeadingLevels`
   (clamp [1,6] y subárbol opcional) + variante cursor en `FormatController` **sin** la
   semántica *toggle* (que borraría el encabezado al promover). `tst_outline`.
-- ⬜ **Resaltar la línea actual del cursor** — *Impl.:* `linehighlight::currentLineColor`
+- ✅ **Resaltar la línea actual del cursor** *(2.5.0)* — *Impl.:* `linehighlight::currentLineColor`
   (mezcla `Base`→`Highlight`) + `ExtraSelection` con `FullWidthSelection`; **refactor**
   de `applyLineFocus` a una lista fusionada (hoy es el dueño único de `extraSelections`).
   Conmutable en *Ver*. `tst_linehighlight`.
-- ⬜ **Búsqueda «N de M» + resaltar todas las coincidencias** — el contador es de coste
+- ✅ **Búsqueda «N de M» + resaltar todas las coincidencias** *(2.5.0)* — el contador es de coste
   bajo (reusa el bucle de `replaceAll`); resaltar-todas es medio porque comparte
   `extraSelections` con el modo foco (mismo refactor a lista fusionada). *Impl.:*
   `mdfind::matchOrdinal` + `QLabel` en la barra; señal `highlightMatches` de
   `FindReplaceBar` al `EditorStack` activo. `tst_findmatches`.
-- ⬜ **Cabecera/pie con número de página al imprimir y en PDF** («3 / 10», título,
+- ✅ **Cabecera/pie con número de página al imprimir y en PDF** *(2.5.0)* («3 / 10», título,
   fecha). *Impl.:* módulo puro `mdprintdecor` (`headerFooterText` + `bodyRect`) + helper
   `paintPaginated(QPrinter*, QTextDocument*)` con `QPainter`/`newPage()` que sustituye
   los 5 `print()` actuales; flags en `AppSettings`. `tst_printdecor`.
 
 #### Extensiones Markdown inline (round-trip con matiz, confianza media)
 
-- ⬜ **Marca `==texto==`** (resaltado) — `=` no es delimitador en md4c, así que
+- ✅ **Marca `==texto==`** (resaltado) *(2.5.0)* — `=` no es delimitador en md4c, así que
   round-trip-ea como texto literal; solo presentación por `QPalette::Highlight` (sin
   `setStyleSheet`). Coste bajo. *Impl.:* módulo puro `mdmark::spansIn` + pasada de
   render en `mdrender::renderPasses` + acción que **inserta** los `==` literales (no un
   char-format). `tst_markhighlight` + caso en `tst_markdownroundtrip`.
-- ⬜ **Superíndice/subíndice de texto `^x^` / `~x~`** — *matiz:* `~x~` choca con
+- ✅ **Superíndice/subíndice de texto `^x^` / `~x~`** *(2.5.0)* — *matiz:* `~x~` choca con
   `~~tachado~~` de GFM → proteger el `~` simple con centinela PUA antes de `setMarkdown`
   (sobrescribe el tachado de tilde simple; precedente en Typora); `AlignSuperScript`
   pasaría a compartirse entre 3 features → desambiguar con una `UserProperty` nueva.
@@ -390,14 +393,14 @@ Coste y confianza según la verificación.
 
 #### Coste medio, confianza media
 
-- ⬜ **Comandos de línea: mover / duplicar / borrar / unir** (Alt+↑/↓, Ctrl+J…) —
+- ✅ **Comandos de línea: mover / duplicar / borrar / unir** *(2.5.0, solo vista de código)* (Alt+↑/↓, Ctrl+J…) —
   *matiz crítico:* reordenar `QTextBlock`s en crudo en el editor WYSIWYG es arriesgado
   (tablas, objetos `MathObject`, notas) → operar sobre el **cuerpo Markdown** y recargar
   con `setBodyMarkdown` (patrón de `cleanMarkdown`/`moveSection`); en la vista de fuente
   es trivial. `Ctrl+Shift+K` (Bloque) y `Ctrl+K` (Enlace) están ocupados → usar
   `Alt+↑/↓`, `Ctrl+J`, etc. *Impl.:* módulo puro `mdmoveline` que respeta los fences y
   no toca el front matter. `tst_moveline`.
-- ⬜ **Panel de esquema: filtro en vivo + plegado persistente** — hoy `rebuild()` hace
+- ✅ **Panel de esquema: filtro en vivo + plegado persistente** *(2.5.0)* — hoy `rebuild()` hace
   `expandAll()` incondicional en cada edición (molesto en documentos largos). *Impl.:*
   `mdoutline::visibleOrdinals` (conserva ancestros) + `QLineEdit` de filtro; recordar
   las ramas plegadas entre reconstrucciones; acciones «Expandir/Plegar todo».
@@ -795,7 +798,8 @@ vivo.*
 > **Prioridad sugerida:** en distribución, el mayor desbloqueo pendiente es la #3
 > (firma/notarización de binarios), que elimina la fricción de
 > Gatekeeper/SmartScreen en la instalación, seguida de la #2 (packaging nativo).
-> En funcionalidad, la primera tanda de la «Nueva auditoría (2026-06-30)» (coste bajo,
-> confianza alta) ya se **entregó en 2.4.0**; lo siguiente es la **paleta de comandos**
-> (#9, la de mayor impacto en usabilidad) y, para reducir la ventaja de Typora, las
-> **reglas de entrada** y la **pasada de tipografía** de «Pulido de UX».
+> En funcionalidad, la **«Nueva auditoría (2026-06-30)» está completada**: sus 18
+> mejoras salieron en 2.4.0 (primera tanda) y 2.5.0 (el resto). Lo siguiente, ya fuera
+> de ese plan, serían las **reglas de entrada** y la **pasada de tipografía** de
+> «Pulido de UX», la ventana de Preferencias, y las notas nuevas (fuente global,
+> importar formatos).
