@@ -36,6 +36,9 @@ serializowany do czystego Markdown.
 - **Plik → Nowy z szablonu** tworzy dokument na podstawie szkieletu gotowego do
   wypełnienia. Szablony są pogrupowane według kategorii (Osobiste, Programowanie,
   Nauczanie, Firma, Pisanie…).
+- **Zapisz jako szablon…** zapisuje bieżący dokument jako własny szablon (z nazwą i
+  kategorią); pojawia się w powyższym menu obok wbudowanych. **Zarządzaj szablonami…**
+  (na dole tego menu) pozwala je edytować lub usuwać.
 - **Plik → Otwórz…** (Ctrl+O) otwiera istniejący `.md`. Aplikacja zapamiętuje
   ostatnio otwarte w **Plik → Otwórz ostatnie**.
 - **Plik → Importuj** otwiera dokument z innego formatu, konwertując go na Markdown w

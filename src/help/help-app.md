@@ -36,6 +36,9 @@ serializa de vuelta a Markdown puro.
 - **Archivo → Nuevo desde plantilla** crea un documento a partir de un esqueleto
   listo para rellenar. Las plantillas se agrupan por categoría (Personal, Programación,
   Docencia, Empresa, Escritura…).
+- **Guardar como plantilla…** guarda el documento actual como una plantilla tuya (con
+  nombre y categoría); reaparece en el menú anterior junto a las de fábrica. **Gestionar
+  plantillas…** (al final de ese menú) permite editarlas o borrarlas.
 - **Archivo → Abrir…** (Ctrl+O) abre un `.md` existente. La aplicación
   recuerda los últimos abiertos en **Archivo → Abrir recientes**.
 - **Archivo → Importar** abre un documento de otro formato convirtiéndolo a Markdown

@@ -19,6 +19,7 @@ inline QString currentLineHighlightKey() { return QStringLiteral("currentLineHig
 inline QString printPageNumbersKey() { return QStringLiteral("printPageNumbers"); }
 inline QString lineSpacingKey()    { return QStringLiteral("lineSpacing"); }
 inline QString snippetsKey()    { return QStringLiteral("snippets"); }
+inline QString userTemplatesKey() { return QStringLiteral("userTemplates"); }
 inline QString spellCheckKey()  { return QStringLiteral("spellCheck"); }
 inline QString spellLanguageKey() { return QStringLiteral("spellLanguage"); }
 inline QString cursorPositionsKey() { return QStringLiteral("cursorPositions"); }
@@ -252,6 +253,15 @@ QList<mdsnippet::Snippet> AppSettings::snippets()
 void AppSettings::setSnippets(const QList<mdsnippet::Snippet> &snippets)
 {
     QSettings().setValue(snippetsKey(), mdsnippet::serialize(snippets));
+}
+
+QList<mdusertemplate::UserTemplate> AppSettings::userTemplates()
+{
+    return mdusertemplate::deserialize(QSettings().value(userTemplatesKey()).toStringList());
+}
+void AppSettings::setUserTemplates(const QList<mdusertemplate::UserTemplate> &templates)
+{
+    QSettings().setValue(userTemplatesKey(), mdusertemplate::serialize(templates));
 }
 
 QString AppSettings::lastFile()

@@ -301,6 +301,13 @@ private:
     void importHtml();
     // Igual que importHtml pero desde un libro EPUB (ZIP de XHTML).
     void importEpub();
+    // Guarda el documento actual como plantilla de usuario (pide nombre y categoría).
+    void saveAsTemplate();
+    // Abre el gestor de plantillas de usuario (editar/eliminar).
+    void manageTemplates();
+    // (Re)construye el submenú «Nuevo desde plantilla» agrupando por categoría las
+    // plantillas de fábrica y las de usuario. Se rehace al cambiar estas últimas.
+    void rebuildTemplateMenu();
     // Abre `path` en una pestaña: si ya está abierto salta a él; reusa la actual si
     // es un documento nuevo vacío; si no, una pestaña nueva.
     void openPathInTab(const QString &path);
@@ -364,6 +371,7 @@ private:
     QAction *m_distractionAction = nullptr;   // toggle de Ver → Sin distracciones
     QAction *m_typewriterAction = nullptr;    // toggle de Ver → Máquina de escribir
     QMenu *m_snippetsMenu = nullptr;          // submenú dinámico Insertar → Snippet
+    QMenu *m_templateMenu = nullptr;          // submenú dinámico Archivo → Nuevo desde plantilla
     DistractionFreeController *m_distraction = nullptr;  // modo pantalla completa/columna
 
     OutlinePanel *m_outline = nullptr;          // panel lateral con el índice (TOC)

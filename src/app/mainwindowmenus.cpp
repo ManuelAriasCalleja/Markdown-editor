@@ -31,6 +31,7 @@
 #include "richpaste.h"
 #include "csvtable.h"
 #include "doctemplates.h"
+#include "usertemplate.h"
 #include "markdownrender.h"
 #include "diagramcontroller.h"
 #include "mathblocks.h"
@@ -153,22 +154,8 @@ void MainWindow::createFileMenu()
     newAction->setShortcut(QKeySequence::New);  // documento nuevo en una pestaña nueva
     connect(newAction, &QAction::triggered, this, &MainWindow::newTab);
 
-    QMenu *templateMenu = fileMenu->addMenu(tr("Nuevo desde &plantilla"));
-    const QList<mdtemplate::DocTemplate> templates = mdtemplate::all();
-    // Un submenú por categoría, en su orden; una categoría sin plantillas no aparece.
-    for (const mdtemplate::Category cat : mdtemplate::categoriesInOrder()) {
-        QMenu *catMenu = nullptr;  // se crea perezosamente al hallar la primera
-        for (const mdtemplate::DocTemplate &tpl : templates) {
-            if (tpl.category != cat)
-                continue;
-            if (!catMenu)
-                catMenu = templateMenu->addMenu(mdtemplate::categoryName(cat));
-            QAction *act = catMenu->addAction(tpl.name);
-            const QString body = tpl.body;
-            connect(act, &QAction::triggered, this,
-                    [this, body] { addTab(); m_stack->file()->newFromTemplate(body); });
-        }
-    }
+    m_templateMenu = fileMenu->addMenu(tr("Nuevo desde &plantilla"));
+    rebuildTemplateMenu();
 
     QAction *openAction = fileMenu->addAction(tr("&Abrir..."));
     openAction->setShortcut(QKeySequence::Open);
@@ -196,6 +183,11 @@ void MainWindow::createFileMenu()
     QAction *saveAsAction = fileMenu->addAction(tr("Guardar &como..."));
     saveAsAction->setShortcut(QKeySequence::SaveAs);
     connect(saveAsAction, &QAction::triggered, this, [this] { m_stack->file()->saveAs(); });
+
+    QAction *saveTemplateAction = fileMenu->addAction(tr("Guardar como &plantilla..."));
+    saveTemplateAction->setToolTip(
+        tr("Guarda el documento actual como una plantilla reutilizable"));
+    connect(saveTemplateAction, &QAction::triggered, this, &MainWindow::saveAsTemplate);
 
     QAction *revertAction = fileMenu->addAction(tr("&Revertir a lo guardado"));
     revertAction->setToolTip(tr("Descarta los cambios y recarga el archivo del disco"));
@@ -262,6 +254,39 @@ void MainWindow::createFileMenu()
     QAction *quitAction = fileMenu->addAction(tr("&Salir"));
     quitAction->setShortcut(QKeySequence::Quit);
     connect(quitAction, &QAction::triggered, this, &QWidget::close);
+}
+
+void MainWindow::rebuildTemplateMenu()
+{
+    if (!m_templateMenu)
+        return;
+    m_templateMenu->clear();
+
+    const QList<mdtemplate::DocTemplate> factory = mdtemplate::all();
+    const QList<mdusertemplate::UserTemplate> user = AppSettings::userTemplates();
+
+    // Un submenú por categoría no vacía, en orden; en cada uno, primero las de
+    // fábrica y luego las del usuario. La creación es perezosa: una categoría sin
+    // ninguna plantilla (de fábrica ni de usuario) no aparece.
+    for (const mdtemplate::Category cat : mdtemplate::categoriesInOrder()) {
+        QMenu *catMenu = nullptr;
+        const auto addItem = [&](const QString &name, const QString &body) {
+            if (!catMenu)
+                catMenu = m_templateMenu->addMenu(mdtemplate::categoryName(cat));
+            connect(catMenu->addAction(name), &QAction::triggered, this,
+                    [this, body] { addTab(); m_stack->file()->newFromTemplate(body); });
+        };
+        for (const mdtemplate::DocTemplate &tpl : factory)
+            if (tpl.category == cat)
+                addItem(tpl.name, tpl.body);
+        for (const mdusertemplate::UserTemplate &tpl : user)
+            if (tpl.category == cat)
+                addItem(tpl.name, tpl.body);
+    }
+
+    m_templateMenu->addSeparator();
+    connect(m_templateMenu->addAction(tr("Gestionar plantillas...")), &QAction::triggered,
+            this, &MainWindow::manageTemplates);
 }
 
 void MainWindow::createEditMenu()

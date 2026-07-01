@@ -143,6 +143,8 @@ add_library(md-editor-core STATIC
     src/markdown/tableedit.h
     src/markdown/tasklist.cpp
     src/markdown/tasklist.h
+    src/markdown/usertemplate.cpp
+    src/markdown/usertemplate.h
     src/markdown/texttransform.cpp
     src/markdown/texttransform.h
     src/markdown/typography.cpp
@@ -200,6 +202,8 @@ add_library(md-editor-core STATIC
     src/widgets/outlinepanel.h
     src/widgets/snippetsdialog.cpp
     src/widgets/snippetsdialog.h
+    src/widgets/usertemplatesdialog.cpp
+    src/widgets/usertemplatesdialog.h
     src/widgets/symbolpicker.cpp
     src/widgets/symbolpicker.h
 )
@@ -465,6 +469,7 @@ if(Qt6Test_FOUND)
         tst_texttransform
         tst_typewriter
         tst_snippets
+        tst_usertemplate
         tst_autopair
         tst_markdowntidy
         tst_codespanfix

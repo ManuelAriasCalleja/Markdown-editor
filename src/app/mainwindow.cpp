@@ -37,6 +37,7 @@
 #include "splitviewcontroller.h"
 #include "tableedit.h"
 #include "themecontroller.h"
+#include "usertemplatesdialog.h"
 
 #include <cmath>
 
@@ -723,6 +724,36 @@ void MainWindow::importEpub()
     }
     addTab();
     m_stack->file()->newFromTemplate(markdown);
+}
+
+void MainWindow::saveAsTemplate()
+{
+    // Cuerpo actual con su front matter delante (como al guardar), para que la
+    // plantilla conserve los metadatos (title, date…).
+    QString body = m_stack->file()->currentBody();
+    const QString frontMatter = m_stack->documentIo()->frontMatter();
+    if (!frontMatter.isEmpty()) {
+        QString fm = frontMatter;
+        if (!fm.endsWith(QLatin1Char('\n')))
+            fm += QLatin1Char('\n');
+        body = fm + QLatin1Char('\n') + body;
+    }
+
+    UserTemplatesDialog dialog(AppSettings::userTemplates(), this);
+    dialog.startNewFromBody(body);
+    if (dialog.exec() != QDialog::Accepted)
+        return;
+    AppSettings::setUserTemplates(dialog.templates());
+    rebuildTemplateMenu();
+}
+
+void MainWindow::manageTemplates()
+{
+    UserTemplatesDialog dialog(AppSettings::userTemplates(), this);
+    if (dialog.exec() != QDialog::Accepted)
+        return;
+    AppSettings::setUserTemplates(dialog.templates());
+    rebuildTemplateMenu();
 }
 
 void MainWindow::openPathInTab(const QString &path)

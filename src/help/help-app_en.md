@@ -36,6 +36,9 @@ serialized back to plain Markdown.
 - **File → New from template** creates a document from a skeleton ready to fill in.
   Templates are grouped by category (Personal, Programming, Teaching, Business,
   Writing…).
+- **Save as template…** saves the current document as your own template (with a name
+  and category); it reappears in the menu above alongside the built-in ones. **Manage
+  templates…** (at the bottom of that menu) lets you edit or delete them.
 - **File → Open…** (Ctrl+O) opens an existing `.md`. The application remembers
   the most recent ones in **File → Open recent**.
 - **File → Import** opens a document from another format, converting it to Markdown

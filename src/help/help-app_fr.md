@@ -36,6 +36,9 @@ document est sérialisé de nouveau en Markdown pur.
 - **Fichier → Nouveau à partir d'un modèle** crée un document à partir d'un squelette
   prêt à remplir. Les modèles sont regroupés par catégorie (Personnel, Programmation,
   Enseignement, Entreprise, Écriture…).
+- **Enregistrer comme modèle…** enregistre le document actuel comme votre propre modèle
+  (avec un nom et une catégorie) ; il réapparaît dans le menu ci-dessus à côté des modèles
+  intégrés. **Gérer les modèles…** (en bas de ce menu) permet de les modifier ou supprimer.
 - **Fichier → Ouvrir…** (Ctrl+O) ouvre un `.md` existant. L'application retient
   les derniers ouverts dans **Fichier → Ouvrir récents**.
 - **Fichier → Importer** ouvre un document d'un autre format en le convertissant en

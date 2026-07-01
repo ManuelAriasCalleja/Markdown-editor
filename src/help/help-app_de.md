@@ -36,6 +36,9 @@ Speichern wird das Dokument wieder als reines Markdown serialisiert.
 - **Datei → Neu aus Vorlage** erstellt ein Dokument aus einem Gerüst, das nur noch
   ausgefüllt werden muss. Die Vorlagen sind nach Kategorie gruppiert (Persönlich,
   Programmierung, Lehre, Unternehmen, Schreiben…).
+- **Als Vorlage speichern…** speichert das aktuelle Dokument als eigene Vorlage (mit
+  Name und Kategorie); sie erscheint im obigen Menü neben den mitgelieferten. **Vorlagen
+  verwalten…** (am Ende dieses Menüs) erlaubt das Bearbeiten oder Löschen.
 - **Datei → Öffnen…** (Strg+O) öffnet eine vorhandene `.md`. Die Anwendung merkt
   sich die zuletzt geöffneten unter **Datei → Zuletzt geöffnet**.
 - **Datei → Importieren** öffnet ein Dokument aus einem anderen Format und wandelt es

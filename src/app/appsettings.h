@@ -8,6 +8,7 @@
 #include <QStringList>
 
 #include "snippets.h"
+#include "usertemplate.h"
 
 /// \brief Fachada sobre QSettings: centraliza las claves de persistencia y expone
 /// accesores tipados.
@@ -123,6 +124,12 @@ void setPersonalDictionary(const QStringList &words);
 /// usuario define y se insertan desde *Insertar → Snippet*.
 QList<mdsnippet::Snippet> snippets();
 void setSnippets(const QList<mdsnippet::Snippet> &snippets);
+
+/// \brief Plantillas de usuario (ver `mdusertemplate`): documentos completos que el
+/// usuario guarda con *Archivo → Guardar como plantilla…* y reaparecen en *Nuevo
+/// desde plantilla*, mezcladas con las de fábrica por categoría.
+QList<mdusertemplate::UserTemplate> userTemplates();
+void setUserTemplates(const QList<mdusertemplate::UserTemplate> &templates);
 
 /// \brief Último documento abierto: ruta del archivo activo al cerrar, para reabrirlo
 /// al arrancar (vacío = no había archivo, se arranca en blanco).

@@ -36,6 +36,9 @@ serializat înapoi în Markdown pur.
 - **Fișier → Nou din șablon** creează un document pornind de la un schelet gata de
   completat. Șabloanele sunt grupate pe categorii (Personal, Programare, Predare,
   Afaceri, Scriere…).
+- **Salvează ca șablon…** salvează documentul curent ca șablon propriu (cu nume și
+  categorie); reapare în meniul de mai sus alături de cele predefinite. **Gestionează
+  șabloanele…** (la finalul acelui meniu) permite editarea sau ștergerea lor.
 - **Fișier → Deschide…** (Ctrl+O) deschide un `.md` existent. Aplicația reține
   ultimele deschise în **Fișier → Deschise recent**.
 - **Fișier → Importă** deschide un document dintr-un alt format, convertindu-l în

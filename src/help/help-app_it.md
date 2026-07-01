@@ -36,6 +36,9 @@ il documento viene serializzato di nuovo in Markdown puro.
 - **File → Nuovo da modello** crea un documento a partire da uno scheletro pronto da
   compilare. I modelli sono raggruppati per categoria (Personale, Programmazione,
   Didattica, Azienda, Scrittura…).
+- **Salva come modello…** salva il documento attuale come modello personale (con nome
+  e categoria); riappare nel menu qui sopra insieme a quelli predefiniti. **Gestisci
+  modelli…** (in fondo a quel menu) permette di modificarli o eliminarli.
 - **File → Apri…** (Ctrl+O) apre un `.md` esistente. L'applicazione ricorda gli
   ultimi aperti in **File → Apri recenti**.
 - **File → Importa** apre un documento da un altro formato convertendolo in Markdown

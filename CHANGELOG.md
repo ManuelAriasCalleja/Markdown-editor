@@ -8,6 +8,10 @@ y el proyecto usa [versionado semántico](https://semver.org/lang/es/).
 ## [Sin publicar]
 
 ### Añadido
+- **Plantillas de usuario**: *Archivo → Guardar como plantilla…* guarda el documento
+  actual (con su front matter) como una plantilla propia, con nombre y categoría;
+  reaparece en *Nuevo desde plantilla* junto a las de fábrica. *Gestionar plantillas…*
+  (al final de ese submenú) permite editarlas o borrarlas. Se guardan en los ajustes.
 - **Importar desde HTML y EPUB** (*Archivo → Importar*): convierte una página HTML
   o un libro EPUB a Markdown y lo abre como documento nuevo sin título, sin tocar el
   original. En HTML respeta el juego de caracteres declarado (BOM › `<meta charset>` ›

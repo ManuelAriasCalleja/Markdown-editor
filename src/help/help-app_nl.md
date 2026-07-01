@@ -36,6 +36,9 @@ document weer naar pure Markdown geserialiseerd.
 - **Bestand → Nieuw op basis van sjabloon** maakt een document op basis van een skelet
   klaar om in te vullen. De sjablonen zijn gegroepeerd per categorie (Persoonlijk,
   Programmeren, Onderwijs, Bedrijf, Schrijven…).
+- **Opslaan als sjabloon…** slaat het huidige document op als je eigen sjabloon (met
+  naam en categorie); het verschijnt in het bovenstaande menu naast de ingebouwde.
+  **Sjablonen beheren…** (onderaan dat menu) laat je ze bewerken of verwijderen.
 - **Bestand → Openen…** (Ctrl+O) opent een bestaand `.md`. De toepassing onthoudt
   de laatst geopende in **Bestand → Recent geopend**.
 - **Bestand → Importeren** opent een document uit een ander formaat en zet het om naar

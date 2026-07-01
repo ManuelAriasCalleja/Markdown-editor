@@ -516,11 +516,15 @@ vez el coste de traducción y el problema de jurisdicción.
   Escritura; Académico y Derecho quedan vacías hasta B/C y no se muestran); el menú monta
   un submenú por categoría no vacía (perezoso). Solo se tradujeron los 7 nombres de
   categoría. `tst_doctemplates` ampliado. Riesgo bajo.
-- ⬜ **Fase B — Plantillas de usuario (núcleo escalable).** *Impl.:* *Archivo → Guardar como
-  plantilla…* (pide nombre + categoría), persistidas en `AppSettings` (modelo puro tipo
-  `snippets`: `mdusertemplate` de (de)serialización + `tst_usertemplate`), diálogo gestor, y
-  el menú mezcla usuario + fábrica por categoría. Esquiva i18n y jurisdicción. Riesgo medio.
-  Es lo que hace útiles a Derecho/Sanidad sin traducir nada.
+- ✅ **Fase B — Plantillas de usuario (núcleo escalable).** *Hecho:* *Archivo → Guardar como
+  plantilla…* (guarda el cuerpo actual + front matter; pide nombre y categoría) y *Gestionar
+  plantillas…* (al final del submenú). Modelo puro `mdusertemplate` (name/body/category +
+  (de)serialización a QSettings, categoría fuera de rango → Personal) con `tst_usertemplate`;
+  persistidas en `AppSettings::userTemplates`; diálogo `UserTemplatesDialog` (lista + editor
+  nombre/categoría/cuerpo, como `SnippetsDialog` + combo de categoría). El menú `Nuevo desde
+  plantilla` se reconstruye (`rebuildTemplateMenu`) mezclando fábrica + usuario por categoría.
+  Esquiva i18n y jurisdicción (las de usuario no se traducen). Es lo que hace útiles a
+  Derecho/Sanidad sin traducir nada.
 - ⬜ **Fase C — Plantillas de fábrica curadas.** *Impl.:* las ~6‑8 nuevas de Programación/
   Académico, cada una nombre + cuerpo por `tr()`, traducidas a los 9 idiomas (la parte cara
   pero acotada); Docencia/Empresa opc. 1‑2; Derecho/Sanidad cero de fábrica.
