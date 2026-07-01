@@ -581,8 +581,7 @@ las plantillas), para no pisar el original.
   `newFromTemplate` en pestaña nueva (documento sin título, no pisa el original).
   `tst_htmlimport`. *Limitación:* las imágenes con ruta relativa apuntan a la ubicación
   del HTML original (no se copian ni reescriben); windows-1252 cae a UTF-8 (Qt6 core no
-  lo decodifica). *Pendiente:* importar EPUB (mismo `htmlToMarkdown` sobre el XHTML del
-  zip) y **Pandoc opcional** para DOCX/ODT/RTF/LaTeX/…
+  lo decodifica). *Pendiente:* **Pandoc opcional** para DOCX/ODT/RTF/LaTeX/…
 - ⬜ **Pandoc opcional** — máximo apalancamiento: una integración `QProcess` cubre
   DOCX/ODT/RTF/LaTeX/reST/… con calidad alta y degradación elegante, sin dependencia
   enlazada (mismo patrón que los diagramas).

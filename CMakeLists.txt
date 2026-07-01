@@ -123,6 +123,8 @@ add_library(md-editor-core STATIC
     src/markdown/supsub.h
     src/markdown/tablesort.cpp
     src/markdown/tablesort.h
+    src/markdown/epubimport.cpp
+    src/markdown/epubimport.h
     src/markdown/htmlimport.cpp
     src/markdown/htmlimport.h
     src/markdown/markdownrender.cpp
@@ -457,6 +459,7 @@ if(Qt6Test_FOUND)
         tst_supersub
         tst_typography
         tst_htmlimport
+        tst_epubimport
         tst_printdecor
         tst_inputrules
         tst_texttransform

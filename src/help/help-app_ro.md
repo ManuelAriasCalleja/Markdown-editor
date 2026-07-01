@@ -37,10 +37,10 @@ serializat înapoi în Markdown pur.
   (scrisoare, proces-verbal, examen…) gata de completat.
 - **Fișier → Deschide…** (Ctrl+O) deschide un `.md` existent. Aplicația reține
   ultimele deschise în **Fișier → Deschise recent**.
-- **Fișier → Importă → Din HTML…** convertește o pagină HTML în Markdown și o
-  deschide ca document nou fără titlu (fișierul original nu este modificat).
-  Funcționează cel mai bine cu HTML simplu; respectă setul de caractere declarat în
-  pagină.
+- **Fișier → Importă** deschide un document dintr-un alt format, convertindu-l în
+  Markdown într-o filă nouă fără titlu (originalul nu este modificat): **Din HTML…**
+  (o pagină web) și **Din EPUB…** (o carte; capitolele sunt citite în ordine).
+  Funcționează cel mai bine cu conținut simplu; respectă setul de caractere declarat.
 - **Salvează** (Ctrl+S) și **Salvează ca…** (Ctrl+Shift+S) scriu documentul în
   UTF-8. **Deschide folderul documentului** deschide folderul documentului în
   managerul de fișiere.

@@ -299,6 +299,8 @@ private:
     // Diálogo de importar → convierte un HTML a Markdown y lo abre como documento
     // nuevo sin título en una pestaña nueva (no pisa el original).
     void importHtml();
+    // Igual que importHtml pero desde un libro EPUB (ZIP de XHTML).
+    void importEpub();
     // Abre `path` en una pestaña: si ya está abierto salta a él; reusa la actual si
     // es un documento nuevo vacío; si no, una pestaña nueva.
     void openPathInTab(const QString &path);

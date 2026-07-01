@@ -24,6 +24,7 @@
 #include "focuseditor.h"
 #include "helpdialog.h"
 #include "docstats.h"
+#include "epubimport.h"
 #include "htmlimport.h"
 #include "markdownrender.h"
 #include "richpaste.h"
@@ -695,6 +696,31 @@ void MainWindow::importHtml()
 
     // Documento nuevo sin título en una pestaña nueva (como «Nuevo desde plantilla»):
     // no pisa el HTML de origen y cuenta como modificado para que no se pierda sin avisar.
+    addTab();
+    m_stack->file()->newFromTemplate(markdown);
+}
+
+void MainWindow::importEpub()
+{
+    const QString path = QFileDialog::getOpenFileName(
+        this, tr("Importar EPUB"), QString(),
+        tr("Libros EPUB (*.epub);;Todos los archivos (*)"));
+    if (path.isEmpty())
+        return;
+
+    QFile file(path);
+    if (!file.open(QIODevice::ReadOnly)) {
+        QMessageBox::warning(this, tr("Error"),
+                             tr("No se pudo leer el archivo:\n%1").arg(path));
+        return;
+    }
+    const QString markdown = mdimport::epubToMarkdown(file.readAll());
+    if (markdown.isEmpty()) {
+        QMessageBox::warning(
+            this, tr("Error"),
+            tr("No se pudo importar el EPUB. Comprueba que el archivo es válido."));
+        return;
+    }
     addTab();
     m_stack->file()->newFromTemplate(markdown);
 }

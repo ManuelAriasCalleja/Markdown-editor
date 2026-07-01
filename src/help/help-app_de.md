@@ -37,10 +37,11 @@ Speichern wird das Dokument wieder als reines Markdown serialisiert.
   Protokoll, Prüfung…), das nur noch ausgefüllt werden muss.
 - **Datei → Öffnen…** (Strg+O) öffnet eine vorhandene `.md`. Die Anwendung merkt
   sich die zuletzt geöffneten unter **Datei → Zuletzt geöffnet**.
-- **Datei → Importieren → Aus HTML…** wandelt eine HTML-Seite in Markdown um und
-  öffnet sie als neues, unbenanntes Dokument (die Originaldatei bleibt unberührt).
-  Funktioniert am besten mit einfachem HTML; der in der Seite angegebene Zeichensatz
-  wird berücksichtigt.
+- **Datei → Importieren** öffnet ein Dokument aus einem anderen Format und wandelt es
+  in Markdown um, in einem neuen, unbenannten Tab (das Original bleibt unberührt):
+  **Aus HTML…** (eine Webseite) und **Aus EPUB…** (ein Buch; die Kapitel werden der
+  Reihe nach gelesen). Funktioniert am besten mit einfachem Inhalt; der angegebene
+  Zeichensatz wird berücksichtigt.
 - **Speichern** (Strg+S) und **Speichern unter…** (Strg+Umschalt+S) schreiben das
   Dokument als UTF-8. **Enthaltenden Ordner öffnen** öffnet den Ordner des
   Dokuments im Dateimanager.

@@ -37,9 +37,10 @@ il documento viene serializzato di nuovo in Markdown puro.
   (lettera, verbale, esame…) pronto da compilare.
 - **File → Apri…** (Ctrl+O) apre un `.md` esistente. L'applicazione ricorda gli
   ultimi aperti in **File → Apri recenti**.
-- **File → Importa → Da HTML…** converte una pagina HTML in Markdown e la apre come
-  nuovo documento senza titolo (il file originale non viene toccato). Funziona meglio
-  con HTML semplice; rispetta il set di caratteri dichiarato nella pagina.
+- **File → Importa** apre un documento da un altro formato convertendolo in Markdown
+  in una nuova scheda senza titolo (l'originale non viene toccato): **Da HTML…** (una
+  pagina web) e **Da EPUB…** (un libro; i capitoli vengono letti in ordine). Funziona
+  meglio con contenuti semplici; rispetta il set di caratteri dichiarato.
 - **Salva** (Ctrl+S) e **Salva come…** (Ctrl+Maiusc+S) scrivono il documento in
   UTF-8. **Apri cartella contenitore** apre la cartella del documento nel gestore
   file.

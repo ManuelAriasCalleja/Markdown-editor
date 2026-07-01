@@ -37,9 +37,10 @@ serialized back to plain Markdown.
   minutes, exam…) ready to fill in.
 - **File → Open…** (Ctrl+O) opens an existing `.md`. The application remembers
   the most recent ones in **File → Open recent**.
-- **File → Import → From HTML…** converts an HTML page to Markdown and opens it as
-  a new untitled document (it doesn't touch the original file). Works best with
-  simple HTML; it respects the character set declared in the page.
+- **File → Import** opens a document from another format, converting it to Markdown
+  in a new untitled tab (the original is left untouched): **From HTML…** (a web page)
+  and **From EPUB…** (a book; its chapters are read in order). Works best with simple
+  content; it respects the declared character set.
 - **Save** (Ctrl+S) and **Save as…** (Ctrl+Shift+S) write the document in UTF-8.
   **Open containing folder** opens the document's folder in the file manager.
 - **Revert to saved** discards unsaved changes and reloads the file from disk

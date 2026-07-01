@@ -175,6 +175,10 @@ void MainWindow::createFileMenu()
     importHtmlAction->setToolTip(
         tr("Convierte una página HTML a Markdown y la abre como documento nuevo"));
     connect(importHtmlAction, &QAction::triggered, this, &MainWindow::importHtml);
+    QAction *importEpubAction = importMenu->addAction(tr("Desde &EPUB..."));
+    importEpubAction->setToolTip(
+        tr("Convierte un libro EPUB a Markdown y lo abre como documento nuevo"));
+    connect(importEpubAction, &QAction::triggered, this, &MainWindow::importEpub);
 
     QAction *saveAction = fileMenu->addAction(tr("&Guardar"));
     saveAction->setShortcut(QKeySequence::Save);
