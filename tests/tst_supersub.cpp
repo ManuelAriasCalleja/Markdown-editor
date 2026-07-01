@@ -22,6 +22,7 @@ private slots:
     void roundTripMixedWithStrikethrough();
     void rendersAsVerticalAlign();
     void leavesCodeSpanLiteral();
+    void doesNotMangleFormula();
 
 private:
     // Carga `md` como lo hace el editor (protect + setMarkdown + renderPasses) y lo
@@ -93,6 +94,23 @@ void TestSuperSub::leavesCodeSpanLiteral()
     // Dentro de código en línea, `^x^` se queda literal (no se convierte en super).
     const QString out = roundtrip(QStringLiteral("usa `x^2^` aqui"));
     QVERIFY(out.contains(QStringLiteral("`x^2^`")));
+}
+
+void TestSuperSub::doesNotMangleFormula()
+{
+    // Regresión: el super/subíndice de texto NO debe emparejar `^…^` a través de una
+    // fórmula. En `$T^2 = \frac{4\pi^2}{GM}\,a^3$`, el `^` de `\pi^2` y el de `a^3` no
+    // tienen espacio en medio (`2}{GM}\,a`), y la regex los unía metiendo centinelas
+    // dentro del TeX (que quedaba corrompido: `a^3` se renderizaba como `a?3`). La
+    // fórmula, ya envuelta en código en línea por protectMath, debe copiarse intacta.
+    const QString tex = QStringLiteral("T^2 = \\frac{4\\pi^2}{GM}\\,a^3");
+    // protect (con la math ya protegida) no debe insertar centinelas de super/sub.
+    const QString protectedMd = mdrender::protect(QStringLiteral("$") + tex + QStringLiteral("$"));
+    for (const QChar sentinel : {QChar(0xF8F0), QChar(0xF8F1), QChar(0xF8F2), QChar(0xF8F3)})
+        QVERIFY2(!protectedMd.contains(sentinel), "protect metió un centinela en la fórmula");
+    // Y el round-trip preserva el TeX íntegro.
+    const QString out = roundtrip(QStringLiteral("$") + tex + QStringLiteral("$"));
+    QVERIFY2(out.contains(tex), qPrintable(QStringLiteral("round-trip perdió el TeX: ") + out));
 }
 
 QTEST_MAIN(TestSuperSub)

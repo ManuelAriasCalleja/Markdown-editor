@@ -36,17 +36,108 @@ QTextCharFormat formatAt(const QTextDocument *doc, int pos)
     return {};
 }
 
+// Aplica las marcas de super/subíndice a un tramo de TEXTO (nunca código).
+QString applyMarks(QString s)
+{
+    // Superíndice `^x^`: interior no vacío, sin espacios ni `^`.
+    static const QRegularExpression supRe(QStringLiteral("\\^([^\\^\\s]+)\\^"));
+    s.replace(supRe, QString(kSupOpen) + QStringLiteral("\\1") + QString(kSupClose));
+    // Subíndice `~x~`: una sola `~` (ni antes ni después), interior sin espacios ni `~`.
+    static const QRegularExpression subRe(QStringLiteral("(?<!~)~([^~\\s]+)~(?!~)"));
+    s.replace(subRe, QString(kSubOpen) + QStringLiteral("\\1") + QString(kSubClose));
+    return s;
+}
+
+// Índice tras la carrera de exactamente `ticks` acentos graves que cierra un span de
+// código en línea abierto en `from`, o -1 si no cierra en la línea.
+int closingBackticks(const QString &s, int from, int ticks)
+{
+    int i = from;
+    const int n = s.size();
+    while (i < n) {
+        if (s.at(i) == QLatin1Char('`')) {
+            int j = i;
+            while (j < n && s.at(j) == QLatin1Char('`'))
+                ++j;
+            if (j - i == ticks)
+                return j;
+            i = j;
+        } else {
+            ++i;
+        }
+    }
+    return -1;
+}
+
+// Aplica las marcas fuera de los tramos de código en línea (acentos graves) de una
+// línea que no está dentro de un bloque vallado.
+QString protectOutsideInlineCode(const QString &line)
+{
+    QString out;
+    int i = 0;
+    const int n = line.size();
+    while (i < n) {
+        if (line.at(i) == QLatin1Char('`')) {
+            int j = i;
+            while (j < n && line.at(j) == QLatin1Char('`'))
+                ++j;
+            const int ticks = j - i;
+            const int close = closingBackticks(line, j, ticks);
+            if (close < 0) {
+                // Sin cierre: los acentos graves son texto literal; sigue tras ellos.
+                out += line.mid(i, ticks);
+                i = j;
+                continue;
+            }
+            out += line.mid(i, close - i);  // el span de código, verbatim
+            i = close;
+        } else {
+            int j = i;
+            while (j < n && line.at(j) != QLatin1Char('`'))
+                ++j;
+            out += applyMarks(line.mid(i, j - i));
+            i = j;
+        }
+    }
+    return out;
+}
+
 }  // namespace
 
 QString protect(const QString &markdown)
 {
-    QString out = markdown;
-    // Superíndice `^x^`: interior no vacío, sin espacios ni `^`.
-    static const QRegularExpression supRe(QStringLiteral("\\^([^\\^\\s]+)\\^"));
-    out.replace(supRe, QString(kSupOpen) + QStringLiteral("\\1") + QString(kSupClose));
-    // Subíndice `~x~`: una sola `~` (ni antes ni después), interior sin espacios ni `~`.
-    static const QRegularExpression subRe(QStringLiteral("(?<!~)~([^~\\s]+)~(?!~)"));
-    out.replace(subRe, QString(kSubOpen) + QStringLiteral("\\1") + QString(kSubClose));
+    // Aplica el super/subíndice SOLO fuera de código: bloques vallados (``` … ```) y
+    // tramos de código en línea (`…`, ``…``) se copian tal cual. Las fórmulas ya
+    // vienen envueltas en código en línea por mdmath::protectMath (que corre antes en
+    // el pipeline de mdrender), así que esto también las respeta: si no, un `^…^`
+    // podría emparejarse a través de la fórmula (p. ej. en `\pi^2}{GM}\,a^3`, el `^`
+    // de `\pi` con el de `a`) y corromper su TeX.
+    const QStringList lines = markdown.split(QLatin1Char('\n'));
+    QString out;
+    bool inFence = false;
+    QString fenceToken;  // ``` o ~~~ que abrió la valla
+    for (int i = 0; i < lines.size(); ++i) {
+        if (i)
+            out += QLatin1Char('\n');
+        const QString &line = lines.at(i);
+        const QString trimmed = line.trimmed();
+        const bool fenceLine = trimmed.startsWith(QLatin1String("```"))
+                               || trimmed.startsWith(QLatin1String("~~~"));
+        if (inFence) {
+            out += line;  // dentro de la valla: verbatim
+            if (fenceLine && trimmed.startsWith(fenceToken))
+                inFence = false;
+            continue;
+        }
+        if (fenceLine) {
+            inFence = true;
+            fenceToken = trimmed.startsWith(QLatin1String("```")) ? QStringLiteral("```")
+                                                                  : QStringLiteral("~~~");
+            out += line;
+            continue;
+        }
+        out += protectOutsideInlineCode(line);
+    }
     return out;
 }
 

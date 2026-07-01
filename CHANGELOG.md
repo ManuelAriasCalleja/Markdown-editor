@@ -17,6 +17,13 @@ y el proyecto usa [versionado semántico](https://semver.org/lang/es/).
 - **Botón H4 en la barra de formato** (antes solo H1–H3; H4–H6 seguían disponibles
   por el menú Formato y Ctrl+4–6).
 
+### Corregido
+- **Fórmulas con varios exponentes/subíndices seguidos** (p. ej.
+  `$T^2 = \frac{4\pi^2}{GM}\,a^3$`): el super/subíndice de texto emparejaba por error
+  dos `^`/`~` a través de la fórmula cuando no había espacio entre ellos, corrompiendo
+  el TeX (el `a^3` se veía como `a` + un símbolo raro + `3`). Ahora el super/subíndice
+  de texto respeta el código en línea y los bloques vallados, y por tanto las fórmulas.
+
 ## [2.5.0] — 2026-07-01
 
 ### Añadido
