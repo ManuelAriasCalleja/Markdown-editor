@@ -1338,6 +1338,27 @@ QTextDocument *cloneForExport(const QTextDocument *src)
         for (const mdmath::MathRun &r : mdmath::renderTexAsRuns(e.tex, base))
             c.insertText(r.text, r.fmt);
     }
+
+    // Qt hornea un tamaño de fuente ABSOLUTO en los runs de código (inline y
+    // bloque): setMarkdown les fija `FontPointSize` = el tamaño por defecto AL
+    // IMPORTAR, que con el zoom de interfaz es el tamaño de pantalla. Normalizar
+    // solo el defaultFont (arriba) no los toca, así que saldrían más grandes (o más
+    // pequeños) que el cuerpo. Se quita ese tamaño absoluto para que hereden el
+    // cuerpo normalizado (conservando la familia monospace y el color). Es el único
+    // formato con tamaño absoluto: los encabezados usan pasos relativos
+    // (FontSizeAdjustment) y el resto hereda el defaultFont.
+    for (QTextBlock b = out->begin(); b.isValid(); b = b.next()) {
+        for (auto it = b.begin(); it != b.end(); ++it) {
+            const QTextFragment frag = it.fragment();
+            if (!frag.isValid() || !frag.charFormat().hasProperty(QTextFormat::FontPointSize))
+                continue;
+            QTextCharFormat cleared = frag.charFormat();
+            cleared.clearProperty(QTextFormat::FontPointSize);
+            c.setPosition(frag.position());
+            c.setPosition(frag.position() + frag.length(), QTextCursor::KeepAnchor);
+            c.setCharFormat(cleared);
+        }
+    }
     return out;
 }
 

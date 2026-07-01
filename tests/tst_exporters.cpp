@@ -4,7 +4,9 @@
 #include <QFile>
 #include <QFont>
 #include <QTemporaryDir>
+#include <QTextBlock>
 #include <QTextDocument>
+#include <QTextFragment>
 #include <QXmlStreamReader>
 
 #include "codehighlighter.h"
@@ -44,6 +46,7 @@ private slots:
     void plainTextFlattensTwoDFormula();
     void codeHighlightingBakedIntoExport();
     void cloneNormalizesFontSizeAwayFromZoom();
+    void cloneCodeInheritsBodyFontSize();
 };
 
 // ¿`xml` es XML bien formado? (para validar las piezas del EPUB).
@@ -399,6 +402,30 @@ void TestExporters::cloneNormalizesFontSizeAwayFromZoom()
     // La familia y demás atributos se conservan.
     QCOMPARE(flat->defaultFont().family(), doc.defaultFont().family());
     // Y el HTML resultante no lleva el tamaño inflado.
+    QVERIFY(!flat->toHtml().contains(QStringLiteral("font-size:30")));
+}
+
+// Qt hornea un tamaño ABSOLUTO en los runs de código (inline y bloque); si no se
+// neutraliza, sale con distinto tamaño que el cuerpo tras normalizar el defaultFont.
+// cloneForExport quita ese tamaño absoluto para que el código herede el cuerpo.
+void TestExporters::cloneCodeInheritsBodyFontSize()
+{
+    QTextDocument doc;
+    doc.setMarkdown(QStringLiteral(
+        "Texto con `codigo` en linea.\n\n```\nbloque\n```\n"));
+    QFont zoomed = doc.defaultFont();
+    zoomed.setPointSizeF(30.0);
+    doc.setDefaultFont(zoomed);
+
+    std::unique_ptr<QTextDocument> flat(mdexport::cloneForExport(&doc));
+    // Ningún fragmento conserva un tamaño de fuente absoluto: todos heredan el cuerpo.
+    for (QTextBlock b = flat->begin(); b.isValid(); b = b.next())
+        for (auto it = b.begin(); it != b.end(); ++it)
+            if (it.fragment().isValid())
+                QVERIFY2(!it.fragment().charFormat().hasProperty(QTextFormat::FontPointSize),
+                         qPrintable(QStringLiteral("fragmento con tamaño absoluto: '%1'")
+                                        .arg(it.fragment().text())));
+    // El HTML no emite el tamaño de pantalla en el código.
     QVERIFY(!flat->toHtml().contains(QStringLiteral("font-size:30")));
 }
 
