@@ -92,7 +92,8 @@ justo delante de su pareja, el editor lo «salta» en vez de duplicarlo.
 ## Encabezados, listas y bloques
 
 - **Encabezados** H1–H6 desde **Formato → Encabezado** o con
-  Ctrl+1 … Ctrl+6.
+  Ctrl+1 … Ctrl+6. **Promover/degradar** el encabezado del cursor un nivel con
+  Ctrl+Shift+[ / Ctrl+Shift+].
 - **Listas**: viñetas, numeradas y de tareas (con casilla). Pulsando Enter al
   final de un punto se crea el siguiente automáticamente; con Enter sobre un
   punto vacío se sale de la lista. Un **clic sobre la casilla** de una tarea la
@@ -379,6 +380,7 @@ ofrece recuperar lo que estabas escribiendo.
 | Buscar                    | Ctrl+F           |
 | Buscar siguiente/anterior | F3 / Shift+F3    |
 | Encabezado H1 … H6        | Ctrl+1 … Ctrl+6  |
+| Promover / degradar encabezado | Ctrl+Shift+[ / Ctrl+Shift+] |
 | Insertar fórmula          | Ctrl+Shift+F     |
 | Insertar nota al pie      | Ctrl+Shift+N     |
 | Ir a encabezado           | Ctrl+G           |

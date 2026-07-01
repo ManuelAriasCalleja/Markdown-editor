@@ -13,6 +13,8 @@ y el proyecto usa [versionado semántico](https://semver.org/lang/es/).
   filtrado difuso y navegación por teclado.
 - **Resaltar la línea actual** (*Ver → Resaltar la línea actual*): marca con un
   fondo sutil la línea del cursor. Desactivado por defecto.
+- **Promover/degradar encabezado** (*Formato*, Ctrl+Shift+[ / Ctrl+Shift+]): sube
+  o baja un nivel el encabezado del cursor (acotado entre H1 y H6).
 
 ### Cambiado
 - **Buscar** resalta ahora **todas** las coincidencias en el documento y muestra

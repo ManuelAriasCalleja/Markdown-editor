@@ -89,6 +89,8 @@ duplikować.
 ## Nagłówki, listy i bloki
 
 - **Nagłówki** H1–H6 z **Format → Nagłówek** lub przez Ctrl+1 … Ctrl+6.
+  **Podnieś/obniż** nagłówek przy kursorze o jeden poziom przez
+  Ctrl+Shift+[ / Ctrl+Shift+].
 - **Listy**: punktowane, numerowane i zadań (z polem wyboru). Enter na końcu
   punktu tworzy automatycznie następny; Enter na pustym punkcie opuszcza listę.
   **Kliknięcie pola wyboru** zadania zaznacza je lub odznacza.
@@ -366,6 +368,7 @@ proponuje odzyskanie tego, co pisałeś.
 | Znajdź                    | Ctrl+F           |
 | Znajdź następny/poprzedni | F3 / Shift+F3    |
 | Nagłówek H1 … H6          | Ctrl+1 … Ctrl+6  |
+| Podnieś / obniż nagłówek  | Ctrl+Shift+[ / Ctrl+Shift+] |
 | Wstaw wzór                | Ctrl+Shift+F     |
 | Wstaw przypis             | Ctrl+Shift+N     |
 | Przejdź do nagłówka       | Ctrl+G           |

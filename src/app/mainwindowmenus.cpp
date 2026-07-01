@@ -459,6 +459,23 @@ void MainWindow::createFormatActions()
     formatMenu->addAction(m_h4Action);
     formatMenu->addAction(m_h5Action);
     formatMenu->addAction(m_h6Action);
+
+    m_promoteHeadingAction = formatMenu->addAction(tr("Promover encabezado"));
+    m_promoteHeadingAction->setShortcut(QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_BracketLeft));
+    m_promoteHeadingAction->setToolTip(withShortcut(
+        tr("Sube el encabezado un nivel (hacia H1)"), m_promoteHeadingAction->shortcut()));
+    connect(m_promoteHeadingAction, &QAction::triggered, this,
+            [this] { m_stack->format()->promoteHeading(); });
+    m_wysiwygActions.append(m_promoteHeadingAction);
+
+    m_demoteHeadingAction = formatMenu->addAction(tr("Degradar encabezado"));
+    m_demoteHeadingAction->setShortcut(QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_BracketRight));
+    m_demoteHeadingAction->setToolTip(withShortcut(
+        tr("Baja el encabezado un nivel (hacia H6)"), m_demoteHeadingAction->shortcut()));
+    connect(m_demoteHeadingAction, &QAction::triggered, this,
+            [this] { m_stack->format()->demoteHeading(); });
+    m_wysiwygActions.append(m_demoteHeadingAction);
+
     formatMenu->addSeparator();
     formatMenu->addAction(m_bulletAction);
     formatMenu->addAction(m_numberedAction);

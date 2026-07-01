@@ -3,6 +3,8 @@
 
 #include "outlinepanel.h"
 
+#include <algorithm>
+
 #include <QDropEvent>
 #include <QHBoxLayout>
 #include <QPalette>
@@ -33,6 +35,13 @@ QList<OutlineHeading> mdoutline::headingsOf(const QTextDocument *doc)
             headings.append({level, block.text(), block.blockNumber()});
     }
     return headings;
+}
+
+int mdoutline::shiftedLevel(int current, int delta)
+{
+    if (current < 1)
+        return 0;  // no es un encabezado: sin cambio
+    return std::clamp(current + delta, 1, 6);
 }
 
 QString mdoutline::tableOfContentsMarkdown(const QList<OutlineHeading> &headings)

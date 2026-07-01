@@ -89,6 +89,8 @@ editor "skips over" it instead of duplicating it.
 ## Headings, lists and blocks
 
 - **Headings** H1–H6 from **Format → Heading** or with Ctrl+1 … Ctrl+6.
+  **Promote/demote** the heading at the cursor by one level with
+  Ctrl+Shift+[ / Ctrl+Shift+].
 - **Lists**: bullets, numbered and task lists (with a checkbox). Pressing Enter
   at the end of an item automatically creates the next one; Enter on an empty
   item leaves the list. A **click on the checkbox** of a task toggles it.
@@ -365,6 +367,7 @@ were writing.
 | Find                      | Ctrl+F           |
 | Find next/previous        | F3 / Shift+F3    |
 | Heading H1 … H6           | Ctrl+1 … Ctrl+6  |
+| Promote / demote heading  | Ctrl+Shift+[ / Ctrl+Shift+] |
 | Insert formula            | Ctrl+Shift+F     |
 | Insert footnote           | Ctrl+Shift+N     |
 | Go to heading             | Ctrl+G           |

@@ -92,6 +92,8 @@ duplicar.
 ## Títulos, listas e blocos
 
 - **Títulos** H1–H6 a partir de **Formato → Título** ou com Ctrl+1 … Ctrl+6.
+  **Promover/rebaixar** o título no cursor um nível com
+  Ctrl+Shift+[ / Ctrl+Shift+].
 - **Listas**: com marcadores, numeradas e de tarefas (com caixa). Premindo Enter
   no fim de um ponto cria-se automaticamente o seguinte; Enter num ponto vazio sai
   da lista. Um **clique na caixa** de uma tarefa marca-a ou desmarca-a.
@@ -371,6 +373,7 @@ recuperar o que estava a escrever.
 | Localizar                 | Ctrl+F           |
 | Localizar seguinte/anterior | F3 / Shift+F3  |
 | Título H1 … H6            | Ctrl+1 … Ctrl+6  |
+| Promover / rebaixar título | Ctrl+Shift+[ / Ctrl+Shift+] |
 | Inserir fórmula           | Ctrl+Shift+F     |
 | Inserir nota de rodapé    | Ctrl+Shift+N     |
 | Ir para título            | Ctrl+G           |

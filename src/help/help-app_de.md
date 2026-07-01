@@ -97,6 +97,8 @@ seinem Gegenstück, „überspringt“ der Editor es, statt es zu verdoppeln.
 ## Überschriften, Listen und Blöcke
 
 - **Überschriften** H1–H6 über **Format → Überschrift** oder mit Strg+1 … Strg+6.
+  **Höher-/Tieferstufen** der Überschrift am Cursor um eine Ebene mit
+  Strg+Umschalt+[ / Strg+Umschalt+].
 - **Listen**: Aufzählungen, nummerierte und Aufgabenlisten (mit Kontrollkästchen).
   Enter am Ende eines Punktes erstellt automatisch den nächsten; Enter auf einem
   leeren Punkt verlässt die Liste. Ein **Klick auf das Kontrollkästchen** einer
@@ -388,6 +390,7 @@ automatisch gespeichert. Schließt die Anwendung unerwartet, bietet sie beim ern
 | Suchen                    | Strg+F           |
 | Weiter-/Rückwärtssuchen   | F3 / Umschalt+F3 |
 | Überschrift H1 … H6       | Strg+1 … Strg+6  |
+| Überschrift höher-/tieferstufen | Strg+Umschalt+[ / Strg+Umschalt+] |
 | Formel einfügen           | Strg+Umschalt+F  |
 | Fußnote einfügen          | Strg+Umschalt+N  |
 | Zu Überschrift gehen      | Strg+G           |

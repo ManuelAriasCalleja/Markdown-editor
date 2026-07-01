@@ -92,6 +92,8 @@ l'editor lo «salta» invece di duplicarlo.
 ## Titoli, elenchi e blocchi
 
 - **Titoli** H1–H6 da **Formato → Titolo** o con Ctrl+1 … Ctrl+6.
+  **Alza/abbassa** il titolo al cursore di un livello con
+  Ctrl+Maiusc+[ / Ctrl+Maiusc+].
 - **Elenchi**: puntati, numerati e di attività (con casella). Premendo Invio alla
   fine di un punto si crea automaticamente il successivo; Invio su un punto vuoto
   esce dall'elenco. Un **clic sulla casella** di un'attività la spunta o la
@@ -378,6 +380,7 @@ propone di recuperare ciò che stavi scrivendo.
 | Trova                     | Ctrl+F           |
 | Trova successivo/precedente | F3 / Maiusc+F3 |
 | Titolo H1 … H6            | Ctrl+1 … Ctrl+6  |
+| Alza / abbassa titolo     | Ctrl+Maiusc+[ / Ctrl+Maiusc+] |
 | Inserisci formula         | Ctrl+Maiusc+F    |
 | Inserisci nota            | Ctrl+Maiusc+N    |
 | Vai al titolo             | Ctrl+G           |

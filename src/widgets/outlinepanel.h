@@ -26,6 +26,11 @@ namespace mdoutline {
 /// \brief Recorre los bloques del documento y recoge los que tienen headingLevel() > 0.
 QList<OutlineHeading> headingsOf(const QTextDocument *doc);
 
+/// \brief Nuevo nivel al promover/degradar un encabezado: `current` (1..6) más
+/// `delta` (−1 promover hacia H1, +1 degradar hacia H6), acotado a [1,6]. Si
+/// `current` no es un encabezado (< 1), devuelve 0 (sin cambio). Pura, testeable.
+int shiftedLevel(int current, int delta);
+
 /// \brief Genera el Markdown de un índice (TOC) a partir de una lista de encabezados:
 /// una lista con viñetas anidada por nivel. La profundidad se calcula como en el
 /// árbol del panel (una pila de ancestros), de modo que los saltos de nivel

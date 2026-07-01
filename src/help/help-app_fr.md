@@ -94,6 +94,8 @@ l'éditeur le « saute » au lieu de le dupliquer.
 ## Titres, listes et blocs
 
 - **Titres** H1–H6 depuis **Format → Titre** ou avec Ctrl+1 … Ctrl+6.
+  **Promouvoir/abaisser** le titre au curseur d'un niveau avec
+  Ctrl+Maj+[ / Ctrl+Maj+].
 - **Listes** : à puces, numérotées et de tâches (avec case). Entrée à la fin d'un
   point crée automatiquement le suivant ; Entrée sur un point vide quitte la
   liste. Un **clic sur la case** d'une tâche la coche ou la décoche.
@@ -382,6 +384,7 @@ elle propose à la réouverture de récupérer ce que vous étiez en train d'éc
 | Rechercher                | Ctrl+F           |
 | Suivant / Précédent       | F3 / Maj+F3      |
 | Titre H1 … H6             | Ctrl+1 … Ctrl+6  |
+| Promouvoir / abaisser le titre | Ctrl+Maj+[ / Ctrl+Maj+] |
 | Insérer une formule       | Ctrl+Maj+F       |
 | Insérer une note          | Ctrl+Maj+N       |
 | Aller au titre            | Ctrl+G           |

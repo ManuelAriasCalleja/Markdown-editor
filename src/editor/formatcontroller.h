@@ -73,6 +73,8 @@ public:
 
 public slots:
     void applyHeading(int level);                  // fija/quita H`level` (toggle)
+    void promoteHeading();                          // sube el encabezado del cursor un nivel (hacia H1)
+    void demoteHeading();                           // baja el encabezado del cursor un nivel (hacia H6)
     void applyList(QTextListFormat::Style style);   // fija/quita lista del estilo (toggle)
     void toggleBlockquote();
     void toggleCodeBlock();
@@ -91,6 +93,9 @@ private:
     // Fija el bloque actual como encabezado de `level` (1..6) o párrafo (0). Núcleo
     // absoluto (sin toggle) que comparten applyHeading y shiftHeading.
     void setHeadingLevel(int level);
+    // Promover (delta −1) / degradar (delta +1) el encabezado del cursor, acotado a
+    // [1,6]; no hace nada si el bloque no es un encabezado o ya está en el límite.
+    void shiftHeading(int delta);
     void mergeCharFormatOnSelection(const QTextCharFormat &format);
     void changeListIndent(int delta);
 

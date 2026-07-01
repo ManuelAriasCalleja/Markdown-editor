@@ -91,6 +91,8 @@ editorul îl „sare” în loc să-l dubleze.
 ## Titluri, liste și blocuri
 
 - **Titluri** H1–H6 din **Format → Titlu** sau cu Ctrl+1 … Ctrl+6.
+  **Promovează/retrogradează** titlul de la cursor cu un nivel prin
+  Ctrl+Shift+[ / Ctrl+Shift+].
 - **Liste**: cu marcatori, numerotate și de sarcini (cu casetă). Enter la sfârșitul
   unui punct creează automat următorul; Enter pe un punct gol iese din listă. Un
   **clic pe caseta** unei sarcini o bifează sau o debifează.
@@ -378,6 +380,7 @@ ce scriai.
 | Caută                     | Ctrl+F           |
 | Caută următorul/anteriorul | F3 / Shift+F3   |
 | Titlu H1 … H6             | Ctrl+1 … Ctrl+6  |
+| Promovează / retrogradează titlul | Ctrl+Shift+[ / Ctrl+Shift+] |
 | Inserează formulă         | Ctrl+Shift+F     |
 | Inserează notă de subsol  | Ctrl+Shift+N     |
 | Mergi la titlu            | Ctrl+G           |

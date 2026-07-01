@@ -68,6 +68,7 @@ class MainWindow : public QMainWindow
     friend class TestFileController;
     friend class TestFormula;
     friend class TestExtraSelections;
+    friend class TestHeadingShift;
 
 public:
     explicit MainWindow(QWidget *parent = nullptr);
@@ -342,6 +343,8 @@ private:
     QAction *m_langAction = nullptr;      // "Lenguaje del bloque": solo dentro de fence
     QAction *m_indentAction = nullptr;    // sangría: solo dentro de una lista
     QAction *m_outdentAction = nullptr;
+    QAction *m_promoteHeadingAction = nullptr;  // promover/degradar el encabezado del cursor
+    QAction *m_demoteHeadingAction = nullptr;
     QHash<mdtheme::ThemeId, QAction *> m_themeActions;  // marca la acción del tema activo
 
     QAction *m_distractionAction = nullptr;   // toggle de Ver → Sin distracciones

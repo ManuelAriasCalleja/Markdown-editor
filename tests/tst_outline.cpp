@@ -32,6 +32,8 @@ private slots:
     void moveSectionIgnoresCodeFenceHashes();
     void moveSectionInvalidIsNoOp();
     void moveSectionIntoItselfIsNoOp();
+
+    void shiftedLevelClampsAndIgnoresNonHeadings();
 };
 
 void TestOutline::nullDocReturnsEmpty()
@@ -205,6 +207,19 @@ void TestOutline::moveSectionIntoItselfIsNoOp()
     // Mover una sección dentro de su propia subsección no debe hacer nada.
     const QString md = QStringLiteral("# Alfa\n\n## Alfa.1\n\n# Beta\n");
     QCOMPARE(mdoutline::moveSection(md, 0, 1, true), md);   // destino = subsección de origen
+}
+
+void TestOutline::shiftedLevelClampsAndIgnoresNonHeadings()
+{
+    // Promover (−1) hacia H1, degradar (+1) hacia H6.
+    QCOMPARE(mdoutline::shiftedLevel(3, -1), 2);
+    QCOMPARE(mdoutline::shiftedLevel(2, 1), 3);
+    // Límites: H1 no sube más, H6 no baja más.
+    QCOMPARE(mdoutline::shiftedLevel(1, -1), 1);
+    QCOMPARE(mdoutline::shiftedLevel(6, 1), 6);
+    // No es encabezado (0 = párrafo): sin cambio.
+    QCOMPARE(mdoutline::shiftedLevel(0, -1), 0);
+    QCOMPARE(mdoutline::shiftedLevel(0, 1), 0);
 }
 
 QTEST_MAIN(TestOutline)

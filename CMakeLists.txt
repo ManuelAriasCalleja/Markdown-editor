@@ -431,6 +431,7 @@ if(Qt6Test_FOUND)
         tst_extraselections
         tst_linehighlight
         tst_find
+        tst_headingshift
         tst_texttransform
         tst_typewriter
         tst_snippets

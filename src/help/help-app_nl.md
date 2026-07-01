@@ -93,6 +93,8 @@ tegenhanger, dan "springt" de editor eroverheen in plaats van het te verdubbelen
 ## Koppen, lijsten en blokken
 
 - **Koppen** H1–H6 via **Opmaak → Kop** of met Ctrl+1 … Ctrl+6.
+  **Promoveren/degraderen** van de kop bij de cursor met één niveau via
+  Ctrl+Shift+[ / Ctrl+Shift+].
 - **Lijsten**: opsommingen, genummerd en taken (met selectievakje). Enter aan het
   einde van een punt maakt automatisch het volgende; Enter op een leeg punt
   verlaat de lijst. Een **klik op het selectievakje** van een taak schakelt deze
@@ -382,6 +384,7 @@ openen aan om te herstellen wat je aan het schrijven was.
 | Zoeken                    | Ctrl+F           |
 | Volgende/vorige zoeken    | F3 / Shift+F3    |
 | Kop H1 … H6               | Ctrl+1 … Ctrl+6  |
+| Kop promoveren / degraderen | Ctrl+Shift+[ / Ctrl+Shift+] |
 | Formule invoegen          | Ctrl+Shift+F     |
 | Voetnoot invoegen         | Ctrl+Shift+N     |
 | Ga naar kop               | Ctrl+G           |

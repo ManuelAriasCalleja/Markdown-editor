@@ -12,6 +12,7 @@
 
 #include "blockconstructs.h"
 #include "codehighlighter.h"
+#include "outlinepanel.h"  // mdoutline::shiftedLevel
 
 // Los textos visibles de setCodeLanguage conservan el contexto de traducción
 // "MainWindow" (QCoreApplication::translate) para no re-hogar las cadenas ya
@@ -83,6 +84,25 @@ void FormatController::applyHeading(int level)
 {
     const int current = m_editor->textCursor().blockFormat().headingLevel();
     setHeadingLevel(current == level ? 0 : level);  // volver a pulsar = quitar
+}
+
+void FormatController::shiftHeading(int delta)
+{
+    const int current = m_editor->textCursor().blockFormat().headingLevel();
+    const int target = mdoutline::shiftedLevel(current, delta);
+    if (target == current)
+        return;  // no es encabezado, o ya en el límite (H1 al promover / H6 al degradar)
+    setHeadingLevel(target);
+}
+
+void FormatController::promoteHeading()
+{
+    shiftHeading(-1);  // hacia H1 (menos '#')
+}
+
+void FormatController::demoteHeading()
+{
+    shiftHeading(1);  // hacia H6 (más '#')
 }
 
 void FormatController::applyList(QTextListFormat::Style style)
