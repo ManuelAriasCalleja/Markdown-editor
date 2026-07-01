@@ -73,8 +73,8 @@ EditorStack::EditorStack(FindReplaceBar *findBar, OutlinePanel *outline,
     // El color de atenuación del foco de línea se deriva de la paleta; al cambiar
     // de tema hay que rehacerlo (si no, se quedaría con el color del tema anterior).
     connect(m_theme, &ThemeController::themeChanged, this, [this] {
-        applyLineFocus(m_editor);
-        applyLineFocus(m_split->sourceEditor());
+        rebuildExtraSelections(m_editor);
+        rebuildExtraSelections(m_split->sourceEditor());
     });
 
     // Corrector ortográfico: posee el motor (lo enchufa al highlighter) y el menú
@@ -97,7 +97,7 @@ EditorStack::EditorStack(FindReplaceBar *findBar, OutlinePanel *outline,
             this, &EditorStack::cursorMoved);
     connect(m_split->sourceEditor(), &QTextEdit::cursorPositionChanged,
             this, [this] { centerCursorLine(m_split->sourceEditor());
-                           applyLineFocus(m_split->sourceEditor()); });
+                           rebuildExtraSelections(m_split->sourceEditor()); });
     connect(m_split->sourceEditor(), &QTextEdit::selectionChanged,
             this, &EditorStack::wordCountShouldUpdate);
     connect(m_split, &SplitViewController::wordCountShouldUpdate,
@@ -162,7 +162,7 @@ EditorStack::EditorStack(FindReplaceBar *findBar, OutlinePanel *outline,
     connect(m_editor, &QTextEdit::cursorPositionChanged,
             this, &EditorStack::cursorMoved);
     connect(m_editor, &QTextEdit::cursorPositionChanged,
-            this, [this] { centerCursorLine(m_editor); applyLineFocus(m_editor); });
+            this, [this] { centerCursorLine(m_editor); rebuildExtraSelections(m_editor); });
     // Marca «modificado» comparando con la línea base (DocumentIo).
     connect(m_editor->document(), &QTextDocument::contentsChanged, this,
             [this] { emit windowModifiedChanged(m_documentIo->isModified()); });
@@ -196,8 +196,8 @@ EditorStack::EditorStack(FindReplaceBar *findBar, OutlinePanel *outline,
     // Tras cargar, reaplica el foco de línea: setTypewriterMode pudo correr con el
     // documento aún vacío (al configurar la pestaña), antes de tener contenido.
     connect(m_documentIo, &DocumentIo::documentLoaded, this, [this] {
-        applyLineFocus(m_editor);
-        applyLineFocus(m_split->sourceEditor());
+        rebuildExtraSelections(m_editor);
+        rebuildExtraSelections(m_split->sourceEditor());
     });
 }
 
@@ -323,17 +323,11 @@ QString EditorStack::formulaAtCursor(int *start) const
     return tex;
 }
 
-void EditorStack::applyLineFocus(QTextEdit *ed)
+QList<QTextEdit::ExtraSelection> EditorStack::focusDimSelections(QTextEdit *ed) const
 {
-    if (!ed)
-        return;
-
-    // Apagado: quita la atenuación de ambos editores (este método se llama por
-    // editor; el toggle lo invoca para los dos).
-    if (!m_typewriter) {
-        ed->setExtraSelections({});
-        return;
-    }
+    QList<QTextEdit::ExtraSelection> selections;
+    if (!ed || !m_typewriter)
+        return selections;
 
     // Color apagado: el texto mezclado a medias con el fondo del editor. Funciona
     // igual en temas claros y oscuros (acerca el texto al fondo, sin fijar gris).
@@ -351,7 +345,6 @@ void EditorStack::applyLineFocus(QTextEdit *ed)
     // rango (la posición máxima es characterCount()-1). Pasarlo entero dejaría el
     // último tramo con un setPosition fallido → selección vacía → sin atenuar.
     const int lastPos = ed->document()->characterCount() - 1;
-    QList<QTextEdit::ExtraSelection> selections;
     for (const mdtypewriter::Range &r :
          mdtypewriter::dimRanges(lastPos,
                                  block.position(), block.position() + block.length())) {
@@ -362,6 +355,18 @@ void EditorStack::applyLineFocus(QTextEdit *ed)
         sel.format.setForeground(dim);
         selections.append(sel);
     }
+    return selections;
+}
+
+void EditorStack::rebuildExtraSelections(QTextEdit *ed)
+{
+    if (!ed)
+        return;
+    // Fusiona todas las capas y aplica en una sola llamada (este es el único
+    // setExtraSelections del componente). El orden importa cuando dos capas se
+    // solapan: las posteriores pintan encima.
+    QList<QTextEdit::ExtraSelection> selections;
+    selections += focusDimSelections(ed);
     ed->setExtraSelections(selections);
 }
 
@@ -371,8 +376,8 @@ void EditorStack::setTypewriterMode(bool on)
     centerCursorLine(activeEditor());  // centra ya, sin esperar a moverse
     // Aplica/limpia la atenuación en ambos editores (cualquiera puede estar visible
     // en la vista dividida).
-    applyLineFocus(m_editor);
-    applyLineFocus(m_split->sourceEditor());
+    rebuildExtraSelections(m_editor);
+    rebuildExtraSelections(m_split->sourceEditor());
 }
 
 void EditorStack::cleanMarkdown()

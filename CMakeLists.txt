@@ -424,6 +424,7 @@ if(Qt6Test_FOUND)
         tst_csvtable
         tst_closedtabstack
         tst_commands
+        tst_extraselections
         tst_texttransform
         tst_typewriter
         tst_snippets

@@ -67,6 +67,7 @@ class MainWindow : public QMainWindow
     friend class TestSplitView;
     friend class TestFileController;
     friend class TestFormula;
+    friend class TestExtraSelections;
 
 public:
     explicit MainWindow(QWidget *parent = nullptr);

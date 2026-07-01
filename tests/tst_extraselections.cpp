@@ -1,0 +1,80 @@
+#include <QtTest>
+
+#include <QApplication>
+#include <QCoreApplication>
+#include <QSettings>
+#include <QTextCursor>
+#include <QTextEdit>
+
+#include "editorstack.h"
+#include "focuseditor.h"
+#include "mainwindow.h"
+
+// Caracterización del compositor de QTextEdit::extraSelections (R1) y de sus
+// capas (#12 línea actual, #13 coincidencias). Fija la conducta OBSERVABLE
+// —qué selecciones hay en el editor según el estado— para que la refactorización
+// del único dueño de setExtraSelections no cambie el comportamiento y para que
+// las capas coexistan. Es friend de MainWindow para tocar el stack activo.
+class TestExtraSelections : public QObject
+{
+    Q_OBJECT
+private slots:
+    void initTestCase();
+    void cleanup();
+
+    // R1: el modo foco atenúa fuera del párrafo del cursor.
+    void focusModeAddsSelections();
+    void focusModeOffClearsSelections();
+
+private:
+    // Coloca el cursor del editor WYSIWYG en el bloque `n` (0-based).
+    static void placeCursorInBlock(QTextEdit *ed, int n);
+};
+
+void TestExtraSelections::initTestCase()
+{
+    QCoreApplication::setOrganizationName(QStringLiteral("md-editor-test"));
+    QCoreApplication::setApplicationName(QStringLiteral("md-editor-test"));
+}
+
+void TestExtraSelections::cleanup()
+{
+    QSettings().clear();
+}
+
+void TestExtraSelections::placeCursorInBlock(QTextEdit *ed, int n)
+{
+    QTextCursor c = ed->textCursor();
+    c.movePosition(QTextCursor::Start);
+    for (int i = 0; i < n; ++i)
+        c.movePosition(QTextCursor::NextBlock);
+    ed->setTextCursor(c);
+}
+
+void TestExtraSelections::focusModeAddsSelections()
+{
+    MainWindow w;
+    w.show();
+    w.m_stack->editor()->setMarkdown(QStringLiteral("uno\n\ndos\n\ntres\n"));
+    placeCursorInBlock(w.m_stack->editor(), 1);  // párrafo del medio
+
+    w.m_stack->setTypewriterMode(true);
+    // Con el cursor en el párrafo del medio hay texto que atenuar antes y después.
+    QVERIFY(!w.m_stack->editor()->extraSelections().isEmpty());
+}
+
+void TestExtraSelections::focusModeOffClearsSelections()
+{
+    MainWindow w;
+    w.show();
+    w.m_stack->editor()->setMarkdown(QStringLiteral("uno\n\ndos\n\ntres\n"));
+    placeCursorInBlock(w.m_stack->editor(), 1);
+
+    w.m_stack->setTypewriterMode(true);
+    QVERIFY(!w.m_stack->editor()->extraSelections().isEmpty());
+    w.m_stack->setTypewriterMode(false);
+    QVERIFY(w.m_stack->editor()->extraSelections().isEmpty());
+}
+
+QTEST_MAIN(TestExtraSelections)
+#include "tst_extraselections.moc"

@@ -6,9 +6,10 @@
 
 #include <QWidget>
 #include <QString>
+#include <QList>
+#include <QTextEdit>  // para QTextEdit::ExtraSelection en las firmas de las capas
 
 class QByteArray;
-class QTextEdit;
 class FocusEditor;
 class CodeBlockHighlighter;
 class DocumentIo;
@@ -144,10 +145,15 @@ private:
     // Si el modo máquina de escribir está activo, desplaza `ed` para que la línea
     // del cursor quede a media altura (lógica pura en `mdtypewriter`).
     void centerCursorLine(QTextEdit *ed);
-    // «Foco de línea» (misma palanca que la máquina de escribir): atenúa con
-    // QTextEdit::extraSelections todo `ed` salvo el párrafo del cursor. Si el modo
-    // está apagado, limpia las selecciones. Los tramos los calcula `mdtypewriter`.
-    void applyLineFocus(QTextEdit *ed);
+    // Compositor de QTextEdit::extraSelections: el ÚNICO que llama setExtraSelections.
+    // Fusiona en una sola lista las capas independientes (proveedores) y la aplica de
+    // una vez. Añadir una capa nueva = otro proveedor sumado aquí, NO otro
+    // setExtraSelections que se pisaría con este. Capas actuales: atenuación del modo
+    // foco. Recalcúlalo cuando cambie cualquier entrada de una capa (cursor, tema…).
+    void rebuildExtraSelections(QTextEdit *ed);
+    // Capa del modo foco: atenúa todo `ed` salvo el párrafo del cursor (tramos de
+    // `mdtypewriter`). Vacía si el modo está apagado.
+    QList<QTextEdit::ExtraSelection> focusDimSelections(QTextEdit *ed) const;
     bool m_typewriter = false;
 
     // Aplica el interlineado actual (m_lineSpacing) a todos los bloques de `ed`.
