@@ -17,8 +17,10 @@ y el proyecto usa [versionado semántico](https://semver.org/lang/es/).
 - **Tipografía del documento renderizado**: el editor ya no muestra el Markdown
   «plano». Los encabezados tienen ritmo vertical (más aire arriba cuanto mayor es el
   nivel), los párrafos se separan un poco, los bloques de código se ven como un panel
-  con fondo tenue y sangría, y las citas llevan un fondo sutil. Es solo presentación
-  (no cambia el Markdown ni el guardado) y se aplica automáticamente.
+  con fondo tenue y sangría, y las citas llevan **barra lateral** (gris en una cita
+  normal; del color del acento en una admonición, completando el aspecto de «callout»)
+  y un fondo sutil. Es solo presentación (no cambia el Markdown ni el guardado) y se
+  aplica automáticamente.
 - **Botón H4 en la barra de formato** (antes solo H1–H3; H4–H6 seguían disponibles
   por el menú Formato y Ctrl+4–6).
 

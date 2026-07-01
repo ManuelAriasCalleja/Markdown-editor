@@ -17,6 +17,7 @@ class TestTypography : public QObject
 private slots:
     void headingMarginsDecreaseWithLevel();
     void tintsAreTranslucent();
+    void quoteBarColorPicksAccentOrNeutral();
     void codeBlocksGetBackground();
     void quotesGetBackground();
     void admonitionsNotDoubleTinted();
@@ -59,6 +60,26 @@ void TestTypography::tintsAreTranslucent()
     QVERIFY(mdtypography::codeBackground().alpha() > 0);
     QVERIFY(mdtypography::codeBackground().alpha() < 255);
     QVERIFY(mdtypography::quoteBackground().alpha() < mdtypography::codeBackground().alpha());
+}
+
+void TestTypography::quoteBarColorPicksAccentOrNeutral()
+{
+    const QColor textColor(20, 20, 20);
+    // Fondo de acento (admonición NOTE, azulado con alpha): barra de acento OPACA.
+    const QColor accentBar =
+        mdtypography::quoteBarColor(QColor(47, 109, 222, 28), textColor);
+    QCOMPARE(accentBar.red(), 47);
+    QCOMPARE(accentBar.green(), 109);
+    QCOMPARE(accentBar.blue(), 222);
+    QCOMPARE(accentBar.alpha(), 255);
+    // Fondo gris neutro (cita normal) o inválido: barra derivada del texto, translúcida.
+    for (const QColor bg : {mdtypography::quoteBackground(), QColor()}) {
+        const QColor neutral = mdtypography::quoteBarColor(bg, textColor);
+        QCOMPARE(neutral.red(), textColor.red());
+        QCOMPARE(neutral.green(), textColor.green());
+        QCOMPARE(neutral.blue(), textColor.blue());
+        QVERIFY(neutral.alpha() < 255);
+    }
 }
 
 void TestTypography::codeBlocksGetBackground()

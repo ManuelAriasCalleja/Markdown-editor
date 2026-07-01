@@ -438,9 +438,12 @@ paleta/formatos, como el resto del proyecto) y con el round-trip a salvo.
   cita con fondo tenue; presentación pura (preserva `isModified`, no toca el round-trip),
   aplicada en `EditorStack` tras `styleTables`/`applyLineSpacing`. Tinte **translúcido**
   (como las admoniciones) para no reaplicar al cambiar de tema; salta tablas, ítems de lista
-  y las citas que ya son admoniciones. `tst_typography`. *Pendiente de una posible segunda
-  tanda:* la **barra lateral** literal de la cita (`QTextBlockFormat` no tiene borde de
-  bloque; requiere pintado en el viewport) y el **ancho de lectura máximo**.
+  y las citas que ya son admoniciones. `tst_typography`. La **barra lateral** de la cita
+  (como `QTextBlockFormat` no tiene borde de bloque) se pinta en `FocusEditor::paintEvent`
+  con `cursorRect` (coordenadas de viewport: respeta scroll, sangría y columna centrada):
+  gris en una cita normal, del color del acento en una admonición (completa el «callout»);
+  el color lo decide `mdtypography::quoteBarColor` (puro, testado). *Pendiente de una posible
+  tanda futura:* el **ancho de lectura máximo**.
 - ⬜ **Ventana de Preferencias única** — hoy los ajustes están repartidos por *Ver → …* +
   `AppSettings`. *Impl.:* diálogo `PreferencesDialog` con pestañas (General, Editor,
   Apariencia, Exportación) que **reúne** lo que ya expone `AppSettings` (nada nuevo que

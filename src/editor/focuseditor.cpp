@@ -6,8 +6,65 @@
 #include <QApplication>
 #include <QEvent>
 #include <QMimeData>
+#include <QPainter>
+#include <QPaintEvent>
 #include <QPalette>
 #include <QResizeEvent>
+#include <QTextBlock>
+#include <QTextCursor>
+#include <QTextDocument>
+
+#include "typography.h"
+
+namespace {
+// Barra lateral de las citas: ancho del trazo y hueco entre la barra y el texto.
+constexpr int kQuoteBarWidth = 3;
+constexpr int kQuoteBarGap = 8;
+}  // namespace
+
+void FocusEditor::paintEvent(QPaintEvent *event)
+{
+    QTextEdit::paintEvent(event);  // el texto primero; la barra va encima
+
+    QTextDocument *doc = document();
+    if (!doc)
+        return;
+
+    const QRect band = event->rect();
+    const QColor textColor = viewport()->palette().color(QPalette::Text);
+    QPainter painter(viewport());
+
+    // Arrancar en el bloque que cae al principio de la zona a repintar (no desde el
+    // inicio del documento) mantiene el coste proporcional a lo visible, no al total.
+    for (QTextBlock b = cursorForPosition(QPoint(0, band.top())).block(); b.isValid();
+         b = b.next()) {
+        const QTextBlockFormat bf = b.blockFormat();
+        if (bf.intProperty(QTextFormat::BlockQuoteLevel) <= 0)
+            continue;
+
+        // Extensión vertical y borde izquierdo del texto en coordenadas de viewport:
+        // cursorRect ya las da con el scroll y la columna centrada aplicados, así que
+        // la barra sigue a la sangría de la cita (más a la derecha si está anidada) y
+        // a la columna del modo sin distracciones sin cálculos extra.
+        QTextCursor cStart(b);
+        QTextCursor cEnd(b);
+        cEnd.setPosition(b.position() + qMax(0, b.length() - 1));
+        const QRect top = cursorRect(cStart);
+        const QRect bottom = cursorRect(cEnd);
+
+        if (bottom.bottom() < band.top())
+            continue;  // por encima de la zona a repintar
+        if (top.top() > band.bottom())
+            break;     // por debajo: los bloques siguientes también
+
+        const QColor bar = mdtypography::quoteBarColor(
+            bf.background().style() != Qt::NoBrush ? bf.background().color() : QColor(),
+            textColor);
+        painter.fillRect(QRect(top.left() - kQuoteBarGap, top.top(), kQuoteBarWidth,
+                               bottom.bottom() - top.top()),
+                         bar);
+    }
+}
 
 void FocusEditor::setMimeInsertHandler(std::function<bool(const QMimeData *)> handler)
 {

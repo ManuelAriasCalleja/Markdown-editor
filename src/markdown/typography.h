@@ -28,6 +28,12 @@ QColor codeBackground();
 /// Fondo translúcido de una cita normal (más sutil que el del código).
 QColor quoteBackground();
 
+/// Color de la barra lateral de una cita, a partir del fondo del bloque y del color
+/// del texto. Si el fondo es de acento (una admonición, no un gris neutro) devuelve
+/// ese acento opaco (barra de «callout»); si es neutro o inválido (cita normal),
+/// una barra derivada del texto, semitransparente. La pinta FocusEditor::paintEvent.
+QColor quoteBarColor(const QColor &blockBackground, const QColor &textColor);
+
 /// Aplica la tipografía a `doc` recorriendo sus bloques (encabezados, párrafos,
 /// bloques de código y citas). Presentación pura: preserva isModified(); no toca las
 /// tablas ni las citas que ya son admoniciones (ya tintadas por mdadmonition).

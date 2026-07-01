@@ -74,6 +74,21 @@ QColor quoteBackground()
     return {kGray, kGray, kGray, kQuoteAlpha};
 }
 
+QColor quoteBarColor(const QColor &blockBackground, const QColor &textColor)
+{
+    // Admonición: su fondo es el color de acento (con alpha bajo); una barra a todo
+    // color completa el aspecto de «callout». Se reconoce por no ser un gris neutro
+    // (el fondo inválido = sin fondo se trata como cita normal).
+    const QColor &bg = blockBackground;
+    if (bg.isValid() && !(bg.red() == bg.green() && bg.green() == bg.blue()))
+        return {bg.red(), bg.green(), bg.blue()};  // acento, opaco
+
+    // Cita normal: barra neutra derivada del color del texto, semitransparente.
+    QColor c = textColor;
+    c.setAlpha(110);
+    return c;
+}
+
 void apply(QTextDocument *doc)
 {
     if (!doc)

@@ -9,6 +9,7 @@
 #include <functional>
 
 class QResizeEvent;
+class QPaintEvent;
 class QMimeData;
 
 /// QTextEdit que puede centrar el texto en una columna de ancho máximo fijo,
@@ -39,6 +40,8 @@ public:
     void setMimeInsertHandler(std::function<bool(const QMimeData *)> handler);
 
 protected:
+    // Pinta la barra lateral de las citas (y admoniciones) sobre el texto ya trazado.
+    void paintEvent(QPaintEvent *event) override;
     void resizeEvent(QResizeEvent *event) override;
     bool canInsertFromMimeData(const QMimeData *source) const override;
     void insertFromMimeData(const QMimeData *source) override;
