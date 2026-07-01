@@ -378,6 +378,7 @@ de voettekst (`N / M`) bij afdrukken en bij exporteren naar PDF.
 
 ## Thema's en uiterlijk
 
+- **Bewerken → Voorkeuren…** (Ctrl+,) verzamelt de meest gebruikte instellingen (thema, warm licht, regelafstand, huidige regel markeren, focusmodus, paginanummers) in een dialoog met tabbladen.
 - **Beeld → Thema** biedt Licht, Donker, GitHub Light, GitHub Dark, Monokai, Hoog contrast, Solarized Light en Solarized Dark. **Systeem volgen** stemt het lichte/donkere thema af op dat van
   het besturingssysteem.
 - **Beeld → Nachtelijk warm licht** dempt de blauwtinten van de achtergrond

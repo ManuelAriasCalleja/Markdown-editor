@@ -361,6 +361,7 @@ footer (`N / M`) when printing and when exporting to PDF.
 
 ## Themes and appearance
 
+- **Edit → Preferences…** (Ctrl+,) gathers the most common settings (theme, warm light, line spacing, current-line highlight, focus mode, page numbers) in a tabbed dialog.
 - **View → Theme** offers Light, Dark, GitHub Light, GitHub Dark, Monokai, High contrast, Solarized Light and Solarized Dark. **Follow the system** matches the light/dark theme to the OS.
 - **View → Night warm light** dims the background blues according to the time.
 - **View → Line spacing** sets the editor's line height: Single, 1.5 lines or Double.

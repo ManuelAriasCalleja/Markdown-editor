@@ -378,6 +378,7 @@ de page en pied de page (`N / M`) à l'impression et à l'export PDF.
 
 ## Thèmes et apparence
 
+- **Édition → Préférences…** (Ctrl+,) regroupe les réglages les plus courants (thème, lumière chaude, interligne, surbrillance de la ligne active, mode focus, numéros de page) dans une fenêtre à onglets.
 - **Affichage → Thème** propose Clair, Sombre, GitHub Light, GitHub Dark, Monokai, Contraste élevé, Solarized Light et Solarized Dark. **Suivre le système** aligne le thème clair/sombre sur celui
   du système.
 - **Affichage → Lumière chaude nocturne** atténue les bleus du fond selon l'heure.

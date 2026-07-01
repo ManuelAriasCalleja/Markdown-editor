@@ -386,6 +386,7 @@ der Fußzeile (`N / M`) beim Drucken und beim PDF-Export hinzu.
 
 ## Themes und Aussehen
 
+- **Bearbeiten → Einstellungen…** (Strg+,) fasst die häufigsten Einstellungen (Design, warmes Licht, Zeilenabstand, aktuelle Zeile hervorheben, Fokusmodus, Seitenzahlen) in einem Dialog mit Registerkarten zusammen.
 - **Ansicht → Theme** bietet Hell, Dunkel, GitHub Light, GitHub Dark, Monokai, Hoher Kontrast, Solarized Light und Solarized Dark. **Dem System folgen** passt das helle/dunkle Theme an das des
   Betriebssystems an.
 - **Ansicht → Nächtliches warmes Licht** dimmt die Blautöne des Hintergrunds je

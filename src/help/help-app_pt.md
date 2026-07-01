@@ -366,6 +366,7 @@ de página no rodapé (`N / M`) ao imprimir e ao exportar para PDF.
 
 ## Temas e aparência
 
+- **Editar → Preferências…** (Ctrl+,) reúne as definições mais comuns (tema, luz quente, espaçamento entre linhas, realce da linha atual, modo de foco, números de página) numa janela com separadores.
 - **Ver → Tema** oferece Claro, Escuro, GitHub Light, GitHub Dark, Monokai, Alto contraste, Solarized Light e Solarized Dark. **Seguir o sistema** ajusta o tema claro/escuro ao do sistema
   operativo.
 - **Ver → Luz quente noturna** atenua os azuis do fundo conforme a hora.

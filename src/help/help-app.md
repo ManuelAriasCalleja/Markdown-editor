@@ -373,6 +373,7 @@ página en el pie (`N / M`) al imprimir y al exportar a PDF.
 
 ## Temas y apariencia
 
+- **Editar → Preferencias…** (Ctrl+,) reúne los ajustes más comunes (tema, luz cálida, interlineado, resaltar la línea actual, modo foco, números de página) en un diálogo con pestañas.
 - **Ver → Tema** ofrece Claro, Oscuro, GitHub Light, GitHub Dark, Monokai,
   Alto contraste, Solarized Light y Solarized Dark. **Seguir el sistema** ajusta
   el tema claro/oscuro al del SO.

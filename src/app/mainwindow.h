@@ -372,6 +372,15 @@ private:
 
     QAction *m_distractionAction = nullptr;   // toggle de Ver → Sin distracciones
     QAction *m_typewriterAction = nullptr;    // toggle de Ver → Máquina de escribir
+    // Acciones de ajuste que la ventana de Preferencias refleja y dispara (reusando
+    // su lógica de aplicar+persistir). Se guardan como miembros para ese fin.
+    QAction *m_warmLightAction = nullptr;
+    QAction *m_followSystemAction = nullptr;
+    QAction *m_currentLineAction = nullptr;
+    QAction *m_pageNumbersAction = nullptr;
+    QActionGroup *m_lineSpacingGroup = nullptr;
+    // Abre la ventana de Preferencias (reúne ajustes de Ver en un diálogo con pestañas).
+    void openPreferences();
     QMenu *m_snippetsMenu = nullptr;          // submenú dinámico Insertar → Snippet
     QMenu *m_templateMenu = nullptr;          // submenú dinámico Archivo → Nuevo desde plantilla
     DistractionFreeController *m_distraction = nullptr;  // modo pantalla completa/columna

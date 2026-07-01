@@ -372,6 +372,7 @@ paginii în subsol (`N / M`) la tipărire și la exportul PDF.
 
 ## Teme și aspect
 
+- **Editare → Preferințe…** (Ctrl+,) adună cele mai frecvente setări (temă, lumină caldă, spațiere între rânduri, evidențierea rândului curent, modul focus, numere de pagină) într-o fereastră cu file.
 - **Vizualizare → Temă** oferă Luminoasă, Întunecată, GitHub Light, GitHub Dark,
   Monokai, Contrast ridicat, Solarized Light și Solarized Dark. **Urmează sistemul** potrivește tema
   luminoasă/întunecată cu cea a sistemului de operare.

@@ -361,6 +361,7 @@ stopce (`N / M`) przy drukowaniu i eksporcie do PDF.
 
 ## Motywy i wygląd
 
+- **Edycja → Preferencje…** (Ctrl+,) zbiera najczęstsze ustawienia (motyw, ciepłe światło, odstęp między wierszami, podświetlenie bieżącego wiersza, tryb skupienia, numery stron) w oknie z kartami.
 - **Widok → Motyw** oferuje Jasny, Ciemny, GitHub Light, GitHub Dark, Monokai, Wysoki kontrast, Solarized Light i Solarized Dark. **Podążaj za systemem** dopasowuje motyw jasny/ciemny do
   systemu operacyjnego.
 - **Widok → Nocne ciepłe światło** przyciemnia błękity tła zależnie od godziny.

@@ -8,6 +8,10 @@ y el proyecto usa [versionado semántico](https://semver.org/lang/es/).
 ## [Sin publicar]
 
 ### Añadido
+- **Ventana de Preferencias** (*Editar → Preferencias…*, Ctrl+,): reúne en un diálogo
+  con pestañas (Apariencia, Editor, Impresión) los ajustes más comunes —tema, luz
+  cálida, seguir el sistema, interlineado, resaltar la línea actual, modo foco y
+  números de página—, que hasta ahora solo estaban repartidos por el menú Ver.
 - **Barra flotante de tabla y navegación por celdas**: cuando el cursor está dentro
   de una tabla aparece sobre ella una barra con botones para insertar/eliminar fila y
   columna y alinear la columna. Además, **Tab** salta a la celda siguiente y

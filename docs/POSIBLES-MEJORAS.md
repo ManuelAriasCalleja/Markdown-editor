@@ -444,11 +444,13 @@ paleta/formatos, como el resto del proyecto) y con el round-trip a salvo.
   gris en una cita normal, del color del acento en una admonición (completa el «callout»);
   el color lo decide `mdtypography::quoteBarColor` (puro, testado). *Pendiente de una posible
   tanda futura:* el **ancho de lectura máximo**.
-- ⬜ **Ventana de Preferencias única** — hoy los ajustes están repartidos por *Ver → …* +
-  `AppSettings`. *Impl.:* diálogo `PreferencesDialog` con pestañas (General, Editor,
-  Apariencia, Exportación) que **reúne** lo que ya expone `AppSettings` (nada nuevo que
-  persistir). Mejora el descubrimiento y aparenta madurez de golpe. Coste medio, riesgo
-  bajo, confianza alta. **La que más madura aparenta.**
+- ✅ **Ventana de Preferencias única** — *Hecho:* diálogo `PreferencesDialog` con pestañas
+  (Apariencia, Editor, Impresión) abierto desde *Editar → Preferencias…* (Ctrl+,,
+  `PreferencesRole` para macOS). No persiste nada por su cuenta: **refleja y dispara** las
+  acciones de ajuste ya existentes del menú Ver (tema, luz cálida, seguir el sistema,
+  interlineado, resaltar línea, modo foco, números de página), que MainWindow le pasa como
+  punteros; así reusa su lógica de aplicar+persistir sin duplicarla. Las casillas toman su
+  rótulo del `text()` traducido de la acción. Riesgo bajo, confianza alta.
 
 #### Affordances en el bloque
 

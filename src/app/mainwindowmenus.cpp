@@ -31,6 +31,8 @@
 #include "richpaste.h"
 #include "csvtable.h"
 #include "doctemplates.h"
+#include "preferencesdialog.h"
+#include "themespec.h"
 #include "usertemplate.h"
 #include "markdownrender.h"
 #include "diagramcontroller.h"
@@ -404,6 +406,31 @@ void MainWindow::createEditMenu()
     QAction *replaceAction = editMenu->addAction(tr("Reemplazar..."));
     replaceAction->setShortcut(QKeySequence::Replace);                 // Ctrl+H
     connect(replaceAction, &QAction::triggered, m_findBar, &FindReplaceBar::showReplace);
+
+    editMenu->addSeparator();
+    QAction *prefsAction = editMenu->addAction(tr("&Preferencias..."));
+    prefsAction->setShortcut(QKeySequence::Preferences);   // Ctrl+, (donde exista)
+    prefsAction->setMenuRole(QAction::PreferencesRole);    // en macOS va al menú de app
+    connect(prefsAction, &QAction::triggered, this, &MainWindow::openPreferences);
+}
+
+void MainWindow::openPreferences()
+{
+    // Reúne las acciones de ajuste ya existentes; el diálogo las refleja y las dispara
+    // (aplican y persisten por su propia vía, sin duplicar lógica).
+    PreferencesDialog::Settings s;
+    for (const mdtheme::ThemeSpec &spec : mdtheme::allThemes())
+        if (QAction *action = m_themeActions.value(spec.id))
+            s.themeActions << action;
+    s.followSystem = m_followSystemAction;
+    s.warmLight = m_warmLightAction;
+    s.lineSpacingActions = m_lineSpacingGroup->actions();
+    s.currentLine = m_currentLineAction;
+    s.focusMode = m_typewriterAction;
+    s.pageNumbers = m_pageNumbersAction;
+
+    PreferencesDialog dialog(s, this);
+    dialog.exec();
 }
 
 void MainWindow::createFormatActions()
@@ -788,22 +815,22 @@ void MainWindow::createViewMenu()
                 s->setTypewriterMode(on);
     });
 
-    QAction *currentLineAction = viewMenu->addAction(tr("Resaltar la línea actual"));
-    currentLineAction->setCheckable(true);
-    currentLineAction->setChecked(AppSettings::currentLineHighlight());
-    currentLineAction->setToolTip(tr("Marca con un fondo sutil la línea del cursor"));
-    connect(currentLineAction, &QAction::toggled, this, [this](bool on) {
+    m_currentLineAction = viewMenu->addAction(tr("Resaltar la línea actual"));
+    m_currentLineAction->setCheckable(true);
+    m_currentLineAction->setChecked(AppSettings::currentLineHighlight());
+    m_currentLineAction->setToolTip(tr("Marca con un fondo sutil la línea del cursor"));
+    connect(m_currentLineAction, &QAction::toggled, this, [this](bool on) {
         AppSettings::setCurrentLineHighlight(on);
         for (int i = 0; i < m_tabs->count(); ++i)
             if (EditorStack *s = stackAt(i))
                 s->setCurrentLineHighlight(on);
     });
 
-    QAction *pageNumbersAction = viewMenu->addAction(tr("Números de página al imprimir"));
-    pageNumbersAction->setCheckable(true);
-    pageNumbersAction->setChecked(AppSettings::printPageNumbers());
-    pageNumbersAction->setToolTip(tr("Añade el número de página en el pie al imprimir o exportar a PDF"));
-    connect(pageNumbersAction, &QAction::toggled, this,
+    m_pageNumbersAction = viewMenu->addAction(tr("Números de página al imprimir"));
+    m_pageNumbersAction->setCheckable(true);
+    m_pageNumbersAction->setChecked(AppSettings::printPageNumbers());
+    m_pageNumbersAction->setToolTip(tr("Añade el número de página en el pie al imprimir o exportar a PDF"));
+    connect(m_pageNumbersAction, &QAction::toggled, this,
             [](bool on) { AppSettings::setPrintPageNumbers(on); });
 
     // Interlineado del editor (presentación pura, no afecta al Markdown). Submenú
@@ -811,8 +838,8 @@ void MainWindow::createViewMenu()
     // pestañas. Los rótulos van por QT_TRANSLATE_NOOP para que lupdate los extraiga
     // (el bucle los traduce con tr() en runtime, como los nombres de tema).
     QMenu *spacingMenu = viewMenu->addMenu(tr("Interlineado"));
-    auto *spacingGroup = new QActionGroup(this);
-    spacingGroup->setExclusive(true);
+    m_lineSpacingGroup = new QActionGroup(this);
+    m_lineSpacingGroup->setExclusive(true);
     const struct { const char *label; int percent; } kSpacingOptions[] = {
         {QT_TRANSLATE_NOOP("MainWindow", "Sencillo"), 100},
         {QT_TRANSLATE_NOOP("MainWindow", "1,5 líneas"), 150},
@@ -823,7 +850,7 @@ void MainWindow::createViewMenu()
         QAction *action = spacingMenu->addAction(tr(opt.label));
         action->setCheckable(true);
         action->setChecked(opt.percent == currentSpacing);
-        spacingGroup->addAction(action);
+        m_lineSpacingGroup->addAction(action);
         const int percent = opt.percent;
         connect(action, &QAction::triggered, this, [this, percent] {
             AppSettings::setLineSpacing(percent);
@@ -976,10 +1003,10 @@ void MainWindow::createViewMenu()
     });
 
     themeMenu->addSeparator();
-    QAction *followSystemAction = themeMenu->addAction(tr("Seguir el sistema"));
-    followSystemAction->setCheckable(true);
-    followSystemAction->setChecked(m_stack->theme()->followsSystem());
-    followSystemAction->setToolTip(
+    m_followSystemAction = themeMenu->addAction(tr("Seguir el sistema"));
+    m_followSystemAction->setCheckable(true);
+    m_followSystemAction->setChecked(m_stack->theme()->followsSystem());
+    m_followSystemAction->setToolTip(
         tr("Usa el tema claro u oscuro según la configuración del sistema operativo"));
     // Mientras se sigue el SO, la elección manual de tema queda deshabilitada.
     auto setManualThemeEnabled = [this](bool follow) {
@@ -987,19 +1014,19 @@ void MainWindow::createViewMenu()
             action->setEnabled(!follow);
     };
     setManualThemeEnabled(m_stack->theme()->followsSystem());
-    connect(followSystemAction, &QAction::toggled, this,
+    connect(m_followSystemAction, &QAction::toggled, this,
             [this, setManualThemeEnabled](bool on) {
                 m_stack->theme()->setFollowSystem(on);
                 setManualThemeEnabled(on);
             });
 
     themeMenu->addSeparator();
-    QAction *warmLightAction = themeMenu->addAction(tr("Luz cálida nocturna"));
-    warmLightAction->setCheckable(true);
-    warmLightAction->setChecked(m_stack->theme()->isWarmLight());
-    warmLightAction->setToolTip(
+    m_warmLightAction = themeMenu->addAction(tr("Luz cálida nocturna"));
+    m_warmLightAction->setCheckable(true);
+    m_warmLightAction->setChecked(m_stack->theme()->isWarmLight());
+    m_warmLightAction->setToolTip(
         tr("Tiñe el fondo del editor de tono ámbar según la hora, más cálido de noche"));
-    connect(warmLightAction, &QAction::toggled, this,
+    connect(m_warmLightAction, &QAction::toggled, this,
             [this](bool on) { m_stack->theme()->setWarmLight(on); });
 
     // --- Idioma (se aplica al instante: recrea la ventana, ver setLanguage) ---

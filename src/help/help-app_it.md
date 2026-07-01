@@ -373,6 +373,7 @@ aggiunge il numero di pagina nel piè di pagina (`N / M`) in stampa e nell'espor
 
 ## Temi e aspetto
 
+- **Modifica → Preferenze…** (Ctrl+,) raccoglie le impostazioni più comuni (tema, luce calda, interlinea, evidenziazione della riga corrente, modalità focus, numeri di pagina) in una finestra a schede.
 - **Visualizza → Tema** offre Chiaro, Scuro, GitHub Light, GitHub Dark, Monokai, Alto contrasto, Solarized Light e Solarized Dark. **Segui il sistema** allinea il tema chiaro/scuro a quello del
   sistema operativo.
 - **Visualizza → Luce calda notturna** attenua i blu dello sfondo in base all'ora.

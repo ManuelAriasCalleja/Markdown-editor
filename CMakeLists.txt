@@ -204,6 +204,8 @@ add_library(md-editor-core STATIC
     src/widgets/helpdialog.h
     src/widgets/outlinepanel.cpp
     src/widgets/outlinepanel.h
+    src/widgets/preferencesdialog.cpp
+    src/widgets/preferencesdialog.h
     src/widgets/codeblockoverlay.cpp
     src/widgets/codeblockoverlay.h
     src/widgets/snippetsdialog.cpp
