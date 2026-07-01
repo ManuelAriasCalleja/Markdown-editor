@@ -58,6 +58,8 @@ You can have several documents open at once, each in its own **tab**:
   jump to the next or previous tab.
 - **Close tab** (Ctrl+W) closes the current one, asking whether it has unsaved
   changes. The last tab is not closed: it becomes a new document.
+- **Reopen closed tab** (Ctrl+Shift+R) reopens the last tab you closed (only
+  those that had a file on disk).
 - The label shows the file name and a dot (•) when there are unsaved changes.
 - On closing the application the open documents are remembered and all reopened
   the next time you start.
@@ -346,6 +348,7 @@ were writing.
 |---------------------------|------------------|
 | New                       | Ctrl+N           |
 | Close tab                 | Ctrl+W           |
+| Reopen closed tab         | Ctrl+Shift+R     |
 | Next / previous tab       | Ctrl+PageDown / Ctrl+PageUp (or Ctrl+Tab / Ctrl+Shift+Tab) |
 | Open                      | Ctrl+O           |
 | Save                      | Ctrl+S           |

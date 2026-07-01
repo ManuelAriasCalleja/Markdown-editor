@@ -58,6 +58,8 @@ Możesz mieć otwartych kilka dokumentów naraz, każdy w osobnej **karcie**:
   Ctrl+Shift+Tab**) przechodzą do następnej lub poprzedniej karty.
 - **Zamknij kartę** (Ctrl+W) zamyka bieżącą, pytając o niezapisane zmiany. Ostatnia
   karta nie jest zamykana: staje się nowym dokumentem.
+- **Otwórz ponownie zamkniętą kartę** (Ctrl+Shift+R) otwiera ponownie ostatnio
+  zamkniętą kartę (tylko te, które miały plik na dysku).
 - Etykieta pokazuje nazwę pliku i kropkę (•), gdy są niezapisane zmiany.
 - Przy zamykaniu aplikacji otwarte dokumenty są zapamiętywane i wszystkie otwierane
   ponownie przy następnym uruchomieniu.
@@ -346,6 +348,7 @@ proponuje odzyskanie tego, co pisałeś.
 |---------------------------|------------------|
 | Nowy                      | Ctrl+N           |
 | Zamknij kartę             | Ctrl+W           |
+| Otwórz ponownie zamkniętą kartę | Ctrl+Shift+R |
 | Następna / poprzednia karta | Ctrl+Page Down / Ctrl+Page Up (lub Ctrl+Tab / Ctrl+Shift+Tab) |
 | Otwórz                    | Ctrl+O           |
 | Zapisz                    | Ctrl+S           |

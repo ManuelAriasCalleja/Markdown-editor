@@ -62,6 +62,8 @@ Sie können mehrere Dokumente gleichzeitig geöffnet haben, jedes in seinem eige
 - **Tab schließen** (Strg+W) schließt den aktuellen und fragt bei ungespeicherten
   Änderungen nach. Der letzte Tab wird nicht geschlossen: er wird zu einem neuen
   Dokument.
+- **Geschlossenen Tab wieder öffnen** (Strg+Umschalt+R) öffnet den zuletzt
+  geschlossenen Tab wieder (nur solche mit Datei auf der Festplatte).
 - Die Beschriftung zeigt den Dateinamen und einen Punkt (•) bei ungespeicherten
   Änderungen.
 - Beim Schließen der Anwendung werden die offenen Dokumente gemerkt und beim
@@ -368,6 +370,7 @@ automatisch gespeichert. Schließt die Anwendung unerwartet, bietet sie beim ern
 |---------------------------|------------------|
 | Neu                       | Strg+N           |
 | Tab schließen             | Strg+W           |
+| Geschlossenen Tab wieder öffnen | Strg+Umschalt+R |
 | Nächster / vorheriger Tab | Strg+Bild ab / Strg+Bild auf (oder Strg+Tab / Strg+Umschalt+Tab) |
 | Öffnen                    | Strg+O           |
 | Speichern                 | Strg+S           |

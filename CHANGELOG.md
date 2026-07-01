@@ -14,6 +14,8 @@ y el proyecto usa [versionado semántico](https://semver.org/lang/es/).
   columna*): muestra la posición del cursor; desactivado por defecto.
 - **Insertar tabla desde el portapapeles** (*Insertar → Tabla desde el
   portapapeles*): convierte datos TSV/CSV en texto plano en una tabla Markdown.
+- **Reabrir pestaña cerrada** (*Archivo → Reabrir pestaña cerrada*, Ctrl+Shift+R):
+  vuelve a abrir la última pestaña cerrada que tenía archivo en disco.
 - **Copiar como Markdown** (*Editar*): copia al portapapeles la selección o el
   documento entero como texto Markdown, por la serialización canónica.
 - **Exportación a texto plano** (*Archivo → Exportar → A texto plano*).

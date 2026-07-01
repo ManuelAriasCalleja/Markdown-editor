@@ -61,6 +61,8 @@ Vous pouvez avoir plusieurs documents ouverts à la fois, chacun dans son **ongl
 - **Fermer l'onglet** (Ctrl+W) ferme l'onglet courant en demandant s'il a des
   modifications non enregistrées. Le dernier onglet ne se ferme pas : il devient un
   nouveau document.
+- **Rouvrir l'onglet fermé** (Ctrl+Maj+R) rouvre le dernier onglet que vous avez
+  fermé (seulement ceux qui avaient un fichier sur le disque).
 - L'étiquette affiche le nom du fichier et un point (•) en cas de modifications non
   enregistrées.
 - À la fermeture de l'application, les documents ouverts sont mémorisés et tous
@@ -362,6 +364,7 @@ elle propose à la réouverture de récupérer ce que vous étiez en train d'éc
 |---------------------------|------------------|
 | Nouveau                   | Ctrl+N           |
 | Fermer l'onglet           | Ctrl+W           |
+| Rouvrir l'onglet fermé    | Ctrl+Maj+R       |
 | Onglet suivant / précédent| Ctrl+Page suiv. / Ctrl+Page préc. (ou Ctrl+Tab / Ctrl+Maj+Tab) |
 | Ouvrir                    | Ctrl+O           |
 | Enregistrer               | Ctrl+S           |

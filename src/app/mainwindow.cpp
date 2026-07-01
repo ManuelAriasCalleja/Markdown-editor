@@ -4,6 +4,7 @@
 #include "mainwindow.h"
 
 #include "appsettings.h"
+#include "closedtabs.h"
 #include "blockconstructs.h"
 #include "chromezoom.h"
 #include "footnotes.h"
@@ -686,12 +687,24 @@ void MainWindow::closeTab(int index)
     m_tabs->setCurrentWidget(stack);  // mostrarlo para el posible diálogo de guardado
     if (!stack->file()->maybeSave())
         return;  // el usuario canceló
+    // Recuerda su ruta para poder reabrirla (solo documentos con archivo en disco).
+    closedtabs::push(m_closedTabs, stack->documentIo()->currentFile());
     if (m_tabs->count() == 1) {
         stack->documentIo()->reset();  // última pestaña: queda como documento nuevo
         return;
     }
     m_tabs->removeTab(m_tabs->indexOf(stack));
     stack->deleteLater();
+}
+
+void MainWindow::reopenClosedTab()
+{
+    const QString path = closedtabs::pop(m_closedTabs);
+    if (path.isEmpty()) {
+        showStatusMessage(tr("No hay pestañas cerradas para reabrir."));
+        return;
+    }
+    openPathInTab(path);  // si ya está abierta, salta a ella; si no existe, avisa al cargar
 }
 
 void MainWindow::updateTabLabel(EditorStack *stack)

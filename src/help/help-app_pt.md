@@ -59,6 +59,8 @@ Pode ter vários documentos abertos ao mesmo tempo, cada um no seu **separador**
   saltam para o separador seguinte ou anterior.
 - **Fechar separador** (Ctrl+W) fecha o atual, perguntando se tem alterações por
   guardar. O último não se fecha: fica como documento novo.
+- **Reabrir separador fechado** (Ctrl+Shift+R) reabre o último separador que fechou
+  (apenas os que tinham ficheiro no disco).
 - A etiqueta mostra o nome do ficheiro e um ponto (•) se houver alterações por
   guardar.
 - Ao fechar a aplicação, os documentos abertos são recordados e todos reabertos no
@@ -353,6 +355,7 @@ recuperar o que estava a escrever.
 |---------------------------|------------------|
 | Novo                      | Ctrl+N           |
 | Fechar separador          | Ctrl+W           |
+| Reabrir separador fechado | Ctrl+Shift+R     |
 | Separador seguinte / anterior | Ctrl+Page Down / Ctrl+Page Up (ou Ctrl+Tab / Ctrl+Shift+Tab) |
 | Abrir                     | Ctrl+O           |
 | Guardar                   | Ctrl+S           |

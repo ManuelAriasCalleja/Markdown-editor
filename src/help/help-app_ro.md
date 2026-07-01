@@ -59,6 +59,8 @@ Poți avea mai multe documente deschise în același timp, fiecare în **fila** 
   sar la fila următoare sau anterioară.
 - **Închide fila** (Ctrl+W) o închide pe cea curentă, întrebând dacă are modificări
   nesalvate. Ultima filă nu se închide: devine un document nou.
+- **Redeschide fila închisă** (Ctrl+Shift+R) redeschide ultima filă închisă (doar
+  cele care aveau un fișier pe disc).
 - Eticheta arată numele fișierului și un punct (•) când există modificări
   nesalvate.
 - La închiderea aplicației, documentele deschise sunt reținute și toate redeschise
@@ -358,6 +360,7 @@ ce scriai.
 |---------------------------|------------------|
 | Nou                       | Ctrl+N           |
 | Închide fila              | Ctrl+W           |
+| Redeschide fila închisă   | Ctrl+Shift+R     |
 | Fila următoare / anterioară | Ctrl+PageDown / Ctrl+PageUp (sau Ctrl+Tab / Ctrl+Shift+Tab) |
 | Deschide                  | Ctrl+O           |
 | Salvează                  | Ctrl+S           |

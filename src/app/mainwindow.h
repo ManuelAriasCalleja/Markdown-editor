@@ -267,6 +267,8 @@ private:
     // Cierra la pestaña `index` (pregunta si tiene cambios sin guardar). No cierra
     // la última: la deja como documento nuevo.
     void closeTab(int index);
+    // Reabre la última pestaña cerrada que tenía archivo en disco (Ctrl+Shift+R).
+    void reopenClosedTab();
     // Documento de la pestaña `index` (o la actual con -1), o nullptr.
     EditorStack *stackAt(int index) const;
     // Documento nuevo en una pestaña nueva (Archivo → Nuevo).
@@ -288,6 +290,7 @@ private:
 
     QTabWidget *m_tabs = nullptr;    // un documento por pestaña
     EditorStack *m_stack = nullptr;  // documento ACTIVO (pestaña actual)
+    QStringList m_closedTabs;        // pila de rutas de pestañas cerradas (reabrir)
     // Tema/paleta/tinte cálido: ÚNICO de la ventana (global a la app). Se reapunta al
     // editor de la pestaña activa en setActiveStack; las pestañas no lo poseen.
     ThemeController *m_theme = nullptr;

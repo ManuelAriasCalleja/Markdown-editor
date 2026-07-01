@@ -61,6 +61,8 @@ Je kunt meerdere documenten tegelijk open hebben, elk in zijn eigen **tabblad**:
   **Ctrl+Tab / Ctrl+Shift+Tab**) naar het volgende of vorige tabblad.
 - **Tabblad sluiten** (Ctrl+W) sluit het huidige en vraagt of er niet-opgeslagen
   wijzigingen zijn. Het laatste tabblad sluit niet: het wordt een nieuw document.
+- **Gesloten tabblad opnieuw openen** (Ctrl+Shift+R) opent het laatst gesloten
+  tabblad opnieuw (alleen die met een bestand op schijf).
 - Het label toont de bestandsnaam en een punt (•) bij niet-opgeslagen wijzigingen.
 - Bij het sluiten van de toepassing worden de open documenten onthouden en de
   volgende keer allemaal heropend.
@@ -362,6 +364,7 @@ openen aan om te herstellen wat je aan het schrijven was.
 |---------------------------|------------------|
 | Nieuw                     | Ctrl+N           |
 | Tabblad sluiten           | Ctrl+W           |
+| Gesloten tabblad opnieuw openen | Ctrl+Shift+R |
 | Volgend / vorig tabblad   | Ctrl+PageDown / Ctrl+PageUp (of Ctrl+Tab / Ctrl+Shift+Tab) |
 | Openen                    | Ctrl+O           |
 | Opslaan                   | Ctrl+S           |

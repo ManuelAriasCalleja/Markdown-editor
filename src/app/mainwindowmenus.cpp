@@ -195,6 +195,13 @@ void MainWindow::createFileMenu()
     closeTabAction->setShortcut(QKeySequence::Close);  // Ctrl+W
     connect(closeTabAction, &QAction::triggered, this, [this] { closeTab(-1); });
 
+    QAction *reopenTabAction = fileMenu->addAction(tr("Reabrir pestaña cerrada"));
+    // Ctrl+Shift+T (convención habitual) está ocupado por «Lista de tareas»; se usa Ctrl+Shift+R.
+    reopenTabAction->setShortcut(QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_R));
+    reopenTabAction->setToolTip(withShortcut(
+        tr("Vuelve a abrir la última pestaña cerrada"), reopenTabAction->shortcut()));
+    connect(reopenTabAction, &QAction::triggered, this, &MainWindow::reopenClosedTab);
+
     fileMenu->addSeparator();
 
     QMenu *exportMenu = fileMenu->addMenu(tr("&Exportar"));

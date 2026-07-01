@@ -59,6 +59,8 @@ Puoi avere più documenti aperti contemporaneamente, ciascuno nella propria **sc
   Ctrl+Maiusc+Tab**) passano alla scheda successiva o precedente.
 - **Chiudi scheda** (Ctrl+W) chiude quella corrente, chiedendo se ha modifiche non
   salvate. L'ultima scheda non si chiude: diventa un documento nuovo.
+- **Riapri scheda chiusa** (Ctrl+Maiusc+R) riapre l'ultima scheda che hai chiuso
+  (solo quelle che avevano un file su disco).
 - L'etichetta mostra il nome del file e un punto (•) se ci sono modifiche non
   salvate.
 - Alla chiusura dell'applicazione i documenti aperti vengono ricordati e tutti
@@ -358,6 +360,7 @@ propone di recuperare ciò che stavi scrivendo.
 |---------------------------|------------------|
 | Nuovo                     | Ctrl+N           |
 | Chiudi scheda             | Ctrl+W           |
+| Riapri scheda chiusa      | Ctrl+Maiusc+R    |
 | Scheda successiva / precedente | Ctrl+PagGiù / Ctrl+PagSu (o Ctrl+Tab / Ctrl+Maiusc+Tab) |
 | Apri                      | Ctrl+O           |
 | Salva                     | Ctrl+S           |

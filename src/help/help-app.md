@@ -60,6 +60,8 @@ Puedes tener varios documentos abiertos a la vez, cada uno en su **pestaña**:
   a la pestaña siguiente o anterior.
 - **Cerrar pestaña** (Ctrl+W) cierra la actual y pregunta si tiene cambios sin
   guardar. La última no se cierra: queda como documento nuevo.
+- **Reabrir pestaña cerrada** (Ctrl+Shift+R) vuelve a abrir la última pestaña que
+  cerraste (solo las que tenían archivo en disco).
 - La etiqueta muestra el nombre del archivo y un punto (•) si hay cambios sin
   guardar.
 - Al cerrar la aplicación se recuerdan los documentos abiertos y se reabren todos
@@ -358,6 +360,7 @@ ofrece recuperar lo que estabas escribiendo.
 | Nuevo                     | Ctrl+N           |
 | Abrir                     | Ctrl+O           |
 | Cerrar pestaña            | Ctrl+W           |
+| Reabrir pestaña cerrada   | Ctrl+Shift+R     |
 | Pestaña siguiente / anterior | Ctrl+AvPág / Ctrl+RePág (o Ctrl+Tab / Ctrl+Shift+Tab) |
 | Guardar                   | Ctrl+S           |
 | Guardar como              | Ctrl+Shift+S     |
