@@ -225,6 +225,161 @@ QList<DocTemplate> all()
             "**3.** [Enunciado] *([N] puntos)*\n"),
         Category::Teaching});
 
+    // Registro de cambios (CHANGELOG)
+    list.append({
+        QCoreApplication::translate("MainWindow", "Registro de cambios (CHANGELOG)"),
+        QCoreApplication::translate("MainWindow",
+            "# Registro de cambios\n"
+            "\n"
+            "Todos los cambios notables de este proyecto se documentan en este archivo.\n"
+            "\n"
+            "## [Sin publicar]\n"
+            "\n"
+            "### Añadido\n"
+            "\n"
+            "- [nueva funcionalidad]\n"
+            "\n"
+            "### Cambiado\n"
+            "\n"
+            "- [cambio en algo existente]\n"
+            "\n"
+            "### Corregido\n"
+            "\n"
+            "- [error corregido]\n"),
+        Category::Programming});
+
+    // Registro de decisión de arquitectura (ADR)
+    list.append({
+        QCoreApplication::translate("MainWindow", "Decisión de arquitectura (ADR)"),
+        QCoreApplication::translate("MainWindow",
+            "# ADR [N]: [Título de la decisión]\n"
+            "\n"
+            "- **Estado:** propuesto\n"
+            "- **Fecha:** [fecha]\n"
+            "\n"
+            "## Contexto\n"
+            "\n"
+            "[Qué problema o necesidad motiva esta decisión.]\n"
+            "\n"
+            "## Decisión\n"
+            "\n"
+            "[La decisión tomada, en voz activa: «Usaremos…».]\n"
+            "\n"
+            "## Consecuencias\n"
+            "\n"
+            "[Qué se vuelve más fácil o más difícil a raíz de esta decisión.]\n"
+            "\n"
+            "## Alternativas consideradas\n"
+            "\n"
+            "- [alternativa] — [por qué se descartó]\n"),
+        Category::Programming});
+
+    // Informe de error (bug)
+    list.append({
+        QCoreApplication::translate("MainWindow", "Informe de error"),
+        QCoreApplication::translate("MainWindow",
+            "# [Título breve del error]\n"
+            "\n"
+            "## Descripción\n"
+            "\n"
+            "[Qué ocurre.]\n"
+            "\n"
+            "## Pasos para reproducir\n"
+            "\n"
+            "1. [paso]\n"
+            "2. [paso]\n"
+            "3. [paso]\n"
+            "\n"
+            "## Resultado esperado\n"
+            "\n"
+            "[Lo que debería ocurrir.]\n"
+            "\n"
+            "## Resultado obtenido\n"
+            "\n"
+            "[Lo que ocurre en realidad.]\n"
+            "\n"
+            "## Entorno\n"
+            "\n"
+            "- **Versión:** [versión]\n"
+            "- **Sistema:** [sistema operativo]\n"),
+        Category::Programming});
+
+    // Artículo científico (IMRyD)
+    list.append({
+        QCoreApplication::translate("MainWindow", "Artículo científico (IMRyD)"),
+        QCoreApplication::translate("MainWindow",
+            "---\n"
+            "title: [Título del artículo]\n"
+            "author: [Autores]\n"
+            "date: [fecha]\n"
+            "---\n"
+            "\n"
+            "# [Título del artículo]\n"
+            "\n"
+            "## Resumen\n"
+            "\n"
+            "[Resumen breve del trabajo.]\n"
+            "\n"
+            "**Palabras clave:** [palabra1, palabra2, palabra3]\n"
+            "\n"
+            "## 1. Introducción\n"
+            "\n"
+            "[Contexto, problema y objetivo del estudio.]\n"
+            "\n"
+            "## 2. Métodos\n"
+            "\n"
+            "[Diseño, materiales y procedimiento, de forma reproducible.]\n"
+            "\n"
+            "## 3. Resultados\n"
+            "\n"
+            "[Hallazgos, con tablas o figuras si procede.]\n"
+            "\n"
+            "## 4. Discusión\n"
+            "\n"
+            "[Interpretación, limitaciones y comparación con trabajos previos.]\n"
+            "\n"
+            "## Referencias\n"
+            "\n"
+            "1. [Referencia]\n"),
+        Category::Academic});
+
+    // Informe de laboratorio
+    list.append({
+        QCoreApplication::translate("MainWindow", "Informe de laboratorio"),
+        QCoreApplication::translate("MainWindow",
+            "---\n"
+            "title: [Título de la práctica]\n"
+            "author: [Nombre]\n"
+            "date: [fecha]\n"
+            "---\n"
+            "\n"
+            "# [Título de la práctica]\n"
+            "\n"
+            "## Objetivo\n"
+            "\n"
+            "[Qué se pretende demostrar o medir.]\n"
+            "\n"
+            "## Fundamento teórico\n"
+            "\n"
+            "[Base teórica y fórmulas relevantes.]\n"
+            "\n"
+            "## Materiales\n"
+            "\n"
+            "- [material]\n"
+            "\n"
+            "## Procedimiento\n"
+            "\n"
+            "1. [paso]\n"
+            "\n"
+            "## Resultados\n"
+            "\n"
+            "[Datos y observaciones; tablas de medidas.]\n"
+            "\n"
+            "## Análisis y conclusiones\n"
+            "\n"
+            "[Cálculo de errores, interpretación y conclusión.]\n"),
+        Category::Academic});
+
     return list;
 }
 

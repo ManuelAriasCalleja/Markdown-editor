@@ -8,6 +8,10 @@ y el proyecto usa [versionado semántico](https://semver.org/lang/es/).
 ## [Sin publicar]
 
 ### Añadido
+- **Nuevas plantillas de fábrica** en *Nuevo desde plantilla*: **Programación** —
+  Registro de cambios (CHANGELOG), Decisión de arquitectura (ADR) e Informe de error;
+  **Académico** — Artículo científico (IMRyD) e Informe de laboratorio. Traducidas a
+  los 9 idiomas.
 - **Plantillas de usuario**: *Archivo → Guardar como plantilla…* guarda el documento
   actual (con su front matter) como una plantilla propia, con nombre y categoría;
   reaparece en *Nuevo desde plantilla* junto a las de fábrica. *Gestionar plantillas…*

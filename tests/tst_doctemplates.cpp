@@ -16,7 +16,7 @@ private slots:
 
 void TestDocTemplates::hasTemplates()
 {
-    QCOMPARE(mdtemplate::all().size(), 10);
+    QCOMPARE(mdtemplate::all().size(), 15);
 }
 
 void TestDocTemplates::allFieldsNonEmpty()

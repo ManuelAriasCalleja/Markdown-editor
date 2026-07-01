@@ -525,9 +525,11 @@ vez el coste de traducción y el problema de jurisdicción.
   plantilla` se reconstruye (`rebuildTemplateMenu`) mezclando fábrica + usuario por categoría.
   Esquiva i18n y jurisdicción (las de usuario no se traducen). Es lo que hace útiles a
   Derecho/Sanidad sin traducir nada.
-- ⬜ **Fase C — Plantillas de fábrica curadas.** *Impl.:* las ~6‑8 nuevas de Programación/
-  Académico, cada una nombre + cuerpo por `tr()`, traducidas a los 9 idiomas (la parte cara
-  pero acotada); Docencia/Empresa opc. 1‑2; Derecho/Sanidad cero de fábrica.
+- ✅ **Fase C — Plantillas de fábrica curadas.** *Hecho:* 5 nuevas, cada una nombre + cuerpo
+  por `tr()` traducidos a los 9 idiomas — Programación: **CHANGELOG**, **ADR** (decisión de
+  arquitectura), **Informe de error**; Académico: **Artículo científico (IMRyD)**, **Informe
+  de laboratorio**. Derecho/Sanidad siguen sin plantillas de fábrica (vía plantillas de
+  usuario, Fase B). El catálogo pasa de 10 a 15 (`tst_doctemplates`).
 
 ### Fuente configurable del documento y la exportación (2026-07-01)
 

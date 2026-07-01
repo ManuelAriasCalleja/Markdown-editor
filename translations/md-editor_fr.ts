@@ -2286,37 +2286,337 @@ date: [date]
 </translation>
     </message>
     <message>
-        <location filename="../src/markdown/doctemplates.cpp" line="235"/>
+        <location filename="../src/markdown/doctemplates.cpp" line="230"/>
+        <source>Registro de cambios (CHANGELOG)</source>
+        <translation>Journal des modifications (CHANGELOG)</translation>
+    </message>
+    <message>
+        <location filename="../src/markdown/doctemplates.cpp" line="231"/>
+        <source># Registro de cambios
+
+Todos los cambios notables de este proyecto se documentan en este archivo.
+
+## [Sin publicar]
+
+### Añadido
+
+- [nueva funcionalidad]
+
+### Cambiado
+
+- [cambio en algo existente]
+
+### Corregido
+
+- [error corregido]
+</source>
+        <translation># Journal des modifications
+
+Tous les changements notables de ce projet sont documentés dans ce fichier.
+
+## [Non publié]
+
+### Ajouté
+
+- [nouvelle fonctionnalité]
+
+### Modifié
+
+- [modification de l'existant]
+
+### Corrigé
+
+- [erreur corrigée]
+</translation>
+    </message>
+    <message>
+        <location filename="../src/markdown/doctemplates.cpp" line="253"/>
+        <source>Decisión de arquitectura (ADR)</source>
+        <translation>Décision d'architecture (ADR)</translation>
+    </message>
+    <message>
+        <location filename="../src/markdown/doctemplates.cpp" line="254"/>
+        <source># ADR [N]: [Título de la decisión]
+
+- **Estado:** propuesto
+- **Fecha:** [fecha]
+
+## Contexto
+
+[Qué problema o necesidad motiva esta decisión.]
+
+## Decisión
+
+[La decisión tomada, en voz activa: «Usaremos…».]
+
+## Consecuencias
+
+[Qué se vuelve más fácil o más difícil a raíz de esta decisión.]
+
+## Alternativas consideradas
+
+- [alternativa] — [por qué se descartó]
+</source>
+        <translation># ADR [N] : [Titre de la décision]
+
+- **Statut :** proposé
+- **Date :** [date]
+
+## Contexte
+
+[Quel problème ou besoin motive cette décision.]
+
+## Décision
+
+[La décision prise, à la voix active : « Nous utiliserons… ».]
+
+## Conséquences
+
+[Ce qui devient plus facile ou plus difficile à cause de cette décision.]
+
+## Alternatives envisagées
+
+- [alternative] — [pourquoi elle a été écartée]
+</translation>
+    </message>
+    <message>
+        <location filename="../src/markdown/doctemplates.cpp" line="279"/>
+        <source>Informe de error</source>
+        <translation>Rapport de bogue</translation>
+    </message>
+    <message>
+        <location filename="../src/markdown/doctemplates.cpp" line="280"/>
+        <source># [Título breve del error]
+
+## Descripción
+
+[Qué ocurre.]
+
+## Pasos para reproducir
+
+1. [paso]
+2. [paso]
+3. [paso]
+
+## Resultado esperado
+
+[Lo que debería ocurrir.]
+
+## Resultado obtenido
+
+[Lo que ocurre en realidad.]
+
+## Entorno
+
+- **Versión:** [versión]
+- **Sistema:** [sistema operativo]
+</source>
+        <translation># [Titre court du bogue]
+
+## Description
+
+[Ce qui se passe.]
+
+## Étapes pour reproduire
+
+1. [étape]
+2. [étape]
+3. [étape]
+
+## Résultat attendu
+
+[Ce qui devrait se passer.]
+
+## Résultat obtenu
+
+[Ce qui se passe réellement.]
+
+## Environnement
+
+- **Version :** [version]
+- **Système :** [système d'exploitation]
+</translation>
+    </message>
+    <message>
+        <location filename="../src/markdown/doctemplates.cpp" line="309"/>
+        <source>Artículo científico (IMRyD)</source>
+        <translation>Article scientifique (IMRaD)</translation>
+    </message>
+    <message>
+        <location filename="../src/markdown/doctemplates.cpp" line="310"/>
+        <source>---
+title: [Título del artículo]
+author: [Autores]
+date: [fecha]
+---
+
+# [Título del artículo]
+
+## Resumen
+
+[Resumen breve del trabajo.]
+
+**Palabras clave:** [palabra1, palabra2, palabra3]
+
+## 1. Introducción
+
+[Contexto, problema y objetivo del estudio.]
+
+## 2. Métodos
+
+[Diseño, materiales y procedimiento, de forma reproducible.]
+
+## 3. Resultados
+
+[Hallazgos, con tablas o figuras si procede.]
+
+## 4. Discusión
+
+[Interpretación, limitaciones y comparación con trabajos previos.]
+
+## Referencias
+
+1. [Referencia]
+</source>
+        <translation>---
+title: [Titre de l'article]
+author: [Auteurs]
+date: [date]
+---
+
+# [Titre de l'article]
+
+## Résumé
+
+[Bref résumé du travail.]
+
+**Mots-clés :** [mot1, mot2, mot3]
+
+## 1. Introduction
+
+[Contexte, problème et objectif de l'étude.]
+
+## 2. Méthodes
+
+[Conception, matériel et procédure, de façon reproductible.]
+
+## 3. Résultats
+
+[Résultats, avec tableaux ou figures si pertinent.]
+
+## 4. Discussion
+
+[Interprétation, limites et comparaison avec les travaux antérieurs.]
+
+## Références
+
+1. [Référence]
+</translation>
+    </message>
+    <message>
+        <location filename="../src/markdown/doctemplates.cpp" line="348"/>
+        <source>Informe de laboratorio</source>
+        <translation>Compte rendu de laboratoire</translation>
+    </message>
+    <message>
+        <location filename="../src/markdown/doctemplates.cpp" line="349"/>
+        <source>---
+title: [Título de la práctica]
+author: [Nombre]
+date: [fecha]
+---
+
+# [Título de la práctica]
+
+## Objetivo
+
+[Qué se pretende demostrar o medir.]
+
+## Fundamento teórico
+
+[Base teórica y fórmulas relevantes.]
+
+## Materiales
+
+- [material]
+
+## Procedimiento
+
+1. [paso]
+
+## Resultados
+
+[Datos y observaciones; tablas de medidas.]
+
+## Análisis y conclusiones
+
+[Cálculo de errores, interpretación y conclusión.]
+</source>
+        <translation>---
+title: [Titre du TP]
+author: [Nom]
+date: [date]
+---
+
+# [Titre du TP]
+
+## Objectif
+
+[Ce que l'on veut démontrer ou mesurer.]
+
+## Fondement théorique
+
+[Base théorique et formules pertinentes.]
+
+## Matériel
+
+- [matériel]
+
+## Procédure
+
+1. [étape]
+
+## Résultats
+
+[Données et observations ; tableaux de mesures.]
+
+## Analyse et conclusions
+
+[Calcul d'erreurs, interprétation et conclusion.]
+</translation>
+    </message>
+    <message>
+        <location filename="../src/markdown/doctemplates.cpp" line="390"/>
         <source>Personal y general</source>
         <translation>Personnel et général</translation>
     </message>
     <message>
-        <location filename="../src/markdown/doctemplates.cpp" line="237"/>
+        <location filename="../src/markdown/doctemplates.cpp" line="392"/>
         <source>Programación</source>
         <translation>Programmation</translation>
     </message>
     <message>
-        <location filename="../src/markdown/doctemplates.cpp" line="239"/>
+        <location filename="../src/markdown/doctemplates.cpp" line="394"/>
         <source>Académico</source>
         <translation>Académique</translation>
     </message>
     <message>
-        <location filename="../src/markdown/doctemplates.cpp" line="241"/>
+        <location filename="../src/markdown/doctemplates.cpp" line="396"/>
         <source>Docencia</source>
         <translation>Enseignement</translation>
     </message>
     <message>
-        <location filename="../src/markdown/doctemplates.cpp" line="243"/>
+        <location filename="../src/markdown/doctemplates.cpp" line="398"/>
         <source>Empresa</source>
         <translation>Entreprise</translation>
     </message>
     <message>
-        <location filename="../src/markdown/doctemplates.cpp" line="245"/>
+        <location filename="../src/markdown/doctemplates.cpp" line="400"/>
         <source>Derecho</source>
         <translation>Droit</translation>
     </message>
     <message>
-        <location filename="../src/markdown/doctemplates.cpp" line="247"/>
+        <location filename="../src/markdown/doctemplates.cpp" line="402"/>
         <source>Escritura</source>
         <translation>Écriture</translation>
     </message>
