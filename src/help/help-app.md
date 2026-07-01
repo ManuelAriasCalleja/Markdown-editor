@@ -94,6 +94,11 @@ Los botones de la barra reflejan el formato activo bajo el cursor.
 cursor queda en medio; si hay texto seleccionado, lo envuelve. Si tecleas el cierre
 justo delante de su pareja, el editor lo «salta» en vez de duplicarlo.
 
+**Reglas de entrada.** Al principio de una línea, teclear un marcador Markdown de
+bloque seguido de un espacio lo transforma en el sitio (sin dejar el marcador):
+`#` … `######` + espacio → encabezado H1…H6; `>` → cita; `-`, `*` o `+` → lista de
+viñetas; `1.` (o `1)`) → lista numerada. Produce el mismo formato que la barra.
+
 ## Encabezados, listas y bloques
 
 - **Encabezados** H1–H6 desde **Formato → Encabezado** o con

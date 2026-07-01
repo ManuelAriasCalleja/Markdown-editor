@@ -109,6 +109,8 @@ add_library(md-editor-core STATIC
     src/markdown/footnotes.h
     src/markdown/find.cpp
     src/markdown/find.h
+    src/markdown/inputrules.cpp
+    src/markdown/inputrules.h
     src/markdown/mark.cpp
     src/markdown/mark.h
     src/markdown/moveline.cpp
@@ -450,6 +452,7 @@ if(Qt6Test_FOUND)
         tst_markhighlight
         tst_supersub
         tst_printdecor
+        tst_inputrules
         tst_texttransform
         tst_typewriter
         tst_snippets

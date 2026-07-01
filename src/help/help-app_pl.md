@@ -91,6 +91,11 @@ sama, a kursor zostaje w środku; jeśli tekst jest zaznaczony, zostaje nim otoc
 Gdy wpiszesz znak zamykający tuż przed jego parą, edytor go „przeskakuje” zamiast
 duplikować.
 
+**Reguły wprowadzania.** Na początku wiersza wpisanie markera bloku Markdown i
+spacji przekształca wiersz w miejscu (bez pozostawiania markera): `#` … `######` +
+spacja → nagłówek H1…H6; `>` → cytat; `-`, `*` lub `+` → lista punktowana;
+`1.` (lub `1)`) → lista numerowana. Daje ten sam format co pasek.
+
 ## Nagłówki, listy i bloki
 
 - **Nagłówki** H1–H6 z **Format → Nagłówek** lub przez Ctrl+1 … Ctrl+6.

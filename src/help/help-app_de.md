@@ -100,6 +100,11 @@ Paar automatisch geschlossen und der Cursor steht in der Mitte; ist Text
 markiert, wird er umschlossen. Tippen Sie das schließende Zeichen direkt vor
 seinem Gegenstück, „überspringt“ der Editor es, statt es zu verdoppeln.
 
+**Eingaberegeln.** Am Zeilenanfang verwandelt ein Markdown-Blockmarker gefolgt von
+einem Leerzeichen die Zeile an Ort und Stelle (ohne den Marker): `#` … `######` +
+Leerzeichen → Überschrift H1…H6; `>` → Zitat; `-`, `*` oder `+` → Aufzählung;
+`1.` (oder `1)`) → nummerierte Liste. Ergibt dasselbe Format wie die Leiste.
+
 ## Überschriften, Listen und Blöcke
 
 - **Überschriften** H1–H6 über **Format → Überschrift** oder mit Strg+1 … Strg+6.

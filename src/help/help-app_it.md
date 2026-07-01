@@ -94,6 +94,11 @@ chiude da sola e il cursore resta in mezzo; se c'è del testo selezionato, lo
 avvolge. Se digiti il carattere di chiusura proprio davanti al suo compagno,
 l'editor lo «salta» invece di duplicarlo.
 
+**Regole di inserimento.** A inizio riga, digitare un marcatore Markdown di blocco
+seguito da uno spazio trasforma la riga sul posto (senza lasciare il marcatore):
+`#` … `######` + spazio → titolo H1…H6; `>` → citazione; `-`, `*` o `+` → elenco
+puntato; `1.` (o `1)`) → elenco numerato. Produce lo stesso formato della barra.
+
 ## Titoli, elenchi e blocchi
 
 - **Titoli** H1–H6 da **Formato → Titolo** o con Ctrl+1 … Ctrl+6.

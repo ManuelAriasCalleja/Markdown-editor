@@ -91,6 +91,11 @@ automatically and the cursor stays in the middle; if there is a selection, it is
 wrapped. If you type the closing character right in front of its match, the
 editor "skips over" it instead of duplicating it.
 
+**Input rules.** At the start of a line, typing a Markdown block marker followed by a
+space transforms the line in place (without leaving the marker): `#` … `######` +
+space → heading H1…H6; `>` → quote; `-`, `*` or `+` → bullet list; `1.` (or `1)`) →
+numbered list. Produces the same format as the toolbar.
+
 ## Headings, lists and blocks
 
 - **Headings** H1–H6 from **Format → Heading** or with Ctrl+1 … Ctrl+6.

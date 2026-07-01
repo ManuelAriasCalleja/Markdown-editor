@@ -94,6 +94,11 @@ sozinho o par e o cursor fica no meio; se houver texto selecionado, envolve-o. S
 escrever o fecho mesmo à frente do seu par, o editor «salta-o» em vez de o
 duplicar.
 
+**Regras de entrada.** No início de uma linha, escrever um marcador Markdown de bloco
+seguido de um espaço transforma a linha no sítio (sem deixar o marcador): `#` …
+`######` + espaço → título H1…H6; `>` → citação; `-`, `*` ou `+` → lista com
+marcadores; `1.` (ou `1)`) → lista numerada. Produz o mesmo formato que a barra.
+
 ## Títulos, listas e blocos
 
 - **Títulos** H1–H6 a partir de **Formato → Título** ou com Ctrl+1 … Ctrl+6.

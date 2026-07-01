@@ -95,6 +95,11 @@ paar vanzelf gesloten en blijft de cursor ertussen staan; is er tekst
 geselecteerd, dan wordt die omsloten. Typ je het sluitteken net vóór zijn
 tegenhanger, dan "springt" de editor eroverheen in plaats van het te verdubbelen.
 
+**Invoerregels.** Aan het begin van een regel verandert een Markdown-blokmarkering
+gevolgd door een spatie de regel ter plekke (zonder de markering te laten staan):
+`#` … `######` + spatie → kop H1…H6; `>` → citaat; `-`, `*` of `+` → opsomming;
+`1.` (of `1)`) → genummerde lijst. Levert dezelfde opmaak als de werkbalk.
+
 ## Koppen, lijsten en blokken
 
 - **Koppen** H1–H6 via **Opmaak → Kop** of met Ctrl+1 … Ctrl+6.

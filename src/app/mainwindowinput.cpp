@@ -28,6 +28,7 @@
 #include "listcontinuation.h"
 #include "gotoheadingdialog.h"
 #include "commandpalettedialog.h"
+#include "inputrules.h"
 #include "nav.h"
 #include "diagramcontroller.h"
 #include "autopair.h"
@@ -241,7 +242,57 @@ bool MainWindow::handleEditorKeyPress(QKeyEvent *ke)
         expandShortcodeBefore(cursor);
         return true;
     }
+    // Reglas de entrada: al teclear espacio tras un marcador de bloque al inicio de
+    // línea (`#`, `>`, `-`, `1.`…), transforma el bloque en su formato (sin dejar el
+    // marcador literal), igual que la barra/atajos. Corre antes del auto-emparejado.
+    if (ke->text() == QStringLiteral(" ")
+        && !(ke->modifiers() & (Qt::ControlModifier | Qt::AltModifier | Qt::MetaModifier))
+        && applyInputRule())
+        return true;  // consumido: no se inserta el espacio literal
     return applyAutoPair(m_stack->editor(), ke);
+}
+
+bool MainWindow::applyInputRule()
+{
+    QTextEdit *ed = m_stack->editor();
+    QTextCursor c = ed->textCursor();
+    if (c.hasSelection())
+        return false;
+    const QTextBlock block = c.block();
+    // Solo en párrafo normal: no re-disparar dentro de un encabezado o una lista ya
+    // formateados (donde `applyList`/`applyHeading` harían un toggle no deseado).
+    if (block.blockFormat().headingLevel() != 0 || c.currentList())
+        return false;
+    const QString before = block.text().left(c.positionInBlock());
+    const mdinputrules::Rule r = mdinputrules::ruleForPrefix(before);
+    if (r.kind == mdinputrules::Kind::None)
+        return false;
+
+    // Borra el marcador y aplica el formato, todo en un solo paso de deshacer.
+    QTextCursor guard(ed->document());
+    guard.beginEditBlock();
+    QTextCursor del = c;
+    del.movePosition(QTextCursor::StartOfBlock, QTextCursor::KeepAnchor);
+    del.removeSelectedText();
+    ed->setTextCursor(del);
+    switch (r.kind) {
+    case mdinputrules::Kind::Heading:
+        m_stack->format()->applyHeading(r.level);
+        break;
+    case mdinputrules::Kind::Quote:
+        m_stack->format()->toggleBlockquote();
+        break;
+    case mdinputrules::Kind::BulletList:
+        m_stack->format()->applyList(QTextListFormat::ListDisc);
+        break;
+    case mdinputrules::Kind::NumberedList:
+        m_stack->format()->applyList(QTextListFormat::ListDecimal);
+        break;
+    case mdinputrules::Kind::None:
+        break;
+    }
+    guard.endEditBlock();
+    return true;
 }
 
 bool MainWindow::handleSourceKeyPress(QKeyEvent *ke)

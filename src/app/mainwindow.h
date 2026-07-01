@@ -71,6 +71,7 @@ class MainWindow : public QMainWindow
     friend class TestHeadingShift;
     friend class TestTableSortUi;
     friend class TestLineCommands;
+    friend class TestInputRules;
 
 public:
     explicit MainWindow(QWidget *parent = nullptr);
@@ -113,6 +114,12 @@ private:
     // Abre la paleta de comandos (Ctrl+Shift+P): busca cualquier acción de los
     // menús por su nombre (filtro difuso) y la dispara al aceptar.
     void commandPalette();
+
+    // Regla de entrada: si el bloque del cursor (párrafo normal) empieza justo por un
+    // marcador Markdown de bloque (`#`, `>`, `-`, `1.`…) y se acaba de teclear un
+    // espacio, borra el marcador y aplica el formato equivalente. Devuelve true si
+    // transformó (el espacio se consume, no se inserta literal).
+    bool applyInputRule();
 
     // Tras teclear el ':' de cierre (en `cursor`), si justo antes hay un shortcode
     // `:nombre:` conocido, lo sustituye por su símbolo (ver mdshortcode).

@@ -93,6 +93,11 @@ Butoanele din bară reflectă formatarea activă sub cursor.
 încadrat. Dacă tastezi caracterul de închidere chiar în fața perechii sale,
 editorul îl „sare” în loc să-l dubleze.
 
+**Reguli de introducere.** La începutul unui rând, tastarea unui marcaj Markdown de
+bloc urmat de un spațiu transformă rândul pe loc (fără a lăsa marcajul): `#` …
+`######` + spațiu → titlu H1…H6; `>` → citat; `-`, `*` sau `+` → listă cu
+marcatori; `1.` (sau `1)`) → listă numerotată. Produce același format ca bara.
+
 ## Titluri, liste și blocuri
 
 - **Titluri** H1–H6 din **Format → Titlu** sau cu Ctrl+1 … Ctrl+6.

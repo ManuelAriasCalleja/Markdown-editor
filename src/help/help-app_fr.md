@@ -96,6 +96,11 @@ toute seule et le curseur reste au milieu ; si du texte est sélectionné, il es
 entouré. Si vous tapez le caractère de fermeture juste devant son homologue,
 l'éditeur le « saute » au lieu de le dupliquer.
 
+**Règles de saisie.** En début de ligne, taper un marqueur Markdown de bloc suivi
+d'un espace transforme la ligne sur place (sans laisser le marqueur) : `#` …
+`######` + espace → titre H1…H6 ; `>` → citation ; `-`, `*` ou `+` → liste à puces ;
+`1.` (ou `1)`) → liste numérotée. Produit le même format que la barre.
+
 ## Titres, listes et blocs
 
 - **Titres** H1–H6 depuis **Format → Titre** ou avec Ctrl+1 … Ctrl+6.
