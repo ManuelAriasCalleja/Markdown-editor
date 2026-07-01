@@ -296,6 +296,9 @@ private:
     void toggleOutlineFocus();
     // Diálogo de abrir → abre en pestaña (reusa la actual si está vacía).
     void openInTab();
+    // Diálogo de importar → convierte un HTML a Markdown y lo abre como documento
+    // nuevo sin título en una pestaña nueva (no pisa el original).
+    void importHtml();
     // Abre `path` en una pestaña: si ya está abierto salta a él; reusa la actual si
     // es un documento nuevo vacío; si no, una pestaña nueva.
     void openPathInTab(const QString &path);

@@ -8,6 +8,10 @@ y el proyecto usa [versionado semántico](https://semver.org/lang/es/).
 ## [Sin publicar]
 
 ### Añadido
+- **Importar desde HTML** (*Archivo → Importar → Desde HTML…*): convierte una página
+  HTML a Markdown y la abre como documento nuevo sin título, sin tocar el original.
+  Respeta el juego de caracteres declarado en la página (BOM › `<meta charset>` ›
+  UTF-8). Reutiliza el conversor de «Pegar como Markdown».
 - **Reglas de entrada** en el editor visual: al inicio de línea, teclear un marcador
   Markdown de bloque seguido de espacio lo transforma en el sitio (sin dejar el
   marcador): `#`…`######` → encabezado, `>` → cita, `-`/`*`/`+` → lista de viñetas,

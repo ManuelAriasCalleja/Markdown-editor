@@ -574,7 +574,15 @@ las plantillas), para no pisar el original.
 
 **Recomendación (coste/beneficio):**
 
-- ⬜ **HTML → Markdown** — fruta madura: reusa `htmlToMarkdown`, Qt puro, alto valor.
+- ✅ **HTML → Markdown** — fruta madura: reusa `htmlToMarkdown`, Qt puro, alto valor.
+  *Hecho:* *Archivo → Importar → Desde HTML…* (`MainWindow::importHtml`) → módulo puro
+  `mdimport` (`markdown/htmlimport.{h,cpp}`: `decodeHtml`/`charsetOf`, decodificación
+  charset-aware BOM › `<meta charset>` › UTF-8) → `mdrichpaste::htmlToMarkdown` →
+  `newFromTemplate` en pestaña nueva (documento sin título, no pisa el original).
+  `tst_htmlimport`. *Limitación:* las imágenes con ruta relativa apuntan a la ubicación
+  del HTML original (no se copian ni reescriben); windows-1252 cae a UTF-8 (Qt6 core no
+  lo decodifica). *Pendiente:* importar EPUB (mismo `htmlToMarkdown` sobre el XHTML del
+  zip) y **Pandoc opcional** para DOCX/ODT/RTF/LaTeX/…
 - ⬜ **Pandoc opcional** — máximo apalancamiento: una integración `QProcess` cubre
   DOCX/ODT/RTF/LaTeX/reST/… con calidad alta y degradación elegante, sin dependencia
   enlazada (mismo patrón que los diagramas).

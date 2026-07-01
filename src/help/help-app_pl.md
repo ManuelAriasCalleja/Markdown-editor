@@ -37,6 +37,9 @@ serializowany do czystego Markdown.
   protokół, egzamin…) gotowego do wypełnienia.
 - **Plik → Otwórz…** (Ctrl+O) otwiera istniejący `.md`. Aplikacja zapamiętuje
   ostatnio otwarte w **Plik → Otwórz ostatnie**.
+- **Plik → Importuj → Z HTML…** konwertuje stronę HTML na Markdown i otwiera ją jako
+  nowy dokument bez tytułu (nie narusza oryginalnego pliku). Działa najlepiej z
+  prostym HTML-em; uwzględnia zestaw znaków zadeklarowany na stronie.
 - **Zapisz** (Ctrl+S) i **Zapisz jako…** (Ctrl+Shift+S) zapisują dokument w UTF-8.
   **Otwórz folder dokumentu** otwiera folder dokumentu w menedżerze plików.
 - **Przywróć do zapisanej wersji** odrzuca niezapisane zmiany i przeładowuje plik

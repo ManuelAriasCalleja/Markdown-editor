@@ -37,6 +37,10 @@ document est sérialisé de nouveau en Markdown pur.
   squelette (lettre, compte rendu, examen…) prêt à remplir.
 - **Fichier → Ouvrir…** (Ctrl+O) ouvre un `.md` existant. L'application retient
   les derniers ouverts dans **Fichier → Ouvrir récents**.
+- **Fichier → Importer → Depuis HTML…** convertit une page HTML en Markdown et
+  l'ouvre comme nouveau document sans titre (le fichier d'origine n'est pas modifié).
+  Fonctionne mieux avec du HTML simple ; respecte le jeu de caractères déclaré dans
+  la page.
 - **Enregistrer** (Ctrl+S) et **Enregistrer sous…** (Ctrl+Maj+S) écrivent le
   document en UTF-8. **Ouvrir le dossier contenant** ouvre le dossier du document
   dans le gestionnaire de fichiers.

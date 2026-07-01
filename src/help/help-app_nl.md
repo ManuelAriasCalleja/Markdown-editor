@@ -37,6 +37,9 @@ document weer naar pure Markdown geserialiseerd.
   skelet (brief, verslag, examen…) klaar om in te vullen.
 - **Bestand → Openen…** (Ctrl+O) opent een bestaand `.md`. De toepassing onthoudt
   de laatst geopende in **Bestand → Recent geopend**.
+- **Bestand → Importeren → Uit HTML…** zet een HTML-pagina om naar Markdown en opent
+  deze als nieuw naamloos document (het originele bestand blijft ongemoeid). Werkt het
+  best met eenvoudige HTML; houdt rekening met de in de pagina opgegeven tekenset.
 - **Opslaan** (Ctrl+S) en **Opslaan als…** (Ctrl+Shift+S) schrijven het document
   in UTF-8. **Bevattende map openen** opent de map van het document in de
   bestandsbeheerder.
