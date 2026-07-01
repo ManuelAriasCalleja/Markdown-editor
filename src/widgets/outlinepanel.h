@@ -28,6 +28,12 @@ namespace mdoutline {
 /// \brief Recorre los bloques del documento y recoge los que tienen headingLevel() > 0.
 QList<OutlineHeading> headingsOf(const QTextDocument *doc);
 
+/// \brief Ordinales (0..N-1, orden de documento) de los encabezados VISIBLES bajo
+/// `filter`: los que contienen el texto (sin distinguir mayúsculas) y, para que el
+/// árbol siga teniendo sentido, todos sus ancestros. Un `filter` vacío devuelve
+/// todos. Pura (sin GUI), testeable.
+QSet<int> visibleOrdinals(const QList<OutlineHeading> &headings, const QString &filter);
+
 /// \brief Nuevo nivel al promover/degradar un encabezado: `current` (1..6) más
 /// `delta` (−1 promover hacia H1, +1 degradar hacia H6), acotado a [1,6]. Si
 /// `current` no es un encabezado (< 1), devuelve 0 (sin cambio). Pura, testeable.

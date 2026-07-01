@@ -266,6 +266,10 @@ it if hidden); there, the arrow keys move through the headings and **Enter**
 jumps to the selected one and returns focus to the editor. Pressing
 **F6** again simply returns focus to the editor.
 
+The **filter field** at the top of the panel shows only the headings matching what
+you type (and their ancestors); the **⊞/⊟** buttons expand or collapse everything.
+The folding you set is **kept** even as you keep editing.
+
 You can **drag** an outline entry to **reorder** that section —its heading, its
 content and its subsections— within the document, without changing its level.
 Also, **Insert → Table of contents (TOC)** dumps a nested list of the headings

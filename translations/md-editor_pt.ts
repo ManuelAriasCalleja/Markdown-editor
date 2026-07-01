@@ -2173,18 +2173,33 @@ date: [data]
 <context>
     <name>OutlinePanel</name>
     <message>
-        <location filename="../src/widgets/outlinepanel.cpp" line="239"/>
-        <location filename="../src/widgets/outlinepanel.cpp" line="242"/>
+        <location filename="../src/widgets/outlinepanel.cpp" line="269"/>
+        <location filename="../src/widgets/outlinepanel.cpp" line="272"/>
         <source>Esquema</source>
         <translation>Estrutura</translation>
     </message>
     <message>
-        <location filename="../src/widgets/outlinepanel.cpp" line="244"/>
+        <location filename="../src/widgets/outlinepanel.cpp" line="274"/>
         <source>Encabezados del documento; actívalos para saltar a esa sección.</source>
         <translation>Títulos do documento; ative um para saltar para essa secção.</translation>
     </message>
     <message>
-        <location filename="../src/widgets/outlinepanel.cpp" line="282"/>
+        <location filename="../src/widgets/outlinepanel.cpp" line="300"/>
+        <source>Filtrar encabezados…</source>
+        <translation>Filtrar títulos…</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/outlinepanel.cpp" line="305"/>
+        <source>Expandir todo</source>
+        <translation>Expandir tudo</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/outlinepanel.cpp" line="308"/>
+        <source>Plegar todo</source>
+        <translation>Recolher tudo</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/outlinepanel.cpp" line="370"/>
         <source>Sin encabezados</source>
         <translation>Sem títulos</translation>
     </message>

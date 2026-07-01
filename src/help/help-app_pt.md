@@ -271,6 +271,10 @@ estrutura (mostrando-a se estiver oculta); aí, as teclas de seta percorrem os
 títulos e **Enter** salta para o selecionado e devolve o foco ao editor. Premir
 **F6** novamente devolve simplesmente o foco ao editor.
 
+O **campo de filtro** no topo do painel mostra apenas os títulos que correspondem
+ao que escreve (e os seus ascendentes); os botões **⊞/⊟** expandem ou recolhem
+tudo. O recolhimento que define é **mantido** mesmo enquanto continua a editar.
+
 Pode **arrastar** uma entrada da estrutura para **reordenar** essa secção —o seu
 título, o seu conteúdo e as suas subsecções— dentro do documento, sem mudar o
 nível. Além disso, **Inserir → Índice (TOC)** insere no documento uma lista

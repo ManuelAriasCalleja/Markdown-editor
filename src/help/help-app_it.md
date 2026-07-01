@@ -273,6 +273,10 @@ sulla struttura (mostrandola se è nascosta); lì i tasti freccia scorrono tra i
 titoli e **Invio** salta a quello selezionato riportando il fuoco all'editor.
 Premendo di nuovo **F6** il fuoco torna semplicemente all'editor.
 
+Il **campo di filtro** in alto nel pannello mostra solo i titoli che corrispondono
+a ciò che digiti (e i loro antenati); i pulsanti **⊞/⊟** espandono o comprimono
+tutto. La compressione che imposti si **conserva** anche mentre continui a modificare.
+
 Puoi **trascinare** una voce della struttura per **riordinare** quella sezione —il
 suo titolo, il suo contenuto e le sue sottosezioni— nel documento, senza cambiare
 il livello. Inoltre, **Inserisci → Indice (TOC)** inserisce nel documento un

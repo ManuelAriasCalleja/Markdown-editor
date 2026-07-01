@@ -277,6 +277,10 @@ vers le plan (en l'affichant s'il est masqué) ; là, les flèches parcourent le
 titres et **Entrée** saute au titre sélectionné en rendant le focus à l'éditeur.
 Appuyer de nouveau sur **F6** rend simplement le focus à l'éditeur.
 
+Le **champ de filtre** en haut du panneau n'affiche que les titres correspondant à
+votre saisie (et leurs ancêtres) ; les boutons **⊞/⊟** développent ou réduisent
+tout. Le pliage que vous appliquez est **conservé** même en continuant à éditer.
+
 Vous pouvez **glisser** une entrée du plan pour **réordonner** cette section —son
 titre, son contenu et ses sous-sections— dans le document, sans changer le niveau.
 De plus, **Insérer → Table des matières (TOC)** insère dans le document une liste

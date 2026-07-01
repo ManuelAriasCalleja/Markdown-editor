@@ -18,6 +18,10 @@ y el proyecto usa [versionado semántico](https://semver.org/lang/es/).
 - **Ordenar filas de tabla por columna** (*Tabla → Ordenar filas por columna*,
   ascendente/descendente): reordena las filas por la columna del cursor dejando la
   cabecera fija; detecta si la columna es numérica o de texto.
+- **Filtro y plegado del esquema**: el panel de esquema tiene un campo de filtro en
+  vivo (muestra las coincidencias y sus ancestros) y botones «Expandir/Plegar
+  todo»; el plegado se conserva ahora entre reconstrucciones (antes se reexpandía
+  todo al editar).
 
 ### Cambiado
 - **Buscar** resalta ahora **todas** las coincidencias en el documento y muestra

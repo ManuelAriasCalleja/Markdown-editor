@@ -270,6 +270,10 @@ structură (afișând-o dacă este ascunsă); acolo, tastele săgeți se deplase
 titluri, iar **Enter** sare la cel selectat și readuce focalizarea în editor.
 Apăsând din nou **F6** revii pur și simplu cu focalizarea în editor.
 
+**Câmpul de filtrare** din partea de sus a panoului afișează doar titlurile care se
+potrivesc cu ce tastezi (și strămoșii lor); butoanele **⊞/⊟** extind sau restrâng
+tot. Plierea pe care o stabilești se **păstrează** chiar și în timp ce continui să editezi.
+
 Poți **trage** o intrare din structură pentru a **reordona** acea secțiune —titlul,
 conținutul și subsecțiunile ei— în document, fără a schimba nivelul. În plus,
 **Inserare → Cuprins (TOC)** plasează în document o listă imbricată a titlurilor.

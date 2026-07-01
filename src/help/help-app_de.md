@@ -281,6 +281,11 @@ dort bewegen die Pfeiltasten durch die Überschriften und **Enter** springt zur
 ausgewählten und gibt den Fokus an den Editor zurück. Ein erneutes **F6**
 gibt den Fokus einfach an den Editor zurück.
 
+Das **Filterfeld** oben im Panel zeigt nur die Überschriften, die zu deiner
+Eingabe passen (und ihre übergeordneten); die Schaltflächen **⊞/⊟** klappen alles
+aus oder ein. Das von dir gewählte Ein-/Ausklappen **bleibt erhalten**, auch
+während du weiter schreibst.
+
 Sie können einen Gliederungseintrag **ziehen**, um diesen Abschnitt —seine
 Überschrift, seinen Inhalt und seine Unterabschnitte— im Dokument **umzuordnen**,
 ohne die Ebene zu ändern. Außerdem schreibt **Einfügen → Inhaltsverzeichnis (TOC)**

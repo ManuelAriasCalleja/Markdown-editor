@@ -34,6 +34,10 @@ private slots:
     void moveSectionIntoItselfIsNoOp();
 
     void shiftedLevelClampsAndIgnoresNonHeadings();
+
+    void visibleOrdinalsEmptyFilterShowsAll();
+    void visibleOrdinalsMatchKeepsAncestors();
+    void visibleOrdinalsNoMatchIsEmpty();
 };
 
 void TestOutline::nullDocReturnsEmpty()
@@ -220,6 +224,31 @@ void TestOutline::shiftedLevelClampsAndIgnoresNonHeadings()
     // No es encabezado (0 = párrafo): sin cambio.
     QCOMPARE(mdoutline::shiftedLevel(0, -1), 0);
     QCOMPARE(mdoutline::shiftedLevel(0, 1), 0);
+}
+
+void TestOutline::visibleOrdinalsEmptyFilterShowsAll()
+{
+    const QList<OutlineHeading> hs{{1, "A", 0}, {2, "A1", 1}, {1, "B", 2}};
+    QCOMPARE(mdoutline::visibleOrdinals(hs, QString()), (QSet<int>{0, 1, 2}));
+    QCOMPARE(mdoutline::visibleOrdinals(hs, QStringLiteral("   ")), (QSet<int>{0, 1, 2}));
+}
+
+void TestOutline::visibleOrdinalsMatchKeepsAncestors()
+{
+    // A(1) > A1(2) > A1a(3), B(1). Filtro "a1a": coincide el 2 y arrastra sus
+    // ancestros (0 y 1); el 3 (B) no.
+    const QList<OutlineHeading> hs{
+        {1, "Alpha", 0}, {2, "Beta", 1}, {3, "A1a target", 2}, {1, "Gamma", 3}};
+    QCOMPARE(mdoutline::visibleOrdinals(hs, QStringLiteral("target")),
+             (QSet<int>{0, 1, 2}));
+    // Coincidencia sin distinguir mayúsculas y por subcadena.
+    QCOMPARE(mdoutline::visibleOrdinals(hs, QStringLiteral("gamm")), (QSet<int>{3}));
+}
+
+void TestOutline::visibleOrdinalsNoMatchIsEmpty()
+{
+    const QList<OutlineHeading> hs{{1, "A", 0}, {2, "B", 1}};
+    QVERIFY(mdoutline::visibleOrdinals(hs, QStringLiteral("zzz")).isEmpty());
 }
 
 QTEST_MAIN(TestOutline)

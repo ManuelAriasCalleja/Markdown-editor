@@ -7,13 +7,17 @@
 
 #include <QDropEvent>
 #include <QHBoxLayout>
+#include <QLineEdit>
 #include <QPalette>
 #include <QRegularExpression>
+#include <QSignalBlocker>
 #include <QStringList>
 #include <QTextBlock>
 #include <QTextDocument>
+#include <QToolButton>
 #include <QTreeWidgetItem>
 #include <QTreeWidgetItemIterator>
+#include <QVBoxLayout>
 #include <QVector>
 #include <QWidget>
 
@@ -42,6 +46,32 @@ int mdoutline::shiftedLevel(int current, int delta)
     if (current < 1)
         return 0;  // no es un encabezado: sin cambio
     return std::clamp(current + delta, 1, 6);
+}
+
+QSet<int> mdoutline::visibleOrdinals(const QList<OutlineHeading> &headings,
+                                     const QString &filter)
+{
+    QSet<int> visible;
+    const QString f = filter.trimmed();
+    if (f.isEmpty()) {
+        for (int i = 0; i < headings.size(); ++i)
+            visible.insert(i);
+        return visible;
+    }
+    for (int j = 0; j < headings.size(); ++j) {
+        if (!headings.at(j).text.contains(f, Qt::CaseInsensitive))
+            continue;
+        visible.insert(j);
+        // Ancestros: hacia atrás, cada nivel estrictamente menor cuelga a este.
+        int needLevel = headings.at(j).level;
+        for (int i = j - 1; i >= 0 && needLevel > 1; --i) {
+            if (headings.at(i).level < needLevel) {
+                visible.insert(i);
+                needLevel = headings.at(i).level;
+            }
+        }
+    }
+    return visible;
 }
 
 QString mdoutline::tableOfContentsMarkdown(const QList<OutlineHeading> &headings)
@@ -255,8 +285,53 @@ OutlinePanel::OutlinePanel(QWidget *parent)
     m_layout = new QHBoxLayout(container);
     m_layout->setContentsMargins(0, 0, 0, 0);
     m_layout->setSpacing(0);
-    m_layout->addWidget(m_tree);
+
+    // Columna: [fila de filtro][árbol]. El relleno izquierdo (setLeftPadding) lo
+    // sigue aplicando m_layout como margen izquierdo de toda la columna.
+    auto *column = new QVBoxLayout;
+    column->setContentsMargins(0, 0, 0, 0);
+    column->setSpacing(0);
+
+    // Fila de filtro: campo de búsqueda + botones «Expandir/Plegar todo».
+    auto *filterRow = new QHBoxLayout;
+    filterRow->setContentsMargins(0, 0, 0, 0);
+    filterRow->setSpacing(0);
+    m_filter = new QLineEdit(this);
+    m_filter->setPlaceholderText(tr("Filtrar encabezados…"));
+    m_filter->setAccessibleName(m_filter->placeholderText());
+    m_filter->setClearButtonEnabled(true);
+    auto *expandBtn = new QToolButton(this);
+    expandBtn->setText(QStringLiteral("⊞"));
+    expandBtn->setToolTip(tr("Expandir todo"));
+    auto *collapseBtn = new QToolButton(this);
+    collapseBtn->setText(QStringLiteral("⊟"));
+    collapseBtn->setToolTip(tr("Plegar todo"));
+    filterRow->addWidget(m_filter);
+    filterRow->addWidget(expandBtn);
+    filterRow->addWidget(collapseBtn);
+    column->addLayout(filterRow);
+    column->addWidget(m_tree);
+    m_layout->addLayout(column);
     setWidget(container);
+
+    // Filtrar en vivo: recalcula visibilidad al teclear (reusa applyViewState).
+    connect(m_filter, &QLineEdit::textChanged, this, [this] { applyViewState(); });
+    // Expandir/plegar todo: fija el conjunto plegado y quita el filtro para que el
+    // efecto se vea sobre el árbol completo.
+    connect(expandBtn, &QToolButton::clicked, this, [this] {
+        m_collapsed.clear();
+        QSignalBlocker block(m_filter);
+        m_filter->clear();
+        applyViewState();
+    });
+    connect(collapseBtn, &QToolButton::clicked, this, [this] {
+        m_collapsed.clear();
+        for (const OutlineHeading &h : m_headings)
+            m_collapsed.insert(h.text);
+        QSignalBlocker block(m_filter);
+        m_filter->clear();
+        applyViewState();
+    });
 
     // Un clic (o Enter con el teclado) en un encabezado lleva el cursor a su bloque
     // (los ítems de relleno no llevan número de bloque, así que no navegan).
@@ -328,9 +403,23 @@ void OutlinePanel::applyViewState()
     // El guard evita que estos cambios programáticos de plegado se registren en
     // m_collapsed (que solo debe reflejar lo que hace el usuario).
     m_applyingState = true;
-    for (QTreeWidgetItemIterator it(m_tree); *it; ++it) {
-        (*it)->setHidden(false);
-        (*it)->setExpanded(!m_collapsed.contains((*it)->text(0)));
+    const QString filter = m_filter ? m_filter->text().trimmed() : QString();
+    if (filter.isEmpty()) {
+        // Sin filtro: todo visible, con el plegado recordado por el usuario.
+        for (QTreeWidgetItemIterator it(m_tree); *it; ++it) {
+            (*it)->setHidden(false);
+            (*it)->setExpanded(!m_collapsed.contains((*it)->text(0)));
+        }
+    } else {
+        // Con filtro: solo las coincidencias y sus ancestros, todo expandido para
+        // que las coincidencias se vean (se ignora el plegado mientras se filtra).
+        const QSet<int> visible = mdoutline::visibleOrdinals(m_headings, filter);
+        for (QTreeWidgetItemIterator it(m_tree); *it; ++it) {
+            const bool v = visible.contains((*it)->data(0, OrdinalRole).toInt());
+            (*it)->setHidden(!v);
+            if (v)
+                (*it)->setExpanded(true);
+        }
     }
     m_applyingState = false;
 }

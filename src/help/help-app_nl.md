@@ -277,6 +277,10 @@ de pijltjestoetsen je door de koppen en springt **Enter** naar de geselecteerde 
 en keert de focus terug naar de editor. Druk je nogmaals op **F6**, dan
 keert de focus simpelweg terug naar de editor.
 
+Het **filterveld** boven in het paneel toont alleen de koppen die overeenkomen met
+wat je typt (en hun voorouders); de knoppen **⊞/⊟** vouwen alles uit of samen. Het
+samenvouwen dat je instelt **blijft behouden**, ook terwijl je verder typt.
+
 Je kunt een overzichtsitem **slepen** om die sectie —de kop, de inhoud en de
 subsecties— in het document te **herordenen**, zonder het niveau te wijzigen.
 Bovendien plaatst **Invoegen → Inhoudsopgave (TOC)** een geneste lijst van de

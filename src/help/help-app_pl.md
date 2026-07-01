@@ -266,6 +266,10 @@ przesuwają się po nagłówkach, a **Enter** przeskakuje do wybranego i przywra
 fokus do edytora. Ponowne naciśnięcie **F6** po prostu przywraca fokus
 do edytora.
 
+**Pole filtra** u góry panelu pokazuje tylko nagłówki pasujące do wpisanego tekstu
+(oraz ich przodków); przyciski **⊞/⊟** rozwijają lub zwijają wszystko. Ustawione
+zwinięcie jest **zachowywane** nawet podczas dalszej edycji.
+
 Pozycję struktury możesz **przeciągnąć**, aby **zmienić kolejność** tej sekcji —jej
 nagłówka, treści i podsekcji— w dokumencie, bez zmiany poziomu. Ponadto **Wstaw →
 Spis treści (TOC)** wstawia do dokumentu zagnieżdżoną listę nagłówków. **Widok →

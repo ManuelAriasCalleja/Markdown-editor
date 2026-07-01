@@ -275,6 +275,11 @@ teclado al esquema (lo muestra si estaba oculto); ahí, las flechas recorren los
 encabezados y **Enter** salta al elegido y devuelve el foco al editor. Pulsar
 **F6** de nuevo, sin más, devuelve el foco al editor.
 
+El **campo de filtro** de la parte superior del panel muestra solo los
+encabezados que coinciden con lo que escribes (y sus ancestros); los botones
+**⊞/⊟** expanden o pliegan todo. El plegado que haces se **conserva** aunque
+sigas editando el documento.
+
 Puedes **arrastrar** una entrada del esquema para **reordenar** esa sección
 —su encabezado, su contenido y sus subsecciones— dentro del documento, sin
 cambiar el nivel. Además, **Insertar → Índice (TOC)** vuelca en el documento una

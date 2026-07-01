@@ -2173,18 +2173,33 @@ date: [Datum]
 <context>
     <name>OutlinePanel</name>
     <message>
-        <location filename="../src/widgets/outlinepanel.cpp" line="239"/>
-        <location filename="../src/widgets/outlinepanel.cpp" line="242"/>
+        <location filename="../src/widgets/outlinepanel.cpp" line="269"/>
+        <location filename="../src/widgets/outlinepanel.cpp" line="272"/>
         <source>Esquema</source>
         <translation>Gliederung</translation>
     </message>
     <message>
-        <location filename="../src/widgets/outlinepanel.cpp" line="244"/>
+        <location filename="../src/widgets/outlinepanel.cpp" line="274"/>
         <source>Encabezados del documento; actívalos para saltar a esa sección.</source>
         <translation>Überschriften des Dokuments; aktivieren Sie eine, um zu diesem Abschnitt zu springen.</translation>
     </message>
     <message>
-        <location filename="../src/widgets/outlinepanel.cpp" line="282"/>
+        <location filename="../src/widgets/outlinepanel.cpp" line="300"/>
+        <source>Filtrar encabezados…</source>
+        <translation>Überschriften filtern…</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/outlinepanel.cpp" line="305"/>
+        <source>Expandir todo</source>
+        <translation>Alle ausklappen</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/outlinepanel.cpp" line="308"/>
+        <source>Plegar todo</source>
+        <translation>Alle einklappen</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/outlinepanel.cpp" line="370"/>
         <source>Sin encabezados</source>
         <translation>Keine Überschriften</translation>
     </message>
