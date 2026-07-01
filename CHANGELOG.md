@@ -22,6 +22,9 @@ y el proyecto usa [versionado semántico](https://semver.org/lang/es/).
   vivo (muestra las coincidencias y sus ancestros) y botones «Expandir/Plegar
   todo»; el plegado se conserva ahora entre reconstrucciones (antes se reexpandía
   todo al editar).
+- **Comandos de línea en la vista de código**: mover la línea arriba/abajo
+  (Alt+↑/↓), duplicarla (Ctrl+D), borrarla (Ctrl+Shift+K) y unirla con la siguiente
+  (Ctrl+J).
 
 ### Cambiado
 - **Buscar** resalta ahora **todas** las coincidencias en el documento y muestra

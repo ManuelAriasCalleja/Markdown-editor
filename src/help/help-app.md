@@ -328,6 +328,10 @@ en el modo fuente se vuelcan al documento al volver al modo visual.
 editor visual y el código fuente, sincronizados (lo que escribes en uno se refleja
 en el otro). Es excluyente con el modo fuente a pantalla completa.
 
+En la vista de código hay **comandos de línea** por teclado sobre la línea del
+cursor: **Alt+↑ / Alt+↓** mueven la línea arriba/abajo, **Ctrl+D** la duplica,
+**Ctrl+Shift+K** la borra y **Ctrl+J** la une con la siguiente.
+
 ## Exportar e imprimir
 
 **Archivo → Exportar** ofrece **PDF**, **HTML**, **ODF (.odt)**, **DOCX (.docx)**,
@@ -397,6 +401,8 @@ ofrece recuperar lo que estabas escribiendo.
 | Foco al esquema / volver al editor | F6 |
 | Vista de código Markdown  | Ctrl+Shift+M     |
 | Vista dividida            | Ctrl+Shift+D     |
+| Mover línea ↑ / ↓ (código) | Alt+↑ / Alt+↓   |
+| Duplicar / borrar / unir línea (código) | Ctrl+D / Ctrl+Shift+K / Ctrl+J |
 | Esquema                   | F9               |
 | Sin distracciones         | F11              |
 | Modo foco                 | F12              |

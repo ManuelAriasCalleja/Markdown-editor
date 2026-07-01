@@ -326,6 +326,10 @@ simultan, una lângă alta: editorul vizual și sursa, sincronizate (ce tastezi
 într-unul se reflectă în celălalt). Se exclude reciproc cu modul sursă pe ecran
 complet.
 
+În vizualizarea sursă există **comenzi de linie** de la tastatură pentru linia
+cursorului: **Alt+↑ / Alt+↓** mută linia în sus/jos, **Ctrl+D** o duplică,
+**Ctrl+Shift+K** o șterge, iar **Ctrl+J** o unește cu următoarea.
+
 ## Export și tipărire
 
 **Fișier → Exportă** oferă **PDF**, **HTML**, **ODF (.odt)**, **DOCX (.docx)**,
@@ -396,6 +400,8 @@ ce scriai.
 | Focus structură / editor  | F6     |
 | Vizualizare sursă Markdown | Ctrl+Shift+M    |
 | Vizualizare divizată      | Ctrl+Shift+D     |
+| Mută linia ↑ / ↓ (sursă)  | Alt+↑ / Alt+↓    |
+| Duplică / șterge / unește linia (sursă) | Ctrl+D / Ctrl+Shift+K / Ctrl+J |
 | Structură                 | F9               |
 | Fără distrageri           | F11              |
 | Mod focalizare            | F12              |

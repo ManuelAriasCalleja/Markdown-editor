@@ -331,6 +331,10 @@ mode source sont reportées dans le document au retour au mode visuel.
 l'éditeur visuel et la source, synchronisés (ce que vous tapez dans l'un apparaît
 dans l'autre). Elle est exclusive avec le mode source en plein écran.
 
+Dans la vue source, des **commandes de ligne** au clavier agissent sur la ligne du
+curseur : **Alt+↑ / Alt+↓** déplacent la ligne vers le haut/bas, **Ctrl+D** la
+duplique, **Ctrl+Maj+K** la supprime et **Ctrl+J** la fusionne avec la suivante.
+
 ## Exporter et imprimer
 
 **Fichier → Exporter** propose **PDF**, **HTML**, **ODF (.odt)**, **DOCX (.docx)**,
@@ -400,6 +404,8 @@ elle propose à la réouverture de récupérer ce que vous étiez en train d'éc
 | Plan / retour à l'éditeur | F6       |
 | Vue source Markdown       | Ctrl+Maj+M       |
 | Vue partagée              | Ctrl+Maj+D       |
+| Déplacer la ligne ↑ / ↓ (source) | Alt+↑ / Alt+↓ |
+| Dupliquer / supprimer / fusionner la ligne (source) | Ctrl+D / Ctrl+Maj+K / Ctrl+J |
 | Plan                      | F9               |
 | Sans distraction          | F11              |
 | Mode focus                | F12              |

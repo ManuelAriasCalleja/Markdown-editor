@@ -461,6 +461,41 @@ void EditorStack::cleanMarkdown()
     }
 }
 
+void EditorStack::applyLineOp(mdmoveline::Result (*op)(const QStringList &, int))
+{
+    QTextEdit *ed = activeEditor();
+    if (ed != m_split->sourceEditor())
+        return;  // los comandos de línea solo tienen sentido en la vista de código
+    const QStringList lines = ed->toPlainText().split(QLatin1Char('\n'));
+    const QTextCursor cur = ed->textCursor();
+    const int line = cur.blockNumber();
+    const int col = cur.positionInBlock();
+
+    const mdmoveline::Result r = op(lines, line);
+    if (r.lines == lines)
+        return;  // sin cambios (borde): no ensuciar el documento
+
+    QTextCursor edit(ed->document());
+    edit.beginEditBlock();
+    edit.select(QTextCursor::Document);
+    edit.insertText(r.lines.join(QLatin1Char('\n')));
+    edit.endEditBlock();
+
+    // Restaura el cursor en la línea resultante, con la misma columna (acotada).
+    const int target = qBound(0, r.line, ed->document()->blockCount() - 1);
+    const QTextBlock nb = ed->document()->findBlockByNumber(target);
+    QTextCursor nc(nb);
+    nc.setPosition(nb.position() + qMin(col, qMax(0, nb.length() - 1)));
+    ed->setTextCursor(nc);
+    ed->setFocus();
+}
+
+void EditorStack::moveLineUp() { applyLineOp(mdmoveline::moveUp); }
+void EditorStack::moveLineDown() { applyLineOp(mdmoveline::moveDown); }
+void EditorStack::duplicateLine() { applyLineOp(mdmoveline::duplicate); }
+void EditorStack::deleteLine() { applyLineOp(mdmoveline::removeLine); }
+void EditorStack::joinLines() { applyLineOp(mdmoveline::joinNext); }
+
 void EditorStack::insertMarkdown(const QString &markdown)
 {
     if (markdown.isEmpty())

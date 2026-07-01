@@ -327,6 +327,10 @@ modalità visuale.
 fianco: l'editor visuale e il sorgente, sincronizzati (ciò che digiti in uno si
 riflette nell'altro). È esclusiva con la modalità sorgente a schermo intero.
 
+Nella vista sorgente ci sono **comandi di riga** da tastiera sulla riga del cursore:
+**Alt+↑ / Alt+↓** spostano la riga su/giù, **Ctrl+D** la duplica, **Ctrl+Maiusc+K**
+la elimina e **Ctrl+J** la unisce alla successiva.
+
 ## Esportare e stampare
 
 **File → Esporta** offre **PDF**, **HTML**, **ODF (.odt)**, **DOCX (.docx)**,
@@ -396,6 +400,8 @@ propone di recuperare ciò che stavi scrivendo.
 | Struttura (fuoco) / editor | F6    |
 | Vista sorgente Markdown   | Ctrl+Maiusc+M    |
 | Vista divisa              | Ctrl+Maiusc+D    |
+| Sposta riga ↑ / ↓ (sorgente) | Alt+↑ / Alt+↓ |
+| Duplica / elimina / unisci riga (sorgente) | Ctrl+D / Ctrl+Maiusc+K / Ctrl+J |
 | Struttura                 | F9               |
 | Senza distrazioni         | F11              |
 | Modalità focus            | F12              |

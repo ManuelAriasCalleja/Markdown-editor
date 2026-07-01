@@ -320,6 +320,10 @@ modo de código são aplicadas ao documento ao voltar ao modo visual.
 o editor visual e o código-fonte, sincronizados (o que escreve num reflete-se no
 outro). É exclusiva com o modo de código em ecrã inteiro.
 
+Na vista de código há **comandos de linha** por teclado para a linha do cursor:
+**Alt+↑ / Alt+↓** movem a linha para cima/baixo, **Ctrl+D** duplica-a,
+**Ctrl+Shift+K** elimina-a e **Ctrl+J** une-a à seguinte.
+
 ## Exportar e imprimir
 
 **Ficheiro → Exportar** oferece **PDF**, **HTML**, **ODF (.odt)**, **DOCX
@@ -389,6 +393,8 @@ recuperar o que estava a escrever.
 | Focar estrutura / voltar ao editor | F6     |
 | Vista de código Markdown  | Ctrl+Shift+M     |
 | Vista dividida            | Ctrl+Shift+D     |
+| Mover linha ↑ / ↓ (código) | Alt+↑ / Alt+↓   |
+| Duplicar / eliminar / unir linha (código) | Ctrl+D / Ctrl+Shift+K / Ctrl+J |
 | Estrutura                 | F9               |
 | Sem distrações            | F11              |
 | Modo de foco              | F12              |

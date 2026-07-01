@@ -10,6 +10,7 @@
 #include <QTextEdit>  // para QTextEdit::ExtraSelection en las firmas de las capas
 
 #include "find.h"  // mdfind::Match (capa de coincidencias de búsqueda)
+#include "moveline.h"  // mdmoveline::Result (comandos de línea)
 
 class QByteArray;
 class FocusEditor;
@@ -120,6 +121,15 @@ public:
     /// fuente, sobre su texto; en WYSIWYG, re-serializa, limpia y recarga.
     void cleanMarkdown();
 
+    /// Comandos de línea de la vista de código (sin efecto si el editor activo no es
+    /// el de fuente): mover la línea del cursor arriba/abajo, duplicarla, borrarla o
+    /// unirla con la siguiente. La lógica pura vive en `mdmoveline`.
+    void moveLineUp();
+    void moveLineDown();
+    void duplicateLine();
+    void deleteLine();
+    void joinLines();
+
 signals:
     /// Mensaje para la barra de estado de la ventana (texto, ms).
     void statusMessage(const QString &text, int timeout);
@@ -179,6 +189,11 @@ private:
     QList<QTextEdit::ExtraSelection> matchSelections(QTextEdit *ed) const;
     QList<mdfind::Match> m_searchMatches;
     QTextEdit *m_matchEditor = nullptr;
+
+    // Aplica un comando de línea (mdmoveline) al editor de código si es el activo:
+    // toma sus líneas y la del cursor, ejecuta `op` y reescribe el texto, dejando el
+    // cursor en la línea resultante (misma columna, acotada). No-op en WYSIWYG.
+    void applyLineOp(mdmoveline::Result (*op)(const QStringList &, int));
 
     // Aplica el interlineado actual (m_lineSpacing) a todos los bloques de `ed`.
     // Presentación pura: preserva la marca «modificado» de Qt (como styleTables).

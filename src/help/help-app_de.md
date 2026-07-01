@@ -338,6 +338,11 @@ nebeneinander: den visuellen Editor und den Quelltext, synchronisiert (was Sie i
 einem tippen, erscheint im anderen). Sie schließt sich mit dem Vollbild-Quelltext
 gegenseitig aus.
 
+In der Quelltextansicht gibt es **Zeilenbefehle** per Tastatur für die Zeile des
+Cursors: **Alt+↑ / Alt+↓** verschieben die Zeile nach oben/unten, **Strg+D**
+dupliziert sie, **Strg+Umschalt+K** löscht sie und **Strg+J** verbindet sie mit der
+nächsten.
+
 ## Exportieren und Drucken
 
 **Datei → Exportieren** bietet **PDF**, **HTML**, **ODF (.odt)**, **DOCX (.docx)**,
@@ -407,6 +412,8 @@ automatisch gespeichert. Schließt die Anwendung unerwartet, bietet sie beim ern
 | Fokus auf Gliederung / zurück zum Editor | F6  |
 | Markdown-Quelltextansicht | Strg+Umschalt+M  |
 | Geteilte Ansicht          | Strg+Umschalt+D  |
+| Zeile verschieben ↑ / ↓ (Quelltext) | Alt+↑ / Alt+↓ |
+| Zeile duplizieren / löschen / verbinden (Quelltext) | Strg+D / Strg+Umschalt+K / Strg+J |
 | Gliederung                | F9               |
 | Ablenkungsfrei            | F11              |
 | Fokusmodus                | F12              |

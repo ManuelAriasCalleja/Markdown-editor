@@ -317,6 +317,10 @@ edytorem zwykłego tekstu, na pełnym ekranie, z surowym Markdown. Zmiany w tryb
 wizualny i źródło, zsynchronizowane (to, co wpiszesz w jednym, odbija się w
 drugim). Wyklucza się z trybem źródła na pełnym ekranie.
 
+W widoku kodu dostępne są **polecenia wiersza** z klawiatury dla wiersza kursora:
+**Alt+↑ / Alt+↓** przenoszą wiersz w górę/dół, **Ctrl+D** go duplikuje,
+**Ctrl+Shift+K** go usuwa, a **Ctrl+J** łączy go z następnym.
+
 ## Eksport i drukowanie
 
 **Plik → Eksportuj** oferuje **PDF**, **HTML**, **ODF (.odt)**, **DOCX (.docx)**,
@@ -384,6 +388,8 @@ proponuje odzyskanie tego, co pisałeś.
 | Fokus na konspekt / powrót do edytora | F6     |
 | Widok źródła Markdown     | Ctrl+Shift+M     |
 | Widok podzielony          | Ctrl+Shift+D     |
+| Przenieś wiersz ↑ / ↓ (kod) | Alt+↑ / Alt+↓  |
+| Duplikuj / usuń / połącz wiersz (kod) | Ctrl+D / Ctrl+Shift+K / Ctrl+J |
 | Struktura                 | F9               |
 | Bez rozpraszania          | F11              |
 | Tryb skupienia            | F12              |

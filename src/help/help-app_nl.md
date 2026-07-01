@@ -330,6 +330,11 @@ bronmodus worden naar het document doorgevoerd bij terugkeer naar de visuele mod
 de visuele editor en de bron, gesynchroniseerd (wat je in de ene typt, verschijnt
 in de andere). Ze sluit elkaar uit met de bronmodus op volledig scherm.
 
+In de bronweergave zijn er **regelcommando's** via het toetsenbord voor de regel van
+de cursor: **Alt+↑ / Alt+↓** verplaatsen de regel omhoog/omlaag, **Ctrl+D**
+dupliceert hem, **Ctrl+Shift+K** verwijdert hem en **Ctrl+J** voegt hem samen met de
+volgende.
+
 ## Exporteren en afdrukken
 
 **Bestand → Exporteren** biedt **PDF**, **HTML**, **ODF (.odt)**, **DOCX
@@ -400,6 +405,8 @@ openen aan om te herstellen wat je aan het schrijven was.
 | Overzicht focussen / terug| F6     |
 | Markdown-bronweergave     | Ctrl+Shift+M     |
 | Gesplitste weergave       | Ctrl+Shift+D     |
+| Regel verplaatsen ↑ / ↓ (bron) | Alt+↑ / Alt+↓ |
+| Regel dupliceren / verwijderen / samenvoegen (bron) | Ctrl+D / Ctrl+Shift+K / Ctrl+J |
 | Overzicht                 | F9               |
 | Afleidingsvrij            | F11              |
 | Focusmodus                | F12              |

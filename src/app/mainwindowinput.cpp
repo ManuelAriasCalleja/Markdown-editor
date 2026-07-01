@@ -246,8 +246,33 @@ bool MainWindow::handleEditorKeyPress(QKeyEvent *ke)
 
 bool MainWindow::handleSourceKeyPress(QKeyEvent *ke)
 {
-    // Continuación inteligente de listas en el editor de código fuente.
     const auto mods = ke->modifiers() & ~Qt::KeypadModifier;
+
+    // Comandos de línea (solo en la vista de código; este manejador solo corre para
+    // el editor de fuente). Ctrl+Shift+K no choca con «Bloque de código» porque esa
+    // acción está deshabilitada mientras el fuente tiene el foco.
+    if (mods == Qt::AltModifier && ke->key() == Qt::Key_Up) {
+        m_stack->moveLineUp();
+        return true;
+    }
+    if (mods == Qt::AltModifier && ke->key() == Qt::Key_Down) {
+        m_stack->moveLineDown();
+        return true;
+    }
+    if (mods == Qt::ControlModifier && ke->key() == Qt::Key_D) {
+        m_stack->duplicateLine();
+        return true;
+    }
+    if (mods == Qt::ControlModifier && ke->key() == Qt::Key_J) {
+        m_stack->joinLines();
+        return true;
+    }
+    if (mods == (Qt::ControlModifier | Qt::ShiftModifier) && ke->key() == Qt::Key_K) {
+        m_stack->deleteLine();
+        return true;
+    }
+
+    // Continuación inteligente de listas en el editor de código fuente.
     if ((ke->key() == Qt::Key_Return || ke->key() == Qt::Key_Enter)
         && mods == Qt::NoModifier && continueSourceList())
         return true;

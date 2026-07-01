@@ -70,6 +70,7 @@ class MainWindow : public QMainWindow
     friend class TestExtraSelections;
     friend class TestHeadingShift;
     friend class TestTableSortUi;
+    friend class TestLineCommands;
 
 public:
     explicit MainWindow(QWidget *parent = nullptr);

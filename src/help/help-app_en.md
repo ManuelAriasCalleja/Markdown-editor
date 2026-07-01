@@ -316,6 +316,10 @@ mode are committed to the document when you return to the visual mode.
 editor and the source code, synchronized (what you type in one is reflected in
 the other). It is mutually exclusive with the full-screen source mode.
 
+In the source view there are keyboard **line commands** for the cursor's line:
+**Alt+↑ / Alt+↓** move the line up/down, **Ctrl+D** duplicates it,
+**Ctrl+Shift+K** deletes it and **Ctrl+J** joins it with the next.
+
 ## Export and print
 
 **File → Export** offers **PDF**, **HTML**, **ODF (.odt)**, **DOCX (.docx)**,
@@ -383,6 +387,8 @@ were writing.
 | Focus outline / back to editor | F6     |
 | Markdown source view      | Ctrl+Shift+M     |
 | Split view                | Ctrl+Shift+D     |
+| Move line ↑ / ↓ (source)  | Alt+↑ / Alt+↓    |
+| Duplicate / delete / join line (source) | Ctrl+D / Ctrl+Shift+K / Ctrl+J |
 | Outline                   | F9               |
 | Distraction-free          | F11              |
 | Focus Mode                | F12              |
