@@ -33,6 +33,7 @@
 #include "markdowntidy.h"
 #include "mathblocks.h"
 #include "tableedit.h"
+#include "typography.h"
 #include "typewriter.h"
 #include "outlinepanel.h"
 #include "recoverymanager.h"
@@ -184,14 +185,17 @@ EditorStack::EditorStack(FindReplaceBar *findBar, OutlinePanel *outline,
     connect(m_diskWatcher, &DiskWatcher::vanished, this, &EditorStack::diskVanished);
 
     // Al cargar: recolorear enlaces, avisar a la ventana (reconstruye el esquema),
-    // dar borde a las tablas y reajustar el idioma del corrector. El orden importa
-    // (recolor › esquema › tablas › corrector), por eso van en esta secuencia.
+    // dar borde a las tablas, aplicar interlineado y tipografía, y reajustar el idioma
+    // del corrector. El orden importa (recolor › esquema › tablas › interlineado ›
+    // tipografía › corrector), por eso van en esta secuencia.
     connect(m_documentIo, &DocumentIo::documentLoaded, this,
             [this] { m_theme->recolorLinks(m_editor); });
     connect(m_documentIo, &DocumentIo::documentLoaded, this, &EditorStack::documentLoaded);
     connect(m_documentIo, &DocumentIo::documentLoaded, this, [this] { styleTables(); });
     connect(m_documentIo, &DocumentIo::documentLoaded, this,
             [this] { applyLineSpacing(m_editor); });
+    connect(m_documentIo, &DocumentIo::documentLoaded, this,
+            [this] { mdtypography::apply(m_editor->document()); });
     connect(m_documentIo, &DocumentIo::documentLoaded,
             m_spell, &SpellController::applyLanguage);
     // Tras cargar, reaplica el foco de línea: setTypewriterMode pudo correr con el
@@ -275,6 +279,7 @@ void EditorStack::setBodyMarkdown(const QString &body)
     mdrender::setMarkdownWithExtensions(m_editor, body);
     styleTables();
     applyLineSpacing(m_editor);
+    mdtypography::apply(m_editor->document());
     m_theme->recolorLinks(m_editor);
     m_editor->setUpdatesEnabled(wasUpdating);
     m_outline->rebuild(m_editor->document());

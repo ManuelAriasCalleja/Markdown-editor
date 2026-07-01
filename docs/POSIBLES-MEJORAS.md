@@ -419,7 +419,7 @@ paleta/formatos, como el resto del proyecto) y con el round-trip a salvo.
 
 #### Alto impacto (cierran la mayor parte de la brecha)
 
-- ⬜ **Reglas de entrada («teclea Markdown y se formatea»)** — lo que hace *mágico* a
+- ✅ **Reglas de entrada («teclea Markdown y se formatea»)** — lo que hace *mágico* a
   Typora: teclear `## `, `**x**`, `> ` o ``` ```lang ``` y que se transforme en el sitio,
   sin barra ni atajos. Hoy en md-editor se formatea con Ctrl+B/barra. *Impl.:* módulo puro
   `mdinputrules` (sobre un `QTextCursor`, detecta el patrón recién tecleado y aplica el
@@ -428,14 +428,19 @@ paleta/formatos, como el resto del proyecto) y con el round-trip a salvo.
   `#`…`######`, `**`/`*`/`~~`/`` ` ``, cita `> `, listas `- `/`1. `, regla `---` y fence
   ``` ```lang ```. Produce los **mismos formatos que la barra**, así que el round-trip es
   idéntico. `tst_inputrules`. Coste medio, confianza alta. **La que más se nota.**
-- ⬜ **Pasada de tipografía del documento renderizado** — el render de Qt sale plano; el de
+  *(Hecho: solo marcadores de bloque `#`/`>`/`-`/`1.`; las inline `**x**`/`` `x` `` quedan
+  pendientes de una segunda tanda.)*
+- ✅ **Pasada de tipografía del documento renderizado** — el render de Qt sale plano; el de
   Typora está compuesto (ritmo de encabezados, interlineado, citas, código, ancho de
-  lectura). *Impl.:* afinar los formatos **por defecto** del documento desde `ThemeSpec`/
-  `mdtheme` sin stylesheet: tamaños/márgenes de encabezados, interlineado y espacio entre
-  párrafos, sangría de listas, **cita con barra lateral** (`QTextFrameFormat` con borde
-  izquierdo de color), **bloque de código con fondo tintado** (frame) y, opcional, ancho de
-  lectura máximo. Por tema; solo presentación (no toca el Markdown). `tst_themespec` (ya
-  vigila contraste). Coste medio, confianza media. **La que más se ve.**
+  lectura). *Hecho:* módulo puro `mdtypography` (`markdown/typography.{h,cpp}`) con
+  `apply(doc)` que recorre los bloques y mergea `QTextBlockFormat` — márgenes de encabezado
+  por nivel, espacio entre párrafos, panel de código con fondo translúcido + sangría, y
+  cita con fondo tenue; presentación pura (preserva `isModified`, no toca el round-trip),
+  aplicada en `EditorStack` tras `styleTables`/`applyLineSpacing`. Tinte **translúcido**
+  (como las admoniciones) para no reaplicar al cambiar de tema; salta tablas, ítems de lista
+  y las citas que ya son admoniciones. `tst_typography`. *Pendiente de una posible segunda
+  tanda:* la **barra lateral** literal de la cita (`QTextBlockFormat` no tiene borde de
+  bloque; requiere pintado en el viewport) y el **ancho de lectura máximo**.
 - ⬜ **Ventana de Preferencias única** — hoy los ajustes están repartidos por *Ver → …* +
   `AppSettings`. *Impl.:* diálogo `PreferencesDialog` con pestañas (General, Editor,
   Apariencia, Exportación) que **reúne** lo que ya expone `AppSettings` (nada nuevo que

@@ -141,6 +141,8 @@ add_library(md-editor-core STATIC
     src/markdown/tasklist.h
     src/markdown/texttransform.cpp
     src/markdown/texttransform.h
+    src/markdown/typography.cpp
+    src/markdown/typography.h
     src/markdown/urldetect.cpp
     src/markdown/urldetect.h
     # --- highlight ---
@@ -451,6 +453,7 @@ if(Qt6Test_FOUND)
         tst_linecommands
         tst_markhighlight
         tst_supersub
+        tst_typography
         tst_printdecor
         tst_inputrules
         tst_texttransform
