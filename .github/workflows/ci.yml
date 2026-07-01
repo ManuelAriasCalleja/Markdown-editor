@@ -44,8 +44,11 @@ jobs:
       - name: Configure
         run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
 
+      # `--parallel 2` (no todos los núcleos): compilar/enlazar las ~50 unidades de
+      # test a la vez agota la RAM del runner (cc1plus «Terminated», exit 143). Mismo
+      # tope que el job de sanitizers; la release lo evita compilando solo el binario.
       - name: Build
-        run: cmake --build build --parallel
+        run: cmake --build build --parallel 2
 
       # Las pruebas usan QApplication: corren con QT_QPA_PLATFORM=offscreen
       # (CMake ya lo fija en cada test, pero lo replicamos por si acaso).
@@ -123,8 +126,10 @@ jobs:
       - name: Configure
         run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
 
+      # `--parallel 2`: igual que arriba, compilar todos los tests a la vez agota la
+      # RAM del runner (exit 143). Este job necesita compilar para generar el moc.
       - name: Build
-        run: cmake --build build --parallel
+        run: cmake --build build --parallel 2
 
       # Análisis estático con los checks del .clang-tidy del repo; falla ante
       # cualquier aviso (el código está limpio, así que es una guardia de
