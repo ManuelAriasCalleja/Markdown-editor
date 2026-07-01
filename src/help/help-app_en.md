@@ -42,9 +42,10 @@ serialized back to plain Markdown.
 - **File → Open…** (Ctrl+O) opens an existing `.md`. The application remembers
   the most recent ones in **File → Open recent**.
 - **File → Import** opens a document from another format, converting it to Markdown
-  in a new untitled tab (the original is left untouched): **From HTML…** (a web page)
-  and **From EPUB…** (a book; its chapters are read in order). Works best with simple
-  content; it respects the declared character set.
+  in a new untitled tab (the original is left untouched): **From HTML…** (a web page),
+  **From EPUB…** (a book; its chapters are read in order) and **Other formats (Pandoc)…**
+  (DOCX, ODT, RTF, LaTeX, reStructuredText…, if Pandoc is installed). Works best with
+  simple content; it respects the declared character set.
 - **Save** (Ctrl+S) and **Save as…** (Ctrl+Shift+S) write the document in UTF-8.
   **Open containing folder** opens the document's folder in the file manager.
 - **Revert to saved** discards unsaved changes and reloads the file from disk

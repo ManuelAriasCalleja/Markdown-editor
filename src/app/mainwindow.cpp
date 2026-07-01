@@ -27,6 +27,7 @@
 #include "epubimport.h"
 #include "htmlimport.h"
 #include "markdownrender.h"
+#include "pandocimport.h"
 #include "richpaste.h"
 #include "diagramcontroller.h"
 #include "mathblocks.h"
@@ -58,6 +59,7 @@
 #include <QFile>
 #include <QFileDialog>
 #include <QFileInfo>
+#include <QProcess>
 #include <QTabBar>
 #include <QTabWidget>
 #include <QFont>
@@ -720,6 +722,44 @@ void MainWindow::importEpub()
         QMessageBox::warning(
             this, tr("Error"),
             tr("No se pudo importar el EPUB. Comprueba que el archivo es válido."));
+        return;
+    }
+    addTab();
+    m_stack->file()->newFromTemplate(markdown);
+}
+
+void MainWindow::importWithPandoc()
+{
+    if (!mdimport::pandocAvailable()) {
+        QMessageBox::information(
+            this, tr("Pandoc no encontrado"),
+            tr("Para importar estos formatos hace falta Pandoc. Instálalo con:\n\n%1")
+                .arg(mdimport::pandocInstallCommand()));
+        return;
+    }
+
+    const QString path = QFileDialog::getOpenFileName(
+        this, tr("Importar con Pandoc"), QString(),
+        tr("Documentos compatibles (%1);;Todos los archivos (*)")
+            .arg(mdimport::pandocFilePattern()));
+    if (path.isEmpty())
+        return;
+
+    QProcess pandoc;
+    pandoc.start(QStringLiteral("pandoc"), mdimport::pandocArguments(path));
+    // Síncrono: la importación es una acción puntual y el resultado se necesita ya.
+    if (!pandoc.waitForFinished(30000) || pandoc.exitStatus() != QProcess::NormalExit
+        || pandoc.exitCode() != 0) {
+        const QString err = QString::fromUtf8(pandoc.readAllStandardError()).trimmed();
+        QMessageBox::warning(
+            this, tr("Error"),
+            tr("Pandoc no pudo convertir el archivo.") + (err.isEmpty() ? QString() : "\n\n" + err));
+        return;
+    }
+    const QString markdown = QString::fromUtf8(pandoc.readAllStandardOutput());
+    if (markdown.trimmed().isEmpty()) {
+        QMessageBox::warning(this, tr("Error"),
+                             tr("El archivo no produjo ningún contenido."));
         return;
     }
     addTab();

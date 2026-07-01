@@ -175,6 +175,10 @@ void MainWindow::createFileMenu()
     importEpubAction->setToolTip(
         tr("Convierte un libro EPUB a Markdown y lo abre como documento nuevo"));
     connect(importEpubAction, &QAction::triggered, this, &MainWindow::importEpub);
+    QAction *importPandocAction = importMenu->addAction(tr("Otros formatos (&Pandoc)..."));
+    importPandocAction->setToolTip(
+        tr("Importa DOCX, ODT, RTF, LaTeX, reStructuredText… mediante Pandoc (si está instalado)"));
+    connect(importPandocAction, &QAction::triggered, this, &MainWindow::importWithPandoc);
 
     QAction *saveAction = fileMenu->addAction(tr("&Guardar"));
     saveAction->setShortcut(QKeySequence::Save);

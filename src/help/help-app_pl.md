@@ -43,8 +43,9 @@ serializowany do czystego Markdown.
   ostatnio otwarte w **Plik → Otwórz ostatnie**.
 - **Plik → Importuj** otwiera dokument z innego formatu, konwertując go na Markdown w
   nowej karcie bez tytułu (oryginał pozostaje nienaruszony): **Z HTML…** (strona
-  internetowa) i **Z EPUB…** (książka; rozdziały są czytane po kolei). Działa najlepiej
-  z prostą treścią; uwzględnia zadeklarowany zestaw znaków.
+  internetowa), **Z EPUB…** (książka; rozdziały są czytane po kolei) oraz **Inne formaty
+  (Pandoc)…** (DOCX, ODT, RTF, LaTeX, reStructuredText…, jeśli Pandoc jest zainstalowany).
+  Działa najlepiej z prostą treścią; uwzględnia zadeklarowany zestaw znaków.
 - **Zapisz** (Ctrl+S) i **Zapisz jako…** (Ctrl+Shift+S) zapisują dokument w UTF-8.
   **Otwórz folder dokumentu** otwiera folder dokumentu w menedżerze plików.
 - **Przywróć do zapisanej wersji** odrzuca niezapisane zmiany i przeładowuje plik

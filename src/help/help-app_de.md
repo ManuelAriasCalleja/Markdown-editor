@@ -42,10 +42,11 @@ Speichern wird das Dokument wieder als reines Markdown serialisiert.
 - **Datei → Öffnen…** (Strg+O) öffnet eine vorhandene `.md`. Die Anwendung merkt
   sich die zuletzt geöffneten unter **Datei → Zuletzt geöffnet**.
 - **Datei → Importieren** öffnet ein Dokument aus einem anderen Format und wandelt es
-  in Markdown um, in einem neuen, unbenannten Tab (das Original bleibt unberührt):
-  **Aus HTML…** (eine Webseite) und **Aus EPUB…** (ein Buch; die Kapitel werden der
-  Reihe nach gelesen). Funktioniert am besten mit einfachem Inhalt; der angegebene
-  Zeichensatz wird berücksichtigt.
+  in Markdown um, in einem neuen, unbenannten Tab (das Original bleibt unberührt): **Aus
+  HTML…** (eine Webseite), **Aus EPUB…** (ein Buch; die Kapitel werden der Reihe nach
+  gelesen) und **Andere Formate (Pandoc)…** (DOCX, ODT, RTF, LaTeX, reStructuredText…,
+  falls Pandoc installiert ist). Funktioniert am besten mit einfachem Inhalt; der
+  angegebene Zeichensatz wird berücksichtigt.
 - **Speichern** (Strg+S) und **Speichern unter…** (Strg+Umschalt+S) schreiben das
   Dokument als UTF-8. **Enthaltenden Ordner öffnen** öffnet den Ordner des
   Dokuments im Dateimanager.

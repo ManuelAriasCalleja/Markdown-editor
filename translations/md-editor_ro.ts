@@ -231,7 +231,7 @@
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="294"/>
+        <location filename="../src/app/mainwindow.cpp" line="296"/>
         <source>Editor Markdown WYSIWYG — escribe y da formato con la barra superior</source>
         <translation>Editor Markdown WYSIWYG — scrie și formatează cu bara de sus</translation>
     </message>
@@ -286,408 +286,418 @@
         <translation>Convertește o carte EPUB în Markdown și o deschide ca document nou</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="179"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="178"/>
+        <source>Otros formatos (&amp;Pandoc)...</source>
+        <translation>Alte formate (&amp;Pandoc)...</translation>
+    </message>
+    <message>
+        <location filename="../src/app/mainwindowmenus.cpp" line="180"/>
+        <source>Importa DOCX, ODT, RTF, LaTeX, reStructuredText… mediante Pandoc (si está instalado)</source>
+        <translation>Importă DOCX, ODT, RTF, LaTeX, reStructuredText… prin Pandoc (dacă este instalat)</translation>
+    </message>
+    <message>
+        <location filename="../src/app/mainwindowmenus.cpp" line="183"/>
         <source>&amp;Guardar</source>
         <translation>&amp;Salvează</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="183"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="187"/>
         <source>Guardar &amp;como...</source>
         <translation>Salvează &amp;ca...</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="187"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="191"/>
         <source>Guardar como &amp;plantilla...</source>
         <translation>Salvează ca &amp;șablon...</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="189"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="193"/>
         <source>Guarda el documento actual como una plantilla reutilizable</source>
         <translation>Salvează documentul curent ca șablon reutilizabil</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="192"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="196"/>
         <source>&amp;Revertir a lo guardado</source>
         <translation>&amp;Revino la versiunea salvată</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="193"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="197"/>
         <source>Descarta los cambios y recarga el archivo del disco</source>
         <translation>Renunță la modificări și reîncarcă fișierul de pe disc</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="203"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="207"/>
         <source>Abrir &amp;carpeta contenedora</source>
         <translation>Deschide &amp;folderul documentului</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="206"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="210"/>
         <source>&amp;Cerrar pestaña</source>
         <translation>În&amp;chide fila</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="210"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="214"/>
         <source>Reabrir pestaña cerrada</source>
         <translation>Redeschide fila închisă</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="214"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="218"/>
         <source>Vuelve a abrir la última pestaña cerrada</source>
         <translation>Redeschide ultima filă închisă</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="219"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="223"/>
         <source>&amp;Exportar</source>
         <translation>&amp;Exportă</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="220"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="224"/>
         <source>A PDF...</source>
         <translation>În PDF...</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="222"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="226"/>
         <source>A HTML...</source>
         <translation>În HTML...</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="224"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="228"/>
         <source>A ODF (ODT)...</source>
         <translation>În ODF (ODT)...</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="226"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="230"/>
         <source>A DOCX (Word)...</source>
         <translation>În DOCX (Word)...</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="228"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="232"/>
         <source>A LaTeX...</source>
         <translation>În LaTeX...</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="230"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="234"/>
         <source>A EPUB...</source>
         <translation>În EPUB...</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="232"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="236"/>
         <source>A texto plano (TXT)...</source>
         <translation>În text simplu (TXT)...</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="235"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="239"/>
         <source>Selección a PDF...</source>
         <translation>Selecție în PDF...</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="236"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="240"/>
         <source>Exporta a PDF solo el texto seleccionado</source>
         <translation>Exportă în PDF doar textul selectat</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="241"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="245"/>
         <source>&amp;Vista previa de impresión...</source>
         <translation>&amp;Previzualizare tipărire...</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="244"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="248"/>
         <source>&amp;Imprimir...</source>
         <translation>&amp;Tipărește...</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="248"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="252"/>
         <source>Imprimir &amp;selección...</source>
         <translation>Tipărește &amp;selecția...</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="249"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="253"/>
         <source>Imprime solo el texto seleccionado</source>
         <translation>Tipărește doar textul selectat</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="254"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="258"/>
         <source>&amp;Salir</source>
         <translation>&amp;Ieșire</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="288"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="292"/>
         <source>Gestionar plantillas...</source>
         <translation>Gestionează șabloanele...</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="294"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="298"/>
         <source>&amp;Editar</source>
         <translation>&amp;Editare</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="296"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="300"/>
         <source>Deshacer</source>
         <translation>Anulează</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="300"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="304"/>
         <source>Rehacer</source>
         <translation>Refă</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="306"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="310"/>
         <source>Pegar como texto plano</source>
         <translation>Lipește ca text simplu</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="315"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="319"/>
         <source>Pegar como Markdown</source>
         <translation>Lipește ca Markdown</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="340"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="344"/>
         <source>Copiar como HTML</source>
         <translation>Copiază ca HTML</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="343"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="347"/>
         <source>Copiar como Markdown</source>
         <translation>Copiază ca Markdown</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="350"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="354"/>
         <source>Transformar texto</source>
         <translation>Transformă textul</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="359"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="363"/>
         <source>MAYÚSCULAS</source>
         <translation>MAJUSCULE</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="362"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="366"/>
         <source>minúsculas</source>
         <translation>minuscule</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="365"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="369"/>
         <source>Capitalizar</source>
         <translation>Capitalizează cuvintele</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="369"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="373"/>
         <source>Tipografía inteligente</source>
         <translation>Tipografie inteligentă</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="370"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="374"/>
         <source>Convierte -- — ... y comillas rectas en sus formas tipográficas</source>
         <translation>Transformă -- — ... și ghilimelele drepte în formele lor tipografice</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="374"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="378"/>
         <source>Ordenar líneas</source>
         <translation>Sortează liniile</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="389"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="393"/>
         <source>Limpiar Markdown</source>
         <translation>Curăță Markdown</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="391"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="395"/>
         <source>Normaliza viñetas, espacios y líneas en blanco (sin tocar el código)</source>
         <translation>Normalizează marcatorii, spațiile și liniile goale (fără a atinge codul)</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="396"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="400"/>
         <source>Buscar...</source>
         <translation>Caută...</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="400"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="404"/>
         <source>Reemplazar...</source>
         <translation>Înlocuiește...</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="426"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="430"/>
         <source>Negrita</source>
         <translation>Îngroșat</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="430"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="434"/>
         <source>Cursiva</source>
         <translation>Cursiv</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="434"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="438"/>
         <source>Subrayado</source>
         <translation>Subliniat</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="440"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="444"/>
         <source>Tachado</source>
         <translation>Tăiat</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="444"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="448"/>
         <source>Código</source>
         <translation>Cod</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="452"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="456"/>
         <source>Código en línea</source>
         <translation>Cod în linie</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="453"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="457"/>
         <location filename="../src/editor/insertcontroller.cpp" line="116"/>
         <source>Enlace</source>
         <translation>Legătură</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="454"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="458"/>
         <source>Insertar o editar enlace</source>
         <translation>Inserează sau editează legătura</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="455"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="459"/>
         <source>❝ Cita</source>
         <translation>❝ Citat</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="456"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="460"/>
         <source>Convertir en cita</source>
         <translation>Transformă în citat</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="457"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="461"/>
         <source>Bloque</source>
         <translation>Bloc</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="458"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="462"/>
         <source>Bloque de código</source>
         <translation>Bloc de cod</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="459"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="463"/>
         <source>H1</source>
         <translation>H1</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="461"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="465"/>
         <source>H2</source>
         <translation>H2</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="463"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="467"/>
         <source>H3</source>
         <translation>H3</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="465"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="469"/>
         <source>H4</source>
         <translation>H4</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="467"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="471"/>
         <source>H5</source>
         <translation>H5</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="469"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="473"/>
         <source>H6</source>
         <translation>H6</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="492"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="496"/>
         <source>&amp;Formato</source>
         <translation>For&amp;mat</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="500"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="504"/>
         <source>Resaltar</source>
         <translation>Evidențiază</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="503"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="507"/>
         <source>Resaltar el texto seleccionado (==marca==)</source>
         <translation>Evidențiază textul selectat (==marcaj==)</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="508"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="512"/>
         <source>Superíndice</source>
         <translation>Exponent</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="511"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="515"/>
         <source>Superíndice del texto seleccionado (^x^)</source>
         <translation>Exponent pentru textul selectat (^x^)</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="516"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="520"/>
         <source>Subíndice</source>
         <translation>Indice</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="519"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="523"/>
         <source>Subíndice del texto seleccionado (~x~)</source>
         <translation>Indice pentru textul selectat (~x~)</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="532"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="536"/>
         <source>Promover encabezado</source>
         <translation>Promovează titlul</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="535"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="539"/>
         <source>Sube el encabezado un nivel (hacia H1)</source>
         <translation>Ridică titlul cu un nivel (spre H1)</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="540"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="544"/>
         <source>Degradar encabezado</source>
         <translation>Retrogradează titlul</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="543"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="547"/>
         <source>Baja el encabezado un nivel (hacia H6)</source>
         <translation>Coboară titlul cu un nivel (spre H6)</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="553"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="557"/>
         <source>Aumentar sangría</source>
         <translation>Mărește indentarea</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="558"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="562"/>
         <source>Disminuir sangría</source>
         <translation>Micșorează indentarea</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="567"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="571"/>
         <source>Lenguaje del bloque...</source>
         <translation>Limbajul blocului...</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="568"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="572"/>
         <source>Fija el lenguaje del bloque de código (resaltado)</source>
         <translation>Stabilește limbajul blocului de cod (evidențiere)</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="584"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="588"/>
         <source>&amp;Insertar</source>
         <translation>&amp;Inserare</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="586"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="590"/>
         <source>Enlace...</source>
         <translation>Legătură...</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="589"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="593"/>
         <source>Imagen...</source>
         <translation>Imagine...</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="592"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="596"/>
         <location filename="../src/editor/insertcontroller.cpp" line="183"/>
         <location filename="../src/editor/insertcontroller.cpp" line="200"/>
         <location filename="../src/editor/insertcontroller.cpp" line="242"/>
@@ -695,437 +705,437 @@
         <translation>Lipește imaginea</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="593"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="597"/>
         <source>Guarda la imagen del portapapeles y la inserta</source>
         <translation>Salvează imaginea din clipboard și o inserează</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="596"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="600"/>
         <source>Tabla...</source>
         <translation>Tabel...</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="599"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="603"/>
         <source>Tabla desde el portapapeles</source>
         <translation>Tabel din clipboard</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="600"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="604"/>
         <source>Convierte los datos TSV/CSV del portapapeles en una tabla</source>
         <translation>Convertește datele TSV/CSV din clipboard într-un tabel</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="605"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="609"/>
         <source>El portapapeles no contiene datos de tabla (TSV/CSV).</source>
         <translation>Clipboardul nu conține date de tabel (TSV/CSV).</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="611"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="615"/>
         <source>Regla horizontal</source>
         <translation>Linie orizontală</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="614"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="618"/>
         <source>Índice (TOC)</source>
         <translation>Cuprins (TOC)</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="615"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="619"/>
         <source>Inserta un índice con los encabezados del documento</source>
         <translation>Inserează un cuprins cu titlurile documentului</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="618"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="622"/>
         <source>Fórmula...</source>
         <translation>Formulă...</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="623"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="627"/>
         <source>Nota al pie</source>
         <translation>Notă de subsol</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="626"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="630"/>
         <source>Inserta una referencia [^n] y su definición al final del documento</source>
         <translation>Inserează o referință [^n] și definiția ei la sfârșitul documentului</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="632"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="636"/>
         <source>Admonición</source>
         <translation>Casetă evidențiată</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="633"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="637"/>
         <source>Inserta un bloque destacado (nota, aviso, etc.)</source>
         <translation>Inserează o casetă evidențiată (notă, avertisment etc.)</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="635"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="639"/>
         <source>Nota</source>
         <translation>Notă</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="636"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="640"/>
         <source>Consejo</source>
         <translation>Sfat</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="637"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="641"/>
         <source>Importante</source>
         <translation>Important</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="638"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="642"/>
         <source>Advertencia</source>
         <translation>Avertisment</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="639"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="643"/>
         <source>Precaución</source>
         <translation>Atenție</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="648"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="652"/>
         <source>Símbolos especiales...</source>
         <translation>Simboluri speciale...</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="649"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="653"/>
         <source>Inserta símbolos no habituales, por categorías</source>
         <translation>Inserează simboluri mai puțin uzuale, pe categorii</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="652"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="656"/>
         <source>Fecha</source>
         <translation>Dată</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="653"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="657"/>
         <source>Inserta la fecha actual en formato local</source>
         <translation>Inserează data curentă în format local</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="656"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="660"/>
         <source>Fecha y hora</source>
         <translation>Dată și oră</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="657"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="661"/>
         <source>Inserta la fecha y la hora actuales en formato local</source>
         <translation>Inserează data și ora curente în format local</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="663"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="667"/>
         <source>Snippet</source>
         <translation>Snippet</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="685"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="689"/>
         <source>(sin snippets)</source>
         <translation>(niciun snippet)</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="689"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="693"/>
         <source>Gestionar snippets...</source>
         <translation>Gestionează snippeturile...</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="704"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="708"/>
         <source>&amp;Tabla</source>
         <translation>&amp;Tabel</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="706"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="710"/>
         <source>Insertar fila encima</source>
         <translation>Inserează rând deasupra</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="708"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="712"/>
         <source>Insertar fila debajo</source>
         <translation>Inserează rând dedesubt</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="710"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="714"/>
         <source>Insertar columna a la izquierda</source>
         <translation>Inserează coloană la stânga</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="712"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="716"/>
         <source>Insertar columna a la derecha</source>
         <translation>Inserează coloană la dreapta</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="716"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="720"/>
         <source>Eliminar fila</source>
         <translation>Șterge rândul</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="718"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="722"/>
         <source>Eliminar columna</source>
         <translation>Șterge coloana</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="722"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="726"/>
         <source>Alinear columna</source>
         <translation>Aliniază coloana</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="723"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="727"/>
         <source>Izquierda</source>
         <translation>Stânga</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="725"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="729"/>
         <source>Centrar</source>
         <translation>Centrat</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="727"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="731"/>
         <source>Derecha</source>
         <translation>Dreapta</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="731"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="735"/>
         <source>Ordenar filas por columna</source>
         <translation>Sortează rândurile după coloană</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="732"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="736"/>
         <source>Ascendente</source>
         <translation>Crescător</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="734"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="738"/>
         <source>Descendente</source>
         <translation>Descrescător</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="745"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="749"/>
         <source>&amp;Ver</source>
         <translation>&amp;Vizualizare</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="753"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="757"/>
         <source>Vista dividida</source>
         <translation>Vizualizare divizată</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="759"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="763"/>
         <source>Editar WYSIWYG y código fuente a la vez, lado a lado</source>
         <translation>Editează WYSIWYG și codul sursă simultan, unul lângă altul</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="763"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="767"/>
         <source>Sin distracciones</source>
         <translation>Mod fără distrageri</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="767"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="771"/>
         <source>Pantalla completa, sin barras, con el texto centrado (ESC o F11 para salir)</source>
         <translation>Ecran complet, fără bare, cu textul centrat (ESC sau F11 pentru a ieși)</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="787"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="791"/>
         <source>Resaltar la línea actual</source>
         <translation>Evidențiază linia curentă</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="790"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="794"/>
         <source>Marca con un fondo sutil la línea del cursor</source>
         <translation>Marchează linia cursorului cu un fundal subtil</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="798"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="802"/>
         <source>Números de página al imprimir</source>
         <translation>Numere de pagină la tipărire</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="801"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="805"/>
         <source>Añade el número de página en el pie al imprimir o exportar a PDF</source>
         <translation>Adaugă numărul paginii în subsol la tipărire sau export PDF</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="809"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="813"/>
         <source>Interlineado</source>
         <translation>Spațiere între rânduri</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="813"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="817"/>
         <source>Sencillo</source>
         <translation>Simplă</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="814"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="818"/>
         <source>1,5 líneas</source>
         <translation>1,5 rânduri</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="815"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="819"/>
         <source>Doble</source>
         <translation>Dublă</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="835"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="839"/>
         <source>Esquema</source>
         <translation>Schiță</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="840"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="844"/>
         <source>Ir a encabezado...</source>
         <translation>Salt la titlu...</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="843"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="847"/>
         <source>Salta a un encabezado del documento</source>
         <translation>Sari la un titlu din document</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="846"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="850"/>
         <source>Ir a línea...</source>
         <translation>Salt la linie...</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="849"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="853"/>
         <source>Salta a un número de línea</source>
         <translation>Sari la un număr de linie</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="852"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="856"/>
         <source>Paleta de comandos...</source>
         <translation>Paletă de comenzi...</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="855"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="859"/>
         <source>Busca y ejecuta cualquier acción por su nombre</source>
         <translation>Caută și execută orice acțiune după nume</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="861"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="865"/>
         <source>Aumentar letra</source>
         <translation>Mărește</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="866"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="870"/>
         <source>Reducir letra</source>
         <translation>Micșorează</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="870"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="874"/>
         <source>Tamaño normal</source>
         <translation>Dimensiune normală</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="876"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="880"/>
         <source>Estadísticas del documento...</source>
         <translation>Statisticile documentului...</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="879"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="883"/>
         <source>Mostrar contador de palabras</source>
         <translation>Afișează numărul de cuvinte</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="889"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="893"/>
         <source>Mostrar línea y columna</source>
         <translation>Afișează linia și coloana</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="899"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="903"/>
         <source>Corrección ortográfica</source>
         <translation>Corectare ortografică</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="902"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="906"/>
         <source>Subraya las palabras mal escritas según el idioma del documento</source>
         <translation>Subliniază cuvintele scrise greșit în limba documentului</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="909"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="913"/>
         <source>Idioma de corrección</source>
         <translation>Limba de corectare</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="913"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="917"/>
         <source>Automático (según el documento)</source>
         <translation>Automat (după document)</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="934"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="938"/>
         <source>Tema</source>
         <translation>Temă</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="943"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="947"/>
         <source>Claro</source>
         <translation>Luminoasă</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="944"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="948"/>
         <source>Oscuro</source>
         <translation>Întunecată</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="945"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="949"/>
         <source>Alto contraste</source>
         <translation>Contrast ridicat</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="975"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="979"/>
         <source>Seguir el sistema</source>
         <translation>Urmează sistemul</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="979"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="983"/>
         <source>Usa el tema claro u oscuro según la configuración del sistema operativo</source>
         <translation>Folosește tema luminoasă sau întunecată în funcție de setarea sistemului de operare</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="993"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="997"/>
         <source>Luz cálida nocturna</source>
         <translation>Lumină caldă nocturnă</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="997"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="1001"/>
         <source>Tiñe el fondo del editor de tono ámbar según la hora, más cálido de noche</source>
         <translation>Colorează fundalul editorului în chihlimbar în funcție de oră, mai cald noaptea</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="1035"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="1039"/>
         <source>A&amp;yuda</source>
         <translation>A&amp;jutor</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="1036"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="1040"/>
         <source>&amp;Manual</source>
         <translation>&amp;Manual</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="1040"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="1044"/>
         <source>&amp;Acerca de</source>
         <translation>&amp;Despre</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="407"/>
+        <location filename="../src/app/mainwindow.cpp" line="409"/>
         <source>Acerca de</source>
         <translation>Despre</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="416"/>
+        <location filename="../src/app/mainwindow.cpp" line="418"/>
         <source>Desarrollado por Manuel Arias Calleja</source>
         <translation>Dezvoltat de Manuel Arias Calleja</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="418"/>
+        <location filename="../src/app/mainwindow.cpp" line="420"/>
         <source>Editor WYSIWYG de Markdown en Qt6 + C++17.</source>
         <translation>Editor WYSIWYG Markdown în Qt6 + C++17.</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="1046"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="1050"/>
         <source>Formato</source>
         <translation>Format</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="463"/>
+        <location filename="../src/app/mainwindow.cpp" line="465"/>
         <source>Selección: </source>
         <translation>Selecție: </translation>
     </message>
@@ -1411,28 +1421,28 @@
         <translation>Exportat în LaTeX: %1</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="262"/>
+        <location filename="../src/app/mainwindow.cpp" line="264"/>
         <source>Contador de palabras</source>
         <translation>Număr de cuvinte</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="268"/>
+        <location filename="../src/app/mainwindow.cpp" line="270"/>
         <source>Línea y columna</source>
         <translation>Linie și coloană</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="336"/>
+        <location filename="../src/app/mainwindow.cpp" line="338"/>
         <source>El archivo se eliminó o movió en disco.</source>
         <translation>Fișierul a fost șters sau mutat pe disc.</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="414"/>
+        <location filename="../src/app/mainwindow.cpp" line="416"/>
         <source>Versión %1</source>
         <translation>Versiunea %1</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/app/mainwindow.cpp" line="461"/>
-        <location filename="../src/app/mainwindow.cpp" line="494"/>
+        <location filename="../src/app/mainwindow.cpp" line="463"/>
+        <location filename="../src/app/mainwindow.cpp" line="496"/>
         <source>~%n min</source>
         <translation>
             <numerusform>~%n min</numerusform>
@@ -1441,90 +1451,124 @@
         </translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="473"/>
+        <location filename="../src/app/mainwindow.cpp" line="475"/>
         <source>Ln %1, Col %2</source>
         <translation>Lin %1, Col %2</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="485"/>
+        <location filename="../src/app/mainwindow.cpp" line="487"/>
         <source>Estadísticas del documento</source>
         <translation>Statisticile documentului</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="487"/>
+        <location filename="../src/app/mainwindow.cpp" line="489"/>
         <source>Palabras:</source>
         <translation>Cuvinte:</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="488"/>
+        <location filename="../src/app/mainwindow.cpp" line="490"/>
         <source>Caracteres:</source>
         <translation>Caractere:</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="489"/>
+        <location filename="../src/app/mainwindow.cpp" line="491"/>
         <source>Caracteres (sin espacios):</source>
         <translation>Caractere (fără spații):</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="491"/>
+        <location filename="../src/app/mainwindow.cpp" line="493"/>
         <source>Párrafos:</source>
         <translation>Paragrafe:</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="492"/>
+        <location filename="../src/app/mainwindow.cpp" line="494"/>
         <source>Frases:</source>
         <translation>Propoziții:</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="493"/>
+        <location filename="../src/app/mainwindow.cpp" line="495"/>
         <source>Tiempo de lectura:</source>
         <translation>Timp de citire:</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="675"/>
+        <location filename="../src/app/mainwindow.cpp" line="677"/>
         <source>Abrir</source>
         <translation>Deschide</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="676"/>
+        <location filename="../src/app/mainwindow.cpp" line="678"/>
         <source>Archivos Markdown (*.md *.markdown *.txt);;Todos los archivos (*)</source>
         <translation>Fișiere Markdown (*.md *.markdown *.txt);;Toate fișierele (*)</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="684"/>
+        <location filename="../src/app/mainwindow.cpp" line="686"/>
         <source>Importar HTML</source>
         <translation>Importă HTML</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="685"/>
+        <location filename="../src/app/mainwindow.cpp" line="687"/>
         <source>Páginas HTML (*.html *.htm);;Todos los archivos (*)</source>
         <translation>Pagini HTML (*.html *.htm);;Toate fișierele (*)</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="692"/>
-        <location filename="../src/app/mainwindow.cpp" line="715"/>
+        <location filename="../src/app/mainwindow.cpp" line="694"/>
+        <location filename="../src/app/mainwindow.cpp" line="717"/>
         <source>No se pudo leer el archivo:
 %1</source>
         <translation>Fișierul nu a putut fi citit:
 %1</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="707"/>
+        <location filename="../src/app/mainwindow.cpp" line="709"/>
         <source>Importar EPUB</source>
         <translation>Importă EPUB</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="708"/>
+        <location filename="../src/app/mainwindow.cpp" line="710"/>
         <source>Libros EPUB (*.epub);;Todos los archivos (*)</source>
         <translation>Cărți EPUB (*.epub);;Toate fișierele (*)</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="722"/>
+        <location filename="../src/app/mainwindow.cpp" line="724"/>
         <source>No se pudo importar el EPUB. Comprueba que el archivo es válido.</source>
         <translation>EPUB-ul nu a putut fi importat. Verifică dacă fișierul este valid.</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="798"/>
+        <location filename="../src/app/mainwindow.cpp" line="735"/>
+        <source>Pandoc no encontrado</source>
+        <translation>Pandoc negăsit</translation>
+    </message>
+    <message>
+        <location filename="../src/app/mainwindow.cpp" line="736"/>
+        <source>Para importar estos formatos hace falta Pandoc. Instálalo con:
+
+%1</source>
+        <translation>Importul acestor formate necesită Pandoc. Instalează-l cu:
+
+%1</translation>
+    </message>
+    <message>
+        <location filename="../src/app/mainwindow.cpp" line="742"/>
+        <source>Importar con Pandoc</source>
+        <translation>Importă cu Pandoc</translation>
+    </message>
+    <message>
+        <location filename="../src/app/mainwindow.cpp" line="743"/>
+        <source>Documentos compatibles (%1);;Todos los archivos (*)</source>
+        <translation>Documente acceptate (%1);;Toate fișierele (*)</translation>
+    </message>
+    <message>
+        <location filename="../src/app/mainwindow.cpp" line="756"/>
+        <source>Pandoc no pudo convertir el archivo.</source>
+        <translation>Pandoc nu a putut converti fișierul.</translation>
+    </message>
+    <message>
+        <location filename="../src/app/mainwindow.cpp" line="762"/>
+        <source>El archivo no produjo ningún contenido.</source>
+        <translation>Fișierul nu a produs niciun conținut.</translation>
+    </message>
+    <message>
+        <location filename="../src/app/mainwindow.cpp" line="838"/>
         <source>No hay pestañas cerradas para reabrir.</source>
         <translation>Nu există file închise de redeschis.</translation>
     </message>
@@ -1693,9 +1737,11 @@ Vrei să le recuperezi?</translation>
         <translation>HTML (*.html *.htm)</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="691"/>
-        <location filename="../src/app/mainwindow.cpp" line="714"/>
-        <location filename="../src/app/mainwindow.cpp" line="721"/>
+        <location filename="../src/app/mainwindow.cpp" line="693"/>
+        <location filename="../src/app/mainwindow.cpp" line="716"/>
+        <location filename="../src/app/mainwindow.cpp" line="723"/>
+        <location filename="../src/app/mainwindow.cpp" line="755"/>
+        <location filename="../src/app/mainwindow.cpp" line="761"/>
         <location filename="../src/app/mainwindowsession.cpp" line="187"/>
         <location filename="../src/io/filecontroller.cpp" line="78"/>
         <location filename="../src/io/filecontroller.cpp" line="140"/>
@@ -1820,57 +1866,57 @@ Dorești să îl recuperezi?</translation>
         <translation>Renunță</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="573"/>
-        <location filename="../src/app/mainwindow.cpp" line="639"/>
-        <location filename="../src/app/mainwindow.cpp" line="812"/>
+        <location filename="../src/app/mainwindow.cpp" line="575"/>
+        <location filename="../src/app/mainwindow.cpp" line="641"/>
+        <location filename="../src/app/mainwindow.cpp" line="852"/>
         <location filename="../src/app/mainwindowsession.cpp" line="130"/>
         <source>Sin título</source>
         <translation>Fără titlu</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="638"/>
+        <location filename="../src/app/mainwindow.cpp" line="640"/>
         <location filename="../src/app/mainwindowsession.cpp" line="132"/>
         <source>%1[*] — md-editor</source>
         <translation>%1[*] — md-editor</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="1007"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="1011"/>
         <source>Automático (sistema)</source>
         <translation>Automat (sistem)</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="471"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="475"/>
         <source>Lista de viñetas</source>
         <translation>Listă cu marcatori</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="473"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="477"/>
         <source>Lista numerada</source>
         <translation>Listă numerotată</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="475"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="479"/>
         <location filename="../src/markdown/doctemplates.cpp" line="143"/>
         <source>Lista de tareas</source>
         <translation>Listă de sarcini</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="771"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="775"/>
         <source>Modo foco</source>
         <translation>Mod focalizare</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="778"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="782"/>
         <source>Centra la línea del cursor y atenúa todo salvo el párrafo actual</source>
         <translation>Centrează linia cursorului și estompează tot în afară de paragraful curent</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="1019"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="1023"/>
         <source>Idioma</source>
         <translation>Limbă</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/app/mainwindow.cpp" line="454"/>
+        <location filename="../src/app/mainwindow.cpp" line="456"/>
         <source>%n palabra(s)</source>
         <translation>
             <numerusform>%n cuvânt</numerusform>
@@ -1879,7 +1925,7 @@ Dorești să îl recuperezi?</translation>
         </translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/app/mainwindow.cpp" line="456"/>
+        <location filename="../src/app/mainwindow.cpp" line="458"/>
         <source>%n carácter(es)</source>
         <translation>
             <numerusform>%n caracter</numerusform>
@@ -1893,7 +1939,7 @@ Dorești să îl recuperezi?</translation>
         <translation>%1 — front matter păstrat</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="747"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="751"/>
         <source>Código fuente Markdown</source>
         <translation>Sursă Markdown</translation>
     </message>
@@ -2373,7 +2419,7 @@ Toate modificările notabile ale acestui proiect sunt documentate în acest fiș
 
 ## Decizie
 
-[Decizia luată, la diateza activă: "Vom folosi…".]
+[Decizia luată, la diateza activă: &quot;Vom folosi…&quot;.]
 
 ## Consecințe
 

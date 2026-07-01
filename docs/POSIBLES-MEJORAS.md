@@ -571,12 +571,17 @@ las plantillas), para no pisar el original.
   `tst_htmlimport`. *Limitación:* las imágenes con ruta relativa apuntan a la ubicación
   del HTML original (no se copian ni reescriben); windows-1252 cae a UTF-8 (Qt6 core no
   lo decodifica). *Pendiente:* **Pandoc opcional** para DOCX/ODT/RTF/LaTeX/…
-- ⬜ **Pandoc opcional** — máximo apalancamiento: una integración `QProcess` cubre
-  DOCX/ODT/RTF/LaTeX/reST/… con calidad alta y degradación elegante, sin dependencia
-  enlazada (mismo patrón que los diagramas).
-- ⬜ **Importador nativo DOCX/ODT** (sin Pandoc) — solo si se quiere sin herramientas
-  externas; más trabajo y lossy. DOCX es el más interesante (cierra el círculo con el
-  export DOCX ya existente).
+- ✅ **Pandoc opcional** — *Hecho:* *Archivo → Importar → Otros formatos (Pandoc)…*
+  (`MainWindow::importWithPandoc`) ejecuta `pandoc --to=gfm --wrap=none <archivo>` por
+  `QProcess` síncrono; cubre DOCX/ODT/RTF/LaTeX/reST/… (Pandoc infiere el formato por la
+  extensión). Módulo puro `mdimport` (`markdown/pandocimport.{h,cpp}`: `pandocAvailable`/
+  `pandocArguments`/`pandocFilePattern`/`pandocInstallCommand`) con `tst_pandocimport`.
+  Degradación elegante como los diagramas: si falta Pandoc, un aviso con la orden de
+  instalación por plataforma. Sin dependencia enlazada. *Limitación:* las imágenes
+  embebidas no se extraen (sin `--extract-media`).
+- ⬜ **Importador nativo DOCX/ODT** (sin Pandoc) — ya cubierto por la vía Pandoc de
+  arriba; quedaría solo como respaldo para quien no quiera instalar herramientas
+  externas (más trabajo y lossy). Prioridad baja.
 
 Caveats transversales: extraer las **imágenes** a disco junto al `.md` y abrir como
 documento nuevo modificado para no sobrescribir la fuente.

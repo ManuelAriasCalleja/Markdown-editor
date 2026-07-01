@@ -127,6 +127,8 @@ add_library(md-editor-core STATIC
     src/markdown/epubimport.h
     src/markdown/htmlimport.cpp
     src/markdown/htmlimport.h
+    src/markdown/pandocimport.cpp
+    src/markdown/pandocimport.h
     src/markdown/markdownrender.cpp
     src/markdown/markdownrender.h
     src/markdown/markdowntidy.cpp
@@ -464,6 +466,7 @@ if(Qt6Test_FOUND)
         tst_typography
         tst_htmlimport
         tst_epubimport
+        tst_pandocimport
         tst_printdecor
         tst_inputrules
         tst_texttransform

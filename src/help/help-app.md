@@ -42,9 +42,10 @@ serializa de vuelta a Markdown puro.
 - **Archivo → Abrir…** (Ctrl+O) abre un `.md` existente. La aplicación
   recuerda los últimos abiertos en **Archivo → Abrir recientes**.
 - **Archivo → Importar** abre un documento de otro formato convirtiéndolo a Markdown
-  en una pestaña nueva sin título (no toca el original): **Desde HTML…** (una página
-  web) y **Desde EPUB…** (un libro; se leen sus capítulos en orden). Funciona mejor
-  con contenido sencillo; respeta el juego de caracteres declarado.
+  en una pestaña nueva sin título (no toca el original): **Desde HTML…** (una página web),
+  **Desde EPUB…** (un libro; se leen sus capítulos en orden) y **Otros formatos (Pandoc)…**
+  (DOCX, ODT, RTF, LaTeX, reStructuredText…, si Pandoc está instalado). Funciona mejor con
+  contenido sencillo; respeta el juego de caracteres declarado.
 - **Guardar** (Ctrl+S) y **Guardar como…** (Ctrl+Shift+S) escriben el
   documento en UTF-8. **Abrir carpeta contenedora** abre en el gestor de
   archivos la carpeta del documento actual.

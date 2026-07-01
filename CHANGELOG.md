@@ -16,11 +16,12 @@ y el proyecto usa [versionado semántico](https://semver.org/lang/es/).
   actual (con su front matter) como una plantilla propia, con nombre y categoría;
   reaparece en *Nuevo desde plantilla* junto a las de fábrica. *Gestionar plantillas…*
   (al final de ese submenú) permite editarlas o borrarlas. Se guardan en los ajustes.
-- **Importar desde HTML y EPUB** (*Archivo → Importar*): convierte una página HTML
-  o un libro EPUB a Markdown y lo abre como documento nuevo sin título, sin tocar el
-  original. En HTML respeta el juego de caracteres declarado (BOM › `<meta charset>` ›
-  UTF-8); del EPUB lee sus capítulos en orden de lectura. Reutiliza el conversor de
-  «Pegar como Markdown».
+- **Importar desde HTML, EPUB y otros formatos** (*Archivo → Importar*): convierte a
+  Markdown y abre como documento nuevo sin título, sin tocar el original. **HTML**
+  (respeta el juego de caracteres declarado: BOM › `<meta charset>` › UTF-8) y **EPUB**
+  (lee sus capítulos en orden) son nativos; **Otros formatos (Pandoc)…** importa DOCX,
+  ODT, RTF, LaTeX, reStructuredText… ejecutando Pandoc si está instalado (si no, indica
+  cómo instalarlo).
 - **Reglas de entrada** en el editor visual: al inicio de línea, teclear un marcador
   Markdown de bloque seguido de espacio lo transforma en el sitio (sin dejar el
   marcador): `#`…`######` → encabezado, `>` → cita, `-`/`*`/`+` → lista de viñetas,

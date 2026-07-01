@@ -74,8 +74,9 @@ Privacy & Security* and click **Open anyway**.
 - **Export** to PDF, HTML, ODF (`.odt`), LaTeX (`.tex`), DOCX (`.docx`), EPUB
   (`.epub`) and plain text (`.txt`), preserving the document language and the
   formula formatting; the PDF embeds the title and author from the front matter.
-- **Import from HTML and EPUB** (*File → Import*): converts a web page or an EPUB
-  book to Markdown and opens it as a new untitled document.
+- **Import from HTML, EPUB and more** (*File → Import*): converts a web page or an
+  EPUB book to Markdown natively, and DOCX/ODT/RTF/LaTeX/reStructuredText… via Pandoc
+  (if installed); opens the result as a new untitled document.
 - **YAML / TOML front matter** preserved verbatim on save.
 - **Navigable outline panel** (F9), find and replace (Ctrl+F / Ctrl+H),
   autosave and crash recovery.

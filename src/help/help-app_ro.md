@@ -43,8 +43,10 @@ serializat înapoi în Markdown pur.
   ultimele deschise în **Fișier → Deschise recent**.
 - **Fișier → Importă** deschide un document dintr-un alt format, convertindu-l în
   Markdown într-o filă nouă fără titlu (originalul nu este modificat): **Din HTML…**
-  (o pagină web) și **Din EPUB…** (o carte; capitolele sunt citite în ordine).
-  Funcționează cel mai bine cu conținut simplu; respectă setul de caractere declarat.
+  (o pagină web), **Din EPUB…** (o carte; capitolele sunt citite în ordine) și **Alte
+  formate (Pandoc)…** (DOCX, ODT, RTF, LaTeX, reStructuredText…, dacă Pandoc este
+  instalat). Funcționează cel mai bine cu conținut simplu; respectă setul de caractere
+  declarat.
 - **Salvează** (Ctrl+S) și **Salvează ca…** (Ctrl+Shift+S) scriu documentul în
   UTF-8. **Deschide folderul documentului** deschide folderul documentului în
   managerul de fișiere.

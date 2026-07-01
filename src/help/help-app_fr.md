@@ -42,9 +42,10 @@ document est sérialisé de nouveau en Markdown pur.
 - **Fichier → Ouvrir…** (Ctrl+O) ouvre un `.md` existant. L'application retient
   les derniers ouverts dans **Fichier → Ouvrir récents**.
 - **Fichier → Importer** ouvre un document d'un autre format en le convertissant en
-  Markdown dans un nouvel onglet sans titre (l'original n'est pas modifié) :
-  **Depuis HTML…** (une page web) et **Depuis EPUB…** (un livre ; ses chapitres sont
-  lus dans l'ordre). Fonctionne mieux avec du contenu simple ; respecte le jeu de
+  Markdown dans un nouvel onglet sans titre (l'original n'est pas modifié) : **Depuis
+  HTML…** (une page web), **Depuis EPUB…** (un livre ; ses chapitres sont lus dans
+  l'ordre) et **Autres formats (Pandoc)…** (DOCX, ODT, RTF, LaTeX, reStructuredText…, si
+  Pandoc est installé). Fonctionne mieux avec du contenu simple ; respecte le jeu de
   caractères déclaré.
 - **Enregistrer** (Ctrl+S) et **Enregistrer sous…** (Ctrl+Maj+S) écrivent le
   document en UTF-8. **Ouvrir le dossier contenant** ouvre le dossier du document

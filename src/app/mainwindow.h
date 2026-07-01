@@ -301,6 +301,8 @@ private:
     void importHtml();
     // Igual que importHtml pero desde un libro EPUB (ZIP de XHTML).
     void importEpub();
+    // Importa DOCX/ODT/RTF/LaTeX/reST… ejecutando Pandoc (si está instalado).
+    void importWithPandoc();
     // Guarda el documento actual como plantilla de usuario (pide nombre y categoría).
     void saveAsTemplate();
     // Abre el gestor de plantillas de usuario (editar/eliminar).

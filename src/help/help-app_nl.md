@@ -43,9 +43,10 @@ document weer naar pure Markdown geserialiseerd.
   de laatst geopende in **Bestand → Recent geopend**.
 - **Bestand → Importeren** opent een document uit een ander formaat en zet het om naar
   Markdown in een nieuw naamloos tabblad (het origineel blijft ongemoeid): **Uit HTML…**
-  (een webpagina) en **Uit EPUB…** (een boek; de hoofdstukken worden op volgorde
-  gelezen). Werkt het best met eenvoudige inhoud; houdt rekening met de opgegeven
-  tekenset.
+  (een webpagina), **Uit EPUB…** (een boek; de hoofdstukken worden op volgorde gelezen)
+  en **Andere formaten (Pandoc)…** (DOCX, ODT, RTF, LaTeX, reStructuredText…, als Pandoc
+  is geïnstalleerd). Werkt het best met eenvoudige inhoud; houdt rekening met de
+  opgegeven tekenset.
 - **Opslaan** (Ctrl+S) en **Opslaan als…** (Ctrl+Shift+S) schrijven het document
   in UTF-8. **Bevattende map openen** opent de map van het document in de
   bestandsbeheerder.

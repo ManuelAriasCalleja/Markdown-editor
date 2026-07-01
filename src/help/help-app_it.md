@@ -43,8 +43,9 @@ il documento viene serializzato di nuovo in Markdown puro.
   ultimi aperti in **File → Apri recenti**.
 - **File → Importa** apre un documento da un altro formato convertendolo in Markdown
   in una nuova scheda senza titolo (l'originale non viene toccato): **Da HTML…** (una
-  pagina web) e **Da EPUB…** (un libro; i capitoli vengono letti in ordine). Funziona
-  meglio con contenuti semplici; rispetta il set di caratteri dichiarato.
+  pagina web), **Da EPUB…** (un libro; i capitoli vengono letti in ordine) e **Altri
+  formati (Pandoc)…** (DOCX, ODT, RTF, LaTeX, reStructuredText…, se Pandoc è installato).
+  Funziona meglio con contenuti semplici; rispetta il set di caratteri dichiarato.
 - **Salva** (Ctrl+S) e **Salva come…** (Ctrl+Maiusc+S) scrivono il documento in
   UTF-8. **Apri cartella contenitore** apre la cartella del documento nel gestore
   file.
