@@ -510,11 +510,12 @@ vez el coste de traducción y el problema de jurisdicción.
 
 **Fases (de barato a caro):**
 
-- ⬜ **Fase A — Agrupar (casi gratis).** *Impl.:* `mdtemplate::Category` (enum) +
-  `categoryName()` por `tr()` + campo `category` en `DocTemplate`; recategorizar las 10
-  actuales; el menú monta submenús por categoría. Solo se traducen los ~7 nombres de
-  categoría. `tst_doctemplates`. Riesgo bajo. **Reorganiza el menú sin escribir plantillas
-  nuevas.**
+- ✅ **Fase A — Agrupar (casi gratis).** *Hecho:* `mdtemplate::Category` (enum de 7) +
+  `categoryName()` por `tr()` + `categoriesInOrder()` + campo `category` en `DocTemplate`;
+  recategorizadas las 10 plantillas actuales (Personal, Programación, Docencia, Empresa,
+  Escritura; Académico y Derecho quedan vacías hasta B/C y no se muestran); el menú monta
+  un submenú por categoría no vacía (perezoso). Solo se tradujeron los 7 nombres de
+  categoría. `tst_doctemplates` ampliado. Riesgo bajo.
 - ⬜ **Fase B — Plantillas de usuario (núcleo escalable).** *Impl.:* *Archivo → Guardar como
   plantilla…* (pide nombre + categoría), persistidas en `AppSettings` (modelo puro tipo
   `snippets`: `mdusertemplate` de (de)serialización + `tst_usertemplate`), diálogo gestor, y

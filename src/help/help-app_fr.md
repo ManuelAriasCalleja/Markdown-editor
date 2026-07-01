@@ -33,8 +33,9 @@ document est sérialisé de nouveau en Markdown pur.
 ## Ouvrir et enregistrer
 
 - **Fichier → Nouveau** (Ctrl+N) crée un document vide dans un nouvel onglet.
-- **Fichier → Nouveau à partir d'un modèle** crée un document à partir d'un
-  squelette (lettre, compte rendu, examen…) prêt à remplir.
+- **Fichier → Nouveau à partir d'un modèle** crée un document à partir d'un squelette
+  prêt à remplir. Les modèles sont regroupés par catégorie (Personnel, Programmation,
+  Enseignement, Entreprise, Écriture…).
 - **Fichier → Ouvrir…** (Ctrl+O) ouvre un `.md` existant. L'application retient
   les derniers ouverts dans **Fichier → Ouvrir récents**.
 - **Fichier → Importer** ouvre un document d'un autre format en le convertissant en

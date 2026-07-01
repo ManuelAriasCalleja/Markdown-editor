@@ -14,15 +14,35 @@
 /// edita el marcador «[fecha]»).
 namespace mdtemplate {
 
-/// Una plantilla de documento: rótulo de menú y cuerpo Markdown inicial.
+/// Categoría profesional de una plantilla. Agrupa el menú «Nuevo desde plantilla» en
+/// submenús; una categoría sin plantillas no se muestra. El orden de presentación lo
+/// da categoriesInOrder().
+enum class Category {
+    Personal,     ///< Personal y general (nota, carta, tareas, certificado…)
+    Programming,  ///< Programación (README, CHANGELOG…)
+    Academic,     ///< Académico / investigación
+    Teaching,     ///< Docencia (examen, práctica…)
+    Business,     ///< Empresa / negocios (acta, informe…)
+    Legal,        ///< Derecho
+    Writing,      ///< Escritura (blog…)
+};
+
+/// Una plantilla de documento: rótulo de menú, cuerpo Markdown inicial y categoría.
 struct DocTemplate {
-    QString name;  ///< etiqueta del submenú (traducida)
-    QString body;  ///< contenido Markdown inicial (traducido)
+    QString name;       ///< etiqueta del submenú (traducida)
+    QString body;       ///< contenido Markdown inicial (traducido)
+    Category category;  ///< submenú en el que aparece
 };
 
 /// Las plantillas disponibles, ya en el idioma vigente. Se construye al vuelo para
 /// que recoja el traductor activo (la interfaz cambia de idioma sin reiniciar).
 QList<DocTemplate> all();
+
+/// Nombre traducido de una categoría (para el rótulo del submenú).
+QString categoryName(Category category);
+
+/// Las categorías en el orden en que deben aparecer en el menú.
+QList<Category> categoriesInOrder();
 
 }  // namespace mdtemplate
 

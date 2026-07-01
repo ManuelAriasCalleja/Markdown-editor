@@ -33,8 +33,9 @@ serializat înapoi în Markdown pur.
 ## Deschidere și salvare
 
 - **Fișier → Nou** (Ctrl+N) creează un document gol într-o filă nouă.
-- **Fișier → Nou din șablon** creează un document pornind de la un schelet
-  (scrisoare, proces-verbal, examen…) gata de completat.
+- **Fișier → Nou din șablon** creează un document pornind de la un schelet gata de
+  completat. Șabloanele sunt grupate pe categorii (Personal, Programare, Predare,
+  Afaceri, Scriere…).
 - **Fișier → Deschide…** (Ctrl+O) deschide un `.md` existent. Aplicația reține
   ultimele deschise în **Fișier → Deschise recent**.
 - **Fișier → Importă** deschide un document dintr-un alt format, convertindu-l în

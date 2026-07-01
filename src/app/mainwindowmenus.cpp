@@ -154,11 +154,20 @@ void MainWindow::createFileMenu()
     connect(newAction, &QAction::triggered, this, &MainWindow::newTab);
 
     QMenu *templateMenu = fileMenu->addMenu(tr("Nuevo desde &plantilla"));
-    for (const mdtemplate::DocTemplate &tpl : mdtemplate::all()) {
-        QAction *act = templateMenu->addAction(tpl.name);
-        const QString body = tpl.body;
-        connect(act, &QAction::triggered, this,
-                [this, body] { addTab(); m_stack->file()->newFromTemplate(body); });
+    const QList<mdtemplate::DocTemplate> templates = mdtemplate::all();
+    // Un submenú por categoría, en su orden; una categoría sin plantillas no aparece.
+    for (const mdtemplate::Category cat : mdtemplate::categoriesInOrder()) {
+        QMenu *catMenu = nullptr;  // se crea perezosamente al hallar la primera
+        for (const mdtemplate::DocTemplate &tpl : templates) {
+            if (tpl.category != cat)
+                continue;
+            if (!catMenu)
+                catMenu = templateMenu->addMenu(mdtemplate::categoryName(cat));
+            QAction *act = catMenu->addAction(tpl.name);
+            const QString body = tpl.body;
+            connect(act, &QAction::triggered, this,
+                    [this, body] { addTab(); m_stack->file()->newFromTemplate(body); });
+        }
     }
 
     QAction *openAction = fileMenu->addAction(tr("&Abrir..."));

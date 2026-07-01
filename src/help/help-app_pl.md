@@ -33,8 +33,9 @@ serializowany do czystego Markdown.
 ## Otwieranie i zapisywanie
 
 - **Plik → Nowy** (Ctrl+N) tworzy pusty dokument w nowej karcie.
-- **Plik → Nowy z szablonu** tworzy dokument na podstawie szkieletu (list,
-  protokół, egzamin…) gotowego do wypełnienia.
+- **Plik → Nowy z szablonu** tworzy dokument na podstawie szkieletu gotowego do
+  wypełnienia. Szablony są pogrupowane według kategorii (Osobiste, Programowanie,
+  Nauczanie, Firma, Pisanie…).
 - **Plik → Otwórz…** (Ctrl+O) otwiera istniejący `.md`. Aplikacja zapamiętuje
   ostatnio otwarte w **Plik → Otwórz ostatnie**.
 - **Plik → Importuj** otwiera dokument z innego formatu, konwertując go na Markdown w

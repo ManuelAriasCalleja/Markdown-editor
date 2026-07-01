@@ -33,8 +33,9 @@ documento é serializado de volta para Markdown puro.
 ## Abrir e guardar
 
 - **Ficheiro → Novo** (Ctrl+N) cria um documento vazio num separador novo.
-- **Ficheiro → Novo a partir de modelo** cria um documento a partir de um
-  esqueleto (carta, ata, exame…) pronto a preencher.
+- **Ficheiro → Novo a partir de modelo** cria um documento a partir de um esqueleto
+  pronto a preencher. Os modelos estão agrupados por categoria (Pessoal, Programação,
+  Ensino, Empresa, Escrita…).
 - **Ficheiro → Abrir…** (Ctrl+O) abre um `.md` existente. A aplicação recorda os
   últimos abertos em **Ficheiro → Abrir recentes**.
 - **Ficheiro → Importar** abre um documento de outro formato convertendo-o em Markdown

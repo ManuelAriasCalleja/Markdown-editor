@@ -10,6 +10,8 @@ private slots:
     void allFieldsNonEmpty();
     void certificateUsesHeadingForCertifico();
     void frontMatterTemplatesAreWellFormed();
+    void everyTemplateHasANamedCategory();
+    void categoriesInOrderHasNoDuplicates();
 };
 
 void TestDocTemplates::hasTemplates()
@@ -51,6 +53,31 @@ void TestDocTemplates::frontMatterTemplatesAreWellFormed()
             QVERIFY2(close > 0, qPrintable(t.name));
         }
     }
+}
+
+void TestDocTemplates::everyTemplateHasANamedCategory()
+{
+    const QList<mdtemplate::Category> order = mdtemplate::categoriesInOrder();
+    for (const auto &t : mdtemplate::all()) {
+        // La categoría de cada plantilla está en el orden de presentación...
+        QVERIFY2(order.contains(t.category), qPrintable(t.name));
+        // ...y tiene un nombre traducible no vacío.
+        QVERIFY2(!mdtemplate::categoryName(t.category).isEmpty(), qPrintable(t.name));
+    }
+}
+
+void TestDocTemplates::categoriesInOrderHasNoDuplicates()
+{
+    const QList<mdtemplate::Category> order = mdtemplate::categoriesInOrder();
+    QSet<int> unique;
+    for (const mdtemplate::Category c : order)
+        unique.insert(static_cast<int>(c));
+    QCOMPARE(unique.size(), order.size());  // sin categorías repetidas
+    // Todo nombre de categoría es no vacío y único.
+    QSet<QString> names;
+    for (const mdtemplate::Category c : order)
+        names.insert(mdtemplate::categoryName(c));
+    QCOMPARE(names.size(), order.size());
 }
 
 QTEST_MAIN(TestDocTemplates)

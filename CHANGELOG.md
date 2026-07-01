@@ -19,6 +19,10 @@ y el proyecto usa [versionado semántico](https://semver.org/lang/es/).
   `1.`/`1)` → lista numerada.
 
 ### Cambiado
+- **Plantillas agrupadas por categoría** en *Archivo → Nuevo desde plantilla*: las
+  plantillas se organizan ahora en submenús por categoría profesional (Personal,
+  Programación, Docencia, Empresa, Escritura…) en vez de una lista plana. Una
+  categoría sin plantillas no se muestra.
 - **Tipografía del documento renderizado**: el editor ya no muestra el Markdown
   «plano». Los encabezados tienen ritmo vertical (más aire arriba cuanto mayor es el
   nivel), los párrafos se separan un poco, los bloques de código se ven como un panel

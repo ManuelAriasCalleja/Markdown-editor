@@ -33,8 +33,9 @@ il documento viene serializzato di nuovo in Markdown puro.
 ## Aprire e salvare
 
 - **File → Nuovo** (Ctrl+N) crea un documento vuoto in una nuova scheda.
-- **File → Nuovo da modello** crea un documento a partire da uno scheletro
-  (lettera, verbale, esame…) pronto da compilare.
+- **File → Nuovo da modello** crea un documento a partire da uno scheletro pronto da
+  compilare. I modelli sono raggruppati per categoria (Personale, Programmazione,
+  Didattica, Azienda, Scrittura…).
 - **File → Apri…** (Ctrl+O) apre un `.md` esistente. L'applicazione ricorda gli
   ultimi aperti in **File → Apri recenti**.
 - **File → Importa** apre un documento da un altro formato convertendolo in Markdown

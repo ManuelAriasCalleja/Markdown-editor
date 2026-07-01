@@ -34,7 +34,8 @@ serializa de vuelta a Markdown puro.
 
 - **Archivo → Nuevo** (Ctrl+N) crea un documento vacío en una pestaña nueva.
 - **Archivo → Nuevo desde plantilla** crea un documento a partir de un esqueleto
-  (carta, acta, examen…) listo para rellenar.
+  listo para rellenar. Las plantillas se agrupan por categoría (Personal, Programación,
+  Docencia, Empresa, Escritura…).
 - **Archivo → Abrir…** (Ctrl+O) abre un `.md` existente. La aplicación
   recuerda los últimos abiertos en **Archivo → Abrir recientes**.
 - **Archivo → Importar** abre un documento de otro formato convirtiéndolo a Markdown

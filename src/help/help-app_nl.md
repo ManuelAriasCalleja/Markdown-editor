@@ -33,8 +33,9 @@ document weer naar pure Markdown geserialiseerd.
 ## Openen en opslaan
 
 - **Bestand → Nieuw** (Ctrl+N) maakt een leeg document in een nieuw tabblad.
-- **Bestand → Nieuw op basis van sjabloon** maakt een document op basis van een
-  skelet (brief, verslag, examen…) klaar om in te vullen.
+- **Bestand → Nieuw op basis van sjabloon** maakt een document op basis van een skelet
+  klaar om in te vullen. De sjablonen zijn gegroepeerd per categorie (Persoonlijk,
+  Programmeren, Onderwijs, Bedrijf, Schrijven…).
 - **Bestand → Openen…** (Ctrl+O) opent een bestaand `.md`. De toepassing onthoudt
   de laatst geopende in **Bestand → Recent geopend**.
 - **Bestand → Importeren** opent een document uit een ander formaat en zet het om naar

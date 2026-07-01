@@ -33,8 +33,9 @@ serialized back to plain Markdown.
 ## Opening and saving
 
 - **File → New** (Ctrl+N) creates an empty document in a new tab.
-- **File → New from template** creates a document from a skeleton (letter,
-  minutes, exam…) ready to fill in.
+- **File → New from template** creates a document from a skeleton ready to fill in.
+  Templates are grouped by category (Personal, Programming, Teaching, Business,
+  Writing…).
 - **File → Open…** (Ctrl+O) opens an existing `.md`. The application remembers
   the most recent ones in **File → Open recent**.
 - **File → Import** opens a document from another format, converting it to Markdown

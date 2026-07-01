@@ -33,8 +33,9 @@ Speichern wird das Dokument wieder als reines Markdown serialisiert.
 ## Öffnen und Speichern
 
 - **Datei → Neu** (Strg+N) erstellt ein leeres Dokument in einem neuen Tab.
-- **Datei → Neu aus Vorlage** erstellt ein Dokument aus einem Gerüst (Brief,
-  Protokoll, Prüfung…), das nur noch ausgefüllt werden muss.
+- **Datei → Neu aus Vorlage** erstellt ein Dokument aus einem Gerüst, das nur noch
+  ausgefüllt werden muss. Die Vorlagen sind nach Kategorie gruppiert (Persönlich,
+  Programmierung, Lehre, Unternehmen, Schreiben…).
 - **Datei → Öffnen…** (Strg+O) öffnet eine vorhandene `.md`. Die Anwendung merkt
   sich die zuletzt geöffneten unter **Datei → Zuletzt geöffnet**.
 - **Datei → Importieren** öffnet ein Dokument aus einem anderen Format und wandelt es

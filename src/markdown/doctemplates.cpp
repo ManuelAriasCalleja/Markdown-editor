@@ -34,7 +34,8 @@ QList<DocTemplate> all()
             "\n"
             "## Tareas\n"
             "\n"
-            "- [ ] [tarea]\n")});
+            "- [ ] [tarea]\n"),
+        Category::Business});
 
     // Nota diaria
     list.append({
@@ -50,7 +51,8 @@ QList<DocTemplate> all()
             "\n"
             "- [ ] \n"
             "\n"
-            "## Notas\n")});
+            "## Notas\n"),
+        Category::Personal});
 
     // Artículo de blog
     list.append({
@@ -69,7 +71,8 @@ QList<DocTemplate> all()
             "\n"
             "## Desarrollo\n"
             "\n"
-            "## Conclusión\n")});
+            "## Conclusión\n"),
+        Category::Writing});
 
     // README de proyecto
     list.append({
@@ -89,7 +92,8 @@ QList<DocTemplate> all()
             "\n"
             "## Licencia\n"
             "\n"
-            "[Licencia]\n")});
+            "[Licencia]\n"),
+        Category::Programming});
 
     // Carta
     list.append({
@@ -108,7 +112,8 @@ QList<DocTemplate> all()
             "\n"
             "Atentamente,\n"
             "\n"
-            "[Nombre]\n")});
+            "[Nombre]\n"),
+        Category::Personal});
 
     // Informe
     list.append({
@@ -130,7 +135,8 @@ QList<DocTemplate> all()
             "\n"
             "## 3. Resultados\n"
             "\n"
-            "## 4. Conclusiones\n")});
+            "## 4. Conclusiones\n"),
+        Category::Business});
 
     // Lista de tareas
     list.append({
@@ -145,7 +151,8 @@ QList<DocTemplate> all()
             "\n"
             "## Hecho\n"
             "\n"
-            "- [x] [tarea]\n")});
+            "- [x] [tarea]\n"),
+        Category::Personal});
 
     // Certificado (la palabra CERTIFICO va como encabezado para que se vea grande
     // y sobreviva al guardado: Markdown no expresa tamaño de fuente, solo niveles
@@ -165,7 +172,8 @@ QList<DocTemplate> all()
             "\n"
             "En [lugar], a [fecha].\n"
             "\n"
-            "Fdo.: [Nombre y cargo]\n")});
+            "Fdo.: [Nombre y cargo]\n"),
+        Category::Personal});
 
     // Práctica de asignatura
     list.append({
@@ -191,7 +199,8 @@ QList<DocTemplate> all()
             "\n"
             "## 5. Conclusiones\n"
             "\n"
-            "## Bibliografía\n")});
+            "## Bibliografía\n"),
+        Category::Teaching});
 
     // Examen
     list.append({
@@ -213,9 +222,38 @@ QList<DocTemplate> all()
             "\n"
             "**2.** [Enunciado] *([N] puntos)*\n"
             "\n"
-            "**3.** [Enunciado] *([N] puntos)*\n")});
+            "**3.** [Enunciado] *([N] puntos)*\n"),
+        Category::Teaching});
 
     return list;
+}
+
+QString categoryName(Category category)
+{
+    switch (category) {
+    case Category::Personal:
+        return QCoreApplication::translate("MainWindow", "Personal y general");
+    case Category::Programming:
+        return QCoreApplication::translate("MainWindow", "Programación");
+    case Category::Academic:
+        return QCoreApplication::translate("MainWindow", "Académico");
+    case Category::Teaching:
+        return QCoreApplication::translate("MainWindow", "Docencia");
+    case Category::Business:
+        return QCoreApplication::translate("MainWindow", "Empresa");
+    case Category::Legal:
+        return QCoreApplication::translate("MainWindow", "Derecho");
+    case Category::Writing:
+        return QCoreApplication::translate("MainWindow", "Escritura");
+    }
+    return {};
+}
+
+QList<Category> categoriesInOrder()
+{
+    return {Category::Personal, Category::Programming, Category::Academic,
+            Category::Teaching, Category::Business,    Category::Legal,
+            Category::Writing};
 }
 
 }  // namespace mdtemplate
