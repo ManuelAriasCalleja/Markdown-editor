@@ -658,9 +658,17 @@ void MainWindow::createTableMenu()
     QAction *aRight = alignMenu->addAction(tr("Derecha"));
     connect(aRight, &QAction::triggered, this, [this] { m_stack->table()->alignColumn(Qt::AlignRight); });
 
+    tableMenu->addSeparator();
+    QMenu *sortMenu = tableMenu->addMenu(tr("Ordenar filas por columna"));
+    QAction *aSortAsc = sortMenu->addAction(tr("Ascendente"));
+    connect(aSortAsc, &QAction::triggered, this, [this] { m_stack->table()->sortByColumn(true); });
+    QAction *aSortDesc = sortMenu->addAction(tr("Descendente"));
+    connect(aSortDesc, &QAction::triggered, this, [this] { m_stack->table()->sortByColumn(false); });
+
     m_tableActions = {aRowAbove, aRowBelow, aColLeft, aColRight,
                       aDelRow, aDelCol, alignMenu->menuAction(),
-                      aLeft, aCenter, aRight};
+                      aLeft, aCenter, aRight,
+                      sortMenu->menuAction(), aSortAsc, aSortDesc};
 }
 
 void MainWindow::createViewMenu()

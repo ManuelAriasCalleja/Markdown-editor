@@ -111,6 +111,8 @@ add_library(md-editor-core STATIC
     src/markdown/find.h
     src/markdown/nav.cpp
     src/markdown/nav.h
+    src/markdown/tablesort.cpp
+    src/markdown/tablesort.h
     src/markdown/markdownrender.cpp
     src/markdown/markdownrender.h
     src/markdown/markdowntidy.cpp
@@ -432,6 +434,8 @@ if(Qt6Test_FOUND)
         tst_linehighlight
         tst_find
         tst_headingshift
+        tst_tablesort
+        tst_tablesortui
         tst_texttransform
         tst_typewriter
         tst_snippets

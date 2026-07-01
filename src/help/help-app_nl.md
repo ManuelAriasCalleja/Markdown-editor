@@ -188,6 +188,9 @@ melding die je vaak herhaalt…
   uitlijnen) zijn alleen actief wanneer de cursor in een tabel staat.
 - De kolomuitlijning (links/midden/rechts) blijft bij het opslaan behouden als
   `:--`/`:-:`/`--:`.
+- **Tabel → Rijen sorteren op kolom** (oplopend/aflopend) herschikt de rijen op de
+  kolom van de cursor, met de koprij vast; detecteert of de kolom numeriek of tekst
+  is.
 
 ## Wiskundige formules
 

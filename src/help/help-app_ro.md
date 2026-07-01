@@ -184,6 +184,9 @@ care îl repeți des…
   sunt active doar când cursorul este într-un tabel.
 - Alinierea coloanei (stânga/centru/dreapta) este păstrată la salvare ca
   `:--`/`:-:`/`--:`.
+- **Tabel → Sortează rândurile după coloană** (crescător/descrescător) reordonează
+  rândurile după coloana cursorului, păstrând antetul fix; detectează dacă coloana
+  este numerică sau text.
 
 ## Formule matematice
 

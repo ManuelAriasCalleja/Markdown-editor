@@ -192,6 +192,9 @@ ein Hinweis, den Sie oft wiederholen…
   ausrichten) sind nur aktiv, wenn der Cursor in einer Tabelle steht.
 - Die Spaltenausrichtung (links/zentriert/rechts) bleibt beim Speichern als
   `:--`/`:-:`/`--:` erhalten.
+- **Tabelle → Zeilen nach Spalte sortieren** (aufsteigend/absteigend) ordnet die
+  Zeilen nach der Spalte des Cursors und lässt die Kopfzeile fest; erkennt, ob die
+  Spalte numerisch oder Text ist.
 
 ## Mathematische Formeln
 

@@ -182,9 +182,12 @@ a menudo…
   TSV/CSV (columnas separadas por tabuladores o comas) copiados de una hoja de
   cálculo o un archivo CSV.
 - Las acciones del menú **Tabla** (añadir/quitar fila o columna, alinear
-  columna) sólo se activan cuando el cursor está dentro de una tabla.
+  columna, ordenar filas) sólo se activan cuando el cursor está dentro de una tabla.
 - La alineación de columna (izquierda/centro/derecha) se conserva al guardar
   como `:--`/`:-:`/`--:`.
+- **Tabla → Ordenar filas por columna** (ascendente/descendente) reordena las
+  filas por la columna del cursor, dejando la cabecera fija; detecta si la columna
+  es numérica o de texto.
 
 ## Fórmulas matemáticas
 

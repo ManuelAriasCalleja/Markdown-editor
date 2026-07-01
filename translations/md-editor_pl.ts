@@ -815,197 +815,212 @@
         <translation>Do prawej</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="668"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="662"/>
+        <source>Ordenar filas por columna</source>
+        <translation>Sortuj wiersze według kolumny</translation>
+    </message>
+    <message>
+        <location filename="../src/app/mainwindowmenus.cpp" line="663"/>
+        <source>Ascendente</source>
+        <translation>Rosnąco</translation>
+    </message>
+    <message>
+        <location filename="../src/app/mainwindowmenus.cpp" line="665"/>
+        <source>Descendente</source>
+        <translation>Malejąco</translation>
+    </message>
+    <message>
+        <location filename="../src/app/mainwindowmenus.cpp" line="676"/>
         <source>&amp;Ver</source>
         <translation>Wido&amp;k</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="676"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="684"/>
         <source>Vista dividida</source>
         <translation>Widok podzielony</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="682"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="690"/>
         <source>Editar WYSIWYG y código fuente a la vez, lado a lado</source>
         <translation>Edytuj WYSIWYG i kod źródłowy jednocześnie, obok siebie</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="686"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="694"/>
         <source>Sin distracciones</source>
         <translation>Tryb bez rozproszeń</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="690"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="698"/>
         <source>Pantalla completa, sin barras, con el texto centrado (ESC o F11 para salir)</source>
         <translation>Pełny ekran, bez pasków, z wyśrodkowanym tekstem (ESC lub F11, aby wyjść)</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="710"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="718"/>
         <source>Resaltar la línea actual</source>
         <translation>Podświetl bieżący wiersz</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="713"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="721"/>
         <source>Marca con un fondo sutil la línea del cursor</source>
         <translation>Oznacza wiersz kursora subtelnym tłem</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="725"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="733"/>
         <source>Interlineado</source>
         <translation>Interlinia</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="729"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="737"/>
         <source>Sencillo</source>
         <translation>Pojedyncza</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="730"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="738"/>
         <source>1,5 líneas</source>
         <translation>1,5 wiersza</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="731"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="739"/>
         <source>Doble</source>
         <translation>Podwójna</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="751"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="759"/>
         <source>Esquema</source>
         <translation>Konspekt</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="756"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="764"/>
         <source>Ir a encabezado...</source>
         <translation>Przejdź do nagłówka...</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="759"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="767"/>
         <source>Salta a un encabezado del documento</source>
         <translation>Przeskocz do nagłówka w dokumencie</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="762"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="770"/>
         <source>Ir a línea...</source>
         <translation>Przejdź do wiersza...</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="765"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="773"/>
         <source>Salta a un número de línea</source>
         <translation>Przeskocz do numeru wiersza</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="768"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="776"/>
         <source>Paleta de comandos...</source>
         <translation>Paleta poleceń...</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="771"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="779"/>
         <source>Busca y ejecuta cualquier acción por su nombre</source>
         <translation>Znajdź i wykonaj dowolną akcję po nazwie</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="777"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="785"/>
         <source>Aumentar letra</source>
         <translation>Powiększ</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="782"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="790"/>
         <source>Reducir letra</source>
         <translation>Pomniejsz</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="786"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="794"/>
         <source>Tamaño normal</source>
         <translation>Rozmiar normalny</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="792"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="800"/>
         <source>Estadísticas del documento...</source>
         <translation>Statystyki dokumentu...</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="795"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="803"/>
         <source>Mostrar contador de palabras</source>
         <translation>Pokaż licznik słów</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="805"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="813"/>
         <source>Mostrar línea y columna</source>
         <translation>Pokaż wiersz i kolumnę</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="815"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="823"/>
         <source>Corrección ortográfica</source>
         <translation>Sprawdzanie pisowni</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="818"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="826"/>
         <source>Subraya las palabras mal escritas según el idioma del documento</source>
         <translation>Podkreśla błędnie napisane słowa w języku dokumentu</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="825"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="833"/>
         <source>Idioma de corrección</source>
         <translation>Język sprawdzania pisowni</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="829"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="837"/>
         <source>Automático (según el documento)</source>
         <translation>Automatycznie (na podstawie dokumentu)</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="850"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="858"/>
         <source>Tema</source>
         <translation>Motyw</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="859"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="867"/>
         <source>Claro</source>
         <translation>Jasny</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="860"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="868"/>
         <source>Oscuro</source>
         <translation>Ciemny</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="861"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="869"/>
         <source>Alto contraste</source>
         <translation>Wysoki kontrast</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="891"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="899"/>
         <source>Seguir el sistema</source>
         <translation>Zgodnie z systemem</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="895"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="903"/>
         <source>Usa el tema claro u oscuro según la configuración del sistema operativo</source>
         <translation>Używa jasnego lub ciemnego motywu zgodnie z ustawieniem systemu operacyjnego</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="909"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="917"/>
         <source>Luz cálida nocturna</source>
         <translation>Ciepłe światło nocne</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="913"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="921"/>
         <source>Tiñe el fondo del editor de tono ámbar según la hora, más cálido de noche</source>
         <translation>Zabarwia tło edytora na bursztynowo zależnie od pory dnia, cieplej w nocy</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="951"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="959"/>
         <source>A&amp;yuda</source>
         <translation>Po&amp;moc</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="952"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="960"/>
         <source>&amp;Manual</source>
         <translation>&amp;Podręcznik</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="956"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="964"/>
         <source>&amp;Acerca de</source>
         <translation>&amp;O programie</translation>
     </message>
@@ -1025,7 +1040,7 @@
         <translation>Edytor WYSIWYG Markdown w Qt6 + C++17.</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="962"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="970"/>
         <source>Formato</source>
         <translation>Format</translation>
     </message>
@@ -1703,7 +1718,7 @@ Czy chcesz go odzyskać?</translation>
         <translation>%1[*] — md-editor</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="923"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="931"/>
         <source>Automático (sistema)</source>
         <translation>Automatyczny (system)</translation>
     </message>
@@ -1724,17 +1739,17 @@ Czy chcesz go odzyskać?</translation>
         <translation>Lista zadań</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="694"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="702"/>
         <source>Modo foco</source>
         <translation>Tryb skupienia</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="701"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="709"/>
         <source>Centra la línea del cursor y atenúa todo salvo el párrafo actual</source>
         <translation>Wyśrodkowuje wiersz kursora i przygasza wszystko poza bieżącym akapitem</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="935"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="943"/>
         <source>Idioma</source>
         <translation>Język</translation>
     </message>
@@ -1762,7 +1777,7 @@ Czy chcesz go odzyskać?</translation>
         <translation>%1 — zachowano front matter</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="670"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="678"/>
         <source>Código fuente Markdown</source>
         <translation>Źródło Markdown</translation>
     </message>

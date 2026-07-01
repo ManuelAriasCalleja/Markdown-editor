@@ -178,6 +178,9 @@ za pomocą paru kliknięć: podpis, szablon tabeli, często powtarzane ostrzeże
   aktywne tylko, gdy kursor jest w tabeli.
 - Wyrównanie kolumny (do lewej/środka/prawej) jest zachowywane przy zapisie jako
   `:--`/`:-:`/`--:`.
+- **Tabela → Sortuj wiersze według kolumny** (rosnąco/malejąco) porządkuje wiersze
+  według kolumny kursora, zostawiając nagłówek na miejscu; wykrywa, czy kolumna jest
+  liczbowa, czy tekstowa.
 
 ## Wzory matematyczne
 

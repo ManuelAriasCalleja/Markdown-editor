@@ -187,6 +187,9 @@ vous répétez souvent…
   une colonne) ne sont actives que lorsque le curseur est dans un tableau.
 - L'alignement de colonne (gauche/centre/droite) est conservé à l'enregistrement
   sous la forme `:--`/`:-:`/`--:`.
+- **Tableau → Trier les lignes par colonne** (croissant/décroissant) réordonne les
+  lignes selon la colonne du curseur, en gardant l'en-tête fixe ; détecte si la
+  colonne est numérique ou textuelle.
 
 ## Formules mathématiques
 

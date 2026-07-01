@@ -43,6 +43,7 @@ public slots:
     void deleteRow();                        // elimina la fila actual
     void deleteColumn();                     // elimina la columna actual
     void alignColumn(Qt::Alignment alignment);  // alinea la columna actual
+    void sortByColumn(bool ascending);       // ordena las filas por la columna del cursor (cabecera fija)
 
 signals:
     /// El contenido difiere (o no) del guardado tras editar la tabla.

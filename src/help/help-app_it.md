@@ -185,6 +185,9 @@ spesso…
   colonna) sono attive solo quando il cursore è dentro una tabella.
 - L'allineamento della colonna (sinistra/centro/destra) viene conservato al
   salvataggio come `:--`/`:-:`/`--:`.
+- **Tabella → Ordina le righe per colonna** (crescente/decrescente) riordina le
+  righe in base alla colonna del cursore, mantenendo fissa l'intestazione; rileva se
+  la colonna è numerica o testuale.
 
 ## Formule matematiche
 

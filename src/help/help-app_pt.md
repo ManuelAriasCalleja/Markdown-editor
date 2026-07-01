@@ -184,6 +184,9 @@ frequência…
   só ficam ativas quando o cursor está dentro de uma tabela.
 - O alinhamento da coluna (esquerda/centro/direita) é mantido ao guardar como
   `:--`/`:-:`/`--:`.
+- **Tabela → Ordenar linhas por coluna** (ascendente/descendente) reordena as linhas
+  pela coluna do cursor, mantendo o cabeçalho fixo; deteta se a coluna é numérica ou
+  de texto.
 
 ## Fórmulas matemáticas
 

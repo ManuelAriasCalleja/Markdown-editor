@@ -179,6 +179,9 @@ repeat…
 - The **Table** menu actions (add/remove row or column, align column) are only
   enabled when the cursor is inside a table.
 - Column alignment (left/center/right) is preserved on save as `:--`/`:-:`/`--:`.
+- **Table → Sort rows by column** (ascending/descending) reorders the rows by the
+  cursor's column, keeping the header fixed; it detects whether the column is
+  numeric or text.
 
 ## Math formulas
 

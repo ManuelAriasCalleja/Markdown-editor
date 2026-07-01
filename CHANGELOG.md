@@ -15,6 +15,9 @@ y el proyecto usa [versionado semántico](https://semver.org/lang/es/).
   fondo sutil la línea del cursor. Desactivado por defecto.
 - **Promover/degradar encabezado** (*Formato*, Ctrl+Shift+[ / Ctrl+Shift+]): sube
   o baja un nivel el encabezado del cursor (acotado entre H1 y H6).
+- **Ordenar filas de tabla por columna** (*Tabla → Ordenar filas por columna*,
+  ascendente/descendente): reordena las filas por la columna del cursor dejando la
+  cabecera fija; detecta si la columna es numérica o de texto.
 
 ### Cambiado
 - **Buscar** resalta ahora **todas** las coincidencias en el documento y muestra
