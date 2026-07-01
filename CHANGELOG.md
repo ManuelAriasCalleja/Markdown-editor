@@ -5,7 +5,7 @@ Todos los cambios relevantes de **md-editor** se documentan en este archivo.
 El formato sigue, a grandes rasgos, [Keep a Changelog](https://keepachangelog.com/es/),
 y el proyecto usa [versionado semántico](https://semver.org/lang/es/).
 
-## [Sin publicar]
+## [2.6.0] — 2026-07-02
 
 ### Añadido
 - **Ventana de Preferencias** (*Editar → Preferencias…*, Ctrl+,): reúne en un diálogo
