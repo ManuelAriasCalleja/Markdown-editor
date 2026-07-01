@@ -254,6 +254,7 @@ De exemplu, un bloc de cod etichetat `mermaid` care conține `flowchart LR  A --
 - **Caută** (Ctrl+F) deschide o bară jos cu câmpuri pentru căutare și înlocuire,
   plus opțiuni (majuscule/minuscule, cuvânt întreg).
 - **Caută următorul** F3 / **Caută anteriorul** Shift+F3.
+- Bara evidențiază **toate** potrivirile din document și afișează un contor **„N din M”** (pe ce potrivire ești, din câte). **Înlocuiește tot** le înlocuiește pe toate deodată.
 
 ## Structura documentului
 

@@ -119,6 +119,12 @@ MainWindow::MainWindow(QWidget *parent)
     addToolBar(Qt::BottomToolBarArea, m_findBar);
     connect(m_findBar, &FindReplaceBar::statusMessage,
             this, &MainWindow::showStatusMessage);
+    // Resalta las coincidencias en el documento ACTIVO (se lee m_stack al emitir).
+    connect(m_findBar, &FindReplaceBar::highlightMatches, this,
+            [this](const QList<mdfind::Match> &matches) {
+                if (m_stack)
+                    m_stack->setSearchMatches(matches);
+            });
 
     // --- Documentos en pestañas: uno por archivo abierto ---
     m_tabs = new QTabWidget(this);
@@ -599,6 +605,11 @@ void MainWindow::setActiveStack(EditorStack *stack)
     if (m_findBar) {
         m_findBar->setEditor(stack->activeEditor());
         m_findBar->hide();
+        // Limpia el resaltado de coincidencias que hubiera en cualquier pestaña: la
+        // barra se ha ocultado y sus posiciones eran del documento anterior.
+        for (int i = 0; i < m_tabs->count(); ++i)
+            if (EditorStack *s = stackAt(i))
+                s->setSearchMatches({});
     }
     if (!stack->split()->sourceMode())
         m_outline->rebuild(stack->editor()->document());

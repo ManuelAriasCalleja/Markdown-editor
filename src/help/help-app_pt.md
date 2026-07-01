@@ -255,6 +255,7 @@ Por exemplo, um bloco de código etiquetado `mermaid` com `flowchart LR  A --> B
 - **Localizar** (Ctrl+F) abre uma barra inferior com campos para localizar e
   substituir, além de opções (maiúsculas/minúsculas, palavra inteira).
 - **Localizar seguinte** F3 / **Localizar anterior** Shift+F3.
+- A barra realça **todas** as correspondências no documento e mostra um contador **«N de M»** (em que correspondência está, de quantas). **Substituir tudo** substitui-as todas de uma vez.
 
 ## Estrutura do documento
 

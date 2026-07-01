@@ -260,6 +260,7 @@ bijvoorbeeld voorvertoond als het bijbehorende stroomschema.
 - **Zoeken** (Ctrl+F) opent onderaan een balk met velden om te zoeken en te
   vervangen, plus opties (hoofdlettergevoelig, heel woord).
 - **Volgende zoeken** F3 / **Vorige zoeken** Shift+F3.
+- De balk markeert **alle** overeenkomsten in het document en toont een teller **'N van M'** (op welke overeenkomst je bent, van hoeveel). **Alles vervangen** vervangt ze allemaal in één keer.
 
 ## Documentoverzicht
 

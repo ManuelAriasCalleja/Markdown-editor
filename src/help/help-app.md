@@ -256,8 +256,11 @@ correspondiente.
 ## Buscar y reemplazar
 
 - **Buscar** (Ctrl+F) abre una barra inferior con campos para buscar y
-  reemplazar, además de opciones (caso, palabra completa).
+  reemplazar, además de opciones (caso, palabra completa, regex).
 - **Buscar siguiente** F3 / **Buscar anterior** Shift+F3.
+- La barra resalta **todas** las coincidencias en el documento y muestra un
+  contador **«N de M»** (en qué coincidencia estás, de cuántas). **Reemplazar
+  todo** sustituye todas de una vez.
 
 ## Esquema del documento
 

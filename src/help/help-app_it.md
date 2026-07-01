@@ -257,6 +257,7 @@ Ad esempio, un blocco di codice etichettato `mermaid` contenente `flowchart LR  
 - **Trova** (Ctrl+F) apre una barra in basso con campi per trovare e sostituire,
   oltre alle opzioni (maiuscole/minuscole, parola intera).
 - **Trova successivo** F3 / **Trova precedente** Maiusc+F3.
+- La barra evidenzia **tutte** le corrispondenze nel documento e mostra un contatore **«N di M»** (su quale corrispondenza sei, sul totale). **Sostituisci tutto** le sostituisce tutte in una volta.
 
 ## Struttura del documento
 

@@ -63,7 +63,7 @@
         <translation>Visueller Editor: Die Formatierung wird auf den gerenderten Text angewendet, ohne die Markdown-Syntax anzuzeigen.</translation>
     </message>
     <message>
-        <location filename="../src/editor/editorstack.cpp" line="476"/>
+        <location filename="../src/editor/editorstack.cpp" line="509"/>
         <source>Fórmula: %1</source>
         <translation>Formel: %1</translation>
     </message>
@@ -71,89 +71,113 @@
 <context>
     <name>FindReplaceBar</name>
     <message>
-        <location filename="../src/widgets/findreplacebar.cpp" line="19"/>
-        <location filename="../src/widgets/findreplacebar.cpp" line="32"/>
+        <location filename="../src/widgets/findreplacebar.cpp" line="21"/>
+        <location filename="../src/widgets/findreplacebar.cpp" line="34"/>
         <source>Buscar</source>
         <translation>Suchen</translation>
     </message>
     <message>
-        <location filename="../src/widgets/findreplacebar.cpp" line="29"/>
+        <location filename="../src/widgets/findreplacebar.cpp" line="31"/>
         <source>Buscar: </source>
         <translation>Suchen: </translation>
     </message>
     <message>
-        <location filename="../src/widgets/findreplacebar.cpp" line="36"/>
+        <location filename="../src/widgets/findreplacebar.cpp" line="38"/>
         <source>◀ Anterior</source>
         <translation>◀ Zurück</translation>
     </message>
     <message>
-        <location filename="../src/widgets/findreplacebar.cpp" line="38"/>
+        <location filename="../src/widgets/findreplacebar.cpp" line="40"/>
         <source>Siguiente ▶</source>
         <translation>Weiter ▶</translation>
     </message>
     <message>
-        <location filename="../src/widgets/findreplacebar.cpp" line="43"/>
+        <location filename="../src/widgets/findreplacebar.cpp" line="45"/>
         <source>Reemplazar: </source>
         <translation>Ersetzen: </translation>
     </message>
     <message>
-        <location filename="../src/widgets/findreplacebar.cpp" line="46"/>
-        <location filename="../src/widgets/findreplacebar.cpp" line="50"/>
+        <location filename="../src/widgets/findreplacebar.cpp" line="48"/>
+        <location filename="../src/widgets/findreplacebar.cpp" line="52"/>
         <source>Reemplazar</source>
         <translation>Ersetzen</translation>
     </message>
     <message>
-        <location filename="../src/widgets/findreplacebar.cpp" line="52"/>
+        <location filename="../src/widgets/findreplacebar.cpp" line="54"/>
         <source>Todo</source>
         <translation>Alle</translation>
     </message>
     <message>
-        <location filename="../src/widgets/findreplacebar.cpp" line="56"/>
+        <location filename="../src/widgets/findreplacebar.cpp" line="58"/>
         <source>May/min</source>
         <translation>Groß/klein</translation>
     </message>
     <message>
-        <location filename="../src/widgets/findreplacebar.cpp" line="57"/>
+        <location filename="../src/widgets/findreplacebar.cpp" line="59"/>
         <source>Distinguir mayúsculas y minúsculas</source>
         <translation>Groß-/Kleinschreibung beachten</translation>
     </message>
     <message>
-        <location filename="../src/widgets/findreplacebar.cpp" line="60"/>
+        <location filename="../src/widgets/findreplacebar.cpp" line="62"/>
         <source>Palabra completa</source>
         <translation>Ganzes Wort</translation>
     </message>
     <message>
-        <location filename="../src/widgets/findreplacebar.cpp" line="61"/>
+        <location filename="../src/widgets/findreplacebar.cpp" line="63"/>
         <source>Buscar solo palabras completas</source>
         <translation>Nur ganze Wörter suchen</translation>
     </message>
     <message>
-        <location filename="../src/widgets/findreplacebar.cpp" line="64"/>
+        <location filename="../src/widgets/findreplacebar.cpp" line="66"/>
         <source>Regex</source>
         <translation>Regex</translation>
     </message>
     <message>
-        <location filename="../src/widgets/findreplacebar.cpp" line="65"/>
+        <location filename="../src/widgets/findreplacebar.cpp" line="67"/>
         <source>Usar expresiones regulares</source>
         <translation>Reguläre Ausdrücke verwenden</translation>
     </message>
     <message>
-        <location filename="../src/widgets/findreplacebar.cpp" line="68"/>
+        <location filename="../src/widgets/findreplacebar.cpp" line="72"/>
+        <source>Coincidencias</source>
+        <translation>Treffer</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/findreplacebar.cpp" line="75"/>
         <source>✕</source>
         <translation>✕</translation>
     </message>
     <message>
-        <location filename="../src/widgets/findreplacebar.cpp" line="116"/>
+        <location filename="../src/widgets/findreplacebar.cpp" line="142"/>
+        <source>Sin coincidencias</source>
+        <translation>Keine Treffer</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/findreplacebar.cpp" line="147"/>
+        <source>%1 de %2</source>
+        <translation>%1 von %2</translation>
+    </message>
+    <message numerus="yes">
+        <location filename="../src/widgets/findreplacebar.cpp" line="148"/>
+        <source>%n coincidencia(s)</source>
+        <translation>
+            <numerusform>%n Treffer</numerusform>
+            <numerusform>%n Treffer</numerusform>
+        </translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/findreplacebar.cpp" line="161"/>
         <source>Expresión regular no válida: %1</source>
         <translation>Ungültiger regulärer Ausdruck: %1</translation>
     </message>
     <message>
-        <location filename="../src/widgets/findreplacebar.cpp" line="160"/>
+        <location filename="../src/widgets/findreplacebar.cpp" line="205"/>
         <source>No se encontró: %1</source>
         <translation>Nicht gefunden: %1</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/widgets/findreplacebar.cpp" line="248"/>
+        <location filename="../src/widgets/findreplacebar.cpp" line="265"/>
+        <location filename="../src/widgets/findreplacebar.cpp" line="283"/>
         <source>%n reemplazo(s)</source>
         <translation>
             <numerusform>%n Ersetzung</numerusform>
@@ -205,7 +229,7 @@
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="283"/>
+        <location filename="../src/app/mainwindow.cpp" line="289"/>
         <source>Editor Markdown WYSIWYG — escribe y da formato con la barra superior</source>
         <translation>WYSIWYG-Markdown-Editor — schreiben und mit der oberen Leiste formatieren</translation>
     </message>
@@ -964,17 +988,17 @@
         <translation>&amp;Über</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="396"/>
+        <location filename="../src/app/mainwindow.cpp" line="402"/>
         <source>Acerca de</source>
         <translation>Über</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="405"/>
+        <location filename="../src/app/mainwindow.cpp" line="411"/>
         <source>Desarrollado por Manuel Arias Calleja</source>
         <translation>Entwickelt von Manuel Arias Calleja</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="407"/>
+        <location filename="../src/app/mainwindow.cpp" line="413"/>
         <source>Editor WYSIWYG de Markdown en Qt6 + C++17.</source>
         <translation>WYSIWYG-Markdown-Editor in Qt6 + C++17.</translation>
     </message>
@@ -984,7 +1008,7 @@
         <translation>Format</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="452"/>
+        <location filename="../src/app/mainwindow.cpp" line="458"/>
         <source>Selección: </source>
         <translation>Auswahl: </translation>
     </message>
@@ -1270,28 +1294,28 @@
         <translation>Als LaTeX exportiert: %1</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="251"/>
+        <location filename="../src/app/mainwindow.cpp" line="257"/>
         <source>Contador de palabras</source>
         <translation>Wortzähler</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="257"/>
+        <location filename="../src/app/mainwindow.cpp" line="263"/>
         <source>Línea y columna</source>
         <translation>Zeile und Spalte</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="325"/>
+        <location filename="../src/app/mainwindow.cpp" line="331"/>
         <source>El archivo se eliminó o movió en disco.</source>
         <translation>Die Datei wurde auf dem Datenträger gelöscht oder verschoben.</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="403"/>
+        <location filename="../src/app/mainwindow.cpp" line="409"/>
         <source>Versión %1</source>
         <translation>Version %1</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/app/mainwindow.cpp" line="450"/>
-        <location filename="../src/app/mainwindow.cpp" line="483"/>
+        <location filename="../src/app/mainwindow.cpp" line="456"/>
+        <location filename="../src/app/mainwindow.cpp" line="489"/>
         <source>~%n min</source>
         <translation>
             <numerusform>~%n min</numerusform>
@@ -1299,57 +1323,57 @@
         </translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="462"/>
+        <location filename="../src/app/mainwindow.cpp" line="468"/>
         <source>Ln %1, Col %2</source>
         <translation>Z. %1, Sp. %2</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="474"/>
+        <location filename="../src/app/mainwindow.cpp" line="480"/>
         <source>Estadísticas del documento</source>
         <translation>Dokumentstatistik</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="476"/>
+        <location filename="../src/app/mainwindow.cpp" line="482"/>
         <source>Palabras:</source>
         <translation>Wörter:</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="477"/>
+        <location filename="../src/app/mainwindow.cpp" line="483"/>
         <source>Caracteres:</source>
         <translation>Zeichen:</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="478"/>
+        <location filename="../src/app/mainwindow.cpp" line="484"/>
         <source>Caracteres (sin espacios):</source>
         <translation>Zeichen (ohne Leerzeichen):</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="480"/>
+        <location filename="../src/app/mainwindow.cpp" line="486"/>
         <source>Párrafos:</source>
         <translation>Absätze:</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="481"/>
+        <location filename="../src/app/mainwindow.cpp" line="487"/>
         <source>Frases:</source>
         <translation>Sätze:</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="482"/>
+        <location filename="../src/app/mainwindow.cpp" line="488"/>
         <source>Tiempo de lectura:</source>
         <translation>Lesezeit:</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="659"/>
+        <location filename="../src/app/mainwindow.cpp" line="670"/>
         <source>Abrir</source>
         <translation>Öffnen</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="660"/>
+        <location filename="../src/app/mainwindow.cpp" line="671"/>
         <source>Archivos Markdown (*.md *.markdown *.txt);;Todos los archivos (*)</source>
         <translation>Markdown-Dateien (*.md *.markdown *.txt);;Alle Dateien (*)</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="704"/>
+        <location filename="../src/app/mainwindow.cpp" line="715"/>
         <source>No hay pestañas cerradas para reabrir.</source>
         <translation>Es gibt keine geschlossenen Tabs zum Wiederöffnen.</translation>
     </message>
@@ -1642,15 +1666,15 @@ Möchtest du es wiederherstellen?</translation>
         <translation>Verwerfen</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="562"/>
-        <location filename="../src/app/mainwindow.cpp" line="623"/>
-        <location filename="../src/app/mainwindow.cpp" line="718"/>
+        <location filename="../src/app/mainwindow.cpp" line="568"/>
+        <location filename="../src/app/mainwindow.cpp" line="634"/>
+        <location filename="../src/app/mainwindow.cpp" line="729"/>
         <location filename="../src/app/mainwindowsession.cpp" line="130"/>
         <source>Sin título</source>
         <translation>Unbenannt</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="622"/>
+        <location filename="../src/app/mainwindow.cpp" line="633"/>
         <location filename="../src/app/mainwindowsession.cpp" line="132"/>
         <source>%1[*] — md-editor</source>
         <translation>%1[*] — md-editor</translation>
@@ -1692,7 +1716,7 @@ Möchtest du es wiederherstellen?</translation>
         <translation>Sprache</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/app/mainwindow.cpp" line="443"/>
+        <location filename="../src/app/mainwindow.cpp" line="449"/>
         <source>%n palabra(s)</source>
         <translation>
             <numerusform>%n Wort</numerusform>
@@ -1700,7 +1724,7 @@ Möchtest du es wiederherstellen?</translation>
         </translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/app/mainwindow.cpp" line="445"/>
+        <location filename="../src/app/mainwindow.cpp" line="451"/>
         <source>%n carácter(es)</source>
         <translation>
             <numerusform>%n Zeichen</numerusform>

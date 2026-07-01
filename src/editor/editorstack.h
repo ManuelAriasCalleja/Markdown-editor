@@ -9,6 +9,8 @@
 #include <QList>
 #include <QTextEdit>  // para QTextEdit::ExtraSelection en las firmas de las capas
 
+#include "find.h"  // mdfind::Match (capa de coincidencias de búsqueda)
+
 class QByteArray;
 class FocusEditor;
 class CodeBlockHighlighter;
@@ -95,6 +97,12 @@ public:
     /// Lo activa/desactiva la ventana por ajuste.
     void setCurrentLineHighlight(bool on);
 
+    /// Resalta todas las coincidencias de la búsqueda en el editor activo (capa del
+    /// compositor). Lista vacía = sin resaltado. Las posiciones son del texto plano
+    /// del editor activo (1:1 con posiciones del documento). Lo alimenta la barra de
+    /// búsqueda a través de la ventana.
+    void setSearchMatches(const QList<mdfind::Match> &matches);
+
     /// Interlineado del editor en porcentaje de la altura natural (100 = sencillo).
     /// Es presentación pura (no se serializa); se reaplica tras cargar y en cada
     /// sustitución del cuerpo, porque setMarkdown rehace los formatos de bloque.
@@ -165,6 +173,12 @@ private:
     // Vacía si el resaltado está apagado (color en `mdlinehighlight`).
     QList<QTextEdit::ExtraSelection> currentLineSelections(QTextEdit *ed) const;
     bool m_currentLineHighlight = false;
+
+    // Capa de coincidencias de búsqueda: un fondo translúcido por cada coincidencia,
+    // solo en el editor al que pertenecen (`m_matchEditor`, el activo al fijarlas).
+    QList<QTextEdit::ExtraSelection> matchSelections(QTextEdit *ed) const;
+    QList<mdfind::Match> m_searchMatches;
+    QTextEdit *m_matchEditor = nullptr;
 
     // Aplica el interlineado actual (m_lineSpacing) a todos los bloques de `ed`.
     // Presentación pura: preserva la marca «modificado» de Qt (como styleTables).

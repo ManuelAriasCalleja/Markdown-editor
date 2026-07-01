@@ -250,6 +250,7 @@ For example, a code block tagged `mermaid` containing `flowchart LR  A --> B
 - **Find** (Ctrl+F) opens a bottom bar with fields to find and replace, plus
   options (case, whole word).
 - **Find next** F3 / **Find previous** Shift+F3.
+- The bar highlights **all** matches in the document and shows an **"N of M"** counter (which match you're on, out of how many). **Replace all** replaces them all at once.
 
 ## Document outline
 

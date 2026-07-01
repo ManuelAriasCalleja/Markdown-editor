@@ -14,6 +14,11 @@ y el proyecto usa [versionado semántico](https://semver.org/lang/es/).
 - **Resaltar la línea actual** (*Ver → Resaltar la línea actual*): marca con un
   fondo sutil la línea del cursor. Desactivado por defecto.
 
+### Cambiado
+- **Buscar** resalta ahora **todas** las coincidencias en el documento y muestra
+  un contador **«N de M»** en la barra. «Reemplazar todo» reusa el mismo motor de
+  coincidencias.
+
 ## [2.4.0] — 2026-07-01
 
 ### Añadido

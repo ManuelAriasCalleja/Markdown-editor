@@ -376,16 +376,40 @@ QList<QTextEdit::ExtraSelection> EditorStack::currentLineSelections(QTextEdit *e
     return selections;
 }
 
+QList<QTextEdit::ExtraSelection> EditorStack::matchSelections(QTextEdit *ed) const
+{
+    QList<QTextEdit::ExtraSelection> selections;
+    if (!ed || ed != m_matchEditor || m_searchMatches.isEmpty())
+        return selections;
+    // Fondo translúcido (el texto se sigue leyendo) derivado del color de selección.
+    QColor bg = ed->palette().color(QPalette::Highlight);
+    bg.setAlpha(90);
+    QTextDocument *doc = ed->document();
+    const int lastPos = doc->characterCount() - 1;
+    for (const mdfind::Match &m : m_searchMatches) {
+        if (m.start < 0 || m.length <= 0 || m.start + m.length > lastPos)
+            continue;  // defensivo: el documento pudo cambiar desde el cálculo
+        QTextEdit::ExtraSelection sel;
+        sel.cursor = QTextCursor(doc);
+        sel.cursor.setPosition(m.start);
+        sel.cursor.setPosition(m.start + m.length, QTextCursor::KeepAnchor);
+        sel.format.setBackground(bg);
+        selections.append(sel);
+    }
+    return selections;
+}
+
 void EditorStack::rebuildExtraSelections(QTextEdit *ed)
 {
     if (!ed)
         return;
     // Fusiona todas las capas y aplica en una sola llamada (este es el único
     // setExtraSelections del componente). El orden importa cuando dos capas se
-    // solapan: las posteriores pintan encima. La línea actual va primero (fondo)
-    // para que las coincidencias (#13) y la atenuación se vean por encima.
+    // solapan: las posteriores pintan encima. La línea actual va primero (fondo);
+    // las coincidencias encima; la atenuación del foco (foreground) al final.
     QList<QTextEdit::ExtraSelection> selections;
     selections += currentLineSelections(ed);
+    selections += matchSelections(ed);
     selections += focusDimSelections(ed);
     ed->setExtraSelections(selections);
 }
@@ -404,6 +428,15 @@ void EditorStack::setCurrentLineHighlight(bool on)
 {
     m_currentLineHighlight = on;
     // Recompone las capas en ambos editores (cualquiera puede estar visible).
+    rebuildExtraSelections(m_editor);
+    rebuildExtraSelections(m_split->sourceEditor());
+}
+
+void EditorStack::setSearchMatches(const QList<mdfind::Match> &matches)
+{
+    m_searchMatches = matches;
+    // Las posiciones son del editor activo (donde busca la barra); solo ahí se pintan.
+    m_matchEditor = activeEditor();
     rebuildExtraSelections(m_editor);
     rebuildExtraSelections(m_split->sourceEditor());
 }

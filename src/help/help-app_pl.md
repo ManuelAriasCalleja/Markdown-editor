@@ -249,6 +249,7 @@ Na przykład blok kodu oznaczony `mermaid` zawierający `flowchart LR  A --> B
 - **Znajdź** (Ctrl+F) otwiera dolny pasek z polami do wyszukiwania i zamiany oraz
   opcjami (wielkość liter, całe słowo).
 - **Znajdź następny** F3 / **Znajdź poprzedni** Shift+F3.
+- Pasek podświetla **wszystkie** dopasowania w dokumencie i pokazuje licznik **„N z M”** (na którym dopasowaniu jesteś, z ilu). **Zamień wszystko** zamienia je wszystkie naraz.
 
 ## Struktura dokumentu
 

@@ -264,6 +264,7 @@ Zum Beispiel wird ein als `mermaid` markierter Codeblock mit `flowchart LR  A
 - **Suchen** (Strg+F) öffnet unten eine Leiste mit Feldern zum Suchen und Ersetzen
   sowie Optionen (Groß-/Kleinschreibung, ganzes Wort).
 - **Weitersuchen** F3 / **Rückwärts suchen** Umschalt+F3.
+- Die Leiste hebt **alle** Treffer im Dokument hervor und zeigt einen Zähler **„N von M“** (auf welchem Treffer von wie vielen). **Alle ersetzen** ersetzt alle auf einmal.
 
 ## Dokumentgliederung
 

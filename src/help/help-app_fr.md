@@ -261,6 +261,7 @@ Par exemple, un bloc de code étiqueté `mermaid` contenant `flowchart LR  A -->
 - **Rechercher** (Ctrl+F) ouvre une barre en bas avec des champs pour rechercher
   et remplacer, ainsi que des options (casse, mot entier).
 - **Suivant** F3 / **Précédent** Maj+F3.
+- La barre surligne **toutes** les correspondances du document et affiche un compteur **« N sur M »** (la correspondance actuelle, sur le total). **Tout remplacer** les remplace toutes d'un coup.
 
 ## Plan du document
 
