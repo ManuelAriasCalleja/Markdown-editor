@@ -462,6 +462,52 @@ auditoría 2026-06-30.
 imágenes con tiradores** (Typora usa `width` de CSS; en `QTextDocument` complicaría el
 round-trip; a lo sumo, alineación).
 
+### Plantillas por profesión: agrupar y ampliar «Nuevo desde plantilla» (2026-07-01)
+
+Ampliar *Archivo → Nuevo desde plantilla* **agrupando** las plantillas en submenús por
+categoría profesional y **añadiendo** más (para programadores, docentes, abogados,
+académicos…). Diseño acordado.
+
+**Coste clave — i18n.** Hoy, en `doctemplates.cpp`, el **nombre y el cuerpo completo** de
+cada plantilla pasan por `translate("MainWindow", …)`, así que cada plantilla nueva hay que
+traducirla a los 8 idiomas (y `tst_translations` lo exige). Además, las plantillas
+**jurídicas dependen de la jurisdicción** (una «demanda» española no equivale a un
+*pleading* de *common law*, ni a los sistemas alemán/polaco/rumano): traducirlas produciría
+documentos legalmente sin sentido. Por eso el enfoque es **mixto**.
+
+**Categorías (7)** — un submenú por categoría; una categoría vacía no se muestra:
+
+| Categoría | De fábrica (traducidas ×9) | Vía plantillas de usuario |
+|---|---|---|
+| Personal / General | nota diaria, carta, lista de tareas, certificado (+ diario) | — |
+| Programación | README + **CHANGELOG, ADR, informe de bug** | sí |
+| Académico / Investigación | **artículo (IMRyD), abstract, informe de laboratorio** | sí |
+| Docencia | examen, práctica (+ opc. rúbrica) | sí |
+| Empresa / Negocios | acta de reunión (+ opc. orden del día, memo) | sí |
+| Derecho | — (jurisdicción) | **todas** |
+| Sanidad / Escritura | — (regulado / blog ya existe) | sí |
+
+**Enfoque mixto:** de fábrica traducidas **solo** donde la convención es global y luce las
+fortalezas de md-editor (Programación → código/diagramas; Académico → TeX + LaTeX + notas al
+pie); **plantillas de usuario** para el resto (Derecho, Sanidad y lo local), que esquivan a la
+vez el coste de traducción y el problema de jurisdicción.
+
+**Fases (de barato a caro):**
+
+- ⬜ **Fase A — Agrupar (casi gratis).** *Impl.:* `mdtemplate::Category` (enum) +
+  `categoryName()` por `tr()` + campo `category` en `DocTemplate`; recategorizar las 10
+  actuales; el menú monta submenús por categoría. Solo se traducen los ~7 nombres de
+  categoría. `tst_doctemplates`. Riesgo bajo. **Reorganiza el menú sin escribir plantillas
+  nuevas.**
+- ⬜ **Fase B — Plantillas de usuario (núcleo escalable).** *Impl.:* *Archivo → Guardar como
+  plantilla…* (pide nombre + categoría), persistidas en `AppSettings` (modelo puro tipo
+  `snippets`: `mdusertemplate` de (de)serialización + `tst_usertemplate`), diálogo gestor, y
+  el menú mezcla usuario + fábrica por categoría. Esquiva i18n y jurisdicción. Riesgo medio.
+  Es lo que hace útiles a Derecho/Sanidad sin traducir nada.
+- ⬜ **Fase C — Plantillas de fábrica curadas.** *Impl.:* las ~6‑8 nuevas de Programación/
+  Académico, cada una nombre + cuerpo por `tr()`, traducidas a los 9 idiomas (la parte cara
+  pero acotada); Docencia/Empresa opc. 1‑2; Derecho/Sanidad cero de fábrica.
+
 ### Robustez
 
 - ✅ **ASAN/UBSAN + clang-tidy en CI** — *Hecho:* opción CMake `ENABLE_SANITIZERS`
