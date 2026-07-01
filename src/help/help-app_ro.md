@@ -349,6 +349,9 @@ Poți, de asemenea, să exporți **doar selecția în PDF** și să folosești
 **Fișier → Tipărește** (Ctrl+P) deschide dialogul sistemului; **Tipărește selecția**
 tipărește doar ce este selectat.
 
+**Vizualizare → Numere de pagină la tipărire** (activat implicit) adaugă numărul
+paginii în subsol (`N / M`) la tipărire și la exportul PDF.
+
 ## Teme și aspect
 
 - **Vizualizare → Temă** oferă Luminoasă, Întunecată, GitHub Light, GitHub Dark,

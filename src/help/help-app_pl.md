@@ -339,6 +339,9 @@ Możesz też wyeksportować **tylko zaznaczenie do PDF** i użyć **Podglądu wy
 **Plik → Drukuj** (Ctrl+P) otwiera okno systemowe; **Drukuj zaznaczenie** drukuje
 tylko to, co zaznaczone.
 
+**Widok → Numery stron przy drukowaniu** (domyślnie włączone) dodaje numer strony w
+stopce (`N / M`) przy drukowaniu i eksporcie do PDF.
+
 ## Motywy i wygląd
 
 - **Widok → Motyw** oferuje Jasny, Ciemny, GitHub Light, GitHub Dark, Monokai, Wysoki kontrast, Solarized Light i Solarized Dark. **Podążaj za systemem** dopasowuje motyw jasny/ciemny do

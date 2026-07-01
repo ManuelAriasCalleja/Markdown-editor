@@ -355,6 +355,9 @@ gebruiken.
 **Bestand → Afdrukken** (Ctrl+P) opent het systeemdialoogvenster; **Selectie
 afdrukken** drukt alleen het geselecteerde af.
 
+**Beeld → Paginanummers bij afdrukken** (standaard aan) voegt het paginanummer toe in
+de voettekst (`N / M`) bij afdrukken en bij exporteren naar PDF.
+
 ## Thema's en uiterlijk
 
 - **Beeld → Thema** biedt Licht, Donker, GitHub Light, GitHub Dark, Monokai, Hoog contrast, Solarized Light en Solarized Dark. **Systeem volgen** stemt het lichte/donkere thema af op dat van

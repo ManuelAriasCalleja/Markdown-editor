@@ -351,6 +351,9 @@ stampa**.
 **File → Stampa** (Ctrl+P) apre la finestra di sistema; **Stampa selezione** stampa
 solo ciò che è selezionato.
 
+**Visualizza → Numeri di pagina in stampa** (attivo per impostazione predefinita)
+aggiunge il numero di pagina nel piè di pagina (`N / M`) in stampa e nell'esportazione PDF.
+
 ## Temi e aspetto
 
 - **Visualizza → Tema** offre Chiaro, Scuro, GitHub Light, GitHub Dark, Monokai, Alto contrasto, Solarized Light e Solarized Dark. **Segui il sistema** allinea il tema chiaro/scuro a quello del

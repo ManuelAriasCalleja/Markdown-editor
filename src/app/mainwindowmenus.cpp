@@ -751,6 +751,13 @@ void MainWindow::createViewMenu()
                 s->setCurrentLineHighlight(on);
     });
 
+    QAction *pageNumbersAction = viewMenu->addAction(tr("Números de página al imprimir"));
+    pageNumbersAction->setCheckable(true);
+    pageNumbersAction->setChecked(AppSettings::printPageNumbers());
+    pageNumbersAction->setToolTip(tr("Añade el número de página en el pie al imprimir o exportar a PDF"));
+    connect(pageNumbersAction, &QAction::toggled, this,
+            [](bool on) { AppSettings::setPrintPageNumbers(on); });
+
     // Interlineado del editor (presentación pura, no afecta al Markdown). Submenú
     // de opciones excluyentes; el valor se persiste y se empuja a todas las
     // pestañas. Los rótulos van por QT_TRANSLATE_NOOP para que lupdate los extraiga

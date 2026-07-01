@@ -172,6 +172,14 @@ void ExportController::applyPdfMetadata(QPrinter *printer) const
         printer->setCreator(info.creator);  // Qt6 no tiene setAuthor; el autor va a «Creator»
 }
 
+void ExportController::renderToPrinter(QTextDocument *doc, QPrinter *printer) const
+{
+    if (AppSettings::printPageNumbers())
+        mdexport::paintPaginated(printer, doc, /*footerPageNumbers=*/true);
+    else
+        doc->print(printer);  // conducta original: paginación de Qt, sin pie
+}
+
 bool ExportController::print()
 {
     m_split->commitSourceToDocument();  // en modo fuente, imprime el contenido al día
@@ -182,7 +190,7 @@ bool ExportController::print()
         return false;
     std::unique_ptr<QTextDocument> flat(
         mdexport::cloneForExport(m_editor->document()));
-    flat->print(&printer);
+    renderToPrinter(flat.get(), &printer);
     emit statusMessage(QCoreApplication::translate("MainWindow", "Documento enviado a la impresora."), 4000);
     return true;
 }
@@ -216,7 +224,7 @@ bool ExportController::printSelection()
     dialog.setWindowTitle(QCoreApplication::translate("MainWindow", "Imprimir selección"));
     if (dialog.exec() != QDialog::Accepted)
         return false;
-    doc->print(&printer);
+    renderToPrinter(doc.get(), &printer);
     emit statusMessage(QCoreApplication::translate("MainWindow", "Selección enviada a la impresora."), 4000);
     return true;
 }
@@ -238,7 +246,7 @@ bool ExportController::exportSelectionPdf()
     printer.setOutputFormat(QPrinter::PdfFormat);
     printer.setOutputFileName(path);
     applyPdfMetadata(&printer);
-    doc->print(&printer);
+    renderToPrinter(doc.get(), &printer);
     emit statusMessage(QCoreApplication::translate("MainWindow", "Exportado a PDF: %1").arg(path), 4000);
     return true;
 }
@@ -254,7 +262,7 @@ bool ExportController::printPreview()
     connect(&dialog, &QPrintPreviewDialog::paintRequested, this, [this](QPrinter *p) {
         std::unique_ptr<QTextDocument> flat(
             mdexport::cloneForExport(m_editor->document()));
-        flat->print(p);
+        renderToPrinter(flat.get(), p);
     });
     return dialog.exec() == QDialog::Accepted;
 }
@@ -305,7 +313,7 @@ bool ExportController::exportPdf()
     applyPdfMetadata(&printer);
     std::unique_ptr<QTextDocument> flat(
         mdexport::cloneForExport(m_editor->document()));
-    flat->print(&printer);
+    renderToPrinter(flat.get(), &printer);
 
     emit statusMessage(QCoreApplication::translate("MainWindow", "Exportado a PDF: %1").arg(path), 4000);
     return true;

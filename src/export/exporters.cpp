@@ -4,15 +4,20 @@
 #include "exporters.h"
 
 #include "mathblocks.h"
+#include "printdecor.h"
 #include "tableedit.h"
 
+#include <QAbstractTextDocumentLayout>
 #include <QBuffer>
 #include <QDateTime>
 #include <QFile>
 #include <QFont>
+#include <QFontMetricsF>
 #include <QHash>
 #include <QImage>
+#include <QPainter>
 #include <QPixmap>
+#include <QPrinter>
 #include <QRegularExpression>
 #include <QStringList>
 #include <QTextBlock>
@@ -1360,6 +1365,49 @@ QTextDocument *cloneForExport(const QTextDocument *src)
         }
     }
     return out;
+}
+
+void paintPaginated(QPrinter *printer, QTextDocument *doc, bool footerPageNumbers)
+{
+    if (!printer || !doc)
+        return;
+    QPainter painter(printer);
+    if (!painter.isActive())
+        return;
+    // Métricas del dispositivo de impresión: la maqueta usa su DPI (como hace el
+    // propio QTextDocument::print internamente).
+    doc->documentLayout()->setPaintDevice(printer);
+
+    const QRectF printable = printer->pageRect(QPrinter::DevicePixel);
+    // Franja del pie: dos alturas de línea de la fuente por defecto (aire + texto).
+    const QFontMetricsF fm(doc->defaultFont(), printer);
+    const qreal footerH = footerPageNumbers ? fm.height() * 2.0 : 0.0;
+    const QSizeF bodySize(printable.width(), qMax<qreal>(1.0, printable.height() - footerH));
+    doc->setPageSize(bodySize);
+
+    const int pages = qMax(1, doc->pageCount());
+    painter.translate(printable.topLeft());  // (0,0) = esquina de la zona imprimible
+    for (int i = 0; i < pages; ++i) {
+        if (i > 0)
+            printer->newPage();
+        // Contenido de la página i: se desplaza su franja al origen y se recorta a
+        // la altura del cuerpo (para que no invada el pie ni la página siguiente).
+        painter.save();
+        const QRectF pageBody(0, bodySize.height() * i, bodySize.width(), bodySize.height());
+        painter.setClipRect(QRectF(0, 0, bodySize.width(), bodySize.height()));
+        painter.translate(0, -pageBody.top());
+        doc->drawContents(&painter, pageBody);
+        painter.restore();
+        // Pie con el número de página, centrado bajo el cuerpo.
+        if (footerPageNumbers) {
+            painter.save();
+            painter.setFont(doc->defaultFont());
+            const QRectF footer(0, bodySize.height(), printable.width(), footerH);
+            painter.drawText(footer, Qt::AlignHCenter | Qt::AlignVCenter,
+                             mdprintdecor::pageNumberText(i + 1, pages));
+            painter.restore();
+        }
+    }
 }
 
 } // namespace mdexport

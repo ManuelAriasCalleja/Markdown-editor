@@ -31,6 +31,8 @@ y el proyecto usa [versionado semántico](https://semver.org/lang/es/).
 - **Superíndice y subíndice** (*Formato*, Ctrl+Shift++ / Ctrl+Shift+-): eleva o baja
   el texto seleccionado, mostrándolo en su posición real; se guarda como `^texto^` y
   `~texto~` (estilo Pandoc), con round-trip fiel.
+- **Números de página al imprimir** (*Ver*, activado por defecto): añade el número de
+  página en el pie (`N / M`) al imprimir y al exportar a PDF.
 
 ### Cambiado
 - **Buscar** resalta ahora **todas** las coincidencias en el documento y muestra

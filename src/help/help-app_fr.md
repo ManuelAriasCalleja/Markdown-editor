@@ -355,6 +355,9 @@ l'**Aperçu avant impression**.
 **Fichier → Imprimer** (Ctrl+P) ouvre la boîte de dialogue du système ;
 **Imprimer la sélection** n'imprime que ce qui est sélectionné.
 
+**Affichage → Numéros de page à l'impression** (activé par défaut) ajoute le numéro
+de page en pied de page (`N / M`) à l'impression et à l'export PDF.
+
 ## Thèmes et apparence
 
 - **Affichage → Thème** propose Clair, Sombre, GitHub Light, GitHub Dark, Monokai, Contraste élevé, Solarized Light et Solarized Dark. **Suivre le système** aligne le thème clair/sombre sur celui

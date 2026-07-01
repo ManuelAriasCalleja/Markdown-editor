@@ -9,6 +9,7 @@
 #include <QString>
 
 class QTextDocument;
+class QPrinter;
 
 /// \brief Exportación a ODF (.odt) y LaTeX (.tex), teniendo en cuenta el idioma del
 /// documento. Qt sabe escribir ODF pero no emite el idioma; LaTeX no lo soporta
@@ -137,6 +138,13 @@ bool writeEpub(const QTextDocument *doc, const QString &path, const Language &la
 /// documento devuelto. LaTeX, en cambio, emite las fórmulas verbatim a partir
 /// del original con `toLatex`.
 QTextDocument *cloneForExport(const QTextDocument *src);
+
+/// \brief Vuelca `doc` en `printer` paginando A MANO con QPainter/newPage(), para
+/// poder añadir un pie con el número de página (`footerPageNumbers`). Reserva la
+/// franja del pie sobre el área imprimible y pinta el contenido de cada página
+/// recortado. Alternativa a `QTextDocument::print`, que no admite pies. MUTA el
+/// pageSize de `doc` (pásale un clon, como hacen las rutas de exportación).
+void paintPaginated(QPrinter *printer, QTextDocument *doc, bool footerPageNumbers);
 
 } // namespace mdexport
 

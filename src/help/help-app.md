@@ -351,6 +351,9 @@ impresión**.
 **Archivo → Imprimir** (Ctrl+P) abre el diálogo del sistema; **Imprimir
 selección** imprime solo lo seleccionado.
 
+**Ver → Números de página al imprimir** (activado por defecto) añade el número de
+página en el pie (`N / M`) al imprimir y al exportar a PDF.
+
 ## Temas y apariencia
 
 - **Ver → Tema** ofrece Claro, Oscuro, GitHub Light, GitHub Dark, Monokai,

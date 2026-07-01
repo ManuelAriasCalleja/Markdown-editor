@@ -339,6 +339,9 @@ You can also export **only the selection to PDF** and use the **Print preview**.
 **File → Print** (Ctrl+P) opens the system dialog; **Print selection** prints
 only what is selected.
 
+**View → Page numbers when printing** (on by default) adds the page number in the
+footer (`N / M`) when printing and when exporting to PDF.
+
 ## Themes and appearance
 
 - **View → Theme** offers Light, Dark, GitHub Light, GitHub Dark, Monokai, High contrast, Solarized Light and Solarized Dark. **Follow the system** matches the light/dark theme to the OS.

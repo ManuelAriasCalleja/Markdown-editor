@@ -344,6 +344,9 @@ impressão**.
 **Ficheiro → Imprimir** (Ctrl+P) abre a caixa de diálogo do sistema; **Imprimir
 seleção** imprime apenas o que está selecionado.
 
+**Ver → Números de página ao imprimir** (ativado por predefinição) adiciona o número
+de página no rodapé (`N / M`) ao imprimir e ao exportar para PDF.
+
 ## Temas e aparência
 
 - **Ver → Tema** oferece Claro, Escuro, GitHub Light, GitHub Dark, Monokai, Alto contraste, Solarized Light e Solarized Dark. **Seguir o sistema** ajusta o tema claro/escuro ao do sistema

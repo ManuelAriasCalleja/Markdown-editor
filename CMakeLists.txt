@@ -115,6 +115,8 @@ add_library(md-editor-core STATIC
     src/markdown/moveline.h
     src/markdown/nav.cpp
     src/markdown/nav.h
+    src/markdown/printdecor.cpp
+    src/markdown/printdecor.h
     src/markdown/supsub.cpp
     src/markdown/supsub.h
     src/markdown/tablesort.cpp
@@ -447,6 +449,7 @@ if(Qt6Test_FOUND)
         tst_linecommands
         tst_markhighlight
         tst_supersub
+        tst_printdecor
         tst_texttransform
         tst_typewriter
         tst_snippets

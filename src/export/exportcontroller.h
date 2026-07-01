@@ -98,6 +98,12 @@ private:
     // Solo tiene efecto con la salida en PdfFormat. Punto único de los dos exportadores PDF.
     void applyPdfMetadata(QPrinter *printer) const;
 
+    // Punto ÚNICO de volcado a impresora/PDF (R2): lo llaman todas las rutas
+    // (imprimir, imprimir selección, vista previa, exportar PDF). Si el ajuste de
+    // números de página está activo, pagina a mano y añade el pie; si no, usa el
+    // print() de Qt (conducta original).
+    void renderToPrinter(QTextDocument *doc, QPrinter *printer) const;
+
     // Descriptor de un formato de exportación basado en archivo (HTML/ODF/LaTeX/
     // DOCX/EPUB). Los textos van como QT_TRANSLATE_NOOP("MainWindow", ...) para que
     // lupdate los extraiga sin traducirlos aquí; runExport los traduce al usarlos.

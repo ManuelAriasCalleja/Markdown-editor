@@ -895,162 +895,172 @@
         <translation>Oznacza wiersz kursora subtelnym tłem</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="758"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="754"/>
+        <source>Números de página al imprimir</source>
+        <translation>Numery stron przy drukowaniu</translation>
+    </message>
+    <message>
+        <location filename="../src/app/mainwindowmenus.cpp" line="757"/>
+        <source>Añade el número de página en el pie al imprimir o exportar a PDF</source>
+        <translation>Dodaje numer strony w stopce przy drukowaniu lub eksporcie do PDF</translation>
+    </message>
+    <message>
+        <location filename="../src/app/mainwindowmenus.cpp" line="765"/>
         <source>Interlineado</source>
         <translation>Interlinia</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="762"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="769"/>
         <source>Sencillo</source>
         <translation>Pojedyncza</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="763"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="770"/>
         <source>1,5 líneas</source>
         <translation>1,5 wiersza</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="764"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="771"/>
         <source>Doble</source>
         <translation>Podwójna</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="784"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="791"/>
         <source>Esquema</source>
         <translation>Konspekt</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="789"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="796"/>
         <source>Ir a encabezado...</source>
         <translation>Przejdź do nagłówka...</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="792"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="799"/>
         <source>Salta a un encabezado del documento</source>
         <translation>Przeskocz do nagłówka w dokumencie</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="795"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="802"/>
         <source>Ir a línea...</source>
         <translation>Przejdź do wiersza...</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="798"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="805"/>
         <source>Salta a un número de línea</source>
         <translation>Przeskocz do numeru wiersza</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="801"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="808"/>
         <source>Paleta de comandos...</source>
         <translation>Paleta poleceń...</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="804"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="811"/>
         <source>Busca y ejecuta cualquier acción por su nombre</source>
         <translation>Znajdź i wykonaj dowolną akcję po nazwie</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="810"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="817"/>
         <source>Aumentar letra</source>
         <translation>Powiększ</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="815"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="822"/>
         <source>Reducir letra</source>
         <translation>Pomniejsz</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="819"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="826"/>
         <source>Tamaño normal</source>
         <translation>Rozmiar normalny</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="825"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="832"/>
         <source>Estadísticas del documento...</source>
         <translation>Statystyki dokumentu...</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="828"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="835"/>
         <source>Mostrar contador de palabras</source>
         <translation>Pokaż licznik słów</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="838"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="845"/>
         <source>Mostrar línea y columna</source>
         <translation>Pokaż wiersz i kolumnę</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="848"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="855"/>
         <source>Corrección ortográfica</source>
         <translation>Sprawdzanie pisowni</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="851"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="858"/>
         <source>Subraya las palabras mal escritas según el idioma del documento</source>
         <translation>Podkreśla błędnie napisane słowa w języku dokumentu</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="858"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="865"/>
         <source>Idioma de corrección</source>
         <translation>Język sprawdzania pisowni</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="862"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="869"/>
         <source>Automático (según el documento)</source>
         <translation>Automatycznie (na podstawie dokumentu)</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="883"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="890"/>
         <source>Tema</source>
         <translation>Motyw</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="892"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="899"/>
         <source>Claro</source>
         <translation>Jasny</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="893"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="900"/>
         <source>Oscuro</source>
         <translation>Ciemny</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="894"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="901"/>
         <source>Alto contraste</source>
         <translation>Wysoki kontrast</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="924"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="931"/>
         <source>Seguir el sistema</source>
         <translation>Zgodnie z systemem</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="928"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="935"/>
         <source>Usa el tema claro u oscuro según la configuración del sistema operativo</source>
         <translation>Używa jasnego lub ciemnego motywu zgodnie z ustawieniem systemu operacyjnego</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="942"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="949"/>
         <source>Luz cálida nocturna</source>
         <translation>Ciepłe światło nocne</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="946"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="953"/>
         <source>Tiñe el fondo del editor de tono ámbar según la hora, más cálido de noche</source>
         <translation>Zabarwia tło edytora na bursztynowo zależnie od pory dnia, cieplej w nocy</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="984"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="991"/>
         <source>A&amp;yuda</source>
         <translation>Po&amp;moc</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="985"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="992"/>
         <source>&amp;Manual</source>
         <translation>&amp;Podręcznik</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="989"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="996"/>
         <source>&amp;Acerca de</source>
         <translation>&amp;O programie</translation>
     </message>
@@ -1070,7 +1080,7 @@
         <translation>Edytor WYSIWYG Markdown w Qt6 + C++17.</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="995"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="1002"/>
         <source>Formato</source>
         <translation>Format</translation>
     </message>
@@ -1197,12 +1207,12 @@
         <translation>Kliknij dwukrotnie wzór, aby go edytować (Ctrl+Shift+F, aby wstawić kolejny).</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="180"/>
+        <location filename="../src/export/exportcontroller.cpp" line="188"/>
         <source>Imprimir</source>
         <translation>Drukowanie</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="186"/>
+        <location filename="../src/export/exportcontroller.cpp" line="194"/>
         <source>Documento enviado a la impresora.</source>
         <translation>Dokument wysłany do drukarki.</translation>
     </message>
@@ -1217,53 +1227,53 @@
         <translation>Język eksportu:</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="211"/>
-        <location filename="../src/export/exportcontroller.cpp" line="229"/>
+        <location filename="../src/export/exportcontroller.cpp" line="219"/>
+        <location filename="../src/export/exportcontroller.cpp" line="237"/>
         <source>No hay texto seleccionado.</source>
         <translation>Nie zaznaczono tekstu.</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="216"/>
+        <location filename="../src/export/exportcontroller.cpp" line="224"/>
         <source>Imprimir selección</source>
         <translation>Drukuj zaznaczenie</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="220"/>
+        <location filename="../src/export/exportcontroller.cpp" line="228"/>
         <source>Selección enviada a la impresora.</source>
         <translation>Zaznaczenie wysłano do drukarki.</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="233"/>
+        <location filename="../src/export/exportcontroller.cpp" line="241"/>
         <source>Exportar selección a PDF</source>
         <translation>Eksportuj zaznaczenie do PDF</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="252"/>
+        <location filename="../src/export/exportcontroller.cpp" line="260"/>
         <source>Vista previa de impresión</source>
         <translation>Podgląd wydruku</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="276"/>
+        <location filename="../src/export/exportcontroller.cpp" line="284"/>
         <source>Copiado como HTML al portapapeles.</source>
         <translation>Skopiowano jako HTML do schowka.</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="291"/>
+        <location filename="../src/export/exportcontroller.cpp" line="299"/>
         <source>Copiado como Markdown al portapapeles.</source>
         <translation>Skopiowano jako Markdown do schowka.</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="333"/>
+        <location filename="../src/export/exportcontroller.cpp" line="341"/>
         <source>Exportar a ODF</source>
         <translation>Eksportuj do ODF</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="334"/>
+        <location filename="../src/export/exportcontroller.cpp" line="342"/>
         <source>Documento ODF (*.odt)</source>
         <translation>Dokument ODF (*.odt)</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="336"/>
+        <location filename="../src/export/exportcontroller.cpp" line="344"/>
         <source>No se pudo exportar a ODF:
 %1
 
@@ -1274,22 +1284,22 @@
 %2</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="337"/>
+        <location filename="../src/export/exportcontroller.cpp" line="345"/>
         <source>Exportado a ODF: %1</source>
         <translation>Wyeksportowano do ODF: %1</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="346"/>
+        <location filename="../src/export/exportcontroller.cpp" line="354"/>
         <source>Exportar a DOCX</source>
         <translation>Eksportuj do DOCX</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="347"/>
+        <location filename="../src/export/exportcontroller.cpp" line="355"/>
         <source>Documento Word (*.docx)</source>
         <translation>Dokument Word (*.docx)</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="349"/>
+        <location filename="../src/export/exportcontroller.cpp" line="357"/>
         <source>No se pudo exportar a DOCX:
 %1
 
@@ -1300,22 +1310,22 @@
 %2</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="350"/>
+        <location filename="../src/export/exportcontroller.cpp" line="358"/>
         <source>Exportado a DOCX: %1</source>
         <translation>Wyeksportowano do DOCX: %1</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="359"/>
+        <location filename="../src/export/exportcontroller.cpp" line="367"/>
         <source>Exportar a EPUB</source>
         <translation>Eksportuj do EPUB</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="360"/>
+        <location filename="../src/export/exportcontroller.cpp" line="368"/>
         <source>Libro EPUB (*.epub)</source>
         <translation>Książka EPUB (*.epub)</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="362"/>
+        <location filename="../src/export/exportcontroller.cpp" line="370"/>
         <source>No se pudo exportar a EPUB:
 %1
 
@@ -1326,37 +1336,37 @@
 %2</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="363"/>
+        <location filename="../src/export/exportcontroller.cpp" line="371"/>
         <source>Exportado a EPUB: %1</source>
         <translation>Wyeksportowano do EPUB: %1</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="372"/>
+        <location filename="../src/export/exportcontroller.cpp" line="380"/>
         <source>Exportar a texto plano</source>
         <translation>Eksportuj do zwykłego tekstu</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="373"/>
+        <location filename="../src/export/exportcontroller.cpp" line="381"/>
         <source>Texto plano (*.txt)</source>
         <translation>Zwykły tekst (*.txt)</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="376"/>
+        <location filename="../src/export/exportcontroller.cpp" line="384"/>
         <source>Exportado a texto plano: %1</source>
         <translation>Wyeksportowano do zwykłego tekstu: %1</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="389"/>
+        <location filename="../src/export/exportcontroller.cpp" line="397"/>
         <source>Exportar a LaTeX</source>
         <translation>Eksportuj do LaTeX</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="390"/>
+        <location filename="../src/export/exportcontroller.cpp" line="398"/>
         <source>Documento LaTeX (*.tex)</source>
         <translation>Dokument LaTeX (*.tex)</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="393"/>
+        <location filename="../src/export/exportcontroller.cpp" line="401"/>
         <source>Exportado a LaTeX: %1</source>
         <translation>Wyeksportowano do LaTeX: %1</translation>
     </message>
@@ -1583,29 +1593,29 @@ Czy chcesz je odzyskać?</translation>
         <translation>Wiersze danych:</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="297"/>
+        <location filename="../src/export/exportcontroller.cpp" line="305"/>
         <source>Exportar a PDF</source>
         <translation>Eksportuj do PDF</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="234"/>
-        <location filename="../src/export/exportcontroller.cpp" line="297"/>
+        <location filename="../src/export/exportcontroller.cpp" line="242"/>
+        <location filename="../src/export/exportcontroller.cpp" line="305"/>
         <source>PDF (*.pdf)</source>
         <translation>PDF (*.pdf)</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="242"/>
-        <location filename="../src/export/exportcontroller.cpp" line="310"/>
+        <location filename="../src/export/exportcontroller.cpp" line="250"/>
+        <location filename="../src/export/exportcontroller.cpp" line="318"/>
         <source>Exportado a PDF: %1</source>
         <translation>Wyeksportowano do PDF: %1</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="317"/>
+        <location filename="../src/export/exportcontroller.cpp" line="325"/>
         <source>Exportar a HTML</source>
         <translation>Eksportuj do HTML</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="318"/>
+        <location filename="../src/export/exportcontroller.cpp" line="326"/>
         <source>HTML (*.html *.htm)</source>
         <translation>HTML (*.html *.htm)</translation>
     </message>
@@ -1618,9 +1628,9 @@ Czy chcesz je odzyskać?</translation>
         <translation>Błąd</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="320"/>
-        <location filename="../src/export/exportcontroller.cpp" line="375"/>
-        <location filename="../src/export/exportcontroller.cpp" line="392"/>
+        <location filename="../src/export/exportcontroller.cpp" line="328"/>
+        <location filename="../src/export/exportcontroller.cpp" line="383"/>
+        <location filename="../src/export/exportcontroller.cpp" line="400"/>
         <source>No se pudo escribir:
 %1
 
@@ -1631,7 +1641,7 @@ Czy chcesz je odzyskać?</translation>
 %2</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="321"/>
+        <location filename="../src/export/exportcontroller.cpp" line="329"/>
         <source>Exportado a HTML: %1</source>
         <translation>Wyeksportowano do HTML: %1</translation>
     </message>
@@ -1748,7 +1758,7 @@ Czy chcesz go odzyskać?</translation>
         <translation>%1[*] — md-editor</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="956"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="963"/>
         <source>Automático (sistema)</source>
         <translation>Automatyczny (system)</translation>
     </message>
@@ -1779,7 +1789,7 @@ Czy chcesz go odzyskać?</translation>
         <translation>Wyśrodkowuje wiersz kursora i przygasza wszystko poza bieżącym akapitem</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="968"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="975"/>
         <source>Idioma</source>
         <translation>Język</translation>
     </message>

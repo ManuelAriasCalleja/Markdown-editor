@@ -363,6 +363,9 @@ Sie können auch **nur die Auswahl als PDF** exportieren und die
 **Datei → Drucken** (Strg+P) öffnet den Systemdialog; **Auswahl drucken** druckt
 nur das Markierte.
 
+**Ansicht → Seitenzahlen beim Drucken** (standardmäßig aktiv) fügt die Seitenzahl in
+der Fußzeile (`N / M`) beim Drucken und beim PDF-Export hinzu.
+
 ## Themes und Aussehen
 
 - **Ansicht → Theme** bietet Hell, Dunkel, GitHub Light, GitHub Dark, Monokai, Hoher Kontrast, Solarized Light und Solarized Dark. **Dem System folgen** passt das helle/dunkle Theme an das des
