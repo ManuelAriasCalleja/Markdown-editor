@@ -2,6 +2,7 @@
 
 #include <QDir>
 #include <QFile>
+#include <QFont>
 #include <QTemporaryDir>
 #include <QTextDocument>
 #include <QXmlStreamReader>
@@ -42,6 +43,7 @@ private slots:
     void twoDFormulaExpandsForHtmlAndLatex();
     void plainTextFlattensTwoDFormula();
     void codeHighlightingBakedIntoExport();
+    void cloneNormalizesFontSizeAwayFromZoom();
 };
 
 // ¿`xml` es XML bien formado? (para validar las piezas del EPUB).
@@ -378,6 +380,26 @@ void TestExporters::codeHighlightingBakedIntoExport()
     // El azul de keyword del tema claro (#0000ff) del «int»/«return».
     QVERIFY2(baked->toHtml().contains(QStringLiteral("color:#0000ff"), Qt::CaseInsensitive),
              "el resaltado de código debe conservarse en la exportación");
+}
+
+// El zoom de interfaz agranda la fuente del editor (y con ella el defaultFont del
+// documento). La exportación NO debe heredar ese tamaño de pantalla: cloneForExport
+// normaliza el cuerpo a un tamaño estándar, aunque el origen venga inflado.
+void TestExporters::cloneNormalizesFontSizeAwayFromZoom()
+{
+    QTextDocument doc;
+    doc.setMarkdown(QStringLiteral("# Título\n\nCuerpo del documento.\n"));
+    QFont zoomed = doc.defaultFont();
+    zoomed.setPointSizeF(30.0);  // simula un zoom fuerte
+    doc.setDefaultFont(zoomed);
+
+    std::unique_ptr<QTextDocument> flat(mdexport::cloneForExport(&doc));
+    // Independiente del tamaño de pantalla: normalizado a 11 pt, no 30.
+    QCOMPARE(flat->defaultFont().pointSizeF(), 11.0);
+    // La familia y demás atributos se conservan.
+    QCOMPARE(flat->defaultFont().family(), doc.defaultFont().family());
+    // Y el HTML resultante no lleva el tamaño inflado.
+    QVERIFY(!flat->toHtml().contains(QStringLiteral("font-size:30")));
 }
 
 QTEST_MAIN(TestExporters)

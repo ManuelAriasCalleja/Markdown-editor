@@ -1283,6 +1283,21 @@ QTextDocument *cloneForExport(const QTextDocument *src)
     // Recolectamos primero y aplicamos en orden descendente para no invalidar
     // posiciones (las expansiones cambian la longitud).
     QTextDocument *out = src->clone();
+
+    // Normaliza el TAMAÑO de la fuente por defecto a un cuerpo estándar. El zoom de
+    // interfaz se aplica agrandando la fuente del editor (editor->setFont), y clone()
+    // copia esa fuente aumentada como fuente por defecto del documento: sin esto, el
+    // zoom de PANTALLA se colaría en la impresión, el PDF y las exportaciones
+    // (HTML/ODF/EPUB), que saldrían con una letra desproporcionada. Se conserva la
+    // familia y demás atributos; los encabezados usan pasos relativos
+    // (FontSizeAdjustment), así que reescalan proporcionalmente solos. DOCX y LaTeX
+    // no pasan por aquí: llevan sus propios tamaños fijos. 11 pt = cuerpo estándar,
+    // igual que el estilo Normal del DOCX.
+    constexpr qreal kExportBodyPointSize = 11.0;
+    QFont df = out->defaultFont();
+    df.setPointSizeF(kExportBodyPointSize);
+    out->setDefaultFont(df);
+
     bakeCodeHighlighting(src, out);  // conserva el color del código (overlay -> char format)
     QTextCursor c(out);
     struct MathEdit { int start; int end; bool isObject; QString tex; QTextCharFormat cleared; };

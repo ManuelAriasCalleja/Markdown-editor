@@ -19,6 +19,12 @@ y el proyecto usa [versionado semántico](https://semver.org/lang/es/).
   un contador **«N de M»** en la barra. «Reemplazar todo» reusa el mismo motor de
   coincidencias.
 
+### Corregido
+- **El zoom de la interfaz ya no afecta al tamaño de letra al imprimir ni al
+  exportar** (PDF, HTML, ODF, EPUB): la salida usa un cuerpo estándar,
+  independiente del zoom de pantalla. Antes, con la interfaz ampliada, el texto
+  impreso/exportado salía desproporcionadamente grande.
+
 ## [2.4.0] — 2026-07-01
 
 ### Añadido
