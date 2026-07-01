@@ -284,6 +284,8 @@ einer Zeilennummer (in der Quelltextansicht zur Zeile des Markdowns).
   geschätzte Lesezeit (des Dokuments oder der Auswahl).
 - **Ansicht → Wortzähler anzeigen** aktiviert einen dauerhaften Zähler in der
   Statusleiste.
+- **Ansicht → Zeile und Spalte anzeigen** zeigt die Cursorposition (Zeile und
+  Spalte) in der Statusleiste an.
 
 ## Ablenkungsfreier Modus
 

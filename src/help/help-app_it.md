@@ -275,6 +275,8 @@ cursore a un numero di riga (nella vista sorgente, alla riga del Markdown).
   paragrafi, frasi e tempo di lettura stimato (del documento o della selezione).
 - **Visualizza → Mostra conteggio parole** attiva un contatore permanente nella
   barra di stato.
+- **Visualizza → Mostra riga e colonna** mostra la posizione del cursore (riga e
+  colonna) nella barra di stato.
 
 ## Modalità senza distrazioni
 

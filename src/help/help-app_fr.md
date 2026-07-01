@@ -280,6 +280,8 @@ sur un numéro de ligne (dans la vue source, sur la ligne du Markdown).
   sélection).
 - **Affichage → Afficher le compteur de mots** active un compteur permanent dans
   la barre d'état.
+- **Affichage → Afficher la ligne et la colonne** affiche la position du curseur
+  (ligne et colonne) dans la barre d'état.
 
 ## Mode sans distraction
 

@@ -279,6 +279,8 @@ cursor naar een regelnummer (in de bronweergave, naar de regel van de Markdown).
   geschatte leestijd (van het document of de selectie).
 - **Beeld → Woordenteller tonen** schakelt een permanente teller in de statusbalk
   in.
+- **Beeld → Regel en kolom tonen** toont de cursorpositie (regel en kolom) in de
+  statusbalk.
 
 ## Afleidingsvrije modus
 

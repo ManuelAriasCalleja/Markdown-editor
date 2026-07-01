@@ -251,6 +251,12 @@ MainWindow::MainWindow(QWidget *parent)
     m_countLabel->setVisible(AppSettings::showWordCount());
     statusBar()->addPermanentWidget(m_countLabel);
 
+    // Indicador de línea y columna del cursor (a la derecha del contador).
+    m_lineColLabel = new QLabel(this);
+    m_lineColLabel->setAccessibleName(tr("Línea y columna"));
+    m_lineColLabel->setVisible(AppSettings::showLineColumn());
+    statusBar()->addPermanentWidget(m_lineColLabel);
+
     // Documento inicial (nuevo) e idioma del corrector. Tras conectar el stack para
     // que el esquema se reconstruya y el título se fije.
     m_stack->documentIo()->reset();
@@ -300,6 +306,10 @@ void MainWindow::connectStack(EditorStack *stack)
     connect(stack, &EditorStack::wordCountShouldUpdate, this, [this, stack] {
         if (stack == m_stack)
             updateWordCount();
+    });
+    connect(stack, &EditorStack::cursorMoved, this, [this, stack] {
+        if (stack == m_stack)
+            updateLineColumn();
     });
     connect(stack, &EditorStack::loadFailed, this, [this](const QString &path) {
         if (m_recentFiles)
@@ -440,6 +450,17 @@ void MainWindow::updateWordCount()
     if (hasSelection)
         count.prepend(tr("Selección: "));
     m_countLabel->setText(count);
+}
+
+void MainWindow::updateLineColumn()
+{
+    if (!m_lineColLabel || !m_lineColLabel->isVisible())
+        return;  // oculto: no malgastar trabajo en cada movimiento del cursor
+    const QTextCursor cursor = m_stack->activeEditor()->textCursor();
+    // 1-based para el usuario; «línea» = bloque (en fuente, la línea del Markdown).
+    m_lineColLabel->setText(tr("Ln %1, Col %2")
+                                .arg(cursor.blockNumber() + 1)
+                                .arg(cursor.positionInBlock() + 1));
 }
 
 void MainWindow::showDocumentStatistics()
@@ -600,6 +621,7 @@ void MainWindow::setActiveStack(EditorStack *stack)
     setWindowTitle(tr("%1[*] — md-editor")
                        .arg(file.isEmpty() ? tr("Sin título") : QFileInfo(file).fileName()));
     updateWordCount();
+    updateLineColumn();
 }
 
 void MainWindow::newTab()

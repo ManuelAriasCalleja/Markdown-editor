@@ -272,6 +272,8 @@ escrevendo parte do seu texto, e **Ir para a linha…** (Ctrl+L) leva o cursor p
   frases e tempo de leitura estimado (do documento ou da seleção).
 - **Ver → Mostrar contador de palavras** ativa um contador permanente na barra de
   estado.
+- **Ver → Mostrar linha e coluna** mostra a posição do cursor (linha e coluna) na
+  barra de estado.
 
 ## Modo sem distrações
 

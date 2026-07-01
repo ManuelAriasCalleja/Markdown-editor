@@ -94,6 +94,8 @@ EditorStack::EditorStack(FindReplaceBar *findBar, OutlinePanel *outline,
     connect(m_split->sourceEditor(), &QTextEdit::cursorPositionChanged,
             this, &EditorStack::wordCountShouldUpdate);
     connect(m_split->sourceEditor(), &QTextEdit::cursorPositionChanged,
+            this, &EditorStack::cursorMoved);
+    connect(m_split->sourceEditor(), &QTextEdit::cursorPositionChanged,
             this, [this] { centerCursorLine(m_split->sourceEditor());
                            applyLineFocus(m_split->sourceEditor()); });
     connect(m_split->sourceEditor(), &QTextEdit::selectionChanged,
@@ -157,6 +159,8 @@ EditorStack::EditorStack(FindReplaceBar *findBar, OutlinePanel *outline,
             this, [this] { m_format->updateActions(); });
     connect(m_editor, &QTextEdit::cursorPositionChanged,
             this, &EditorStack::announceFormulaUnderCursor);
+    connect(m_editor, &QTextEdit::cursorPositionChanged,
+            this, &EditorStack::cursorMoved);
     connect(m_editor, &QTextEdit::cursorPositionChanged,
             this, [this] { centerCursorLine(m_editor); applyLineFocus(m_editor); });
     // Marca «modificado» comparando con la línea base (DocumentIo).

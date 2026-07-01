@@ -746,6 +746,16 @@ void MainWindow::createViewMenu()
         AppSettings::setShowWordCount(on);
     });
 
+    QAction *lineColAction = viewMenu->addAction(tr("Mostrar línea y columna"));
+    lineColAction->setCheckable(true);
+    lineColAction->setChecked(AppSettings::showLineColumn());
+    connect(lineColAction, &QAction::toggled, this, [this](bool on) {
+        m_lineColLabel->setVisible(on);
+        AppSettings::setShowLineColumn(on);
+        if (on)
+            updateLineColumn();  // rellena el texto al activarlo (antes estaba vacío y oculto)
+    });
+
     QAction *spellAction = viewMenu->addAction(tr("Corrección ortográfica"));
     spellAction->setCheckable(true);
     spellAction->setChecked(AppSettings::spellCheck());

@@ -5,6 +5,7 @@
 #include <QApplication>
 #include <QCoreApplication>
 #include <QKeySequence>
+#include <QLabel>
 #include <QSettings>
 #include <QTextBlock>
 #include <QTextBlockFormat>
@@ -48,6 +49,7 @@ private slots:
     void focusModeHasShortcut();
     void noConflictingShortcuts();
     void lineSpacingAppliesToBlocks();
+    void lineColumnIndicatorTracksCursor();
 
 private:
     // Markdown actual del documento WYSIWYG (serialización canónica, igual que
@@ -321,6 +323,35 @@ void TestSplitView::lineSpacingAppliesToBlocks()
     w.m_stack->setLineSpacing(100);  // sencillo de nuevo
     QCOMPARE(w.m_stack->editor()->document()->firstBlock().blockFormat().lineHeight(),
              100.0);
+}
+
+// El indicador Ln/Col sigue al cursor del editor activo (vía la señal cursorMoved,
+// refactor R4: el WYSIWYG no propagaba cursorPositionChanged a la ventana).
+void TestSplitView::lineColumnIndicatorTracksCursor()
+{
+    MainWindow w;
+    w.show();
+    w.m_lineColLabel->setVisible(true);  // updateLineColumn no trabaja si está oculto
+    w.m_stack->editor()->setMarkdown(QStringLiteral("uno\n\ndos cuatro\n"));
+    QApplication::processEvents();
+
+    QTextEdit *ed = w.m_stack->editor();
+    QTextCursor c(ed->document());
+    c.movePosition(QTextCursor::Start);
+    ed->setTextCursor(c);  // dispara cursorPositionChanged → cursorMoved
+    QApplication::processEvents();
+    QVERIFY(w.m_lineColLabel->text().contains(QStringLiteral("Ln 1")));
+    QVERIFY(w.m_lineColLabel->text().contains(QStringLiteral("Col 1")));
+
+    c.movePosition(QTextCursor::End);  // último bloque, tras «dos cuatro»
+    ed->setTextCursor(c);
+    QApplication::processEvents();
+    // Se compara contra el propio cursor para no depender del recuento exacto de bloques.
+    QVERIFY(w.m_lineColLabel->text().contains(
+        QStringLiteral("Ln %1").arg(c.blockNumber() + 1)));
+    QVERIFY(w.m_lineColLabel->text().contains(
+        QStringLiteral("Col %1").arg(c.positionInBlock() + 1)));
+    QVERIFY(c.blockNumber() + 1 >= 2);  // de verdad bajó a la 2ª línea/bloque
 }
 
 QTEST_MAIN(TestSplitView)

@@ -51,6 +51,11 @@ void setZoomLevel(int level);
 bool showWordCount();
 void setShowWordCount(bool on);
 
+/// \brief Mostrar el indicador de línea y columna del cursor en la barra de estado.
+/// Desactivado por defecto.
+bool showLineColumn();
+void setShowLineColumn(bool on);
+
 /// \brief Modo «máquina de escribir»: la línea del cursor se mantiene centrada en
 /// vertical mientras se escribe. Desactivado por defecto.
 bool typewriterMode();

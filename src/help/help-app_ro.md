@@ -273,6 +273,8 @@ linie (în vizualizarea sursă, la linia din Markdown).
   selecției).
 - **Vizualizare → Arată contorul de cuvinte** activează un contor permanent în bara
   de stare.
+- **Vizualizare → Afișează linia și coloana** arată poziția cursorului (linia și
+  coloana) în bara de stare.
 
 ## Mod fără distrageri
 

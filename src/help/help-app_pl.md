@@ -268,6 +268,8 @@ wiersza (w widoku kodu — do wiersza Markdown).
 - **Widok → Statystyki dokumentu…** pokazuje słowa, znaki, akapity, zdania i
   szacowany czas czytania (dokumentu lub zaznaczenia).
 - **Widok → Pokaż licznik słów** włącza stały licznik na pasku stanu.
+- **Widok → Pokaż wiersz i kolumnę** pokazuje pozycję kursora (wiersz i kolumna)
+  na pasku stanu.
 
 ## Tryb bez rozpraszania
 

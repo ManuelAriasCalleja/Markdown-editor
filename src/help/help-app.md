@@ -276,6 +276,8 @@ cursor a un número de línea (en la vista de fuente, a la línea del Markdown).
   frases y tiempo estimado de lectura (del documento o de la selección).
 - **Ver → Mostrar contador de palabras** activa un contador permanente en la
   barra de estado.
+- **Ver → Mostrar línea y columna** muestra en la barra de estado la posición del
+  cursor (línea y columna).
 
 ## Modo sin distracciones
 

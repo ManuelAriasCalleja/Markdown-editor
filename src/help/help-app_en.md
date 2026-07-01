@@ -268,6 +268,8 @@ number (in the source view, to the Markdown line).
 - **View → Document statistics…** shows words, characters, paragraphs, sentences
   and estimated reading time (of the document or the selection).
 - **View → Show word count** enables a permanent counter in the status bar.
+- **View → Show line and column** shows the cursor position (line and column) in
+  the status bar.
 
 ## Distraction-free mode
 

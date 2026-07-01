@@ -187,6 +187,9 @@ private slots:
     // Actualiza el contador de palabras/caracteres de la barra de estado.
     void updateWordCount();
 
+    // Actualiza el indicador de línea y columna del cursor (barra de estado).
+    void updateLineColumn();
+
     // Muestra un mensaje en la barra de estado y, además, lo anuncia a los lectores
     // de pantalla (que no leen la barra de estado por sí sola). Punto único por el
     // que pasa el feedback efímero importante (guardado, exportado, «no encontrado»,
@@ -346,6 +349,7 @@ private:
     FindReplaceBar *m_findBar = nullptr;        // barra de buscar/reemplazar (abajo)
     RecentFilesManager *m_recentFiles = nullptr;  // gestor de "Abrir recientes"
     QLabel *m_countLabel = nullptr;             // contador en la barra de estado
+    QLabel *m_lineColLabel = nullptr;           // indicador Ln/Col en la barra de estado
 };
 
 #endif // MAINWINDOW_H

@@ -113,6 +113,10 @@ signals:
     void documentLoaded();
     /// Hay que recalcular el contador de palabras de la barra de estado.
     void wordCountShouldUpdate();
+    /// El cursor del editor activo se movió (para el indicador Ln/Col). Señal
+    /// explícita en vez de colgarse de `wordCountShouldUpdate` (que solo salta al
+    /// cambiar texto/selección, no al mover el cursor en el editor WYSIWYG).
+    void cursorMoved();
     /// Hay que refrescar el estado de las acciones de formato (bajo el cursor).
     void formatActionsShouldUpdate();
     /// No se pudo cargar `path` (quitar de recientes).
