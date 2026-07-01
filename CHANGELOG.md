@@ -11,6 +11,8 @@ y el proyecto usa [versionado semántico](https://semver.org/lang/es/).
 - **Paleta de comandos** (*Ver → Paleta de comandos*, Ctrl+Shift+P): busca y
   ejecuta cualquier acción de los menús escribiendo parte de su nombre, con
   filtrado difuso y navegación por teclado.
+- **Resaltar la línea actual** (*Ver → Resaltar la línea actual*): marca con un
+  fondo sutil la línea del cursor. Desactivado por defecto.
 
 ## [2.4.0] — 2026-07-01
 

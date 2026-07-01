@@ -331,6 +331,7 @@ seleção** imprime apenas o que está selecionado.
   operativo.
 - **Ver → Luz quente noturna** atenua os azuis do fundo conforme a hora.
 - **Ver → Entrelinha** define a altura de linha do editor: Simples, 1,5 linhas ou Duplo.
+- **Ver → Realçar a linha atual** marca a linha do cursor com um fundo subtil.
 - **Zoom**: Ctrl+roda do rato, Ctrl++ / Ctrl+- e **Tamanho normal** (Ctrl+0)
   escalam toda a interface (não só o texto do editor).
 - **Ver → Idioma** muda o idioma da interface; aplica-se de imediato (a janela é

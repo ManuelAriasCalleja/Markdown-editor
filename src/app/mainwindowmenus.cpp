@@ -141,6 +141,7 @@ void MainWindow::configureStack(EditorStack *stack)
     stack->table()->setActions(m_tableActions);
     stack->table()->updateActions();  // estado inicial (sin tabla bajo el cursor)
     stack->setTypewriterMode(m_typewriterAction && m_typewriterAction->isChecked());
+    stack->setCurrentLineHighlight(AppSettings::currentLineHighlight());
     stack->setLineSpacing(AppSettings::lineSpacing());
 }
 
@@ -687,6 +688,17 @@ void MainWindow::createViewMenu()
         for (int i = 0; i < m_tabs->count(); ++i)
             if (EditorStack *s = stackAt(i))
                 s->setTypewriterMode(on);
+    });
+
+    QAction *currentLineAction = viewMenu->addAction(tr("Resaltar la línea actual"));
+    currentLineAction->setCheckable(true);
+    currentLineAction->setChecked(AppSettings::currentLineHighlight());
+    currentLineAction->setToolTip(tr("Marca con un fondo sutil la línea del cursor"));
+    connect(currentLineAction, &QAction::toggled, this, [this](bool on) {
+        AppSettings::setCurrentLineHighlight(on);
+        for (int i = 0; i < m_tabs->count(); ++i)
+            if (EditorStack *s = stackAt(i))
+                s->setCurrentLineHighlight(on);
     });
 
     // Interlineado del editor (presentación pura, no afecta al Markdown). Submenú

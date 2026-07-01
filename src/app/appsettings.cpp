@@ -15,6 +15,7 @@ inline QString zoomLevelKey()   { return QStringLiteral("zoomLevel"); }
 inline QString showWordCountKey() { return QStringLiteral("showWordCount"); }
 inline QString showLineColumnKey() { return QStringLiteral("showLineColumn"); }
 inline QString typewriterModeKey() { return QStringLiteral("typewriterMode"); }
+inline QString currentLineHighlightKey() { return QStringLiteral("currentLineHighlight"); }
 inline QString lineSpacingKey()    { return QStringLiteral("lineSpacing"); }
 inline QString snippetsKey()    { return QStringLiteral("snippets"); }
 inline QString spellCheckKey()  { return QStringLiteral("spellCheck"); }
@@ -134,6 +135,15 @@ bool AppSettings::typewriterMode()
 void AppSettings::setTypewriterMode(bool on)
 {
     QSettings().setValue(typewriterModeKey(), on);
+}
+
+bool AppSettings::currentLineHighlight()
+{
+    return QSettings().value(currentLineHighlightKey(), false).toBool();  // desactivado por defecto
+}
+void AppSettings::setCurrentLineHighlight(bool on)
+{
+    QSettings().setValue(currentLineHighlightKey(), on);
 }
 
 int AppSettings::lineSpacing()

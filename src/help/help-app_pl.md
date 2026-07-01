@@ -326,6 +326,7 @@ tylko to, co zaznaczone.
   systemu operacyjnego.
 - **Widok → Nocne ciepłe światło** przyciemnia błękity tła zależnie od godziny.
 - **Widok → Interlinia** ustawia odstęp między wierszami w edytorze: Pojedyncza, 1,5 wiersza lub Podwójna.
+- **Widok → Podświetl bieżący wiersz** oznacza wiersz kursora subtelnym tłem.
 - **Powiększenie**: Ctrl+kółko myszy, Ctrl++ / Ctrl+- i **Rozmiar normalny**
   (Ctrl+0) skalują cały interfejs (nie tylko tekst edytora).
 - **Widok → Język** zmienia język interfejsu; stosuje się od razu (okno jest

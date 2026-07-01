@@ -338,6 +338,7 @@ tipărește doar ce este selectat.
 - **Vizualizare → Lumină caldă nocturnă** atenuează albastrurile fundalului în
   funcție de oră.
 - **Vizualizare → Spațiere între rânduri** stabilește înălțimea rândului în editor: Simplă, 1,5 rânduri sau Dublă.
+- **Vizualizare → Evidențiază linia curentă** marchează linia cursorului cu un fundal subtil.
 - **Zoom**: Ctrl+rotița mouse-ului, Ctrl++ / Ctrl+- și **Dimensiune normală**
   (Ctrl+0) scalează întreaga interfață (nu doar textul editorului).
 - **Vizualizare → Limbă** schimbă limba interfeței; se aplică imediat (fereastra

@@ -338,6 +338,7 @@ solo ciò che è selezionato.
   sistema operativo.
 - **Visualizza → Luce calda notturna** attenua i blu dello sfondo in base all'ora.
 - **Visualizza → Interlinea** imposta l'altezza di riga dell'editor: Singola, 1,5 righe o Doppia.
+- **Visualizza → Evidenzia la riga corrente** segna la riga del cursore con uno sfondo tenue.
 - **Zoom**: Ctrl+rotellina, Ctrl++ / Ctrl+- e **Dimensione normale** (Ctrl+0)
   scalano tutta l'interfaccia (non solo il testo dell'editor).
 - **Visualizza → Lingua** cambia la lingua dell'interfaccia; si applica all'istante

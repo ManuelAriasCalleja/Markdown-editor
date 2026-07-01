@@ -338,6 +338,7 @@ selección** imprime solo lo seleccionado.
 - **Ver → Luz cálida nocturna** atenúa los azules del fondo según la hora.
 - **Ver → Interlineado** ajusta la altura de línea del editor: Sencillo, 1,5
   líneas o Doble.
+- **Ver → Resaltar la línea actual** marca con un fondo sutil la línea del cursor.
 - **Zoom**: Ctrl+rueda del ratón, Ctrl++ / Ctrl+- y **Tamaño normal** (Ctrl+0)
   escalan toda la interfaz (no sólo el texto del editor).
 - **Ver → Idioma** cambia el idioma de la interfaz; se aplica al instante (recrea la ventana).

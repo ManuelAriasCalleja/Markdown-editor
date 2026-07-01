@@ -28,6 +28,7 @@
 #include "formatcontroller.h"
 #include "formulacontroller.h"
 #include "insertcontroller.h"
+#include "linehighlight.h"
 #include "markdownrender.h"
 #include "markdowntidy.h"
 #include "mathblocks.h"
@@ -358,14 +359,33 @@ QList<QTextEdit::ExtraSelection> EditorStack::focusDimSelections(QTextEdit *ed) 
     return selections;
 }
 
+QList<QTextEdit::ExtraSelection> EditorStack::currentLineSelections(QTextEdit *ed) const
+{
+    QList<QTextEdit::ExtraSelection> selections;
+    if (!ed || !m_currentLineHighlight)
+        return selections;
+    QTextEdit::ExtraSelection sel;
+    sel.format.setBackground(mdlinehighlight::currentLineColor(
+        ed->palette().color(QPalette::Base), ed->palette().color(QPalette::Highlight)));
+    // FullWidthSelection pinta el fondo de toda la línea; requiere que el cursor no
+    // tenga selección propia.
+    sel.format.setProperty(QTextFormat::FullWidthSelection, true);
+    sel.cursor = ed->textCursor();
+    sel.cursor.clearSelection();
+    selections.append(sel);
+    return selections;
+}
+
 void EditorStack::rebuildExtraSelections(QTextEdit *ed)
 {
     if (!ed)
         return;
     // Fusiona todas las capas y aplica en una sola llamada (este es el único
     // setExtraSelections del componente). El orden importa cuando dos capas se
-    // solapan: las posteriores pintan encima.
+    // solapan: las posteriores pintan encima. La línea actual va primero (fondo)
+    // para que las coincidencias (#13) y la atenuación se vean por encima.
     QList<QTextEdit::ExtraSelection> selections;
+    selections += currentLineSelections(ed);
     selections += focusDimSelections(ed);
     ed->setExtraSelections(selections);
 }
@@ -376,6 +396,14 @@ void EditorStack::setTypewriterMode(bool on)
     centerCursorLine(activeEditor());  // centra ya, sin esperar a moverse
     // Aplica/limpia la atenuación en ambos editores (cualquiera puede estar visible
     // en la vista dividida).
+    rebuildExtraSelections(m_editor);
+    rebuildExtraSelections(m_split->sourceEditor());
+}
+
+void EditorStack::setCurrentLineHighlight(bool on)
+{
+    m_currentLineHighlight = on;
+    // Recompone las capas en ambos editores (cualquiera puede estar visible).
     rebuildExtraSelections(m_editor);
     rebuildExtraSelections(m_split->sourceEditor());
 }

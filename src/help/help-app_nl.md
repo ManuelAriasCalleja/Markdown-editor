@@ -342,6 +342,7 @@ afdrukken** drukt alleen het geselecteerde af.
 - **Beeld → Nachtelijk warm licht** dempt de blauwtinten van de achtergrond
   afhankelijk van het tijdstip.
 - **Beeld → Regelafstand** stelt de regelhoogte van de editor in: Enkel, 1,5 regel of Dubbel.
+- **Beeld → Huidige regel markeren** markeert de regel van de cursor met een subtiele achtergrond.
 - **Zoom**: Ctrl+muiswiel, Ctrl++ / Ctrl+- en **Normale grootte** (Ctrl+0) schalen
   de hele interface (niet alleen de editortekst).
 - **Beeld → Taal** wijzigt de interfacetaal; ze wordt meteen toegepast (het venster

@@ -342,6 +342,7 @@ l'**Aperçu avant impression**.
   du système.
 - **Affichage → Lumière chaude nocturne** atténue les bleus du fond selon l'heure.
 - **Affichage → Interligne** règle la hauteur de ligne de l'éditeur : Simple, 1,5 ligne ou Double.
+- **Affichage → Surligner la ligne actuelle** marque la ligne du curseur avec un fond discret.
 - **Zoom** : Ctrl+molette, Ctrl++ / Ctrl+- et **Taille normale** (Ctrl+0) mettent
   à l'échelle toute l'interface (pas seulement le texte de l'éditeur).
 - **Affichage → Langue** change la langue de l'interface ; elle s'applique

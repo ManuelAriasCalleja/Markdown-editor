@@ -90,6 +90,11 @@ public:
     /// activarlo, centra ya el editor activo.
     void setTypewriterMode(bool on);
 
+    /// Resaltado de la línea actual: pinta un fondo sutil a todo el ancho de la
+    /// línea del cursor (presentación pura, capa del compositor de extraSelections).
+    /// Lo activa/desactiva la ventana por ajuste.
+    void setCurrentLineHighlight(bool on);
+
     /// Interlineado del editor en porcentaje de la altura natural (100 = sencillo).
     /// Es presentación pura (no se serializa); se reaplica tras cargar y en cada
     /// sustitución del cuerpo, porque setMarkdown rehace los formatos de bloque.
@@ -155,6 +160,11 @@ private:
     // `mdtypewriter`). Vacía si el modo está apagado.
     QList<QTextEdit::ExtraSelection> focusDimSelections(QTextEdit *ed) const;
     bool m_typewriter = false;
+
+    // Capa de la línea actual: un fondo a todo el ancho en la línea del cursor.
+    // Vacía si el resaltado está apagado (color en `mdlinehighlight`).
+    QList<QTextEdit::ExtraSelection> currentLineSelections(QTextEdit *ed) const;
+    bool m_currentLineHighlight = false;
 
     // Aplica el interlineado actual (m_lineSpacing) a todos los bloques de `ed`.
     // Presentación pura: preserva la marca «modificado» de Qt (como styleTables).

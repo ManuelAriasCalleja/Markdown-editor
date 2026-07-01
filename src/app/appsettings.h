@@ -61,6 +61,10 @@ void setShowLineColumn(bool on);
 bool typewriterMode();
 void setTypewriterMode(bool on);
 
+/// \brief Resaltar la línea actual con un fondo sutil. Desactivado por defecto.
+bool currentLineHighlight();
+void setCurrentLineHighlight(bool on);
+
 /// \brief Interlineado del editor, en porcentaje de la altura de línea natural
 /// (100 = sencillo, valor por defecto; 150 = 1,5 líneas; 200 = doble). Es
 /// presentación pura: no se serializa al Markdown.

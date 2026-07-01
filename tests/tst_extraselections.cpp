@@ -26,7 +26,14 @@ private slots:
     void focusModeAddsSelections();
     void focusModeOffClearsSelections();
 
+    // #12: resaltado de la línea actual (capa independiente que coexiste con el foco).
+    void currentLineAddsFullWidthSelection();
+    void currentLineCoexistsWithFocus();
+    void currentLineOffClears();
+
 private:
+    // ¿Hay alguna ExtraSelection con FullWidthSelection (la de la línea actual)?
+    static bool hasFullWidth(const QList<QTextEdit::ExtraSelection> &sels);
     // Coloca el cursor del editor WYSIWYG en el bloque `n` (0-based).
     static void placeCursorInBlock(QTextEdit *ed, int n);
 };
@@ -74,6 +81,56 @@ void TestExtraSelections::focusModeOffClearsSelections()
     QVERIFY(!w.m_stack->editor()->extraSelections().isEmpty());
     w.m_stack->setTypewriterMode(false);
     QVERIFY(w.m_stack->editor()->extraSelections().isEmpty());
+}
+
+bool TestExtraSelections::hasFullWidth(const QList<QTextEdit::ExtraSelection> &sels)
+{
+    for (const QTextEdit::ExtraSelection &s : sels)
+        if (s.format.boolProperty(QTextFormat::FullWidthSelection))
+            return true;
+    return false;
+}
+
+void TestExtraSelections::currentLineAddsFullWidthSelection()
+{
+    MainWindow w;
+    w.show();
+    w.m_stack->editor()->setMarkdown(QStringLiteral("uno\n\ndos\n\ntres\n"));
+    placeCursorInBlock(w.m_stack->editor(), 1);
+
+    QVERIFY(!hasFullWidth(w.m_stack->editor()->extraSelections()));  // apagado por defecto
+    w.m_stack->setCurrentLineHighlight(true);
+    QVERIFY(hasFullWidth(w.m_stack->editor()->extraSelections()));
+}
+
+void TestExtraSelections::currentLineCoexistsWithFocus()
+{
+    MainWindow w;
+    w.show();
+    w.m_stack->editor()->setMarkdown(QStringLiteral("uno\n\ndos\n\ntres\n"));
+    placeCursorInBlock(w.m_stack->editor(), 1);
+
+    // Las dos capas activas a la vez: debe haber la de línea (FullWidth) Y las de
+    // atenuación del foco (varias), sin que una borre a la otra (esto es lo que R1
+    // garantiza).
+    w.m_stack->setCurrentLineHighlight(true);
+    w.m_stack->setTypewriterMode(true);
+    const QList<QTextEdit::ExtraSelection> sels = w.m_stack->editor()->extraSelections();
+    QVERIFY(hasFullWidth(sels));       // capa de línea actual
+    QVERIFY(sels.size() >= 2);         // + al menos un tramo de atenuación
+}
+
+void TestExtraSelections::currentLineOffClears()
+{
+    MainWindow w;
+    w.show();
+    w.m_stack->editor()->setMarkdown(QStringLiteral("uno\n\ndos\n\ntres\n"));
+    placeCursorInBlock(w.m_stack->editor(), 1);
+
+    w.m_stack->setCurrentLineHighlight(true);
+    QVERIFY(hasFullWidth(w.m_stack->editor()->extraSelections()));
+    w.m_stack->setCurrentLineHighlight(false);
+    QVERIFY(!hasFullWidth(w.m_stack->editor()->extraSelections()));
 }
 
 QTEST_MAIN(TestExtraSelections)

@@ -66,6 +66,8 @@ add_library(md-editor-core STATIC
     src/editor/formatcontroller.h
     src/editor/insertcontroller.cpp
     src/editor/insertcontroller.h
+    src/editor/linehighlight.cpp
+    src/editor/linehighlight.h
     src/editor/listcontinuation.cpp
     src/editor/listcontinuation.h
     src/editor/tablecontroller.cpp
@@ -425,6 +427,7 @@ if(Qt6Test_FOUND)
         tst_closedtabstack
         tst_commands
         tst_extraselections
+        tst_linehighlight
         tst_texttransform
         tst_typewriter
         tst_snippets
