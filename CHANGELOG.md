@@ -5,6 +5,36 @@ Todos los cambios relevantes de **md-editor** se documentan en este archivo.
 El formato sigue, a grandes rasgos, [Keep a Changelog](https://keepachangelog.com/es/),
 y el proyecto usa [versionado semántico](https://semver.org/lang/es/).
 
+## [2.6.1] — 2026-07-02
+
+Auditoría de robustez: 30 correcciones de estabilidad, round-trip y ciclo de vida
+(ver `ERRORES-DETECTADOS.md`). Cada arreglo con su prueba de regresión donde
+aplicaba; la suite pasa en build normal y bajo ASan+UBSan, y clang-tidy queda limpio.
+
+### Corregido
+- **Cuelgues y cierres inesperados**: doble `delete` del directorio temporal en el
+  render de diagramas cuando el proceso falla; cuelgue O(n²) del parser TeX ante
+  fórmulas hostiles muy anidadas (parser y motor 2D).
+- **Guardado sin pérdida de datos**: escritura atómica y comprobada (`QSaveFile`) en
+  el guardado de documentos, el borrador de recuperación y la exportación; un fallo
+  de disco ya no se reporta como éxito ni deja el archivo truncado.
+- **Fórmulas**: off-by-one al teclear en el borde de una fórmula y al editarla por
+  doble clic; buscar/reemplazar ya no entra dentro de las fórmulas.
+- **Round-trip Markdown**: código en línea con conciencia de fences, cita e
+  indentado y del backtick escapado; cierre de fence por longitud de run al limpiar;
+  las tablas de ejemplo dentro de un fence ya no reciben marcadores de alineación;
+  fórmulas `$$…$$` multilínea y fórmulas dentro de una cita preservadas; corregido el
+  desbordamiento del índice de sentinela.
+- **Interfaz, pestañas y disco**: acciones WYSIWYG y corrector re-sincronizados al
+  cambiar de pestaña; cambios en disco detectados también en pestañas de segundo
+  plano y re-vigilancia tras guardar; el borrador de recuperación se conserva al
+  cerrar; la última pestaña en modo fuente y la cancelación del guardado se respetan;
+  ya no queda una pestaña huérfana si falla la apertura.
+- **Otros**: `baseUrl` correcto en PDF, impresión, vista previa, ODF y exportación de
+  la selección; tabla anidada dentro de tabla; nota al pie sobre una selección; Tab
+  en celdas fusionadas; encabezado que abarca varios bloques; número de lista
+  desbordado; recuento de caracteres UTF-16; escape LaTeX de URLs y rutas.
+
 ## [2.6.0] — 2026-07-02
 
 ### Añadido
