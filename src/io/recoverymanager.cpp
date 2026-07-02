@@ -6,6 +6,7 @@
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
+#include <QSaveFile>
 #include <QStandardPaths>
 #include <QStringConverter>
 #include <QTextStream>
@@ -121,11 +122,16 @@ QString RecoveryManager::readFile(const QString &path)
 
 bool RecoveryManager::writeFile(const QString &path, const QString &text)
 {
-    QFile file(path);
+    // QSaveFile: escritura atómica (temporal + rename). Si el volcado falla a
+    // medias (disco lleno, corte de energía), el borrador ANTERIOR se conserva
+    // íntegro en vez de quedar truncado, y devolvemos false para no escribir la
+    // meta sobre un cuerpo corrupto.
+    QSaveFile file(path);
     if (!file.open(QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Text))
         return false;
     QTextStream out(&file);
     out.setEncoding(QStringConverter::Utf8);
     out << text;
-    return true;
+    out.flush();
+    return out.status() == QTextStream::Ok && file.commit();
 }

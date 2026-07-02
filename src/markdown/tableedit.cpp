@@ -47,6 +47,52 @@ bool isPipeRow(const QString &line)
     return s.length() > 1 && s.startsWith(QLatin1Char('|')) && s.endsWith(QLatin1Char('|'));
 }
 
+// Análisis de una posible línea de fence de código vallado, para no confundir una
+// tabla de EJEMPLO dentro de un bloque de código con una tabla real.
+struct FenceLine {
+    bool ok = false;
+    QChar ch;
+    int len = 0;
+    bool bare = false;           // tras el run solo hay espacios (requisito de cierre)
+    bool backtickAfter = false;  // backticks tras el run (invalida un fence de `` ` ``)
+};
+
+FenceLine fenceOf(const QString &line)
+{
+    FenceLine f;
+    int i = 0;
+    while (i < line.size()
+           && (line.at(i) == QLatin1Char(' ') || line.at(i) == QLatin1Char('\t')))
+        ++i;
+    if (line.size() - i < 3)
+        return f;
+    const QChar c = line.at(i);
+    if (c != QLatin1Char('`') && c != QLatin1Char('~'))
+        return f;
+    int run = 0;
+    while (i < line.size() && line.at(i) == c) {
+        ++i;
+        ++run;
+    }
+    if (run < 3)
+        return f;
+    bool onlySpaces = true;
+    bool hasBacktick = false;
+    for (int j = i; j < line.size(); ++j) {
+        const QChar x = line.at(j);
+        if (x != QLatin1Char(' ') && x != QLatin1Char('\t'))
+            onlySpaces = false;
+        if (x == QLatin1Char('`'))
+            hasBacktick = true;
+    }
+    f.ok = true;
+    f.ch = c;
+    f.len = run;
+    f.bare = onlySpaces;
+    f.backtickAfter = hasBacktick;
+    return f;
+}
+
 QString alignmentToken(Qt::Alignment a)
 {
     if (a & Qt::AlignHCenter)
@@ -91,7 +137,27 @@ QString injectAlignments(const QString &md,
 
     QStringList lines = md.split(QLatin1Char('\n'));
     int table = 0;
+    QChar fenceChar;  // nulo = fuera de un bloque de código vallado
+    int fenceLen = 0;
     for (int i = 0; i + 1 < lines.size() && table < alignments.size(); ++i) {
+        // Salta el contenido de los fences: una tabla de ejemplo dentro de un
+        // bloque de código no es una tabla real y no debe consumir una entrada de
+        // alineación ni reescribirse.
+        const FenceLine f = fenceOf(lines[i]);
+        if (f.ok) {
+            if (fenceChar.isNull()) {
+                if (!(f.ch == QLatin1Char('`') && f.backtickAfter)) {
+                    fenceChar = f.ch;  // abre (un fence de `` ` `` no lleva backticks tras el run)
+                    fenceLen = f.len;
+                }
+            } else if (f.ch == fenceChar && f.len >= fenceLen && f.bare) {
+                fenceChar = QChar();  // cierra
+                fenceLen = 0;
+            }
+            continue;
+        }
+        if (!fenceChar.isNull())
+            continue;  // dentro de un fence: intacto
         // Cabecera de tabla = fila de tubos seguida de una separadora.
         if (!isPipeRow(lines[i]) || !isSeparatorLine(lines[i + 1]))
             continue;

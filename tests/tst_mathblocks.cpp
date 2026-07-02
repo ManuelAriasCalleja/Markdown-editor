@@ -45,6 +45,7 @@ private slots:
     void findFindsMultilineWithContentOnDelimiterLines();
     void findIgnoresMultilineOpenInsideFence();
     void findDiscardsUnclosedMultilineBlock();
+    void findDoesNotOpenMultilineOnEmptyDollarBlock();
     void roundTripPreservesMultilineMath();
     void deeplyNestedTexDoesNotOverflowStack();
     void renderFormulaRunsPicksObjectFor2D();
@@ -375,6 +376,17 @@ void TestMathBlocks::findDiscardsUnclosedMultilineBlock()
 {
     const QString s = QStringLiteral("texto\n$$\n\\sum x\nsin cierre\n");
     QCOMPARE(mdmath::findMath(s).size(), 0);
+}
+
+void TestMathBlocks::findDoesNotOpenMultilineOnEmptyDollarBlock()
+{
+    // Regresión: `$$$$` (bloque vacío) NO debe abrir un bloque multilínea que
+    // engulla los párrafos siguientes; la fórmula real posterior sí se detecta.
+    const QString s = QStringLiteral("$$$$\nhola mundo\n$$x$$\n");
+    const QList<mdmath::Span> spans = mdmath::findMath(s);
+    QCOMPARE(spans.size(), 1);
+    QCOMPARE(spans.first().content, QStringLiteral("x"));
+    QVERIFY(spans.first().block);
 }
 
 // renderFormulaRuns es el despachador: una fórmula con \frac (o gran operador

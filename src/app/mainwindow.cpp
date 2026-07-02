@@ -625,6 +625,10 @@ void MainWindow::setActiveStack(EditorStack *stack)
     if (m_sourceModeAction) {
         m_sourceModeAction->setChecked(stack->split()->sourceMode());
         m_splitAction->setChecked(stack->split()->splitMode());
+        // Las acciones WYSIWYG son únicas y compartidas: re-sincroniza su estado
+        // habilitado con el modo de ESTA pestaña (la anterior pudo dejarlas
+        // deshabilitadas en modo fuente y nadie las re-habilitaba).
+        stack->split()->syncActionsToMode();
         stack->format()->updateActions();
         stack->table()->updateActions();
     }
@@ -633,6 +637,12 @@ void MainWindow::setActiveStack(EditorStack *stack)
     // vez de salirse (si está activo lo mantiene; si no, solo recuerda el destino).
     if (m_distraction)
         m_distraction->retarget(stack->editor(), stack->split());
+
+    // Una pestaña en segundo plano pudo cambiar en disco sin que se atendiera el
+    // aviso (solo se procesa para la activa). Al activarla, re-comprueba el disco;
+    // diferido, para no abrir un diálogo modal dentro del propio cambio de pestaña.
+    if (stack->diskWatcher())
+        QTimer::singleShot(0, stack->diskWatcher(), [w = stack->diskWatcher()] { w->recheck(); });
 
     // Título, indicador de modificado y recuento del documento activo.
     setWindowModified(stack->documentIo()->isModified());
@@ -806,11 +816,16 @@ void MainWindow::openPathInTab(const QString &path)
         }
     // Reusa la pestaña actual si es un documento nuevo vacío y sin cambios; si no,
     // abre en una pestaña nueva.
-    EditorStack *target = (m_stack->documentIo()->currentFile().isEmpty()
-                           && !m_stack->documentIo()->isModified())
-                          ? m_stack : addTab();
+    const bool reuse = m_stack->documentIo()->currentFile().isEmpty()
+                       && !m_stack->documentIo()->isModified();
+    EditorStack *target = reuse ? m_stack : addTab();
     m_tabs->setCurrentWidget(target);
-    target->file()->openFile(path);
+    if (!target->file()->openFile(path) && !reuse) {
+        // La carga falló en una pestaña recién creada: no dejar una pestaña vacía
+        // huérfana (activa y sin documento).
+        m_tabs->removeTab(m_tabs->indexOf(target));
+        target->deleteLater();
+    }
 }
 
 void MainWindow::closeTab(int index)
@@ -821,10 +836,19 @@ void MainWindow::closeTab(int index)
     m_tabs->setCurrentWidget(stack);  // mostrarlo para el posible diálogo de guardado
     if (!stack->file()->maybeSave())
         return;  // el usuario canceló
+    // La pestaña se cierra limpiamente (guardada o descartada): su borrador de
+    // recuperación es basura. Sin esto, reaparecería como falso «documento con
+    // cambios sin guardar» en el siguiente arranque.
+    if (stack->recovery())
+        stack->recovery()->clearDraft();
     // Recuerda su ruta para poder reabrirla (solo documentos con archivo en disco).
     closedtabs::push(m_closedTabs, stack->documentIo()->currentFile());
     if (m_tabs->count() == 1) {
         stack->documentIo()->reset();  // última pestaña: queda como documento nuevo
+        // Si estaba en modo fuente, el panel de fuente conservaba el texto del
+        // documento cerrado (reset solo toca el WYSIWYG): refréscalo para que no
+        // muestre —ni permita resucitar— el documento ya cerrado.
+        stack->split()->refreshSourceFromDocument();
         return;
     }
     m_tabs->removeTab(m_tabs->indexOf(stack));

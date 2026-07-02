@@ -26,10 +26,16 @@ Continuation analyze(const QString &line)
     const QString content = m.captured(6);
 
     QString marker;
-    if (!number.isEmpty())
-        marker = QString::number(number.toInt() + 1) + delim + QLatin1Char(' ');
-    else
+    if (!number.isEmpty()) {
+        // Usa long long y comprueba el desbordamiento: un número enorme (más de
+        // ~10 dígitos) desbordaría int y toInt daría 0, continuando con «1.».
+        bool ok = false;
+        const qlonglong value = number.toLongLong(&ok);
+        const QString next = ok ? QString::number(value + 1) : number;
+        marker = next + delim + QLatin1Char(' ');
+    } else {
         marker = bullet + QLatin1Char(' ');
+    }
     if (isTask)  // la tarea nueva siempre nace sin marcar
         marker += QStringLiteral("[ ] ");
 

@@ -202,8 +202,10 @@ QString inlineLatex(const QTextBlock &block, bool ignoreBold = false)
         }
         lastMathTex.clear();
         if (cf.isImageFormat()) {
+            // La ruta se escapa: `%`, `#`, `{`, `}`, `\` en el nombre romperían el
+            // .tex o inyectarían comandos.
             out += QStringLiteral("\\includegraphics[max width=\\linewidth]{%1}")
-                       .arg(cf.toImageFormat().name());
+                       .arg(latexEscape(cf.toImageFormat().name()));
             continue;
         }
         QString t = latexEscape(frag.text());
@@ -220,7 +222,9 @@ QString inlineLatex(const QTextBlock &block, bool ignoreBold = false)
         if (!ignoreBold && cf.fontWeight() >= QFont::Bold)
             t = QStringLiteral("\\textbf{%1}").arg(t);
         if (cf.isAnchor() && !cf.anchorHref().isEmpty())
-            t = QStringLiteral("\\href{%1}{%2}").arg(cf.anchorHref(), t);
+            // El destino se escapa: un `%` (URLs codificadas) rompería el .tex y un
+            // destino con `}{\...}` inyectaría comandos LaTeX.
+            t = QStringLiteral("\\href{%1}{%2}").arg(latexEscape(cf.anchorHref()), t);
         out += t;
     }
     return out;
@@ -1288,6 +1292,11 @@ QTextDocument *cloneForExport(const QTextDocument *src)
     // Recolectamos primero y aplicamos en orden descendente para no invalidar
     // posiciones (las expansiones cambian la longitud).
     QTextDocument *out = src->clone();
+    // clone() NO copia la baseUrl (ni la caché de recursos): sin ella, las
+    // imágenes de ruta relativa (`![](imagen.png)`) no se resuelven y desaparecen
+    // del PDF, la impresión, la vista previa y el ODF. La copiamos para que
+    // doc->resource() las cargue desde disco.
+    out->setBaseUrl(src->baseUrl());
 
     // Normaliza el TAMAÑO de la fuente por defecto a un cuerpo estándar. El zoom de
     // interfaz se aplica agrandando la fuente del editor (editor->setFont), y clone()

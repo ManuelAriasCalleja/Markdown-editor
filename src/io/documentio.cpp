@@ -9,6 +9,7 @@
 #include <QFile>
 #include <QFileInfo>
 #include <QRegularExpression>
+#include <QSaveFile>
 #include <QStringConverter>
 #include <QTextCharFormat>
 #include <QTextDocument>
@@ -141,7 +142,11 @@ bool DocumentIo::load(const QString &path, QString *errorString)
 
 bool DocumentIo::write(const QString &path, QString *errorString)
 {
-    QFile file(path);
+    // QSaveFile escribe a un temporal y lo renombra atómicamente en commit(): si
+    // el volcado falla (disco lleno, corte de energía), el archivo original queda
+    // intacto en vez de truncarse. Y comprobamos el estado antes de dar por bueno
+    // el guardado, para no actualizar la línea base sobre un archivo corrupto.
+    QSaveFile file(path);
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
         if (errorString)
             *errorString = file.errorString();
@@ -159,7 +164,12 @@ bool DocumentIo::write(const QString &path, QString *errorString)
         out << fm << '\n';
     }
     out << mdtable::documentMarkdown(m_editor->document());
-    file.close();
+    out.flush();
+    if (out.status() != QTextStream::Ok || !file.commit()) {
+        if (errorString)
+            *errorString = file.errorString();
+        return false;
+    }
 
     setCurrentFile(path);
     return true;

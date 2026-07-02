@@ -69,8 +69,15 @@ void FormatController::setHeadingLevel(int level)
     cf.setProperty(QTextFormat::FontSizeAdjustment, level > 0 ? 4 - level : 0);
     cf.setFontWeight(level > 0 ? QFont::Bold : QFont::Normal);
 
-    QTextCursor blockCursor = cursor;
+    // Aplica el tamaño/negrita a TODOS los bloques de la selección (de inicio del
+    // primero a fin del último), no solo al del cursor: con una selección
+    // multibloque, mergeBlockFormat ya puso el headingLevel en todos, pero el
+    // formato visible se quedaba solo en uno (los demás se veían como texto normal
+    // hasta recargar).
+    QTextCursor blockCursor(m_editor->document());
+    blockCursor.setPosition(cursor.selectionStart());
     blockCursor.movePosition(QTextCursor::StartOfBlock);
+    blockCursor.setPosition(cursor.selectionEnd(), QTextCursor::KeepAnchor);
     blockCursor.movePosition(QTextCursor::EndOfBlock, QTextCursor::KeepAnchor);
     blockCursor.mergeCharFormat(cf);
 

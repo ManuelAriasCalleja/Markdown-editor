@@ -358,20 +358,40 @@ bool EditorStack::navigateTableCell(bool forward)
 
     const QTextTableCell cell = table->cellAt(cursor);
     const int cols = table->columns();
+    const int total = table->rows() * cols;
     int index = cell.row() * cols + cell.column();
+    // Con celdas fusionadas, cellAt() devuelve la MISMA celda de origen para todas
+    // las coordenadas que cubre; hay que SALTARLAS o el Tab se quedaría atascado
+    // reseleccionando siempre la misma celda. Se comparan los orígenes (row/column).
+    const auto sameCell = [&cell](const QTextTableCell &other) {
+        return other.row() == cell.row() && other.column() == cell.column();
+    };
     if (forward) {
-        if (++index >= table->rows() * cols) {
-            // Última celda: añade una fila y baja a su primera celda.
-            const int newRow = table->rows();
-            table->appendRows(1);
-            selectCell(table->cellAt(newRow, 0));
-            return true;
+        while (true) {
+            if (++index >= total) {
+                // Última celda: añade una fila y baja a su primera celda.
+                const int newRow = table->rows();
+                table->appendRows(1);
+                selectCell(table->cellAt(newRow, 0));
+                return true;
+            }
+            const QTextTableCell next = table->cellAt(index / cols, index % cols);
+            if (!sameCell(next)) {
+                selectCell(next);
+                return true;
+            }
         }
-    } else if (--index < 0) {
-        return true;  // primera celda: consumido, sin salir de la tabla
+    } else {
+        while (true) {
+            if (--index < 0)
+                return true;  // primera celda: consumido, sin salir de la tabla
+            const QTextTableCell prev = table->cellAt(index / cols, index % cols);
+            if (!sameCell(prev)) {
+                selectCell(prev);
+                return true;
+            }
+        }
     }
-    selectCell(table->cellAt(index / cols, index % cols));
-    return true;
 }
 
 void EditorStack::applyLineSpacing(QTextEdit *ed)

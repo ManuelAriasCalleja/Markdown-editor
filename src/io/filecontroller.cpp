@@ -65,11 +65,13 @@ void FileController::newFromTemplate(const QString &body)
     m_documentIo->loadFromString(body);
 }
 
-void FileController::openFile(const QString &path)
+bool FileController::openFile(const QString &path)
 {
-    m_split->toggleSourceMode(false);  // el archivo cargado se muestra en WYSIWYG
+    // maybeSave PRIMERO: si el usuario cancela, no cambiamos nada (antes ya se había
+    // salido del modo fuente, expulsando al usuario de su vista aunque cancelara).
     if (!maybeSave())
-        return;
+        return false;
+    m_split->toggleSourceMode(false);  // el archivo cargado se muestra en WYSIWYG
 
     rememberCursorPosition();  // guarda dónde estaba el documento que se reemplaza
 
@@ -80,7 +82,7 @@ void FileController::openFile(const QString &path)
                                  "No se pudo abrir el archivo:\n%1\n\n%2")
                                  .arg(path, error));
         emit loadFailed(path);  // si venía de recientes y ya no es accesible
-        return;
+        return false;
     }
     // El front matter se conserva pero no se muestra: avisamos para que no
     // parezca que se ha perdido.
@@ -91,6 +93,7 @@ void FileController::openFile(const QString &path)
         emit statusMessage(path, 0);
 
     restoreCursorPosition();  // reabre el documento donde se dejó
+    return true;
 }
 
 void FileController::openContainingFolder()

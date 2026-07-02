@@ -10,6 +10,9 @@
 #include <QTextDocument>
 #include <QTextEdit>
 
+#include "markdownrender.h"
+#include "tableedit.h"
+
 // ---------------------------------------------------------------------------
 // Transformaciones de texto puras
 // ---------------------------------------------------------------------------
@@ -127,13 +130,27 @@ void BlockConstruct::toggle(QTextEdit *editor) const
 
 namespace {
 
-// Devuelve el Markdown de la selección (preservando el formato en línea).
+// Devuelve el Markdown de la selección por la ruta CANÓNICA (mdtable::
+// documentMarkdown): así las fórmulas TeX salen como `$tex$`, las tablas con su
+// alineación y los code spans sin sobre-escapar, en vez de aplanarse con el
+// toMarkdown crudo (que destruía las fórmulas del texto citado).
 QString selectionToMarkdown(const QTextCursor &cursor)
 {
     QTextDocument tmp;
     QTextCursor tc(&tmp);
     tc.insertFragment(cursor.selection());
-    return tmp.toMarkdown().trimmed();
+    return mdtable::documentMarkdown(&tmp).trimmed();
+}
+
+// Construye un fragmento a partir de Markdown re-renderizado con el MISMO pipeline
+// que la carga (protege y renderiza fórmulas, notas al pie, admoniciones), para que
+// el `$tex$` reinsertado vuelva a ser una fórmula y no texto plano.
+QTextDocumentFragment renderedFragment(const QString &markdown)
+{
+    QTextDocument tmp;
+    tmp.setMarkdown(mdrender::protect(markdown), mdrender::kMarkdownFeatures);
+    mdrender::renderPasses(&tmp);
+    return QTextDocumentFragment(&tmp);
 }
 
 } // namespace
@@ -151,7 +168,7 @@ QTextDocumentFragment Blockquote::buildReplacement(const QTextCursor &selection,
         return {};  // cita vacía: el formato lo pone toggle() vía blockFormat()
     const QString out = removing ? mdblock::removeBlockquoteMarkers(md)
                                  : mdblock::addBlockquoteMarkers(md);
-    return QTextDocumentFragment::fromMarkdown(out);
+    return renderedFragment(out);
 }
 
 QTextBlockFormat Blockquote::blockFormat() const

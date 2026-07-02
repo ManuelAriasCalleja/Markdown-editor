@@ -106,6 +106,16 @@ void SplitViewController::setWysiwygActionsEnabled(bool enabled)
         a->setEnabled(enabled);
 }
 
+void SplitViewController::syncActionsToMode()
+{
+    if (m_sourceMode)
+        setWysiwygActionsEnabled(false);             // fuente-completo: sin WYSIWYG
+    else if (m_splitMode)
+        setWysiwygActionsEnabled(!m_sourceEditor->hasFocus());  // según el panel con foco
+    else
+        setWysiwygActionsEnabled(true);              // WYSIWYG puro: todas activas
+}
+
 void SplitViewController::updateEditorVisibility()
 {
     m_editor->setVisible(!m_sourceMode);                       // oculto solo en fuente-completo

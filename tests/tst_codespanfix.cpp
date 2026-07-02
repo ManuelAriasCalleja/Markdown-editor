@@ -20,6 +20,11 @@ private slots:
     void handlesMultipleSpansInOneLine();
     void leavesUnescapedCodeUnchanged();
     void handlesMultiBacktickSpan();
+    void unescapesBacktickInMultiBacktickSpan();
+    void leavesBlockquotedFenceUntouched();
+    void leavesIndentedCodeBlockUntouched();
+    void processesListContinuationInlineCode();
+    void inlineCodeLineStartingWithBackticks();
     void unclosedBacktickIsLiteral();
     void emptyAndNoCode();
 };
@@ -90,6 +95,49 @@ void TestCodeSpanFix::handlesMultiBacktickSpan()
     // Code span con doble backtick (por contener un backtick): se procesa igual.
     QCOMPARE(mdcodespan::unescapeInlineCode(QStringLiteral("``a\\\\b``")),
              QStringLiteral("``a\\b``"));
+}
+
+void TestCodeSpanFix::unescapesBacktickInMultiBacktickSpan()
+{
+    // Qt escapa el backtick interno de un span de doble backtick como `` \` ``.
+    // Debe revertirse; si no, la barra se acumula en cada guardado.
+    QCOMPARE(mdcodespan::unescapeInlineCode(QStringLiteral("``a\\`b``")),
+             QStringLiteral("``a`b``"));
+}
+
+void TestCodeSpanFix::leavesBlockquotedFenceUntouched()
+{
+    // Un fence dentro de una cita (`> ```) es código verbatim: su contenido no se
+    // des-escapa (antes el prefijo `>` impedía reconocer el fence).
+    const QString in = QStringLiteral("> ```\n> hola \\*\n> ```");
+    QCOMPARE(mdcodespan::unescapeInlineCode(in), in);
+}
+
+void TestCodeSpanFix::leavesIndentedCodeBlockUntouched()
+{
+    // Un bloque de código indentado (4 espacios) es verbatim: Qt no escapa ahí,
+    // así que no hay que des-escapar (borraría el backslash literal del usuario).
+    const QString in = QStringLiteral("parrafo\n\n    codigo `\\*` literal");
+    QCOMPARE(mdcodespan::unescapeInlineCode(in), in);
+}
+
+void TestCodeSpanFix::processesListContinuationInlineCode()
+{
+    // Una continuación de lista indentada 2 espacios NO es código indentado: su
+    // código en línea sí debe des-escaparse (no debe confundirse con un bloque).
+    QCOMPARE(mdcodespan::unescapeInlineCode(
+                 QStringLiteral("- item\n  ver `a\\*b` aqui")),
+             QStringLiteral("- item\n  ver `a*b` aqui"));
+}
+
+void TestCodeSpanFix::inlineCodeLineStartingWithBackticks()
+{
+    // Una línea que EMPIEZA por `` ``` `` pero es código en línea (lleva más
+    // backticks) no es un fence: debe procesarse y no desactivar el resto del
+    // documento.
+    QCOMPARE(mdcodespan::unescapeInlineCode(
+                 QStringLiteral("```a``b``` y `c\\*d` fin")),
+             QStringLiteral("```a``b``` y `c*d` fin"));
 }
 
 void TestCodeSpanFix::unclosedBacktickIsLiteral()

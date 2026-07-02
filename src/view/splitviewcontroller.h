@@ -94,6 +94,11 @@ public slots:
     void toggleSourceMode(bool on);
     /// \brief Entra/sale de la vista dividida.
     void toggleSplitView(bool on);
+    /// \brief Re-sincroniza el estado habilitado de las acciones WYSIWYG (que son
+    /// únicas y compartidas entre pestañas) con el modo de vista de ESTA pestaña.
+    /// Lo llama MainWindow::setActiveStack al cambiar de documento, porque la
+    /// pestaña anterior pudo dejarlas deshabilitadas (modo fuente).
+    void syncActionsToMode();
 
 signals:
     /// \brief El contador de palabras debe recalcularse.

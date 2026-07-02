@@ -73,7 +73,9 @@ public slots:
     /// \brief Documento nuevo prerrellenado con el cuerpo Markdown de una plantilla.
     void newFromTemplate(const QString &body);
     /// \brief Carga y renderiza `path` (preguntando antes si hay cambios sin guardar).
-    void openFile(const QString &path);
+    /// \brief Abre `path` en el documento. Devuelve true si se cargó; false si el
+    /// usuario canceló el guardado previo o la carga falló (ya avisó por su cuenta).
+    bool openFile(const QString &path);
     /// \brief Guarda en la ruta actual, o pide una con «Guardar como» si no la hay.
     bool save();
     /// \brief Pide una ruta con un diálogo y guarda en ella.

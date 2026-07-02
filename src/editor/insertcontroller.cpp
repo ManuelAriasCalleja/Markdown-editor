@@ -27,6 +27,7 @@
 #include <QTextBlock>
 #include <QTextDocumentFragment>
 #include <QTextEdit>
+#include <QTextTable>
 #include <QVBoxLayout>
 
 #include "admonitions.h"
@@ -256,6 +257,18 @@ bool InsertController::handlePastedImage(const QMimeData *source)
 
 void InsertController::insertTable()
 {
+    // Las tablas no se anidan: insertar una dentro de la celda de otra crea una
+    // QTextTable anidada que corrompe la serialización Markdown de AMBAS. Si el
+    // cursor está dentro de una tabla, se avisa y no se inserta.
+    if (m_editor->textCursor().currentTable()) {
+        QMessageBox::information(
+            m_parent, QCoreApplication::translate("MainWindow", "Insertar tabla"),
+            QCoreApplication::translate("MainWindow",
+                "No se puede insertar una tabla dentro de otra. Coloca el cursor "
+                "fuera de la tabla."));
+        return;
+    }
+
     // Un solo diálogo con columnas y filas a la vez (más legible que dos seguidos).
     QDialog dlg(m_parent);
     dlg.setWindowTitle(QCoreApplication::translate("MainWindow", "Insertar tabla"));
@@ -331,8 +344,11 @@ void InsertController::insertFootnote()
     QTextCursor cursor = m_editor->textCursor();
     cursor.beginEditBlock();
 
-    // 1) Referencia `[^id]` en el cursor, con estilo de superíndice.
-    const int refStart = cursor.position();
+    // 1) Referencia `[^id]` en el cursor, con estilo de superíndice. Con una
+    //    selección activa, insertText reemplaza desde selectionStart, así que el
+    //    inicio real de la referencia es ahí (no position(), que puede ser el fin
+    //    de la selección: el formato caería sobre el texto siguiente).
+    const int refStart = cursor.selectionStart();
     const QString ref = QStringLiteral("[^%1]").arg(id);
     cursor.insertText(ref);
     QTextCursor refFmt(doc);

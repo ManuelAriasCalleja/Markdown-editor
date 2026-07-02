@@ -16,6 +16,23 @@
 #include <QTextEdit>
 
 #include "find.h"
+#include "mathblocks.h"
+
+namespace {
+
+// ¿El rango [start, start+length) solapa alguna fórmula? Las fórmulas son grupos
+// atómicos: reemplazar dentro de una corrompe el TeX (la serialización reinyecta
+// el original) o parte el grupo, así que esos aciertos se saltan al reemplazar.
+bool overlapsMath(const QList<QPair<int, int>> &groups, int start, int length)
+{
+    const int end = start + length;
+    for (const auto &g : groups)
+        if (start < g.second && g.first < end)
+            return true;
+    return false;
+}
+
+}  // namespace
 
 FindReplaceBar::FindReplaceBar(QTextEdit *editor, QWidget *parent)
     : QToolBar(tr("Buscar"), parent), m_editor(editor)
@@ -184,10 +201,14 @@ bool FindReplaceBar::doFind(bool backward)
     auto findWithWrap = [this, backward, flags](const auto &needle) -> bool {
         if (m_editor->find(needle, flags))
             return true;
-        QTextCursor c = m_editor->textCursor();
+        const QTextCursor original = m_editor->textCursor();
+        QTextCursor c = original;
         c.movePosition(backward ? QTextCursor::End : QTextCursor::Start);
         m_editor->setTextCursor(c);
-        return m_editor->find(needle, flags);
+        if (m_editor->find(needle, flags))
+            return true;
+        m_editor->setTextCursor(original);  // sin resultado: no movemos al usuario
+        return false;
     };
 
     bool found = false;
@@ -242,8 +263,11 @@ bool FindReplaceBar::selectionMatches(const QTextCursor &c) const
 void FindReplaceBar::replaceOne()
 {
     QTextCursor c = m_editor->textCursor();
-    // Si la selección actual ya es la coincidencia, la reemplazamos.
-    if (selectionMatches(c))
+    // Si la selección actual ya es la coincidencia, la reemplazamos, salvo que
+    // caiga dentro de una fórmula (grupo atómico): en ese caso no se toca.
+    if (selectionMatches(c)
+        && !overlapsMath(mdmath::mathGroupBounds(m_editor->document()),
+                         c.selectionStart(), c.selectionEnd() - c.selectionStart()))
         c.insertText(m_replaceEdit->text());
     findNext();
 }
@@ -268,18 +292,25 @@ void FindReplaceBar::replaceAll()
 
     QTextDocument *doc = m_editor->document();
     const QString replacement = m_replaceEdit->text();
+    // Aciertos que caen dentro de una fórmula: se omiten (reemplazarlos corrompería
+    // el TeX o partiría el grupo). Se calcula una vez sobre el documento actual.
+    const QList<QPair<int, int>> mathGroups = mdmath::mathGroupBounds(doc);
     QTextCursor group(doc);
     group.beginEditBlock();  // un solo paso de deshacer para todos los reemplazos
     // De atrás hacia adelante: así cada reemplazo no invalida las posiciones de los
     // anteriores (que están antes en el documento).
+    int replaced = 0;
     for (int i = matches.size() - 1; i >= 0; --i) {
+        if (overlapsMath(mathGroups, matches.at(i).start, matches.at(i).length))
+            continue;
         QTextCursor c(doc);
         c.setPosition(matches.at(i).start);
         c.setPosition(matches.at(i).start + matches.at(i).length, QTextCursor::KeepAnchor);
         c.insertText(replacement);
+        ++replaced;
     }
     group.endEditBlock();
 
-    emit statusMessage(tr("%n reemplazo(s)", nullptr, int(matches.size())), 3000);
+    emit statusMessage(tr("%n reemplazo(s)", nullptr, replaced), 3000);
     updateMatches();  // el documento cambió: recuenta y re-resalta
 }

@@ -33,8 +33,14 @@ public:
     /// cambios locales ante un conflicto, para no volver a avisar del mismo cambio.
     void setSnapshot(const QByteArray &bytes) { m_snapshot = bytes; }
     /// \brief Suspende/reactiva la comprobación mientras hay un diálogo de conflicto
-    /// abierto, para no apilar otro (su exec corre un bucle de eventos anidado).
-    void setSuspended(bool suspended) { m_suspended = suspended; }
+    /// abierto, para no apilar otro (su exec corre un bucle de eventos anidado). Al
+    /// reactivar, procesa cualquier comprobación que llegó durante la suspensión.
+    void setSuspended(bool suspended);
+    /// \brief Fuerza una comprobación inmediata del disco: re-añade la vigilancia si
+    /// el archivo reapareció y compara con la instantánea (emite externalChange/
+    /// vanished si procede). La llama MainWindow al activar una pestaña que estuvo en
+    /// segundo plano (cuyos avisos no se atendieron) y al recrear la vigilancia.
+    void recheck() { checkChange(); }
 
 signals:
     /// \brief El archivo vigilado cambió en disco respecto a la instantánea; `diskBytes` es
@@ -53,6 +59,7 @@ private:
     QTimer *m_debounce = nullptr;           // agrupa los eventos de un guardado atómico
     QByteArray m_snapshot;                  // últimos bytes en disco (cargados/guardados)
     bool m_suspended = false;               // hay un diálogo de conflicto abierto
+    bool m_pendingCheck = false;            // llegó un cambio mientras estaba suspendido
 };
 
 #endif // DISKWATCHER_H

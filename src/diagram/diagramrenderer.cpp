@@ -10,6 +10,8 @@
 #include <QStandardPaths>
 #include <QTemporaryDir>
 
+#include <memory>
+
 namespace {
 
 QString toolName(mddiagram::Kind kind)
@@ -83,13 +85,22 @@ void DiagramRenderer::startPlantUml(const QString &key, const QString &source)
 {
     auto *proc = new QProcess(this);
     const auto kind = mddiagram::Kind::PlantUml;
+    // Un proceso que crashea emite AMBAS señales (errorOccurred + finished): el
+    // guard `done` evita emitir `failed`/`rendered` por duplicado.
+    auto done = std::make_shared<bool>(false);
     connect(proc, &QProcess::errorOccurred, this, [=] {
+        if (*done)
+            return;
+        *done = true;
         m_inFlight.remove(key);
         emit failed(kind, source, proc->errorString());
         proc->deleteLater();
     });
     connect(proc, &QProcess::finished, this,
             [=](int code, QProcess::ExitStatus) {
+                if (*done)
+                    return;
+                *done = true;
                 m_inFlight.remove(key);
                 QImage img;
                 if (code == 0)
@@ -135,14 +146,24 @@ void DiagramRenderer::startMermaid(const QString &key, const QString &source)
     in.close();
 
     auto *proc = new QProcess(this);
-    auto cleanup = [=] { proc->deleteLater(); delete dir; };
+    // Un proceso que crashea emite AMBAS señales (errorOccurred + finished): el
+    // guard `done` garantiza que la limpieza (y el `delete dir`) corre una sola
+    // vez y que no se emite `failed`/`rendered` por duplicado.
+    auto done = std::make_shared<bool>(false);
     connect(proc, &QProcess::errorOccurred, this, [=] {
+        if (*done)
+            return;
+        *done = true;
         m_inFlight.remove(key);
         emit failed(kind, source, proc->errorString());
-        cleanup();
+        proc->deleteLater();
+        delete dir;
     });
     connect(proc, &QProcess::finished, this,
             [=](int code, QProcess::ExitStatus) {
+                if (*done)
+                    return;
+                *done = true;
                 m_inFlight.remove(key);
                 QImage img;
                 if (code == 0)
@@ -154,7 +175,8 @@ void DiagramRenderer::startMermaid(const QString &key, const QString &source)
                     emit failed(kind, source,
                                 QString::fromUtf8(proc->readAllStandardError()));
                 }
-                cleanup();
+                proc->deleteLater();
+                delete dir;
             });
     proc->start(toolPath(kind),
                 {QStringLiteral("-i"), inPath, QStringLiteral("-o"), outPath,

@@ -58,17 +58,17 @@
 <context>
     <name>DiagramRenderer</name>
     <message>
-        <location filename="../src/diagram/diagramrenderer.cpp" line="72"/>
+        <location filename="../src/diagram/diagramrenderer.cpp" line="74"/>
         <source>herramienta no encontrada</source>
         <translation>ferramenta não encontrada</translation>
     </message>
     <message>
-        <location filename="../src/diagram/diagramrenderer.cpp" line="121"/>
+        <location filename="../src/diagram/diagramrenderer.cpp" line="132"/>
         <source>no se pudo crear un directorio temporal</source>
         <translation>não foi possível criar uma pasta temporária</translation>
     </message>
     <message>
-        <location filename="../src/diagram/diagramrenderer.cpp" line="130"/>
+        <location filename="../src/diagram/diagramrenderer.cpp" line="141"/>
         <source>no se pudo escribir la fuente</source>
         <translation>não foi possível gravar a fonte</translation>
     </message>
@@ -91,7 +91,7 @@
         <translation>Comece a escrever. Formate com a barra de ferramentas ou escrevendo Markdown.</translation>
     </message>
     <message>
-        <location filename="../src/editor/editorstack.cpp" line="683"/>
+        <location filename="../src/editor/editorstack.cpp" line="703"/>
         <source>Fórmula: %1</source>
         <translation>Fórmula: %1</translation>
     </message>
@@ -99,94 +99,94 @@
 <context>
     <name>FindReplaceBar</name>
     <message>
-        <location filename="../src/widgets/findreplacebar.cpp" line="21"/>
-        <location filename="../src/widgets/findreplacebar.cpp" line="34"/>
+        <location filename="../src/widgets/findreplacebar.cpp" line="38"/>
+        <location filename="../src/widgets/findreplacebar.cpp" line="51"/>
         <source>Buscar</source>
         <translation>Localizar</translation>
     </message>
     <message>
-        <location filename="../src/widgets/findreplacebar.cpp" line="31"/>
+        <location filename="../src/widgets/findreplacebar.cpp" line="48"/>
         <source>Buscar: </source>
         <translation>Localizar: </translation>
     </message>
     <message>
-        <location filename="../src/widgets/findreplacebar.cpp" line="38"/>
+        <location filename="../src/widgets/findreplacebar.cpp" line="55"/>
         <source>◀ Anterior</source>
         <translation>◀ Anterior</translation>
     </message>
     <message>
-        <location filename="../src/widgets/findreplacebar.cpp" line="40"/>
+        <location filename="../src/widgets/findreplacebar.cpp" line="57"/>
         <source>Siguiente ▶</source>
         <translation>Próximo ▶</translation>
     </message>
     <message>
-        <location filename="../src/widgets/findreplacebar.cpp" line="45"/>
+        <location filename="../src/widgets/findreplacebar.cpp" line="62"/>
         <source>Reemplazar: </source>
         <translation>Substituir: </translation>
     </message>
     <message>
-        <location filename="../src/widgets/findreplacebar.cpp" line="48"/>
-        <location filename="../src/widgets/findreplacebar.cpp" line="52"/>
+        <location filename="../src/widgets/findreplacebar.cpp" line="65"/>
+        <location filename="../src/widgets/findreplacebar.cpp" line="69"/>
         <source>Reemplazar</source>
         <translation>Substituir</translation>
     </message>
     <message>
-        <location filename="../src/widgets/findreplacebar.cpp" line="54"/>
+        <location filename="../src/widgets/findreplacebar.cpp" line="71"/>
         <source>Todo</source>
         <translation>Tudo</translation>
     </message>
     <message>
-        <location filename="../src/widgets/findreplacebar.cpp" line="58"/>
+        <location filename="../src/widgets/findreplacebar.cpp" line="75"/>
         <source>May/min</source>
         <translation>Maiús/mín</translation>
     </message>
     <message>
-        <location filename="../src/widgets/findreplacebar.cpp" line="59"/>
+        <location filename="../src/widgets/findreplacebar.cpp" line="76"/>
         <source>Distinguir mayúsculas y minúsculas</source>
         <translation>Diferenciar maiúsculas e minúsculas</translation>
     </message>
     <message>
-        <location filename="../src/widgets/findreplacebar.cpp" line="62"/>
+        <location filename="../src/widgets/findreplacebar.cpp" line="79"/>
         <source>Palabra completa</source>
         <translation>Palavra inteira</translation>
     </message>
     <message>
-        <location filename="../src/widgets/findreplacebar.cpp" line="63"/>
+        <location filename="../src/widgets/findreplacebar.cpp" line="80"/>
         <source>Buscar solo palabras completas</source>
         <translation>Procurar apenas palavras inteiras</translation>
     </message>
     <message>
-        <location filename="../src/widgets/findreplacebar.cpp" line="66"/>
+        <location filename="../src/widgets/findreplacebar.cpp" line="83"/>
         <source>Regex</source>
         <translation>Regex</translation>
     </message>
     <message>
-        <location filename="../src/widgets/findreplacebar.cpp" line="67"/>
+        <location filename="../src/widgets/findreplacebar.cpp" line="84"/>
         <source>Usar expresiones regulares</source>
         <translation>Usar expressões regulares</translation>
     </message>
     <message>
-        <location filename="../src/widgets/findreplacebar.cpp" line="72"/>
+        <location filename="../src/widgets/findreplacebar.cpp" line="89"/>
         <source>Coincidencias</source>
         <translation>Correspondências</translation>
     </message>
     <message>
-        <location filename="../src/widgets/findreplacebar.cpp" line="75"/>
+        <location filename="../src/widgets/findreplacebar.cpp" line="92"/>
         <source>✕</source>
         <translation>✕</translation>
     </message>
     <message>
-        <location filename="../src/widgets/findreplacebar.cpp" line="142"/>
+        <location filename="../src/widgets/findreplacebar.cpp" line="159"/>
         <source>Sin coincidencias</source>
         <translation>Sem correspondências</translation>
     </message>
     <message>
-        <location filename="../src/widgets/findreplacebar.cpp" line="147"/>
+        <location filename="../src/widgets/findreplacebar.cpp" line="164"/>
         <source>%1 de %2</source>
         <translation>%1 de %2</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/widgets/findreplacebar.cpp" line="148"/>
+        <location filename="../src/widgets/findreplacebar.cpp" line="165"/>
         <source>%n coincidencia(s)</source>
         <translation>
             <numerusform>%n correspondência</numerusform>
@@ -194,18 +194,18 @@
         </translation>
     </message>
     <message>
-        <location filename="../src/widgets/findreplacebar.cpp" line="161"/>
+        <location filename="../src/widgets/findreplacebar.cpp" line="178"/>
         <source>Expresión regular no válida: %1</source>
         <translation>Expressão regular inválida: %1</translation>
     </message>
     <message>
-        <location filename="../src/widgets/findreplacebar.cpp" line="205"/>
+        <location filename="../src/widgets/findreplacebar.cpp" line="226"/>
         <source>No se encontró: %1</source>
         <translation>Não encontrado: %1</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/widgets/findreplacebar.cpp" line="265"/>
-        <location filename="../src/widgets/findreplacebar.cpp" line="283"/>
+        <location filename="../src/widgets/findreplacebar.cpp" line="289"/>
+        <location filename="../src/widgets/findreplacebar.cpp" line="314"/>
         <source>%n reemplazo(s)</source>
         <translation>
             <numerusform>%n substituição</numerusform>
@@ -578,7 +578,7 @@
     </message>
     <message>
         <location filename="../src/app/mainwindowmenus.cpp" line="484"/>
-        <location filename="../src/editor/insertcontroller.cpp" line="116"/>
+        <location filename="../src/editor/insertcontroller.cpp" line="117"/>
         <source>Enlace</source>
         <translation>Link</translation>
     </message>
@@ -729,9 +729,9 @@
     </message>
     <message>
         <location filename="../src/app/mainwindowmenus.cpp" line="623"/>
-        <location filename="../src/editor/insertcontroller.cpp" line="183"/>
-        <location filename="../src/editor/insertcontroller.cpp" line="200"/>
-        <location filename="../src/editor/insertcontroller.cpp" line="242"/>
+        <location filename="../src/editor/insertcontroller.cpp" line="184"/>
+        <location filename="../src/editor/insertcontroller.cpp" line="201"/>
+        <location filename="../src/editor/insertcontroller.cpp" line="243"/>
         <source>Pegar imagen</source>
         <translation>Colar imagem</translation>
     </message>
@@ -1081,67 +1081,67 @@
         <translation>Sublinha as palavras com erros no idioma do documento</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="940"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="944"/>
         <source>Idioma de corrección</source>
         <translation>Idioma da verificação</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="944"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="948"/>
         <source>Automático (según el documento)</source>
         <translation>Automático (conforme o documento)</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="965"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="973"/>
         <source>Tema</source>
         <translation>Tema</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="974"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="982"/>
         <source>Claro</source>
         <translation>Claro</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="975"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="983"/>
         <source>Oscuro</source>
         <translation>Escuro</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="976"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="984"/>
         <source>Alto contraste</source>
         <translation>Alto contraste</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="1006"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="1014"/>
         <source>Seguir el sistema</source>
         <translation>Seguir o sistema</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="1010"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="1018"/>
         <source>Usa el tema claro u oscuro según la configuración del sistema operativo</source>
         <translation>Usa o tema claro ou escuro conforme a configuração do sistema operativo</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="1024"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="1032"/>
         <source>Luz cálida nocturna</source>
         <translation>Luz quente noturna</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="1028"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="1036"/>
         <source>Tiñe el fondo del editor de tono ámbar según la hora, más cálido de noche</source>
         <translation>Tinge o fundo do editor de âmbar conforme a hora, mais quente à noite</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="1066"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="1074"/>
         <source>A&amp;yuda</source>
         <translation>A&amp;juda</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="1067"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="1075"/>
         <source>&amp;Manual</source>
         <translation>&amp;Manual</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="1071"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="1079"/>
         <source>&amp;Acerca de</source>
         <translation>&amp;Sobre</translation>
     </message>
@@ -1161,7 +1161,7 @@
         <translation>Editor WYSIWYG de Markdown em Qt6 + C++17.</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="1077"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="1085"/>
         <source>Formato</source>
         <translation>Formato</translation>
     </message>
@@ -1171,79 +1171,84 @@
         <translation>Seleção: </translation>
     </message>
     <message>
-        <location filename="../src/editor/formatcontroller.cpp" line="249"/>
+        <location filename="../src/editor/formatcontroller.cpp" line="256"/>
         <source>Coloca el cursor dentro de un bloque de código</source>
         <translation>Posicione o cursor dentro de um bloco de código</translation>
     </message>
     <message>
-        <location filename="../src/editor/formatcontroller.cpp" line="267"/>
+        <location filename="../src/editor/formatcontroller.cpp" line="274"/>
         <source>Lenguaje del bloque</source>
         <translation>Linguagem do bloco</translation>
     </message>
     <message>
-        <location filename="../src/editor/formatcontroller.cpp" line="268"/>
+        <location filename="../src/editor/formatcontroller.cpp" line="275"/>
         <source>Lenguaje (vacío = ninguno):</source>
         <translation>Linguagem (vazio = nenhuma):</translation>
     </message>
     <message>
-        <location filename="../src/editor/insertcontroller.cpp" line="117"/>
+        <location filename="../src/editor/insertcontroller.cpp" line="118"/>
         <source>Texto:</source>
         <translation>Texto:</translation>
     </message>
     <message>
-        <location filename="../src/editor/insertcontroller.cpp" line="118"/>
+        <location filename="../src/editor/insertcontroller.cpp" line="119"/>
         <source>URL:</source>
         <translation>URL:</translation>
     </message>
     <message>
-        <location filename="../src/editor/insertcontroller.cpp" line="150"/>
+        <location filename="../src/editor/insertcontroller.cpp" line="151"/>
         <source>imagen</source>
         <translation>imagem</translation>
     </message>
     <message>
-        <location filename="../src/editor/insertcontroller.cpp" line="152"/>
+        <location filename="../src/editor/insertcontroller.cpp" line="153"/>
         <source>Insertar imagen</source>
         <translation>Inserir imagem</translation>
     </message>
     <message>
-        <location filename="../src/editor/insertcontroller.cpp" line="153"/>
-        <location filename="../src/editor/insertcontroller.cpp" line="201"/>
+        <location filename="../src/editor/insertcontroller.cpp" line="154"/>
+        <location filename="../src/editor/insertcontroller.cpp" line="202"/>
         <source>Texto alternativo:</source>
         <translation>Texto alternativo:</translation>
     </message>
     <message>
-        <location filename="../src/editor/insertcontroller.cpp" line="154"/>
+        <location filename="../src/editor/insertcontroller.cpp" line="155"/>
         <source>Ruta o URL:</source>
         <translation>Caminho ou URL:</translation>
     </message>
     <message>
-        <location filename="../src/editor/insertcontroller.cpp" line="184"/>
+        <location filename="../src/editor/insertcontroller.cpp" line="185"/>
         <source>El portapapeles no contiene ninguna imagen.</source>
         <translation>A área de transferência não contém nenhuma imagem.</translation>
     </message>
     <message>
-        <location filename="../src/editor/insertcontroller.cpp" line="232"/>
+        <location filename="../src/editor/insertcontroller.cpp" line="233"/>
         <source>Guardar imagen pegada</source>
         <translation>Salvar imagem colada</translation>
     </message>
     <message>
-        <location filename="../src/editor/insertcontroller.cpp" line="234"/>
+        <location filename="../src/editor/insertcontroller.cpp" line="235"/>
         <source>Imagen PNG (*.png)</source>
         <translation>Imagem PNG (*.png)</translation>
     </message>
     <message>
-        <location filename="../src/editor/insertcontroller.cpp" line="243"/>
+        <location filename="../src/editor/insertcontroller.cpp" line="244"/>
         <source>No se pudo guardar la imagen en «%1».</source>
         <translation>Não foi possível salvar a imagem em «%1».</translation>
     </message>
     <message>
-        <location filename="../src/editor/insertcontroller.cpp" line="310"/>
+        <location filename="../src/editor/insertcontroller.cpp" line="266"/>
+        <source>No se puede insertar una tabla dentro de otra. Coloca el cursor fuera de la tabla.</source>
+        <translation>Não é possível inserir uma tabela dentro de outra. Coloque o cursor fora da tabela.</translation>
+    </message>
+    <message>
+        <location filename="../src/editor/insertcontroller.cpp" line="323"/>
         <source>Insertar índice</source>
         <translation>Inserir índice</translation>
     </message>
     <message>
         <location filename="../src/app/mainwindowinput.cpp" line="435"/>
-        <location filename="../src/editor/insertcontroller.cpp" line="311"/>
+        <location filename="../src/editor/insertcontroller.cpp" line="324"/>
         <source>El documento no tiene encabezados.</source>
         <translation>O documento não tem títulos.</translation>
     </message>
@@ -1283,78 +1288,78 @@
         <translation>Pré-visualização:</translation>
     </message>
     <message>
-        <location filename="../src/math/formulacontroller.cpp" line="246"/>
+        <location filename="../src/math/formulacontroller.cpp" line="231"/>
         <source>Doble clic en la fórmula para editarla (Ctrl+Shift+F para insertar otra).</source>
         <translation>Clique duas vezes na fórmula para editá-la (Ctrl+Shift+F para inserir outra).</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="188"/>
+        <location filename="../src/export/exportcontroller.cpp" line="196"/>
         <source>Imprimir</source>
         <translation>Imprimir</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="194"/>
+        <location filename="../src/export/exportcontroller.cpp" line="202"/>
         <source>Documento enviado a la impresora.</source>
         <translation>Documento enviado para a impressora.</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="83"/>
+        <location filename="../src/export/exportcontroller.cpp" line="84"/>
         <source>Idioma del documento</source>
         <translation>Idioma do documento</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="84"/>
+        <location filename="../src/export/exportcontroller.cpp" line="85"/>
         <source>Idioma para la exportación:</source>
         <translation>Idioma para a exportação:</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="219"/>
-        <location filename="../src/export/exportcontroller.cpp" line="237"/>
+        <location filename="../src/export/exportcontroller.cpp" line="230"/>
+        <location filename="../src/export/exportcontroller.cpp" line="248"/>
         <source>No hay texto seleccionado.</source>
         <translation>Nenhum texto selecionado.</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="224"/>
+        <location filename="../src/export/exportcontroller.cpp" line="235"/>
         <source>Imprimir selección</source>
         <translation>Imprimir seleção</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="228"/>
+        <location filename="../src/export/exportcontroller.cpp" line="239"/>
         <source>Selección enviada a la impresora.</source>
         <translation>Seleção enviada para a impressora.</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="241"/>
+        <location filename="../src/export/exportcontroller.cpp" line="252"/>
         <source>Exportar selección a PDF</source>
         <translation>Exportar seleção para PDF</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="260"/>
+        <location filename="../src/export/exportcontroller.cpp" line="271"/>
         <source>Vista previa de impresión</source>
         <translation>Pré-visualização de impressão</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="284"/>
+        <location filename="../src/export/exportcontroller.cpp" line="295"/>
         <source>Copiado como HTML al portapapeles.</source>
         <translation>Copiado como HTML para a área de transferência.</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="299"/>
+        <location filename="../src/export/exportcontroller.cpp" line="310"/>
         <source>Copiado como Markdown al portapapeles.</source>
         <translation>Copiado como Markdown para a área de transferência.</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="341"/>
+        <location filename="../src/export/exportcontroller.cpp" line="352"/>
         <source>Exportar a ODF</source>
         <translation>Exportar para ODF</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="342"/>
+        <location filename="../src/export/exportcontroller.cpp" line="353"/>
         <source>Documento ODF (*.odt)</source>
         <translation>Documento ODF (*.odt)</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="344"/>
+        <location filename="../src/export/exportcontroller.cpp" line="355"/>
         <source>No se pudo exportar a ODF:
 %1
 
@@ -1365,22 +1370,22 @@
 %2</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="345"/>
+        <location filename="../src/export/exportcontroller.cpp" line="356"/>
         <source>Exportado a ODF: %1</source>
         <translation>Exportado para ODF: %1</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="354"/>
+        <location filename="../src/export/exportcontroller.cpp" line="365"/>
         <source>Exportar a DOCX</source>
         <translation>Exportar para DOCX</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="355"/>
+        <location filename="../src/export/exportcontroller.cpp" line="366"/>
         <source>Documento Word (*.docx)</source>
         <translation>Documento Word (*.docx)</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="357"/>
+        <location filename="../src/export/exportcontroller.cpp" line="368"/>
         <source>No se pudo exportar a DOCX:
 %1
 
@@ -1391,22 +1396,22 @@
 %2</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="358"/>
+        <location filename="../src/export/exportcontroller.cpp" line="369"/>
         <source>Exportado a DOCX: %1</source>
         <translation>Exportado para DOCX: %1</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="367"/>
+        <location filename="../src/export/exportcontroller.cpp" line="378"/>
         <source>Exportar a EPUB</source>
         <translation>Exportar para EPUB</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="368"/>
+        <location filename="../src/export/exportcontroller.cpp" line="379"/>
         <source>Libro EPUB (*.epub)</source>
         <translation>Livro EPUB (*.epub)</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="370"/>
+        <location filename="../src/export/exportcontroller.cpp" line="381"/>
         <source>No se pudo exportar a EPUB:
 %1
 
@@ -1417,37 +1422,37 @@
 %2</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="371"/>
+        <location filename="../src/export/exportcontroller.cpp" line="382"/>
         <source>Exportado a EPUB: %1</source>
         <translation>Exportado para EPUB: %1</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="380"/>
+        <location filename="../src/export/exportcontroller.cpp" line="391"/>
         <source>Exportar a texto plano</source>
         <translation>Exportar para texto simples</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="381"/>
+        <location filename="../src/export/exportcontroller.cpp" line="392"/>
         <source>Texto plano (*.txt)</source>
         <translation>Texto simples (*.txt)</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="384"/>
+        <location filename="../src/export/exportcontroller.cpp" line="395"/>
         <source>Exportado a texto plano: %1</source>
         <translation>Exportado para texto simples: %1</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="397"/>
+        <location filename="../src/export/exportcontroller.cpp" line="408"/>
         <source>Exportar a LaTeX</source>
         <translation>Exportar para LaTeX</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="398"/>
+        <location filename="../src/export/exportcontroller.cpp" line="409"/>
         <source>Documento LaTeX (*.tex)</source>
         <translation>Documento LaTeX (*.tex)</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="401"/>
+        <location filename="../src/export/exportcontroller.cpp" line="412"/>
         <source>Exportado a LaTeX: %1</source>
         <translation>Exportado para LaTeX: %1</translation>
     </message>
@@ -1521,55 +1526,55 @@
         <translation>Tempo de leitura:</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="677"/>
+        <location filename="../src/app/mainwindow.cpp" line="687"/>
         <source>Abrir</source>
         <translation>Abrir</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="678"/>
+        <location filename="../src/app/mainwindow.cpp" line="688"/>
         <source>Archivos Markdown (*.md *.markdown *.txt);;Todos los archivos (*)</source>
         <translation>Ficheiros Markdown (*.md *.markdown *.txt);;Todos os ficheiros (*)</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="686"/>
+        <location filename="../src/app/mainwindow.cpp" line="696"/>
         <source>Importar HTML</source>
         <translation>Importar HTML</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="687"/>
+        <location filename="../src/app/mainwindow.cpp" line="697"/>
         <source>Páginas HTML (*.html *.htm);;Todos los archivos (*)</source>
         <translation>Páginas HTML (*.html *.htm);;Todos os ficheiros (*)</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="694"/>
-        <location filename="../src/app/mainwindow.cpp" line="717"/>
+        <location filename="../src/app/mainwindow.cpp" line="704"/>
+        <location filename="../src/app/mainwindow.cpp" line="727"/>
         <source>No se pudo leer el archivo:
 %1</source>
         <translation>Não foi possível ler o ficheiro:
 %1</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="709"/>
+        <location filename="../src/app/mainwindow.cpp" line="719"/>
         <source>Importar EPUB</source>
         <translation>Importar EPUB</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="710"/>
+        <location filename="../src/app/mainwindow.cpp" line="720"/>
         <source>Libros EPUB (*.epub);;Todos los archivos (*)</source>
         <translation>Livros EPUB (*.epub);;Todos os ficheiros (*)</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="724"/>
+        <location filename="../src/app/mainwindow.cpp" line="734"/>
         <source>No se pudo importar el EPUB. Comprueba que el archivo es válido.</source>
         <translation>Não foi possível importar o EPUB. Verifique se o ficheiro é válido.</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="735"/>
+        <location filename="../src/app/mainwindow.cpp" line="745"/>
         <source>Pandoc no encontrado</source>
         <translation>Pandoc não encontrado</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="736"/>
+        <location filename="../src/app/mainwindow.cpp" line="746"/>
         <source>Para importar estos formatos hace falta Pandoc. Instálalo con:
 
 %1</source>
@@ -1578,27 +1583,27 @@
 %1</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="742"/>
+        <location filename="../src/app/mainwindow.cpp" line="752"/>
         <source>Importar con Pandoc</source>
         <translation>Importar com Pandoc</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="743"/>
+        <location filename="../src/app/mainwindow.cpp" line="753"/>
         <source>Documentos compatibles (%1);;Todos los archivos (*)</source>
         <translation>Documentos compatíveis (%1);;Todos os ficheiros (*)</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="756"/>
+        <location filename="../src/app/mainwindow.cpp" line="766"/>
         <source>Pandoc no pudo convertir el archivo.</source>
         <translation>O Pandoc não conseguiu converter o ficheiro.</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="762"/>
+        <location filename="../src/app/mainwindow.cpp" line="772"/>
         <source>El archivo no produjo ningún contenido.</source>
         <translation>O ficheiro não produziu qualquer conteúdo.</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="838"/>
+        <location filename="../src/app/mainwindow.cpp" line="862"/>
         <source>No hay pestañas cerradas para reabrir.</source>
         <translation>Não há separadores fechados para reabrir.</translation>
     </message>
@@ -1720,69 +1725,70 @@ Queres recuperá-los?</translation>
         <translation>Revertido para a versão guardada.</translation>
     </message>
     <message>
-        <location filename="../src/editor/insertcontroller.cpp" line="202"/>
+        <location filename="../src/editor/insertcontroller.cpp" line="203"/>
         <source>imagen pegada</source>
         <translation>imagem colada</translation>
     </message>
     <message>
-        <location filename="../src/editor/insertcontroller.cpp" line="261"/>
+        <location filename="../src/editor/insertcontroller.cpp" line="265"/>
+        <location filename="../src/editor/insertcontroller.cpp" line="274"/>
         <source>Insertar tabla</source>
         <translation>Inserir tabela</translation>
     </message>
     <message>
-        <location filename="../src/editor/insertcontroller.cpp" line="269"/>
+        <location filename="../src/editor/insertcontroller.cpp" line="282"/>
         <source>Columnas:</source>
         <translation>Colunas:</translation>
     </message>
     <message>
-        <location filename="../src/editor/insertcontroller.cpp" line="270"/>
+        <location filename="../src/editor/insertcontroller.cpp" line="283"/>
         <source>Filas de datos:</source>
         <translation>Linhas de dados:</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="305"/>
+        <location filename="../src/export/exportcontroller.cpp" line="316"/>
         <source>Exportar a PDF</source>
         <translation>Exportar para PDF</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="242"/>
-        <location filename="../src/export/exportcontroller.cpp" line="305"/>
+        <location filename="../src/export/exportcontroller.cpp" line="253"/>
+        <location filename="../src/export/exportcontroller.cpp" line="316"/>
         <source>PDF (*.pdf)</source>
         <translation>PDF (*.pdf)</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="250"/>
-        <location filename="../src/export/exportcontroller.cpp" line="318"/>
+        <location filename="../src/export/exportcontroller.cpp" line="261"/>
+        <location filename="../src/export/exportcontroller.cpp" line="329"/>
         <source>Exportado a PDF: %1</source>
         <translation>Exportado para PDF: %1</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="325"/>
+        <location filename="../src/export/exportcontroller.cpp" line="336"/>
         <source>Exportar a HTML</source>
         <translation>Exportar para HTML</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="326"/>
+        <location filename="../src/export/exportcontroller.cpp" line="337"/>
         <source>HTML (*.html *.htm)</source>
         <translation>HTML (*.html *.htm)</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="693"/>
-        <location filename="../src/app/mainwindow.cpp" line="716"/>
-        <location filename="../src/app/mainwindow.cpp" line="723"/>
-        <location filename="../src/app/mainwindow.cpp" line="755"/>
-        <location filename="../src/app/mainwindow.cpp" line="761"/>
+        <location filename="../src/app/mainwindow.cpp" line="703"/>
+        <location filename="../src/app/mainwindow.cpp" line="726"/>
+        <location filename="../src/app/mainwindow.cpp" line="733"/>
+        <location filename="../src/app/mainwindow.cpp" line="765"/>
+        <location filename="../src/app/mainwindow.cpp" line="771"/>
         <location filename="../src/app/mainwindowsession.cpp" line="199"/>
-        <location filename="../src/io/filecontroller.cpp" line="78"/>
-        <location filename="../src/io/filecontroller.cpp" line="140"/>
-        <location filename="../src/export/exportcontroller.cpp" line="157"/>
+        <location filename="../src/io/filecontroller.cpp" line="80"/>
+        <location filename="../src/io/filecontroller.cpp" line="143"/>
+        <location filename="../src/export/exportcontroller.cpp" line="165"/>
         <source>Error</source>
         <translation>Erro</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="328"/>
-        <location filename="../src/export/exportcontroller.cpp" line="383"/>
-        <location filename="../src/export/exportcontroller.cpp" line="400"/>
+        <location filename="../src/export/exportcontroller.cpp" line="339"/>
+        <location filename="../src/export/exportcontroller.cpp" line="394"/>
+        <location filename="../src/export/exportcontroller.cpp" line="411"/>
         <source>No se pudo escribir:
 %1
 
@@ -1793,7 +1799,7 @@ Queres recuperá-los?</translation>
 %2</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="329"/>
+        <location filename="../src/export/exportcontroller.cpp" line="340"/>
         <source>Exportado a HTML: %1</source>
         <translation>Exportado para HTML: %1</translation>
     </message>
@@ -1803,7 +1809,7 @@ Queres recuperá-los?</translation>
         <translation>Ctrl+clique para abrir o link: %1</translation>
     </message>
     <message>
-        <location filename="../src/io/filecontroller.cpp" line="79"/>
+        <location filename="../src/io/filecontroller.cpp" line="81"/>
         <source>No se pudo abrir el archivo:
 %1
 
@@ -1814,27 +1820,27 @@ Queres recuperá-los?</translation>
 %2</translation>
     </message>
     <message>
-        <location filename="../src/io/filecontroller.cpp" line="102"/>
+        <location filename="../src/io/filecontroller.cpp" line="105"/>
         <source>Abrir carpeta contenedora</source>
         <translation>Abrir a pasta do documento</translation>
     </message>
     <message>
-        <location filename="../src/io/filecontroller.cpp" line="103"/>
+        <location filename="../src/io/filecontroller.cpp" line="106"/>
         <source>Guarda el documento primero para abrir su carpeta.</source>
         <translation>Salve o documento primeiro para abrir a sua pasta.</translation>
     </message>
     <message>
-        <location filename="../src/io/filecontroller.cpp" line="122"/>
+        <location filename="../src/io/filecontroller.cpp" line="125"/>
         <source>Guardar como</source>
         <translation>Salvar como</translation>
     </message>
     <message>
-        <location filename="../src/io/filecontroller.cpp" line="124"/>
+        <location filename="../src/io/filecontroller.cpp" line="127"/>
         <source>Archivos Markdown (*.md *.markdown);;Todos los archivos (*)</source>
         <translation>Arquivos Markdown (*.md *.markdown);;Todos os arquivos (*)</translation>
     </message>
     <message>
-        <location filename="../src/io/filecontroller.cpp" line="141"/>
+        <location filename="../src/io/filecontroller.cpp" line="144"/>
         <source>No se pudo guardar el archivo:
 %1
 
@@ -1845,24 +1851,24 @@ Queres recuperá-los?</translation>
 %2</translation>
     </message>
     <message>
-        <location filename="../src/io/filecontroller.cpp" line="149"/>
+        <location filename="../src/io/filecontroller.cpp" line="152"/>
         <source>Guardado: %1</source>
         <translation>Salvo: %1</translation>
     </message>
     <message>
-        <location filename="../src/io/filecontroller.cpp" line="160"/>
+        <location filename="../src/io/filecontroller.cpp" line="163"/>
         <source>md-editor</source>
         <translation>md-editor</translation>
     </message>
     <message>
-        <location filename="../src/io/filecontroller.cpp" line="161"/>
+        <location filename="../src/io/filecontroller.cpp" line="164"/>
         <source>El documento tiene cambios sin guardar.
 ¿Quieres guardarlos?</source>
         <translation>O documento tem alterações não salvas.
 Deseja salvá-las?</translation>
     </message>
     <message>
-        <location filename="../src/io/filecontroller.cpp" line="238"/>
+        <location filename="../src/io/filecontroller.cpp" line="241"/>
         <source>Documento recuperado de la sesión anterior</source>
         <translation>Documento recuperado da sessão anterior</translation>
     </message>
@@ -1897,20 +1903,20 @@ Deseja recuperá-lo?</translation>
     </message>
     <message>
         <location filename="../src/app/mainwindow.cpp" line="575"/>
-        <location filename="../src/app/mainwindow.cpp" line="641"/>
-        <location filename="../src/app/mainwindow.cpp" line="852"/>
+        <location filename="../src/app/mainwindow.cpp" line="651"/>
+        <location filename="../src/app/mainwindow.cpp" line="876"/>
         <location filename="../src/app/mainwindowsession.cpp" line="142"/>
         <source>Sin título</source>
         <translation>Sem título</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="640"/>
+        <location filename="../src/app/mainwindow.cpp" line="650"/>
         <location filename="../src/app/mainwindowsession.cpp" line="144"/>
         <source>%1[*] — md-editor</source>
         <translation>%1[*] — md-editor</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="1038"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="1046"/>
         <source>Automático (sistema)</source>
         <translation>Automático (sistema)</translation>
     </message>
@@ -1941,7 +1947,7 @@ Deseja recuperá-lo?</translation>
         <translation>Centra a linha do cursor e atenua tudo exceto o parágrafo atual</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="1050"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="1058"/>
         <source>Idioma</source>
         <translation>Idioma</translation>
     </message>
@@ -1962,7 +1968,7 @@ Deseja recuperá-lo?</translation>
         </translation>
     </message>
     <message>
-        <location filename="../src/io/filecontroller.cpp" line="88"/>
+        <location filename="../src/io/filecontroller.cpp" line="90"/>
         <source>%1 — front matter conservado</source>
         <translation>%1 — front matter preservado</translation>
     </message>
@@ -2797,17 +2803,17 @@ Apaga este texto e começa a escrever.
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../src/editor/insertcontroller.cpp" line="71"/>
+        <location filename="../src/editor/insertcontroller.cpp" line="72"/>
         <source>...</source>
         <translation>...</translation>
     </message>
     <message>
-        <location filename="../src/editor/insertcontroller.cpp" line="74"/>
+        <location filename="../src/editor/insertcontroller.cpp" line="75"/>
         <source>Elegir imagen</source>
         <translation>Escolher imagem</translation>
     </message>
     <message>
-        <location filename="../src/editor/insertcontroller.cpp" line="75"/>
+        <location filename="../src/editor/insertcontroller.cpp" line="76"/>
         <source>Imágenes (*.png *.jpg *.jpeg *.gif *.bmp *.svg);;Todos (*)</source>
         <translation>Imagens (*.png *.jpg *.jpeg *.gif *.bmp *.svg);;Todos (*)</translation>
     </message>

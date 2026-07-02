@@ -53,17 +53,32 @@ void DiskWatcher::onWatchedFileChanged(const QString &path)
         m_debounce->start();  // (re)arranca el debounce
 }
 
+void DiskWatcher::setSuspended(bool suspended)
+{
+    m_suspended = suspended;
+    // Al reanudar, procesa el cambio que hubiera llegado mientras el diálogo estaba
+    // abierto (si no, se perdería y el archivo quedaría sin re-vigilar).
+    if (!suspended && m_pendingCheck) {
+        m_pendingCheck = false;
+        checkChange();
+    }
+}
+
 void DiskWatcher::checkChange()
 {
-    if (m_suspended)
-        return;  // ya hay un diálogo abierto: no apilar otro (exec corre anidado)
     if (m_path.isEmpty())
         return;
 
     // Un guardado atómico recrea el archivo y rompe la vigilancia: hay que volver a
-    // añadirlo si volvió a existir.
+    // añadirlo si volvió a existir. Se hace SIEMPRE (incluso suspendidos), para no
+    // quedar ciegos ante los cambios posteriores tras cerrar el diálogo.
     if (QFileInfo::exists(m_path) && !m_watcher->files().contains(m_path))
         m_watcher->addPath(m_path);
+
+    if (m_suspended) {
+        m_pendingCheck = true;  // ya hay un diálogo abierto: reintenta al reanudar
+        return;
+    }
 
     if (!QFileInfo::exists(m_path)) {
         emit vanished();

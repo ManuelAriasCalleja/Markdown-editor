@@ -48,23 +48,35 @@ QString tidy(const QString &markdown)
 
     QStringList out;
     QChar fenceChar;       // nulo = fuera de un bloque de código cercado
+    int fenceLen = 0;      // longitud del run de apertura del fence activo
     bool lastBlank = false;
 
     const QStringList lines = text.split(QLatin1Char('\n'));
     for (const QString &raw : lines) {
         const QRegularExpressionMatch fm = fenceRe.match(raw);
         if (fm.hasMatch()) {
-            const QChar c = fm.captured(1).at(0);
+            const QString run = fm.captured(1);
+            const QChar c = run.at(0);
+            const int len = run.size();
             if (fenceChar.isNull()) {
                 fenceChar = c;             // abre el fence
-            } else if (c == fenceChar) {
-                fenceChar = QChar();       // lo cierra (mismo carácter)
-            } else {
-                out << raw;                // otro carácter dentro del fence: es código
+                fenceLen = len;
+                out << rstripPlain(raw);
                 lastBlank = false;
                 continue;
             }
-            out << rstripPlain(raw);
+            // Cierra solo con el MISMO carácter, un run ≥ el de apertura y sin
+            // info string (CommonMark). Un run más corto —p. ej. un ``` dentro de
+            // un fence de ```` — es contenido del código, no un cierre.
+            const bool bare = raw.mid(fm.capturedEnd(1)).trimmed().isEmpty();
+            if (c == fenceChar && len >= fenceLen && bare) {
+                fenceChar = QChar();
+                fenceLen = 0;
+                out << rstripPlain(raw);
+                lastBlank = false;
+                continue;
+            }
+            out << raw;                    // run que no cierra: es código, intacto
             lastBlank = false;
             continue;
         }

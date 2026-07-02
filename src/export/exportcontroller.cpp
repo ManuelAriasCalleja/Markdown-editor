@@ -12,6 +12,7 @@
 #include <QFile>
 #include <QMimeData>
 #include <QFileDialog>
+#include <QSaveFile>
 #include <QFileInfo>
 #include <QInputDialog>
 #include <QLocale>
@@ -114,7 +115,7 @@ QString ExportController::promptSavePath(const QString &title, const QString &fi
 bool ExportController::writeUtf8File(const QString &path, const QString &contents,
                                     QString *error)
 {
-    QFile file(path);
+    QSaveFile file(path);
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
         if (error)
             *error = file.errorString();
@@ -123,7 +124,14 @@ bool ExportController::writeUtf8File(const QString &path, const QString &content
     QTextStream out(&file);
     out.setEncoding(QStringConverter::Utf8);
     out << contents;
-    file.close();
+    out.flush();
+    // Comprueba el volcado antes de anunciar «Exportado»: un fallo de disco no
+    // debe reportarse como éxito con un archivo truncado.
+    if (out.status() != QTextStream::Ok || !file.commit()) {
+        if (error)
+            *error = file.errorString();
+        return false;
+    }
     return true;
 }
 
@@ -205,6 +213,9 @@ std::unique_ptr<QTextDocument> selectionExportDocument(QTextEdit *editor)
     if (!cursor.hasSelection())
         return nullptr;
     QTextDocument selection;
+    // Hereda la baseUrl del documento para que las imágenes de ruta relativa de la
+    // selección se resuelvan también al exportar/imprimir solo la selección.
+    selection.setBaseUrl(editor->document()->baseUrl());
     QTextCursor into(&selection);
     into.insertFragment(cursor.selection());
     return std::unique_ptr<QTextDocument>(mdexport::cloneForExport(&selection));

@@ -19,15 +19,24 @@ mdstats::DocStats mdstats::analyze(const QString &input, int wordsPerMinute)
     text.replace(QChar(QChar::ParagraphSeparator), QLatin1Char('\n'));
 
     DocStats st;
-    st.chars = static_cast<int>(text.size());
 
     static const QRegularExpression whitespace(QStringLiteral("\\s+"));
     st.words = static_cast<int>(text.split(whitespace, Qt::SkipEmptyParts).size());
 
+    // Cuenta por PUNTOS DE CÓDIGO, no por unidades UTF-16: un carácter del plano
+    // astral (emoji, alfabetos matemáticos) es un par subrogado y debe contar como
+    // uno. Un punto de código = una unidad que no sea un subrogado bajo.
+    int chars = 0;
     int nonSpace = 0;
-    for (const QChar &c : text)
+    for (int i = 0; i < text.size(); ++i) {
+        const QChar c = text.at(i);
+        if (c.isLowSurrogate())
+            continue;
+        ++chars;
         if (!c.isSpace())
             ++nonSpace;
+    }
+    st.chars = chars;
     st.charsNoSpaces = nonSpace;
 
     // Párrafos: líneas con algún carácter no blanco (las vacías no cuentan).

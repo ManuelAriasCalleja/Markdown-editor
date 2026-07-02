@@ -177,46 +177,35 @@ bool FormulaController::handleMathKeyPress(QKeyEvent *event)
 
     QTextDocument *doc = m_editor->document();
     const int pos = cursor.position();
-    const int docLen = doc->characterCount() - 1;
-    auto fmtAt = [doc](int p) {
-        QTextCursor c(doc);
-        c.setPosition(p);
-        return c.charFormat();
+
+    // Rangos [inicio, fin) de cada fórmula, en índices de carácter — el mismo
+    // primitivo canónico que usa la protección del pegado. Se trabaja con índices
+    // de carácter directamente para NO depender de la semántica de
+    // QTextCursor::charFormat() en los bordes (devuelve el formato del carácter
+    // anterior, y en el inicio de bloque el del siguiente): esa ambigüedad
+    // desfasaba en uno toda la detección de bordes.
+    const QList<QPair<int, int>> groups = mdmath::mathGroupBounds(doc);
+    auto groupContaining = [&groups](int charIndex) -> QPair<int, int> {
+        for (const auto &g : groups)
+            if (charIndex >= g.first && charIndex < g.second)
+                return g;
+        return {-1, -1};
     };
 
-    const QTextCharFormat before = pos > 0 ? fmtAt(pos - 1) : QTextCharFormat();
-    const QTextCharFormat after  = pos < docLen ? fmtAt(pos) : QTextCharFormat();
-    const bool mathBefore = before.boolProperty(mdmath::IsMathProperty);
-    const bool mathAfter  = after.boolProperty(mdmath::IsMathProperty);
+    // El carácter a la izquierda del cursor ocupa el índice pos-1; el de la
+    // derecha, el índice pos.
+    const QPair<int, int> groupBefore =
+        pos > 0 ? groupContaining(pos - 1) : QPair<int, int>{-1, -1};
+    const QPair<int, int> groupAfter = groupContaining(pos);
+    const bool mathBefore = groupBefore.first >= 0;
+    const bool mathAfter  = groupAfter.first >= 0;
 
     if (!mathBefore && !mathAfter)
         return false;  // sin contacto con math: pasa al editor
 
+    // Cursor estrictamente dentro de una misma fórmula (entre dos de sus caracteres).
     const bool insideMath = mathBefore && mathAfter
-        && before.property(mdmath::MathTexProperty).toString()
-               == after.property(mdmath::MathTexProperty).toString();
-
-    // Expande [start,end) al grupo de fragmentos con el mismo MathTex que toca
-    // en `pivot`. `pivot` apunta al char con IsMath (antes o después del cursor).
-    auto groupBounds = [&](int pivot, int *start, int *end) {
-        const QString tex = fmtAt(pivot).property(mdmath::MathTexProperty).toString();
-        int s = pivot, e = pivot + 1;
-        while (s > 0) {
-            const QTextCharFormat f = fmtAt(s - 1);
-            if (!f.boolProperty(mdmath::IsMathProperty)
-                || f.property(mdmath::MathTexProperty).toString() != tex)
-                break;
-            --s;
-        }
-        while (e < docLen) {
-            const QTextCharFormat f = fmtAt(e);
-            if (!f.boolProperty(mdmath::IsMathProperty)
-                || f.property(mdmath::MathTexProperty).toString() != tex)
-                break;
-            ++e;
-        }
-        *start = s; *end = e;
-    };
+        && groupBefore.first == groupAfter.first;
 
     auto removeRange = [&](int start, int end) {
         QTextCursor c(doc);
@@ -226,18 +215,14 @@ bool FormulaController::handleMathKeyPress(QKeyEvent *event)
         m_editor->setCurrentCharFormat(QTextCharFormat());
     };
 
-    // Backspace tocando el borde derecho (mathBefore): borra el grupo entero.
+    // Backspace tocando el borde derecho (o dentro): borra el grupo entero.
     if (event->key() == Qt::Key_Backspace && mathBefore) {
-        int s, e;
-        groupBounds(pos - 1, &s, &e);
-        removeRange(s, e);
+        removeRange(groupBefore.first, groupBefore.second);
         return true;
     }
-    // Delete tocando el borde izquierdo (mathAfter): borra el grupo entero.
+    // Delete tocando el borde izquierdo (o dentro): borra el grupo entero.
     if (event->key() == Qt::Key_Delete && mathAfter) {
-        int s, e;
-        groupBounds(pos, &s, &e);
-        removeRange(s, e);
+        removeRange(groupAfter.first, groupAfter.second);
         return true;
     }
 
@@ -270,42 +255,32 @@ bool FormulaController::handleMathKeyPress(QKeyEvent *event)
 
 bool FormulaController::editFormulaAt(const QPoint &viewportPos)
 {
+    QTextDocument *doc = m_editor->document();
     const int pos = m_editor->cursorForPosition(viewportPos).position();
-    // El char-format del carácter justo antes del cursor (o del actual, si está
-    // al inicio del documento) decide si estamos sobre una fórmula.
-    QTextCursor probe(m_editor->document());
-    probe.setPosition(pos > 0 ? pos - 1 : 0);
-    QTextCharFormat cf = probe.charFormat();
-    if (!cf.boolProperty(mdmath::IsMathProperty)) {
-        probe.setPosition(pos);
-        cf = probe.charFormat();
-        if (!cf.boolProperty(mdmath::IsMathProperty))
-            return false;
+
+    // Busca la fórmula tocada por el clic entre los grupos [inicio, fin) reales
+    // (índices de carácter): el carácter a la derecha del punto (índice pos) o el
+    // de la izquierda (índice pos-1). Usar los grupos canónicos evita el desfase
+    // de charFormat() en los bordes.
+    const QList<QPair<int, int>> groups = mdmath::mathGroupBounds(doc);
+    QPair<int, int> hit{-1, -1};
+    for (const auto &g : groups) {
+        if ((pos >= g.first && pos < g.second)
+            || (pos - 1 >= g.first && pos - 1 < g.second)) {
+            hit = g;
+            break;
+        }
     }
-    // Expande hasta cubrir todo el fragmento de la fórmula (los caracteres con
-    // las mismas propiedades IsMath/MathTex).
+    if (hit.first < 0)
+        return false;
+
+    // Lee el TeX/estilo desde un punto interior del grupo (pos hit.first+1 está
+    // dentro, así charFormat() da con seguridad el formato de la fórmula).
+    QTextCursor probe(doc);
+    probe.setPosition(hit.first + 1);
+    const QTextCharFormat cf = probe.charFormat();
     const QString tex = cf.property(mdmath::MathTexProperty).toString();
     const bool block = cf.boolProperty(mdmath::MathBlockProperty);
-    int start = pos > 0 ? pos - 1 : 0;
-    int end = start + 1;
-    QTextCursor walker(m_editor->document());
-    while (start > 0) {
-        walker.setPosition(start - 1);
-        const QTextCharFormat f = walker.charFormat();
-        if (!f.boolProperty(mdmath::IsMathProperty)
-            || f.property(mdmath::MathTexProperty).toString() != tex)
-            break;
-        --start;
-    }
-    const int docLen = m_editor->document()->characterCount();
-    while (end < docLen - 1) {
-        walker.setPosition(end);
-        const QTextCharFormat f = walker.charFormat();
-        if (!f.boolProperty(mdmath::IsMathProperty)
-            || f.property(mdmath::MathTexProperty).toString() != tex)
-            break;
-        ++end;
-    }
 
     QString newTex;
     bool newBlock = block;
@@ -313,10 +288,10 @@ bool FormulaController::editFormulaAt(const QPoint &viewportPos)
         return true;  // canceló pero atendimos el clic
 
     const QList<mdmath::MathRun> runs = mdmath::renderFormulaRuns(newTex, newBlock);
-    QTextCursor c(m_editor->document());
+    QTextCursor c(doc);
     c.beginEditBlock();
-    c.setPosition(start);
-    c.setPosition(end, QTextCursor::KeepAnchor);
+    c.setPosition(hit.first);
+    c.setPosition(hit.second, QTextCursor::KeepAnchor);
     c.removeSelectedText();
     for (const mdmath::MathRun &r : runs)
         c.insertText(r.text, r.fmt);

@@ -27,6 +27,8 @@ private slots:
 
     void guardExpandsSelectionInsideFormula();
     void backspaceAtRightEdgeDeletesGroup();
+    void deleteAtLeftEdgeDeletesGroup();
+    void typingRightAfterFormulaInsertsText();
     void printableInsideFormulaIsBlocked();
     void navigationKeysInsideFormulaPassThrough();
     void formulaUnderCursorIsAnnouncedOnce();
@@ -92,6 +94,48 @@ void TestFormula::backspaceAtRightEdgeDeletesGroup()
     QVERIFY(w.m_stack->formula()->handleMathKeyPress(&backspace));
     // El grupo entero desaparece: no queda ningún fragmento de math.
     QVERIFY(mdmath::mathGroupBounds(w.m_stack->editor()->document()).isEmpty());
+}
+
+void TestFormula::deleteAtLeftEdgeDeletesGroup()
+{
+    // Regresión: Delete con el cursor en el BORDE IZQUIERDO de la fórmula debe
+    // borrar el grupo entero (antes, por un desfase en la detección, borraba solo
+    // el primer carácter y la fórmula «resucitaba» al guardar).
+    MainWindow w;
+    QTextEdit *ed = w.m_stack->editor();
+    QTextCursor c = ed->textCursor();
+    c.insertText(QStringLiteral("ab "));
+    const auto bounds = insertMath(ed, QStringLiteral("x^2"));
+
+    c = ed->textCursor();
+    c.setPosition(bounds.first);  // justo antes del primer carácter de la fórmula
+    ed->setTextCursor(c);
+
+    QKeyEvent del(QEvent::KeyPress, Qt::Key_Delete, Qt::NoModifier);
+    QVERIFY(w.m_stack->formula()->handleMathKeyPress(&del));
+    QVERIFY(mdmath::mathGroupBounds(ed->document()).isEmpty());
+    QCOMPARE(ed->toPlainText(), QStringLiteral("ab "));
+}
+
+void TestFormula::typingRightAfterFormulaInsertsText()
+{
+    // Regresión: teclear justo DESPUÉS de una fórmula inline debe insertar el
+    // carácter como texto normal (antes se «tragaba» la tecla sin insertar nada).
+    MainWindow w;
+    QTextEdit *ed = w.m_stack->editor();
+    const auto bounds = insertMath(ed, QStringLiteral("x^2"));
+
+    QTextCursor c = ed->textCursor();
+    c.setPosition(bounds.second);  // borde derecho de la fórmula
+    ed->setTextCursor(c);
+
+    QKeyEvent typeZ(QEvent::KeyPress, Qt::Key_Z, Qt::NoModifier, QStringLiteral("z"));
+    QVERIFY(w.m_stack->formula()->handleMathKeyPress(&typeZ));  // consumido
+    QVERIFY(ed->toPlainText().endsWith(QLatin1Char('z')));
+    // La 'z' es texto normal, no parte de la fórmula: el grupo de math no crece.
+    const auto groups = mdmath::mathGroupBounds(ed->document());
+    QCOMPARE(groups.size(), 1);
+    QCOMPARE(groups.first().second, bounds.second);  // el grupo termina donde estaba
 }
 
 void TestFormula::printableInsideFormulaIsBlocked()

@@ -66,6 +66,8 @@ QList<QPair<int, int>> inlineCodeRanges(const QString &line)
                 }
                 if (closing == run) {
                     ranges.append({start, j});
+                    i = j;  // reanuda TRAS el cierre; si no, el cierre se
+                            // reempareja con la apertura del siguiente span
                     break;
                 }
                 Q_UNUSED(cstart);
@@ -217,12 +219,26 @@ QList<Span> findMath(const QString &text)
                 i = (s.start - offset) + s.length;
                 continue;
             }
-            // matchAt no encontró cierre en la misma línea. Si es `$$`, lo
-            // tratamos como apertura de un bloque multilínea cuyo cierre
-            // buscamos en las líneas siguientes.
+            // matchAt no encontró cierre en la misma línea. Si es `$$`, PODRÍA ser
+            // la apertura de un bloque multilínea cuyo cierre está en líneas
+            // siguientes. Pero antes descartamos el caso de un `$$` que sí tiene un
+            // `$$` de cierre en ESTA línea y que matchAt rechazó por vacío (p. ej.
+            // `$$$$`): tratarlo como apertura engulliría los párrafos siguientes.
             if (i + 1 < line.size() && line.at(i + 1) == QLatin1Char('$')) {
-                openStart = offset + i;
-                break;
+                int closePos = -1;
+                for (int j = i + 2; j + 1 < line.size(); ++j) {
+                    if (line.at(j) == QLatin1Char('$') && line.at(j + 1) == QLatin1Char('$')
+                        && !isEscaped(line, j) && !inRange(j, codeRanges)) {
+                        closePos = j;
+                        break;
+                    }
+                }
+                if (closePos < 0) {
+                    openStart = offset + i;  // apertura multilínea genuina
+                    break;
+                }
+                i = closePos + 2;  // `$$…$$` vacío/rechazado: literal, saltarlo entero
+                continue;
             }
             ++i;
         }
@@ -496,8 +512,11 @@ QString restoreMathFromSentinels(const QString &markdown,
     QRegularExpressionMatchIterator it = re.globalMatch(markdown);
     while (it.hasNext()) {
         const QRegularExpressionMatch m = it.next();
-        const int idx = m.captured(1).toInt();
-        if (idx < 0 || idx >= table.entries.size())
+        bool ok = false;
+        const int idx = m.captured(1).toInt(&ok);
+        // Comprueba `ok`: un índice enorme desbordaría a 0 y sustituiría por la
+        // entrada 0 de la tabla (corrupción si el texto trae sentinelas espurios).
+        if (!ok || idx < 0 || idx >= table.entries.size())
             continue;
         out += QStringView{markdown}.mid(last, m.capturedStart() - last);
         const auto &entry = table.entries.at(idx);

@@ -14,6 +14,7 @@ private slots:
     void normalizesBullets();
     void preservesThematicBreaks();
     void leavesCodeFenceContentUntouched();
+    void longFenceEmbeddingShorterFenceUntouched();
     void trimsEdgesAndEndsWithSingleNewline();
 };
 
@@ -68,6 +69,15 @@ void TestMarkdownTidy::leavesCodeFenceContentUntouched()
 {
     // Dentro del fence: espacios finales, viñetas y líneas en blanco intactas.
     const QString in = QStringLiteral("```\n* no es viñeta   \n\n\nx\n```\n");
+    QCOMPARE(mdtidy::tidy(in), in);
+}
+
+void TestMarkdownTidy::longFenceEmbeddingShorterFenceUntouched()
+{
+    // Un fence de 4 backticks que contiene un ejemplo de 3 backticks: el ``` interno
+    // NO cierra el fence (run < apertura), así que su contenido (viñetas, espacios
+    // finales) se conserva intacto.
+    const QString in = QStringLiteral("````\n```\n* item   \n```\n````\n");
     QCOMPARE(mdtidy::tidy(in), in);
 }
 

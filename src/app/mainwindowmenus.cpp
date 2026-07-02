@@ -932,7 +932,11 @@ void MainWindow::createViewMenu()
     spellAction->setChecked(AppSettings::spellCheck());
     spellAction->setToolTip(tr("Subraya las palabras mal escritas según el idioma del documento"));
     connect(spellAction, &QAction::toggled, this, [this](bool on) {
-        m_stack->spell()->setEnabled(on);  // persiste, carga/descarga y rehace el resaltado
+        // Aplica a TODAS las pestañas (cada una tiene su SpellController): si no, las
+        // de segundo plano seguirían subrayando con el ajuste desincronizado.
+        for (int i = 0; i < m_tabs->count(); ++i)
+            if (EditorStack *s = stackAt(i))
+                s->spell()->setEnabled(on);  // persiste, carga/descarga y rehace el resaltado
     });
 
     // Idioma del corrector: «Automático» (deduce del documento) o uno fijo de los
@@ -946,7 +950,9 @@ void MainWindow::createViewMenu()
     autoLangAction->setChecked(currentSpellLang.isEmpty());
     spellLangGroup->addAction(autoLangAction);
     connect(autoLangAction, &QAction::triggered, this, [this] {
-        m_stack->spell()->setLanguageOverride(QString());
+        for (int i = 0; i < m_tabs->count(); ++i)
+            if (EditorStack *s = stackAt(i))
+                s->spell()->setLanguageOverride(QString());
     });
     const QStringList spellLangs = SpellChecker::availableLanguages();
     if (!spellLangs.isEmpty())
@@ -957,7 +963,9 @@ void MainWindow::createViewMenu()
         langAct->setChecked(code == currentSpellLang);
         spellLangGroup->addAction(langAct);
         connect(langAct, &QAction::triggered, this, [this, code] {
-            m_stack->spell()->setLanguageOverride(code);
+            for (int i = 0; i < m_tabs->count(); ++i)
+                if (EditorStack *s = stackAt(i))
+                    s->spell()->setLanguageOverride(code);
         });
     }
 

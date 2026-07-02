@@ -711,16 +711,18 @@ QList<MathRun> renderTexAsRuns(const QString &tex, const QTextCharFormat &baseFm
                 continue;
             }
 
-            // \mathbb{X} y similares: el comando completo (con su arg) puede
-            // estar en la tabla; si lo está, ese símbolo va al buffer normal.
-            if (after < n && tex.at(after) == QLatin1Char('{')) {
-                int probe = after;
-                const QString arg = readGroup(tex, probe);
-                const QString combined = cmd + QLatin1Char('{') + arg + QLatin1Char('}');
+            // \mathbb{X} y similares: las entradas combinadas de la tabla son todas
+            // de UN solo carácter (`\mathbb{R}`), así que solo miramos el caso `{X}`
+            // sin leer todo el grupo. Leerlo (readGroup) para CADA comando con `{`
+            // era O(n²): con TeX hostil como `\a{\a{\a{…` colgaba la interfaz.
+            if (after + 2 < n && tex.at(after) == QLatin1Char('{')
+                && tex.at(after + 2) == QLatin1Char('}')) {
+                const QString combined =
+                    cmd + QLatin1Char('{') + tex.at(after + 1) + QLatin1Char('}');
                 const auto it = singleCharCommands().constFind(combined);
                 if (it != singleCharCommands().cend()) {
                     buffer += it.value();
-                    i = probe;
+                    i = after + 3;  // pasa `{X}`
                     continue;
                 }
             }

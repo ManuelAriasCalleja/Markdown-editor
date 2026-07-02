@@ -5,6 +5,8 @@
 #include <QTextEdit>
 
 #include "blockconstructs.h"
+#include "mathblocks.h"
+#include "tableedit.h"
 
 // Pruebas de los constructos de bloque: las transformaciones de texto puras y
 // el alternado completo sobre un QTextEdit (Template Method).
@@ -26,6 +28,7 @@ private slots:
     void toggleCodeBlockKeepsContentLiteral();
     // --- Casos límite que antes fallaban (regresiones) ---
     void blockquoteQuotesEveryLineOfMultiline();
+    void blockquotePreservesFormula();
     void codeBlockOnMiddleLineMakesFenceNotInline();
     void codeBlockOnEmptyParagraphCreatesBlock();
 };
@@ -122,6 +125,29 @@ void TestBlockConstructs::blockquoteQuotesEveryLineOfMultiline()
     QVERIFY2(md.contains(QStringLiteral("> a")), md.toUtf8());
     QVERIFY2(md.contains(QStringLiteral("> b")), md.toUtf8());
     QVERIFY2(md.contains(QStringLiteral("> c")), md.toUtf8());
+}
+
+void TestBlockConstructs::blockquotePreservesFormula()
+{
+    // Regresión: alternar cita sobre un párrafo con una fórmula TeX conservaba el
+    // TeX (antes se aplanaba a glifos y se perdía en el guardado).
+    QTextEdit edit;
+    QTextCursor c = edit.textCursor();
+    c.insertText(QStringLiteral("Antes "));
+    const QTextCharFormat base = mdmath::mathCharFormat(QStringLiteral("E=mc^2"),
+                                                        /*block=*/false);
+    for (const mdmath::MathRun &r : mdmath::renderTexAsRuns(QStringLiteral("E=mc^2"), base))
+        c.insertText(r.text, r.fmt);
+    edit.setCurrentCharFormat(QTextCharFormat());
+    c = edit.textCursor();
+    c.insertText(QStringLiteral(" despues"));
+
+    edit.selectAll();
+    Blockquote().toggle(&edit);
+
+    const QString md = mdtable::documentMarkdown(edit.document());
+    QVERIFY2(md.contains(QStringLiteral("$E=mc^2$")), md.toUtf8());
+    QVERIFY2(md.contains(QStringLiteral("> ")), md.toUtf8());
 }
 
 void TestBlockConstructs::codeBlockOnMiddleLineMakesFenceNotInline()

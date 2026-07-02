@@ -431,15 +431,17 @@ Box buildHList(const QString &tex, const QFont &font)
                     i = after;
                     atom = glyph(readGroup(tex, i), font);
                 } else {
-                    // \mathbb{R} y similares: el comando con su grupo puede estar
-                    // en la tabla como un único glifo.
-                    if (after < n && tex.at(after) == QLatin1Char('{')) {
-                        int probe = after;
-                        const QString arg = readGroup(tex, probe);
-                        const QString combined = cmd + QLatin1Char('{') + arg + QLatin1Char('}');
+                    // \mathbb{R} y similares: las entradas combinadas de la tabla
+                    // son de UN carácter, así que solo miramos `{X}` sin leer todo
+                    // el grupo (readGroup por cada comando con `{` era O(n²) y
+                    // colgaba con TeX hostil como `\a{\a{…`).
+                    if (after + 2 < n && tex.at(after) == QLatin1Char('{')
+                        && tex.at(after + 2) == QLatin1Char('}')) {
+                        const QString combined =
+                            cmd + QLatin1Char('{') + tex.at(after + 1) + QLatin1Char('}');
                         const QString mapped = commandToUnicode(combined);
                         if (mapped != QLatin1Char('\\') + combined) {
-                            i = probe;
+                            i = after + 3;  // pasa `{X}`
                             atom = glyph(mapped, font);
                             list.kids.append(attachScripts(tex, i, atom, font));
                             continue;
