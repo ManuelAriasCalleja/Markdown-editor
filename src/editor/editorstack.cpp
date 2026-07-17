@@ -45,6 +45,7 @@
 #include "recoverymanager.h"
 #include "spellcontroller.h"
 #include "splitviewcontroller.h"
+#include "imageobject.h"
 #include "tablecontroller.h"
 #include "themecontroller.h"
 
@@ -69,6 +70,12 @@ EditorStack::EditorStack(FindReplaceBar *findBar, OutlinePanel *outline,
         tr("Empieza a escribir. Da formato con la barra o tecleando Markdown."));
     // Resaltado de sintaxis de los bloques de código.
     m_highlighter = new CodeBlockHighlighter(m_editor->document());
+
+    // Handler de imágenes: las dimensiona al zoom (nativo · factor) sustituyendo al de
+    // Qt. El documento del editor es estable (setMarkdown no lo reemplaza), así que
+    // basta registrarlo una vez. setContentScale le pasa el factor del zoom.
+    m_imageObject = new ImageObject(this);
+    ImageObject::registerOn(m_editor->document(), m_imageObject);
 
     // Overlay (etiqueta de lenguaje + copiar) que aparece al pasar el ratón por un
     // bloque de código. Es hijo del viewport; presentación pura, no toca el documento.
@@ -417,6 +424,19 @@ void EditorStack::setLineSpacing(int percent)
     // sincronización de la vista dividida y perdería el formato de bloque.
     m_lineSpacing = percent;
     applyLineSpacing(m_editor);
+}
+
+void EditorStack::setContentScale(qreal scale)
+{
+    const qreal s = scale > 0 ? scale : 1.0;
+    if (!m_imageObject || qFuzzyCompare(m_contentScale, s))
+        return;  // sin cambio: no re-maquetar
+    m_contentScale = s;
+    m_imageObject->setScale(s);
+    // El handler mide en el trazado, así que hay que invalidar el maquetado para que
+    // remida las imágenes al nuevo zoom. No edita el documento: no toca undo/modificado.
+    QTextDocument *doc = m_editor->document();
+    doc->markContentsDirty(0, doc->characterCount());
 }
 
 void EditorStack::setBodyMarkdown(const QString &body)

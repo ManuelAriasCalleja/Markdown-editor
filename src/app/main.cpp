@@ -63,6 +63,12 @@ int main(int argc, char *argv[])
         if (loaded)
             app.installTranslator(&appTranslator);
 
+        // El formato de números (separador de miles, decimales) sigue al idioma de
+        // la interfaz, no al del sistema: así el contador de la barra de estado y las
+        // estadísticas agrupan las cifras (12.345) según el idioma elegido. QLocale()
+        // por defecto era el del sistema; lo fijamos al `locale` ya resuelto.
+        QLocale::setDefault(locale);
+
         // Traducciones de Qt (diálogos estándar) para el idioma resuelto.
         if (qtTranslator.load(locale, QStringLiteral("qtbase"), QStringLiteral("_"),
                               QLibraryInfo::path(QLibraryInfo::TranslationsPath)))

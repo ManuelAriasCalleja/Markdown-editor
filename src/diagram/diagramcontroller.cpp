@@ -285,14 +285,9 @@ void DiagramController::setPreviewBlock(int lastBlockNumber, const QString &hash
         doc->addResource(QTextDocument::ImageResource, QUrl(name), QVariant(image));
         QTextImageFormat img;
         img.setName(name);
-        const int maxW = m_editor->viewport()->width() - 40;
-        if (maxW > 0 && image.width() > maxW) {
-            img.setWidth(maxW);
-            img.setHeight(image.height() * double(maxW) / image.width());
-        } else {
-            img.setWidth(image.width());
-            img.setHeight(image.height());
-        }
+        // El tamaño de presentación lo decide el handler de imágenes (ImageObject):
+        // nativo · zoom, acotado a la vista. Aquí solo se referencia el recurso; el
+        // ancho/alto del formato es indiferente (el handler los recalcula).
         c.insertImage(img);
     }
 

@@ -52,6 +52,10 @@ void MainWindow::applyZoom()
     f.setPointSizeF(chromezoom::scaledPointSize(m_baseFontPointSize, m_zoomDelta));
     m_stack->editor()->setFont(f);
 
+    // Las imágenes (diagramas, `![]()`) no siguen a la fuente: se reescalan aparte
+    // al mismo factor. Solo la pestaña activa; las demás, al activarse (setActiveStack).
+    m_stack->setContentScale(uiScaleFactor());
+
     applyChromeZoom();
     AppSettings::setZoomLevel(m_zoomDelta);  // se recuerda para la próxima sesión
 }

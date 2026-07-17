@@ -452,15 +452,16 @@ void MainWindow::updateWordCount()
     const mdstats::DocStats st = mdstats::analyze(text);
 
     // %n produce el plural correcto en cada idioma (relevante en polaco/rumano,
-    // de reglas complejas, y evita el «1 palabra(s)»).
-    QString count = tr("%n palabra(s)", nullptr, st.words)
+    // de reglas complejas, y evita el «1 palabra(s)»). El modificador L de %Ln
+    // agrupa además las cifras según el locale (12.345), como QLocale::toString.
+    QString count = tr("%Ln palabra(s)", nullptr, st.words)
                     + QStringLiteral(" · ")
-                    + tr("%n carácter(es)", nullptr, st.chars);
+                    + tr("%Ln carácter(es)", nullptr, st.chars);
     // Tiempo de lectura estimado: cualquier texto cuenta al menos como 1 min.
     const int minutes =
         st.words > 0 ? std::max(1, static_cast<int>(std::ceil(st.readingMinutes))) : 0;
     if (minutes > 0)
-        count += QStringLiteral(" · ") + tr("~%n min", nullptr, minutes);
+        count += QStringLiteral(" · ") + formatReadingTime(minutes);
     if (hasSelection)
         count.prepend(tr("Selección: "));
     m_countLabel->setText(count);
@@ -483,17 +484,20 @@ void MainWindow::showDocumentStatistics()
     const int minutes =
         st.words > 0 ? std::max(1, static_cast<int>(std::ceil(st.readingMinutes))) : 0;
 
+    // QLocale::toString agrupa las cifras según el idioma (12.345), como %Ln en la
+    // barra de estado; QString::number no lo haría.
+    const QLocale loc;
     QDialog dlg(this);
     dlg.setWindowTitle(tr("Estadísticas del documento"));
     auto *form = new QFormLayout(&dlg);
-    form->addRow(tr("Palabras:"), new QLabel(QString::number(st.words), &dlg));
-    form->addRow(tr("Caracteres:"), new QLabel(QString::number(st.chars), &dlg));
+    form->addRow(tr("Palabras:"), new QLabel(loc.toString(st.words), &dlg));
+    form->addRow(tr("Caracteres:"), new QLabel(loc.toString(st.chars), &dlg));
     form->addRow(tr("Caracteres (sin espacios):"),
-                 new QLabel(QString::number(st.charsNoSpaces), &dlg));
-    form->addRow(tr("Párrafos:"), new QLabel(QString::number(st.paragraphs), &dlg));
-    form->addRow(tr("Frases:"), new QLabel(QString::number(st.sentences), &dlg));
+                 new QLabel(loc.toString(st.charsNoSpaces), &dlg));
+    form->addRow(tr("Párrafos:"), new QLabel(loc.toString(st.paragraphs), &dlg));
+    form->addRow(tr("Frases:"), new QLabel(loc.toString(st.sentences), &dlg));
     form->addRow(tr("Tiempo de lectura:"),
-                 new QLabel(tr("~%n min", nullptr, minutes), &dlg));
+                 new QLabel(formatReadingTime(minutes), &dlg));
 
     auto *buttons = new QDialogButtonBox(QDialogButtonBox::Close, &dlg);
     connect(buttons, &QDialogButtonBox::rejected, &dlg, &QDialog::reject);
@@ -501,6 +505,23 @@ void MainWindow::showDocumentStatistics()
     form->addRow(buttons);
 
     dlg.exec();
+}
+
+QString MainWindow::formatReadingTime(int minutes) const
+{
+    // Menos de una hora: minutos con plural localizado, como antes.
+    if (minutes < 60)
+        return tr("~%n min", nullptr, minutes);
+    // A partir de 60 min se reparte en horas + minutos («~1 h 15 min», «~2 h»).
+    // «h»/«min» son símbolos internacionales; QLocale::toString agrupa las horas
+    // si llegaran a miles. Se separan las horas de los minutos para poder omitir el
+    // «0 min» cuando el tiempo es un número entero de horas.
+    const int h = minutes / 60;
+    const int m = minutes % 60;
+    const QString hours = QLocale().toString(h);
+    if (m == 0)
+        return tr("~%1 h").arg(hours);
+    return tr("~%1 h %2 min").arg(hours).arg(m);
 }
 
 // El zoom/escalado de toda la interfaz (zoomInText/applyZoom/applyChromeZoom/…)
@@ -606,6 +627,8 @@ void MainWindow::setActiveStack(EditorStack *stack)
         QFont sf = stack->split()->sourceEditor()->font();
         sf.setPointSizeF(chromezoom::scaledPointSize(m_baseSourceFontPointSize, m_zoomDelta));
         stack->split()->sourceEditor()->setFont(sf);
+        // Y las imágenes del documento al mismo factor (Qt no las escala con la fuente).
+        stack->setContentScale(uiScaleFactor());
     }
 
     // Barra de búsqueda al editor activo (oculta al cambiar); esquema del activo.

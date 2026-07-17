@@ -62,6 +62,8 @@ add_library(md-editor-core STATIC
     src/editor/editorstack.h
     src/editor/focuseditor.cpp
     src/editor/focuseditor.h
+    src/editor/imageobject.cpp
+    src/editor/imageobject.h
     src/editor/formatcontroller.cpp
     src/editor/formatcontroller.h
     src/editor/insertcontroller.cpp

@@ -14,6 +14,7 @@
 
 class QByteArray;
 class FocusEditor;
+class ImageObject;
 class CodeBlockHighlighter;
 class CodeBlockOverlay;
 class TableToolbar;
@@ -124,6 +125,14 @@ public:
     /// sustitución del cuerpo, porque setMarkdown rehace los formatos de bloque.
     void setLineSpacing(int percent);
 
+    /// Factor de escala del zoom de la interfaz (1.0 = 100 %) para las imágenes del
+    /// documento (diagramas y `![]()`), que Qt no escala con la fuente. Lo aplica el
+    /// handler `ImageObject` al medir cada imagen; aquí solo se le pasa el factor y se
+    /// fuerza un re-maquetado. Presentación pura (no edita el documento): no afecta al
+    /// round-trip, ni a «modificado», ni al historial de deshacer. Lo fija MainWindow
+    /// al aplicar el zoom y al activar la pestaña.
+    void setContentScale(qreal scale);
+
     /// Inserta Markdown en el editor activo: crudo en la vista de fuente (es texto
     /// Markdown) y renderizado como fragmento en WYSIWYG. Base de insertSnippet y de
     /// «Insertar → Tabla desde portapapeles».
@@ -214,12 +223,15 @@ private:
     // Presentación pura: preserva la marca «modificado» de Qt (como styleTables).
     void applyLineSpacing(QTextEdit *ed);
 
+    qreal m_contentScale = 1.0;  // factor del zoom aplicado a las imágenes del documento
+
     // Muestra/oculta y posiciona la barra flotante de tabla según el cursor esté o no
     // dentro de una tabla del editor visual. Se llama al mover el cursor.
     void updateTableToolbar();
     int m_lineSpacing = 100;  // porcentaje; 100 = sencillo
 
     FocusEditor *m_editor = nullptr;
+    ImageObject *m_imageObject = nullptr;  // handler que escala las imágenes al zoom (registrado en el doc)
     CodeBlockHighlighter *m_highlighter = nullptr;
     CodeBlockOverlay *m_codeOverlay = nullptr;  // etiqueta lenguaje + copiar (al pasar el ratón)
     int m_codeOverlayFirstBlock = -1;           // primer bloque del fence bajo el ratón

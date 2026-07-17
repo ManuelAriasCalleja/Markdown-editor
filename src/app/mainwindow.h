@@ -216,6 +216,10 @@ private slots:
     // párrafos, frases y tiempo de lectura estimado).
     void showDocumentStatistics();
 
+    // Formatea el tiempo de lectura estimado (en minutos) para mostrarlo: «~5 min»
+    // hasta 59 min, y en horas + minutos a partir de 60 («~1 h 15 min», «~2 h»).
+    QString formatReadingTime(int minutes) const;
+
 private:
     // Construye la barra de menús. Orquesta los creadores por menú de abajo y, al
     // final, entrega al controlador de la vista dividida las acciones creadas.

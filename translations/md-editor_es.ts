@@ -24,24 +24,23 @@
 <context>
     <name>MainWindow</name>
     <message numerus="yes">
-        <location filename="../../src/app/mainwindow.cpp" line="456"/>
-        <source>%n palabra(s)</source>
+        <location filename="../../src/app/mainwindow.cpp" line="457"/>
+        <source>%Ln palabra(s)</source>
         <translation>
-            <numerusform>%n palabra</numerusform>
-            <numerusform>%n palabras</numerusform>
+            <numerusform>%Ln palabra</numerusform>
+            <numerusform>%Ln palabras</numerusform>
         </translation>
     </message>
     <message numerus="yes">
-        <location filename="../../src/app/mainwindow.cpp" line="458"/>
-        <source>%n carácter(es)</source>
+        <location filename="../../src/app/mainwindow.cpp" line="459"/>
+        <source>%Ln carácter(es)</source>
         <translation>
-            <numerusform>%n carácter</numerusform>
-            <numerusform>%n caracteres</numerusform>
+            <numerusform>%Ln carácter</numerusform>
+            <numerusform>%Ln caracteres</numerusform>
         </translation>
     </message>
     <message numerus="yes">
-        <location filename="../../src/app/mainwindow.cpp" line="463"/>
-        <location filename="../../src/app/mainwindow.cpp" line="496"/>
+        <location filename="../../src/app/mainwindow.cpp" line="514"/>
         <source>~%n min</source>
         <translation>
             <numerusform>~%n min</numerusform>
