@@ -65,6 +65,7 @@ class MainWindow : public QMainWindow
     // Pruebas de caracterización que acceden a los colaboradores internos y
     // disparan operaciones privadas directamente.
     friend class TestSplitView;
+    friend class TestTabLifecycle;
     friend class TestFileController;
     friend class TestFormula;
     friend class TestExtraSelections;

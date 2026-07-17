@@ -495,6 +495,8 @@ if(Qt6Test_FOUND)
         tst_themespec
         tst_links
         tst_splitview
+        tst_tablifecycle
+        tst_imageobject
         tst_chromezoom
         tst_filecontroller
         tst_formulacontroller)
