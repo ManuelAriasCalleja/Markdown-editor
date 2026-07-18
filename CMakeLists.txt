@@ -53,6 +53,8 @@ add_library(md-editor-core STATIC
     src/app/mainwindowmenus.cpp
     src/app/mainwindowsession.cpp
     src/app/mainwindowzoom.cpp
+    src/app/tabmenu.cpp
+    src/app/tabmenu.h
     # --- editor ---
     src/editor/autopair.cpp
     src/editor/autopair.h
@@ -461,6 +463,7 @@ if(Qt6Test_FOUND)
         tst_nav
         tst_csvtable
         tst_closedtabstack
+        tst_tabmenu
         tst_commands
         tst_extraselections
         tst_linehighlight

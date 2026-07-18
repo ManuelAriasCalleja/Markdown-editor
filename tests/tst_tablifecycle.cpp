@@ -4,6 +4,7 @@
 #include <QCoreApplication>
 #include <QDir>
 #include <QSettings>
+#include <QTabBar>
 #include <QTabWidget>
 #include <QTemporaryDir>
 #include <QTextEdit>
@@ -42,6 +43,7 @@ private slots:
     void closingLastTabResetsToUntitled();
     void closedFileTabCanBeReopened();
     void cycleTabWrapsAround();
+    void tabBarHasCustomContextMenu();
 
 private:
     QTemporaryDir m_dir;
@@ -226,6 +228,16 @@ void TestTabLifecycle::cycleTabWrapsAround()
     QCOMPARE(w.m_tabs->currentIndex(), 2);
     w.cycleTab(1);                       // hacia delante desde la 2 -> envuelve a la 0
     QCOMPARE(w.m_tabs->currentIndex(), 0);
+}
+
+void TestTabLifecycle::tabBarHasCustomContextMenu()
+{
+    // El menú contextual de pestaña (abrir carpeta / copiar nombre / copiar ruta)
+    // se sirve desde la propia QTabBar con política CustomContextMenu. Guarda la
+    // integración: si se quitara el cableado, el clic derecho dejaría de ofrecerlo.
+    MainWindow w;
+    w.show();
+    QCOMPARE(w.m_tabs->tabBar()->contextMenuPolicy(), Qt::CustomContextMenu);
 }
 
 QTEST_MAIN(TestTabLifecycle)

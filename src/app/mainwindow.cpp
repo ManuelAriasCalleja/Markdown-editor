@@ -37,6 +37,7 @@
 #include "spellcontroller.h"
 #include "splitviewcontroller.h"
 #include "tableedit.h"
+#include "tabmenu.h"
 #include "themecontroller.h"
 #include "usertemplatesdialog.h"
 
@@ -142,6 +143,12 @@ MainWindow::MainWindow(QWidget *parent)
     // de QTabBar es expandir): se vería desproporcionada, sobre todo en el modo
     // sin distracciones. Con expanding=false cada pestaña se dimensiona a su texto.
     m_tabs->tabBar()->setExpanding(false);
+    // Menú contextual (clic derecho) sobre la pestaña: abrir carpeta / copiar
+    // nombre / copiar ruta. La política va en la propia QTabBar (no en el
+    // QTabWidget) porque es ahí donde se recibe el clic sobre el rótulo.
+    m_tabs->tabBar()->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(m_tabs->tabBar(), &QWidget::customContextMenuRequested,
+            this, &MainWindow::showTabContextMenu);
     setCentralWidget(m_tabs);
     connect(m_tabs, &QTabWidget::currentChanged, this, [this](int index) {
         if (EditorStack *s = stackAt(index))
@@ -688,6 +695,37 @@ void MainWindow::cycleTab(int delta)
         return;  // una sola pestaña: nada que rotar
     const int idx = (m_tabs->currentIndex() + delta % n + n) % n;
     m_tabs->setCurrentIndex(idx);  // dispara setActiveStack
+}
+
+void MainWindow::showTabContextMenu(const QPoint &pos)
+{
+    QTabBar *bar = m_tabs->tabBar();
+    const int index = bar->tabAt(pos);
+    if (index < 0)
+        return;  // clic derecho en zona vacía de la barra: sin menú
+    EditorStack *stack = stackAt(index);
+    if (!stack)
+        return;
+    // Datos derivados de la ruta (lógica pura, sin GUI): qué copiar y qué carpeta
+    // abrir. Si el documento aún no está en disco, las acciones van deshabilitadas.
+    const tabmenu::FileInfo info =
+        tabmenu::infoForPath(stack->documentIo()->currentFile());
+
+    QMenu menu(this);
+    QAction *openFolder = menu.addAction(tr("Abrir carpeta contenedora"));
+    QAction *copyName = menu.addAction(tr("Copiar nombre del archivo"));
+    QAction *copyPath = menu.addAction(tr("Copiar ruta completa"));
+    openFolder->setEnabled(info.hasFile);
+    copyName->setEnabled(info.hasFile);
+    copyPath->setEnabled(info.hasFile);
+
+    const QAction *chosen = menu.exec(bar->mapToGlobal(pos));
+    if (chosen == openFolder)
+        QDesktopServices::openUrl(QUrl::fromLocalFile(info.containingFolder));
+    else if (chosen == copyName)
+        QApplication::clipboard()->setText(info.fileName);
+    else if (chosen == copyPath)
+        QApplication::clipboard()->setText(info.fullPath);
 }
 
 void MainWindow::toggleOutlineFocus()
