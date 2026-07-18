@@ -5,6 +5,19 @@ Todos los cambios relevantes de **md-editor** se documentan en este archivo.
 El formato sigue, a grandes rasgos, [Keep a Changelog](https://keepachangelog.com/es/),
 y el proyecto usa [versionado semántico](https://semver.org/lang/es/).
 
+## [2.7.0] — 2026-07-18
+
+### Añadido
+- **Menú contextual en las pestañas** (clic derecho sobre el nombre): abrir la
+  carpeta contenedora en el gestor de archivos, copiar el nombre del archivo y
+  copiar la ruta completa.
+- **Los gráficos e imágenes escalan con el zoom**: los diagramas Mermaid/PlantUML
+  y las imágenes `![]()` crecen y menguan con Ctrl++/Ctrl+− junto al texto.
+
+### Cambiado
+- **Contador y estadísticas**: las cifras se agrupan con el separador de miles del
+  idioma; el tiempo de lectura se reparte en horas y minutos a partir de 60 min.
+
 ## [2.6.1] — 2026-07-02
 
 Auditoría de robustez: 30 correcciones de estabilidad, round-trip y ciclo de vida

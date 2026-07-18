@@ -7,7 +7,7 @@
 > redacta la wiki.
 >
 > - **Producto:** md-editor — editor/visor **WYSIWYG** de Markdown.
-> - **Versión cubierta:** 2.6.1.
+> - **Versión cubierta:** 2.7.0.
 > - **Tecnología:** Qt6 (≥ 6.5) + C++17.
 > - **Plataformas:** Linux, Windows, macOS.
 > - **Fuente de verdad última:** el código fuente. Aquí se recoge el comportamiento
@@ -600,7 +600,7 @@ final de este documento).
 > reinstalar). Útil empezar con un documento de ejemplo rico (p. ej.
 > `ejemplos/prueba-completa.md`).
 >
-> **Versión objetivo:** 2.6.1 · **Plataforma probada:** ____________ · **Fecha:** __________
+> **Versión objetivo:** 2.7.0 · **Plataforma probada:** ____________ · **Fecha:** __________
 
 ## 0. Preparación
 
