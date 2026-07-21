@@ -49,6 +49,7 @@ private slots:
     void roundTripPreservesMultilineMath();
     void deeplyNestedTexDoesNotOverflowStack();
     void renderFormulaRunsPicksObjectFor2D();
+    void unicodeToLatexMapsTechnicalChars();
 };
 
 void TestMathBlocks::findFindsInlineAndBlock()
@@ -445,6 +446,40 @@ void TestMathBlocks::deeplyNestedTexDoesNotOverflowStack()
 
     // Llegar aquí ya prueba que no hubo SIGSEGV.
     QVERIFY(true);
+}
+
+void TestMathBlocks::unicodeToLatexMapsTechnicalChars()
+{
+    // Super/subíndices → modo matemático.
+    QCOMPARE(mdmath::unicodeToLatex(0x2081), QStringLiteral("$_{1}$"));   // ₁
+    QCOMPARE(mdmath::unicodeToLatex(0x2099), QStringLiteral("$_{n}$"));   // ₙ
+    QCOMPARE(mdmath::unicodeToLatex(0x1D62), QStringLiteral("$_{i}$"));   // ᵢ
+    QCOMPARE(mdmath::unicodeToLatex(0x207F), QStringLiteral("$^{n}$"));   // ⁿ
+    QCOMPARE(mdmath::unicodeToLatex(0x00B2), QStringLiteral("$^{2}$"));   // ²
+    // Ellipsis → \ldots (no \dots), como pide el caso de uso.
+    QCOMPARE(mdmath::unicodeToLatex(0x2026), QStringLiteral("$\\ldots$"));
+    // Griego: φ es la «rizada» (\varphi en LaTeX), no \phi.
+    QCOMPARE(mdmath::unicodeToLatex(0x03C6), QStringLiteral("$\\varphi$"));
+    QCOMPARE(mdmath::unicodeToLatex(0x03A3), QStringLiteral("$\\Sigma$"));
+    QCOMPARE(mdmath::unicodeToLatex(0x03A0), QStringLiteral("$\\Pi$"));
+    // Operadores/relaciones que antes se descartaban.
+    QCOMPARE(mdmath::unicodeToLatex(0x2295), QStringLiteral("$\\oplus$"));   // ⊕
+    QCOMPARE(mdmath::unicodeToLatex(0x2208), QStringLiteral("$\\in$"));      // ∈
+    QCOMPARE(mdmath::unicodeToLatex(0x2297), QStringLiteral("$\\otimes$"));  // ⊗
+    QCOMPARE(mdmath::unicodeToLatex(0x22C3), QStringLiteral("$\\bigcup$"));  // ⋃
+    QCOMPARE(mdmath::unicodeToLatex(0x2261), QStringLiteral("$\\equiv$"));   // ≡
+    QCOMPARE(mdmath::unicodeToLatex(0x2265), QStringLiteral("$\\geq$"));     // ≥
+    QCOMPARE(mdmath::unicodeToLatex(0x27C2), QStringLiteral("$\\perp$"));    // ⟂
+    // Conjuntos «blackboard» y alfabetos matemáticos (astral y BMP).
+    QCOMPARE(mdmath::unicodeToLatex(0x211D), QStringLiteral("$\\mathbb{R}$"));   // ℝ
+    QCOMPARE(mdmath::unicodeToLatex(0x1D49E), QStringLiteral("$\\mathcal{C}$")); // 𝒞
+    QCOMPARE(mdmath::unicodeToLatex(0x1D7D9), QStringLiteral("$\\mathbf{1}$"));  // 𝟙 (aprox.)
+    // El latín-1 y la puntuación corriente NO se matematizan (los compone T1).
+    QVERIFY(mdmath::unicodeToLatex(0x00D7).isEmpty());  // ×
+    QVERIFY(mdmath::unicodeToLatex(0x00B7).isEmpty());  // · (punto medio)
+    QVERIFY(mdmath::unicodeToLatex(0x2014).isEmpty());  // — (raya)
+    QVERIFY(mdmath::unicodeToLatex(u'a').isEmpty());
+    QVERIFY(mdmath::unicodeToLatex(0x00F1).isEmpty());  // ñ
 }
 
 QTEST_MAIN(TestMathBlocks)

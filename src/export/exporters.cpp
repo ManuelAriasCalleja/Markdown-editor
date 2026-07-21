@@ -11,6 +11,7 @@
 #include <QBuffer>
 #include <QDateTime>
 #include <QFile>
+#include <QFileInfo>
 #include <QFont>
 #include <QFontMetricsF>
 #include <QHash>
@@ -153,7 +154,13 @@ QString latexEscape(const QString &s)
         case u'^':  out += QStringLiteral("\\textasciicircum{}"); continue;
         default:    break;
         }
-        if (cp < kHighSymbolStart)
+        // Caracteres «técnicos» (super/subíndices, griego, operadores, letras
+        // matemáticas…) que pdflatex+T1 no compone → su equivalente LaTeX en modo
+        // matemático. Cubre por igual los que hoy se colaban crudos y abortaban la
+        // compilación (`₁`, `φ`, `ℝ`…) y los altos que se descartaban (`⊕`, `∈`…).
+        if (const QString math = mdmath::unicodeToLatex(cp); !math.isEmpty())
+            out += math;
+        else if (cp < kHighSymbolStart)
             out += QChar(static_cast<char16_t>(cp));  // latino/puntuación: lo compone el motor
         else if (const auto it = highSymbolMap().constFind(cp); it != highSymbolMap().cend())
             out += it.value();
@@ -174,11 +181,118 @@ QString verbatimSanitize(const QString &s)
     return out;
 }
 
+// Estado para traer las imágenes junto al .tex y así hacer el export
+// autocontenido. Con `outDir` vacío (p.ej. en los tests) no se toca nada: las
+// imágenes se referencian por su ruta original, como siempre.
+struct LatexImages {
+    const QTextDocument *doc = nullptr;
+    QString outDir;   ///< carpeta del .tex donde escribir las imágenes traídas
+    QString stem;     ///< prefijo de nombre de los ficheros (ya saneado, sin puntos)
+    int counter = 0;  ///< secuencia para nombres de fichero únicos
+};
+
+// Extensiones que pdflatex (driver pdftex) incluye de forma nativa. Las demás
+// (SVG, GIF, BMP, TIFF, WebP…) abortan la compilación con «Unknown graphics
+// extension», así que hay que rasterizarlas antes.
+bool pdflatexIncludable(const QString &ext)
+{
+    return ext == QLatin1String("pdf") || ext == QLatin1String("png")
+        || ext == QLatin1String("jpg") || ext == QLatin1String("jpeg");
+}
+
+// Ruta local legible del recurso `name` resuelta contra `baseUrl` (rutas
+// relativas del Markdown), o vacío si es remoto/no existe.
+QString localFileFor(const QString &name, const QUrl &baseUrl)
+{
+    QUrl u(name);
+    if (u.isRelative())
+        u = baseUrl.resolved(u);
+    if (u.isLocalFile()) {
+        const QString p = u.toLocalFile();
+        if (QFileInfo::exists(p))
+            return p;
+    }
+    if (QFileInfo::exists(name))  // por si era ya una ruta de sistema de ficheros
+        return name;
+    return QString();
+}
+
+// Escribe el siguiente sidecar (`<stem>-imgN.<ext>`) junto al .tex y devuelve su
+// nombre de fichero, o vacío si la escritura falla. Solo avanza el contador si
+// realmente escribe, para que los nombres no salten números.
+QString writeSidecar(LatexImages &images, const QString &ext, const QByteArray &bytes)
+{
+    QString file =
+        QStringLiteral("%1-img%2.%3").arg(images.stem).arg(images.counter + 1).arg(ext);
+    QFile out(images.outDir + QLatin1Char('/') + file);
+    if (!out.open(QIODevice::WriteOnly) || out.write(bytes) != bytes.size())
+        return QString();
+    ++images.counter;
+    return file;
+}
+
+QString imagePlaceholder(const QString &name)
+{
+    // Marcador visible e inocuo (nunca un `%`, que comentaría el resto de la línea
+    // del párrafo) para cuando la imagen no se puede traer.
+    return QStringLiteral("\\texttt{[imagen: %1]}").arg(latexEscape(QFileInfo(name).fileName()));
+}
+
+// LaTeX para una imagen, dejando el export AUTOCONTENIDO: toda imagen se copia o
+// convierte a un fichero junto al .tex y se referencia por ese nombre, de modo que
+// el .tex compila esté donde esté. Las de formato incluible (pdf/png/jpg) se copian
+// byte a byte (conservan formato y calidad); las que pdflatex no soporta (SVG, GIF,
+// BMP…) —o una incluible que no se pueda leer del disco, p.ej. remota— se
+// rasterizan a PNG vía `doc->resource()` (que resuelve la ruta relativa por baseUrl
+// y rasteriza el SVG con el mismo plugin que ya lo muestra en el editor). La ruta
+// del sidecar se escapa (`%`, `#`, `{`, `}`, `\` romperían el .tex). Sin carpeta de
+// salida (tests) se mantiene la conducta previa: referencia directa de las
+// incluibles, marcador para el resto.
+QString imageLatex(const QString &name, LatexImages &images)
+{
+    if (name.isEmpty())
+        return QString();
+    const QString incl = QStringLiteral("\\includegraphics[max width=\\linewidth]{%1}");
+    const QString ext = QFileInfo(name).suffix().toLower();
+
+    if (images.outDir.isEmpty() || !images.doc)
+        return pdflatexIncludable(ext) ? incl.arg(latexEscape(name)) : imagePlaceholder(name);
+
+    // 1) Formato incluible con fichero local → copia los bytes tal cual.
+    if (pdflatexIncludable(ext)) {
+        const QString src = localFileFor(name, images.doc->baseUrl());
+        QFile in(src);
+        if (!src.isEmpty() && in.open(QIODevice::ReadOnly)) {
+            const QString file = writeSidecar(images, ext, in.readAll());
+            if (!file.isEmpty())
+                return incl.arg(latexEscape(file));
+        }
+    }
+    // 2) Formato no incluible (o incluible ilegible/remota) → rasteriza a PNG.
+    const QVariant res = images.doc->resource(QTextDocument::ImageResource, QUrl(name));
+    QImage img = qvariant_cast<QImage>(res);
+    if (img.isNull()) {
+        const QPixmap pm = qvariant_cast<QPixmap>(res);
+        if (!pm.isNull())
+            img = pm.toImage();
+    }
+    if (!img.isNull()) {
+        QByteArray png;
+        QBuffer buf(&png);
+        buf.open(QIODevice::WriteOnly);
+        img.save(&buf, "PNG");
+        const QString file = writeSidecar(images, QStringLiteral("png"), png);
+        if (!file.isEmpty())
+            return incl.arg(latexEscape(file));
+    }
+    return imagePlaceholder(name);
+}
+
 // Texto en línea de un bloque, con el formato de carácter convertido a comandos
 // LaTeX (negrita, cursiva, subrayado, tachado, código, enlaces e imágenes).
 // `ignoreBold` evita el \textbf en los encabezados (que Qt marca en negrita y en
 // LaTeX ya lo son), para no producir \section{\textbf{...}}.
-QString inlineLatex(const QTextBlock &block, bool ignoreBold = false)
+QString inlineLatex(const QTextBlock &block, LatexImages &images, bool ignoreBold = false)
 {
     QString out;
     QString lastMathTex;  // sigue el grupo de fórmula abierto (evita repetir)
@@ -202,10 +316,7 @@ QString inlineLatex(const QTextBlock &block, bool ignoreBold = false)
         }
         lastMathTex.clear();
         if (cf.isImageFormat()) {
-            // La ruta se escapa: `%`, `#`, `{`, `}`, `\` en el nombre romperían el
-            // .tex o inyectarían comandos.
-            out += QStringLiteral("\\includegraphics[max width=\\linewidth]{%1}")
-                       .arg(latexEscape(cf.toImageFormat().name()));
+            out += imageLatex(cf.toImageFormat().name(), images);
             continue;
         }
         QString t = latexEscape(frag.text());
@@ -247,7 +358,7 @@ QString columnSpec(const QTextTable *table)
     return spec;
 }
 
-QString tableLatex(QTextTable *table)
+QString tableLatex(QTextTable *table, LatexImages &images)
 {
     QString out = QStringLiteral("\\begin{tabular}{%1}\n\\hline\n").arg(columnSpec(table));
     for (int r = 0; r < table->rows(); ++r) {
@@ -259,7 +370,7 @@ QString tableLatex(QTextTable *table)
             for (; !fit.atEnd(); ++fit) {
                 const QTextBlock b = fit.currentBlock();
                 if (b.isValid())
-                    text += inlineLatex(b);
+                    text += inlineLatex(b, images);
             }
             cells << text;
         }
@@ -313,8 +424,24 @@ static QString latexPreamble(const Language &language, const QString &title)
     return out;
 }
 
-QString toLatex(const QTextDocument *doc, const Language &language, const QString &title)
+QString toLatex(const QTextDocument *doc, const Language &language, const QString &title,
+                const QString &outputTexPath)
 {
+    // Contexto de conversión de imágenes: si nos dan la ruta del .tex, las imágenes
+    // que pdflatex no soporta (SVG…) se rasterizan a un PNG junto a él. Sin ruta
+    // (tests), la conversión queda inactiva y las imágenes se referencian tal cual.
+    LatexImages images;
+    images.doc = doc;
+    if (!outputTexPath.isEmpty()) {
+        const QFileInfo fi(outputTexPath);
+        images.outDir = fi.absolutePath();
+        // Nombre base saneado (sin puntos ni espacios) para que graphicx no se líe
+        // con las extensiones y no haya problemas de rutas con espacios.
+        QString stem = fi.baseName();
+        stem.replace(QRegularExpression(QStringLiteral("[^A-Za-z0-9_-]")), QStringLiteral("-"));
+        images.stem = stem.isEmpty() ? QStringLiteral("figura") : stem;
+    }
+
     QStringList openLists;  // entornos de lista abiertos (de fuera hacia dentro)
     bool inQuote = false;
     bool inCode = false;
@@ -340,7 +467,7 @@ QString toLatex(const QTextDocument *doc, const Language &language, const QStrin
             if (!doneTables.contains(table)) {
                 closeLists(); closeQuote(); closeCode();
                 doneTables.append(table);
-                body += tableLatex(table) + QLatin1Char('\n');
+                body += tableLatex(table, images) + QLatin1Char('\n');
             }
             continue;
         }
@@ -361,7 +488,7 @@ QString toLatex(const QTextDocument *doc, const Language &language, const QStrin
             continue;
         }
 
-        const QString text = inlineLatex(block);
+        const QString text = inlineLatex(block, images);
 
         // Listas (viñetas, numeradas y tareas) con anidamiento por sangría.
         if (QTextList *list = block.textList()) {
@@ -404,7 +531,7 @@ QString toLatex(const QTextDocument *doc, const Language &language, const QStrin
         // Encabezado o párrafo normal.
         const int level = bf.headingLevel();
         if (level >= 1)
-            body += headingCommand(level, inlineLatex(block, /*ignoreBold=*/true));
+            body += headingCommand(level, inlineLatex(block, images, /*ignoreBold=*/true));
         else
             body += text + QStringLiteral("\n\n");
     }

@@ -87,6 +87,16 @@ constexpr int MathObjectType = QTextFormat::UserObject + 1;
 /// la tabla de glifos (griego, operadores) sin duplicarla.
 QString commandToUnicode(const QString &cmd);
 
+/// \brief Traducción a LaTeX (en modo matemático, `$...$`) de un carácter Unicode
+/// «técnico» que pdfLaTeX con `inputenc`+`T1` no sabe componer: super/subíndices
+/// (`₁`→`$_{1}$`, `ⁿ`→`$^{n}$`), letras griegas (`φ`→`$\varphi$`), operadores y
+/// relaciones (`⊕`,`∈`,`≥`,`…`→`$\ldots$`), conjuntos «blackboard»/script/fraktur
+/// (`ℝ`→`$\mathbb{R}$`, `𝒞`→`$\mathcal{C}$`) y las letras/dígitos matemáticos del
+/// plano astral. Devuelve vacío para lo que el motor sí compone (latín, puntuación
+/// corriente): esos caracteres se dejan pasar tal cual. Reutiliza las tablas del
+/// parser TeX (invertidas) para no duplicarlas. Pensado para el exportador LaTeX.
+QString unicodeToLatex(char32_t cp);
+
 /// \brief Carácter Unicode combinante del acento `cmd` (`hat`→◌̂, `bar`→◌̄, `vec`→◌⃗,
 /// `tilde`/`dot`/`ddot`/`acute`/`grave`/`check`/`breve`), o QChar nulo si no es
 /// un acento. Se pone DETRÁS del carácter base para que se superponga. Compartido

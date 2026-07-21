@@ -415,7 +415,9 @@ bool ExportController::exportLatex()
         /*needsLanguage=*/true, /*useFlatClone=*/false, /*needsBaseUrl=*/false,
         [](const QTextDocument *doc, const QString &path, const mdexport::Language &lang,
            const QString &title, QString *error) {
-            return writeUtf8File(path, mdexport::toLatex(doc, lang, title), error);
+            // Se pasa `path` para que las imágenes que pdflatex no soporta (SVG…) se
+            // rasterizen a un PNG junto al .tex.
+            return writeUtf8File(path, mdexport::toLatex(doc, lang, title, path), error);
         },
     });
 }

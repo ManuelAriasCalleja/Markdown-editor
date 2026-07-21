@@ -1491,18 +1491,18 @@
     </message>
     <message numerus="yes">
         <location filename="../src/app/mainwindow.cpp" line="464"/>
-        <source>%Ln palabra(s)</source>
+        <source>%1 palabra(s)</source>
         <translation>
-            <numerusform>%Ln palavra</numerusform>
-            <numerusform>%Ln palavras</numerusform>
+            <numerusform>%1 palavra</numerusform>
+            <numerusform>%1 palavras</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <location filename="../src/app/mainwindow.cpp" line="466"/>
-        <source>%Ln carácter(es)</source>
+        <source>%1 carácter(es)</source>
         <translation>
-            <numerusform>%Ln caractere</numerusform>
-            <numerusform>%Ln caracteres</numerusform>
+            <numerusform>%1 caractere</numerusform>
+            <numerusform>%1 caracteres</numerusform>
         </translation>
     </message>
     <message>

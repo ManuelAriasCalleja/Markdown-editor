@@ -3,10 +3,14 @@
 #include <QDir>
 #include <QFile>
 #include <QFont>
+#include <QImage>
 #include <QTemporaryDir>
 #include <QTextBlock>
+#include <QTextCursor>
 #include <QTextDocument>
 #include <QTextFragment>
+#include <QTextImageFormat>
+#include <QUrl>
 #include <QXmlStreamReader>
 
 #include "codehighlighter.h"
@@ -30,6 +34,8 @@ private slots:
     void latexConstructs();
     void latexHeadingNotDoublyBold();
     void latexSanitizesHighUnicode();
+    void latexConvertsMathUnicodeToCommands();
+    void latexBundlesImagesSelfContained();
     void odfStylesCarryLanguage();
     void odfMetaCarriesLanguageAndTitle();
     void odfManifestListsExtraFiles();
@@ -163,6 +169,103 @@ void TestExporters::latexSanitizesHighUnicode()
     // Preámbulo portable entre motores.
     QVERIFY(tex.contains(QStringLiteral("\\usepackage{iftex}")));
     QVERIFY(tex.contains(QStringLiteral("\\usepackage{fontspec}")));
+}
+
+void TestExporters::latexConvertsMathUnicodeToCommands()
+{
+    QTextDocument doc;
+    // Prosa con matemática en Unicode (subíndices, ellipsis, griego, operadores,
+    // conjuntos): cruda rompía la compilación pdflatex. Debe salir en modo
+    // matemático.
+    doc.setMarkdown(QString::fromUtf8(
+        u8"La probabilidad P(X₁,…,Xₙ) sobre φ ∈ 𝒞 con ⊕ y Σ⋃ℝ y 𝟙.\n"));
+    const QString tex = mdexport::toLatex(
+        &doc, mdexport::languageForCode(QStringLiteral("es")), QString());
+    // El caso concreto del informe: P(X₁,…,Xₙ) → P(X$_{1}$,$\ldots$,X$_{n}$).
+    QVERIFY(tex.contains(QStringLiteral("$_{1}$")));
+    QVERIFY(tex.contains(QStringLiteral("$_{n}$")));
+    QVERIFY(tex.contains(QStringLiteral("$\\ldots$")));
+    QVERIFY(tex.contains(QStringLiteral("$\\varphi$")));
+    QVERIFY(tex.contains(QStringLiteral("$\\in$")));
+    QVERIFY(tex.contains(QStringLiteral("$\\mathcal{C}$")));
+    QVERIFY(tex.contains(QStringLiteral("$\\oplus$")));
+    QVERIFY(tex.contains(QStringLiteral("$\\Sigma$")));
+    QVERIFY(tex.contains(QStringLiteral("$\\bigcup$")));
+    QVERIFY(tex.contains(QStringLiteral("$\\mathbb{R}$")));
+    QVERIFY(tex.contains(QStringLiteral("$\\mathbf{1}$")));
+    // Ya no quedan los caracteres crudos que abortaban pdflatex.
+    QVERIFY(!tex.contains(QChar(0x2081)));  // ₁
+    QVERIFY(!tex.contains(QChar(0x2099)));  // ₙ
+    QVERIFY(!tex.contains(QChar(0x2026)));  // …
+    QVERIFY(!tex.contains(QChar(0x03C6)));  // φ
+    QVERIFY(!tex.contains(QChar(0x2208)));  // ∈
+    QVERIFY(!tex.contains(QChar(0x2295)));  // ⊕
+    QVERIFY(!tex.contains(QChar(0x211D)));  // ℝ
+    QVERIFY(!tex.contains(QString::fromUtf8(u8"𝒞")));  // astral
+    QVERIFY(!tex.contains(QString::fromUtf8(u8"𝟙")));  // astral
+}
+
+void TestExporters::latexBundlesImagesSelfContained()
+{
+    // Carpeta del «.md»: un JPG real en disco + una baseUrl que lo resuelva.
+    QTemporaryDir srcDir;
+    QVERIFY(srcDir.isValid());
+    QImage red(40, 20, QImage::Format_RGB32);
+    red.fill(Qt::red);
+    const QString jpgSrc = srcDir.filePath(QStringLiteral("foto.jpg"));
+    QVERIFY(red.save(jpgSrc, "JPG"));
+    QByteArray jpgBytes;
+    {
+        QFile f(jpgSrc);
+        QVERIFY(f.open(QIODevice::ReadOnly));
+        jpgBytes = f.readAll();
+    }
+
+    QTextDocument doc;
+    doc.setBaseUrl(QUrl::fromLocalFile(srcDir.path() + QLatin1Char('/')));
+    // SVG inyectado como recurso (no incluible → se rasteriza; sin depender de qsvg).
+    // resource() resuelve el nombre contra baseUrl, así que se registra bajo la URL
+    // resuelta (en la app real el SVG se carga del disco por esa misma ruta).
+    doc.addResource(QTextDocument::ImageResource,
+                    doc.baseUrl().resolved(QUrl(QStringLiteral("diagrama.svg"))), red);
+    QTextCursor cur(&doc);
+    QTextImageFormat svg;
+    svg.setName(QStringLiteral("diagrama.svg"));
+    cur.insertImage(svg);
+    cur.insertText(QStringLiteral("\n"));
+    QTextImageFormat jpg;
+    jpg.setName(QStringLiteral("foto.jpg"));
+    cur.insertImage(jpg);
+
+    // Exporta el .tex a OTRA carpeta, distinta de la del .md/imágenes.
+    QTemporaryDir outDir;
+    QVERIFY(outDir.isValid());
+    const QString texPath = outDir.filePath(QStringLiteral("salida.tex"));
+    const QString tex = mdexport::toLatex(&doc, mdexport::Language{}, QString(), texPath);
+
+    // SVG → PNG rasterizado junto al .tex.
+    QVERIFY(tex.contains(QStringLiteral("\\includegraphics[max width=\\linewidth]{salida-img1.png}")));
+    QVERIFY(QFile::exists(outDir.filePath(QStringLiteral("salida-img1.png"))));
+    // JPG incluible → COPIA byte a byte junto al .tex, conservando la extensión.
+    QVERIFY(tex.contains(QStringLiteral("\\includegraphics[max width=\\linewidth]{salida-img2.jpg}")));
+    const QString copied = outDir.filePath(QStringLiteral("salida-img2.jpg"));
+    QVERIFY(QFile::exists(copied));
+    QByteArray copiedBytes;
+    {
+        QFile f(copied);
+        QVERIFY(f.open(QIODevice::ReadOnly));
+        copiedBytes = f.readAll();
+    }
+    QCOMPARE(copiedBytes, jpgBytes);  // copia exacta, sin re-encode
+    // Ya no quedan referencias a las rutas originales.
+    QVERIFY(!tex.contains(QStringLiteral("diagrama.svg")));
+    QVERIFY(!tex.contains(QStringLiteral("{foto.jpg}")));
+
+    // Sin ruta de salida (p.ej. otros tests): conducta previa — referencia directa
+    // las incluibles y deja un marcador inocuo para las que no.
+    const QString noOut = mdexport::toLatex(&doc, mdexport::Language{}, QString());
+    QVERIFY(noOut.contains(QStringLiteral("\\texttt{[imagen: diagrama.svg]}")));
+    QVERIFY(noOut.contains(QStringLiteral("{foto.jpg}")));
 }
 
 void TestExporters::odfStylesCarryLanguage()

@@ -108,6 +108,25 @@
 #include <QUrl>
 #include <QWheelEvent>
 
+namespace {
+// Formatea un entero con el separador de millares del locale, agrupando SIEMPRE en
+// grupos de 3. QLocale::toString() y `%Ln` siguen la regla CLDR
+// «minimumGroupingDigits» (2 en español y casi todos los locales europeos), que NO
+// agrupa los números de 4 cifras: «1234» pero «12.345». Como los caracteres suelen
+// pasar de 10 000 y las palabras quedar en 1000–9999, unos salían con separador y
+// otras no; aquí ambos se agrupan igual («1.234», «12.345»). Los 9 idiomas de la
+// interfaz usan dígitos occidentales y grupos de 3, así que basta con insertar el
+// separador del locale cada tres cifras.
+QString groupedNumber(int n)
+{
+    const QLocale loc;
+    QString digits = QString::number(qAbs(static_cast<qlonglong>(n)));
+    const QString sep = loc.groupSeparator();
+    for (int i = digits.size() - 3; i > 0; i -= 3)
+        digits.insert(i, sep);
+    return (n < 0 ? loc.negativeSign() : QString()) + digits;
+}
+}  // namespace
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -458,12 +477,13 @@ void MainWindow::updateWordCount()
     const QString text = hasSelection ? cursor.selectedText() : ed->toPlainText();
     const mdstats::DocStats st = mdstats::analyze(text);
 
-    // %n produce el plural correcto en cada idioma (relevante en polaco/rumano,
-    // de reglas complejas, y evita el «1 palabra(s)»). El modificador L de %Ln
-    // agrupa además las cifras según el locale (12.345), como QLocale::toString.
-    QString count = tr("%Ln palabra(s)", nullptr, st.words)
+    // El count de numerus produce el plural correcto en cada idioma (relevante en
+    // polaco/rumano, de reglas complejas, y evita el «1 palabra(s)»); el número lo
+    // pone `groupedNumber` en `%1` para que palabras y caracteres se agrupen igual
+    // (%Ln heredaba la regla CLDR que no agrupa los 4 dígitos: «1234» vs «12.345»).
+    QString count = tr("%1 palabra(s)", nullptr, st.words).arg(groupedNumber(st.words))
                     + QStringLiteral(" · ")
-                    + tr("%Ln carácter(es)", nullptr, st.chars);
+                    + tr("%1 carácter(es)", nullptr, st.chars).arg(groupedNumber(st.chars));
     // Tiempo de lectura estimado: cualquier texto cuenta al menos como 1 min.
     const int minutes =
         st.words > 0 ? std::max(1, static_cast<int>(std::ceil(st.readingMinutes))) : 0;
@@ -491,18 +511,17 @@ void MainWindow::showDocumentStatistics()
     const int minutes =
         st.words > 0 ? std::max(1, static_cast<int>(std::ceil(st.readingMinutes))) : 0;
 
-    // QLocale::toString agrupa las cifras según el idioma (12.345), como %Ln en la
-    // barra de estado; QString::number no lo haría.
-    const QLocale loc;
+    // groupedNumber agrupa las cifras según el idioma (12.345) igual que la barra de
+    // estado, sin la excepción CLDR que dejaba los 4 dígitos sin separador.
     QDialog dlg(this);
     dlg.setWindowTitle(tr("Estadísticas del documento"));
     auto *form = new QFormLayout(&dlg);
-    form->addRow(tr("Palabras:"), new QLabel(loc.toString(st.words), &dlg));
-    form->addRow(tr("Caracteres:"), new QLabel(loc.toString(st.chars), &dlg));
+    form->addRow(tr("Palabras:"), new QLabel(groupedNumber(st.words), &dlg));
+    form->addRow(tr("Caracteres:"), new QLabel(groupedNumber(st.chars), &dlg));
     form->addRow(tr("Caracteres (sin espacios):"),
-                 new QLabel(loc.toString(st.charsNoSpaces), &dlg));
-    form->addRow(tr("Párrafos:"), new QLabel(loc.toString(st.paragraphs), &dlg));
-    form->addRow(tr("Frases:"), new QLabel(loc.toString(st.sentences), &dlg));
+                 new QLabel(groupedNumber(st.charsNoSpaces), &dlg));
+    form->addRow(tr("Párrafos:"), new QLabel(groupedNumber(st.paragraphs), &dlg));
+    form->addRow(tr("Frases:"), new QLabel(groupedNumber(st.sentences), &dlg));
     form->addRow(tr("Tiempo de lectura:"),
                  new QLabel(formatReadingTime(minutes), &dlg));
 
@@ -520,12 +539,12 @@ QString MainWindow::formatReadingTime(int minutes) const
     if (minutes < 60)
         return tr("~%n min", nullptr, minutes);
     // A partir de 60 min se reparte en horas + minutos («~1 h 15 min», «~2 h»).
-    // «h»/«min» son símbolos internacionales; QLocale::toString agrupa las horas
-    // si llegaran a miles. Se separan las horas de los minutos para poder omitir el
+    // «h»/«min» son símbolos internacionales; groupedNumber agrupa las horas si
+    // llegaran a miles. Se separan las horas de los minutos para poder omitir el
     // «0 min» cuando el tiempo es un número entero de horas.
     const int h = minutes / 60;
     const int m = minutes % 60;
-    const QString hours = QLocale().toString(h);
+    const QString hours = groupedNumber(h);
     if (m == 0)
         return tr("~%1 h").arg(hours);
     return tr("~%1 h %2 min").arg(hours).arg(m);

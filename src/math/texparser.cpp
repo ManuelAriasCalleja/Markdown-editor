@@ -500,6 +500,157 @@ QString styledMathAlphabet(const QString &cmd, const QString &arg)
     return out;
 }
 
+namespace {
+
+// ── Inversos de las tablas TeX→Unicode, para el exportador LaTeX ──────────────
+// Convierten un carácter Unicode «técnico» de vuelta a su comando LaTeX. Se
+// construyen una sola vez a partir de las tablas directas de arriba (toSuperscript
+// /toSubscript/singleCharCommands), así no se duplica el catálogo: al ampliar la
+// tabla directa, el inverso la sigue.
+
+// Carácter Unicode de super/subíndice → su carácter base ASCII (`¹`→'1', `ₙ`→'n'),
+// o QChar nulo si no lo es.
+QChar superscriptInverse(char32_t cp)
+{
+    static const QHash<char32_t, QChar> m = [] {
+        QHash<char32_t, QChar> inv;
+        for (int c = 0x20; c < 0x7f; ++c)
+            if (const QChar up = toSuperscript(QChar(char16_t(c))); !up.isNull())
+                inv.insert(up.unicode(), QChar(char16_t(c)));
+        return inv;
+    }();
+    return m.value(cp);
+}
+QChar subscriptInverse(char32_t cp)
+{
+    static const QHash<char32_t, QChar> m = [] {
+        QHash<char32_t, QChar> inv;
+        for (int c = 0x20; c < 0x7f; ++c)
+            if (const QChar dn = toSubscript(QChar(char16_t(c))); !dn.isNull())
+                inv.insert(dn.unicode(), QChar(char16_t(c)));
+        return inv;
+    }();
+    return m.value(cp);
+}
+
+// Carácter Unicode de símbolo/griego → comando LaTeX (sin la `\`), o vacío. El
+// latín-1 (`×`,`·`,`±`,`÷`,`¬`…) se deja fuera a propósito (cp < 0x0370): T1 lo
+// compone y en prosa suele ser puntuación, no matemática. Se parte del inverso de
+// singleCharCommands, con preferencias explícitas donde varios comandos comparten
+// glifo o donde Unicode y LaTeX difieren en qué variante es la «recta».
+QString symbolCommandInverse(char32_t cp)
+{
+    if (cp < 0x0370)
+        return QString();  // ASCII/latín-1: lo compone el motor, no se matematiza
+    static const QHash<char32_t, QString> m = [] {
+        // Preferencias explícitas (ganan al auto-inverso).
+        QHash<char32_t, QString> inv = {
+            {0x2026, QStringLiteral("ldots")},                                  // …
+            {0x2264, QStringLiteral("leq")},     {0x2265, QStringLiteral("geq")},
+            {0x2260, QStringLiteral("neq")},
+            {0x2192, QStringLiteral("rightarrow")}, {0x2190, QStringLiteral("leftarrow")},
+            {0x21D4, QStringLiteral("Leftrightarrow")},
+            {0x2205, QStringLiteral("emptyset")},
+            {0x2227, QStringLiteral("wedge")},   {0x2228, QStringLiteral("vee")},
+            {0x22A5, QStringLiteral("perp")},
+            // phi/epsilon: Unicode 03C6=φ(rizada)=\varphi, 03D5=ϕ(recta)=\phi;
+            // 03B5=ε=\varepsilon, 03F5=ϵ=\epsilon. El catálogo del editor los asigna
+            // al revés (para el render); al exportar seguimos la convención LaTeX.
+            {0x03C6, QStringLiteral("varphi")},  {0x03D5, QStringLiteral("phi")},
+            {0x03B5, QStringLiteral("varepsilon")}, {0x03F5, QStringLiteral("epsilon")},
+            {0x27C2, QStringLiteral("perp")},    // ⟂ (no está en el catálogo directo)
+        };
+        // Auto-inverso del catálogo. Orden estable (claves ordenadas) para que el
+        // resultado sea reproducible pese a que QHash no ordena; no pisa las
+        // preferencias.
+        QStringList cmds = singleCharCommands().keys();
+        cmds.sort();
+        for (const QString &cmd : cmds) {
+            const char32_t v = singleCharCommands().value(cmd).unicode();
+            if (!inv.contains(v))
+                inv.insert(v, cmd);
+        }
+        return inv;
+    }();
+    return m.value(cp);
+}
+
+// Letra/dígito matemático estilizado (bloque astral U+1D400–U+1D7FF y las
+// excepciones «letterlike» reubicadas en el BMP) → comando LaTeX con argumento,
+// p.ej. `𝒞`→"mathcal{C}", `𝔄`→"mathfrak{A}". Los estilos sin comando propio en
+// amsmath+amssymb (negrita cursiva, sans-serif, dígitos double-struck…) se
+// aproximan al más cercano que compile. Vacío si `cp` no es de esa clase.
+QString styledAlphabetInverse(char32_t cp)
+{
+    // Excepciones del BMP: letras script/fraktur/double-struck que Unicode reubicó
+    // en «Letterlike Symbols» (huecos del bloque astral). Las double-struck ℝℕℤℚℂℙ y
+    // ℑℜ (Im/Re) ya las cubre singleCharCommands; aquí solo lo que falta.
+    static const QHash<char32_t, QString> letterlike = {
+        {0x212C, QStringLiteral("mathcal{B}")},  {0x2130, QStringLiteral("mathcal{E}")},
+        {0x2131, QStringLiteral("mathcal{F}")},  {0x210B, QStringLiteral("mathcal{H}")},
+        {0x2110, QStringLiteral("mathcal{I}")},  {0x2112, QStringLiteral("mathcal{L}")},
+        {0x2133, QStringLiteral("mathcal{M}")},  {0x211B, QStringLiteral("mathcal{R}")},
+        {0x212F, QStringLiteral("mathcal{e}")},  {0x210A, QStringLiteral("mathcal{g}")},
+        {0x2134, QStringLiteral("mathcal{o}")},
+        {0x212D, QStringLiteral("mathfrak{C}")}, {0x210C, QStringLiteral("mathfrak{H}")},
+        {0x2128, QStringLiteral("mathfrak{Z}")},
+        {0x210D, QStringLiteral("mathbb{H}")},
+    };
+    if (const auto it = letterlike.constFind(cp); it != letterlike.cend())
+        return it.value();
+
+    // Rangos alfabéticos del bloque astral: 26 mayúsculas (A–Z) seguidas de 26
+    // minúsculas (a–z), 52 posiciones consecutivas por estilo. Los huecos (letras
+    // reubicadas al BMP, arriba) quedan sin asignar en Unicode, así que no llegan.
+    struct AlphaRange { char32_t start; const char *cmd; };
+    static const AlphaRange alpha[] = {
+        {0x1D400, "mathbf"},   {0x1D434, "mathit"},   {0x1D468, "mathbf"},    // bold, italic, bold-italic≈bf
+        {0x1D49C, "mathcal"},  {0x1D4D0, "mathcal"},                          // script, bold-script≈cal
+        {0x1D504, "mathfrak"}, {0x1D56C, "mathfrak"},                         // fraktur, bold-fraktur≈frak
+        {0x1D538, "mathbb"},                                                  // double-struck
+        {0x1D5A0, "mathsf"},   {0x1D5D4, "mathsf"},   {0x1D608, "mathsf"}, {0x1D63C, "mathsf"},  // sans variants
+        {0x1D670, "mathtt"},                                                  // monospace
+    };
+    for (const auto &r : alpha)
+        if (cp >= r.start && cp < r.start + 52) {
+            const int idx = int(cp - r.start);
+            const QChar base = QChar(char16_t(idx < 26 ? 'A' + idx : 'a' + (idx - 26)));
+            return QString::fromLatin1(r.cmd) + QLatin1Char('{') + base + QLatin1Char('}');
+        }
+
+    // Dígitos estilizados. amssymb no da \mathbb de dígitos → los double-struck se
+    // aproximan con \mathbf (p.ej. 𝟙, la función indicadora, → \mathbf{1}).
+    struct DigitRange { char32_t start; const char *cmd; };
+    static const DigitRange digit[] = {
+        {0x1D7CE, "mathbf"},  {0x1D7D8, "mathbf"},  {0x1D7E2, "mathsf"},
+        {0x1D7EC, "mathsf"},  {0x1D7F6, "mathtt"},
+    };
+    for (const auto &d : digit)
+        if (cp >= d.start && cp < d.start + 10) {
+            const QChar base = QChar(char16_t('0' + int(cp - d.start)));
+            return QString::fromLatin1(d.cmd) + QLatin1Char('{') + base + QLatin1Char('}');
+        }
+    return QString();
+}
+
+} // namespace
+
+QString unicodeToLatex(char32_t cp)
+{
+    // Super/subíndices: Unicode los tiene como carácter, T1 no los compone.
+    if (const QChar base = superscriptInverse(cp); !base.isNull())
+        return QStringLiteral("$^{%1}$").arg(base);
+    if (const QChar base = subscriptInverse(cp); !base.isNull())
+        return QStringLiteral("$_{%1}$").arg(base);
+    // Letras/dígitos matemáticos estilizados (script, fraktur, double-struck…).
+    if (const QString alpha = styledAlphabetInverse(cp); !alpha.isEmpty())
+        return QStringLiteral("$\\%1$").arg(alpha);
+    // Griego y símbolos matemáticos (el latín-1 se filtra dentro).
+    if (const QString cmd = symbolCommandInverse(cp); !cmd.isEmpty())
+        return QStringLiteral("$\\%1$").arg(cmd);
+    return QString();
+}
+
 // Vuelca el texto acumulado en `buffer` (si lo hay) como un run con `baseFmt` y lo
 // limpia. Sub-paso común de los parsers de renderTexAsRuns.
 static void flushBuffer(QList<MathRun> &runs, QString &buffer, const QTextCharFormat &baseFmt)

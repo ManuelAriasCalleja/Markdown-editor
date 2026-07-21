@@ -525,9 +525,28 @@ una fórmula muy anidada (`\frac{\frac{…}}`, `x^{y^{…}}`) desbordaba la pila
   `fo:language`) y `meta.xml` (`dc:language`/`dc:title`). API privada de Qt: revisar
   al actualizar Qt.
 - **LaTeX**: serializador propio (`mdexport::toLatex`). Preámbulo portable con
-  `iftex` (pdfLaTeX usa inputenc/T1; Lua/XeLaTeX usan fontspec) + `babel`. Los
-  caracteres ≥ U+2190 (símbolos/emoji) se mapean a comandos LaTeX o se omiten para
-  no romper pdfLaTeX; el código `verbatim` se sanea aparte.
+  `iftex` (pdfLaTeX usa inputenc/T1; Lua/XeLaTeX usan fontspec) + `babel`. La
+  matemática Unicode escrita **literalmente en la prosa** (subíndices `₁ₙ`,
+  superíndices `ⁿ`, griego `φΣ`, operadores `⊕∈≥`, `…`, conjuntos `ℝ`, alfabetos
+  `𝒞`) rompía la compilación de pdfLaTeX (que con inputenc+T1 no compone esos
+  glifos): `mdmath::unicodeToLatex` la traduce a modo matemático (`₁`→`$_{1}$`,
+  `φ`→`$\varphi$`, `𝒞`→`$\mathcal{C}$`, `…`→`$\ldots$`) reutilizando las tablas
+  TeX→Unicode del parser **invertidas** (`toSuperscript`/`toSubscript`/
+  `singleCharCommands`), con las preferencias de alias donde varias órdenes comparten
+  glifo; el latín-1 y la puntuación corriente (`× · — …`) se dejan pasar (T1 sí los
+  compone). El resto de símbolos/emoji ≥ U+2190 se mapean con la tabla suelta del
+  exportador o se omiten; el código `verbatim` se sanea aparte.
+  **Imágenes: export autocontenido.** `toLatex` recibe la ruta del `.tex` y **trae
+  toda imagen junto a él** (`<stem>-imgN.ext`), de modo que el `.tex` compila esté
+  donde esté (no depende de exportarse junto al `.md`). Las de formato incluible por
+  pdfLaTeX (pdf/png/jpg/jpeg) se **copian byte a byte** (conservan formato y calidad);
+  las que no soporta (`.svg`, `.gif`, `.bmp`, `.tiff`…) —o una incluible ilegible/
+  remota— se **rasterizan a PNG** vía `doc->resource()` (que resuelve la ruta relativa
+  por `baseUrl` y rasteriza el SVG con el mismo plugin `qsvg` que ya lo muestra en el
+  editor). Se referencia el fichero traído (ruta escapada). Si no se puede traer, un
+  marcador `\texttt{[imagen: …]}` inocuo (nunca un `%`, que comentaría la línea). Sin
+  ruta de salida (tests) se mantiene la conducta previa: referencia directa de las
+  incluibles, marcador para el resto.
 - **DOCX**: serializador OOXML propio (`mdexport::toDocxDocumentXml`) empaquetado
   con el QZip privado; idioma/título incrustados, imágenes embebidas.
 - **EPUB**: `mdexport::writeEpub` arma un EPUB 3 (`mimetype` sin comprimir primero,

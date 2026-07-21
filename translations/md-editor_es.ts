@@ -25,18 +25,18 @@
     <name>MainWindow</name>
     <message numerus="yes">
         <location filename="../../src/app/mainwindow.cpp" line="464"/>
-        <source>%Ln palabra(s)</source>
+        <source>%1 palabra(s)</source>
         <translation>
-            <numerusform>%Ln palabra</numerusform>
-            <numerusform>%Ln palabras</numerusform>
+            <numerusform>%1 palabra</numerusform>
+            <numerusform>%1 palabras</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <location filename="../../src/app/mainwindow.cpp" line="466"/>
-        <source>%Ln carácter(es)</source>
+        <source>%1 carácter(es)</source>
         <translation>
-            <numerusform>%Ln carácter</numerusform>
-            <numerusform>%Ln caracteres</numerusform>
+            <numerusform>%1 carácter</numerusform>
+            <numerusform>%1 caracteres</numerusform>
         </translation>
     </message>
     <message numerus="yes">

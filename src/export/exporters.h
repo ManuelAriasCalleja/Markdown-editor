@@ -53,8 +53,13 @@ struct PdfInfo {
 PdfInfo pdfDocumentInfo(const QString &frontMatter);
 
 /// \brief Serializa el documento a un .tex completo (preámbulo + cuerpo), con babel del
-/// idioma dado y, si `title` no está vacío, `\maketitle`. Función pura.
-QString toLatex(const QTextDocument *doc, const Language &language, const QString &title);
+/// idioma dado y, si `title` no está vacío, `\maketitle`.
+/// \param outputTexPath ruta del .tex de destino. Si se da, las imágenes que
+/// pdflatex no sabe incluir (SVG, GIF, BMP…) se rasterizan a un PNG escrito en esa
+/// misma carpeta y se referencian; si está vacía (p.ej. en tests), se referencian
+/// tal cual. Salvo por ese efecto de escritura de PNGs, la función es pura.
+QString toLatex(const QTextDocument *doc, const Language &language, const QString &title,
+                const QString &outputTexPath = QString());
 
 /// \brief Devuelve el XML `styles.xml` que fija el idioma del ODF. Pura y testeable.
 QByteArray odfStylesXml(const Language &language);
