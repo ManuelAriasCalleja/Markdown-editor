@@ -77,7 +77,7 @@ jobs:
           # versión para que la página de releases muestre nombres claros.
           mv md-editor-*.AppImage "md-editor-${VERSION}-x86_64.AppImage"
 
-      - uses: actions/upload-artifact@v5
+      - uses: actions/upload-artifact@v6
         with:
           name: linux
           path: md-editor-*-x86_64.AppImage
@@ -136,7 +136,7 @@ jobs:
       - name: Upload unsigned .exe for SignPath
         if: ${{ env.SIGN_ENABLED == 'true' }}
         id: unsigned-exe
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: unsigned-exe
           path: dist/md-editor.exe
@@ -161,7 +161,7 @@ jobs:
           $version = $env:GITHUB_REF_NAME.TrimStart('v')
           Compress-Archive -Path dist/* -DestinationPath "md-editor-$version-windows-x64.zip"
 
-      - uses: actions/upload-artifact@v5
+      - uses: actions/upload-artifact@v6
         with:
           name: windows
           path: md-editor-*-windows-x64.zip
@@ -239,7 +239,7 @@ jobs:
           macdeployqt md-editor.app -dmg
           mv md-editor.dmg "../md-editor-${VERSION}-macos-universal.dmg"
 
-      - uses: actions/upload-artifact@v5
+      - uses: actions/upload-artifact@v6
         with:
           name: macos
           path: md-editor-*-macos-universal.dmg
@@ -254,7 +254,7 @@ jobs:
     permissions:
       contents: write  # necesario para crear el Release en este repo
     steps:
-      - uses: actions/download-artifact@v5
+      - uses: actions/download-artifact@v7
         with:
           path: artifacts
 
