@@ -5,6 +5,24 @@ Todos los cambios relevantes de **md-editor** se documentan en este archivo.
 El formato sigue, a grandes rasgos, [Keep a Changelog](https://keepachangelog.com/es/),
 y el proyecto usa [versionado semántico](https://semver.org/lang/es/).
 
+## [2.7.1] — 2026-07-24
+
+### Corregido
+- **Exportación a LaTeX**: la matemática Unicode escrita literalmente en la prosa
+  (subíndices `₁ₙ`, superíndices `ⁿ`, griego `φΣ`, operadores `⊕∈≥`, conjuntos `ℝ`,
+  alfabetos `𝒞`) rompía la compilación en pdfLaTeX, que con inputenc+T1 no compone
+  esos glifos. Ahora se traducen a modo matemático (`$_{1}$`, `$\varphi$`,
+  `$\mathcal{C}$`, `$\ldots$`) y el `.tex` compila.
+- **Contador de palabras**: las cifras de cuatro dígitos no llevaban separador de
+  miles cuando las de caracteres sí (`1234` frente a `12.345`). Palabras, caracteres
+  y estadísticas agrupan ya de forma coherente.
+
+### Cambiado
+- **Exportación a LaTeX autocontenida**: el `.tex` se lleva consigo las imágenes
+  —copiadas a su lado tal cual si pdfLaTeX admite el formato (pdf/png/jpg), o
+  rasterizadas a PNG si no (`.svg`, `.gif`, `.bmp`…)—, así que compila esté donde
+  esté y ya no depende de quedarse junto al `.md`.
+
 ## [2.7.0] — 2026-07-18
 
 ### Añadido

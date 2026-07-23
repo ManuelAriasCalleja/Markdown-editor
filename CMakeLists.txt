@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.16)
 
 project(md-editor
-    VERSION 2.7.0
+    VERSION 2.7.1
     DESCRIPTION "Editor/visor de archivos Markdown en Qt6"
     LANGUAGES CXX)
 
