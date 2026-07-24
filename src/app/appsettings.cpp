@@ -15,6 +15,7 @@ inline QString zoomLevelKey()   { return QStringLiteral("zoomLevel"); }
 inline QString showWordCountKey() { return QStringLiteral("showWordCount"); }
 inline QString showLineColumnKey() { return QStringLiteral("showLineColumn"); }
 inline QString typewriterModeKey() { return QStringLiteral("typewriterMode"); }
+inline QString diagramPreviewKey() { return QStringLiteral("diagramPreview"); }
 inline QString currentLineHighlightKey() { return QStringLiteral("currentLineHighlight"); }
 inline QString printPageNumbersKey() { return QStringLiteral("printPageNumbers"); }
 inline QString lineSpacingKey()    { return QStringLiteral("lineSpacing"); }
@@ -129,6 +130,16 @@ bool AppSettings::showLineColumn()
 void AppSettings::setShowLineColumn(bool on)
 {
     QSettings().setValue(showLineColumnKey(), on);
+}
+
+bool AppSettings::diagramPreview()
+{
+    return QSettings().value(diagramPreviewKey(), true).toBool();  // activado por defecto
+}
+
+void AppSettings::setDiagramPreview(bool on)
+{
+    QSettings().setValue(diagramPreviewKey(), on);
 }
 
 bool AppSettings::typewriterMode()

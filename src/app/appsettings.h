@@ -62,6 +62,12 @@ void setShowLineColumn(bool on);
 bool typewriterMode();
 void setTypewriterMode(bool on);
 
+/// \brief Previsualizar los bloques ```mermaid/```plantuml como imagen bajo el
+/// bloque (ejecutando la herramienta externa). Activado por defecto; al apagarlo
+/// esos bloques se quedan como código sin renderizar.
+bool diagramPreview();
+void setDiagramPreview(bool on);
+
 /// \brief Resaltar la línea actual con un fondo sutil. Desactivado por defecto.
 bool currentLineHighlight();
 void setCurrentLineHighlight(bool on);

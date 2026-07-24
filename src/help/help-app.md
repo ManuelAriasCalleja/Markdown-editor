@@ -261,6 +261,10 @@ Markdown guardado.
   instalación de tu sistema operativo; el bloque se mantiene como código.
 - La imagen es solo presentación: no se escribe en el Markdown ni cuenta como
   cambio sin guardar.
+- **Ver → Previsualizar diagramas** activa o desactiva esta previsualización
+  automática (activada por defecto). Apágala si prefieres dejar los bloques como
+  código —por ejemplo cuando ya insertas tú una imagen pre-renderizada bajo el
+  bloque y no quieres verla por duplicado—.
 
 Por ejemplo, un bloque de código con la etiqueta `mermaid` que contenga
 `flowchart LR  A --> B --> C` se previsualiza como el diagrama de flujo

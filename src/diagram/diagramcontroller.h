@@ -30,6 +30,12 @@ class DiagramController : public QObject
 public:
     DiagramController(QTextEdit *editor, QObject *parent = nullptr);
 
+    /// Activa/desactiva la previsualización de diagramas. Persiste el ajuste
+    /// (global) en AppSettings. Al desactivarla, retira las previews ya colocadas y
+    /// deja los bloques como código; al activarla, vuelve a renderizarlos.
+    void setEnabled(bool on);
+    bool isEnabled() const { return m_enabled; }
+
 public slots:
     /// Programa un refresco (debounce): re-escanea y actualiza las previews.
     void scheduleRefresh();
@@ -69,6 +75,7 @@ private:
     DiagramRenderer *m_renderer = nullptr;
     QTimer *m_debounce = nullptr;
     bool m_updating = false;  // cambios propios: no re-disparar refresh
+    bool m_enabled = true;    // previsualización activada (ajuste global de AppSettings)
 
     // Aviso de fallo de render «asentado» (ver onFailed).
     QTimer *m_failNotify = nullptr;

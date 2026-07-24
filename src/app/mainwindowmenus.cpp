@@ -927,6 +927,19 @@ void MainWindow::createViewMenu()
             updateLineColumn();  // rellena el texto al activarlo (antes estaba vacío y oculto)
     });
 
+    QAction *diagramAction = viewMenu->addAction(tr("Previsualizar diagramas"));
+    diagramAction->setCheckable(true);
+    diagramAction->setChecked(AppSettings::diagramPreview());
+    diagramAction->setToolTip(
+        tr("Renderiza los bloques mermaid/plantuml como imagen bajo el bloque"));
+    connect(diagramAction, &QAction::toggled, this, [this](bool on) {
+        // Aplica a TODAS las pestañas (cada una tiene su DiagramController): así las
+        // de segundo plano no se quedan con previews cuando se apaga la opción.
+        for (int i = 0; i < m_tabs->count(); ++i)
+            if (EditorStack *s = stackAt(i))
+                s->diagrams()->setEnabled(on);  // persiste, retira/rehace las previews
+    });
+
     QAction *spellAction = viewMenu->addAction(tr("Corrección ortográfica"));
     spellAction->setCheckable(true);
     spellAction->setChecked(AppSettings::spellCheck());

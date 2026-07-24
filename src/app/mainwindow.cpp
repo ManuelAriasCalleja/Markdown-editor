@@ -761,10 +761,24 @@ void MainWindow::toggleOutlineFocus()
     m_outline->focusTree();
 }
 
+QString MainWindow::dialogStartDir() const
+{
+    // Preferimos la carpeta del documento activo (donde probablemente esté el
+    // siguiente); luego la del último documento abierto (sobrevive a un documento
+    // nuevo sin guardar); por último, la carpeta personal.
+    const QString current = m_stack ? m_stack->documentIo()->currentFile() : QString();
+    if (!current.isEmpty())
+        return QFileInfo(current).absolutePath();
+    const QString last = AppSettings::lastFile();
+    if (!last.isEmpty())
+        return QFileInfo(last).absolutePath();
+    return QDir::homePath();
+}
+
 void MainWindow::openInTab()
 {
     const QString path = QFileDialog::getOpenFileName(
-        this, tr("Abrir"), QString(),
+        this, tr("Abrir"), dialogStartDir(),
         tr("Archivos Markdown (*.md *.markdown *.txt);;Todos los archivos (*)"));
     if (!path.isEmpty())
         openPathInTab(path);
@@ -773,7 +787,7 @@ void MainWindow::openInTab()
 void MainWindow::importHtml()
 {
     const QString path = QFileDialog::getOpenFileName(
-        this, tr("Importar HTML"), QString(),
+        this, tr("Importar HTML"), dialogStartDir(),
         tr("Páginas HTML (*.html *.htm);;Todos los archivos (*)"));
     if (path.isEmpty())
         return;
@@ -796,7 +810,7 @@ void MainWindow::importHtml()
 void MainWindow::importEpub()
 {
     const QString path = QFileDialog::getOpenFileName(
-        this, tr("Importar EPUB"), QString(),
+        this, tr("Importar EPUB"), dialogStartDir(),
         tr("Libros EPUB (*.epub);;Todos los archivos (*)"));
     if (path.isEmpty())
         return;
@@ -829,7 +843,7 @@ void MainWindow::importWithPandoc()
     }
 
     const QString path = QFileDialog::getOpenFileName(
-        this, tr("Importar con Pandoc"), QString(),
+        this, tr("Importar con Pandoc"), dialogStartDir(),
         tr("Documentos compatibles (%1);;Todos los archivos (*)")
             .arg(mdimport::pandocFilePattern()));
     if (path.isEmpty())

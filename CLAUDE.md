@@ -362,7 +362,13 @@ añadir lógica nueva: hay un `tst_*` por módulo.
   de preview, `PreviewPlaceholderProperty`) con la orden de instalación de la
   plataforma (detectada con `QSysInfo::kernelType`, sin `#ifdef`): contextual,
   seleccionable para copiar la orden, y se reemplaza por la imagen en cuanto la
-  herramienta aparece.
+  herramienta aparece. La previsualización se puede apagar (*Ver → Previsualizar
+  diagramas*, ajuste global `AppSettings::diagramPreview`, activado por defecto):
+  `DiagramController::setEnabled(false)` retira todas las previews con
+  `removeOrphanPreviews({})` (conjunto de regiones vacío = todas huérfanas) y
+  `scheduleRefresh` corta en seco; el menú lo aplica a **todas** las pestañas. Útil
+  cuando el autor ya inserta a mano una imagen pre-renderizada bajo el bloque (que
+  si no, se vería por duplicado con la preview automática).
 - **Corrección ortográfica (opcional, Hunspell).** Primera dependencia de
   terceros, **opcional** (`SPELL_CHECK`→`HAVE_HUNSPELL` en CMake): sin
   `libhunspell-dev` el build sigue verde. Piezas: `spellscan` (`mdspell`, puro:

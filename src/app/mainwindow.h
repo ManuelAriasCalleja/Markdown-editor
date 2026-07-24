@@ -302,6 +302,11 @@ private:
     // Alterna el foco de teclado entre el esquema (TOC) y el editor (F6):
     // muestra el esquema si está oculto, lo enfoca; si ya lo tiene, vuelve al editor.
     void toggleOutlineFocus();
+    // Directorio inicial para los diálogos de abrir/importar: la carpeta del
+    // documento activo si está guardado en disco; si no, la del último documento
+    // abierto; si no, la carpeta personal. Evita que el diálogo caiga en la raíz
+    // (lo que hace QFileDialog con un directorio vacío) cuando ya hay contexto.
+    QString dialogStartDir() const;
     // Diálogo de abrir → abre en pestaña (reusa la actual si está vacía).
     void openInTab();
     // Diálogo de importar → convierte un HTML a Markdown y lo abre como documento

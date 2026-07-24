@@ -13,6 +13,7 @@
 #include <QTimer>
 #include <QUrl>
 
+#include "appsettings.h"
 #include "diagramdoc.h"
 #include "diagramrenderer.h"
 
@@ -50,6 +51,7 @@ DiagramController::DiagramController(QTextEdit *editor, QObject *parent)
     , m_renderer(new DiagramRenderer(this))
     , m_debounce(new QTimer(this))
 {
+    m_enabled = AppSettings::diagramPreview();
     m_debounce->setSingleShot(true);
     m_debounce->setInterval(600);  // no renderizar en cada tecla
     connect(m_debounce, &QTimer::timeout, this, &DiagramController::refresh);
@@ -69,9 +71,27 @@ DiagramController::DiagramController(QTextEdit *editor, QObject *parent)
 
 void DiagramController::scheduleRefresh()
 {
-    if (m_updating)
-        return;  // cambios provocados por nosotros: no realimentar
+    if (m_updating || !m_enabled)
+        return;  // cambios provocados por nosotros, o preview apagada: no realimentar
     m_debounce->start();
+}
+
+void DiagramController::setEnabled(bool on)
+{
+    if (on == m_enabled)
+        return;
+    m_enabled = on;
+    AppSettings::setDiagramPreview(on);
+    if (on) {
+        refresh();  // vuelve a renderizar los bloques ya presentes
+    } else {
+        // Apagar: cancela lo pendiente y retira TODAS las previews (un conjunto de
+        // regiones vacío deja huérfanas todas las que haya, y removeOrphanPreviews
+        // las borra) para que los bloques queden solo como código.
+        m_debounce->stop();
+        m_failNotify->stop();
+        removeOrphanPreviews({});
+    }
 }
 
 QList<DiagramController::Region> DiagramController::scanRegions() const
