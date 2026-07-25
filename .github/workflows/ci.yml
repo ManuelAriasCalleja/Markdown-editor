@@ -1,6 +1,13 @@
-# Continuous integration: compila y ejecuta los tests en Linux con cada push a
-# main y cada pull request. Es la red de seguridad rápida — el release.yml
-# luego se encarga de construir para Linux/Windows/macOS al hacer un tag.
+# Continuous integration: compila y ejecuta los tests en los TRES sistemas con
+# cada push a main y cada pull request. Es la red de seguridad rápida — el
+# release.yml luego se encarga de empaquetar para Linux/Windows/macOS al hacer
+# un tag.
+#
+# La matriz existe porque hasta 2026-07-25 los tests solo corrían en Linux: los
+# binarios de Windows y macOS se publicaban sin que se hubiera ejecutado ni una
+# prueba sobre ellos (release.yml compila `--target md-editor`, ni siquiera
+# construye los tests). Todo lo que depende del sistema —rutas, separadores,
+# mayúsculas del sistema de ficheros, fuentes— era terreno ciego.
 name: CI
 
 on:
@@ -11,8 +18,25 @@ on:
 
 jobs:
   build-test:
-    name: Build & Test (Linux)
-    runs-on: ubuntu-latest
+    name: Build & Test (${{ matrix.name }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      # Que un sistema falle no cancela a los otros dos: interesa ver el cuadro
+      # completo en cada push, no el primer fallo.
+      fail-fast: false
+      matrix:
+        include:
+          - name: Linux
+            os: ubuntu-latest
+          - name: Windows
+            os: windows-latest
+            qt_arch: win64_msvc2022_64
+          # macos-14, no macos-latest: la imagen reciente rodó a un SDK que
+          # eliminó el framework AGL que los binarios de Qt 6.8.2 todavía
+          # referencian (`ld: framework 'AGL' not found`). Misma imagen que usa
+          # release.yml para el DMG.
+          - name: macOS
+            os: macos-14
     steps:
       - uses: actions/checkout@v5
 
@@ -23,11 +47,14 @@ jobs:
         with:
           version: '6.8.2'
           cache: true
+          arch: ${{ matrix.qt_arch }}
 
       # Dependencias del sistema que Qt necesita en runtime (OpenGL para los
       # widgets compuestos, libxkbcommon para teclado, fontconfig para
-      # texto). El runner ya trae compilador y CMake.
-      - name: Install system dependencies
+      # texto). El runner ya trae compilador y CMake. Windows y macOS no
+      # necesitan nada de esto.
+      - name: Install system dependencies (Linux)
+        if: runner.os == 'Linux'
         run: |
           sudo apt-get update
           sudo apt-get install -y \
@@ -37,8 +64,14 @@ jobs:
             libxcb-xfixes0 libxcb-xinerama0 libxcb-xkb1 libxkbcommon0
 
       # Hunspell para compilar el corrector de verdad (no el stub) y que sus
-      # pruebas corran (con un diccionario instalado).
-      - name: Install Hunspell
+      # pruebas corran (con un diccionario instalado). Solo en Linux, que es
+      # donde release.yml también lo tiene: en Windows y macOS los binarios
+      # publicados salen HOY sin corrector, así que la matriz prueba lo que de
+      # verdad se distribuye. Si algún día la release los compila con Hunspell,
+      # este paso tiene que crecer con ella (`brew install hunspell`, vcpkg).
+      # Sin él, SpellChecker es un stub inerte y tst_spellchecker se salta solo.
+      - name: Install Hunspell (Linux)
+        if: runner.os == 'Linux'
         run: sudo apt-get install -y libhunspell-dev hunspell-en-us
 
       - name: Configure
@@ -47,13 +80,16 @@ jobs:
       # `--parallel 2` (no todos los núcleos): compilar/enlazar las ~50 unidades de
       # test a la vez agota la RAM del runner (cc1plus «Terminated», exit 143). Mismo
       # tope que el job de sanitizers; la release lo evita compilando solo el binario.
+      # `--config Release` lo necesita el generador multiconfiguración de Windows
+      # (MSVC); en Linux y macOS se ignora.
       - name: Build
-        run: cmake --build build --parallel 2
+        run: cmake --build build --config Release --parallel 2
 
       # Las pruebas usan QApplication: corren con QT_QPA_PLATFORM=offscreen
       # (CMake ya lo fija en cada test, pero lo replicamos por si acaso).
+      # `-C Release`, igual que arriba, es para el generador de Windows.
       - name: Test
-        run: ctest --test-dir build --output-on-failure
+        run: ctest --test-dir build --output-on-failure -C Release
         env:
           QT_QPA_PLATFORM: offscreen
 
