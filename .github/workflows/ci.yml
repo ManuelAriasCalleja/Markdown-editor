@@ -121,8 +121,10 @@ jobs:
       # del producto o un artefacto del plugin offscreen con el que corren los
       # tests, porque la aplicación real usa el plugin nativo. Aquí se ejecuta
       # el mismo test SIN forzar QT_QPA_PLATFORM: si también falla, es real.
+      # `always()`: sin él, GitHub salta el paso porque uno anterior falló, que
+      # es justo cuando interesa que corra.
       - name: Emphasis with the native platform plugin (Windows)
-        if: runner.os == 'Windows'
+        if: always() && runner.os == 'Windows'
         shell: pwsh
         run: |
           $log = Join-Path $env:RUNNER_TEMP "nativo.txt"
