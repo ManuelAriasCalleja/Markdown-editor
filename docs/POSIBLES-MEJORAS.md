@@ -649,6 +649,43 @@ documento nuevo modificado para no sobrescribir la fuente.
     el cierre de un *fence* que sigue a una lista. Ambos **se estabilizan en una
     pasada** (no crecen, no hay pérdida de datos); arreglarlos exigiría des-wrappear
     la salida de Qt, con riesgo alto y valor casi nulo.
+- ⬜ **El fuzzer no corre bajo sanitizers, al contrario de lo que dice el código.**
+  El comentario del punto anterior —y el del propio `CMakeLists`— afirma que
+  `tst_roundtripfuzz` es «la red de verdad bajo ASan/UBSan, lo corre CI». No es
+  cierto: **no está registrado en CTest** (a propósito, ver el comentario largo en
+  `CMakeLists.txt`) y el *job* de sanitizers ejecuta `ctest`, así que nunca lo
+  toca. La herramienta que cazaría un fallo de memoria en el fuzzeo jamás se ha
+  aplicado sobre él. Al ejecutarlo a mano instrumentado (25-07-2026, primera vez)
+  pasa limpio los 2000 casos, así que no hay nada pendiente que arreglar ahí; lo
+  que hay que decidir es cómo cubrirlo sin devolverlo al *gate* —un *job* aparte
+  que lo ejecute bajo ASan y que pueda fallar sin bloquear la release, por
+  ejemplo— y, mientras tanto, corregir el comentario para que no prometa una red
+  que no existe.
+- ⬜ **Cuelgue del fuzzer en Windows (acotado, sin resolver).** Al añadir Windows a
+  la matriz de CI (25-07-2026) apareció que `tst_roundtripfuzz.exe` muere allí con
+  `0xC0000005` a los ~250 ms. Lo que se sabe:
+  - **Caso 281**, 115 caracteres. El PRNG es determinista, así que ese índice
+    reproduce el mismo documento en cualquier sistema:
+    `---` / lista de tareas con `**über**` y `~~niño~~` / un párrafo con
+    `[hash#](http://e.com/back\slash)`, `` `a&b` `` y `$\sqrt{x}$`.
+  - **Dónde muere:** `QTextDocument::setMarkdown` → `QTextMarkdownImporter::import`
+    → `QtPrivate::convertToUtf8` → `QUtf8::convertFromUnicode`. Es decir, **dentro
+    de Qt**, convirtiendo la cadena de entrada para dársela a md4c.
+  - **Descartado:** desbordamiento de pila y anidamiento profundo (el documento son
+    115 caracteres y la traza no muestra recursión); el artefacto del plugin
+    `offscreen` (falla igual con el plugin nativo); y un fallo de memoria visible
+    desde Linux (limpio bajo ASan+UBSan, caso aislado y los 2000).
+  - **Lo que falta:** saber cuál de las dos pasadas lo mata —la segunda recibe la
+    salida ya serializada, que no es la misma cadena— y con esa cadena exacta
+    intentar reproducirlo con **Qt a secas**, sin nada de este proyecto. Si un
+    `setMarkdown()` pelado revienta, es un fallo de Qt en Windows: tocaría
+    reportarlo aguas arriba y rodearlo. La instrumentación ya está puesta:
+    `MD_FUZZ_TRACE=1` traza cada pasada y `MD_FUZZ_ONLY=N` vuelca la entrada exacta
+    escapada carácter a carácter.
+  - **Prioridad:** baja en cuanto a usuarios —el fuzzer no es el editor, y el
+    documento es entrada sintética—, pero es la única evidencia de que
+    `setMarkdown` puede morir con contenido de tamaño normal, así que conviene
+    llegar al fondo antes de descartarlo.
 - ✅ **Golden tests de exportadores** — *Hecho:* `tst_goldenexport` fija la salida
   exacta de los serializadores propios y deterministas para un documento canónico,
   contra referencias en `tests/golden/` (LaTeX, el XML de DOCX/ODF, las piezas del
