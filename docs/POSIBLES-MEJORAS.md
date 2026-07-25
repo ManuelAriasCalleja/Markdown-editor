@@ -804,6 +804,43 @@ vivo.*
   uno; todo lo demás está cableado contra la API de accesibilidad de Qt (que en Linux
   habla AT-SPI con Orca), que es lo máximo verificable sin AT en vivo.
 
+## 🌍 Internacionalización
+
+### Revisión del juego de idiomas (2026-07-25)
+
+Revisión de los 9 idiomas de la interfaz (es de origen + en, de, fr, it, pt, pl,
+nl, ro). Conclusión: la selección está bien dimensionada y no conviene ampliarla;
+lo que hay que arreglar es el remate del portugués.
+
+- ⬜ **Uniformar el portugués a una sola norma.** `md-editor_pt.ts` mezcla
+  vocabulario europeo y brasileño para los mismos conceptos, y se ve en la misma
+  sesión de uso: el menú traduce «Guardar» como `&Salvar` / `Salvar como...`
+  (brasileño) mientras el resto de la interfaz dice `ficheiro` (europeo); y los dos
+  filtros de diálogo, que el usuario ve casi seguidos, son `Ficheiros Markdown
+  (…);;Todos os ficheiros (*)` al abrir y `Arquivos Markdown (…);;Todos os arquivos
+  (*)` al guardar. No es un matiz de estilo: es la misma palabra traducida de dos
+  maneras, y chirría para hablantes de cualquiera de las dos variantes. *Norma
+  recomendada:* la **brasileña** (`arquivo`, `salvar`, `usuário`), por número de
+  hablantes (~200 M frente a ~10 M) y porque `QTranslator` carga igualmente el `pt`
+  genérico en un sistema `pt_BR`. Coste: una pasada sobre el `.ts`, sin tocar código.
+- ✅ **No ampliar el juego de idiomas** (decisión, no tarea). Los 9 actuales son
+  justo aquellos a los que la aplicación **entera** puede dar servicio, no solo la
+  interfaz: el corrector necesita un diccionario Hunspell y la exportación a LaTeX
+  monta el preámbulo con `babel` sobre `inputenc`+`T1` (`exportlatex.cpp`), que cubre
+  el latín-1 y poco más. De ahí que la ausencia más llamativa —el CJK— esté
+  justificada: un usuario chino, japonés o coreano tendría la interfaz traducida y
+  dos funciones importantes rotas (sin diccionario, y un `.tex` que pdfLaTeX no
+  compila sin `ctex`/`xeCJK`). Contra la ampliación pesa además el coste recurrente:
+  `tst_translations` falla ante cualquier cadena sin traducir, así que **cada `tr()`
+  nuevo son 9 ficheros que tocar** antes de que la suite pase; el décimo idioma tiene
+  un rendimiento claramente decreciente para un proyecto de una persona.
+- ⬜ **Si algún día se amplía, la dirección es el este de Europa, no Asia.** Ruso,
+  ucraniano, checo y turco tienen más usuarios potenciales de un editor Markdown que
+  el neerlandés o el rumano, que sí están, y caen **dentro** de la frontera técnica
+  de arriba: hay diccionario Hunspell y `babel` los soporta. Único trabajo de código:
+  el ruso y el ucraniano piden `T2A` en el `fontenc` del preámbulo LaTeX (tres
+  líneas) para que el cirílico de un documento no tumbe la compilación.
+
 ## 📋 Proyecto / comunidad
 
 16. ✅ **CHANGELOG.md** — *Hecho:* `CHANGELOG.md` con el historial por versión.
