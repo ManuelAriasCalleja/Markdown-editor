@@ -148,8 +148,12 @@ jobs:
           & build/Release/tst_roundtripfuzz.exe 2>$err | Out-Null
           Write-Host "=== tst_roundtripfuzz: exit=$LASTEXITCODE"
           if (Test-Path $err) {
-            Write-Host "--- últimos casos antes de morir ---"
-            Get-Content $err | Select-Object -Last 6 | ForEach-Object { Write-Host "    $_" }
+            $lines = Get-Content $err
+            $ultimo = $lines | Where-Object { $_ -like 'caso *' } | Select-Object -Last 1
+            Write-Host "--- último caso trazado (el que revienta): $ultimo"
+            Write-Host "--- traza del cuelgue ---"
+            $lines | Where-Object { $_ -notlike 'caso *' } |
+              Select-Object -First 30 | ForEach-Object { Write-Host "    $_" }
           }
           exit 0
 

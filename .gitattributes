@@ -1,0 +1,14 @@
+# Ficheros que NO deben pasar por la conversión de fin de línea de git.
+#
+# En Windows, git convierte a CRLF al hacer checkout (core.autocrlf, activo por
+# defecto en los runners de GitHub). Para casi todo da igual, pero estos se
+# comparan BYTE A BYTE con lo que genera el código, que siempre escribe LF: con
+# CRLF, el fichero de referencia pesa exactamente una línea más y la comparación
+# falla. Fue lo que hizo caer los 12 goldens de tst_goldenexport al añadir
+# Windows a la matriz de CI —cada diferencia de tamaño coincidía al byte con el
+# número de líneas del fichero—, sin que hubiera nada mal en los exportadores.
+tests/golden/** -text
+
+# Los .docx de prueba son zips (binarios) y los .md de referencia se comparan
+# con la salida de Pandoc: mismo motivo.
+tests/fixtures/** -text
