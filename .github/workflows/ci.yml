@@ -93,6 +93,16 @@ jobs:
         env:
           QT_QPA_PLATFORM: offscreen
 
+      # Un test que se cae ANTES de arrancar (falta una DLL, peta en la
+      # inicialización estática) no imprime ni la cabecera de QTest, y
+      # --output-on-failure se queda en blanco: no hay nada que enseñar. Con -VV
+      # sí aparecen la orden exacta y el código de salida del proceso.
+      - name: Re-run failed tests verbosely
+        if: failure()
+        run: ctest --test-dir build --rerun-failed --output-on-failure -VV -C Release
+        env:
+          QT_QPA_PLATFORM: offscreen
+
   sanitizers:
     name: Sanitizers (ASan/UBSan)
     runs-on: ubuntu-latest
