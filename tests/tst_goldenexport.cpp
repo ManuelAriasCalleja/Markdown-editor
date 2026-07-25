@@ -114,8 +114,12 @@ void TestGoldenExport::latex()
 
 void TestGoldenExport::docxDocumentXml()
 {
+    // Con la lista de enlaces, para que el golden fije también el `w:hyperlink`
+    // con su rId (sin ella el rótulo saldría sin destino).
+    QList<mdexport::DocxHyperlink> links;
     checkGolden(QStringLiteral("docx-document.xml"),
-                mdexport::toDocxDocumentXml(&m_doc, QStringLiteral("Documento de prueba")));
+                mdexport::toDocxDocumentXml(&m_doc, QStringLiteral("Documento de prueba"),
+                                            nullptr, &links));
 }
 
 void TestGoldenExport::docxStyles()
@@ -154,17 +158,29 @@ void TestGoldenExport::epubContentOpf()
                                          QStringLiteral("2024-01-01T00:00:00Z")));
 }
 
+// Índice de ejemplo con anidamiento y un salto de nivel (h1 → h3), que es donde
+// el árbol se puede quedar mal formado.
+static QList<mdexport::EpubTocEntry> goldenToc()
+{
+    return {{1, QStringLiteral("Capítulo & uno"), QStringLiteral("sec1")},
+            {2, QStringLiteral("Sección A"), QStringLiteral("sec2")},
+            {3, QStringLiteral("Subsección"), QStringLiteral("sec3")},
+            {1, QStringLiteral("Capítulo dos"), QStringLiteral("sec4")}};
+}
+
 void TestGoldenExport::epubNav()
 {
     checkGolden(QStringLiteral("epub-nav.xhtml"),
-                mdexport::epubNavXhtml(m_lang, QStringLiteral("Documento de prueba")));
+                mdexport::epubNavXhtml(m_lang, QStringLiteral("Documento de prueba"),
+                                       goldenToc()));
 }
 
 void TestGoldenExport::epubTocNcx()
 {
     checkGolden(QStringLiteral("epub-toc.ncx"),
                 mdexport::epubTocNcx(QStringLiteral("Documento de prueba"),
-                                     QStringLiteral("00000000-0000-0000-0000-000000000000")));
+                                     QStringLiteral("00000000-0000-0000-0000-000000000000"),
+                                     goldenToc()));
 }
 
 void TestGoldenExport::epubStyleCss()

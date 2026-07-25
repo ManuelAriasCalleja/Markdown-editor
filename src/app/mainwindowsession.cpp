@@ -13,7 +13,6 @@
 #include <QFileInfo>
 #include <QMessageBox>
 #include <QPushButton>
-#include <QTabWidget>
 #include <QTextCursor>
 #include <QTextEdit>
 

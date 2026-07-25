@@ -4,6 +4,7 @@
 
 #include "markdownrender.h"
 
+#include <QFileInfo>
 #include <QTextCursor>
 #include <QTextDocument>
 #include <QTextEdit>
@@ -44,4 +45,31 @@ void mdrender::setMarkdownWithExtensions(QTextEdit *editor, const QString &markd
     // features (NoHTML); el QTextEdit refleja el documento igual.
     editor->document()->setMarkdown(protect(markdown), kMarkdownFeatures);
     renderPasses(editor->document());
+}
+
+QString mdrender::imageAltFallback(const QString &destination)
+{
+    QString path = destination;
+    if (path.startsWith(QLatin1Char('<')) && path.endsWith(QLatin1Char('>')))
+        path = path.mid(1, path.size() - 2);
+    const QString name = QFileInfo(path).completeBaseName();
+    return name.isEmpty() ? QStringLiteral("imagen") : name;
+}
+
+QString mdrender::imageMarkdown(const QString &destination, const QString &alt)
+{
+    QString dest = destination;
+    // Un `<`/`>` dentro de la propia ruta rompería el envoltorio `<...>`: se codifica.
+    if (dest.contains(QLatin1Char('<')) || dest.contains(QLatin1Char('>'))) {
+        dest.replace(QLatin1String("<"), QLatin1String("%3C"));
+        dest.replace(QLatin1String(">"), QLatin1String("%3E"));
+    }
+    if (dest.contains(QLatin1Char(' ')) || dest.contains(QLatin1Char('('))
+        || dest.contains(QLatin1Char(')')))
+        dest = QLatin1Char('<') + dest + QLatin1Char('>');
+
+    QString text = alt.isEmpty() ? imageAltFallback(destination) : alt;
+    text.replace(QLatin1String("["), QLatin1String("\\["));  // cerrarían el rótulo
+    text.replace(QLatin1String("]"), QLatin1String("\\]"));
+    return QStringLiteral("![%1](%2)").arg(text, dest);
 }

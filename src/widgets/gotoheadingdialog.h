@@ -4,19 +4,17 @@
 /// \file
 /// \brief Diálogo «quick open» para saltar a un encabezado del documento.
 
-#include <QDialog>
+#include "filterlistdialog.h"
+
 #include <QList>
 
 struct OutlineHeading;
-class QLineEdit;
-class QListWidget;
 
 /// \brief Diálogo «quick open» para saltar a un encabezado: un campo de filtro sobre una
-/// lista de los encabezados del documento (sangrados por nivel). Se filtra por
-/// subcadena al teclear; las flechas arriba/abajo desde el filtro mueven la
-/// selección de la lista; Intro o doble clic aceptan. Tras aceptar, el bloque
-/// elegido se consulta con selectedBlockNumber().
-class GoToHeadingDialog : public QDialog
+/// lista de los encabezados del documento (sangrados por nivel), filtrada por
+/// subcadena. El comportamiento de teclado lo pone FilterListDialog. Tras aceptar,
+/// el bloque elegido se consulta con selectedBlockNumber().
+class GoToHeadingDialog : public FilterListDialog
 {
     Q_OBJECT
 
@@ -27,11 +25,7 @@ public:
     int selectedBlockNumber() const;
 
 protected:
-    bool eventFilter(QObject *watched, QEvent *event) override;
-
-private:
-    QLineEdit *m_filter;
-    QListWidget *m_list;
+    void filterChanged(const QString &query) override;
 };
 
 #endif  // GOTOHEADINGDIALOG_H

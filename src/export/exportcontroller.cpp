@@ -19,7 +19,9 @@
 #include <QMessageBox>
 #include <QPrintDialog>
 #include <QPrintPreviewDialog>
+#include <QGuiApplication>
 #include <QPrinter>
+#include <QScreen>
 #include <QStringConverter>
 #include <QTextCursor>
 #include <QTextDocument>
@@ -182,6 +184,23 @@ void ExportController::applyPdfMetadata(QPrinter *printer) const
 
 void ExportController::renderToPrinter(QTextDocument *doc, QPrinter *printer) const
 {
+    // Una imagen más ancha que la página (un gantt apaisado) salía TRUNCADA: la
+    // maqueta recorta en el borde en vez de escalar. Se encogen al ancho imprimible
+    // antes de maquetar, en las dos ramas (afecta a PDF, impresión, selección y
+    // vista previa, que pasan todas por aquí). El factor: la maqueta pinta una
+    // imagen sin tamaño explícito a razón de dpi-del-dispositivo / dpi lógico de
+    // la pantalla (el «96» de qt_defaultDpi, salvo escritorios con fuentes a otra
+    // densidad, de ahí leerlo de la pantalla real).
+    const QScreen *screen = QGuiApplication::primaryScreen();
+    const qreal screenDpi = screen ? screen->logicalDotsPerInchX() : 96.0;
+    const qreal dpiScale = printer->logicalDpiX() / qMax<qreal>(1.0, screenDpi);
+    mdexport::clampImagesToWidth(doc, printer->pageRect(QPrinter::DevicePixel).width(),
+                                 dpiScale);
+    // Y se fijan los recursos resueltos: doc->print() clona por dentro y el clon
+    // pierde baseUrl y caché — sin esto, las imágenes relativas desaparecían de la
+    // rama sin números de página.
+    mdexport::bakeImageResources(doc);
+
     if (AppSettings::printPageNumbers())
         mdexport::paintPaginated(printer, doc, /*footerPageNumbers=*/true);
     else
@@ -290,7 +309,10 @@ void ExportController::copyHtmlToClipboard()
     std::unique_ptr<QTextDocument> flat(
         mdexport::cloneForExport(m_editor->document()));
     auto *mime = new QMimeData;
-    mime->setHtml(flat->toHtml());
+    // Con las imágenes embebidas: el destino del pegado (correo, procesador de
+    // textos) no tiene forma de resolver una ruta relativa como `imagen.png`, así
+    // que sin esto se pegaba el texto y las imágenes se perdían por el camino.
+    mime->setHtml(mdexport::toHtmlDocument(flat.get(), mdexport::Language{}, QString()));
     mime->setText(flat->toPlainText());  // reserva para destinos sin formato
     setClipboardMime(mime, QT_TRANSLATE_NOOP("MainWindow", "Copiado como HTML al portapapeles."));
 }
@@ -338,10 +360,12 @@ bool ExportController::exportHtml()
         QStringLiteral("html"),
         QT_TRANSLATE_NOOP("MainWindow", "No se pudo escribir:\n%1\n\n%2"),
         QT_TRANSLATE_NOOP("MainWindow", "Exportado a HTML: %1"),
-        /*needsLanguage=*/false, /*useFlatClone=*/true, /*needsBaseUrl=*/false,
-        [](const QTextDocument *doc, const QString &path, const mdexport::Language &,
-           const QString &, QString *error) {
-            return writeUtf8File(path, doc->toHtml(), error);
+        // Idioma: va en `<html lang>`, como en los demás formatos. baseUrl: hace
+        // falta para resolver las imágenes de ruta relativa y embeberlas.
+        /*needsLanguage=*/true, /*useFlatClone=*/true, /*needsBaseUrl=*/true,
+        [](const QTextDocument *doc, const QString &path, const mdexport::Language &lang,
+           const QString &title, QString *error) {
+            return writeUtf8File(path, mdexport::toHtmlDocument(doc, lang, title), error);
         },
     });
 }

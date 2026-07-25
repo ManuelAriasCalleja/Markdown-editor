@@ -28,12 +28,24 @@ QColor contrastingInk(const QColor &background)
 // texto de los botones, para que siga al tema claro/oscuro). Tres filas con una
 // «línea de texto» a la derecha y, a la izquierda, el marcador propio de cada
 // tipo: viñetas, números o casillas de verificación.
-QIcon makeListIcon(ListIconKind kind, const QColor &color, int px, qreal dpr)
+namespace {
+
+// Lienzo transparente para un icono monocromo de `px` puntos lógicos, a la
+// densidad `dpr` de la pantalla. Los tres generadores de abajo empezaban con
+// estas mismas cinco líneas.
+QPixmap iconCanvas(int px, qreal dpr)
 {
     QPixmap pm(QSize(px, px) * dpr);
     pm.setDevicePixelRatio(dpr);
     pm.fill(Qt::transparent);
+    return pm;
+}
 
+}  // namespace
+
+QIcon makeListIcon(ListIconKind kind, const QColor &color, int px, qreal dpr)
+{
+    QPixmap pm = iconCanvas(px, dpr);
     QPainter p(&pm);
     p.setRenderHint(QPainter::Antialiasing, true);
 
@@ -109,10 +121,7 @@ QIcon makeListIcon(ListIconKind kind, const QColor &color, int px, qreal dpr)
 // texto, para seguir al tema como los iconos de lista.
 QIcon makeFormatIcon(FormatIconKind kind, const QColor &color, int px, qreal dpr)
 {
-    QPixmap pm(QSize(px, px) * dpr);
-    pm.setDevicePixelRatio(dpr);
-    pm.fill(Qt::transparent);
-
+    QPixmap pm = iconCanvas(px, dpr);
     QPainter p(&pm);
     p.setRenderHint(QPainter::Antialiasing, true);
     p.setRenderHint(QPainter::TextAntialiasing, true);
@@ -145,10 +154,7 @@ QIcon makeFormatIcon(FormatIconKind kind, const QColor &color, int px, qreal dpr
 // que se lea. La alineación usa las tres líneas clásicas pegadas a un lado.
 QIcon makeTableIcon(TableIconKind kind, const QColor &color, int px, qreal dpr)
 {
-    QPixmap pm(QSize(px, px) * dpr);
-    pm.setDevicePixelRatio(dpr);
-    pm.fill(Qt::transparent);
-
+    QPixmap pm = iconCanvas(px, dpr);
     QPainter p(&pm);
     p.setRenderHint(QPainter::Antialiasing, true);
 

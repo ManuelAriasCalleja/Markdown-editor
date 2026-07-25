@@ -41,70 +41,45 @@
 #include "themecontroller.h"
 #include "usertemplatesdialog.h"
 
-#include <cmath>
 
+#include <QClipboard>
+#include <QSplitter>
+#include <QStatusBar>
 #include <QAccessible>
 #include <QAction>
-#include <QActionGroup>
 #include <QApplication>
-#include <QClipboard>
 #include <QCloseEvent>
-#include <QColor>
 #include <QDesktopServices>
 #include <QDialog>
 #include <QDialogButtonBox>
 #include <QDir>
-#include <QDropEvent>
-#include <QMouseEvent>
 #include <QEvent>
 #include <QFile>
 #include <QFileDialog>
 #include <QFileInfo>
 #include <QProcess>
+#include <QStandardPaths>
 #include <QTabBar>
 #include <QTabWidget>
 #include <QFont>
-#include <QFontMetrics>
-#include <QIcon>
 #include <QFormLayout>
-#include <QKeyEvent>
 #include <QKeySequence>
 #include <QShortcut>
 #include <QLocale>
-#include <QPainter>
 #include <QPixmap>
-#include <QPointF>
-#include <QPolygonF>
-#include <QRectF>
 #include <QResizeEvent>
 #include <QShowEvent>
-#include <QToolButton>
 #include <QLabel>
 
-#include <QContextMenuEvent>
 #include <QMenu>
 #include <QMenuBar>
 #include <QMessageBox>
-#include <QMimeData>
-#include <QPushButton>
-#include <QRegularExpression>
-#include <QSplitter>
-#include <QTextDocumentFragment>
-#include <QStatusBar>
 #include <QStringList>
-#include <QTextCharFormat>
 #include <QTextBlock>
 #include <QTextCursor>
 #include <QTextDocument>
 #include <QTextEdit>
-#include <QTextFragment>
-#include <QTextFrame>
-#include <QTextLength>
-#include <QTextList>
-#include <QTextTable>
-#include <QTextTableCell>
 #include <QTimer>
-#include <QToolBar>
 #include <QUrl>
 #include <QWheelEvent>
 
@@ -849,8 +824,20 @@ void MainWindow::importWithPandoc()
     if (path.isEmpty())
         return;
 
+    // Las imágenes incrustadas se extraen a `<nombre>-media`, junto al documento de
+    // origen; sin eso se pierden (Pandoc las referenciaría por una ruta que solo
+    // existe DENTRO del paquete). Si esa carpeta no se puede escribir (un medio de
+    // solo lectura, un adjunto abierto desde una carpeta ajena), se cae a los datos
+    // de la aplicación en vez de abortar la importación entera.
+    QString mediaDir = mdimport::mediaDirFor(path);
+    if (!QFileInfo(QFileInfo(path).absolutePath()).isWritable()) {
+        mediaDir = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation)
+                   + QStringLiteral("/imported-media/")
+                   + QFileInfo(path).completeBaseName();
+    }
+
     QProcess pandoc;
-    pandoc.start(QStringLiteral("pandoc"), mdimport::pandocArguments(path));
+    pandoc.start(QStringLiteral("pandoc"), mdimport::pandocArguments(path, mediaDir));
     // Síncrono: la importación es una acción puntual y el resultado se necesita ya.
     if (!pandoc.waitForFinished(30000) || pandoc.exitStatus() != QProcess::NormalExit
         || pandoc.exitCode() != 0) {
@@ -860,7 +847,12 @@ void MainWindow::importWithPandoc()
             tr("Pandoc no pudo convertir el archivo.") + (err.isEmpty() ? QString() : "\n\n" + err));
         return;
     }
-    const QString markdown = QString::fromUtf8(pandoc.readAllStandardOutput());
+    // Lo que GFM no sabe expresar, Pandoc lo emite como HTML crudo; y el editor
+    // carga sin HTML, así que se vería como texto literal. Se rescatan las dos
+    // cosas que importan: las imágenes con tamaño (`<img>`) y las tablas con
+    // celdas combinadas, multipárrafo o anidadas (`<table>`).
+    const QString markdown = mdimport::htmlTablesToMarkdown(
+        mdimport::repairImages(QString::fromUtf8(pandoc.readAllStandardOutput())));
     if (markdown.trimmed().isEmpty()) {
         QMessageBox::warning(this, tr("Error"),
                              tr("El archivo no produjo ningún contenido."));
@@ -868,6 +860,11 @@ void MainWindow::importWithPandoc()
     }
     addTab();
     m_stack->file()->newFromTemplate(markdown);
+    // Pandoc solo crea la carpeta si había imágenes: si existe, avisamos de dónde
+    // quedaron (son ficheros nuevos en la carpeta del usuario, y las rutas del
+    // Markdown apuntan ahí).
+    if (QFileInfo::exists(mediaDir))
+        showStatusMessage(tr("Imágenes extraídas a: %1").arg(mediaDir), 8000);
 }
 
 void MainWindow::saveAsTemplate()

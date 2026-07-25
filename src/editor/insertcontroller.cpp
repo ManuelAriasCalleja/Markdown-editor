@@ -33,7 +33,8 @@
 #include "admonitions.h"
 #include "documentio.h"
 #include "footnotes.h"
-#include "outlinepanel.h"
+#include "markdownrender.h"
+#include "outline.h"
 #include "symbolpicker.h"
 #include "urldetect.h"
 
@@ -170,8 +171,11 @@ void InsertController::insertImage()
 
     QTextCursor cursor = m_editor->textCursor();
     cursor.beginEditBlock();
-    cursor.insertFragment(QTextDocumentFragment::fromMarkdown(
-        QStringLiteral("![%1](%2)").arg(alt, path)));
+    // mdrender::imageMarkdown y no un `![%1](%2)` a mano: si el usuario deja vacío
+    // el texto alternativo, `setMarkdown` descartaría la imagen al reabrir el
+    // documento (y una ruta con espacios cortaría el enlace).
+    cursor.insertFragment(
+        QTextDocumentFragment::fromMarkdown(mdrender::imageMarkdown(path, alt)));
     cursor.endEditBlock();
     m_editor->setFocus();
 }
@@ -248,8 +252,8 @@ bool InsertController::handlePastedImage(const QMimeData *source)
 
     QTextCursor cursor = m_editor->textCursor();
     cursor.beginEditBlock();
-    cursor.insertFragment(QTextDocumentFragment::fromMarkdown(
-        QStringLiteral("![%1](%2)").arg(alt, mdPath)));
+    cursor.insertFragment(
+        QTextDocumentFragment::fromMarkdown(mdrender::imageMarkdown(mdPath, alt)));
     cursor.endEditBlock();
     m_editor->setFocus();
     return true;

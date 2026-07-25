@@ -47,6 +47,8 @@ add_library(md-editor-core STATIC
     src/app/closedtabs.h
     src/app/chromezoom.cpp
     src/app/chromezoom.h
+    src/app/commands.cpp
+    src/app/commands.h
     src/app/mainwindow.cpp
     src/app/mainwindow.h
     src/app/mainwindowinput.cpp
@@ -121,6 +123,8 @@ add_library(md-editor-core STATIC
     src/markdown/moveline.h
     src/markdown/nav.cpp
     src/markdown/nav.h
+    src/markdown/outline.cpp
+    src/markdown/outline.h
     src/markdown/printdecor.cpp
     src/markdown/printdecor.h
     src/markdown/supsub.cpp
@@ -195,9 +199,18 @@ add_library(md-editor-core STATIC
     src/export/exportcontroller.h
     src/export/exporters.cpp
     src/export/exporters.h
+    src/export/exportdocx.cpp
+    src/export/exportepub.cpp
+    src/export/exporthtml.cpp
+    src/export/exportlatex.cpp
+    src/export/exportodf.cpp
+    src/export/exportutil.cpp
+    src/export/exportutil.h
     # --- widgets ---
     src/widgets/commandpalettedialog.cpp
     src/widgets/commandpalettedialog.h
+    src/widgets/filterlistdialog.cpp
+    src/widgets/filterlistdialog.h
     src/widgets/findreplacebar.cpp
     src/widgets/findreplacebar.h
     src/widgets/formaticons.cpp
@@ -481,6 +494,7 @@ if(Qt6Test_FOUND)
         tst_htmlimport
         tst_epubimport
         tst_pandocimport
+        tst_docx
         tst_printdecor
         tst_inputrules
         tst_texttransform
@@ -514,6 +528,11 @@ if(Qt6Test_FOUND)
     # Los golden tests necesitan la ruta a las referencias en el árbol fuente.
     target_compile_definitions(tst_goldenexport PRIVATE
         GOLDEN_DIR="${CMAKE_CURRENT_SOURCE_DIR}/tests/golden")
+
+    # La mitad de importación de tst_docx lee los .docx de prueba del árbol fuente
+    # (se regeneran con scripts/make-docx-fixtures.py).
+    target_compile_definitions(tst_docx PRIVATE
+        DOCX_FIXTURE_DIR="${CMAKE_CURRENT_SOURCE_DIR}/tests/fixtures/docx")
 
     # Fuzzer del round-trip: se COMPILA pero NO se registra como prueba de CTest.
     # Es una herramienta de fuzzing manual/bajo demanda:

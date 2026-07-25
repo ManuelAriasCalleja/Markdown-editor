@@ -13,7 +13,6 @@
 #include <QMenu>
 #include <QMenuBar>
 #include <QStatusBar>
-#include <QToolBar>
 #include <QWidget>
 
 #include "appsettings.h"
@@ -22,6 +21,7 @@
 #include "editorstack.h"
 #include "findreplacebar.h"   // upcast m_findBar → QWidget* (tipo completo)
 #include "focuseditor.h"
+#include "outline.h"
 #include "outlinepanel.h"     // upcast m_outline → QWidget* (tipo completo)
 #include "splitviewcontroller.h"
 

@@ -1,5 +1,7 @@
 #include <QtTest>
 
+#include <memory>
+
 #include <QDir>
 #include <QFile>
 #include <QFont>
@@ -9,12 +11,14 @@
 #include <QTextCursor>
 #include <QTextDocument>
 #include <QTextFragment>
+#include <QTextEdit>
 #include <QTextImageFormat>
 #include <QUrl>
 #include <QXmlStreamReader>
 
 #include "codehighlighter.h"
 #include "exporters.h"
+#include "markdownrender.h"
 #include "mathblocks.h"
 #include "themespec.h"
 
@@ -32,6 +36,10 @@ private slots:
     void latexHasBabelAndTitle();
     void latexEscapesSpecialChars();
     void latexConstructs();
+    void latexKeepsSuperAndSubscript();
+    void latexSurvivesHostileContent();
+    void latexKeepsQuoteStructure();
+    void latexKeepsOrderedListStart();
     void latexHeadingNotDoublyBold();
     void latexSanitizesHighUnicode();
     void latexConvertsMathUnicodeToCommands();
@@ -45,12 +53,19 @@ private slots:
     void docxNumberingHasBulletAndDecimal();
     void docxWriteProducesZipPackage();
     void htmlBodyToXhtmlExtractsAndSanitizes();
+    void htmlDocumentCarriesLanguageAndTitle();
+    void htmlEmbedsImagesSelfContained();
     void epubBuildersAreWellFormedXml();
+    void epubTocIsBuiltFromHeadings();
+    void epubNavNestingIsWellFormed();
+    void epubStyleCoversTaskCheckboxes();
     void epubContentXhtmlWrapsBody();
     void epubWriteProducesZipPackage();
     void twoDFormulaExpandsForHtmlAndLatex();
     void plainTextFlattensTwoDFormula();
     void codeHighlightingBakedIntoExport();
+    void printClampsOversizedImages();
+    void printBakesRelativeImageResources();
     void cloneNormalizesFontSizeAwayFromZoom();
     void cloneCodeInheritsBodyFontSize();
 };
@@ -138,6 +153,147 @@ void TestExporters::latexConstructs()
     QVERIFY(tex.contains(QStringLiteral("\\begin{quote}")));
     QVERIFY(tex.contains(QStringLiteral("\\texttt{x}")));
     QVERIFY(tex.contains(QStringLiteral("\\textbf{negrita}")));
+}
+
+// Cuatro maneras de producir un .tex que NO COMPILA o que enlaza a ninguna parte.
+// Las cuatro salieron de exportar y compilar con pdflatex, no de leer el código.
+void TestExporters::latexSurvivesHostileContent()
+{
+    const auto body = [](const QString &markdown) {
+        QTextDocument doc;
+        doc.setMarkdown(markdown);
+        return mdexport::toLatex(&doc, mdexport::languageForCode(QStringLiteral("es")),
+                                 QString());
+    };
+
+    // 1) Un bloque de código con `\end{verbatim}` dentro cerraba el entorno ahí y
+    //    el documento entero dejaba de compilar («\begin{document} ended by
+    //    \end{verbatim}»). Con alltt el terminador va escapado y es texto.
+    const QString code = body(QStringLiteral("```\nantes\n\\end{verbatim}\ndespués\n```\n"));
+    QVERIFY2(code.contains(QStringLiteral("\\begin{alltt}")), qPrintable(code));
+    QVERIFY2(!code.contains(QStringLiteral("\\end{verbatim}")), qPrintable(code));
+    QVERIFY(code.contains(QStringLiteral("\\textbackslash{}end\\{verbatim\\}")));
+    QVERIFY(code.contains(QStringLiteral("antes")) && code.contains(QStringLiteral("después")));
+
+    // 2) Más de cuatro listas anidadas: LaTeX aborta con «Too deeply nested». Se
+    //    limita la profundidad; el contenido de los niveles de más se conserva.
+    QString deep;
+    for (int i = 0; i < 7; ++i)
+        deep += QString(qsizetype(i) * 2, QLatin1Char(' '))
+                + QStringLiteral("- nivel %1\n").arg(i);
+    const QString lists = body(deep);
+    QCOMPARE(lists.count(QStringLiteral("\\begin{itemize}")), 4);
+    QCOMPARE(lists.count(QStringLiteral("\\end{itemize}")), 4);
+    QVERIFY2(lists.contains(QStringLiteral("nivel 6")), qPrintable(lists));
+
+    // 3) Un elemento de lista que empieza por `[` (una bibliografía: `- [1] Knuth`)
+    //    lo tomaba LaTeX como argumento opcional de \item: salía «1» de viñeta y
+    //    sin corchetes. Un grupo vacío delante lo impide.
+    const QString refs = body(QStringLiteral("- [1] Knuth\n- normal\n"));
+    QVERIFY2(refs.contains(QStringLiteral("\\item {}[1] Knuth")), qPrintable(refs));
+    QVERIFY2(refs.contains(QStringLiteral("\\item normal")), qPrintable(refs));
+
+    // 4) Una `~` en la URL salía como `\textasciitilde{}`, y hyperref enlazaba a
+    //    «http://e.com/~{}u»: las llaves acababan DENTRO del enlace del PDF.
+    const QString link = body(QStringLiteral("[web](http://e.com/~u/a_b?x=1&y=2#z)\n"));
+    QVERIFY2(link.contains(QStringLiteral("\\href{http://e.com/~u/a\\_b?x=1\\&y=2\\#z}")),
+             qPrintable(link));
+    QVERIFY(!link.contains(QStringLiteral("textasciitilde")));
+
+    // Lo que ni siquiera es válido en una URL (espacios, llaves, no-ASCII) sí se
+    // codifica en porcentaje, con el `%` escapado para que no comente la línea.
+    QTextDocument raw;
+    QTextCursor c(&raw);
+    QTextCharFormat anchor;
+    anchor.setAnchor(true);
+    anchor.setAnchorHref(QStringLiteral("http://e.com/a b/{x}/ñ"));
+    c.insertText(QStringLiteral("destino"), anchor);
+    const QString odd = mdexport::toLatex(
+        &raw, mdexport::languageForCode(QStringLiteral("es")), QString());
+    QVERIFY2(odd.contains(QStringLiteral(
+                 "\\href{http://e.com/a\\%20b/\\%7Bx\\%7D/\\%C3\\%B1}")),
+             qPrintable(odd));
+}
+
+// Una lista dentro de una cita seguía siendo parte de la cita en el editor, pero
+// el .tex la sacaba fuera (cerraba `quote`, ponía la lista y abría otra `quote`),
+// y dos párrafos citados se fundían en uno por falta de línea en blanco.
+void TestExporters::latexKeepsQuoteStructure()
+{
+    QTextDocument doc;
+    doc.setMarkdown(QStringLiteral(
+        "> Primero.\n>\n> - uno\n> - dos\n>\n> Segundo.\n"));
+    const QString tex = mdexport::toLatex(
+        &doc, mdexport::languageForCode(QStringLiteral("es")), QString());
+
+    QCOMPARE(tex.count(QStringLiteral("\\begin{quote}")), 1);
+    QCOMPARE(tex.count(QStringLiteral("\\end{quote}")), 1);
+    // La lista queda DENTRO de la cita.
+    const int quoteStart = tex.indexOf(QStringLiteral("\\begin{quote}"));
+    const int quoteEnd = tex.indexOf(QStringLiteral("\\end{quote}"));
+    const int listStart = tex.indexOf(QStringLiteral("\\begin{itemize}"));
+    QVERIFY2(listStart > quoteStart && listStart < quoteEnd, qPrintable(tex));
+    // Y los dos párrafos citados siguen siendo dos.
+    QVERIFY2(tex.contains(QStringLiteral("Primero.\n\n")), qPrintable(tex));
+
+    // Un bloque de código citado también pertenece a la cita.
+    QTextDocument withCode;
+    withCode.setMarkdown(QStringLiteral("> Mira:\n>\n> ```\n> int x;\n> ```\n>\n> Ya.\n"));
+    const QString code = mdexport::toLatex(
+        &withCode, mdexport::languageForCode(QStringLiteral("es")), QString());
+    QCOMPARE(code.count(QStringLiteral("\\begin{quote}")), 1);
+    QVERIFY2(code.indexOf(QStringLiteral("\\begin{alltt}"))
+                 < code.indexOf(QStringLiteral("\\end{quote}")),
+             qPrintable(code));
+
+    // Y `>>` es una cita dentro de otra, no la misma aplanada.
+    QTextDocument nested;
+    nested.setMarkdown(QStringLiteral("> uno\n>\n> > dos\n>\n> tres\n"));
+    const QString deep = mdexport::toLatex(
+        &nested, mdexport::languageForCode(QStringLiteral("es")), QString());
+    QCOMPARE(deep.count(QStringLiteral("\\begin{quote}")), 2);
+    QCOMPARE(deep.count(QStringLiteral("\\end{quote}")), 2);
+}
+
+// Una lista numerada que no empieza en 1 (`5. cinco`) salía renumerada desde 1:
+// Qt sí conserva el arranque, pero enumerate cuenta desde 1 si no se le mueve el
+// contador del nivel.
+void TestExporters::latexKeepsOrderedListStart()
+{
+    QTextDocument doc;
+    doc.setMarkdown(QStringLiteral("5. cinco\n6. seis\n"));
+    const QString tex = mdexport::toLatex(
+        &doc, mdexport::languageForCode(QStringLiteral("es")), QString());
+    QVERIFY2(tex.contains(QStringLiteral("\\begin{enumerate}\n\\setcounter{enumi}{4}")),
+             qPrintable(tex));
+
+    // Empezando en 1 no se toca el contador (el caso normal, sin ruido).
+    QTextDocument plain;
+    plain.setMarkdown(QStringLiteral("1. uno\n2. dos\n"));
+    QVERIFY(!mdexport::toLatex(&plain, mdexport::languageForCode(QStringLiteral("es")),
+                               QString())
+                 .contains(QStringLiteral("setcounter")));
+}
+
+// Los super/subíndices que NO son fórmula (`x^2^`, `H~2~O` de mdsupsub, y las
+// referencias de nota al pie) viven en el documento como `verticalAlignment`, sin
+// propiedades de math. inlineLatex solo miraba las propiedades de math, así que
+// salían a ras de línea: «H2O» en vez de H₂O. En el editor, y en DOCX/HTML/ODF, sí
+// se veían elevados; el LaTeX era el único que los perdía.
+void TestExporters::latexKeepsSuperAndSubscript()
+{
+    QTextEdit edit;  // pipeline real: mdsupsub necesita su pasada de render
+    mdrender::setMarkdownWithExtensions(
+        &edit, QStringLiteral("Agua H~2~O y potencia x^2^ junto a $y_1$.\n"));
+    const QString tex = mdexport::toLatex(
+        edit.document(), mdexport::languageForCode(QStringLiteral("es")), QString());
+
+    QVERIFY2(tex.contains(QStringLiteral("H\\textsubscript{2}O")), qPrintable(tex));
+    QVERIFY2(tex.contains(QStringLiteral("x\\textsuperscript{2}")), qPrintable(tex));
+    // Y la fórmula de verdad sigue emitiéndose como matemática, no como texto
+    // elevado (sus runs también llevan verticalAlignment: no deben confundirse).
+    QVERIFY2(tex.contains(QStringLiteral("$y_1$")), qPrintable(tex));
+    QVERIFY(!tex.contains(QStringLiteral("\\textsubscript{1}")));
 }
 
 void TestExporters::latexHeadingNotDoublyBold()
@@ -304,15 +460,17 @@ void TestExporters::docxDocumentConstructs()
         "# Título\n\n**negrita** *cursiva* `codigo`\n\n"
         "[enlace](https://example.com)\n\n"
         "- uno\n- dos\n\n> cita\n\n| a | b |\n|---|---|\n| 1 | 2 |\n"));
-    const QString xml = mdexport::toDocxDocumentXml(&doc, QString(), nullptr);
+    QList<mdexport::DocxHyperlink> links;
+    const QString xml = mdexport::toDocxDocumentXml(&doc, QString(), nullptr, &links);
 
     QVERIFY(xml.contains(QStringLiteral("<w:document")));
     QVERIFY(xml.contains(QStringLiteral("<w:pStyle w:val=\"Heading1\"/>")));
     QVERIFY(xml.contains(QStringLiteral("<w:b/>")));
     QVERIFY(xml.contains(QStringLiteral("<w:i/>")));
     QVERIFY(xml.contains(QStringLiteral("Courier New")));            // código monoespaciado
-    QVERIFY(xml.contains(QStringLiteral("HYPERLINK")));              // enlace como campo
-    QVERIFY(xml.contains(QStringLiteral("example.com")));
+    QVERIFY(xml.contains(QStringLiteral("<w:hyperlink r:id=")));     // enlace por relación
+    QCOMPARE(links.size(), 1);
+    QCOMPARE(links.first().target, QStringLiteral("https://example.com"));
     QVERIFY(xml.contains(QStringLiteral("<w:numPr>")));             // lista con numeración real
     QVERIFY(xml.contains(QStringLiteral("<w:tbl>")));               // tabla
     QVERIFY(xml.contains(QStringLiteral("<w:sectPr>")));           // propiedades de sección
@@ -379,6 +537,72 @@ void TestExporters::htmlBodyToXhtmlExtractsAndSanitizes()
     QVERIFY(body.contains(QStringLiteral("<hr/>")));     // elemento vacío cerrado
 }
 
+// El `toHtml()` de Qt no pone nada de esto, y el documento sí lo sabe: sin `lang`
+// el lector de pantalla no sabe en qué idioma está el texto, y sin `<title>` el
+// navegador rotula la pestaña con el nombre del fichero.
+void TestExporters::htmlDocumentCarriesLanguageAndTitle()
+{
+    QTextDocument doc;
+    doc.setMarkdown(QStringLiteral("# Hola\n\nmundo\n"));
+    const QString html = mdexport::toHtmlDocument(
+        &doc, mdexport::languageForCode(QStringLiteral("fr")), QStringLiteral("Mi & Doc"));
+
+    QVERIFY2(html.contains(QStringLiteral("<html lang=\"fr\">")), qPrintable(html.left(200)));
+    // El título se escapa: un `&` crudo dejaría el HTML mal formado.
+    QVERIFY2(html.contains(QStringLiteral("<title>Mi &amp; Doc</title>")),
+             qPrintable(html.left(300)));
+    QVERIFY(html.contains(QStringLiteral("charset=\"utf-8\"")));
+
+    // Sin idioma ni título no se inventa nada (y no se rompe el HTML).
+    const QString bare = mdexport::toHtmlDocument(&doc, mdexport::Language{}, QString());
+    QVERIFY(bare.contains(QStringLiteral("<html>")));
+    QVERIFY(!bare.contains(QStringLiteral("<title>")));
+}
+
+// Qt referencia las imágenes por su ruta relativa, así que el .html se veía bien
+// donde se exportó y se quedaba SIN NINGUNA imagen en cuanto se movía de carpeta o
+// se enviaba por correo. Ahora van embebidas, conservando los bytes originales
+// cuando el navegador entiende el formato (reencodearlo todo a PNG infla una foto
+// JPEG y convierte un SVG vectorial en un mapa de bits).
+void TestExporters::htmlEmbedsImagesSelfContained()
+{
+    QTemporaryDir dir;
+    QVERIFY(dir.isValid());
+    const QString svgPath = dir.filePath(QStringLiteral("vector.svg"));
+    const QByteArray svg =
+        "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"8\" height=\"8\">"
+        "<rect width=\"8\" height=\"8\" fill=\"red\"/></svg>";
+    QFile svgFile(svgPath);
+    QVERIFY(svgFile.open(QIODevice::WriteOnly));
+    svgFile.write(svg);
+    svgFile.close();
+
+    const QString pngPath = dir.filePath(QStringLiteral("mapa.png"));
+    QImage bitmap(4, 4, QImage::Format_RGB32);
+    bitmap.fill(qRgb(10, 20, 30));
+    QVERIFY(bitmap.save(pngPath, "PNG"));
+
+    QTextDocument doc;
+    doc.setBaseUrl(QUrl::fromLocalFile(dir.path() + QLatin1Char('/')));
+    doc.setMarkdown(QStringLiteral(
+        "![a](mapa.png)\n\n![b](vector.svg)\n\n![c](https://example.com/no-existe.png)\n"));
+
+    const QString html = mdexport::toHtmlDocument(
+        &doc, mdexport::languageForCode(QStringLiteral("es")), QString());
+
+    // El mapa de bits y el vectorial, embebidos con SU tipo (el SVG sigue siendo SVG).
+    QVERIFY2(html.contains(QStringLiteral("src=\"data:image/png;base64,")), qPrintable(html));
+    QVERIFY2(html.contains(QStringLiteral("src=\"data:image/svg+xml;base64,")),
+             qPrintable(html));
+    QVERIFY2(html.contains(QString::fromLatin1(svg.toBase64())),
+             "el SVG debe viajar tal cual, no rasterizado");
+    // Ninguna ruta local suelta: el fichero ya no depende de su carpeta.
+    QVERIFY(!html.contains(QStringLiteral("src=\"mapa.png\"")));
+    QVERIFY(!html.contains(QStringLiteral("src=\"vector.svg\"")));
+    // Lo que no se puede cargar (remoto) se deja como estaba, no se pierde.
+    QVERIFY(html.contains(QStringLiteral("src=\"https://example.com/no-existe.png\"")));
+}
+
 void TestExporters::epubBuildersAreWellFormedXml()
 {
     const mdexport::Language es = mdexport::languageForCode(QStringLiteral("es"));
@@ -393,6 +617,77 @@ void TestExporters::epubBuildersAreWellFormedXml()
     QVERIFY(opf.contains("dcterms:modified"));
     QVERIFY(isWellFormedXml(mdexport::epubNavXhtml(es, QStringLiteral("T"))));
     QVERIFY(isWellFormedXml(mdexport::epubTocNcx(QStringLiteral("T"), QStringLiteral("abc-123"))));
+}
+
+// El libro llegaba al lector con UNA entrada de índice («el documento»), sin
+// manera de saltar a un capítulo por muchos encabezados que tuviera. El índice se
+// arma ahora con ellos, y las anclas las pone epubAnchorHeadings.
+void TestExporters::epubTocIsBuiltFromHeadings()
+{
+    // `<hr>` empieza por «h» pero no es un encabezado: no debe llevarse un id.
+    const QString body = mdexport::epubAnchorHeadings(QStringLiteral(
+        "<h1 style=\"x\">Uno</h1>\n<hr />\n<p>t</p>\n<h2>Dos</h2>\n<h6>Seis</h6>"));
+    QVERIFY2(body.contains(QStringLiteral("<h1 id=\"sec1\" style=\"x\">")), qPrintable(body));
+    QVERIFY2(body.contains(QStringLiteral("<h2 id=\"sec2\">")), qPrintable(body));
+    QVERIFY2(body.contains(QStringLiteral("<h6 id=\"sec3\">")), qPrintable(body));
+    QVERIFY2(body.contains(QStringLiteral("<hr />")), qPrintable(body));
+
+    const QList<mdexport::EpubTocEntry> toc = {
+        {1, QStringLiteral("Uno"), QStringLiteral("sec1")},
+        {2, QStringLiteral("Dos"), QStringLiteral("sec2")},
+    };
+    const QByteArray nav = mdexport::epubNavXhtml(
+        mdexport::languageForCode(QStringLiteral("es")), QStringLiteral("T"), toc);
+    QVERIFY(isWellFormedXml(nav));
+    QVERIFY2(nav.contains("content.xhtml#sec1"), nav.constData());
+    QVERIFY2(nav.contains("content.xhtml#sec2"), nav.constData());
+
+    const QByteArray ncx = mdexport::epubTocNcx(QStringLiteral("T"),
+                                                QStringLiteral("u"), toc);
+    QVERIFY(isWellFormedXml(ncx));
+    QVERIFY(ncx.contains("content.xhtml#sec2"));
+}
+
+// El anidamiento del índice es donde el XHTML se queda mal formado, y un nav mal
+// formado invalida el libro ENTERO. Los casos que lo rompían: saltarse un nivel y
+// empezar por debajo del primero.
+void TestExporters::epubNavNestingIsWellFormed()
+{
+    const auto nav = [](const QList<mdexport::EpubTocEntry> &toc) {
+        return mdexport::epubNavXhtml(mdexport::languageForCode(QStringLiteral("es")),
+                                      QStringLiteral("T"), toc);
+    };
+    const auto entry = [](int level, int n) {
+        return mdexport::EpubTocEntry{level, QStringLiteral("h%1").arg(n),
+                                      QStringLiteral("sec%1").arg(n)};
+    };
+
+    // h1 → h3 → h2: el salto abre UN nivel (un <ol> sin <li> no es válido).
+    const QByteArray jump = nav({entry(1, 1), entry(3, 2), entry(2, 3)});
+    QVERIFY2(isWellFormedXml(jump), jump.constData());
+    QVERIFY(!jump.contains("<ol>\n<ol>"));
+
+    // Empezando por h3, un h1 posterior no puede subir por encima de la raíz.
+    QVERIFY(isWellFormedXml(nav({entry(3, 1), entry(1, 2)})));
+    // Bajada de varios niveles de golpe, y subida al final.
+    QVERIFY(isWellFormedXml(nav({entry(1, 1), entry(2, 2), entry(3, 3), entry(4, 4),
+                                 entry(1, 5)})));
+    // Sin encabezados: una entrada al documento, mejor que un índice vacío.
+    const QByteArray none = nav({});
+    QVERIFY(isWellFormedXml(none));
+    QVERIFY(none.contains("content.xhtml"));
+}
+
+// Qt marca las tareas con `li.unchecked`/`li.checked` y deja la regla que las pinta
+// en el <style> de su <head>… que es justo lo que htmlBodyToXhtml descarta. Sin
+// esas reglas en el CSS del libro, una tarea hecha y una pendiente son dos viñetas
+// idénticas en el lector.
+void TestExporters::epubStyleCoversTaskCheckboxes()
+{
+    const QByteArray css = mdexport::epubStyleCss();
+    QVERIFY2(css.contains("li.unchecked::before"), css.constData());
+    QVERIFY2(css.contains("li.checked::before"), css.constData());
+    QVERIFY(css.contains("2610") && css.contains("2612"));  // ☐ y ☒
 }
 
 void TestExporters::epubContentXhtmlWrapsBody()
@@ -486,6 +781,99 @@ void TestExporters::codeHighlightingBakedIntoExport()
     // El azul de keyword del tema claro (#0000ff) del «int»/«return».
     QVERIFY2(baked->toHtml().contains(QStringLiteral("color:#0000ff"), Qt::CaseInsensitive),
              "el resaltado de código debe conservarse en la exportación");
+}
+
+// Una imagen más ancha que la página (un gantt apaisado) salía TRUNCADA en el PDF
+// y la impresión: la maqueta recorta en el borde en vez de escalar. clampImages-
+// ToWidth la encoge al ancho imprimible ANTES de maquetar. Ojo con las unidades:
+// la maqueta multiplica por el factor de dpi TODOS los tamaños (también los
+// explícitos), así que el tope se fija en unidades de formato — fijarlo en píxeles
+// de dispositivo salía re-escalado otra vez y la imagen quedaba GIGANTE (partida
+// en dos páginas), que fue el primer intento de arreglo.
+void TestExporters::printClampsOversizedImages()
+{
+    const auto imageFormats = [](QTextDocument *doc) {
+        QList<QTextImageFormat> fmts;
+        for (QTextBlock b = doc->begin(); b.isValid(); b = b.next())
+            for (auto it = b.begin(); it != b.end(); ++it)
+                if (it.fragment().charFormat().isImageFormat())
+                    fmts << it.fragment().charFormat().toImageFormat();
+        return fmts;
+    };
+
+    // Sin tamaño explícito: se compara la anchura intrínseca del recurso y solo se
+    // fija la anchura (la altura sigue en automático y conserva la proporción sola).
+    QTextDocument doc;
+    QImage wide(3000, 400, QImage::Format_RGB32);
+    wide.fill(qRgb(1, 2, 3));
+    doc.addResource(QTextDocument::ImageResource, QUrl(QStringLiteral("ancha.png")),
+                    QVariant(wide));
+    QTextCursor(&doc).insertImage(QStringLiteral("ancha.png"));
+
+    mdexport::clampImagesToWidth(&doc, 600.0, 1.0);
+    QList<QTextImageFormat> fmts = imageFormats(&doc);
+    QCOMPARE(fmts.size(), 1);
+    QCOMPARE(fmts.first().width(), 600.0);
+    QVERIFY2(fmts.first().height() <= 0, "la altura debe seguir en automático");
+
+    // Con el factor de dpi de una impresora (1200/96 = 12.5): el tope en unidades
+    // de formato es maxWidth/dpiScale, no maxWidth.
+    QTextDocument hi;
+    hi.addResource(QTextDocument::ImageResource, QUrl(QStringLiteral("ancha.png")),
+                   QVariant(wide));
+    QTextCursor(&hi).insertImage(QStringLiteral("ancha.png"));
+    mdexport::clampImagesToWidth(&hi, 7500.0, 12.5);
+    QCOMPARE(imageFormats(&hi).first().width(), 600.0);
+
+    // Tamaño explícito que ya cabe: intocable. Y uno que no cabe se reescala
+    // conservando la proporción también en la altura fijada.
+    QTextDocument sized;
+    QTextImageFormat small;
+    small.setName(QStringLiteral("s.png"));
+    small.setWidth(500);
+    QTextImageFormat big;
+    big.setName(QStringLiteral("b.png"));
+    big.setWidth(1000);
+    big.setHeight(200);
+    QTextCursor c(&sized);
+    c.insertImage(small);
+    c.insertImage(big);
+    mdexport::clampImagesToWidth(&sized, 600.0, 1.0);
+    fmts = imageFormats(&sized);
+    QCOMPARE(fmts.at(0).width(), 500.0);   // cabía: no se toca
+    QCOMPARE(fmts.at(1).width(), 600.0);   // 1000x200 -> 600x120
+    QCOMPARE(fmts.at(1).height(), 120.0);
+}
+
+// `QTextDocument::print()` clona el documento por dentro, y ese clon copia los
+// recursos explícitos pero NO la baseUrl ni la caché: una imagen de ruta relativa
+// desaparecía de la impresión y del PDF con los números de página desactivados
+// (salía el icono de imagen rota). bakeImageResources fija lo resuelto como
+// recurso explícito, que el clon sí conserva.
+void TestExporters::printBakesRelativeImageResources()
+{
+    QTemporaryDir dir;
+    QVERIFY(dir.isValid());
+    QImage img(20, 10, QImage::Format_RGB32);
+    img.fill(qRgb(9, 8, 7));
+    QVERIFY(img.save(dir.filePath(QStringLiteral("rel.png")), "PNG"));
+
+    QTextDocument doc;
+    doc.setBaseUrl(QUrl::fromLocalFile(dir.path() + QLatin1Char('/')));
+    doc.setMarkdown(QStringLiteral("![x](rel.png)\n"));
+    QVERIFY(doc.resource(QTextDocument::ImageResource, QUrl(QStringLiteral("rel.png")))
+                .isValid());
+
+    // La premisa del fallo: el clon (lo que print() usa por dentro) la pierde.
+    std::unique_ptr<QTextDocument> before(doc.clone());
+    QVERIFY2(!before->resource(QTextDocument::ImageResource,
+                               QUrl(QStringLiteral("rel.png"))).isValid(),
+             "si esto falla, Qt ya copia baseUrl/caché al clonar y el bake sobra");
+
+    mdexport::bakeImageResources(&doc);
+    std::unique_ptr<QTextDocument> after(doc.clone());
+    QVERIFY(after->resource(QTextDocument::ImageResource,
+                            QUrl(QStringLiteral("rel.png"))).isValid());
 }
 
 // El zoom de interfaz agranda la fuente del editor (y con ella el defaultFont del

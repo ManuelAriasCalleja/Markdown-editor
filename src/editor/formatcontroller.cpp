@@ -12,7 +12,7 @@
 
 #include "blockconstructs.h"
 #include "codehighlighter.h"
-#include "outlinepanel.h"  // mdoutline::shiftedLevel
+#include "outline.h"  // mdoutline::shiftedLevel
 #include "supsub.h"        // mdsupsub::SupSubProperty
 
 // Los textos visibles de setCodeLanguage conservan el contexto de traducción

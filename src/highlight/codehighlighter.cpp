@@ -137,17 +137,19 @@ void CodeBlockHighlighter::highlightMathFragments()
     }
 }
 
-void CodeBlockHighlighter::highlightMarks()
+namespace {
+
+// Recorre los fragmentos de PROSA del bloque —saltando lo que no lo es: código en
+// línea (monoespaciado), fórmulas y enlaces— y llama a `apply` con el texto del
+// fragmento y su desplazamiento dentro del bloque.
+//
+// La regla de qué cuenta como prosa vivía copiada en el subrayado ortográfico y en
+// el resaltado de `==`: si mañana hay que excluir un cuarto tipo de fragmento, así
+// se toca en un solo sitio.
+template <typename Apply>
+void forEachProseFragment(const QTextBlock &block, Apply apply)
 {
-    if (!m_markColor.isValid())
-        return;
-    const QTextBlock block = currentBlock();
     const int basePos = block.position();
-    QTextCharFormat mark;
-    mark.setBackground(m_markColor);
-    // Igual que la ortografía: recorremos fragmentos para saltar lo que no es prosa
-    // (código en línea, fórmulas, enlaces). El fondo es de la capa de presentación:
-    // no toca el Markdown (`==` viaja como texto literal).
     for (auto it = block.begin(); it != block.end(); ++it) {
         const QTextFragment frag = it.fragment();
         if (!frag.isValid())
@@ -155,43 +157,45 @@ void CodeBlockHighlighter::highlightMarks()
         const QTextCharFormat cf = frag.charFormat();
         if (cf.fontFixedPitch() || cf.boolProperty(mdmath::IsMathProperty) || cf.isAnchor())
             continue;
-        const QString text = frag.text();
-        const int offset = frag.position() - basePos;
+        apply(frag.text(), frag.position() - basePos);
+    }
+}
+
+}  // namespace
+
+void CodeBlockHighlighter::highlightMarks()
+{
+    if (!m_markColor.isValid())
+        return;
+    QTextCharFormat mark;
+    mark.setBackground(m_markColor);
+    // El fondo es de la capa de presentación: no toca el Markdown (`==` viaja como
+    // texto literal).
+    forEachProseFragment(currentBlock(), [this, &mark](const QString &text, int offset) {
         for (const mdmark::Span &s : mdmark::spansIn(text)) {
             // Solo el texto interior (entre los `==`), no los delimitadores.
             const int innerLen = s.length - 4;
             if (innerLen > 0)
                 setFormat(offset + s.start + 2, innerLen, mark);
         }
-    }
+    });
 }
 
 void CodeBlockHighlighter::highlightSpelling()
 {
     if (!m_spell || !m_spell->isAvailable())
         return;  // sin diccionario no se subraya nada (coste cero)
-    const QTextBlock block = currentBlock();
-    const int basePos = block.position();
     QTextCharFormat underline;
     underline.setUnderlineStyle(QTextCharFormat::SpellCheckUnderline);
     underline.setUnderlineColor(m_misspellColor);
-    // Recorremos fragmentos para saltar lo que no es prosa: código en línea
-    // (monoespaciado), fórmulas (IsMathProperty) y enlaces (anchor). El subrayado
-    // es de la capa de presentación: no toca el Markdown.
-    for (auto it = block.begin(); it != block.end(); ++it) {
-        const QTextFragment frag = it.fragment();
-        if (!frag.isValid())
-            continue;
-        const QTextCharFormat cf = frag.charFormat();
-        if (cf.fontFixedPitch() || cf.boolProperty(mdmath::IsMathProperty) || cf.isAnchor())
-            continue;
-        const QString text = frag.text();
-        const int offset = frag.position() - basePos;
+    // El subrayado es de la capa de presentación: no toca el Markdown.
+    forEachProseFragment(currentBlock(),
+                         [this, &underline](const QString &text, int offset) {
         for (const mdspell::Word &w : mdspell::tokenize(text)) {
             if (!m_spell->isCorrect(text.mid(w.start, w.length)))
                 setFormat(offset + w.start, w.length, underline);
         }
-    }
+    });
 }
 
 void CodeBlockHighlighter::highlightMultilineComments(const QString &text)

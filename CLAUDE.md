@@ -97,9 +97,23 @@ en su carpeta):
 - `diagram/` — Mermaid/PlantUML: `diagram`, `diagramdoc`, `DiagramRenderer`,
   `DiagramController`.
 - `spell/` — corrector: `spellscan`, `SpellChecker`, `SpellController`.
-- `export/` — `mdexport`/`exporters` + `ExportController`.
+- `export/` — `ExportController` (la orquestación con diálogos) y el namespace
+  `mdexport`, cuya **API entera vive en `exporters.h`** pero está repartida en una
+  unidad de traducción por formato, igual que `MainWindow`: `exporters.cpp` (lo
+  común: catálogo de idiomas, front matter, `cloneForExport`, paginación del PDF),
+  `exportlatex`, `exportdocx`, `exportepub`, `exporthtml`, `exportodf`. Lo que
+  comparten entre sí va en `exportutil.h`, cabecera **interna** que los
+  consumidores no incluyen: `xmlEsc`, `localFileFor` y `imageData`, que es el único
+  sitio donde se resuelve una imagen del documento a bytes (con la regla de
+  conservar los originales o rasterizar a PNG, que antes estaba copiada en los
+  cuatro formatos).
 - `widgets/` — diálogos y widgets sueltos (`FindReplaceBar`, `GoToHeadingDialog`,
   `HelpDialog`, `SymbolPicker`, `SnippetsDialog`, `OutlinePanel`) + `formaticons`.
+  Los dos diálogos de filtro rápido (la paleta de comandos y el salto a
+  encabezado) comparten `FilterListDialog`, que pone el armazón «campo de filtro
+  sobre lista» y **el comportamiento de teclado**: las flechas y AvPág/RePág mueven
+  la selección sin sacar el foco del filtro. Esa parte estaba duplicada literalmente
+  en ambos; la derivada solo llena la lista y responde a `filterChanged`.
 
 `src/` conserva además `resources.qrc`, `icons/` y `help/` (recursos Qt, fuera de
 las carpetas de código). El código está documentado con Doxygen (`Doxyfile` en la
@@ -176,8 +190,10 @@ parser de fuente / motor TeX→runs / maquetación 2D), `footnotes` (`mdfootnote
 (`mdtask`), `shortcodes` (`mdshortcode`), `symbolcatalog` (`mdsymbols`), `urldetect`
 (`mdurl`), `richpaste` (`mdrichpaste`), `doctemplates` (`mdtemplate`),
 `admonitions` (`mdadmonition`), `texttransform` (`mdtext`), `docstats`
-(`mdstats`), `blockconstructs` (`mdblock`), `outlinepanel`
-(`mdoutline::headingsOf`), `spellscan` (`mdspell`; tokenización de palabras y
+(`mdstats`), `blockconstructs` (`mdblock`), `outline`
+(`mdoutline::headingsOf`; vive aparte de `OutlinePanel` para que quien solo quiere
+el índice —la exportación a EPUB, por ejemplo— no arrastre un `QDockWidget`; lo
+mismo con `mdcommands` en `app/commands.h`), `spellscan` (`mdspell`; tokenización de palabras y
 selección de diccionario para el corrector ortográfico, ver abajo), `diagram`
 (`mddiagram`; clasifica el lenguaje de un bloque ```mermaid/plantuml para el
 render de diagramas, ver abajo), `typewriter` (`mdtypewriter`; lógica pura del
@@ -479,7 +495,13 @@ una fórmula muy anidada (`\frac{\frac{…}}`, `x^{y^{…}}`) desbordaba la pila
 - *Exportación.* **LaTeX**: `inlineLatex` detecta fragmentos por `IsMathProperty`,
   agrupa los consecutivos con el mismo `MathTex` y emite **una** `$tex$`/`$$tex$$`
   por grupo (preámbulo con `amsmath`+`amssymb`); el carácter objeto 2D cuenta como
-  un grupo de uno. **HTML/PDF/ODF/DOCX**: pasan por `mdexport::cloneForExport`, que
+  un grupo de uno. Ojo con no confundir esos runs con el super/subíndice **que no
+  es fórmula** (`x^2^`/`H~2~O` de `mdsupsub`, las referencias de nota al pie): ese
+  solo lleva `verticalAlignment`, y hay que emitirlo como
+  `\textsuperscript`/`\textsubscript` —mirar únicamente las propiedades de math lo
+  dejaba caer a ras de línea («H2O»), y LaTeX era el único formato que lo perdía
+  (DOCX lo emite como `w:vertAlign`, y HTML/ODF/PDF los serializa Qt).
+  **HTML/PDF/ODF/DOCX**: pasan por `mdexport::cloneForExport`, que
   clona el documento, limpia las propiedades custom de los runs inline y
   **expande** cada carácter objeto 2D a esos runs inline (cursiva + super/sub),
   dejando que Qt serialice el vertical-align a CSS/ODF/PDF (la maquetación 2D es
@@ -515,6 +537,16 @@ una fórmula muy anidada (`\frac{\frac{…}}`, `x^{y^{…}}`) desbordaba la pila
 - **Formatos**: PDF (`QPrinter`), HTML (`toHtml`), **ODF (.odt)**, **LaTeX (.tex)**,
   **DOCX (.docx)** y **EPUB (.epub)** en `mdexport`, más **Imprimir**
   (`QPrintDialog`). Menú *Archivo → Exportar* / *Imprimir* (Ctrl+P).
+- **PDF e impresión: dos trampas de imágenes** (ambas en `renderToPrinter`, que es
+  el embudo de PDF/imprimir/selección/vista previa, y con test en `tst_exporters`):
+  (1) una imagen más ancha que la página salía TRUNCADA — la maqueta recorta en el
+  borde en vez de escalar—; `clampImagesToWidth` la encoge antes de maquetar, y el
+  tope va en **unidades de formato** (`maxWidth/dpiScale`), porque la maqueta
+  multiplica por el factor de dpi también los tamaños explícitos (fijar píxeles de
+  dispositivo re-escala otra vez y la imagen sale gigante). (2) `doc->print()`
+  clona por dentro y el clon copia los recursos explícitos pero NO la baseUrl ni
+  la caché: las imágenes relativas desaparecían de la rama sin números de página;
+  `bakeImageResources` fija lo resuelto como recurso explícito antes de imprimir.
 - **Orquestación dirigida por datos.** Los cinco formatos basados en archivo
   (HTML/ODF/LaTeX/DOCX/EPUB) comparten `ExportController::runExport(FileExporter)`:
   un descriptor declara título/filtro/extensión, mensajes, si pide idioma, si usa el
@@ -525,6 +557,17 @@ una fórmula muy anidada (`\frac{\frac{…}}`, `x^{y^{…}}`) desbordaba la pila
 - **Idioma del documento**: ODF y LaTeX lo incrustan. Se pregunta al exportar
   (`QInputDialog`), por defecto el `lang`/`language` del front matter › ajuste de la
   app › locale del sistema. Tabla código→{babel, fo:language} en `mdexport`.
+- **HTML**: el cuerpo lo escribe Qt (`toHtml`), pero `mdexport::toHtmlDocument` le
+  añade lo que Qt no pone y el documento sí sabe: `lang` en `<html>` (sin él, ni el
+  lector de pantalla ni la separación silábica saben el idioma), `<title>` (sin él
+  la pestaña del navegador muestra el nombre del fichero) y, sobre todo, las
+  **imágenes embebidas** como `data:` URI. Qt referencia la ruta relativa tal cual
+  (`src="imagen.png"`), así que el .html se veía bien donde se exportó y perdía
+  TODAS las imágenes al moverlo o enviarlo. Se embeben con los **bytes originales**
+  cuando el navegador entiende el formato (png/jpg/gif/webp/svg): reencodear a PNG
+  conserva el aspecto pero infla una foto JPEG y convierte un SVG vectorial en un
+  mapa de bits. Lo que no se puede cargar (una URL remota) se deja como está. Lo
+  mismo vale para *Copiar como HTML*, que si no pegaba el texto sin las imágenes.
 - **ODF**: Qt escribe el `.odt` (`QTextDocumentWriter "ODF"`) pero **no** el idioma;
   se reempaqueta el zip con el **QZip privado de Qt** (`Qt6::GuiPrivate`,
   `private/qzipreader_p.h`/`qzipwriter_p.h`) para añadir `styles.xml` (con
@@ -541,7 +584,31 @@ una fórmula muy anidada (`\frac{\frac{…}}`, `x^{y^{…}}`) desbordaba la pila
   `singleCharCommands`), con las preferencias de alias donde varias órdenes comparten
   glifo; el latín-1 y la puntuación corriente (`× · — …`) se dejan pasar (T1 sí los
   compone). El resto de símbolos/emoji ≥ U+2190 se mapean con la tabla suelta del
-  exportador o se omiten; el código `verbatim` se sanea aparte.
+  exportador o se omiten.
+  **Un `.tex` que no compila no sirve de nada**, y esa es la clase de fallo que
+  domina aquí: se descubren exportando y pasando `pdflatex`, no leyendo el código.
+  Los que ya costaron un documento entero, todos con su caso en `tst_exporters`:
+  - Los bloques de código van en **`alltt`, no en `verbatim`**: verbatim es
+    interrumpible, así que bastaba que el código contuviera la línea
+    `\end{verbatim}` —cualquier documento que hable de LaTeX— para cerrar el
+    entorno ahí y tumbar la compilación entera. En alltt solo `\ { }` conservan su
+    significado y `codeBlockSanitize` los escapa: el resto es literal pase lo que pase.
+  - **Listas y citas comparten un tope de anidamiento** (`kMaxNesting`): LaTeX
+    cuenta `quote` como entorno de lista y aborta con «Too deeply nested» pasados
+    cuatro. Se limita la profundidad; se pierde la sangría de los niveles de más,
+    nunca el contenido.
+  - Un `\item` cuyo contenido empieza por `[` (`- [1] Knuth`, una bibliografía) se
+    lo come LaTeX como argumento opcional: se antepone un grupo vacío.
+  - El destino de `\href` va por **`latexUrl`, no por `latexEscape`**: el
+    `~` → `\textasciitilde{}` de este último dejaba las llaves DENTRO de la URL
+    (`http://e.com/~{}manuel`). `latexUrl` deja `~` literal, pone barra a
+    `# % & _ $` y codifica en porcentaje lo que no es válido en una URL.
+  - Se conservan cosas que el documento sí sabe y el serializador tiraba: el
+    arranque de una lista numerada (`5.` → `\setcounter{enumi}{4}`), el nivel de
+    las citas anidadas, y que una lista o un bloque de código **dentro** de una
+    cita siguen dentro de ella (`BlockQuoteLevel` los marca).
+  *Limitación:* una tabla dentro de un elemento de lista sale fuera de la lista,
+  porque Qt tampoco la anida en el documento: no hay información que usar.
   **Imágenes: export autocontenido.** `toLatex` recibe la ruta del `.tex` y **trae
   toda imagen junto a él** (`<stem>-imgN.ext`), de modo que el `.tex` compila esté
   donde esté (no depende de exportarse junto al `.md`). Las de formato incluible por
@@ -554,13 +621,73 @@ una fórmula muy anidada (`\frac{\frac{…}}`, `x^{y^{…}}`) desbordaba la pila
   ruta de salida (tests) se mantiene la conducta previa: referencia directa de las
   incluibles, marcador para el resto.
 - **DOCX**: serializador OOXML propio (`mdexport::toDocxDocumentXml`) empaquetado
-  con el QZip privado; idioma/título incrustados, imágenes embebidas.
+  con el QZip privado; idioma/título incrustados, imágenes embebidas. Tres
+  detalles que no se pueden relajar (los tres nacieron de un fallo real, ver
+  `tst_docx`): (1) `xmlEsc` **descarta** los caracteres que XML 1.0 no admite
+  (control C0, U+FFFE/U+FFFF, suplentes sueltos) —uno solo deja el
+  `word/document.xml` mal formado y Word rechaza el paquete entero—; (2) cada
+  `<w:gridCol>` lleva su `w:w`: sin anchura hay consumidores (Pandoc) que leen la
+  tabla como si no tuviera columnas y **pierden todas las celdas**; (3) los
+  enlaces van por **relación** (`<w:hyperlink r:id>` + `TargetMode="External"`,
+  como Word), no por campo `w:fldSimple HYPERLINK`, que otros consumidores
+  descartan entero, rótulo visible incluido. Las imágenes y los enlaces comparten
+  el contador de rId, que empieza en 3 (1 = styles.xml, 2 = numbering.xml).
 - **EPUB**: `mdexport::writeEpub` arma un EPUB 3 (`mimetype` sin comprimir primero,
   `META-INF/container.xml`, OPF, `nav.xhtml`, `toc.ncx`, CSS, un XHTML) con el QZip
   privado. **Reutiliza el HTML de Qt** (`toHtml`) como cuerpo, saneado a XHTML con
-  `htmlBodyToXhtml` (`&nbsp;`→`&#160;`, elementos vacíos cerrados); las imágenes se
-  recuperan con `doc->resource` y se embeben como PNG, reescribiendo su `src`. Las
-  piezas XML son funciones puras (`epubContentOpf`, `epubNavXhtml`, etc.).
+  `htmlBodyToXhtml` (`&nbsp;`→`&#160;`, elementos vacíos cerrados). Las piezas XML
+  son funciones puras (`epubContentOpf`, `epubNavXhtml`, etc.). Tres cosas que hay
+  que mantener, las tres nacidas de un libro que salía mal:
+  - **El índice se arma con los encabezados** (`mdoutline::headingsOf`), anidado por
+    niveles, y `epubAnchorHeadings` pone un `id` a cada `<hN>` del cuerpo para que
+    los enlaces salten a alguna parte. Antes el libro llegaba al lector con una sola
+    entrada, sin manera de ir a un capítulo. Ojo con el anidamiento: un `<ol>` sin
+    `<li>` dentro no es válido y **un nav mal formado invalida el libro entero**,
+    así que `epubNavList` lleva una pila de niveles (un salto de h1 a h3 abre UN
+    nivel; un h1 tras un h3 no sube por encima de la raíz).
+  - Las **casillas de tarea** las marca Qt con `li.unchecked`/`li.checked` y deja la
+    regla que las pinta en el `<style>` de su `<head>`… que es justo lo que
+    `htmlBodyToXhtml` descarta. `epubStyleCss` las redefine con `::before` (mejor
+    soportado que el `::marker` de Qt); sin eso, hecha y pendiente son dos viñetas
+    iguales.
+  - Las **imágenes** conservan sus bytes originales cuando el formato es de los que
+    entienden los lectores (png/jpg/gif/svg) y solo se rasterizan si no; el
+    `media-type` del manifiesto se deriva de la extensión, no se da por hecho que
+    todo es PNG. Reencodearlo todo inflaba las fotos y convertía los SVG en mapas de
+    bits.
+
+**Importación de otros formatos (`mdimport`).** *Archivo → Importar → Otros formatos*
+convierte DOCX/ODT/RTF/LaTeX/reST… ejecutando **Pandoc** por `QProcess` (mismo
+enfoque que los diagramas: sin dependencia enlazada, con degradación elegante si
+falta). La lógica pura vive en `pandocimport`; el proceso, en
+`MainWindow::importWithPandoc`. Lo que hace usable el resultado —cada pieza nació de
+una pérdida real de contenido, toda ella cubierta por `tst_docx` y `tst_pandocimport`:
+
+- **Metadatos**: `--standalone`. Sin él Pandoc parsea el título del documento (el
+  estilo «Title» de Word) y lo tira, porque solo emite el cuerpo. Con él sale como
+  front matter YAML, que es justo lo que el editor conserva verbatim (`DocumentIo`)
+  y de donde la exportación lee `title`/`lang`. Un documento sin metadatos no gana
+  ningún bloque, y uno vacío sigue produciendo salida vacía (de lo que depende el
+  aviso «no produjo ningún contenido»).
+- **Imágenes**: `--extract-media`. Van dentro del paquete, así que sin extraerlas
+  Pandoc emite una ruta que no existe fuera de él. Se sacan a `<nombre>-media`,
+  junto al documento de origen (`mediaDirFor`; si esa carpeta no es escribible se
+  cae a `AppLocalDataLocation` en vez de abortar la importación), y el Markdown las
+  referencia por ruta **absoluta**: el documento importado aún no tiene ubicación en
+  disco, así que una relativa no resolvería.
+- **`repairImages`**: convierte a `![alt](ruta)` el `<img>` crudo que Pandoc emite
+  cuando la imagen lleva tamaño (GFM no lo expresa) y rellena el texto alternativo
+  vacío. Ambas cosas las arregla `mdrender::imageMarkdown`, que es donde vive esa
+  regla porque **también** la necesita *Insertar → Imagen*: `setMarkdown` **descarta**
+  `![](ruta)` sin insertar nada —ni la imagen ni un hueco—, así que un rótulo vacío
+  hace desaparecer la imagen al reabrir el documento.
+- **`htmlTablesToMarkdown`**: Pandoc cae a HTML crudo cuando GFM no expresa la
+  tabla (celdas combinadas, celdas con varios párrafos, tablas anidadas), y con
+  `MarkdownNoHTML` eso se vería como texto literal. Se convierte a tabla de tuberías
+  aplanando lo que Markdown no tiene (los bloques de una celda quedan en una línea,
+  el `colspan` se reparte en celdas vacías), conservando el formato en línea. Los
+  bloques de código se saltan (un ` ``` ` con un `<table>` dentro es texto del
+  usuario) y, si el fragmento no se puede parsear, se deja intacto.
 
 ## Empaquetado multiplataforma
 

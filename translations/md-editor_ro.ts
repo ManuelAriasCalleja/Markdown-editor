@@ -259,7 +259,7 @@
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="322"/>
+        <location filename="../src/app/mainwindow.cpp" line="323"/>
         <source>Editor Markdown WYSIWYG — escribe y da formato con la barra superior</source>
         <translation>Editor Markdown WYSIWYG — scrie și formatează cu bara de sus</translation>
     </message>
@@ -580,7 +580,7 @@
     </message>
     <message>
         <location filename="../src/app/mainwindowmenus.cpp" line="484"/>
-        <location filename="../src/editor/insertcontroller.cpp" line="117"/>
+        <location filename="../src/editor/insertcontroller.cpp" line="118"/>
         <source>Enlace</source>
         <translation>Legătură</translation>
     </message>
@@ -731,9 +731,9 @@
     </message>
     <message>
         <location filename="../src/app/mainwindowmenus.cpp" line="623"/>
-        <location filename="../src/editor/insertcontroller.cpp" line="184"/>
-        <location filename="../src/editor/insertcontroller.cpp" line="201"/>
-        <location filename="../src/editor/insertcontroller.cpp" line="243"/>
+        <location filename="../src/editor/insertcontroller.cpp" line="188"/>
+        <location filename="../src/editor/insertcontroller.cpp" line="205"/>
+        <location filename="../src/editor/insertcontroller.cpp" line="247"/>
         <source>Pegar imagen</source>
         <translation>Lipește imaginea</translation>
     </message>
@@ -1158,17 +1158,17 @@
         <translation>&amp;Despre</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="435"/>
+        <location filename="../src/app/mainwindow.cpp" line="436"/>
         <source>Acerca de</source>
         <translation>Despre</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="444"/>
+        <location filename="../src/app/mainwindow.cpp" line="445"/>
         <source>Desarrollado por Manuel Arias Calleja</source>
         <translation>Dezvoltat de Manuel Arias Calleja</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="446"/>
+        <location filename="../src/app/mainwindow.cpp" line="447"/>
         <source>Editor WYSIWYG de Markdown en Qt6 + C++17.</source>
         <translation>Editor WYSIWYG Markdown în Qt6 + C++17.</translation>
     </message>
@@ -1178,7 +1178,7 @@
         <translation>Format</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="493"/>
+        <location filename="../src/app/mainwindow.cpp" line="494"/>
         <source>Selección: </source>
         <translation>Selecție: </translation>
     </message>
@@ -1198,69 +1198,69 @@
         <translation>Limbaj (gol = niciunul):</translation>
     </message>
     <message>
-        <location filename="../src/editor/insertcontroller.cpp" line="118"/>
+        <location filename="../src/editor/insertcontroller.cpp" line="119"/>
         <source>Texto:</source>
         <translation>Text:</translation>
     </message>
     <message>
-        <location filename="../src/editor/insertcontroller.cpp" line="119"/>
+        <location filename="../src/editor/insertcontroller.cpp" line="120"/>
         <source>URL:</source>
         <translation>URL:</translation>
     </message>
     <message>
-        <location filename="../src/editor/insertcontroller.cpp" line="151"/>
+        <location filename="../src/editor/insertcontroller.cpp" line="152"/>
         <source>imagen</source>
         <translation>imagine</translation>
     </message>
     <message>
-        <location filename="../src/editor/insertcontroller.cpp" line="153"/>
+        <location filename="../src/editor/insertcontroller.cpp" line="154"/>
         <source>Insertar imagen</source>
         <translation>Inserează imagine</translation>
     </message>
     <message>
-        <location filename="../src/editor/insertcontroller.cpp" line="154"/>
-        <location filename="../src/editor/insertcontroller.cpp" line="202"/>
+        <location filename="../src/editor/insertcontroller.cpp" line="155"/>
+        <location filename="../src/editor/insertcontroller.cpp" line="206"/>
         <source>Texto alternativo:</source>
         <translation>Text alternativ:</translation>
     </message>
     <message>
-        <location filename="../src/editor/insertcontroller.cpp" line="155"/>
+        <location filename="../src/editor/insertcontroller.cpp" line="156"/>
         <source>Ruta o URL:</source>
         <translation>Cale sau URL:</translation>
     </message>
     <message>
-        <location filename="../src/editor/insertcontroller.cpp" line="185"/>
+        <location filename="../src/editor/insertcontroller.cpp" line="189"/>
         <source>El portapapeles no contiene ninguna imagen.</source>
         <translation>Clipboardul nu conține nicio imagine.</translation>
     </message>
     <message>
-        <location filename="../src/editor/insertcontroller.cpp" line="233"/>
+        <location filename="../src/editor/insertcontroller.cpp" line="237"/>
         <source>Guardar imagen pegada</source>
         <translation>Salvează imaginea lipită</translation>
     </message>
     <message>
-        <location filename="../src/editor/insertcontroller.cpp" line="235"/>
+        <location filename="../src/editor/insertcontroller.cpp" line="239"/>
         <source>Imagen PNG (*.png)</source>
         <translation>Imagine PNG (*.png)</translation>
     </message>
     <message>
-        <location filename="../src/editor/insertcontroller.cpp" line="244"/>
+        <location filename="../src/editor/insertcontroller.cpp" line="248"/>
         <source>No se pudo guardar la imagen en «%1».</source>
         <translation>Imaginea nu a putut fi salvată în „%1”.</translation>
     </message>
     <message>
-        <location filename="../src/editor/insertcontroller.cpp" line="266"/>
+        <location filename="../src/editor/insertcontroller.cpp" line="270"/>
         <source>No se puede insertar una tabla dentro de otra. Coloca el cursor fuera de la tabla.</source>
         <translation>Nu poți insera un tabel în interiorul altuia. Plasează cursorul în afara tabelului.</translation>
     </message>
     <message>
-        <location filename="../src/editor/insertcontroller.cpp" line="323"/>
+        <location filename="../src/editor/insertcontroller.cpp" line="327"/>
         <source>Insertar índice</source>
         <translation>Inserează cuprins</translation>
     </message>
     <message>
         <location filename="../src/app/mainwindowinput.cpp" line="435"/>
-        <location filename="../src/editor/insertcontroller.cpp" line="324"/>
+        <location filename="../src/editor/insertcontroller.cpp" line="328"/>
         <source>El documento no tiene encabezados.</source>
         <translation>Documentul nu conține titluri.</translation>
     </message>
@@ -1351,27 +1351,27 @@
         <translation>Previzualizare tipărire</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="295"/>
+        <location filename="../src/export/exportcontroller.cpp" line="298"/>
         <source>Copiado como HTML al portapapeles.</source>
         <translation>Copiat ca HTML în clipboard.</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="310"/>
+        <location filename="../src/export/exportcontroller.cpp" line="313"/>
         <source>Copiado como Markdown al portapapeles.</source>
         <translation>Copiat ca Markdown în clipboard.</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="352"/>
+        <location filename="../src/export/exportcontroller.cpp" line="357"/>
         <source>Exportar a ODF</source>
         <translation>Exportă în ODF</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="353"/>
+        <location filename="../src/export/exportcontroller.cpp" line="358"/>
         <source>Documento ODF (*.odt)</source>
         <translation>Document ODF (*.odt)</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="355"/>
+        <location filename="../src/export/exportcontroller.cpp" line="360"/>
         <source>No se pudo exportar a ODF:
 %1
 
@@ -1382,22 +1382,22 @@
 %2</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="356"/>
+        <location filename="../src/export/exportcontroller.cpp" line="361"/>
         <source>Exportado a ODF: %1</source>
         <translation>Exportat în ODF: %1</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="365"/>
+        <location filename="../src/export/exportcontroller.cpp" line="370"/>
         <source>Exportar a DOCX</source>
         <translation>Exportă în DOCX</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="366"/>
+        <location filename="../src/export/exportcontroller.cpp" line="371"/>
         <source>Documento Word (*.docx)</source>
         <translation>Document Word (*.docx)</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="368"/>
+        <location filename="../src/export/exportcontroller.cpp" line="373"/>
         <source>No se pudo exportar a DOCX:
 %1
 
@@ -1408,22 +1408,22 @@
 %2</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="369"/>
+        <location filename="../src/export/exportcontroller.cpp" line="374"/>
         <source>Exportado a DOCX: %1</source>
         <translation>Exportat în DOCX: %1</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="378"/>
+        <location filename="../src/export/exportcontroller.cpp" line="383"/>
         <source>Exportar a EPUB</source>
         <translation>Exportă în EPUB</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="379"/>
+        <location filename="../src/export/exportcontroller.cpp" line="384"/>
         <source>Libro EPUB (*.epub)</source>
         <translation>Carte EPUB (*.epub)</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="381"/>
+        <location filename="../src/export/exportcontroller.cpp" line="386"/>
         <source>No se pudo exportar a EPUB:
 %1
 
@@ -1434,62 +1434,62 @@
 %2</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="382"/>
+        <location filename="../src/export/exportcontroller.cpp" line="387"/>
         <source>Exportado a EPUB: %1</source>
         <translation>Exportat în EPUB: %1</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="391"/>
+        <location filename="../src/export/exportcontroller.cpp" line="396"/>
         <source>Exportar a texto plano</source>
         <translation>Exportă în text simplu</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="392"/>
+        <location filename="../src/export/exportcontroller.cpp" line="397"/>
         <source>Texto plano (*.txt)</source>
         <translation>Text simplu (*.txt)</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="395"/>
+        <location filename="../src/export/exportcontroller.cpp" line="400"/>
         <source>Exportado a texto plano: %1</source>
         <translation>Exportat în text simplu: %1</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="408"/>
+        <location filename="../src/export/exportcontroller.cpp" line="413"/>
         <source>Exportar a LaTeX</source>
         <translation>Exportă în LaTeX</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="409"/>
+        <location filename="../src/export/exportcontroller.cpp" line="414"/>
         <source>Documento LaTeX (*.tex)</source>
         <translation>Document LaTeX (*.tex)</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="412"/>
+        <location filename="../src/export/exportcontroller.cpp" line="417"/>
         <source>Exportado a LaTeX: %1</source>
         <translation>Exportat în LaTeX: %1</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="290"/>
+        <location filename="../src/app/mainwindow.cpp" line="291"/>
         <source>Contador de palabras</source>
         <translation>Număr de cuvinte</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="296"/>
+        <location filename="../src/app/mainwindow.cpp" line="297"/>
         <source>Línea y columna</source>
         <translation>Linie și coloană</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="364"/>
+        <location filename="../src/app/mainwindow.cpp" line="365"/>
         <source>El archivo se eliminó o movió en disco.</source>
         <translation>Fișierul a fost șters sau mutat pe disc.</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="442"/>
+        <location filename="../src/app/mainwindow.cpp" line="443"/>
         <source>Versión %1</source>
         <translation>Versiunea %1</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/app/mainwindow.cpp" line="540"/>
+        <location filename="../src/app/mainwindow.cpp" line="541"/>
         <source>~%n min</source>
         <translation>
             <numerusform>~%n min</numerusform>
@@ -1498,12 +1498,12 @@
         </translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="503"/>
+        <location filename="../src/app/mainwindow.cpp" line="504"/>
         <source>Ln %1, Col %2</source>
         <translation>Lin %1, Col %2</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/app/mainwindow.cpp" line="484"/>
+        <location filename="../src/app/mainwindow.cpp" line="485"/>
         <source>%1 palabra(s)</source>
         <translation>
             <numerusform>%1 cuvânt</numerusform>
@@ -1512,7 +1512,7 @@
         </translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/app/mainwindow.cpp" line="486"/>
+        <location filename="../src/app/mainwindow.cpp" line="487"/>
         <source>%1 carácter(es)</source>
         <translation>
             <numerusform>%1 caracter</numerusform>
@@ -1521,110 +1521,110 @@
         </translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="517"/>
+        <location filename="../src/app/mainwindow.cpp" line="518"/>
         <source>Estadísticas del documento</source>
         <translation>Statisticile documentului</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="519"/>
+        <location filename="../src/app/mainwindow.cpp" line="520"/>
         <source>Palabras:</source>
         <translation>Cuvinte:</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="520"/>
+        <location filename="../src/app/mainwindow.cpp" line="521"/>
         <source>Caracteres:</source>
         <translation>Caractere:</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="521"/>
+        <location filename="../src/app/mainwindow.cpp" line="522"/>
         <source>Caracteres (sin espacios):</source>
         <translation>Caractere (fără spații):</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="523"/>
+        <location filename="../src/app/mainwindow.cpp" line="524"/>
         <source>Párrafos:</source>
         <translation>Paragrafe:</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="524"/>
+        <location filename="../src/app/mainwindow.cpp" line="525"/>
         <source>Frases:</source>
         <translation>Propoziții:</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="525"/>
+        <location filename="../src/app/mainwindow.cpp" line="526"/>
         <source>Tiempo de lectura:</source>
         <translation>Timp de citire:</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="549"/>
+        <location filename="../src/app/mainwindow.cpp" line="550"/>
         <source>~%1 h</source>
         <translation>~%1 h</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="550"/>
+        <location filename="../src/app/mainwindow.cpp" line="551"/>
         <source>~%1 h %2 min</source>
         <translation>~%1 h %2 min</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="735"/>
+        <location filename="../src/app/mainwindow.cpp" line="736"/>
         <source>Copiar nombre del archivo</source>
         <translation>Copiază numele fișierului</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="736"/>
+        <location filename="../src/app/mainwindow.cpp" line="737"/>
         <source>Copiar ruta completa</source>
         <translation>Copiază calea completă</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="781"/>
+        <location filename="../src/app/mainwindow.cpp" line="782"/>
         <source>Abrir</source>
         <translation>Deschide</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="782"/>
+        <location filename="../src/app/mainwindow.cpp" line="783"/>
         <source>Archivos Markdown (*.md *.markdown *.txt);;Todos los archivos (*)</source>
         <translation>Fișiere Markdown (*.md *.markdown *.txt);;Toate fișierele (*)</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="790"/>
+        <location filename="../src/app/mainwindow.cpp" line="791"/>
         <source>Importar HTML</source>
         <translation>Importă HTML</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="791"/>
+        <location filename="../src/app/mainwindow.cpp" line="792"/>
         <source>Páginas HTML (*.html *.htm);;Todos los archivos (*)</source>
         <translation>Pagini HTML (*.html *.htm);;Toate fișierele (*)</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="798"/>
-        <location filename="../src/app/mainwindow.cpp" line="821"/>
+        <location filename="../src/app/mainwindow.cpp" line="799"/>
+        <location filename="../src/app/mainwindow.cpp" line="822"/>
         <source>No se pudo leer el archivo:
 %1</source>
         <translation>Fișierul nu a putut fi citit:
 %1</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="813"/>
+        <location filename="../src/app/mainwindow.cpp" line="814"/>
         <source>Importar EPUB</source>
         <translation>Importă EPUB</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="814"/>
+        <location filename="../src/app/mainwindow.cpp" line="815"/>
         <source>Libros EPUB (*.epub);;Todos los archivos (*)</source>
         <translation>Cărți EPUB (*.epub);;Toate fișierele (*)</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="828"/>
+        <location filename="../src/app/mainwindow.cpp" line="829"/>
         <source>No se pudo importar el EPUB. Comprueba que el archivo es válido.</source>
         <translation>EPUB-ul nu a putut fi importat. Verifică dacă fișierul este valid.</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="839"/>
+        <location filename="../src/app/mainwindow.cpp" line="840"/>
         <source>Pandoc no encontrado</source>
         <translation>Pandoc negăsit</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="840"/>
+        <location filename="../src/app/mainwindow.cpp" line="841"/>
         <source>Para importar estos formatos hace falta Pandoc. Instálalo con:
 
 %1</source>
@@ -1633,27 +1633,32 @@
 %1</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="846"/>
+        <location filename="../src/app/mainwindow.cpp" line="847"/>
         <source>Importar con Pandoc</source>
         <translation>Importă cu Pandoc</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="847"/>
+        <location filename="../src/app/mainwindow.cpp" line="848"/>
         <source>Documentos compatibles (%1);;Todos los archivos (*)</source>
         <translation>Documente acceptate (%1);;Toate fișierele (*)</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="860"/>
+        <location filename="../src/app/mainwindow.cpp" line="873"/>
         <source>Pandoc no pudo convertir el archivo.</source>
         <translation>Pandoc nu a putut converti fișierul.</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="866"/>
+        <location filename="../src/app/mainwindow.cpp" line="884"/>
         <source>El archivo no produjo ningún contenido.</source>
         <translation>Fișierul nu a produs niciun conținut.</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="956"/>
+        <location filename="../src/app/mainwindow.cpp" line="893"/>
+        <source>Imágenes extraídas a: %1</source>
+        <translation>Imagini extrase în: %1</translation>
+    </message>
+    <message>
+        <location filename="../src/app/mainwindow.cpp" line="979"/>
         <source>No hay pestañas cerradas para reabrir.</source>
         <translation>Nu există file închise de redeschis.</translation>
     </message>
@@ -1775,59 +1780,59 @@ Vrei să le recuperezi?</translation>
         <translation>S-a revenit la versiunea salvată.</translation>
     </message>
     <message>
-        <location filename="../src/editor/insertcontroller.cpp" line="203"/>
+        <location filename="../src/editor/insertcontroller.cpp" line="207"/>
         <source>imagen pegada</source>
         <translation>imagine lipită</translation>
     </message>
     <message>
-        <location filename="../src/editor/insertcontroller.cpp" line="265"/>
-        <location filename="../src/editor/insertcontroller.cpp" line="274"/>
+        <location filename="../src/editor/insertcontroller.cpp" line="269"/>
+        <location filename="../src/editor/insertcontroller.cpp" line="278"/>
         <source>Insertar tabla</source>
         <translation>Inserează tabel</translation>
     </message>
     <message>
-        <location filename="../src/editor/insertcontroller.cpp" line="282"/>
+        <location filename="../src/editor/insertcontroller.cpp" line="286"/>
         <source>Columnas:</source>
         <translation>Coloane:</translation>
     </message>
     <message>
-        <location filename="../src/editor/insertcontroller.cpp" line="283"/>
+        <location filename="../src/editor/insertcontroller.cpp" line="287"/>
         <source>Filas de datos:</source>
         <translation>Rânduri de date:</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="316"/>
+        <location filename="../src/export/exportcontroller.cpp" line="319"/>
         <source>Exportar a PDF</source>
         <translation>Exportă în PDF</translation>
     </message>
     <message>
         <location filename="../src/export/exportcontroller.cpp" line="253"/>
-        <location filename="../src/export/exportcontroller.cpp" line="316"/>
+        <location filename="../src/export/exportcontroller.cpp" line="319"/>
         <source>PDF (*.pdf)</source>
         <translation>PDF (*.pdf)</translation>
     </message>
     <message>
         <location filename="../src/export/exportcontroller.cpp" line="261"/>
-        <location filename="../src/export/exportcontroller.cpp" line="329"/>
+        <location filename="../src/export/exportcontroller.cpp" line="332"/>
         <source>Exportado a PDF: %1</source>
         <translation>Exportat în PDF: %1</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="336"/>
+        <location filename="../src/export/exportcontroller.cpp" line="339"/>
         <source>Exportar a HTML</source>
         <translation>Exportă în HTML</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="337"/>
+        <location filename="../src/export/exportcontroller.cpp" line="340"/>
         <source>HTML (*.html *.htm)</source>
         <translation>HTML (*.html *.htm)</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="797"/>
-        <location filename="../src/app/mainwindow.cpp" line="820"/>
-        <location filename="../src/app/mainwindow.cpp" line="827"/>
-        <location filename="../src/app/mainwindow.cpp" line="859"/>
-        <location filename="../src/app/mainwindow.cpp" line="865"/>
+        <location filename="../src/app/mainwindow.cpp" line="798"/>
+        <location filename="../src/app/mainwindow.cpp" line="821"/>
+        <location filename="../src/app/mainwindow.cpp" line="828"/>
+        <location filename="../src/app/mainwindow.cpp" line="872"/>
+        <location filename="../src/app/mainwindow.cpp" line="883"/>
         <location filename="../src/app/mainwindowsession.cpp" line="199"/>
         <location filename="../src/io/filecontroller.cpp" line="80"/>
         <location filename="../src/io/filecontroller.cpp" line="143"/>
@@ -1836,9 +1841,9 @@ Vrei să le recuperezi?</translation>
         <translation>Eroare</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="339"/>
-        <location filename="../src/export/exportcontroller.cpp" line="394"/>
-        <location filename="../src/export/exportcontroller.cpp" line="411"/>
+        <location filename="../src/export/exportcontroller.cpp" line="342"/>
+        <location filename="../src/export/exportcontroller.cpp" line="399"/>
+        <location filename="../src/export/exportcontroller.cpp" line="416"/>
         <source>No se pudo escribir:
 %1
 
@@ -1849,7 +1854,7 @@ Vrei să le recuperezi?</translation>
 %2</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="340"/>
+        <location filename="../src/export/exportcontroller.cpp" line="343"/>
         <source>Exportado a HTML: %1</source>
         <translation>Exportat în HTML: %1</translation>
     </message>
@@ -1870,7 +1875,7 @@ Vrei să le recuperezi?</translation>
 %2</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="734"/>
+        <location filename="../src/app/mainwindow.cpp" line="735"/>
         <location filename="../src/io/filecontroller.cpp" line="105"/>
         <source>Abrir carpeta contenedora</source>
         <translation>Deschide folderul documentului</translation>
@@ -1953,15 +1958,15 @@ Dorești să îl recuperezi?</translation>
         <translation>Renunță</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="622"/>
-        <location filename="../src/app/mainwindow.cpp" line="700"/>
-        <location filename="../src/app/mainwindow.cpp" line="970"/>
+        <location filename="../src/app/mainwindow.cpp" line="623"/>
+        <location filename="../src/app/mainwindow.cpp" line="701"/>
+        <location filename="../src/app/mainwindow.cpp" line="993"/>
         <location filename="../src/app/mainwindowsession.cpp" line="142"/>
         <source>Sin título</source>
         <translation>Fără titlu</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="699"/>
+        <location filename="../src/app/mainwindow.cpp" line="700"/>
         <location filename="../src/app/mainwindowsession.cpp" line="144"/>
         <source>%1[*] — md-editor</source>
         <translation>%1[*] — md-editor</translation>
@@ -2838,17 +2843,17 @@ Acesta este un editor Markdown **vizual**: scrii și formatezi pe textul deja ra
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../src/editor/insertcontroller.cpp" line="72"/>
+        <location filename="../src/editor/insertcontroller.cpp" line="73"/>
         <source>...</source>
         <translation>...</translation>
     </message>
     <message>
-        <location filename="../src/editor/insertcontroller.cpp" line="75"/>
+        <location filename="../src/editor/insertcontroller.cpp" line="76"/>
         <source>Elegir imagen</source>
         <translation>Alege imagine</translation>
     </message>
     <message>
-        <location filename="../src/editor/insertcontroller.cpp" line="76"/>
+        <location filename="../src/editor/insertcontroller.cpp" line="77"/>
         <source>Imágenes (*.png *.jpg *.jpeg *.gif *.bmp *.svg);;Todos (*)</source>
         <translation>Imagini (*.png *.jpg *.jpeg *.gif *.bmp *.svg);;Toate (*)</translation>
     </message>

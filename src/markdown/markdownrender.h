@@ -43,6 +43,23 @@ void renderPasses(QTextDocument *doc);
 /// Conveniencia: `editor->setMarkdown(protect(markdown))` + `renderPasses`.
 void setMarkdownWithExtensions(QTextEdit *editor, const QString &markdown);
 
+/// Texto alternativo de reserva para una imagen que no trae ninguno: el nombre del
+/// fichero del destino (sin carpeta ni extensión), que al menos dice qué falta si
+/// la ruta se rompe. Admite el destino envuelto en `<...>`. Nunca devuelve "".
+/// Función pura.
+QString imageAltFallback(const QString &destination);
+
+/// Sintaxis Markdown de una imagen (`![alt](destino)`) lista para insertar en el
+/// editor. Dos reglas que no son opcionales, las dos porque si no la imagen SE
+/// PIERDE, y por eso viven aquí, junto al resto del contrato de `setMarkdown`:
+///   - el texto alternativo no puede quedar vacío: `QTextDocument::setMarkdown`
+///     **descarta** `![](ruta)` sin insertar nada —ni la imagen ni un hueco—, así
+///     que desaparecería al volver a abrir el documento. Vacío → `imageAltFallback`;
+///   - un espacio o un paréntesis en la ruta corta el enlace en seco: para esos,
+///     CommonMark admite envolver el destino en `<...>` (y Qt lo entiende).
+/// Función pura.
+QString imageMarkdown(const QString &destination, const QString &alt = QString());
+
 }  // namespace mdrender
 
 #endif  // MARKDOWNRENDER_H

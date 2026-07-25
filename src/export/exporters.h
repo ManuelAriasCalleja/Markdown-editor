@@ -78,18 +78,30 @@ bool writeOdf(const QTextDocument *doc, const QString &path, const Language &lan
 // el ODF, con un serializador OOXML propio (Qt no sabe escribir DOCX). Sin
 // dependencias externas.
 
-/// \brief Una imagen embebida que produce la serialización: su ruta dentro del paquete y
-/// los bytes PNG.
+/// \brief Una imagen embebida que produce la serialización: su ruta dentro del paquete,
+/// los bytes PNG y el rId con el que la cita el documento.
 struct DocxImage {
-    QString partName;  ///< p. ej. "media/image1.png"
-    QByteArray data;   ///< PNG
+    QString partName;         ///< p. ej. "media/image1.png"
+    QByteArray data;          ///< PNG
+    QString relationshipId;   ///< p. ej. "rId3"
+};
+
+/// \brief Un enlace externo que produce la serialización. En OOXML el destino NO cabe
+/// en el documento: va en una relación aparte (`TargetMode="External"`) que el
+/// `<w:hyperlink r:id>` referencia, como escribe Word.
+struct DocxHyperlink {
+    QString relationshipId;  ///< p. ej. "rId4"
+    QString target;          ///< URL de destino
 };
 
 /// \brief Serializa el documento a `word/document.xml` (OOXML completo). Si `images` no es
 /// nulo, las imágenes se reencodean a PNG y se registran ahí con su relación rId;
-/// si es nulo, se omiten. `title`, si no está vacío, se emite como párrafo «Título».
+/// si es nulo, se omiten. Igual con `hyperlinks`: si es nulo, el texto del enlace
+/// se emite con su estilo pero sin destino (no hay dónde declarar la relación).
+/// `title`, si no está vacío, se emite como párrafo «Título».
 QString toDocxDocumentXml(const QTextDocument *doc, const QString &title,
-                          QList<DocxImage> *images = nullptr);
+                          QList<DocxImage> *images = nullptr,
+                          QList<DocxHyperlink> *hyperlinks = nullptr);
 
 /// \brief XML de estilos (encabezados, código, cita, título) con el idioma del documento.
 /// Puro y testeable aparte.
@@ -111,6 +123,22 @@ bool writeDocx(const QTextDocument *doc, const QString &path, const Language &la
 /// `&nbsp;` y elementos vacíos sin cerrar). Función pura.
 QString htmlBodyToXhtml(const QString &fullHtml);
 
+// --- HTML (.html) ---
+
+/// \brief Documento HTML completo para *Exportar a HTML*: el `toHtml()` de Qt más lo
+/// que ese no pone y sí tiene el documento.
+///   - `lang` en `<html>`: sin él, ni el lector de pantalla ni la separación
+///     silábica del navegador saben en qué idioma está el texto;
+///   - `<title>`: sin él la pestaña del navegador muestra el nombre del fichero;
+///   - las **imágenes embebidas** como `data:` URI. Qt referencia la ruta relativa
+///     tal cual (`src="imagen.png"`), así que el .html se veía bien donde se
+///     exportó y perdía TODAS las imágenes en cuanto se movía o se enviaba a
+///     alguien. Las que no se puedan cargar (una URL remota) se dejan como están.
+/// `title` y el idioma pueden ir vacíos. Salvo por la lectura de recursos del
+/// documento, es una función pura.
+QString toHtmlDocument(const QTextDocument *doc, const Language &language,
+                       const QString &title);
+
 /// \brief Documento XHTML completo (cabecera + cuerpo) para el capítulo del EPUB. Pura.
 QString epubContentXhtml(const QString &bodyInner, const QString &title,
                          const Language &language);
@@ -123,10 +151,26 @@ QByteArray epubContainerXml();
 QByteArray epubContentOpf(const Language &language, const QString &title,
                           const QStringList &imageHrefs, const QString &uuid,
                           const QString &modified);
-/// \brief XML de navegación `nav.xhtml` del EPUB. Pura.
-QByteArray epubNavXhtml(const Language &language, const QString &title);
+/// \brief Una entrada del índice del EPUB: un encabezado del documento y el ancla a
+/// la que apunta dentro de `content.xhtml`.
+struct EpubTocEntry {
+    int level;      ///< 1..6, para anidar el índice
+    QString text;   ///< rótulo
+    QString anchor;  ///< id del ancla (sin `#`)
+};
+
+/// \brief Pone un `id` a cada `<h1>`…`<h6>` del cuerpo (en orden de documento) para
+/// que el índice pueda enlazarlos, y devuelve el cuerpo modificado. Sin anclas, un
+/// índice con capítulos no puede saltar a ninguna parte. Función pura.
+QString epubAnchorHeadings(const QString &bodyInner);
+
+/// \brief XML de navegación `nav.xhtml` del EPUB, con el índice anidado por niveles.
+/// Con `entries` vacío cae a una única entrada al documento. Pura.
+QByteArray epubNavXhtml(const Language &language, const QString &title,
+                        const QList<EpubTocEntry> &entries = {});
 /// \brief XML `toc.ncx` (tabla de contenidos legada) del EPUB. Pura.
-QByteArray epubTocNcx(const QString &title, const QString &uuid);
+QByteArray epubTocNcx(const QString &title, const QString &uuid,
+                      const QList<EpubTocEntry> &entries = {});
 /// \brief Hoja de estilos CSS embebida en el EPUB. Pura.
 QByteArray epubStyleCss();
 
@@ -143,6 +187,25 @@ bool writeEpub(const QTextDocument *doc, const QString &path, const Language &la
 /// documento devuelto. LaTeX, en cambio, emite las fórmulas verbatim a partir
 /// del original con `toLatex`.
 QTextDocument *cloneForExport(const QTextDocument *src);
+
+/// \brief Encoge (nunca agranda) las imágenes de `doc` que sobresalen de `maxWidth`
+/// (en unidades del documento), conservando la proporción. Sin esto, una imagen más
+/// ancha que la página —un gantt apaisado— sale TRUNCADA en el PDF y la impresión:
+/// la maqueta de QTextDocument recorta en el borde en vez de escalar (a diferencia
+/// de HTML/DOCX/LaTeX, que ya escalan). `dpiScale` es el factor con el que la
+/// maqueta agranda una imagen SIN tamaño explícito al pintar en el dispositivo
+/// (dpi del dispositivo / dpi lógico de pantalla); con tamaño explícito no aplica.
+/// Solo fija la anchura: la altura sin fijar sigue en automático y conserva la
+/// proporción sola. MUTA `doc` (pásale un clon, como hacen las rutas de impresión).
+void clampImagesToWidth(QTextDocument *doc, qreal maxWidth, qreal dpiScale = 1.0);
+
+/// \brief Fija en el mapa de recursos PERSISTENTE de `doc` las imágenes que ahora
+/// mismo solo se resuelven vía baseUrl (caché). `QTextDocument::print()` clona el
+/// documento por dentro, y ese clon copia los recursos pero NO la baseUrl ni la
+/// caché: sin esto, las imágenes de ruta relativa desaparecen de la impresión y
+/// del PDF cuando los números de página están desactivados (la rama `doc->print`).
+/// MUTA `doc` (pásale un clon, como hacen las rutas de impresión).
+void bakeImageResources(QTextDocument *doc);
 
 /// \brief Vuelca `doc` en `printer` paginando A MANO con QPainter/newPage(), para
 /// poder añadir un pie con el número de página (`footerPageNumbers`). Reserva la

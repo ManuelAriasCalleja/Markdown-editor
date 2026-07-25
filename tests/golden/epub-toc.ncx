@@ -2,5 +2,9 @@
 <ncx xmlns="http://www.daisy.org/z3986/2005/ncx/" version="2005-1">
   <head><meta name="dtb:uid" content="urn:uuid:00000000-0000-0000-0000-000000000000"/></head>
   <docTitle><text>Documento de prueba</text></docTitle>
-  <navMap><navPoint id="np1" playOrder="1"><navLabel><text>Documento de prueba</text></navLabel><content src="content.xhtml"/></navPoint></navMap>
+  <navMap><navPoint id="np1" playOrder="1"><navLabel><text>Capítulo &amp; uno</text></navLabel><content src="content.xhtml#sec1"/></navPoint>
+<navPoint id="np2" playOrder="2"><navLabel><text>Sección A</text></navLabel><content src="content.xhtml#sec2"/></navPoint>
+<navPoint id="np3" playOrder="3"><navLabel><text>Subsección</text></navLabel><content src="content.xhtml#sec3"/></navPoint>
+<navPoint id="np4" playOrder="4"><navLabel><text>Capítulo dos</text></navLabel><content src="content.xhtml#sec4"/></navPoint>
+</navMap>
 </ncx>

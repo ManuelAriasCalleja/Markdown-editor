@@ -16,6 +16,7 @@
 #include "focuseditor.h"
 #include "mainwindow.h"
 #include "editorstack.h"
+#include "outline.h"
 #include "outlinepanel.h"
 #include "splitviewcontroller.h"
 #include "tableedit.h"

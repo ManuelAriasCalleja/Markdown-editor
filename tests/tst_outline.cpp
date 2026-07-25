@@ -3,7 +3,7 @@
 #include <QTextBlock>
 #include <QTextDocument>
 
-#include "outlinepanel.h"
+#include "outline.h"
 
 // Pruebas de la extracción pura de encabezados (mdoutline::headingsOf) que
 // alimenta el panel de esquema. Se construye el documento con setMarkdown, que

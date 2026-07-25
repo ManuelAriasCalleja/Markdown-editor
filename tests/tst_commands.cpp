@@ -4,7 +4,7 @@
 #include <QMenu>
 #include <QMenuBar>
 
-#include "commandpalettedialog.h"
+#include "commands.h"
 
 // Pruebas de la lógica pura de la paleta de comandos (mdcommands): recolección
 // desde un QMenuBar, coincidencia difusa y filtrado/ordenación.
