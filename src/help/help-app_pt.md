@@ -1,16 +1,16 @@
 # Manual de utilização
 
 O **md-editor** é um editor visual (WYSIWYG) de Markdown: você escreve e aplica
-formatação sobre o texto já renderizado, sem ver o código. Ao guardar, o
+formatação sobre o texto já renderizado, sem ver o código. Ao salvar, o
 documento é serializado de volta para Markdown puro.
 
 ## Índice
 
-- [Abrir e guardar](#abrir-e-guardar)
+- [Abrir e salvar](#abrir-e-salvar)
 - [Formatar o texto](#formatar-o-texto)
 - [Títulos, listas e blocos](#titulos-listas-e-blocos)
 - [Transformar o texto e a área de transferência](#transformar-o-texto-e-a-area-de-transferencia)
-- [Ligações e imagens](#ligacoes-e-imagens)
+- [Links e imagens](#links-e-imagens)
 - [Notas de rodapé](#notas-de-rodape)
 - [Destaques, símbolos e atalhos de texto](#destaques-simbolos-e-atalhos-de-texto)
 - [Snippets (fragmentos reutilizáveis)](#snippets-fragmentos-reutilizaveis)
@@ -30,55 +30,55 @@ documento é serializado de volta para Markdown puro.
 - [Acessibilidade](#acessibilidade)
 - [Atalhos](#atalhos)
 
-## Abrir e guardar
+## Abrir e salvar
 
-- **Ficheiro → Novo** (Ctrl+N) cria um documento vazio num separador novo.
-- **Ficheiro → Novo a partir de modelo** cria um documento a partir de um esqueleto
+- **Arquivo → Novo** (Ctrl+N) cria um documento vazio numa aba nova.
+- **Arquivo → Novo a partir de modelo** cria um documento a partir de um esqueleto
   pronto a preencher. Os modelos estão agrupados por categoria (Pessoal, Programação,
   Ensino, Empresa, Escrita…).
-- **Guardar como modelo…** guarda o documento atual como um modelo teu (com nome e
-  categoria); reaparece no menu acima junto aos predefinidos. **Gerir modelos…** (no fim
+- **Salvar como modelo…** salva o documento atual como um modelo seu (com nome e
+  categoria); reaparece no menu acima junto aos de fábrica. **Gerenciar modelos…** (no fim
   desse menu) permite editá-los ou eliminá-los.
-- **Ficheiro → Abrir…** (Ctrl+O) abre um `.md` existente. A aplicação recorda os
-  últimos abertos em **Ficheiro → Abrir recentes**.
-- **Ficheiro → Importar** abre um documento de outro formato convertendo-o em Markdown
-  num novo separador sem título (o original não é tocado): **De HTML…** (uma página web),
+- **Arquivo → Abrir…** (Ctrl+O) abre um `.md` existente. A aplicação recorda os
+  últimos abertos em **Arquivo → Abrir recentes**.
+- **Arquivo → Importar** abre um documento de outro formato convertendo-o em Markdown
+  numa nova aba sem título (o original não é tocado): **De HTML…** (uma página web),
   **De EPUB…** (um livro; os capítulos são lidos por ordem) e **Outros formatos
   (Pandoc)…** (DOCX, ODT, RTF, LaTeX, reStructuredText…, se o Pandoc estiver instalado).
   Funciona melhor com conteúdo simples; respeita o conjunto de caracteres declarado.
-- **Guardar** (Ctrl+S) e **Guardar como…** (Ctrl+Shift+S) escrevem o documento em
+- **Salvar** (Ctrl+S) e **Salvar como…** (Ctrl+Shift+S) escrevem o documento em
   UTF-8. **Abrir pasta do documento** abre a pasta do documento no gestor de
-  ficheiros.
-- **Reverter para o guardado** descarta as alterações por guardar e recarrega o
-  ficheiro a partir do disco (pede confirmação). Só está disponível se o documento
-  tiver ficheiro e alterações pendentes.
-- Se o ficheiro mudar fora do editor, a aplicação deteta-o e, se não tiver
-  alterações por guardar, recarrega-o; se tiver, pergunta o que fazer.
-- Também pode **arrastar e largar** um ficheiro sobre a janela para o abrir.
+  arquivos.
+- **Reverter para o salvo** descarta as alterações não salvas e recarrega o
+  arquivo a partir do disco (pede confirmação). Só está disponível se o documento
+  tiver arquivo e alterações pendentes.
+- Se o arquivo mudar fora do editor, a aplicação detecta-o e, se não tiver
+  alterações não salvas, recarrega-o; se tiver, pergunta o que fazer.
+- Também pode **arrastar e largar** um arquivo sobre a janela para o abrir.
 
-### Separadores (vários documentos)
+### Abas (vários documentos)
 
-Pode ter vários documentos abertos ao mesmo tempo, cada um no seu **separador**:
+Pode ter vários documentos abertos ao mesmo tempo, cada um na sua **aba**:
 
-- **Novo** (Ctrl+N), **Novo a partir de modelo** e **Abrir** (Ctrl+O) criam um
-  separador (ou reutilizam o separador vazio inicial). Largar um ficheiro também o
-  abre num separador; se já estiver aberto, salta para o seu.
-- Mude de documento clicando no seu separador; arraste-os para os reordenar. Com
+- **Novo** (Ctrl+N), **Novo a partir de modelo** e **Abrir** (Ctrl+O) criam uma
+  aba (ou reutilizam a aba vazia inicial). Largar um arquivo também o
+  abre numa aba; se já estiver aberto, salta para a sua.
+- Mude de documento clicando na sua aba; arraste-os para os reordenar. Com
   o teclado, **Ctrl+Page Down / Ctrl+Page Up** (ou **Ctrl+Tab / Ctrl+Shift+Tab**)
-  saltam para o separador seguinte ou anterior.
-- **Fechar separador** (Ctrl+W) fecha o atual, perguntando se tem alterações por
-  guardar. O último não se fecha: fica como documento novo.
-- **Reabrir separador fechado** (Ctrl+Shift+R) reabre o último separador que fechou
-  (apenas os que tinham ficheiro no disco).
-- A etiqueta mostra o nome do ficheiro e um ponto (•) se houver alterações por
-  guardar.
+  saltam para a aba seguinte ou anterior.
+- **Fechar aba** (Ctrl+W) fecha a atual, perguntando se tem alterações não
+  salvas. A última não se fecha: fica como documento novo.
+- **Reabrir aba fechada** (Ctrl+Shift+R) reabre a última aba que fechou
+  (apenas as que tinham arquivo no disco).
+- A etiqueta mostra o nome do arquivo e um ponto (•) se houver alterações não
+  salvas.
 - Ao fechar a aplicação, os documentos abertos são recordados e todos reabertos no
   arranque seguinte.
 
 ### *Front matter*
 
 Se o documento começar com um bloco `---…---` (YAML) ou `+++…+++` (TOML), é
-mantido tal como está ao guardar: não se vê no editor nem se edita. Serve para
+mantido tal como está ao salvar: não se vê no editor nem se edita. Serve para
 metadados como `title`, `lang`, etc., usados na exportação.
 
 ## Formatar o texto
@@ -89,12 +89,12 @@ menu **Formato**:
 - **Negrito** (Ctrl+B), **Itálico** (Ctrl+I), **Sublinhado** (Ctrl+U),
   **Rasurado**.
 - **Código em linha** para fragmentos `monoespaçados`.
-- **Ligação**: adiciona `[texto](url)` sobre a seleção.
+- **Link**: adiciona `[texto](url)` sobre a seleção.
 - **Realçar** (Ctrl+Shift+H): envolve a seleção em `==marca==`; o texto aparece com
-  fundo de realce. Como `==` não é sintaxe Markdown padrão, é guardado como texto
+  fundo de realce. Como `==` não é sintaxe Markdown padrão, é salvo como texto
   literal.
 - **Sobrescrito** (Ctrl+Shift++) e **Subscrito** (Ctrl+Shift+-): elevam ou baixam o
-  texto selecionado; guardados como `^texto^` e `~texto~` (estilo Pandoc).
+  texto selecionado; salvos como `^texto^` e `~texto~` (estilo Pandoc).
 
 Os botões da barra refletem a formatação ativa sob o cursor.
 
@@ -120,7 +120,7 @@ marcadores; `1.` (ou `1)`) → lista numerada. Produz o mesmo formato que a barr
   partir da barra; ambos voltam corretamente a Markdown. Com **Formato →
   Linguagem do bloco…** escolhe a linguagem de um bloco de código (com o cursor lá
   dentro) para que a sua sintaxe seja realçada.
-- Ao **passar o rato** sobre um bloco de código, aparecem no canto superior direito a sua **linguagem** (clique para a alterar) e um botão para **copiar** o código.
+- Ao **passar o mouse** sobre um bloco de código, aparecem no canto superior direito a sua **linguagem** (clique para a alterar) e um botão para **copiar** o código.
 - **Indentação**: **Formato → Aumentar/Diminuir indentação** aninha listas e
   citações.
 
@@ -145,14 +145,14 @@ marcadores; `1.` (ou `1)`) → lista numerada. Produz o mesmo formato que a barr
   em branco a mais e ajusta o espaço a seguir aos `#` dos títulos. É conservador:
   não toca no interior dos blocos de código.
 
-## Ligações e imagens
+## Links e imagens
 
-- **Inserir → Ligação…** abre uma caixa com texto e URL. Uma seleção existente é
+- **Inserir → Link…** abre uma caixa com texto e URL. Uma seleção existente é
   usada como texto.
-- **Ctrl+clique** numa ligação abre-a no navegador do sistema; ao passar o rato
+- **Ctrl+clique** num link abre-o no navegador do sistema; ao passar o mouse
   por cima, o URL aparece numa dica junto ao cursor e na barra de estado.
-- **Imagens**: arraste um ficheiro, cole uma imagem da área de transferência ou
-  use **Inserir → Colar imagem**. A imagem é guardada como PNG ao lado do `.md` e
+- **Imagens**: arraste um arquivo, cole uma imagem da área de transferência ou
+  use **Inserir → Colar imagem**. A imagem é salva como PNG ao lado do `.md` e
   inserida como `![alt](caminho-relativo)`; assim sobrevive ao round-trip para
   Markdown (as imagens incorporadas não).
 
@@ -163,14 +163,14 @@ marcadores; `1.` (ou `1)`) → lista numerada. Produz o mesmo formato que a barr
   o texto da nota.
 - As referências aparecem em **sobrescrito**; um **clique** numa delas leva o
   cursor à sua definição.
-- São guardadas como Markdown padrão (`texto[^1]` no corpo e, abaixo,
+- São salvas como Markdown padrão (`texto[^1]` no corpo e, abaixo,
   `[^1]: a nota`), pelo que são compatíveis com outros editores.
 
 ## Destaques, símbolos e atalhos de texto
 
 - **Inserir → Destaque** cria um *callout* ao estilo do GitHub: uma citação cuja
   primeira linha é `[!NOTE]`, `[!TIP]`, `[!IMPORTANT]`, `[!WARNING]` ou
-  `[!CAUTION]`. Aparece com fundo colorido e título a cores, e é guardado como
+  `[!CAUTION]`. Aparece com fundo colorido e título a cores, e é salvo como
   Markdown compatível com o GitHub.
 - **Inserir → Símbolos especiais…** abre um mapa de carateres por categorias
   (matemáticos, grego, setas, moeda, pontuação…); um clique insere o símbolo e a
@@ -188,10 +188,10 @@ frequência…
 
 - **Inserir → Snippet** abre a lista dos que tem; ao escolher um, o seu conteúdo é
   inserido onde está o cursor (funciona também na vista de código).
-- **Inserir → Snippet → Gerir snippets…** abre uma caixa para criar, editar e apagar
+- **Inserir → Snippet → Gerenciar snippets…** abre uma caixa para criar, editar e apagar
   os seus snippets. Cada um tem um **nome** (o que vê no menu) e um **corpo** em
   Markdown.
-- São guardados nas definições da aplicação, pelo que estão disponíveis em todos os
+- São salvos nas configurações da aplicação, pelo que estão disponíveis em todos os
   seus documentos, não só no atual.
 
 ## Tabelas
@@ -201,13 +201,13 @@ frequência…
 - **Tabela → Inserir tabela…** pede linhas e colunas.
 - **Inserir → Tabela da área de transferência** converte numa tabela os dados
   TSV/CSV (colunas separadas por tabulações ou vírgulas) copiados de uma folha de
-  cálculo ou de um ficheiro CSV.
+  cálculo ou de um arquivo CSV.
 - As ações do menu **Tabela** (adicionar/remover linha ou coluna, alinhar coluna)
   só ficam ativas quando o cursor está dentro de uma tabela.
-- O alinhamento da coluna (esquerda/centro/direita) é mantido ao guardar como
+- O alinhamento da coluna (esquerda/centro/direita) é mantido ao salvar como
   `:--`/`:-:`/`--:`.
 - **Tabela → Ordenar linhas por coluna** (ascendente/descendente) reordena as linhas
-  pela coluna do cursor, mantendo o cabeçalho fixo; deteta se a coluna é numérica ou
+  pela coluna do cursor, mantendo o cabeçalho fixo; detecta se a coluna é numérica ou
   de texto.
 
 ## Fórmulas matemáticas
@@ -233,7 +233,7 @@ nenhuma dependência externa.
   `amsmath` e `amssymb` no preâmbulo); para HTML/PDF/ODF são reduzidas à sua
   aproximação em linha.
 - Na **vista de código** aparecem como `$...$` / `$$...$$`, com todos os carateres
-  TeX (`\sum`, `\frac`, `_`, `*`) intactos ao guardar.
+  TeX (`\sum`, `\frac`, `_`, `*`) intactos ao salvar.
 
 Exemplos:
 
@@ -252,14 +252,14 @@ $$
 
 Um bloco de código com a linguagem `mermaid` ou `plantuml` é **pré-visualizado
 como imagem** logo abaixo do bloco, sem tocar no código (que continua editável)
-nem no Markdown guardado.
+nem no Markdown salvo.
 
 - Requer a ferramenta correspondente instalada: **`plantuml`** (com Java) para
   PlantUML, ou **`mmdc`** (mermaid-cli, com Node) para Mermaid.
 - Se a ferramenta faltar, abaixo do bloco aparece um aviso com o comando de
-  instalação do seu sistema operativo; o bloco mantém-se como código.
+  instalação do seu sistema operacional; o bloco mantém-se como código.
 - A imagem é apenas apresentação: não é escrita no Markdown nem conta como
-  alteração por guardar.
+  alteração não salva.
 
 Por exemplo, um bloco de código etiquetado `mermaid` com `flowchart LR  A --> B
 --> C` é pré-visualizado como o fluxograma correspondente.
@@ -267,8 +267,8 @@ Por exemplo, um bloco de código etiquetado `mermaid` com `flowchart LR  A --> B
 ## Verificação ortográfica
 
 - Sublinha a vermelho as palavras mal escritas conforme o **idioma do documento**
-  (obtido do front matter `lang`, da definição de idioma ou do sistema). Não
-  verifica o código, as fórmulas nem as ligações.
+  (obtido do front matter `lang`, da configuração de idioma ou do sistema). Não
+  verifica o código, as fórmulas nem os links.
 - O **clique direito** sobre uma palavra sublinhada oferece **sugestões** (um
   clique substitui-a), **Adicionar ao dicionário** (uma lista pessoal permanente) e
   **Ignorar** (durante a sessão).
@@ -314,7 +314,7 @@ escrevendo parte do seu texto, e **Ir para a linha…** (Ctrl+L) leva o cursor p
 
 ## Modo sem distrações
 
-**Ver → Sem distrações** (F11) entra em ecrã inteiro com o menu e as barras
+**Ver → Sem distrações** (F11) entra em tela cheia com o menu e as barras
 ocultos e o texto centrado numa coluna de leitura. A estrutura, se visível, fica
 encostada ao bloco central. ESC ou F11 saem.
 
@@ -335,12 +335,12 @@ distrações (F11): pode usar os dois ao mesmo tempo ou cada um por sua conta.
 ## Vista de código
 
 **Ver → Código-fonte Markdown** (Ctrl+Shift+M) alterna entre o editor visual e um
-editor de texto simples, em ecrã inteiro, com o Markdown bruto. As alterações no
+editor de texto simples, em tela cheia, com o Markdown bruto. As alterações no
 modo de código são aplicadas ao documento ao voltar ao modo visual.
 
 **Ver → Vista dividida** (Ctrl+Shift+D) mostra ambos ao mesmo tempo, lado a lado:
 o editor visual e o código-fonte, sincronizados (o que escreve num reflete-se no
-outro). É exclusiva com o modo de código em ecrã inteiro.
+outro). É exclusiva com o modo de código em tela cheia.
 
 Na vista de código há **comandos de linha** por teclado para a linha do cursor:
 **Alt+↑ / Alt+↓** movem a linha para cima/baixo, **Ctrl+D** duplica-a,
@@ -348,45 +348,45 @@ Na vista de código há **comandos de linha** por teclado para a linha do cursor
 
 ## Exportar e imprimir
 
-**Ficheiro → Exportar** oferece **PDF**, **HTML**, **ODF (.odt)**, **DOCX
+**Arquivo → Exportar** oferece **PDF**, **HTML**, **ODF (.odt)**, **DOCX
 (.docx)**, **LaTeX (.tex)**, **EPUB (.epub)** e **texto simples (.txt)**. Em ODF,
 DOCX, LaTeX e EPUB é incorporado o idioma do documento (obtido do front matter
-`lang`/`language`, da definição da aplicação ou, em último caso, do idioma do
+`lang`/`language`, da configuração da aplicação ou, em último caso, do idioma do
 sistema). No PDF são incorporados o título e o autor quando constam do front
 matter (`title`, `author`).
 
 Também pode exportar **apenas a seleção para PDF** e usar a **Pré-visualização de
 impressão**.
 
-**Ficheiro → Imprimir** (Ctrl+P) abre a caixa de diálogo do sistema; **Imprimir
+**Arquivo → Imprimir** (Ctrl+P) abre a caixa de diálogo do sistema; **Imprimir
 seleção** imprime apenas o que está selecionado.
 
-**Ver → Números de página ao imprimir** (ativado por predefinição) adiciona o número
+**Ver → Números de página ao imprimir** (ativado por padrão) adiciona o número
 de página no rodapé (`N / M`) ao imprimir e ao exportar para PDF.
 
 ## Temas e aparência
 
-- **Editar → Preferências…** (Ctrl+,) reúne as definições mais comuns (tema, luz quente, espaçamento entre linhas, realce da linha atual, modo de foco, números de página) numa janela com separadores.
+- **Editar → Preferências…** (Ctrl+,) reúne as configurações mais comuns (tema, luz quente, espaçamento entre linhas, realce da linha atual, modo de foco, números de página) numa janela com abas.
 - **Ver → Tema** oferece Claro, Escuro, GitHub Light, GitHub Dark, Monokai, Alto contraste, Solarized Light e Solarized Dark. **Seguir o sistema** ajusta o tema claro/escuro ao do sistema
-  operativo.
+  operacional.
 - **Ver → Luz quente noturna** atenua os azuis do fundo conforme a hora.
 - **Ver → Entrelinha** define a altura de linha do editor: Simples, 1,5 linhas ou Duplo.
 - **Ver → Realçar a linha atual** marca a linha do cursor com um fundo subtil.
-- **Zoom**: Ctrl+roda do rato, Ctrl++ / Ctrl+- e **Tamanho normal** (Ctrl+0)
+- **Zoom**: Ctrl+roda do mouse, Ctrl++ / Ctrl+- e **Tamanho normal** (Ctrl+0)
   escalam toda a interface (não só o texto do editor).
 - **Ver → Idioma** muda o idioma da interface; aplica-se de imediato (a janela é
   recriada).
 
 ## Recuperação automática
 
-Enquanto edita, o conteúdo é guardado automaticamente a cada poucos segundos numa
+Enquanto edita, o conteúdo é salvo automaticamente a cada poucos segundos numa
 cópia de rascunho. Se a aplicação fechar de forma anómala, ao reabrir oferece
-recuperar o que estava a escrever.
+recuperar o que estava escrevendo.
 
 ## Acessibilidade
 
-- **Leitores de ecrã**: o editor, o painel de esquema, os campos de pesquisa e os restantes controlos têm nome acessível; além disso, as mensagens de estado (guardado, «não encontrado», alterações no disco…) são anunciadas por voz.
-- **Apenas com teclado**: todas as ações têm atalho ou entrada de menu (F10 ou Alt abre a barra de menus). Consulta a tabela [Atalhos](#atalhos).
+- **Leitores de tela**: o editor, o painel de esquema, os campos de pesquisa e os restantes controlos têm nome acessível; além disso, as mensagens de estado (salvo, «não encontrado», alterações no disco…) são anunciadas por voz.
+- **Apenas com teclado**: todas as ações têm atalho ou entrada de menu (F10 ou Alt abre a barra de menus). Consulte a tabela [Atalhos](#atalhos).
 - **Contraste e tamanho**: o tema **Contraste elevado** e o **zoom** de toda a interface ajudam na baixa visão; o tamanho de letra inicial é o do sistema.
 - **Foco**: o elemento focado é realçado com a cor de seleção do tema.
 
@@ -395,14 +395,14 @@ recuperar o que estava a escrever.
 | Ação                      | Atalho           |
 |---------------------------|------------------|
 | Novo                      | Ctrl+N           |
-| Fechar separador          | Ctrl+W           |
-| Reabrir separador fechado | Ctrl+Shift+R     |
-| Separador seguinte / anterior | Ctrl+Page Down / Ctrl+Page Up (ou Ctrl+Tab / Ctrl+Shift+Tab) |
+| Fechar aba                | Ctrl+W           |
+| Reabrir aba fechada       | Ctrl+Shift+R     |
+| Aba seguinte / anterior   | Ctrl+Page Down / Ctrl+Page Up (ou Ctrl+Tab / Ctrl+Shift+Tab) |
 | Abrir                     | Ctrl+O           |
-| Guardar                   | Ctrl+S           |
-| Guardar como              | Ctrl+Shift+S     |
+| Salvar                    | Ctrl+S           |
+| Salvar como               | Ctrl+Shift+S     |
 | Imprimir                  | Ctrl+P           |
-| Anular / Refazer          | Ctrl+Z / Ctrl+Y  |
+| Desfazer / Refazer        | Ctrl+Z / Ctrl+Y  |
 | Negrito / Itálico         | Ctrl+B / Ctrl+I  |
 | Realçar (==marca==)       | Ctrl+Shift+H     |
 | Sobrescrito / Subscrito   | Ctrl+Shift++ / Ctrl+Shift+- |

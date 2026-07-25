@@ -70,7 +70,7 @@
     <message>
         <location filename="../src/diagram/diagramrenderer.cpp" line="141"/>
         <source>no se pudo escribir la fuente</source>
-        <translation>não foi possível gravar a fonte</translation>
+        <translation>não foi possível salvar a fonte</translation>
     </message>
 </context>
 <context>
@@ -334,22 +334,22 @@
     <message>
         <location filename="../src/app/mainwindowmenus.cpp" line="193"/>
         <source>Guardar como &amp;plantilla...</source>
-        <translation>Guardar como &amp;modelo...</translation>
+        <translation>Salvar como &amp;modelo...</translation>
     </message>
     <message>
         <location filename="../src/app/mainwindowmenus.cpp" line="195"/>
         <source>Guarda el documento actual como una plantilla reutilizable</source>
-        <translation>Guarda o documento atual como um modelo reutilizável</translation>
+        <translation>Salva o documento atual como um modelo reutilizável</translation>
     </message>
     <message>
         <location filename="../src/app/mainwindowmenus.cpp" line="198"/>
         <source>&amp;Revertir a lo guardado</source>
-        <translation>&amp;Reverter para o guardado</translation>
+        <translation>&amp;Reverter para o salvo</translation>
     </message>
     <message>
         <location filename="../src/app/mainwindowmenus.cpp" line="199"/>
         <source>Descarta los cambios y recarga el archivo del disco</source>
-        <translation>Descarta as alterações e recarrega o ficheiro do disco</translation>
+        <translation>Descarta as alterações e recarrega o arquivo do disco</translation>
     </message>
     <message>
         <location filename="../src/app/mainwindowmenus.cpp" line="209"/>
@@ -359,17 +359,17 @@
     <message>
         <location filename="../src/app/mainwindowmenus.cpp" line="212"/>
         <source>&amp;Cerrar pestaña</source>
-        <translation>&amp;Fechar separador</translation>
+        <translation>&amp;Fechar aba</translation>
     </message>
     <message>
         <location filename="../src/app/mainwindowmenus.cpp" line="216"/>
         <source>Reabrir pestaña cerrada</source>
-        <translation>Reabrir separador fechado</translation>
+        <translation>Reabrir aba fechada</translation>
     </message>
     <message>
         <location filename="../src/app/mainwindowmenus.cpp" line="220"/>
         <source>Vuelve a abrir la última pestaña cerrada</source>
-        <translation>Reabre o último separador fechado</translation>
+        <translation>Reabre a última aba fechada</translation>
     </message>
     <message>
         <location filename="../src/app/mainwindowmenus.cpp" line="225"/>
@@ -449,7 +449,7 @@
     <message>
         <location filename="../src/app/mainwindowmenus.cpp" line="294"/>
         <source>Gestionar plantillas...</source>
-        <translation>Gerir modelos...</translation>
+        <translation>Gerenciar modelos...</translation>
     </message>
     <message>
         <location filename="../src/app/mainwindowmenus.cpp" line="300"/>
@@ -868,7 +868,7 @@
     <message>
         <location filename="../src/app/mainwindowmenus.cpp" line="720"/>
         <source>Gestionar snippets...</source>
-        <translation>Gerir snippets...</translation>
+        <translation>Gerenciar snippets...</translation>
     </message>
     <message>
         <location filename="../src/app/mainwindowmenus.cpp" line="735"/>
@@ -963,7 +963,7 @@
     <message>
         <location filename="../src/app/mainwindowmenus.cpp" line="798"/>
         <source>Pantalla completa, sin barras, con el texto centrado (ESC o F11 para salir)</source>
-        <translation>Ecrã inteiro, sem barras, com o texto centrado (ESC ou F11 para sair)</translation>
+        <translation>Tela cheia, sem barras, com o texto centrado (ESC ou F11 para sair)</translation>
     </message>
     <message>
         <location filename="../src/app/mainwindowmenus.cpp" line="818"/>
@@ -1128,7 +1128,7 @@
     <message>
         <location filename="../src/app/mainwindowmenus.cpp" line="1031"/>
         <source>Usa el tema claro u oscuro según la configuración del sistema operativo</source>
-        <translation>Usa o tema claro ou escuro conforme a configuração do sistema operativo</translation>
+        <translation>Usa o tema claro ou escuro conforme a configuração do sistema operacional</translation>
     </message>
     <message>
         <location filename="../src/app/mainwindowmenus.cpp" line="1045"/>
@@ -1563,7 +1563,7 @@
     <message>
         <location filename="../src/app/mainwindow.cpp" line="736"/>
         <source>Copiar nombre del archivo</source>
-        <translation>Copiar nome do ficheiro</translation>
+        <translation>Copiar nome do arquivo</translation>
     </message>
     <message>
         <location filename="../src/app/mainwindow.cpp" line="737"/>
@@ -1578,7 +1578,7 @@
     <message>
         <location filename="../src/app/mainwindow.cpp" line="783"/>
         <source>Archivos Markdown (*.md *.markdown *.txt);;Todos los archivos (*)</source>
-        <translation>Ficheiros Markdown (*.md *.markdown *.txt);;Todos os ficheiros (*)</translation>
+        <translation>Arquivos Markdown (*.md *.markdown *.txt);;Todos os arquivos (*)</translation>
     </message>
     <message>
         <location filename="../src/app/mainwindow.cpp" line="791"/>
@@ -1588,14 +1588,14 @@
     <message>
         <location filename="../src/app/mainwindow.cpp" line="792"/>
         <source>Páginas HTML (*.html *.htm);;Todos los archivos (*)</source>
-        <translation>Páginas HTML (*.html *.htm);;Todos os ficheiros (*)</translation>
+        <translation>Páginas HTML (*.html *.htm);;Todos os arquivos (*)</translation>
     </message>
     <message>
         <location filename="../src/app/mainwindow.cpp" line="799"/>
         <location filename="../src/app/mainwindow.cpp" line="822"/>
         <source>No se pudo leer el archivo:
 %1</source>
-        <translation>Não foi possível ler o ficheiro:
+        <translation>Não foi possível ler o arquivo:
 %1</translation>
     </message>
     <message>
@@ -1606,12 +1606,12 @@
     <message>
         <location filename="../src/app/mainwindow.cpp" line="815"/>
         <source>Libros EPUB (*.epub);;Todos los archivos (*)</source>
-        <translation>Livros EPUB (*.epub);;Todos os ficheiros (*)</translation>
+        <translation>Livros EPUB (*.epub);;Todos os arquivos (*)</translation>
     </message>
     <message>
         <location filename="../src/app/mainwindow.cpp" line="829"/>
         <source>No se pudo importar el EPUB. Comprueba que el archivo es válido.</source>
-        <translation>Não foi possível importar o EPUB. Verifique se o ficheiro é válido.</translation>
+        <translation>Não foi possível importar o EPUB. Verifique se o arquivo é válido.</translation>
     </message>
     <message>
         <location filename="../src/app/mainwindow.cpp" line="840"/>
@@ -1635,17 +1635,17 @@
     <message>
         <location filename="../src/app/mainwindow.cpp" line="848"/>
         <source>Documentos compatibles (%1);;Todos los archivos (*)</source>
-        <translation>Documentos compatíveis (%1);;Todos os ficheiros (*)</translation>
+        <translation>Documentos compatíveis (%1);;Todos os arquivos (*)</translation>
     </message>
     <message>
         <location filename="../src/app/mainwindow.cpp" line="873"/>
         <source>Pandoc no pudo convertir el archivo.</source>
-        <translation>O Pandoc não conseguiu converter o ficheiro.</translation>
+        <translation>O Pandoc não conseguiu converter o arquivo.</translation>
     </message>
     <message>
         <location filename="../src/app/mainwindow.cpp" line="884"/>
         <source>El archivo no produjo ningún contenido.</source>
-        <translation>O ficheiro não produziu qualquer conteúdo.</translation>
+        <translation>O arquivo não produziu qualquer conteúdo.</translation>
     </message>
     <message>
         <location filename="../src/app/mainwindow.cpp" line="893"/>
@@ -1655,7 +1655,7 @@
     <message>
         <location filename="../src/app/mainwindow.cpp" line="979"/>
         <source>No hay pestañas cerradas para reabrir.</source>
-        <translation>Não há separadores fechados para reabrir.</translation>
+        <translation>Não há abas fechadas para reabrir.</translation>
     </message>
     <message>
         <location filename="../src/spell/spellcontroller.cpp" line="93"/>
@@ -1713,10 +1713,10 @@
 %1
 
 ¿Quieres recuperarlos?</source>
-        <translation>Foram encontrados documentos com alterações por guardar de uma sessão anterior:
+        <translation>Foram encontrados documentos com alterações não salvas de uma sessão anterior:
 %1
 
-Queres recuperá-los?</translation>
+Deseja recuperá-los?</translation>
     </message>
     <message>
         <location filename="../src/app/mainwindowsession.cpp" line="157"/>
@@ -1762,17 +1762,17 @@ Queres recuperá-los?</translation>
     <message>
         <location filename="../src/app/mainwindowsession.cpp" line="226"/>
         <source>Revertir a lo guardado</source>
-        <translation>Reverter para o guardado</translation>
+        <translation>Reverter para o salvo</translation>
     </message>
     <message>
         <location filename="../src/app/mainwindowsession.cpp" line="227"/>
         <source>Se descartarán los cambios sin guardar de «%1» y se recargará la versión del disco. ¿Continuar?</source>
-        <translation>As alterações não guardadas de «%1» serão descartadas e a versão do disco será recarregada. Continuar?</translation>
+        <translation>As alterações não salvas de «%1» serão descartadas e a versão do disco será recarregada. Continuar?</translation>
     </message>
     <message>
         <location filename="../src/app/mainwindowsession.cpp" line="235"/>
         <source>Revertido a la versión guardada.</source>
-        <translation>Revertido para a versão guardada.</translation>
+        <translation>Revertido para a versão salva.</translation>
     </message>
     <message>
         <location filename="../src/editor/insertcontroller.cpp" line="207"/>
@@ -1843,7 +1843,7 @@ Queres recuperá-los?</translation>
 %1
 
 %2</source>
-        <translation>Não foi possível gravar:
+        <translation>Não foi possível salvar:
 %1
 
 %2</translation>
@@ -2302,7 +2302,7 @@ Fdo.: [Nombre y cargo]
 
 # CERTIFICO:
 
-Que **[nome]** [facto a certificar].
+Que **[nome]** [fato a certificar].
 
 E para que conste e produza os devidos efeitos, assino o presente certificado.
 
@@ -2408,7 +2408,7 @@ date: [data]
     <message>
         <location filename="../src/markdown/doctemplates.cpp" line="230"/>
         <source>Registro de cambios (CHANGELOG)</source>
-        <translation>Registo de alterações (CHANGELOG)</translation>
+        <translation>Registro de alterações (CHANGELOG)</translation>
     </message>
     <message>
         <location filename="../src/markdown/doctemplates.cpp" line="231"/>
@@ -2430,9 +2430,9 @@ Todos los cambios notables de este proyecto se documentan en este archivo.
 
 - [error corregido]
 </source>
-        <translation># Registo de alterações
+        <translation># Registro de alterações
 
-Todas as alterações relevantes deste projeto são documentadas neste ficheiro.
+Todas as alterações relevantes deste projeto são documentadas neste arquivo.
 
 ## [Não publicado]
 
@@ -2554,7 +2554,7 @@ Todas as alterações relevantes deste projeto são documentadas neste ficheiro.
 ## Ambiente
 
 - **Versão:** [versão]
-- **Sistema:** [sistema operativo]
+- **Sistema:** [sistema operacional]
 </translation>
     </message>
     <message>
@@ -3013,7 +3013,7 @@ Apaga este texto e começa a escrever.
     <message>
         <location filename="../src/widgets/usertemplatesdialog.cpp" line="22"/>
         <source>Plantillas de usuario</source>
-        <translation>Modelos do utilizador</translation>
+        <translation>Modelos do usuário</translation>
     </message>
     <message>
         <location filename="../src/widgets/usertemplatesdialog.cpp" line="25"/>

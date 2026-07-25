@@ -812,17 +812,24 @@ Revisión de los 9 idiomas de la interfaz (es de origen + en, de, fr, it, pt, pl
 nl, ro). Conclusión: la selección está bien dimensionada y no conviene ampliarla;
 lo que hay que arreglar es el remate del portugués.
 
-- ⬜ **Uniformar el portugués a una sola norma.** `md-editor_pt.ts` mezcla
+- ✅ **Uniformar el portugués a una sola norma.** *Hecho:* `md-editor_pt.ts` mezclaba
   vocabulario europeo y brasileño para los mismos conceptos, y se ve en la misma
   sesión de uso: el menú traduce «Guardar» como `&Salvar` / `Salvar como...`
   (brasileño) mientras el resto de la interfaz dice `ficheiro` (europeo); y los dos
   filtros de diálogo, que el usuario ve casi seguidos, son `Ficheiros Markdown
   (…);;Todos os ficheiros (*)` al abrir y `Arquivos Markdown (…);;Todos os arquivos
-  (*)` al guardar. No es un matiz de estilo: es la misma palabra traducida de dos
-  maneras, y chirría para hablantes de cualquiera de las dos variantes. *Norma
-  recomendada:* la **brasileña** (`arquivo`, `salvar`, `usuário`), por número de
-  hablantes (~200 M frente a ~10 M) y porque `QTranslator` carga igualmente el `pt`
-  genérico en un sistema `pt_BR`. Coste: una pasada sobre el `.ts`, sin tocar código.
+  (*)` al guardar. No es un matiz de estilo: era la misma palabra traducida de dos
+  maneras, y chirriaba para hablantes de cualquiera de las dos variantes. Se
+  uniformó a la norma **brasileña** (por número de hablantes, ~200 M frente a ~10 M,
+  y porque `QTranslator` carga igualmente el `pt` genérico en un sistema `pt_BR`):
+  `ficheiro`→`arquivo`, `guardar`→`salvar`, `utilizador`→`usuário`, `ecrã`→`tela`,
+  `rato`→`mouse`, `separador`→`aba` (con la concordancia de género rehecha),
+  `ligação`→`link`, `registo`→`registro`, `gerir`→`gerenciar`, `definições`→
+  `configurações`, `sistema operativo`→`sistema operacional`, `deteta`→`detecta`, y
+  el único tuteo (`Queres recuperá-los?`) al tratamiento de usted del resto. Alcanzó
+  también a `src/help/help-app_pt.md`, que además citaba nombres de menú que ya no
+  coincidían con la interfaz (`Ligação` por `Link`, `Anular` por `Desfazer`) y dos
+  anclas del índice. Sin tocar código.
 - ✅ **No ampliar el juego de idiomas** (decisión, no tarea). Los 9 actuales son
   justo aquellos a los que la aplicación **entera** puede dar servicio, no solo la
   interfaz: el corrector necesita un diccionario Hunspell y la exportación a LaTeX
