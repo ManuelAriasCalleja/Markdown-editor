@@ -7,7 +7,7 @@
 > redacta la wiki.
 >
 > - **Producto:** md-editor — editor/visor **WYSIWYG** de Markdown.
-> - **Versión cubierta:** 2.7.1.
+> - **Versión cubierta:** 2.8.0.
 > - **Tecnología:** Qt6 (≥ 6.5) + C++17.
 > - **Plataformas:** Linux, Windows, macOS.
 > - **Fuente de verdad última:** el código fuente. Aquí se recoge el comportamiento
@@ -312,6 +312,10 @@ final de este documento).
 - **RF-DIA-05 — Aviso de error.** Si un diagrama no se puede renderizar (sintaxis
   inválida, error de la herramienta), se avisa en la barra de estado tras un margen
   para no molestar al teclear.
+- **RF-DIA-06 — Previsualización conmutable.** *Ver → Previsualizar diagramas*
+  activa o desactiva el render automático (global, activado por defecto, se
+  recuerda). Al desactivarlo se retiran las previsualizaciones de todas las
+  pestañas; útil si el documento ya trae una imagen puesta a mano bajo el bloque.
 
 ## 13. Corrección ortográfica
 
@@ -600,7 +604,7 @@ final de este documento).
 > reinstalar). Útil empezar con un documento de ejemplo rico (p. ej.
 > `ejemplos/prueba-completa.md`).
 >
-> **Versión objetivo:** 2.7.1 · **Plataforma probada:** ____________ · **Fecha:** __________
+> **Versión objetivo:** 2.8.0 · **Plataforma probada:** ____________ · **Fecha:** __________
 
 ## 0. Preparación
 
@@ -756,6 +760,8 @@ final de este documento).
 - [ ] Sin la herramienta: aparece el marcador con la **orden de instalación** del SO;
       al instalarla, se sustituye por la imagen. _(RF-DIA-04)_
 - [ ] Un diagrama con sintaxis inválida avisa en la barra de estado. _(RF-DIA-05)_
+- [ ] *Ver → Previsualizar diagramas* desactivado retira las imágenes de todas las
+      pestañas y no vuelve a renderizar; al reactivarlo, reaparecen. _(RF-DIA-06)_
 
 ## C13. Corrección ortográfica · _RF-ORT-\*_ (requiere Hunspell)
 

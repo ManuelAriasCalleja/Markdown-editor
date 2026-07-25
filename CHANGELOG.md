@@ -5,6 +5,58 @@ Todos los cambios relevantes de **md-editor** se documentan en este archivo.
 El formato sigue, a grandes rasgos, [Keep a Changelog](https://keepachangelog.com/es/),
 y el proyecto usa [versionado semántico](https://semver.org/lang/es/).
 
+## [2.8.0] — 2026-07-25
+
+Repaso a fondo de la exportación y la importación: cada corrección nació de un
+documento que salía mal (un `.docx` que Word rechazaba, un `.tex` que no compilaba,
+un `.html` que perdía las imágenes al moverlo, un EPUB con una sola entrada de
+índice) y queda cubierta por su prueba. La reorganización interna que lo acompaña no
+cambia la salida: los ficheros de referencia coinciden byte a byte.
+
+### Añadido
+- **Ver → Previsualizar diagramas**: interruptor para apagar la previsualización
+  automática de los bloques ```` ```mermaid ````/```` ```plantuml ```` (activado por
+  defecto, se recuerda). Útil cuando el documento ya trae debajo una imagen
+  pre-renderizada a mano, que si no se veía por duplicado.
+
+### Corregido
+- **Exportación a DOCX**: un solo carácter que XML no admite (control, suplente
+  suelto) dejaba el paquete mal formado y **Word lo rechazaba entero**; ahora se
+  descartan. Las tablas llevan la anchura de cada columna y marcada la fila de
+  encabezado —sin ellas, Pandoc las leía como si no tuvieran columnas y **perdía
+  todas las celdas**—, y los enlaces van por relación, como los escribe Word, en vez
+  del campo `HYPERLINK` que otros programas descartaban con rótulo incluido.
+- **Importación con Pandoc**: las imágenes se extraen a una carpeta
+  `<nombre>-media` junto al original (antes el Markdown apuntaba a rutas de dentro
+  del paquete y **se perdían todas**); el título del documento llega como front
+  matter en vez de descartarse; las imágenes con tamaño o sin texto alternativo ya
+  no desaparecen al reabrir el documento; y las tablas que Markdown no sabe expresar
+  (celdas combinadas, celdas de varios párrafos, tablas anidadas) se convierten a
+  tabla de tuberías en vez de verse como texto literal.
+- **Exportación a LaTeX**: un bloque de código que contuviera la línea
+  `\end{verbatim}` —cualquier documento que hable de LaTeX— **tumbaba la
+  compilación**; también las listas y citas muy anidadas («Too deeply nested»), un
+  elemento de lista que empieza por `[` (una bibliografía) y el `~` de las URLs, que
+  llegaba estropeado al enlace del PDF. Se conservan además cosas que se perdían: el
+  arranque de una lista numerada, las citas anidadas, las listas y el código
+  **dentro** de una cita, y el super/subíndice de la prosa (`H~2~O` salía «H2O»).
+- **Exportación a HTML**: el `.html` **perdía todas las imágenes** al moverlo de
+  carpeta o enviarlo, porque se referenciaban por ruta relativa; ahora se embeben en
+  el propio archivo, con sus bytes originales cuando el navegador entiende el
+  formato. Se añaden también el idioma y el título del documento. *Copiar como HTML*,
+  igual.
+- **Exportación a EPUB**: el libro llegaba al lector **con una sola entrada de
+  índice**, sin manera de ir a un capítulo; ahora el índice se arma con los
+  encabezados del documento. Las casillas de tarea hechas y pendientes se
+  distinguen, y las imágenes conservan su formato en vez de rasterizarse todas.
+- **PDF e impresión**: una imagen más ancha que la página salía **truncada** en vez
+  de escalada; y al imprimir sin números de página desaparecían las imágenes
+  referenciadas por ruta relativa.
+
+### Cambiado
+- **Los diálogos de abrir e importar** arrancan en la carpeta del documento activo
+  (o del último abierto), en vez de siempre en la misma.
+
 ## [2.7.1] — 2026-07-24
 
 ### Corregido
