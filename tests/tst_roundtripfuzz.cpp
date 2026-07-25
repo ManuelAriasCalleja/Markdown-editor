@@ -5,6 +5,8 @@
 #include <QTextDocument>
 #include <QTextEdit>
 
+#include <cstdio>
+
 #include "markdownrender.h"
 #include "tableedit.h"
 
@@ -200,10 +202,32 @@ QString TestRoundtripFuzz::document()
 
 void TestRoundtripFuzz::survivesAdversarialContent()
 {
+    // Si un caso mata el proceso, el fallo no deja rastro de CUÁL era: la salida
+    // se pierde con el crash y las semillas no se ven. Dos válvulas por entorno,
+    // que no cambian nada en una ejecución normal:
+    //   MD_FUZZ_TRACE=1  → escribe el índice de cada caso en stderr sin buffer,
+    //                      así el último impreso ES el que revienta.
+    //   MD_FUZZ_ONLY=N   → ejecuta solo el caso N y vuelca su documento, para
+    //                      reproducirlo aislado (el PRNG es determinista, así
+    //                      que N genera lo mismo en cualquier sistema).
+    const bool trace = !qEnvironmentVariableIsEmpty("MD_FUZZ_TRACE");
+    const int only = qEnvironmentVariableIntValue("MD_FUZZ_ONLY");
+
     constexpr int kCases = 2000;
     for (int i = 1; i <= kCases; ++i) {
+        if (only > 0 && i != only)
+            continue;
         seed(quint32(i) * 2654435761u);  // dispersa las semillas (Knuth)
         const QString body = document();
+        if (trace) {
+            std::fprintf(stderr, "caso %d (%lld caracteres)\n", i, qint64(body.size()));
+            std::fflush(stderr);
+        }
+        if (only > 0) {
+            std::fprintf(stderr, "--- documento del caso %d ---\n%s\n--- fin ---\n",
+                         i, qPrintable(body));
+            std::fflush(stderr);
+        }
 
         // Editor NUEVO por caso: cada documento renderiza fórmulas (que registran
         // un handler de objeto en su layout), notas al pie, etc. Reutilizar un solo

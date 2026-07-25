@@ -106,22 +106,50 @@ jobs:
         env:
           QT_QPA_PLATFORM: ${{ runner.os == 'Windows' && 'windows' || 'offscreen' }}
 
+      # En Windows, un test que falla no escribe nada en stdout —ni por ctest ni
+      # ejecutándolo a mano—, así que el mensaje de la aserción no aparece por
+      # ningún lado. El logger a fichero de QTest (`-o fichero,txt`) no depende
+      # de la consola y sí lo da. El código de salida se imprime también: un
+      # número pequeño es QTest contando funciones fallidas, y 0xC0000005 o
+      # 0xC00000FD serían un cuelgue.
+      - name: Failure detail of the test binaries (Windows)
+        if: failure() && runner.os == 'Windows'
+        shell: pwsh
+        env:
+          QT_QPA_PLATFORM: windows
+        run: |
+          foreach ($exe in Get-ChildItem build/Release/tst_*.exe) {
+            $log = Join-Path $env:RUNNER_TEMP "$($exe.BaseName).txt"
+            & $exe.FullName -o "$log,txt" 2>&1 | Out-Null
+            if ($LASTEXITCODE -ne 0) {
+              Write-Host "=== $($exe.Name): exit=$LASTEXITCODE"
+              if (Test-Path $log) {
+                Get-Content $log | Where-Object { $_ -match 'FAIL!|Actual|Expected|Loc:' } |
+                  Select-Object -First 12 | ForEach-Object { Write-Host "    $_" }
+              }
+            }
+          }
+          exit 0
+
       # EXPERIMENTO (temporal). tst_roundtripfuzz —que no está registrado en
-      # ctest, ver CMakeLists— revienta en Windows con 0xC0000005 a los 219 ms.
-      # Pero se observó con el plugin «offscreen», el mismo que rompía la
-      # serialización del énfasis por no montar la base de datos de fuentes: un
-      # acceso inválido encaja con desreferenciar un motor de fuente nulo. Se
-      # ejecuta con los dos plugins para separar las hipótesis.
-      - name: Fuzzer with both platform plugins (Windows)
+      # ctest, ver CMakeLists— revienta en Windows con 0xC0000005 con LOS DOS
+      # plugins, así que el cuelgue es real. MD_FUZZ_TRACE escribe el índice de
+      # cada caso en stderr sin buffer: el último impreso antes de morir es el
+      # que lo provoca, y como el PRNG es determinista ese índice reproduce el
+      # mismo documento en cualquier sistema.
+      - name: Locate the fuzzer crash (Windows)
         if: always() && runner.os == 'Windows'
         shell: pwsh
+        env:
+          QT_QPA_PLATFORM: windows
+          MD_FUZZ_TRACE: '1'
         run: |
-          foreach ($qpa in @('windows', 'offscreen')) {
-            $env:QT_QPA_PLATFORM = $qpa
-            $log = Join-Path $env:RUNNER_TEMP "fuzz-$qpa.txt"
-            & build/Release/tst_roundtripfuzz.exe -o "$log,txt" 2>&1 | Out-Null
-            Write-Host "=== tst_roundtripfuzz con QT_QPA_PLATFORM=$qpa : exit=$LASTEXITCODE"
-            if (Test-Path $log) { Get-Content $log | Select-Object -Last 8 | ForEach-Object { Write-Host "    $_" } }
+          $err = Join-Path $env:RUNNER_TEMP "fuzz-trace.txt"
+          & build/Release/tst_roundtripfuzz.exe 2>$err | Out-Null
+          Write-Host "=== tst_roundtripfuzz: exit=$LASTEXITCODE"
+          if (Test-Path $err) {
+            Write-Host "--- últimos casos antes de morir ---"
+            Get-Content $err | Select-Object -Last 6 | ForEach-Object { Write-Host "    $_" }
           }
           exit 0
 
