@@ -237,11 +237,41 @@ void TestRoundtripFuzz::survivesAdversarialContent()
         QTextEdit ed;
         ed.setAcceptRichText(true);
 
+        // Con MD_FUZZ_ONLY, vuelca la entrada EXACTA de cada pasada escapando
+        // todo lo que no sea ASCII imprimible. La segunda pasada recibe la
+        // salida ya serializada, que lleva dentro los centinelas de la PUA de
+        // las fórmulas: si lo que mata al proceso es esa, hay que verlo carácter
+        // a carácter, no en texto renderizado.
+        const auto dump = [only](const char *etiqueta, const QString &s) {
+            if (only <= 0)
+                return;
+            QString esc;
+            for (const QChar c : s) {
+                if (c.unicode() < 0x20 || c.unicode() > 0x7e)
+                    esc += QStringLiteral("\\u%1").arg(c.unicode(), 4, 16, QLatin1Char('0'));
+                else
+                    esc += c;
+            }
+            std::fprintf(stderr, "%s (%lld caracteres): %s\n", etiqueta,
+                         qint64(s.size()), qPrintable(esc));
+            std::fflush(stderr);
+        };
+
         // Doble pasada por el pipeline real. El objetivo es que no haya SIGSEGV,
         // assert ni error de sanitizer en ninguna de las etapas (proteger →
         // setMarkdown → pasadas de render → serialización con sentinelas).
+        if (trace) {
+            std::fprintf(stderr, "  caso %d pasada 1\n", i);
+            std::fflush(stderr);
+        }
+        dump("  entrada pasada 1", body);
         mdrender::setMarkdownWithExtensions(&ed, body);
         const QString once = mdtable::documentMarkdown(ed.document());
+        if (trace) {
+            std::fprintf(stderr, "  caso %d pasada 2\n", i);
+            std::fflush(stderr);
+        }
+        dump("  entrada pasada 2", once);
         mdrender::setMarkdownWithExtensions(&ed, once);
         const QString twice = mdtable::documentMarkdown(ed.document());
         Q_UNUSED(twice);

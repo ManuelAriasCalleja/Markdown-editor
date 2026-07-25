@@ -149,11 +149,20 @@ jobs:
           Write-Host "=== tst_roundtripfuzz: exit=$LASTEXITCODE"
           if (Test-Path $err) {
             $lines = Get-Content $err
-            $ultimo = $lines | Where-Object { $_ -like 'caso *' } | Select-Object -Last 1
-            Write-Host "--- último caso trazado (el que revienta): $ultimo"
-            Write-Host "--- traza del cuelgue ---"
-            $lines | Where-Object { $_ -notlike 'caso *' } |
-              Select-Object -First 30 | ForEach-Object { Write-Host "    $_" }
+            $ultimo = $lines | Where-Object { $_ -match '^\s*caso \d+ pasada' } | Select-Object -Last 1
+            Write-Host "--- última pasada trazada (la que revienta): $ultimo"
+          }
+          # Y ahora solo ese caso, volcando la entrada exacta de cada pasada:
+          # el último volcado antes de morir ES la cadena que mata a setMarkdown.
+          if ($ultimo -match 'caso (\d+)') {
+            $env:MD_FUZZ_ONLY = $Matches[1]
+            $solo = Join-Path $env:RUNNER_TEMP "fuzz-solo.txt"
+            & build/Release/tst_roundtripfuzz.exe 2>$solo | Out-Null
+            Write-Host "=== solo el caso $($Matches[1]): exit=$LASTEXITCODE"
+            if (Test-Path $solo) {
+              Get-Content $solo | Where-Object { $_ -match 'entrada pasada|Nearby symbol|Exception code' } |
+                ForEach-Object { Write-Host "    $_" }
+            }
           }
           exit 0
 
