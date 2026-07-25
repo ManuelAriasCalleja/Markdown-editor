@@ -103,6 +103,27 @@ jobs:
         env:
           QT_QPA_PLATFORM: offscreen
 
+      # ctest tampoco enseña el código de salida, y en Windows es justo el dato
+      # que distingue los casos: 0xC0000135 = falta una DLL, 0xC00000FD =
+      # desbordamiento de pila, 0xC0000005 = acceso inválido, y un número
+      # pequeño = QTest contando funciones fallidas. Ejecutar el .exe a pelo lo
+      # da, junto con lo que escriba por stderr.
+      - name: Exit codes of the test binaries (Windows)
+        if: failure() && runner.os == 'Windows'
+        shell: pwsh
+        env:
+          QT_QPA_PLATFORM: offscreen
+        run: |
+          foreach ($exe in Get-ChildItem build/Release/tst_*.exe) {
+            $out = & $exe.FullName 2>&1 | Out-String
+            if ($LASTEXITCODE -ne 0) {
+              $hex = '0x{0:X8}' -f $LASTEXITCODE
+              Write-Host "=== $($exe.Name): exit=$LASTEXITCODE ($hex)"
+              if ($out.Trim()) { Write-Host $out.Trim() } else { Write-Host "(sin salida)" }
+            }
+          }
+          exit 0
+
   sanitizers:
     name: Sanitizers (ASan/UBSan)
     runs-on: ubuntu-latest
