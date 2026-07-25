@@ -17,7 +17,7 @@
 /// resultados suben); las flechas mueven la selección sin salir del filtro;
 /// Intro o doble clic aceptan. Tras aceptar, la acción elegida se consulta con
 /// selectedAction() (el llamante hace `action->trigger()`).
-class CommandPaletteDialog : public FilterListDialog
+class CommandPaletteDialog final : public FilterListDialog
 {
     Q_OBJECT
 

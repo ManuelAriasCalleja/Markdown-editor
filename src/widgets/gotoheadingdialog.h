@@ -14,7 +14,7 @@ struct OutlineHeading;
 /// lista de los encabezados del documento (sangrados por nivel), filtrada por
 /// subcadena. El comportamiento de teclado lo pone FilterListDialog. Tras aceptar,
 /// el bloque elegido se consulta con selectedBlockNumber().
-class GoToHeadingDialog : public FilterListDialog
+class GoToHeadingDialog final : public FilterListDialog
 {
     Q_OBJECT
 
