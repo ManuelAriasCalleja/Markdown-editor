@@ -37,6 +37,20 @@ set(CMAKE_AUTOUIC ON)
 
 find_package(Qt6 REQUIRED COMPONENTS Widgets PrintSupport LinguistTools)
 
+# Qt6::GuiPrivate (el QZip del export ODF, ver más abajo) hay que asegurarlo a
+# mano porque las dos formas de obtenerlo son excluyentes según la versión:
+#   • Hasta Qt 6.8 el target queda definido de rebote al encontrar Widgets/Gui,
+#     y el componente `GuiPrivate` puede NO existir como paquete de
+#     configuración (Debian no instala Qt6GuiPrivateConfig.cmake), así que
+#     pedirlo aborta la configuración.
+#   • Desde Qt 6.11 es al revés: el paquete existe pero el target ya no se
+#     define solo, y la configuración muere con «Target "md-editor-core" links
+#     to Qt6::GuiPrivate but the target was not found».
+# Mirar si el target ya está cubre ambos sin condicionar por número de versión.
+if(NOT TARGET Qt6::GuiPrivate)
+    find_package(Qt6 REQUIRED COMPONENTS GuiPrivate)
+endif()
+
 # Toda la lógica vive en una biblioteca estática para poder enlazarla tanto
 # desde el ejecutable como desde las pruebas. El ejecutable es solo main().
 add_library(md-editor-core STATIC

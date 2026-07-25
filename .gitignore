@@ -27,6 +27,9 @@ ui_*.h
 # Qt lupdate (cache temporal de las herramientas de traducción)
 .lupdate/
 
+# flatpak-builder: estado y descargas de una compilación local del paquete
+.flatpak-builder/
+
 # macOS / Windows finos
 .DS_Store
 Thumbs.db

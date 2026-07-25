@@ -28,8 +28,8 @@ import tempfile
 REPO = "ManuelAriasCalleja/Markdown-editor"
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 PKG = ROOT / "packaging"
-METAINFO = PKG / "flatpak" / "io.github.manuelariascalleja.MarkdownEditor.metainfo.xml"
-FLATPAK = PKG / "flatpak" / "io.github.manuelariascalleja.MarkdownEditor.yaml"
+METAINFO = PKG / "flatpak" / "io.github.manuelariascalleja.Markdown-editor.metainfo.xml"
+FLATPAK = PKG / "flatpak" / "io.github.manuelariascalleja.Markdown-editor.yaml"
 SCOOP = PKG / "scoop" / "md-editor.json"
 HOMEBREW = PKG / "homebrew" / "md-editor.rb"
 

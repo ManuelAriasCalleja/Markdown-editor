@@ -1,0 +1,52 @@
+# BORRADOR de manifiesto Flatpak para Flathub.
+#
+# Requiere probarlo en local con flatpak-builder y, muy probablemente, pequeños
+# ajustes antes de enviarlo a https://github.com/flathub/flathub (ver README.md
+# de esta carpeta). No está validado en una build real.
+id: io.github.manuelariascalleja.Markdown-editor
+runtime: org.kde.Platform
+runtime-version: '6.11'
+sdk: org.kde.Sdk
+command: md-editor
+
+finish-args:
+  - --share=ipc
+  - --socket=wayland
+  - --socket=fallback-x11
+  - --device=dri
+  # Abrir y guardar los .md del usuario (y las imágenes que referencian).
+  - --filesystem=home
+
+cleanup:
+  - /include
+  - /lib/cmake
+  - /lib/pkgconfig
+  - '*.a'
+
+modules:
+  - name: md-editor
+    buildsystem: cmake-ninja
+    config-opts:
+      - -DCMAKE_BUILD_TYPE=Release
+      # El runtime (org.kde.Platform) ya trae libhunspell y ~150 diccionarios en
+      # /usr/share/hunspell, que es una de las rutas que mira SpellChecker. Aquí
+      # no queremos el enlazado estático por defecto (pensado para el .zip/.dmg,
+      # donde no hay Hunspell en destino): el SDK solo trae la .so, así que
+      # dejarlo activado solo produce un aviso de CMake y cae igualmente a
+      # dinámico.
+      - -DSPELL_CHECK_STATIC=OFF
+    sources:
+      - type: git
+        url: https://github.com/ManuelAriasCalleja/Markdown-editor.git
+        tag: v2.8.0
+        commit: 1fd8379d48489e662a3d83cbab9b199932d5e91c
+      - type: file
+        path: io.github.manuelariascalleja.Markdown-editor.metainfo.xml
+    # Flathub exige que el .desktop, el icono y el metainfo se llamen como el
+    # app-id. El CMake los instala como «md-editor»; aquí los renombramos.
+    post-install:
+      - install -Dm644 io.github.manuelariascalleja.Markdown-editor.metainfo.xml /app/share/metainfo/io.github.manuelariascalleja.Markdown-editor.metainfo.xml
+      - mv /app/share/applications/md-editor.desktop /app/share/applications/io.github.manuelariascalleja.Markdown-editor.desktop
+      - desktop-file-edit --set-icon=io.github.manuelariascalleja.Markdown-editor /app/share/applications/io.github.manuelariascalleja.Markdown-editor.desktop
+      - for s in 16 24 32 48 64 128 256; do mv /app/share/icons/hicolor/${s}x${s}/apps/md-editor.png /app/share/icons/hicolor/${s}x${s}/apps/io.github.manuelariascalleja.Markdown-editor.png; done
+      - mv /app/share/icons/hicolor/scalable/apps/md-editor.svg /app/share/icons/hicolor/scalable/apps/io.github.manuelariascalleja.Markdown-editor.svg
