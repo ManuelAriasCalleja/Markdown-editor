@@ -1,5 +1,7 @@
 #include <QtTest>
 
+#include <QDir>
+
 #include "pandocimport.h"
 
 // Pruebas de la parte pura de la importación con Pandoc (mdimport): argumentos,
@@ -50,11 +52,16 @@ void TestPandocImport::argumentsExtractMediaWhenAsked()
 
 void TestPandocImport::mediaDirSitsNextToTheDocument()
 {
-    QCOMPARE(mdimport::mediaDirFor(QStringLiteral("/casa/docs/Informe final.docx")),
-             QStringLiteral("/casa/docs/Informe final-media"));
+    // La ruta se construye sobre QDir::rootPath() («/» en Unix, «C:/» en
+    // Windows) porque mediaDirFor normaliza a absoluta: en Windows «/casa» no
+    // lo es —le falta la unidad— y QFileInfo le antepone la unidad actual,
+    // devolviendo «D:/casa/…» en el runner de CI.
+    const QString root = QDir::rootPath();
+    QCOMPARE(mdimport::mediaDirFor(root + QStringLiteral("casa/docs/Informe final.docx")),
+             root + QStringLiteral("casa/docs/Informe final-media"));
     // Nombre compuesto: solo se quita la última extensión.
-    QCOMPARE(mdimport::mediaDirFor(QStringLiteral("/casa/v1.2.docx")),
-             QStringLiteral("/casa/v1.2-media"));
+    QCOMPARE(mdimport::mediaDirFor(root + QStringLiteral("casa/v1.2.docx")),
+             root + QStringLiteral("casa/v1.2-media"));
     QVERIFY(mdimport::mediaDirFor(QString()).isEmpty());
 }
 

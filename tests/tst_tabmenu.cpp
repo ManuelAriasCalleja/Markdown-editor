@@ -29,22 +29,28 @@ void TestTabMenu::emptyPathDisablesActions()
 
 void TestTabMenu::filePathFillsNameAndFolder()
 {
+    // Sobre QDir::rootPath() («/» en Unix, «C:/» en Windows): infoForPath
+    // normaliza a absoluta, y en Windows «/home/…» no lo es —le falta la
+    // unidad—, así que QFileInfo le antepone la unidad actual («D:/home/…» en
+    // el runner de CI) y la comparación literal fallaba.
+    const QString root = QDir::rootPath();
     const tabmenu::FileInfo info =
-        tabmenu::infoForPath(QStringLiteral("/home/usuario/docs/apuntes.md"));
+        tabmenu::infoForPath(root + QStringLiteral("home/usuario/docs/apuntes.md"));
     QVERIFY(info.hasFile);
     QCOMPARE(info.fileName, QStringLiteral("apuntes.md"));
-    QCOMPARE(info.fullPath, QStringLiteral("/home/usuario/docs/apuntes.md"));
-    QCOMPARE(info.containingFolder, QStringLiteral("/home/usuario/docs"));
+    QCOMPARE(info.fullPath, root + QStringLiteral("home/usuario/docs/apuntes.md"));
+    QCOMPARE(info.containingFolder, root + QStringLiteral("home/usuario/docs"));
 }
 
 void TestTabMenu::nestedPathSplitsCorrectly()
 {
     // Un nombre con puntos y espacios: el nombre es solo el último componente.
+    const QString root = QDir::rootPath();
     const tabmenu::FileInfo info =
-        tabmenu::infoForPath(QStringLiteral("/a/b c/mi archivo.final.md"));
+        tabmenu::infoForPath(root + QStringLiteral("a/b c/mi archivo.final.md"));
     QVERIFY(info.hasFile);
     QCOMPARE(info.fileName, QStringLiteral("mi archivo.final.md"));
-    QCOMPARE(info.containingFolder, QStringLiteral("/a/b c"));
+    QCOMPARE(info.containingFolder, root + QStringLiteral("a/b c"));
 }
 
 void TestTabMenu::relativePathIsMadeAbsolute()

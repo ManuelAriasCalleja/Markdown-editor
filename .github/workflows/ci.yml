@@ -115,6 +115,22 @@ jobs:
       # sale el mensaje. El código de salida en hexadecimal se imprime igual,
       # porque es lo que distinguiría un cuelgue (0xC0000005, 0xC00000FD) de un
       # fallo de aserción.
+      # EXPERIMENTO (temporal, no decide el resultado del job). En Windows se
+      # pierden los marcadores de énfasis al serializar a Markdown: entra
+      # «texto **negrita** aqui» y sale «texto negrita aqui». Falta saber si es
+      # del producto o un artefacto del plugin offscreen con el que corren los
+      # tests, porque la aplicación real usa el plugin nativo. Aquí se ejecuta
+      # el mismo test SIN forzar QT_QPA_PLATFORM: si también falla, es real.
+      - name: Emphasis with the native platform plugin (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $log = Join-Path $env:RUNNER_TEMP "nativo.txt"
+          & build/Release/tst_markdownroundtrip.exe -o "$log,txt" 2>&1 | Out-Null
+          Write-Host "=== tst_markdownroundtrip con el plugin NATIVO: exit=$LASTEXITCODE"
+          if (Test-Path $log) { Get-Content $log | Select-Object -First 25 }
+          exit 0
+
       - name: Failure detail of the test binaries (Windows)
         if: failure() && runner.os == 'Windows'
         shell: pwsh
