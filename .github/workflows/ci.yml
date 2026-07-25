@@ -106,6 +106,25 @@ jobs:
         env:
           QT_QPA_PLATFORM: ${{ runner.os == 'Windows' && 'windows' || 'offscreen' }}
 
+      # EXPERIMENTO (temporal). tst_roundtripfuzz —que no está registrado en
+      # ctest, ver CMakeLists— revienta en Windows con 0xC0000005 a los 219 ms.
+      # Pero se observó con el plugin «offscreen», el mismo que rompía la
+      # serialización del énfasis por no montar la base de datos de fuentes: un
+      # acceso inválido encaja con desreferenciar un motor de fuente nulo. Se
+      # ejecuta con los dos plugins para separar las hipótesis.
+      - name: Fuzzer with both platform plugins (Windows)
+        if: always() && runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          foreach ($qpa in @('windows', 'offscreen')) {
+            $env:QT_QPA_PLATFORM = $qpa
+            $log = Join-Path $env:RUNNER_TEMP "fuzz-$qpa.txt"
+            & build/Release/tst_roundtripfuzz.exe -o "$log,txt" 2>&1 | Out-Null
+            Write-Host "=== tst_roundtripfuzz con QT_QPA_PLATFORM=$qpa : exit=$LASTEXITCODE"
+            if (Test-Path $log) { Get-Content $log | Select-Object -Last 8 | ForEach-Object { Write-Host "    $_" } }
+          }
+          exit 0
+
   sanitizers:
     name: Sanitizers (ASan/UBSan)
     runs-on: ubuntu-latest
