@@ -71,6 +71,13 @@ Resuelto, no hay que volver sobre ello:
 - **Captura de pantalla.** `docs/screenshot.png` existe y la URL de
   `raw.githubusercontent.com` resuelve.
 
+Y dos cosas que **no** son problema aunque el linter las marque al pasarlo sobre
+un repo construido en local (`flatpak-builder-lint repo …`):
+`appstream-external-screenshot-url` y `appstream-screenshots-not-mirrored-in-ostree`.
+El espejado de capturas a `dl.flathub.org/media` lo hace la propia
+infraestructura de Flathub al invocar el builder con `--mirror-screenshots-url`;
+fuera de ella salen siempre.
+
 ## Lo único que queda abierto: los permisos
 
 `flatpak-builder-lint` marca `finish-args-home-filesystem-access` como error:
@@ -83,10 +90,20 @@ carpeta**, y este editor necesita la carpeta:
 - vigilar el fichero en disco y recargarlo si cambia fuera del editor.
 
 Con permisos de solo-portal, un documento con imágenes se vería roto. Las
-opciones son pedir la **excepción** al enviar (es lo habitual en editores, y el
-argumento de las rutas relativas es justo el que Flathub acepta) o acotar a
-`--filesystem=xdg-documents`, que no da error pero deja fuera los `.md` que estén
-en cualquier otro sitio. Es una decisión de producto, no técnica.
+opciones son pedir la **excepción** al enviar —Flathub la concede «on sufficient
+explanation being provided», y el argumento de las rutas relativas es justo esa
+clase de explicación— o acotar a `--filesystem=xdg-documents`, que no da error
+pero deja fuera los `.md` que estén en cualquier otro sitio. Es una decisión de
+producto, no técnica.
+
+## Antes de enviar: hace falta una release con el arreglo de CMake
+
+El manifiesto compila **desde el tag**, y la v2.8.0 no lleva el arreglo de
+`Qt6::GuiPrivate` que hace falta para configurar con Qt 6.11 (lo destapó esta
+misma validación). Mientras el `tag:` apunte a la 2.8.0, el paquete no compila
+sobre `org.kde.Platform//6.11`. Así que el envío a Flathub va **después** de
+publicar la siguiente versión: al etiquetarla, el job `packaging` de
+`release.yml` mueve solo el `tag`/`commit` de este manifiesto.
 
 ## Recomendación a futuro
 

@@ -30,9 +30,17 @@ proyecto es sólido (~9k LOC, 23 ficheros de test, arquitectura por controllers,
    vía `scripts/update-packaging.py`. Esa automatización nació de que se
    quedaron **seis versiones clavados en la 1.2.0** mientras el README de Scoop
    publicaba el comando de instalación que los usa: quien lo siguiera se
-   instalaba la 1.2.0. *Pendiente:* enviarlos — el de Scoop a un *bucket* propio,
-   el cask a un *tap*, y el Flatpak validarlo con `flatpak-builder` (sigue sin
-   probarse en una build real) antes del PR a Flathub.
+   instalaba la 1.2.0. *Flatpak validado (25-07-2026):* compila y exporta con
+   `org.flatpak.Builder` sobre `org.kde.Platform//6.11` y pasa
+   `flatpak-builder-lint`; hubo que corregir el app-id (el viejo derivaba en una
+   URL de GitHub que daba 404) y el runtime EOL, y salió de ahí un fallo ajeno al
+   empaquetado: el proyecto no configuraba con Qt 6.11 (ver el punto de
+   `Qt6::GuiPrivate` en CMakeLists). *Pendiente:* enviarlos — el de Scoop a un
+   *bucket* propio, el cask a un *tap*, y el Flatpak a Flathub, esto último
+   **después de publicar una versión que lleve el arreglo de CMake** (el
+   manifiesto compila desde el tag, y la 2.8.0 no lo tiene) y decidiendo antes
+   qué hacer con `--filesystem=home`, el único error que el linter deja abierto
+   (ver `packaging/flatpak/README.md`).
 3. **Firma de binarios** — macOS y Windows no están firmados (Ctrl-clic → Abrir).
    Firmar (y notarizar en Mac) elimina la fricción de instalación, que es donde
    se pierden usuarios. *Windows, listo y a la espera:* `release.yml` ya tiene el
