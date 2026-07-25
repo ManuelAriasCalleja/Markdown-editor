@@ -108,18 +108,30 @@ jobs:
       # desbordamiento de pila, 0xC0000005 = acceso inválido, y un número
       # pequeño = QTest contando funciones fallidas. Ejecutar el .exe a pelo lo
       # da, junto con lo que escriba por stderr.
-      - name: Exit codes of the test binaries (Windows)
+      # Los tests que fallan en Windows devuelven el recuento de funciones
+      # fallidas de QTest (1, 2, 12…) pero no escriben NADA en stdout, así que
+      # ni ctest ni ejecutarlos a mano enseñan la aserción. `-o fichero,txt` es
+      # el logger de QTest a fichero, que no depende de la consola: de ahí sí
+      # sale el mensaje. El código de salida en hexadecimal se imprime igual,
+      # porque es lo que distinguiría un cuelgue (0xC0000005, 0xC00000FD) de un
+      # fallo de aserción.
+      - name: Failure detail of the test binaries (Windows)
         if: failure() && runner.os == 'Windows'
         shell: pwsh
         env:
           QT_QPA_PLATFORM: offscreen
         run: |
           foreach ($exe in Get-ChildItem build/Release/tst_*.exe) {
-            $out = & $exe.FullName 2>&1 | Out-String
+            $log = Join-Path $env:RUNNER_TEMP "$($exe.BaseName).txt"
+            & $exe.FullName -o "$log,txt" 2>&1 | Out-Null
             if ($LASTEXITCODE -ne 0) {
-              $hex = '0x{0:X8}' -f $LASTEXITCODE
-              Write-Host "=== $($exe.Name): exit=$LASTEXITCODE ($hex)"
-              if ($out.Trim()) { Write-Host $out.Trim() } else { Write-Host "(sin salida)" }
+              Write-Host "=== $($exe.Name): exit=$LASTEXITCODE ('0x{0:X8}' -f $LASTEXITCODE)"
+              if (Test-Path $log) {
+                Get-Content $log | Where-Object { $_ -match 'FAIL!|Actual|Expected|Loc:|Compared' } |
+                  Select-Object -First 12 | ForEach-Object { Write-Host "    $_" }
+              } else {
+                Write-Host "    (el logger no llegó a escribir el fichero)"
+              }
             }
           }
           exit 0
