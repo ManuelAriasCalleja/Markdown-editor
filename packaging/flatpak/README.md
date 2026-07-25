@@ -63,3 +63,12 @@ Una vez construya y valide en local, se envía como **Pull Request a
 [`flathub/flathub`](https://github.com/flathub/flathub)** siguiendo su guía de
 *submission*. Tras la aprobación, cada nueva release se publica actualizando el
 `commit`/`tag` del manifiesto en el repositorio que Flathub te crea.
+
+## Mantenimiento
+
+El `tag`/`commit` de este manifiesto y la entrada `<release>` del metainfo los
+pone al día solos el job `packaging` de `release.yml` al etiquetar, vía
+`scripts/update-packaging.py`; a mano, `python3 scripts/update-packaging.py
+<versión>`. La entrada `<release>` que genera el script solo lleva el enlace a
+las notas de la release: la descripción, que es lo que muestran las tiendas, se
+escribe a mano cuando la versión lo merece.

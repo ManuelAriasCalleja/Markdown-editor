@@ -21,12 +21,24 @@ proyecto es sólido (~9k LOC, 23 ficheros de test, arquitectura por controllers,
    los tres jobs de release compilan solo `--target md-editor` (los tests ya los
    ejecuta `ci.yml`, la release no los necesita). La primera release v2.4.0 falló
    por esto y se rehízo re-etiquetando el tag sobre el commit del arreglo.
-2. **Packaging para gestores nativos** — Flatpak/AppStream o AUR (Linux),
-   winget/Chocolatey (Windows), Homebrew cask (macOS). Multiplica la visibilidad
-   frente al `.AppImage`/`.zip` suelto y mejora la confianza.
+2. **Packaging para gestores nativos** — Flatpak/AppStream (Linux), Scoop
+   (Windows), Homebrew cask (macOS). Multiplica la visibilidad frente al
+   `.AppImage`/`.zip` suelto y mejora la confianza. *Hecho a medias:* los tres
+   manifiestos están escritos en `packaging/` y **el job `packaging` de
+   `release.yml` los pone al día al etiquetar** (versión, URL y SHA-256 de los
+   artefactos, `tag`/`commit` del Flatpak y la entrada `<release>` del metainfo),
+   vía `scripts/update-packaging.py`. Esa automatización nació de que se
+   quedaron **seis versiones clavados en la 1.2.0** mientras el README de Scoop
+   publicaba el comando de instalación que los usa: quien lo siguiera se
+   instalaba la 1.2.0. *Pendiente:* enviarlos — el de Scoop a un *bucket* propio,
+   el cask a un *tap*, y el Flatpak validarlo con `flatpak-builder` (sigue sin
+   probarse en una build real) antes del PR a Flathub.
 3. **Firma de binarios** — macOS y Windows no están firmados (Ctrl-clic → Abrir).
    Firmar (y notarizar en Mac) elimina la fricción de instalación, que es donde
-   se pierden usuarios.
+   se pierden usuarios. *Windows, listo y a la espera:* `release.yml` ya tiene el
+   paso de SignPath escrito y **se activa solo** en cuanto exista el secreto
+   `SIGNPATH_API_TOKEN`; falta la aprobación del proyecto en signpath.org
+   (gratuita para OSS), no trabajo de código. macOS sigue sin firmar.
 4. **Auto-actualización o aviso de nueva versión** — al ser descarga manual, los
    usuarios de una versión antigua nunca sabrán de la nueva. Un chequeo ligero
    contra la API de releases bastaría.

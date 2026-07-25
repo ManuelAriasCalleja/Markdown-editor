@@ -34,7 +34,9 @@ ese aviso.
 
 ## Mantenimiento
 
-- `version` + `sha256` apuntan a la release v1.2.0.
+- `version` + `sha256` apuntan a la release v2.8.0. Los actualiza solo el job
+  `packaging` de `release.yml` al etiquetar (vía `scripts/update-packaging.py`);
+  a mano, `python3 scripts/update-packaging.py <versión>`.
 - `livecheck` (`:github_latest`) permite que `brew livecheck md-editor` detecte
   nuevas versiones; para actualizar el cask:
   ```bash

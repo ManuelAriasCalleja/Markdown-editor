@@ -12,7 +12,9 @@ scoop install https://raw.githubusercontent.com/ManuelAriasCalleja/Markdown-edit
 
 ## Mantenimiento
 
-- `version`, `url` y `hash` apuntan a la release v1.2.0.
+- `version`, `url` y `hash` apuntan a la release v2.8.0. Los actualiza solo el
+  job `packaging` de `release.yml` al etiquetar (vía `scripts/update-packaging.py`);
+  a mano, `python3 scripts/update-packaging.py <versión>`.
 - `checkver: github` y `autoupdate` permiten actualizar el manifiesto solo:
   ```powershell
   # con el repo de scoop (https://github.com/ScoopInstaller/Scoop) clonado:

@@ -18,8 +18,8 @@
       <li>WYSIWYG editing with a clean round-trip to plain Markdown</li>
       <li>TeX formulas, tables with alignment, footnotes and interactive task lists</li>
       <li>Outline panel with drag-to-reorder sections</li>
-      <li>Six themes, a distraction-free mode and a split source view</li>
-      <li>Export to PDF, HTML, ODT, DOCX and LaTeX</li>
+      <li>Eight themes, a distraction-free mode and a split source view</li>
+      <li>Export to PDF, HTML, ODT, DOCX, LaTeX and EPUB</li>
       <li>Interface available in 9 languages</li>
     </ul>
   </description>
@@ -44,6 +44,16 @@
   </screenshots>
 
   <releases>
+    <release version="2.8.0" date="2026-07-25">
+      <description>
+        <p>
+          A switch to turn off the automatic Mermaid/PlantUML diagram previews,
+          and a round of export and import fixes: DOCX files that Word accepts,
+          LaTeX that compiles, HTML that keeps its images when moved elsewhere,
+          and EPUB books with a real table of contents.
+        </p>
+      </description>
+    </release>
     <release version="1.2.0" date="2026-06-18">
       <description>
         <p>

@@ -269,3 +269,44 @@ jobs:
             artifacts/linux/*
             artifacts/windows/*
             artifacts/macos/*
+
+  # -----------------------------------------------------------------
+  # Deja los manifiestos de packaging/ apuntando a la versión recién
+  # publicada. Fijan versión y hash de los artefactos, así que quedarse
+  # atrás no rompe nada visible: simplemente se sigue instalando una
+  # versión vieja (estuvieron seis versiones clavados en la 1.2.0 mientras
+  # el README de Scoop publicaba el comando de instalación que los usa).
+  # Corre después de `publish` porque lee los artefactos ya subidos.
+  # -----------------------------------------------------------------
+  packaging:
+    name: Update packaging manifests
+    needs: publish
+    # No en las prereleases (-alpha, -rc…): no deben ser lo que se instala.
+    if: ${{ !contains(github.ref_name, '-') }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write  # necesario para empujar el commit a main
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: main
+          fetch-depth: 0  # hacen falta los tags para resolver tag -> commit
+
+      - name: Update manifests
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 scripts/update-packaging.py "${GITHUB_REF_NAME#v}"
+
+      - name: Commit and push
+        run: |
+          if git diff --quiet; then
+            echo "Los manifiestos ya estaban al día."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          # [skip ci]: es un cambio de manifiestos, no hay nada que compilar.
+          git commit -am "Empaquetado: manifiestos a ${GITHUB_REF_NAME#v} [skip ci]"
+          # main pudo avanzar entre el tag y este job.
+          git pull --rebase origin main
+          git push origin HEAD:main
