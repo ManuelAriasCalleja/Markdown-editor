@@ -85,74 +85,26 @@ jobs:
       - name: Build
         run: cmake --build build --config Release --parallel 2
 
-      # Las pruebas usan QApplication: corren con QT_QPA_PLATFORM=offscreen
-      # (CMake ya lo fija en cada test, pero lo replicamos por si acaso).
+      # Las pruebas usan QApplication: corren sin pantalla (CMake ya fija la
+      # plataforma en cada test, pero lo replicamos por si acaso). En Windows,
+      # el plugin nativo en vez de «offscreen»: ver el porqué en CMakeLists,
+      # donde está el mismo condicional (offscreen ahí rompe la serialización
+      # del énfasis y silencia la salida de QTest).
       # `-C Release`, igual que arriba, es para el generador de Windows.
       - name: Test
         run: ctest --test-dir build --output-on-failure -C Release
         env:
-          QT_QPA_PLATFORM: offscreen
+          QT_QPA_PLATFORM: ${{ runner.os == 'Windows' && 'windows' || 'offscreen' }}
 
       # Un test que se cae ANTES de arrancar (falta una DLL, peta en la
       # inicialización estática) no imprime ni la cabecera de QTest, y
       # --output-on-failure se queda en blanco: no hay nada que enseñar. Con -VV
-      # sí aparecen la orden exacta y el código de salida del proceso.
+      # sí aparecen al menos la orden exacta y el directorio de trabajo.
       - name: Re-run failed tests verbosely
         if: failure()
         run: ctest --test-dir build --rerun-failed --output-on-failure -VV -C Release
         env:
-          QT_QPA_PLATFORM: offscreen
-
-      # ctest tampoco enseña el código de salida, y en Windows es justo el dato
-      # que distingue los casos: 0xC0000135 = falta una DLL, 0xC00000FD =
-      # desbordamiento de pila, 0xC0000005 = acceso inválido, y un número
-      # pequeño = QTest contando funciones fallidas. Ejecutar el .exe a pelo lo
-      # da, junto con lo que escriba por stderr.
-      # Los tests que fallan en Windows devuelven el recuento de funciones
-      # fallidas de QTest (1, 2, 12…) pero no escriben NADA en stdout, así que
-      # ni ctest ni ejecutarlos a mano enseñan la aserción. `-o fichero,txt` es
-      # el logger de QTest a fichero, que no depende de la consola: de ahí sí
-      # sale el mensaje. El código de salida en hexadecimal se imprime igual,
-      # porque es lo que distinguiría un cuelgue (0xC0000005, 0xC00000FD) de un
-      # fallo de aserción.
-      # EXPERIMENTO (temporal, no decide el resultado del job). En Windows se
-      # pierden los marcadores de énfasis al serializar a Markdown: entra
-      # «texto **negrita** aqui» y sale «texto negrita aqui». Falta saber si es
-      # del producto o un artefacto del plugin offscreen con el que corren los
-      # tests, porque la aplicación real usa el plugin nativo. Aquí se ejecuta
-      # el mismo test SIN forzar QT_QPA_PLATFORM: si también falla, es real.
-      # `always()`: sin él, GitHub salta el paso porque uno anterior falló, que
-      # es justo cuando interesa que corra.
-      - name: Emphasis with the native platform plugin (Windows)
-        if: always() && runner.os == 'Windows'
-        shell: pwsh
-        run: |
-          $log = Join-Path $env:RUNNER_TEMP "nativo.txt"
-          & build/Release/tst_markdownroundtrip.exe -o "$log,txt" 2>&1 | Out-Null
-          Write-Host "=== tst_markdownroundtrip con el plugin NATIVO: exit=$LASTEXITCODE"
-          if (Test-Path $log) { Get-Content $log | Select-Object -First 25 }
-          exit 0
-
-      - name: Failure detail of the test binaries (Windows)
-        if: failure() && runner.os == 'Windows'
-        shell: pwsh
-        env:
-          QT_QPA_PLATFORM: offscreen
-        run: |
-          foreach ($exe in Get-ChildItem build/Release/tst_*.exe) {
-            $log = Join-Path $env:RUNNER_TEMP "$($exe.BaseName).txt"
-            & $exe.FullName -o "$log,txt" 2>&1 | Out-Null
-            if ($LASTEXITCODE -ne 0) {
-              Write-Host "=== $($exe.Name): exit=$LASTEXITCODE ('0x{0:X8}' -f $LASTEXITCODE)"
-              if (Test-Path $log) {
-                Get-Content $log | Where-Object { $_ -match 'FAIL!|Actual|Expected|Loc:|Compared' } |
-                  Select-Object -First 12 | ForEach-Object { Write-Host "    $_" }
-              } else {
-                Write-Host "    (el logger no llegó a escribir el fichero)"
-              }
-            }
-          }
-          exit 0
+          QT_QPA_PLATFORM: ${{ runner.os == 'Windows' && 'windows' || 'offscreen' }}
 
   sanitizers:
     name: Sanitizers (ASan/UBSan)

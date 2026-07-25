@@ -535,8 +535,23 @@ if(Qt6Test_FOUND)
         target_link_libraries(${test} PRIVATE md-editor-core Qt6::Test)
         add_test(NAME ${test} COMMAND ${test})
         # Las pruebas usan QApplication: ejecútalas sin pantalla (headless).
+        #
+        # En Windows NO: su plugin «offscreen» no monta la base de datos de
+        # fuentes, y sin ella QTextDocument::toMarkdown() deja de emitir los
+        # marcadores de énfasis (entra «texto **negrita** aqui» y sale sin los
+        # asteriscos), además de tragarse toda la salida de QTest. Eso hacía
+        # fallar 7 pruebas —round-trip, pegado enriquecido, importadores,
+        # notas al pie y los 12 goldens, todos más cortos de la cuenta— por un
+        # defecto del entorno de pruebas, no del editor: con el plugin nativo
+        # pasan todas. Los runners de Windows tienen sesión de escritorio, así
+        # que el plugin nativo funciona sin más.
+        if(WIN32)
+            set(_qpa "windows")
+        else()
+            set(_qpa "offscreen")
+        endif()
         set_tests_properties(${test} PROPERTIES
-            ENVIRONMENT "QT_QPA_PLATFORM=offscreen")
+            ENVIRONMENT "QT_QPA_PLATFORM=${_qpa}")
     endforeach()
 
     # Los golden tests necesitan la ruta a las referencias en el árbol fuente.
