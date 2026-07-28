@@ -18,6 +18,8 @@ toolbar and, on save, the editor writes them for you.
 - [Horizontal rules](#horizontal-rules)
 - [Tables](#tables)
 - [Math formulas](#math-formulas)
+- [Extensions supported by md-editor](#extensions-supported-by-md-editor)
+- [Front matter](#front-matter)
 - [Escapes](#escapes)
 
 ## Paragraphs and line breaks
@@ -159,6 +161,61 @@ them with italics or bold.
 In md-editor formulas appear rendered with real super- and subscripts (not
 as literal `$x^2$`). Insert one with **Insert → Formula…** (Ctrl+Shift+F) or
 double-click an existing one to edit it.
+
+## Extensions supported by md-editor
+
+Besides everything above — which is standard Markdown — md-editor understands
+four widely used conventions. They are not part of original Markdown, so another
+editor may show them as literal text; the file itself is saved as is, so nothing
+is lost.
+
+**Highlight** (GitHub/Obsidian style): two equals signs on each side.
+
+```
+This is ==highlighted== as if with a marker pen.
+```
+
+**Superscript and subscript** (Pandoc style): caret and tilde.
+
+```
+The area is 12 m^2^ and the formula for water is H~2~O.
+```
+
+**Admonitions** or *callouts* (GitHub style): a quote whose first line is a tag
+in brackets. Valid tags are `[!NOTE]`, `[!TIP]`, `[!IMPORTANT]`, `[!WARNING]`
+and `[!CAUTION]`.
+
+```
+> [!WARNING]
+> This step deletes the previous data.
+```
+
+**Diagrams**: a code block with the language `mermaid` or `plantuml`. The editor
+previews it as an image below the block if you have the corresponding tool
+installed.
+
+````
+```mermaid
+flowchart LR
+  A --> B --> C
+```
+````
+
+## Front matter
+
+Many site generators (Jekyll, Hugo, Quarto…) start the file with a metadata
+block between `---` (YAML) or `+++` (TOML):
+
+```
+---
+title: Annual report
+lang: en
+---
+```
+
+md-editor keeps it **as is** when saving: it is neither edited nor shown in the
+editor. It takes `title` and `lang` from there when exporting and to pick the
+spell checker dictionary.
 
 ## Escapes
 

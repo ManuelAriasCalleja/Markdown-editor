@@ -18,6 +18,8 @@ e, al salvataggio, l'editor li genera per te.
 - [Righe orizzontali](#righe-orizzontali)
 - [Tabelle](#tabelle)
 - [Formule matematiche](#formule-matematiche)
+- [Estensioni supportate da md-editor](#estensioni-supportate-da-md-editor)
+- [Front matter](#front-matter)
 - [Escape](#escape)
 
 ## Paragrafi e interruzioni di riga
@@ -160,6 +162,61 @@ li confonda con corsivo o grassetto.
 In md-editor le formule appaiono renderizzate con veri apici e pedici (non come
 `$x^2$` letterale). Inseriscine una con **Inserisci → Formula…** (Ctrl+Shift+F) o
 fai doppio clic su una esistente per modificarla.
+
+## Estensioni supportate da md-editor
+
+Oltre a quanto sopra — che è Markdown standard —, md-editor capisce quattro
+convenzioni molto diffuse. Non fanno parte del Markdown originale, quindi un
+altro editor può mostrarle come testo letterale; il file, in ogni caso, viene
+salvato così com'è e non si perde nulla.
+
+**Evidenziazione** (stile GitHub/Obsidian): due segni di uguale per lato.
+
+```
+Questo è ==evidenziato== come con un evidenziatore.
+```
+
+**Apice e pedice** (stile Pandoc): accento circonflesso e tilde.
+
+```
+L'area è 12 m^2^ e la formula dell'acqua è H~2~O.
+```
+
+**Ammonizioni** o *callout* (stile GitHub): una citazione la cui prima riga è
+un'etichetta tra parentesi quadre. Valgono `[!NOTE]`, `[!TIP]`, `[!IMPORTANT]`,
+`[!WARNING]` e `[!CAUTION]`.
+
+```
+> [!WARNING]
+> Questo passaggio cancella i dati precedenti.
+```
+
+**Diagrammi**: un blocco di codice con linguaggio `mermaid` o `plantuml`.
+L'editor ne mostra un'anteprima come immagine sotto il blocco se hai installato
+lo strumento corrispondente.
+
+````
+```mermaid
+flowchart LR
+  A --> B --> C
+```
+````
+
+## Front matter
+
+Molti generatori di siti (Jekyll, Hugo, Quarto…) iniziano il file con un blocco
+di metadati tra `---` (YAML) o `+++` (TOML):
+
+```
+---
+title: Relazione annuale
+lang: it
+---
+```
+
+md-editor lo conserva **così com'è** al salvataggio: non si modifica né si vede
+nell'editor. Da lì prende `title` e `lang` per l'esportazione e per scegliere il
+dizionario del correttore.
 
 ## Escape
 

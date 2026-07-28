@@ -70,6 +70,8 @@ You can have several documents open at once, each in its own **tab**:
 - **Reopen closed tab** (Ctrl+Shift+R) reopens the last tab you closed (only
   those that had a file on disk).
 - The label shows the file name and a dot (•) when there are unsaved changes.
+- **Right-clicking** a tab offers **Open containing folder**, **Copy file name**
+  and **Copy full path**.
 - On closing the application the open documents are remembered and all reopened
   the next time you start.
 
@@ -84,9 +86,9 @@ used for metadata such as `title`, `lang`, etc., which are used when exporting.
 Select a fragment and apply formatting with the toolbar or the **Format** menu:
 
 - **Bold** (Ctrl+B), **Italic** (Ctrl+I), **Underline** (Ctrl+U),
-  **Strikethrough**.
-- **Inline code** for `monospaced` fragments.
-- **Link**: adds `[text](url)` over the selection.
+  **Strikethrough** (Ctrl+Shift+X).
+- **Inline code** (Ctrl+E) for `monospaced` fragments.
+- **Link** (Ctrl+K): adds `[text](url)` over the selection.
 - **Highlight** (Ctrl+Shift+H): wraps the selection in `==mark==`; the text is shown
   with a highlight background. Since `==` isn't standard Markdown syntax, it's saved
   as literal text.
@@ -110,20 +112,26 @@ numbered list. Produces the same format as the toolbar.
 - **Headings** H1–H6 from **Format → Heading** or with Ctrl+1 … Ctrl+6.
   **Promote/demote** the heading at the cursor by one level with
   Ctrl+Shift+[ / Ctrl+Shift+].
-- **Lists**: bullets, numbered and task lists (with a checkbox). Pressing Enter
+- **Lists**: bullets (Ctrl+Shift+U), numbered (Ctrl+Shift+O) and task lists
+  (Ctrl+Shift+T, with a checkbox). Pressing Enter
   at the end of an item automatically creates the next one; Enter on an empty
   item leaves the list. A **click on the checkbox** of a task toggles it.
-- **Quote** (`>` at the start of a paragraph) and **code block** are applied
+- **Quote** (Ctrl+Shift+Q, `>` at the start of a paragraph) and **code block**
+  (Ctrl+Shift+K) are applied
   from the toolbar; both round-trip to Markdown correctly. With **Format → Block
   language…** you choose the language of a code block (with the cursor inside it)
   so its syntax gets highlighted.
 - When you **hover** over a code block, its **language** (click to change it) and a **copy** button appear in the top-right corner.
-- **Indentation**: **Format → Increase/Decrease indent** nests lists and quotes.
+- **Indentation**: **Format → Increase/Decrease indent** (Ctrl+] / Ctrl+[) nests
+  lists and quotes.
 
 ## Transforming text and the clipboard
 
-- **Edit → Transform text** acts on the selection: **UPPERCASE**, **lowercase**,
-  **Capitalize** and **Sort lines**.
+- **Edit → Transform text** changes the case of the text: **UPPERCASE**,
+  **lowercase** and **Capitalize**. It acts on the selection or, if there is no
+  selection, on the word under the cursor.
+- **Edit → Sort lines** sorts the selected lines alphabetically. This one does
+  need a selection: without one it does nothing.
 - **Smart typography** (in the same menu) converts the dashes `--`/`---` in the
   selection to `–`/`—`, `...` to `…` and straight quotes to typographic ones
   according to context.
@@ -147,10 +155,15 @@ numbered list. Produces the same format as the toolbar.
   it is used as the text.
 - **Ctrl+click** on a link opens it in the system browser; hovering over it
   shows the URL in a tooltip next to the cursor and in the status bar.
-- **Images**: drag a file, paste an image from the clipboard or use **Insert →
-  Paste image**. The image is saved as PNG next to the `.md` and inserted as
-  `![alt](relative-path)`; this way it survives the round-trip to Markdown
+- **Insert → Image…** asks for the alternative text and the file path (or a
+  URL). If the document is already saved, the path is written **relative** to the
+  `.md`, so the document stays portable.
+- **Pasting an image** from the clipboard (Ctrl+V, or **Insert → Paste image**)
+  saves it as PNG next to the `.md` and inserts it as `![alt](relative-path)`
+  instead of embedding it: this way it survives the round-trip to Markdown
   (embedded images do not).
+- Dragging an image file onto the window does **not** insert it: like any other
+  file, it is opened in a tab.
 
 ## Footnotes
 
@@ -168,6 +181,8 @@ numbered list. Produces the same format as the toolbar.
   line is `[!NOTE]`, `[!TIP]`, `[!IMPORTANT]`, `[!WARNING]` or `[!CAUTION]`. It
   is shown with a tinted background and a colored title, and is saved as
   GitHub-compatible Markdown.
+- **Insert → Horizontal rule** inserts a separator line (`---` in Markdown)
+  between blocks.
 - **Insert → Special symbols…** opens a character map by categories
   (mathematical, Greek, arrows, currency, punctuation…); a click inserts the
   symbol and the dialog stays open to insert several.
@@ -195,7 +210,8 @@ repeat…
 
 - When the cursor is **inside a table**, a **floating bar** appears above it with buttons to insert/delete rows and columns and align the column.
 - **Tab** moves to the next cell and **Shift+Tab** to the previous one; **Tab** in the last cell adds a row.
-- **Table → Insert table…** asks for rows and columns.
+- **Insert → Table…** asks for rows and columns and creates the table where the
+  cursor is.
 - **Insert → Table from clipboard** turns TSV/CSV data (columns separated by tabs
   or commas) copied from a spreadsheet or a CSV file into a table.
 - The **Table** menu actions (add/remove row or column, align column) are only
@@ -255,6 +271,10 @@ saved Markdown.
   operating system appears below the block; the block stays as code.
 - The image is presentation only: it is not written to the Markdown and does not
   count as an unsaved change.
+- **View → Preview diagrams** turns this automatic preview on or off (on by
+  default). Turn it off if you prefer to keep the blocks as code — for instance
+  when you already insert a pre-rendered image below the block yourself and don't
+  want to see it twice.
 
 For example, a code block tagged `mermaid` containing `flowchart LR  A --> B
 --> C` is previewed as the corresponding flowchart.
@@ -275,8 +295,11 @@ For example, a code block tagged `mermaid` containing `flowchart LR  A --> B
 ## Find and replace
 
 - **Find** (Ctrl+F) opens a bottom bar with fields to find and replace, plus
-  options (case, whole word).
-- **Find next** F3 / **Find previous** Shift+F3.
+  options (match case, whole word, regex). **Replace…** (Ctrl+H) opens the same
+  bar with the focus on the replace field. ESC closes it.
+- **Find next** (F3) and **Find previous** (Shift+F3) repeat the last search
+  without going back to the bar, even if it is closed; if you haven't searched
+  for anything yet, F3 opens the bar. The search wraps around at the end.
 - The bar highlights **all** matches in the document and shows an **"N of M"** counter (which match you're on, out of how many). **Replace all** replaces them all at once.
 
 ## Document outline
@@ -302,8 +325,9 @@ number (in the source view, to the Markdown line). The **Command palette**
 
 ## Document statistics
 
-- **View → Document statistics…** shows words, characters, paragraphs, sentences
-  and estimated reading time (of the document or the selection).
+- **View → Document statistics…** shows words, characters (with and without
+  spaces), paragraphs, sentences and estimated reading time (of the document or
+  the selection).
 - **View → Show word count** enables a permanent counter in the status bar.
 - **View → Show line and column** shows the cursor position (line and column) in
   the status bar.
@@ -396,17 +420,24 @@ were writing.
 | Save                      | Ctrl+S           |
 | Save as                   | Ctrl+Shift+S     |
 | Print                     | Ctrl+P           |
+| Preferences               | Ctrl+,           |
 | Undo / Redo               | Ctrl+Z / Ctrl+Y  |
 | Bold / Italic             | Ctrl+B / Ctrl+I  |
+| Underline / Strikethrough | Ctrl+U / Ctrl+Shift+X |
+| Inline code               | Ctrl+E           |
+| Link                      | Ctrl+K           |
 | Highlight (==mark==)      | Ctrl+Shift+H     |
 | Superscript / Subscript   | Ctrl+Shift++ / Ctrl+Shift+- |
-| Underline                 | Ctrl+U           |
 | Paste as plain text       | Ctrl+Shift+V     |
 | Paste as Markdown         | Ctrl+Alt+V       |
-| Find                      | Ctrl+F           |
+| Find / Replace            | Ctrl+F / Ctrl+H  |
 | Find next/previous        | F3 / Shift+F3    |
 | Heading H1 … H6           | Ctrl+1 … Ctrl+6  |
 | Promote / demote heading  | Ctrl+Shift+[ / Ctrl+Shift+] |
+| Bullet / numbered / task list | Ctrl+Shift+U / Ctrl+Shift+O / Ctrl+Shift+T |
+| Increase / decrease indent | Ctrl+] / Ctrl+[ |
+| Quote                     | Ctrl+Shift+Q     |
+| Code block                | Ctrl+Shift+K     |
 | Insert formula            | Ctrl+Shift+F     |
 | Insert footnote           | Ctrl+Shift+N     |
 | Go to heading             | Ctrl+G           |
@@ -422,3 +453,8 @@ were writing.
 | Focus Mode                | F12              |
 | Zoom + / − / Normal       | Ctrl++ / Ctrl+− / Ctrl+0 |
 | Help                      | F1               |
+
+> **Ctrl+Shift+K** does two things depending on where you are: in the visual
+> editor it applies a **code block**; in the source view it **deletes the line**.
+> They don't clash because the formatting actions are disabled while the source
+> panel has the focus.

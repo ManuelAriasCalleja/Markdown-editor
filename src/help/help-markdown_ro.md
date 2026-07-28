@@ -18,6 +18,8 @@ instrumente și, la salvare, editorul le generează pentru tine.
 - [Linii orizontale](#linii-orizontale)
 - [Tabele](#tabele)
 - [Formule matematice](#formule-matematice)
+- [Extensii acceptate de md-editor](#extensii-acceptate-de-md-editor)
+- [Front matter](#front-matter)
 - [Escape-uri](#escape-uri)
 
 ## Paragrafe și întreruperi de linie
@@ -159,6 +161,60 @@ să nu le confunde cu cursive sau îngroșat.
 În md-editor formulele apar randate cu superscripte și subscripte reale (nu ca
 `$x^2$` literal). Inserează una cu **Inserare → Formulă…** (Ctrl+Shift+F) sau
 dă dublu clic pe una existentă pentru a o edita.
+
+## Extensii acceptate de md-editor
+
+Pe lângă cele de mai sus — care sunt Markdown standard —, md-editor înțelege
+patru convenții foarte răspândite. Ele nu fac parte din Markdown-ul original,
+așa că un alt editor le poate afișa ca text literal; fișierul, oricum, se
+salvează ca atare și nu se pierde nimic.
+
+**Evidențiere** (stil GitHub/Obsidian): două semne egal de fiecare parte.
+
+```
+Acesta este ==evidențiat== ca de un marker.
+```
+
+**Exponent și indice** (stil Pandoc): accent circumflex și tildă.
+
+```
+Aria este 12 m^2^, iar formula apei este H~2~O.
+```
+
+**Admoniții** sau *callout*-uri (stil GitHub): un citat a cărui primă linie este
+o etichetă între paranteze drepte. Sunt valide `[!NOTE]`, `[!TIP]`,
+`[!IMPORTANT]`, `[!WARNING]` și `[!CAUTION]`.
+
+```
+> [!WARNING]
+> Acest pas șterge datele anterioare.
+```
+
+**Diagrame**: un bloc de cod cu limbajul `mermaid` sau `plantuml`. Editorul îl
+previzualizează ca imagine sub bloc dacă ai instalat unealta corespunzătoare.
+
+````
+```mermaid
+flowchart LR
+  A --> B --> C
+```
+````
+
+## Front matter
+
+Multe generatoare de site-uri (Jekyll, Hugo, Quarto…) încep fișierul cu un bloc
+de metadate între `---` (YAML) sau `+++` (TOML):
+
+```
+---
+title: Raport anual
+lang: ro
+---
+```
+
+md-editor îl păstrează **ca atare** la salvare: nu se editează și nu se vede în
+editor. De acolo ia `title` și `lang` la export și pentru a alege dicționarul
+corectorului ortografic.
 
 ## Escape-uri
 

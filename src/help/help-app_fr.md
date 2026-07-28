@@ -73,6 +73,8 @@ Vous pouvez avoir plusieurs documents ouverts à la fois, chacun dans son **ongl
   nouveau document.
 - **Rouvrir l'onglet fermé** (Ctrl+Maj+R) rouvre le dernier onglet que vous avez
   fermé (seulement ceux qui avaient un fichier sur le disque).
+- Un **clic droit** sur un onglet propose **Ouvrir le dossier contenant**,
+  **Copier le nom du fichier** et **Copier le chemin complet**.
 - L'étiquette affiche le nom du fichier et un point (•) en cas de modifications non
   enregistrées.
 - À la fermeture de l'application, les documents ouverts sont mémorisés et tous
@@ -90,9 +92,10 @@ l'export.
 Sélectionnez un fragment et appliquez la mise en forme via la barre d'outils ou
 le menu **Format** :
 
-- **Gras** (Ctrl+B), **Italique** (Ctrl+I), **Souligné** (Ctrl+U), **Barré**.
-- **Code en ligne** pour les fragments en `chasse fixe`.
-- **Lien** : ajoute `[texte](url)` sur la sélection.
+- **Gras** (Ctrl+B), **Italique** (Ctrl+I), **Souligné** (Ctrl+U),
+  **Barré** (Ctrl+Maj+X).
+- **Code en ligne** (Ctrl+E) pour les fragments en `chasse fixe`.
+- **Lien** (Ctrl+K) : ajoute `[texte](url)` sur la sélection.
 - **Surligner** (Ctrl+Maj+H) : entoure la sélection de `==marque==` ; le texte
   s'affiche avec un fond de surlignage. Comme `==` n'est pas une syntaxe Markdown
   standard, c'est enregistré comme texte littéral.
@@ -116,21 +119,26 @@ d'un espace transforme la ligne sur place (sans laisser le marqueur) : `#` …
 - **Titres** H1–H6 depuis **Format → Titre** ou avec Ctrl+1 … Ctrl+6.
   **Promouvoir/abaisser** le titre au curseur d'un niveau avec
   Ctrl+Maj+[ / Ctrl+Maj+].
-- **Listes** : à puces, numérotées et de tâches (avec case). Entrée à la fin d'un
+- **Listes** : à puces (Ctrl+Maj+U), numérotées (Ctrl+Maj+O) et de tâches
+  (Ctrl+Maj+T, avec case). Entrée à la fin d'un
   point crée automatiquement le suivant ; Entrée sur un point vide quitte la
   liste. Un **clic sur la case** d'une tâche la coche ou la décoche.
-- **Citation** (`>` au début d'un paragraphe) et **bloc de code** s'appliquent
+- **Citation** (Ctrl+Maj+Q, `>` au début d'un paragraphe) et **bloc de code**
+  (Ctrl+Maj+K) s'appliquent
   depuis la barre ; les deux font correctement l'aller-retour vers Markdown. Avec
   **Format → Langage du bloc…** vous choisissez le langage d'un bloc de code (le
   curseur étant à l'intérieur) pour que sa syntaxe soit colorée.
 - Lorsque vous **survolez** un bloc de code, son **langage** (cliquez pour le changer) et un bouton **copier** apparaissent en haut à droite.
-- **Indentation** : **Format → Augmenter/Diminuer l'indentation** imbrique listes
-  et citations.
+- **Indentation** : **Format → Augmenter/Diminuer l'indentation** (Ctrl+] /
+  Ctrl+[) imbrique listes et citations.
 
 ## Transformer le texte et le presse-papiers
 
-- **Édition → Transformer le texte** agit sur la sélection : **MAJUSCULES**,
-  **minuscules**, **Capitaliser** et **Trier les lignes**.
+- **Édition → Transformer le texte** change la casse du texte : **MAJUSCULES**,
+  **minuscules** et **Capitaliser**. Agit sur la sélection ou, à défaut de
+  sélection, sur le mot où se trouve le curseur.
+- **Édition → Trier les lignes** trie alphabétiquement les lignes sélectionnées.
+  Ici une sélection est indispensable : sans elle, rien ne se passe.
 - **Typographie intelligente** (dans le même menu) convertit dans la sélection
   les tirets `--`/`---` en `–`/`—`, `...` en `…` et les guillemets droits en
   guillemets typographiques selon le contexte.
@@ -154,10 +162,15 @@ d'un espace transforme la ligne sur place (sans laisser le marqueur) : `#` …
   sélection existante est reprise comme texte.
 - **Ctrl+clic** sur un lien l'ouvre dans le navigateur du système ; au survol,
   l'URL s'affiche dans une info-bulle près du curseur et dans la barre d'état.
-- **Images** : glissez un fichier, collez une image du presse-papiers ou utilisez
-  **Insérer → Coller l'image**. L'image est enregistrée en PNG à côté du `.md` et
-  insérée comme `![alt](chemin-relatif)` ; ainsi elle survit à l'aller-retour vers
-  Markdown (pas les images incrustées).
+- **Insérer → Image…** demande le texte alternatif et le chemin du fichier (ou
+  une URL). Si le document est déjà enregistré, le chemin est écrit **relatif** au
+  `.md`, pour que le document reste portable.
+- **Coller une image** du presse-papiers (Ctrl+V, ou **Insérer → Coller
+  l'image**) l'enregistre en PNG à côté du `.md` et l'insère comme
+  `![alt](chemin-relatif)` au lieu de l'incruster : ainsi elle survit à
+  l'aller-retour vers Markdown (pas les images incrustées).
+- Glisser un fichier image sur la fenêtre ne l'insère **pas** : comme tout autre
+  fichier, il s'ouvre dans un onglet.
 
 ## Notes de bas de page
 
@@ -175,6 +188,8 @@ d'un espace transforme la ligne sur place (sans laisser le marqueur) : `#` …
   première ligne est `[!NOTE]`, `[!TIP]`, `[!IMPORTANT]`, `[!WARNING]` ou
   `[!CAUTION]`. Il s'affiche avec un fond teinté et un titre en couleur, et est
   enregistré en Markdown compatible GitHub.
+- **Insérer → Ligne horizontale** insère une ligne de séparation (`---` en
+  Markdown) entre les blocs.
 - **Insérer → Symboles spéciaux…** ouvre une table de caractères par catégories
   (mathématiques, grec, flèches, monnaie, ponctuation…) ; un clic insère le
   symbole et la boîte reste ouverte pour en insérer plusieurs.
@@ -202,7 +217,8 @@ vous répétez souvent…
 
 - Lorsque le curseur est **dans un tableau**, une **barre flottante** apparaît au-dessus avec des boutons pour insérer/supprimer des lignes et des colonnes et aligner la colonne.
 - **Tab** passe à la cellule suivante et **Maj+Tab** à la précédente ; **Tab** dans la dernière cellule ajoute une ligne.
-- **Tableau → Insérer un tableau…** demande lignes et colonnes.
+- **Insertion → Tableau…** demande lignes et colonnes et crée le tableau à
+  l'emplacement du curseur.
 - **Insertion → Tableau depuis le presse-papiers** convertit en tableau les données
   TSV/CSV (colonnes séparées par des tabulations ou des virgules) copiées depuis un
   tableur ou un fichier CSV.
@@ -265,6 +281,10 @@ Markdown enregistré.
   d'exploitation apparaît sous le bloc ; le bloc reste du code.
 - L'image n'est que de la présentation : elle n'est pas écrite dans le Markdown et
   ne compte pas comme une modification non enregistrée.
+- **Affichage → Aperçu des diagrammes** active ou désactive cet aperçu
+  automatique (activé par défaut). Désactivez-le si vous préférez laisser les
+  blocs sous forme de code — par exemple lorsque vous insérez vous-même une image
+  pré-rendue sous le bloc et ne voulez pas la voir en double.
 
 Par exemple, un bloc de code étiqueté `mermaid` contenant `flowchart LR  A --> B
 --> C` est prévisualisé comme l'organigramme correspondant.
@@ -287,8 +307,12 @@ Par exemple, un bloc de code étiqueté `mermaid` contenant `flowchart LR  A -->
 ## Rechercher et remplacer
 
 - **Rechercher** (Ctrl+F) ouvre une barre en bas avec des champs pour rechercher
-  et remplacer, ainsi que des options (casse, mot entier).
-- **Suivant** F3 / **Précédent** Maj+F3.
+  et remplacer, ainsi que des options (casse, mot entier, regex).
+  **Remplacer…** (Ctrl+H) ouvre la même barre avec le focus sur le champ de
+  remplacement. ÉCHAP la ferme.
+- **Suivant** (F3) et **Précédent** (Maj+F3) répètent la dernière recherche sans
+  repasser par la barre, même si elle est fermée ; si vous n'avez encore rien
+  cherché, F3 ouvre la barre. La recherche reboucle à la fin du document.
 - La barre surligne **toutes** les correspondances du document et affiche un compteur **« N sur M »** (la correspondance actuelle, sur le total). **Tout remplacer** les remplace toutes d'un coup.
 
 ## Plan du document
@@ -315,9 +339,9 @@ action des menus en tapant une partie de son nom.
 
 ## Statistiques du document
 
-- **Affichage → Statistiques du document…** affiche mots, caractères,
-  paragraphes, phrases et temps de lecture estimé (du document ou de la
-  sélection).
+- **Affichage → Statistiques du document…** affiche mots, caractères (avec et
+  sans espaces), paragraphes, phrases et temps de lecture estimé (du document ou
+  de la sélection).
 - **Affichage → Afficher le compteur de mots** active un compteur permanent dans
   la barre d'état.
 - **Affichage → Afficher la ligne et la colonne** affiche la position du curseur
@@ -414,17 +438,24 @@ elle propose à la réouverture de récupérer ce que vous étiez en train d'éc
 | Enregistrer               | Ctrl+S           |
 | Enregistrer sous          | Ctrl+Maj+S       |
 | Imprimer                  | Ctrl+P           |
+| Préférences               | Ctrl+,           |
 | Annuler / Rétablir        | Ctrl+Z / Ctrl+Y  |
 | Gras / Italique           | Ctrl+B / Ctrl+I  |
+| Souligné / Barré          | Ctrl+U / Ctrl+Maj+X |
+| Code en ligne             | Ctrl+E           |
+| Lien                      | Ctrl+K           |
 | Surligner (==marque==)    | Ctrl+Maj+H       |
 | Exposant / Indice         | Ctrl+Maj++ / Ctrl+Maj+- |
-| Souligné                  | Ctrl+U           |
 | Coller comme texte brut   | Ctrl+Maj+V       |
 | Coller comme Markdown     | Ctrl+Alt+V       |
-| Rechercher                | Ctrl+F           |
+| Rechercher / Remplacer    | Ctrl+F / Ctrl+H  |
 | Suivant / Précédent       | F3 / Maj+F3      |
 | Titre H1 … H6             | Ctrl+1 … Ctrl+6  |
 | Promouvoir / abaisser le titre | Ctrl+Maj+[ / Ctrl+Maj+] |
+| Liste à puces / numérotée / de tâches | Ctrl+Maj+U / Ctrl+Maj+O / Ctrl+Maj+T |
+| Augmenter / diminuer l'indentation | Ctrl+] / Ctrl+[ |
+| Citation                  | Ctrl+Maj+Q       |
+| Bloc de code              | Ctrl+Maj+K       |
 | Insérer une formule       | Ctrl+Maj+F       |
 | Insérer une note          | Ctrl+Maj+N       |
 | Aller au titre            | Ctrl+G           |
@@ -440,3 +471,8 @@ elle propose à la réouverture de récupérer ce que vous étiez en train d'éc
 | Mode focus                | F12              |
 | Zoom + / − / Normal       | Ctrl++ / Ctrl+− / Ctrl+0 |
 | Aide                      | F1               |
+
+> **Ctrl+Maj+K** fait deux choses selon l'endroit : dans l'éditeur visuel il
+> applique un **bloc de code** ; dans la vue du code source il **supprime la
+> ligne**. Il n'y a pas de conflit car les actions de mise en forme sont
+> désactivées tant que le panneau du code a le focus.

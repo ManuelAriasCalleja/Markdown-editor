@@ -18,6 +18,8 @@ en, bij het opslaan, schrijft de editor ze voor je.
 - [Horizontale lijnen](#horizontale-lijnen)
 - [Tabellen](#tabellen)
 - [Wiskundige formules](#wiskundige-formules)
+- [Uitbreidingen die md-editor ondersteunt](#uitbreidingen-die-md-editor-ondersteunt)
+- [Front matter](#front-matter)
 - [Escapes](#escapes)
 
 ## Alinea's en regeleinden
@@ -160,6 +162,61 @@ cursief of vet.
 In md-editor verschijnen formules weergegeven met echte super- en subscripts
 (niet als letterlijke `$x^2$`). Voeg er een in met **Invoegen → Formule…**
 (Ctrl+Shift+F) of dubbelklik op een bestaande om die te bewerken.
+
+## Uitbreidingen die md-editor ondersteunt
+
+Naast het bovenstaande — dat standaard Markdown is — begrijpt md-editor vier
+veelgebruikte conventies. Ze horen niet bij het oorspronkelijke Markdown, dus een
+andere editor kan ze als letterlijke tekst tonen; het bestand wordt hoe dan ook
+onveranderd opgeslagen, er gaat dus niets verloren.
+
+**Markering** (stijl GitHub/Obsidian): twee ist-gelijk-tekens aan elke kant.
+
+```
+Dit is ==gemarkeerd== als met een markeerstift.
+```
+
+**Superscript en subscript** (Pandoc-stijl): dakje en tilde.
+
+```
+De oppervlakte is 12 m^2^ en de formule van water is H~2~O.
+```
+
+**Aandachtsblokken** of *callouts* (GitHub-stijl): een citaat waarvan de eerste
+regel een label tussen vierkante haken is. Geldig zijn `[!NOTE]`, `[!TIP]`,
+`[!IMPORTANT]`, `[!WARNING]` en `[!CAUTION]`.
+
+```
+> [!WARNING]
+> Deze stap wist de eerdere gegevens.
+```
+
+**Diagrammen**: een codeblok met de taal `mermaid` of `plantuml`. De editor toont
+er een voorvertoning als afbeelding onder het blok, als je het bijbehorende
+programma hebt geïnstalleerd.
+
+````
+```mermaid
+flowchart LR
+  A --> B --> C
+```
+````
+
+## Front matter
+
+Veel sitegeneratoren (Jekyll, Hugo, Quarto…) beginnen het bestand met een blok
+metagegevens tussen `---` (YAML) of `+++` (TOML):
+
+```
+---
+title: Jaarverslag
+lang: nl
+---
+```
+
+md-editor bewaart het bij het opslaan **onveranderd**: het wordt niet bewerkt en
+niet in de editor getoond. Daaruit haalt hij `title` en `lang` bij het exporteren
+en om het woordenboek van de spellingcontrole te kiezen.
 
 ## Escapes
 

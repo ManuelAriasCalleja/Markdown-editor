@@ -7,8 +7,8 @@ narzędzi, a przy zapisie edytor zapisuje je za Ciebie.
 
 ## Spis treści
 
-- [Akapity i podziały wiersza](#akapity-i-podzialy-wiersza)
-- [Nagłówki](#naglowki)
+- [Akapity i podziały wiersza](#akapity-i-podziały-wiersza)
+- [Nagłówki](#nagłowki)
 - [Wyróżnienia](#wyroznienia)
 - [Listy](#listy)
 - [Cytaty](#cytaty)
@@ -18,6 +18,8 @@ narzędzi, a przy zapisie edytor zapisuje je za Ciebie.
 - [Linie poziome](#linie-poziome)
 - [Tabele](#tabele)
 - [Wzory matematyczne](#wzory-matematyczne)
+- [Rozszerzenia obsługiwane przez md-editor](#rozszerzenia-obsługiwane-przez-md-editor)
+- [Front matter](#front-matter)
 - [Znaki ucieczki](#znaki-ucieczki)
 
 ## Akapity i podziały wiersza
@@ -160,6 +162,60 @@ kursywą czy pogrubieniem.
 W md-editor wzory są wyświetlane z prawdziwymi indeksami górnymi i dolnymi
 (nie jako dosłowne `$x^2$`). Wstaw wzór z menu **Wstaw → Wzór…**
 (Ctrl+Shift+F) lub kliknij dwukrotnie istniejący, aby go edytować.
+
+## Rozszerzenia obsługiwane przez md-editor
+
+Poza powyższym — czyli standardowym Markdown — md-editor rozumie cztery bardzo
+rozpowszechnione konwencje. Nie należą do pierwotnego Markdown, więc inny edytor
+może pokazać je jako zwykły tekst; plik i tak zapisuje się bez zmian, więc nic
+nie ginie.
+
+**Wyróżnienie** (styl GitHub/Obsidian): po dwa znaki równości z każdej strony.
+
+```
+To jest ==wyróżnione== jak zakreślaczem.
+```
+
+**Indeks górny i dolny** (styl Pandoc): daszek i tylda.
+
+```
+Pole wynosi 12 m^2^, a wzór wody to H~2~O.
+```
+
+**Wyróżnione bloki** (*callouts*, styl GitHub): cytat, którego pierwszy wiersz
+jest etykietą w nawiasach kwadratowych. Dozwolone są `[!NOTE]`, `[!TIP]`,
+`[!IMPORTANT]`, `[!WARNING]` i `[!CAUTION]`.
+
+```
+> [!WARNING]
+> Ten krok usuwa wcześniejsze dane.
+```
+
+**Diagramy**: blok kodu z językiem `mermaid` lub `plantuml`. Edytor pokazuje pod
+blokiem podgląd w postaci obrazu, jeśli masz zainstalowane odpowiednie narzędzie.
+
+````
+```mermaid
+flowchart LR
+  A --> B --> C
+```
+````
+
+## Front matter
+
+Wiele generatorów stron (Jekyll, Hugo, Quarto…) zaczyna plik blokiem metadanych
+między `---` (YAML) albo `+++` (TOML):
+
+```
+---
+title: Raport roczny
+lang: pl
+---
+```
+
+md-editor zachowuje go przy zapisie **bez zmian**: nie jest edytowany ani
+pokazywany w edytorze. Stamtąd bierze `title` i `lang` przy eksporcie oraz do
+wyboru słownika korektora pisowni.
 
 ## Znaki ucieczki
 

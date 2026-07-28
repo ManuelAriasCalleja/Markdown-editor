@@ -264,9 +264,10 @@ añadir lógica nueva: hay un `tst_*` por módulo.
   provoca no realimenten el bucle. `flushPendingSync()` (en `focusChanged`) vacía
   el timer pendiente al cambiar de panel para que el destino llegue al día. Se
   preserva el scroll del panel refrescado.
-- **Temas y luz cálida nocturna.** `ThemeController` aplica uno de los 6 temas del
+- **Temas y luz cálida nocturna.** `ThemeController` aplica uno de los 8 temas del
   catálogo declarativo `mdtheme`/`ThemeSpec` (Claro, Oscuro, GitHub Light, GitHub
-  Dark, Monokai, Alto contraste), persiste la clave `theme` (con migración del
+  Dark, Monokai, Alto contraste, Solarized Light, Solarized Dark), persiste la
+  clave `theme` (con migración del
   antiguo booleano `darkTheme`) y recolorea enlaces + resaltado al cambiar. Sobre
   cualquier tema se superpone, **ortogonalmente**, la **luz cálida nocturna**
   (toggle `warmLight`, **activo por defecto**): un tinte cálido **automático y

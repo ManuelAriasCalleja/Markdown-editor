@@ -73,6 +73,8 @@ Puedes tener varios documentos abiertos a la vez, cada uno en su **pestaña**:
   cerraste (solo las que tenían archivo en disco).
 - La etiqueta muestra el nombre del archivo y un punto (•) si hay cambios sin
   guardar.
+- **Clic derecho** sobre una pestaña ofrece **Abrir carpeta contenedora**,
+  **Copiar nombre del archivo** y **Copiar ruta completa**.
 - Al cerrar la aplicación se recuerdan los documentos abiertos y se reabren todos
   al volver a arrancar.
 
@@ -88,9 +90,9 @@ Selecciona un fragmento y aplica el formato con la barra de herramientas o el
 menú **Formato**:
 
 - **Negrita** (Ctrl+B), **Cursiva** (Ctrl+I), **Subrayado** (Ctrl+U),
-  **Tachado**.
-- **Código en línea** para fragmentos `monoespaciados`.
-- **Enlace**: añade `[texto](url)` sobre la selección.
+  **Tachado** (Ctrl+Shift+X).
+- **Código en línea** (Ctrl+E) para fragmentos `monoespaciados`.
+- **Enlace** (Ctrl+K): añade `[texto](url)` sobre la selección.
 - **Resaltar** (Ctrl+Shift+H): envuelve la selección en `==marca==`; el texto se
   muestra con fondo de resaltado. Como `==` no es sintaxis Markdown estándar, se
   guarda como texto literal.
@@ -113,21 +115,27 @@ viñetas; `1.` (o `1)`) → lista numerada. Produce el mismo formato que la barr
 - **Encabezados** H1–H6 desde **Formato → Encabezado** o con
   Ctrl+1 … Ctrl+6. **Promover/degradar** el encabezado del cursor un nivel con
   Ctrl+Shift+[ / Ctrl+Shift+].
-- **Listas**: viñetas, numeradas y de tareas (con casilla). Pulsando Enter al
+- **Listas**: viñetas (Ctrl+Shift+U), numeradas (Ctrl+Shift+O) y de tareas
+  (Ctrl+Shift+T, con casilla). Pulsando Enter al
   final de un punto se crea el siguiente automáticamente; con Enter sobre un
   punto vacío se sale de la lista. Un **clic sobre la casilla** de una tarea la
   marca o desmarca.
-- **Cita** (`>` al principio de un párrafo) y **bloque de código** se aplican
+- **Cita** (Ctrl+Shift+Q, `>` al principio de un párrafo) y **bloque de código**
+  (Ctrl+Shift+K) se aplican
   desde la barra; ambos round-trip-ean a Markdown correctamente. Con **Formato →
   Lenguaje del bloque…** eliges el lenguaje de un bloque de código (estando el
   cursor dentro) para que se le resalte la sintaxis.
 - Al **pasar el ratón** por un bloque de código, arriba a la derecha aparecen su **lenguaje** (clic para cambiarlo) y un botón para **copiar** el código.
-- **Sangría**: **Formato → Aumentar/Disminuir sangría** anida listas y citas.
+- **Sangría**: **Formato → Aumentar/Disminuir sangría** (Ctrl+] / Ctrl+[) anida
+  listas y citas.
 
 ## Transformar texto y portapapeles
 
-- **Editar → Transformar texto** opera sobre la selección: **MAYÚSCULAS**,
-  **minúsculas**, **Capitalizar** y **Ordenar líneas**.
+- **Editar → Transformar texto** cambia la caja del texto: **MAYÚSCULAS**,
+  **minúsculas** y **Capitalizar**. Actúa sobre la selección o, si no hay
+  selección, sobre la palabra donde está el cursor.
+- **Editar → Ordenar líneas** ordena alfabéticamente las líneas seleccionadas.
+  Aquí sí hace falta seleccionar: sin selección no hace nada.
 - **Tipografía inteligente** (en el mismo menú) convierte sobre la selección
   los guiones `--`/`---` en `–`/`—`, `...` en `…` y las comillas rectas en
   tipográficas según el contexto.
@@ -151,10 +159,15 @@ viñetas; `1.` (o `1)`) → lista numerada. Produce el mismo formato que la barr
   pasa como texto.
 - **Ctrl+clic** sobre un enlace lo abre en el navegador del sistema; al pasar
   el ratón por encima se muestra la URL en un aviso junto al cursor y en la barra de estado.
-- **Imágenes**: arrastra un archivo, pega una imagen del portapapeles o usa
-  **Insertar → Pegar imagen**. La imagen se guarda como PNG junto al `.md` y
-  se inserta como `![alt](ruta-relativa)`; así sobrevive al round-trip a
-  Markdown (las imágenes incrustadas, no).
+- **Insertar → Imagen…** pide el texto alternativo y la ruta del archivo (o una
+  URL). Si el documento ya está guardado, la ruta se escribe **relativa** al
+  `.md`, para que el documento siga siendo portable.
+- **Pegar una imagen** del portapapeles (Ctrl+V, o **Insertar → Pegar imagen**)
+  la guarda como PNG junto al `.md` y la inserta como `![alt](ruta-relativa)`,
+  en vez de incrustarla: así sobrevive al round-trip a Markdown (las imágenes
+  incrustadas, no).
+- Arrastrar un archivo de imagen sobre la ventana **no** la inserta: como
+  cualquier otro archivo, se abre en una pestaña.
 
 ## Notas al pie
 
@@ -172,6 +185,8 @@ viñetas; `1.` (o `1)`) → lista numerada. Produce el mismo formato que la barr
   primera línea es `[!NOTE]`, `[!TIP]`, `[!IMPORTANT]`, `[!WARNING]` o
   `[!CAUTION]`. Se muestra con fondo tintado y título en color, y se guarda como
   Markdown compatible con GitHub.
+- **Insertar → Regla horizontal** inserta una línea de separación (`---` en
+  Markdown) entre bloques.
 - **Insertar → Símbolos especiales…** abre un mapa de caracteres por categorías
   (matemáticos, griego, flechas, moneda, puntuación…); un clic inserta el
   símbolo y el diálogo se queda abierto para insertar varios.
@@ -199,7 +214,8 @@ a menudo…
 
 - Con el cursor **dentro de una tabla** aparece una **barra flotante** sobre ella con botones para insertar/eliminar fila y columna y alinear la columna.
 - **Tab** salta a la celda siguiente y **Mayús+Tab** a la anterior; **Tab** en la última celda añade una fila.
-- **Tabla → Insertar tabla…** pide filas y columnas.
+- **Insertar → Tabla…** pide filas y columnas y crea la tabla donde está el
+  cursor.
 - **Insertar → Tabla desde el portapapeles** convierte en una tabla los datos
   TSV/CSV (columnas separadas por tabuladores o comas) copiados de una hoja de
   cálculo o un archivo CSV.
@@ -286,8 +302,12 @@ correspondiente.
 ## Buscar y reemplazar
 
 - **Buscar** (Ctrl+F) abre una barra inferior con campos para buscar y
-  reemplazar, además de opciones (caso, palabra completa, regex).
-- **Buscar siguiente** F3 / **Buscar anterior** Shift+F3.
+  reemplazar, además de opciones (May/min, palabra completa, regex).
+  **Reemplazar…** (Ctrl+H) abre la misma barra con el foco en el campo de
+  reemplazo. ESC la cierra.
+- **Buscar siguiente** (F3) y **Buscar anterior** (Mayús+F3) repiten la última
+  búsqueda sin volver a la barra, aunque esté cerrada; si aún no has buscado
+  nada, F3 abre la barra. La búsqueda da la vuelta al llegar al final.
 - La barra resalta **todas** las coincidencias en el documento y muestra un
   contador **«N de M»** (en qué coincidencia estás, de cuántas). **Reemplazar
   todo** sustituye todas de una vez.
@@ -317,8 +337,9 @@ menús escribiendo parte de su nombre.
 
 ## Estadísticas del documento
 
-- **Ver → Estadísticas del documento…** muestra palabras, caracteres, párrafos,
-  frases y tiempo estimado de lectura (del documento o de la selección).
+- **Ver → Estadísticas del documento…** muestra palabras, caracteres (con y sin
+  espacios), párrafos, frases y tiempo estimado de lectura (del documento o de
+  la selección).
 - **Ver → Mostrar contador de palabras** activa un contador permanente en la
   barra de estado.
 - **Ver → Mostrar línea y columna** muestra en la barra de estado la posición del
@@ -414,17 +435,24 @@ ofrece recuperar lo que estabas escribiendo.
 | Guardar                   | Ctrl+S           |
 | Guardar como              | Ctrl+Shift+S     |
 | Imprimir                  | Ctrl+P           |
+| Preferencias              | Ctrl+,           |
 | Deshacer / Rehacer        | Ctrl+Z / Ctrl+Y  |
 | Negrita / Cursiva         | Ctrl+B / Ctrl+I  |
+| Subrayado / Tachado       | Ctrl+U / Ctrl+Shift+X |
+| Código en línea           | Ctrl+E           |
+| Enlace                    | Ctrl+K           |
 | Resaltar (==marca==)      | Ctrl+Shift+H     |
 | Superíndice / Subíndice   | Ctrl+Shift++ / Ctrl+Shift+- |
-| Subrayado                 | Ctrl+U           |
 | Pegar como texto plano    | Ctrl+Shift+V     |
 | Pegar como Markdown       | Ctrl+Alt+V       |
-| Buscar                    | Ctrl+F           |
-| Buscar siguiente/anterior | F3 / Shift+F3    |
+| Buscar / Reemplazar       | Ctrl+F / Ctrl+H  |
+| Buscar siguiente/anterior | F3 / Mayús+F3    |
 | Encabezado H1 … H6        | Ctrl+1 … Ctrl+6  |
 | Promover / degradar encabezado | Ctrl+Shift+[ / Ctrl+Shift+] |
+| Lista de viñetas / numerada / tareas | Ctrl+Shift+U / Ctrl+Shift+O / Ctrl+Shift+T |
+| Aumentar / disminuir sangría | Ctrl+] / Ctrl+[ |
+| Cita                      | Ctrl+Shift+Q     |
+| Bloque de código          | Ctrl+Shift+K     |
 | Insertar fórmula          | Ctrl+Shift+F     |
 | Insertar nota al pie      | Ctrl+Shift+N     |
 | Ir a encabezado           | Ctrl+G           |
@@ -440,3 +468,8 @@ ofrece recuperar lo que estabas escribiendo.
 | Modo foco                 | F12              |
 | Zoom + / − / Normal       | Ctrl++ / Ctrl+− / Ctrl+0 |
 | Ayuda                     | F1               |
+
+> **Ctrl+Shift+K** hace dos cosas según dónde estés: en el editor visual aplica
+> **bloque de código**; en la vista de código **borra la línea**. No chocan
+> porque las acciones de formato se desactivan mientras el panel de código tiene
+> el foco.

@@ -73,6 +73,8 @@ Poți avea mai multe documente deschise în același timp, fiecare în **fila** 
   cele care aveau un fișier pe disc).
 - Eticheta arată numele fișierului și un punct (•) când există modificări
   nesalvate.
+- **Clic dreapta** pe o filă oferă **Deschide folderul care conține**,
+  **Copiază numele fișierului** și **Copiază calea completă**.
 - La închiderea aplicației, documentele deschise sunt reținute și toate redeschise
   la următoarea pornire.
 
@@ -87,9 +89,10 @@ pentru metadate precum `title`, `lang` etc., folosite la export.
 Selectează un fragment și aplică formatarea din bara de instrumente sau din meniul
 **Format**:
 
-- **Aldin** (Ctrl+B), **Cursiv** (Ctrl+I), **Subliniat** (Ctrl+U), **Tăiat**.
-- **Cod în linie** pentru fragmente `monospațiate`.
-- **Link**: adaugă `[text](url)` peste selecție.
+- **Aldin** (Ctrl+B), **Cursiv** (Ctrl+I), **Subliniat** (Ctrl+U),
+  **Tăiat** (Ctrl+Shift+X).
+- **Cod în linie** (Ctrl+E) pentru fragmente `monospațiate`.
+- **Link** (Ctrl+K): adaugă `[text](url)` peste selecție.
 - **Evidențiază** (Ctrl+Shift+H): încadrează selecția în `==marcaj==`; textul apare
   cu fundal de evidențiere. Deoarece `==` nu este sintaxă Markdown standard, se
   salvează ca text literal.
@@ -113,21 +116,26 @@ marcatori; `1.` (sau `1)`) → listă numerotată. Produce același format ca ba
 - **Titluri** H1–H6 din **Format → Titlu** sau cu Ctrl+1 … Ctrl+6.
   **Promovează/retrogradează** titlul de la cursor cu un nivel prin
   Ctrl+Shift+[ / Ctrl+Shift+].
-- **Liste**: cu marcatori, numerotate și de sarcini (cu casetă). Enter la sfârșitul
+- **Liste**: cu marcatori (Ctrl+Shift+U), numerotate (Ctrl+Shift+O) și de
+  sarcini (Ctrl+Shift+T, cu casetă). Enter la sfârșitul
   unui punct creează automat următorul; Enter pe un punct gol iese din listă. Un
   **clic pe caseta** unei sarcini o bifează sau o debifează.
-- **Citat** (`>` la începutul unui paragraf) și **bloc de cod** se aplică din bară;
+- **Citat** (Ctrl+Shift+Q, `>` la începutul unui paragraf) și **bloc de cod**
+  (Ctrl+Shift+K) se aplică din bară;
   ambele revin corect la Markdown. Cu **Format → Limbajul blocului…** alegi
   limbajul unui bloc de cod (având cursorul în interior) pentru a-i evidenția
   sintaxa.
 - Când treci cu **mouse-ul** peste un bloc de cod, în colțul din dreapta sus apar **limbajul** (clic pentru a-l schimba) și un buton de **copiere**.
-- **Indentare**: **Format → Mărește/Micșorează indentarea** imbrică listele și
-  citatele.
+- **Indentare**: **Format → Mărește/Micșorează indentarea** (Ctrl+] / Ctrl+[)
+  imbrică listele și citatele.
 
 ## Transformarea textului și clipboardul
 
-- **Editare → Transformă textul** acționează asupra selecției: **MAJUSCULE**,
-  **minuscule**, **Capitalizează** și **Sortează liniile**.
+- **Editare → Transformă textul** schimbă majusculele/minusculele:
+  **MAJUSCULE**, **minuscule** și **Capitalizează**. Acționează asupra selecției
+  sau, dacă nu există selecție, asupra cuvântului de sub cursor.
+- **Editare → Sortează liniile** sortează alfabetic liniile selectate. Aici
+  selecția chiar este necesară: fără ea nu face nimic.
 - **Tipografie inteligentă** (în același meniu) convertește în selecție liniuțele
   `--`/`---` în `–`/`—`, `...` în `…` și ghilimelele drepte în ghilimele
   tipografice în funcție de context.
@@ -151,10 +159,15 @@ marcatori; `1.` (sau `1)`) → listă numerotată. Produce același format ca ba
   este folosită ca text.
 - **Ctrl+clic** pe un link îl deschide în browserul sistemului; la trecerea cu
   mouse-ul, URL-ul apare într-un indiciu lângă cursor și în bara de stare.
-- **Imagini**: trage un fișier, lipește o imagine din clipboard sau folosește
-  **Inserare → Lipește imagine**. Imaginea este salvată ca PNG lângă `.md` și
-  inserată ca `![alt](cale-relativă)`; astfel supraviețuiește conversiei dus-întors
-  în Markdown (imaginile încorporate nu).
+- **Inserare → Imagine…** cere textul alternativ și calea fișierului (sau un
+  URL). Dacă documentul este deja salvat, calea se scrie **relativă** la `.md`,
+  ca documentul să rămână portabil.
+- **Lipirea unei imagini** din clipboard (Ctrl+V sau **Inserare → Lipește
+  imagine**) o salvează ca PNG lângă `.md` și o inserează ca
+  `![alt](cale-relativă)` în loc să o încorporeze: astfel supraviețuiește
+  conversiei dus-întors în Markdown (imaginile încorporate nu).
+- Tragerea unui fișier imagine peste fereastră **nu** o inserează: ca orice alt
+  fișier, se deschide într-o filă.
 
 ## Note de subsol
 
@@ -172,6 +185,8 @@ marcatori; `1.` (sau `1)`) → listă numerotată. Produce același format ca ba
   linie este `[!NOTE]`, `[!TIP]`, `[!IMPORTANT]`, `[!WARNING]` sau `[!CAUTION]`.
   Este afișat cu fundal colorat și titlu colorat și salvat ca Markdown compatibil
   cu GitHub.
+- **Inserare → Linie orizontală** inserează între blocuri o linie de separare
+  (`---` în Markdown).
 - **Inserare → Simboluri speciale…** deschide o hartă de caractere pe categorii
   (matematice, grecești, săgeți, monedă, punctuație…); un clic inserează simbolul,
   iar fereastra rămâne deschisă pentru a insera mai multe.
@@ -199,7 +214,8 @@ care îl repeți des…
 
 - Când cursorul este **într-un tabel**, deasupra apare o **bară flotantă** cu butoane pentru a insera/șterge rânduri și coloane și a alinia coloana.
 - **Tab** trece la celula următoare, iar **Shift+Tab** la cea anterioară; **Tab** în ultima celulă adaugă un rând.
-- **Tabel → Inserează tabel…** cere rânduri și coloane.
+- **Inserare → Tabel…** cere rânduri și coloane și creează tabelul acolo unde
+  este cursorul.
 - **Inserare → Tabel din clipboard** transformă într-un tabel datele TSV/CSV
   (coloane separate prin tabulatori sau virgule) copiate dintr-o foaie de calcul sau
   dintr-un fișier CSV.
@@ -260,6 +276,10 @@ salvat.
   pentru sistemul tău de operare; blocul rămâne cod.
 - Imaginea este doar prezentare: nu este scrisă în Markdown și nu contează ca
   modificare nesalvată.
+- **Vizualizare → Previzualizează diagramele** activează sau dezactivează această
+  previzualizare automată (activată implicit). Dezactiveaz-o dacă preferi să lași
+  blocurile ca text de cod — de exemplu când inserezi chiar tu o imagine deja
+  randată sub bloc și nu vrei să o vezi de două ori.
 
 De exemplu, un bloc de cod etichetat `mermaid` care conține `flowchart LR  A --> B
 --> C` este previzualizat ca diagrama de flux corespunzătoare.
@@ -280,8 +300,12 @@ De exemplu, un bloc de cod etichetat `mermaid` care conține `flowchart LR  A --
 ## Căutare și înlocuire
 
 - **Caută** (Ctrl+F) deschide o bară jos cu câmpuri pentru căutare și înlocuire,
-  plus opțiuni (majuscule/minuscule, cuvânt întreg).
-- **Caută următorul** F3 / **Caută anteriorul** Shift+F3.
+  plus opțiuni (majuscule/minuscule, cuvânt întreg, regex). **Înlocuiește…**
+  (Ctrl+H) deschide aceeași bară cu focalizarea pe câmpul de înlocuire. ESC o
+  închide.
+- **Caută următorul** (F3) și **Caută anteriorul** (Shift+F3) repetă ultima
+  căutare fără a reveni la bară, chiar dacă este închisă; dacă nu ai căutat încă
+  nimic, F3 deschide bara. Căutarea reia de la început când ajunge la capăt.
 - Bara evidențiază **toate** potrivirile din document și afișează un contor **„N din M”** (pe ce potrivire ești, din câte). **Înlocuiește tot** le înlocuiește pe toate deodată.
 
 ## Structura documentului
@@ -308,9 +332,9 @@ numele ei.
 
 ## Statistici despre document
 
-- **Vizualizare → Statistici despre document…** arată cuvinte, caractere,
-  paragrafe, propoziții și timpul estimat de citire (al documentului sau al
-  selecției).
+- **Vizualizare → Statistici despre document…** arată cuvinte, caractere (cu și
+  fără spații), paragrafe, propoziții și timpul estimat de citire (al
+  documentului sau al selecției).
 - **Vizualizare → Arată contorul de cuvinte** activează un contor permanent în bara
   de stare.
 - **Vizualizare → Afișează linia și coloana** arată poziția cursorului (linia și
@@ -410,17 +434,24 @@ ce scriai.
 | Salvează                  | Ctrl+S           |
 | Salvează ca               | Ctrl+Shift+S     |
 | Tipărește                 | Ctrl+P           |
+| Preferințe                | Ctrl+,           |
 | Anulează / Refă           | Ctrl+Z / Ctrl+Y  |
 | Aldin / Cursiv            | Ctrl+B / Ctrl+I  |
+| Subliniat / Tăiat         | Ctrl+U / Ctrl+Shift+X |
+| Cod în linie              | Ctrl+E           |
+| Link                      | Ctrl+K           |
 | Evidențiază (==marcaj==)  | Ctrl+Shift+H     |
 | Exponent / Indice         | Ctrl+Shift++ / Ctrl+Shift+- |
-| Subliniat                 | Ctrl+U           |
 | Lipește ca text simplu    | Ctrl+Shift+V     |
 | Lipește ca Markdown       | Ctrl+Alt+V       |
-| Caută                     | Ctrl+F           |
+| Caută / Înlocuiește       | Ctrl+F / Ctrl+H  |
 | Caută următorul/anteriorul | F3 / Shift+F3   |
 | Titlu H1 … H6             | Ctrl+1 … Ctrl+6  |
 | Promovează / retrogradează titlul | Ctrl+Shift+[ / Ctrl+Shift+] |
+| Listă cu marcatori / numerotată / de sarcini | Ctrl+Shift+U / Ctrl+Shift+O / Ctrl+Shift+T |
+| Mărește / micșorează indentarea | Ctrl+] / Ctrl+[ |
+| Citat                     | Ctrl+Shift+Q     |
+| Bloc de cod               | Ctrl+Shift+K     |
 | Inserează formulă         | Ctrl+Shift+F     |
 | Inserează notă de subsol  | Ctrl+Shift+N     |
 | Mergi la titlu            | Ctrl+G           |
@@ -436,3 +467,8 @@ ce scriai.
 | Mod focalizare            | F12              |
 | Zoom + / − / Normal       | Ctrl++ / Ctrl+− / Ctrl+0 |
 | Ajutor                    | F1               |
+
+> **Ctrl+Shift+K** face două lucruri, după locul în care ești: în editorul vizual
+> aplică un **bloc de cod**, iar în vizualizarea codului **șterge linia**. Nu
+> intră în conflict, fiindcă acțiunile de formatare sunt dezactivate cât timp
+> panoul de cod are focalizarea.

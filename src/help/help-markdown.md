@@ -18,6 +18,8 @@ barra de herramientas y, al guardar, el editor los genera por ti.
 - [Reglas horizontales](#reglas-horizontales)
 - [Tablas](#tablas)
 - [Fórmulas matemáticas](#formulas-matematicas)
+- [Extensiones que admite md-editor](#extensiones-que-admite-md-editor)
+- [Front matter](#front-matter)
 - [Escapes](#escapes)
 
 ## Párrafos y saltos de línea
@@ -158,6 +160,61 @@ Markdown no los confunda con cursiva o negrita.
 En md-editor las fórmulas se ven renderizadas con super y subíndices reales
 (no como `$x^2$` literal). Inserta una con **Insertar → Fórmula…**
 (Ctrl+Shift+F) o haz doble clic sobre una existente para editarla.
+
+## Extensiones que admite md-editor
+
+Además de lo anterior —que es Markdown estándar—, md-editor entiende cuatro
+convenciones muy extendidas. No forman parte del Markdown original, así que otro
+editor puede mostrarlas como texto literal; el archivo, en todo caso, se guarda
+tal cual y no se pierde nada.
+
+**Resaltado** (estilo GitHub/Obsidian): dos signos igual a cada lado.
+
+```
+Esto va ==resaltado== como con un rotulador.
+```
+
+**Superíndice y subíndice** (estilo Pandoc): acento circunflejo y virgulilla.
+
+```
+El área es 12 m^2^ y la fórmula del agua es H~2~O.
+```
+
+**Admoniciones** o *callouts* (estilo GitHub): una cita cuya primera línea es una
+etiqueta entre corchetes. Valen `[!NOTE]`, `[!TIP]`, `[!IMPORTANT]`,
+`[!WARNING]` y `[!CAUTION]`.
+
+```
+> [!WARNING]
+> Este paso borra los datos anteriores.
+```
+
+**Diagramas**: un bloque de código con el lenguaje `mermaid` o `plantuml`. El
+editor lo previsualiza como imagen bajo el bloque si tienes instalada la
+herramienta correspondiente.
+
+````
+```mermaid
+flowchart LR
+  A --> B --> C
+```
+````
+
+## Front matter
+
+Muchos generadores de sitios (Jekyll, Hugo, Quarto…) empiezan el archivo con un
+bloque de metadatos entre `---` (YAML) o `+++` (TOML):
+
+```
+---
+title: Informe anual
+lang: es
+---
+```
+
+md-editor lo conserva **tal cual** al guardar: no se edita ni se ve en el editor.
+De ahí saca el `title` y el `lang` al exportar y para elegir el diccionario del
+corrector.
 
 ## Escapes
 

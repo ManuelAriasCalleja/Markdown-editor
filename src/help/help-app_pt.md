@@ -72,6 +72,8 @@ Pode ter vários documentos abertos ao mesmo tempo, cada um na sua **aba**:
   (apenas as que tinham arquivo no disco).
 - A etiqueta mostra o nome do arquivo e um ponto (•) se houver alterações não
   salvas.
+- O **clique direito** em uma aba oferece **Abrir pasta do arquivo**, **Copiar
+  nome do arquivo** e **Copiar caminho completo**.
 - Ao fechar a aplicação, os documentos abertos são recordados e todos reabertos no
   arranque seguinte.
 
@@ -87,9 +89,9 @@ Selecione um fragmento e aplique a formatação com a barra de ferramentas ou o
 menu **Formato**:
 
 - **Negrito** (Ctrl+B), **Itálico** (Ctrl+I), **Sublinhado** (Ctrl+U),
-  **Rasurado**.
-- **Código em linha** para fragmentos `monoespaçados`.
-- **Link**: adiciona `[texto](url)` sobre a seleção.
+  **Rasurado** (Ctrl+Shift+X).
+- **Código em linha** (Ctrl+E) para fragmentos `monoespaçados`.
+- **Link** (Ctrl+K): adiciona `[texto](url)` sobre a seleção.
 - **Realçar** (Ctrl+Shift+H): envolve a seleção em `==marca==`; o texto aparece com
   fundo de realce. Como `==` não é sintaxe Markdown padrão, é salvo como texto
   literal.
@@ -113,21 +115,26 @@ marcadores; `1.` (ou `1)`) → lista numerada. Produz o mesmo formato que a barr
 - **Títulos** H1–H6 a partir de **Formato → Título** ou com Ctrl+1 … Ctrl+6.
   **Promover/rebaixar** o título no cursor um nível com
   Ctrl+Shift+[ / Ctrl+Shift+].
-- **Listas**: com marcadores, numeradas e de tarefas (com caixa). Premindo Enter
+- **Listas**: com marcadores (Ctrl+Shift+U), numeradas (Ctrl+Shift+O) e de
+  tarefas (Ctrl+Shift+T, com caixa). Premindo Enter
   no fim de um ponto cria-se automaticamente o seguinte; Enter num ponto vazio sai
   da lista. Um **clique na caixa** de uma tarefa marca-a ou desmarca-a.
-- **Citação** (`>` no início de um parágrafo) e **bloco de código** aplicam-se a
+- **Citação** (Ctrl+Shift+Q, `>` no início de um parágrafo) e **bloco de código**
+  (Ctrl+Shift+K) aplicam-se a
   partir da barra; ambos voltam corretamente a Markdown. Com **Formato →
   Linguagem do bloco…** escolhe a linguagem de um bloco de código (com o cursor lá
   dentro) para que a sua sintaxe seja realçada.
 - Ao **passar o mouse** sobre um bloco de código, aparecem no canto superior direito a sua **linguagem** (clique para a alterar) e um botão para **copiar** o código.
-- **Indentação**: **Formato → Aumentar/Diminuir indentação** aninha listas e
-  citações.
+- **Indentação**: **Formato → Aumentar/Diminuir indentação** (Ctrl+] / Ctrl+[)
+  aninha listas e citações.
 
 ## Transformar o texto e a área de transferência
 
-- **Editar → Transformar texto** atua sobre a seleção: **MAIÚSCULAS**,
-  **minúsculas**, **Capitalizar** e **Ordenar linhas**.
+- **Editar → Transformar texto** muda a caixa do texto: **MAIÚSCULAS**,
+  **minúsculas** e **Capitalizar**. Atua sobre a seleção ou, se não houver
+  seleção, sobre a palavra onde está o cursor.
+- **Editar → Ordenar linhas** ordena alfabeticamente as linhas selecionadas. Aqui
+  a seleção é necessária: sem ela não faz nada.
 - **Tipografia inteligente** (no mesmo menu) converte na seleção os traços
   `--`/`---` em `–`/`—`, `...` em `…` e as aspas retas em tipográficas conforme o
   contexto.
@@ -151,10 +158,15 @@ marcadores; `1.` (ou `1)`) → lista numerada. Produz o mesmo formato que a barr
   usada como texto.
 - **Ctrl+clique** num link abre-o no navegador do sistema; ao passar o mouse
   por cima, o URL aparece numa dica junto ao cursor e na barra de estado.
-- **Imagens**: arraste um arquivo, cole uma imagem da área de transferência ou
-  use **Inserir → Colar imagem**. A imagem é salva como PNG ao lado do `.md` e
-  inserida como `![alt](caminho-relativo)`; assim sobrevive ao round-trip para
-  Markdown (as imagens incorporadas não).
+- **Inserir → Imagem…** pede o texto alternativo e o caminho do arquivo (ou uma
+  URL). Se o documento já estiver salvo, o caminho é escrito **relativo** ao
+  `.md`, para que o documento continue portátil.
+- **Colar uma imagem** da área de transferência (Ctrl+V, ou **Inserir → Colar
+  imagem**) salva-a como PNG ao lado do `.md` e insere-a como
+  `![alt](caminho-relativo)` em vez de incorporá-la: assim sobrevive ao
+  round-trip para Markdown (as imagens incorporadas não).
+- Arrastar um arquivo de imagem para a janela **não** a insere: como qualquer
+  outro arquivo, ele é aberto em uma aba.
 
 ## Notas de rodapé
 
@@ -172,6 +184,8 @@ marcadores; `1.` (ou `1)`) → lista numerada. Produz o mesmo formato que a barr
   primeira linha é `[!NOTE]`, `[!TIP]`, `[!IMPORTANT]`, `[!WARNING]` ou
   `[!CAUTION]`. Aparece com fundo colorido e título a cores, e é salvo como
   Markdown compatível com o GitHub.
+- **Inserir → Régua horizontal** insere uma linha de separação (`---` em
+  Markdown) entre blocos.
 - **Inserir → Símbolos especiais…** abre um mapa de carateres por categorias
   (matemáticos, grego, setas, moeda, pontuação…); um clique insere o símbolo e a
   caixa fica aberta para inserir vários.
@@ -198,7 +212,8 @@ frequência…
 
 - Com o cursor **dentro de uma tabela**, aparece por cima uma **barra flutuante** com botões para inserir/eliminar linhas e colunas e alinhar a coluna.
 - **Tab** passa à célula seguinte e **Shift+Tab** à anterior; **Tab** na última célula adiciona uma linha.
-- **Tabela → Inserir tabela…** pede linhas e colunas.
+- **Inserir → Tabela…** pede linhas e colunas e cria a tabela onde está o
+  cursor.
 - **Inserir → Tabela da área de transferência** converte numa tabela os dados
   TSV/CSV (colunas separadas por tabulações ou vírgulas) copiados de uma folha de
   cálculo ou de um arquivo CSV.
@@ -260,6 +275,10 @@ nem no Markdown salvo.
   instalação do seu sistema operacional; o bloco mantém-se como código.
 - A imagem é apenas apresentação: não é escrita no Markdown nem conta como
   alteração não salva.
+- **Ver → Pré-visualizar diagramas** ativa ou desativa esta pré-visualização
+  automática (ativada por padrão). Desative-a se preferir deixar os blocos como
+  código — por exemplo quando você mesmo já insere uma imagem pré-renderizada
+  abaixo do bloco e não quer vê-la em duplicado.
 
 Por exemplo, um bloco de código etiquetado `mermaid` com `flowchart LR  A --> B
 --> C` é pré-visualizado como o fluxograma correspondente.
@@ -280,8 +299,12 @@ Por exemplo, um bloco de código etiquetado `mermaid` com `flowchart LR  A --> B
 ## Localizar e substituir
 
 - **Localizar** (Ctrl+F) abre uma barra inferior com campos para localizar e
-  substituir, além de opções (maiúsculas/minúsculas, palavra inteira).
-- **Localizar seguinte** F3 / **Localizar anterior** Shift+F3.
+  substituir, além de opções (maiúsculas/minúsculas, palavra inteira, regex).
+  **Substituir…** (Ctrl+H) abre a mesma barra com o foco no campo de
+  substituição. ESC fecha-a.
+- **Localizar seguinte** (F3) e **Localizar anterior** (Shift+F3) repetem a
+  última busca sem voltar à barra, mesmo que esteja fechada; se você ainda não
+  buscou nada, F3 abre a barra. A busca recomeça do início ao chegar ao fim.
 - A barra realça **todas** as correspondências no documento e mostra um contador **«N de M»** (em que correspondência está, de quantas). **Substituir tudo** substitui-as todas de uma vez.
 
 ## Estrutura do documento
@@ -305,8 +328,9 @@ escrevendo parte do seu texto, e **Ir para a linha…** (Ctrl+L) leva o cursor p
 
 ## Estatísticas do documento
 
-- **Ver → Estatísticas do documento…** mostra palavras, carateres, parágrafos,
-  frases e tempo de leitura estimado (do documento ou da seleção).
+- **Ver → Estatísticas do documento…** mostra palavras, caracteres (com e sem
+  espaços), parágrafos, frases e tempo de leitura estimado (do documento ou da
+  seleção).
 - **Ver → Mostrar contador de palavras** ativa um contador permanente na barra de
   estado.
 - **Ver → Mostrar linha e coluna** mostra a posição do cursor (linha e coluna) na
@@ -402,17 +426,24 @@ recuperar o que estava escrevendo.
 | Salvar                    | Ctrl+S           |
 | Salvar como               | Ctrl+Shift+S     |
 | Imprimir                  | Ctrl+P           |
+| Preferências              | Ctrl+,           |
 | Desfazer / Refazer        | Ctrl+Z / Ctrl+Y  |
 | Negrito / Itálico         | Ctrl+B / Ctrl+I  |
+| Sublinhado / Rasurado     | Ctrl+U / Ctrl+Shift+X |
+| Código em linha           | Ctrl+E           |
+| Link                      | Ctrl+K           |
 | Realçar (==marca==)       | Ctrl+Shift+H     |
 | Sobrescrito / Subscrito   | Ctrl+Shift++ / Ctrl+Shift+- |
-| Sublinhado                | Ctrl+U           |
 | Colar como texto simples  | Ctrl+Shift+V     |
 | Colar como Markdown       | Ctrl+Alt+V       |
-| Localizar                 | Ctrl+F           |
+| Localizar / Substituir    | Ctrl+F / Ctrl+H  |
 | Localizar seguinte/anterior | F3 / Shift+F3  |
 | Título H1 … H6            | Ctrl+1 … Ctrl+6  |
 | Promover / rebaixar título | Ctrl+Shift+[ / Ctrl+Shift+] |
+| Lista com marcadores / numerada / de tarefas | Ctrl+Shift+U / Ctrl+Shift+O / Ctrl+Shift+T |
+| Aumentar / diminuir indentação | Ctrl+] / Ctrl+[ |
+| Citação                   | Ctrl+Shift+Q     |
+| Bloco de código           | Ctrl+Shift+K     |
 | Inserir fórmula           | Ctrl+Shift+F     |
 | Inserir nota de rodapé    | Ctrl+Shift+N     |
 | Ir para título            | Ctrl+G           |
@@ -428,3 +459,8 @@ recuperar o que estava escrevendo.
 | Modo de foco              | F12              |
 | Zoom + / − / Normal       | Ctrl++ / Ctrl+− / Ctrl+0 |
 | Ajuda                     | F1               |
+
+> **Ctrl+Shift+K** faz duas coisas conforme onde você estiver: no editor visual
+> aplica um **bloco de código**; na visualização do código **apaga a linha**. Não
+> há conflito porque as ações de formatação ficam desativadas enquanto o painel
+> de código tem o foco.

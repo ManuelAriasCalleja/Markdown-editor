@@ -18,6 +18,8 @@ ferramentas e, ao salvar, o editor escreve-os por si.
 - [Réguas horizontais](#reguas-horizontais)
 - [Tabelas](#tabelas)
 - [Fórmulas matemáticas](#formulas-matematicas)
+- [Extensões que o md-editor aceita](#extensoes-que-o-md-editor-aceita)
+- [Front matter](#front-matter)
 - [Escapes](#escapes)
 
 ## Parágrafos e quebras de linha
@@ -160,6 +162,61 @@ os confunda com itálico ou negrito.
 No md-editor as fórmulas aparecem renderizadas com sobrescritos e subscritos
 reais (não como `$x^2$` literal). Insira uma com **Inserir → Fórmula…**
 (Ctrl+Shift+F) ou faça duplo clique sobre uma existente para editá-la.
+
+## Extensões que o md-editor aceita
+
+Além do anterior — que é Markdown padrão —, o md-editor entende quatro
+convenções muito difundidas. Elas não fazem parte do Markdown original, então
+outro editor pode mostrá-las como texto literal; o arquivo, de todo modo, é salvo
+tal como está e nada se perde.
+
+**Realce** (estilo GitHub/Obsidian): dois sinais de igual de cada lado.
+
+```
+Isto fica ==realçado== como com um marca-texto.
+```
+
+**Sobrescrito e subscrito** (estilo Pandoc): acento circunflexo e til.
+
+```
+A área é 12 m^2^ e a fórmula da água é H~2~O.
+```
+
+**Admoestações** ou *callouts* (estilo GitHub): uma citação cuja primeira linha é
+um rótulo entre colchetes. Valem `[!NOTE]`, `[!TIP]`, `[!IMPORTANT]`,
+`[!WARNING]` e `[!CAUTION]`.
+
+```
+> [!WARNING]
+> Esta etapa apaga os dados anteriores.
+```
+
+**Diagramas**: um bloco de código com a linguagem `mermaid` ou `plantuml`. O
+editor mostra uma pré-visualização como imagem abaixo do bloco se você tiver a
+ferramenta correspondente instalada.
+
+````
+```mermaid
+flowchart LR
+  A --> B --> C
+```
+````
+
+## Front matter
+
+Muitos geradores de sites (Jekyll, Hugo, Quarto…) começam o arquivo com um bloco
+de metadados entre `---` (YAML) ou `+++` (TOML):
+
+```
+---
+title: Relatório anual
+lang: pt
+---
+```
+
+O md-editor o conserva **tal como está** ao salvar: não é editado nem aparece no
+editor. É de lá que ele tira o `title` e o `lang` ao exportar e para escolher o
+dicionário do corretor ortográfico.
 
 ## Escapes
 

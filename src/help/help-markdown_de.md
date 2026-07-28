@@ -18,6 +18,8 @@ Werkzeugleiste an, und beim Speichern erzeugt sie der Editor für Sie.
 - [Horizontale Linien](#horizontale-linien)
 - [Tabellen](#tabellen)
 - [Mathematische Formeln](#mathematische-formeln)
+- [Erweiterungen, die md-editor unterstützt](#erweiterungen-die-md-editor-unterstutzt)
+- [Front Matter](#front-matter)
 - [Escapes](#escapes)
 
 ## Absätze und Zeilenumbrüche
@@ -162,6 +164,61 @@ In md-editor erscheinen Formeln gerendert mit echten Hoch- und Tiefstellungen
 (nicht als wörtliches `$x^2$`). Fügen Sie eine mit **Einfügen → Formel…**
 (Ctrl+Shift+F) ein oder doppelklicken Sie auf eine vorhandene, um sie zu
 bearbeiten.
+
+## Erweiterungen, die md-editor unterstützt
+
+Über das Obige hinaus — das ist Standard-Markdown — versteht md-editor vier weit
+verbreitete Konventionen. Sie gehören nicht zum ursprünglichen Markdown, daher
+kann ein anderer Editor sie als wörtlichen Text anzeigen; die Datei wird in
+jedem Fall unverändert gespeichert, es geht also nichts verloren.
+
+**Hervorhebung** (Stil GitHub/Obsidian): zwei Gleichheitszeichen auf jeder Seite.
+
+```
+Das ist ==hervorgehoben== wie mit einem Textmarker.
+```
+
+**Hoch- und Tiefstellung** (Pandoc-Stil): Zirkumflex und Tilde.
+
+```
+Die Fläche beträgt 12 m^2^ und die Formel von Wasser ist H~2~O.
+```
+
+**Hinweise** oder *Callouts* (GitHub-Stil): ein Zitat, dessen erste Zeile eine
+Markierung in eckigen Klammern ist. Gültig sind `[!NOTE]`, `[!TIP]`,
+`[!IMPORTANT]`, `[!WARNING]` und `[!CAUTION]`.
+
+```
+> [!WARNING]
+> Dieser Schritt löscht die vorherigen Daten.
+```
+
+**Diagramme**: ein Codeblock mit der Sprache `mermaid` oder `plantuml`. Der
+Editor zeigt darunter eine Bildvorschau, wenn das entsprechende Werkzeug
+installiert ist.
+
+````
+```mermaid
+flowchart LR
+  A --> B --> C
+```
+````
+
+## Front Matter
+
+Viele Website-Generatoren (Jekyll, Hugo, Quarto…) beginnen die Datei mit einem
+Metadatenblock zwischen `---` (YAML) oder `+++` (TOML):
+
+```
+---
+title: Jahresbericht
+lang: de
+---
+```
+
+md-editor bewahrt ihn beim Speichern **unverändert**: Er wird weder bearbeitet
+noch im Editor angezeigt. Von dort nimmt er `title` und `lang` beim Exportieren
+und für die Wahl des Wörterbuchs der Rechtschreibprüfung.
 
 ## Escapes
 

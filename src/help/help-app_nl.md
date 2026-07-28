@@ -74,6 +74,8 @@ Je kunt meerdere documenten tegelijk open hebben, elk in zijn eigen **tabblad**:
 - **Gesloten tabblad opnieuw openen** (Ctrl+Shift+R) opent het laatst gesloten
   tabblad opnieuw (alleen die met een bestand op schijf).
 - Het label toont de bestandsnaam en een punt (•) bij niet-opgeslagen wijzigingen.
+- **Rechtsklikken** op een tabblad biedt **Bovenliggende map openen**,
+  **Bestandsnaam kopiëren** en **Volledig pad kopiëren**.
 - Bij het sluiten van de toepassing worden de open documenten onthouden en de
   volgende keer allemaal heropend.
 
@@ -89,9 +91,9 @@ exporteren worden gebruikt.
 Selecteer een fragment en pas opmaak toe met de werkbalk of het menu **Opmaak**:
 
 - **Vet** (Ctrl+B), **Cursief** (Ctrl+I), **Onderstreept** (Ctrl+U),
-  **Doorgehaald**.
-- **Code in regel** voor `monospace`-fragmenten.
-- **Koppeling**: voegt `[tekst](url)` over de selectie toe.
+  **Doorgehaald** (Ctrl+Shift+X).
+- **Code in regel** (Ctrl+E) voor `monospace`-fragmenten.
+- **Koppeling** (Ctrl+K): voegt `[tekst](url)` over de selectie toe.
 - **Markeren** (Ctrl+Shift+H): omsluit de selectie met `==markering==`; de tekst
   krijgt een markeerachtergrond. Omdat `==` geen standaard-Markdown is, wordt het als
   letterlijke tekst opgeslagen.
@@ -115,22 +117,27 @@ gevolgd door een spatie de regel ter plekke (zonder de markering te laten staan)
 - **Koppen** H1–H6 via **Opmaak → Kop** of met Ctrl+1 … Ctrl+6.
   **Promoveren/degraderen** van de kop bij de cursor met één niveau via
   Ctrl+Shift+[ / Ctrl+Shift+].
-- **Lijsten**: opsommingen, genummerd en taken (met selectievakje). Enter aan het
+- **Lijsten**: opsommingen (Ctrl+Shift+U), genummerd (Ctrl+Shift+O) en taken
+  (Ctrl+Shift+T, met selectievakje). Enter aan het
   einde van een punt maakt automatisch het volgende; Enter op een leeg punt
   verlaat de lijst. Een **klik op het selectievakje** van een taak schakelt deze
   om.
-- **Citaat** (`>` aan het begin van een alinea) en **codeblok** pas je toe via de
+- **Citaat** (Ctrl+Shift+Q, `>` aan het begin van een alinea) en **codeblok**
+  (Ctrl+Shift+K) pas je toe via de
   werkbalk; beide gaan correct heen en terug naar Markdown. Met **Opmaak → Taal
   van het blok…** kies je de taal van een codeblok (met de cursor erin) zodat de
   syntaxis ervan wordt gemarkeerd.
 - Als je met de muis **over** een codeblok gaat, verschijnen rechtsboven de **taal** (klik om te wijzigen) en een knop om de code te **kopiëren**.
-- **Inspringen**: **Opmaak → Inspringen vergroten/verkleinen** nestelt lijsten en
-  citaten.
+- **Inspringen**: **Opmaak → Inspringen vergroten/verkleinen** (Ctrl+] / Ctrl+[)
+  nestelt lijsten en citaten.
 
 ## Tekst omzetten en het klembord
 
-- **Bewerken → Tekst omzetten** werkt op de selectie: **HOOFDLETTERS**,
-  **kleine letters**, **Met hoofdletter** en **Regels sorteren**.
+- **Bewerken → Tekst omzetten** verandert het hoofdlettergebruik:
+  **HOOFDLETTERS**, **kleine letters** en **Met hoofdletter**. Het werkt op de
+  selectie of, als er geen selectie is, op het woord onder de cursor.
+- **Bewerken → Regels sorteren** sorteert de geselecteerde regels alfabetisch.
+  Hier is een selectie wél nodig: zonder selectie gebeurt er niets.
 - **Slimme typografie** (in hetzelfde menu) zet in de selectie de streepjes
   `--`/`---` om in `–`/`—`, `...` in `…` en rechte aanhalingstekens in
   typografische, afhankelijk van de context.
@@ -155,10 +162,15 @@ gevolgd door een spatie de regel ter plekke (zonder de markering te laten staan)
   selectie wordt als tekst gebruikt.
 - **Ctrl+klik** op een koppeling opent deze in de systeembrowser; bij het zweven
   met de muis verschijnt de URL in een tooltip naast de cursor en in de statusbalk.
-- **Afbeeldingen**: sleep een bestand, plak een afbeelding van het klembord of
-  gebruik **Invoegen → Afbeelding plakken**. De afbeelding wordt als PNG naast de
-  `.md` opgeslagen en ingevoegd als `![alt](relatief-pad)`; zo overleeft ze de
+- **Invoegen → Afbeelding…** vraagt om de alternatieve tekst en het pad van het
+  bestand (of een URL). Is het document al opgeslagen, dan wordt het pad
+  **relatief** aan de `.md` geschreven, zodat het document overdraagbaar blijft.
+- **Een afbeelding plakken** van het klembord (Ctrl+V, of **Invoegen →
+  Afbeelding plakken**) slaat ze als PNG naast de `.md` op en voegt ze in als
+  `![alt](relatief-pad)` in plaats van ze in te bedden: zo overleeft ze de
   heen-en-terugconversie naar Markdown (ingebedde afbeeldingen niet).
+- Een afbeeldingsbestand op het venster slepen voegt het **niet** in: net als elk
+  ander bestand wordt het in een tabblad geopend.
 
 ## Voetnoten
 
@@ -176,6 +188,8 @@ gevolgd door een spatie de regel ter plekke (zonder de markering te laten staan)
   waarvan de eerste regel `[!NOTE]`, `[!TIP]`, `[!IMPORTANT]`, `[!WARNING]` of
   `[!CAUTION]` is. Het wordt getoond met een getinte achtergrond en een gekleurde
   titel, en opgeslagen als GitHub-compatibele Markdown.
+- **Invoegen → Horizontale lijn** voegt tussen blokken een scheidingslijn in
+  (`---` in Markdown).
 - **Invoegen → Speciale symbolen…** opent een tekentabel per categorie (wiskundig,
   Grieks, pijlen, valuta, leestekens…); een klik voegt het symbool in en het
   venster blijft open om er meerdere in te voegen.
@@ -203,7 +217,8 @@ melding die je vaak herhaalt…
 
 - Als de cursor **in een tabel** staat, verschijnt erboven een **zwevende balk** met knoppen om rijen en kolommen in te voegen/verwijderen en de kolom uit te lijnen.
 - **Tab** gaat naar de volgende cel en **Shift+Tab** naar de vorige; **Tab** in de laatste cel voegt een rij toe.
-- **Tabel → Tabel invoegen…** vraagt om rijen en kolommen.
+- **Invoegen → Tabel…** vraagt om rijen en kolommen en maakt de tabel op de
+  cursorpositie.
 - **Invoegen → Tabel uit klembord** zet TSV/CSV-gegevens (kolommen gescheiden door
   tabs of komma's) die uit een spreadsheet of een CSV-bestand zijn gekopieerd, om in
   een tabel.
@@ -265,6 +280,10 @@ opgeslagen Markdown aan te raken.
   installatiecommando voor jouw besturingssysteem; het blok blijft code.
 - De afbeelding is alleen presentatie: ze wordt niet naar de Markdown geschreven
   en telt niet als een niet-opgeslagen wijziging.
+- **Beeld → Diagrammen voorvertonen** schakelt deze automatische voorvertoning in
+  of uit (standaard ingeschakeld). Zet het uit als je de blokken liever als code
+  laat staan — bijvoorbeeld wanneer je zelf al een vooraf gerenderde afbeelding
+  onder het blok zet en die niet dubbel wilt zien.
 
 Een codeblok met label `mermaid` dat `flowchart LR  A --> B --> C` bevat, wordt
 bijvoorbeeld voorvertoond als het bijbehorende stroomschema.
@@ -286,8 +305,13 @@ bijvoorbeeld voorvertoond als het bijbehorende stroomschema.
 ## Zoeken en vervangen
 
 - **Zoeken** (Ctrl+F) opent onderaan een balk met velden om te zoeken en te
-  vervangen, plus opties (hoofdlettergevoelig, heel woord).
-- **Volgende zoeken** F3 / **Vorige zoeken** Shift+F3.
+  vervangen, plus opties (hoofdlettergevoelig, heel woord, regex).
+  **Vervangen…** (Ctrl+H) opent dezelfde balk met de focus in het vervangveld.
+  ESC sluit hem.
+- **Volgende zoeken** (F3) en **Vorige zoeken** (Shift+F3) herhalen de laatste
+  zoekopdracht zonder terug te gaan naar de balk, ook als die gesloten is; heb je
+  nog niets gezocht, dan opent F3 de balk. Aan het einde begint de zoekopdracht
+  weer bij het begin.
 - De balk markeert **alle** overeenkomsten in het document en toont een teller **'N van M'** (op welke overeenkomst je bent, van hoeveel). **Alles vervangen** vervangt ze allemaal in één keer.
 
 ## Documentoverzicht
@@ -315,8 +339,9 @@ een deel van de naam te typen.
 
 ## Documentstatistieken
 
-- **Beeld → Documentstatistieken…** toont woorden, tekens, alinea's, zinnen en de
-  geschatte leestijd (van het document of de selectie).
+- **Beeld → Documentstatistieken…** toont woorden, tekens (met en zonder
+  spaties), alinea's, zinnen en de geschatte leestijd (van het document of de
+  selectie).
 - **Beeld → Woordenteller tonen** schakelt een permanente teller in de statusbalk
   in.
 - **Beeld → Regel en kolom tonen** toont de cursorpositie (regel en kolom) in de
@@ -415,17 +440,24 @@ openen aan om te herstellen wat je aan het schrijven was.
 | Opslaan                   | Ctrl+S           |
 | Opslaan als               | Ctrl+Shift+S     |
 | Afdrukken                 | Ctrl+P           |
+| Voorkeuren                | Ctrl+,           |
 | Ongedaan maken / Opnieuw  | Ctrl+Z / Ctrl+Y  |
 | Vet / Cursief             | Ctrl+B / Ctrl+I  |
+| Onderstreept / Doorgehaald | Ctrl+U / Ctrl+Shift+X |
+| Code in regel             | Ctrl+E           |
+| Koppeling                 | Ctrl+K           |
 | Markeren (==markering==)   | Ctrl+Shift+H     |
 | Superscript / Subscript   | Ctrl+Shift++ / Ctrl+Shift+- |
-| Onderstreept              | Ctrl+U           |
 | Plakken als platte tekst  | Ctrl+Shift+V     |
 | Plakken als Markdown      | Ctrl+Alt+V       |
-| Zoeken                    | Ctrl+F           |
+| Zoeken / Vervangen        | Ctrl+F / Ctrl+H  |
 | Volgende/vorige zoeken    | F3 / Shift+F3    |
 | Kop H1 … H6               | Ctrl+1 … Ctrl+6  |
 | Kop promoveren / degraderen | Ctrl+Shift+[ / Ctrl+Shift+] |
+| Opsommings- / genummerde / takenlijst | Ctrl+Shift+U / Ctrl+Shift+O / Ctrl+Shift+T |
+| Inspringen vergroten / verkleinen | Ctrl+] / Ctrl+[ |
+| Citaat                    | Ctrl+Shift+Q     |
+| Codeblok                  | Ctrl+Shift+K     |
 | Formule invoegen          | Ctrl+Shift+F     |
 | Voetnoot invoegen         | Ctrl+Shift+N     |
 | Ga naar kop               | Ctrl+G           |
@@ -441,3 +473,8 @@ openen aan om te herstellen wat je aan het schrijven was.
 | Focusmodus                | F12              |
 | Zoom + / − / Normaal      | Ctrl++ / Ctrl+− / Ctrl+0 |
 | Help                      | F1               |
+
+> **Ctrl+Shift+K** doet twee dingen, afhankelijk van waar je bent: in de visuele
+> editor past het een **codeblok** toe; in de codeweergave **verwijdert het de
+> regel**. Ze botsen niet, omdat de opmaakacties uitgeschakeld zijn zolang het
+> codepaneel de focus heeft.

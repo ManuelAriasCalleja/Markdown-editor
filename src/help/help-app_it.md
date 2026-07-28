@@ -72,6 +72,8 @@ Puoi avere più documenti aperti contemporaneamente, ciascuno nella propria **sc
   (solo quelle che avevano un file su disco).
 - L'etichetta mostra il nome del file e un punto (•) se ci sono modifiche non
   salvate.
+- Il **clic destro** su una scheda offre **Apri cartella contenitore**, **Copia
+  nome del file** e **Copia percorso completo**.
 - Alla chiusura dell'applicazione i documenti aperti vengono ricordati e tutti
   riaperti al successivo avvio.
 
@@ -87,9 +89,9 @@ Seleziona un frammento e applica la formattazione con la barra degli strumenti o
 il menu **Formato**:
 
 - **Grassetto** (Ctrl+B), **Corsivo** (Ctrl+I), **Sottolineato** (Ctrl+U),
-  **Barrato**.
-- **Codice in linea** per frammenti a `spaziatura fissa`.
-- **Collegamento**: aggiunge `[testo](url)` sulla selezione.
+  **Barrato** (Ctrl+Maiusc+X).
+- **Codice in linea** (Ctrl+E) per frammenti a `spaziatura fissa`.
+- **Collegamento** (Ctrl+K): aggiunge `[testo](url)` sulla selezione.
 - **Evidenzia** (Ctrl+Maiusc+H): racchiude la selezione tra `==marca==`; il testo
   appare con uno sfondo di evidenziazione. Poiché `==` non è sintassi Markdown
   standard, viene salvato come testo letterale.
@@ -113,21 +115,27 @@ puntato; `1.` (o `1)`) → elenco numerato. Produce lo stesso formato della barr
 - **Titoli** H1–H6 da **Formato → Titolo** o con Ctrl+1 … Ctrl+6.
   **Alza/abbassa** il titolo al cursore di un livello con
   Ctrl+Maiusc+[ / Ctrl+Maiusc+].
-- **Elenchi**: puntati, numerati e di attività (con casella). Premendo Invio alla
+- **Elenchi**: puntati (Ctrl+Maiusc+U), numerati (Ctrl+Maiusc+O) e di attività
+  (Ctrl+Maiusc+T, con casella). Premendo Invio alla
   fine di un punto si crea automaticamente il successivo; Invio su un punto vuoto
   esce dall'elenco. Un **clic sulla casella** di un'attività la spunta o la
   deseleziona.
-- **Citazione** (`>` all'inizio di un paragrafo) e **blocco di codice** si
+- **Citazione** (Ctrl+Maiusc+Q, `>` all'inizio di un paragrafo) e **blocco di
+  codice** (Ctrl+Maiusc+K) si
   applicano dalla barra; entrambi tornano correttamente a Markdown. Con
   **Formato → Linguaggio del blocco…** scegli il linguaggio di un blocco di
   codice (con il cursore al suo interno) per evidenziarne la sintassi.
 - Passando il **mouse** su un blocco di codice, in alto a destra compaiono il suo **linguaggio** (clic per cambiarlo) e un pulsante per **copiare** il codice.
-- **Rientro**: **Formato → Aumenta/Riduci rientro** annida elenchi e citazioni.
+- **Rientro**: **Formato → Aumenta/Riduci rientro** (Ctrl+] / Ctrl+[) annida
+  elenchi e citazioni.
 
 ## Trasformare il testo e gli appunti
 
-- **Modifica → Trasforma testo** agisce sulla selezione: **MAIUSCOLO**,
-  **minuscolo**, **Capitalizza** e **Ordina righe**.
+- **Modifica → Trasforma testo** cambia il maiuscolo/minuscolo del testo:
+  **MAIUSCOLO**, **minuscolo** e **Capitalizza**. Agisce sulla selezione o, se non
+  c'è selezione, sulla parola dov'è il cursore.
+- **Modifica → Ordina righe** ordina alfabeticamente le righe selezionate. Qui la
+  selezione serve davvero: senza di essa non fa nulla.
 - **Tipografia intelligente** (nello stesso menu) converte nella selezione i
   trattini `--`/`---` in `–`/`—`, `...` in `…` e le virgolette dritte in
   tipografiche secondo il contesto.
@@ -151,10 +159,15 @@ puntato; `1.` (o `1)`) → elenco numerato. Produce lo stesso formato della barr
   esistente viene usata come testo.
 - **Ctrl+clic** su un collegamento lo apre nel browser di sistema; passandoci
   sopra il mouse, l'URL appare in un suggerimento accanto al cursore e nella barra di stato.
-- **Immagini**: trascina un file, incolla un'immagine dagli appunti o usa
-  **Inserisci → Incolla immagine**. L'immagine viene salvata come PNG accanto al
-  `.md` e inserita come `![alt](percorso-relativo)`; così sopravvive al round-trip
-  verso Markdown (le immagini incorporate no).
+- **Inserisci → Immagine…** chiede il testo alternativo e il percorso del file
+  (o un URL). Se il documento è già salvato, il percorso viene scritto
+  **relativo** al `.md`, così il documento resta portabile.
+- **Incollare un'immagine** dagli appunti (Ctrl+V, o **Inserisci → Incolla
+  immagine**) la salva come PNG accanto al `.md` e la inserisce come
+  `![alt](percorso-relativo)` invece di incorporarla: così sopravvive al
+  round-trip verso Markdown (le immagini incorporate no).
+- Trascinare un file di immagine sulla finestra **non** la inserisce: come
+  qualsiasi altro file, viene aperto in una scheda.
 
 ## Note a piè di pagina
 
@@ -172,6 +185,8 @@ puntato; `1.` (o `1)`) → elenco numerato. Produce lo stesso formato della barr
   prima riga è `[!NOTE]`, `[!TIP]`, `[!IMPORTANT]`, `[!WARNING]` o `[!CAUTION]`.
   Viene mostrato con sfondo colorato e titolo a colori, e salvato come Markdown
   compatibile con GitHub.
+- **Inserisci → Riga orizzontale** inserisce una linea di separazione (`---` in
+  Markdown) tra i blocchi.
 - **Inserisci → Simboli speciali…** apre una mappa caratteri per categorie
   (matematici, greco, frecce, valute, punteggiatura…); un clic inserisce il
   simbolo e la finestra resta aperta per inserirne altri.
@@ -199,7 +214,8 @@ spesso…
 
 - Con il cursore **dentro una tabella** compare sopra una **barra flottante** con pulsanti per inserire/eliminare righe e colonne e allineare la colonna.
 - **Tab** passa alla cella successiva e **Maiusc+Tab** alla precedente; **Tab** nell'ultima cella aggiunge una riga.
-- **Tabella → Inserisci tabella…** chiede righe e colonne.
+- **Inserisci → Tabella…** chiede righe e colonne e crea la tabella dov'è il
+  cursore.
 - **Inserisci → Tabella dagli appunti** converte in una tabella i dati TSV/CSV
   (colonne separate da tabulazioni o virgole) copiati da un foglio di calcolo o da
   un file CSV.
@@ -261,6 +277,10 @@ resta modificabile) né il Markdown salvato.
   installazione per il tuo sistema operativo; il blocco resta come codice.
 - L'immagine è solo presentazione: non viene scritta nel Markdown e non conta come
   modifica non salvata.
+- **Visualizza → Anteprima diagrammi** attiva o disattiva questa anteprima
+  automatica (attiva per impostazione predefinita). Disattivala se preferisci
+  lasciare i blocchi come codice — per esempio quando inserisci già tu
+  un'immagine pre-renderizzata sotto il blocco e non vuoi vederla doppia.
 
 Ad esempio, un blocco di codice etichettato `mermaid` contenente `flowchart LR  A
 --> B --> C` viene mostrato come il diagramma di flusso corrispondente.
@@ -282,8 +302,12 @@ Ad esempio, un blocco di codice etichettato `mermaid` contenente `flowchart LR  
 ## Trova e sostituisci
 
 - **Trova** (Ctrl+F) apre una barra in basso con campi per trovare e sostituire,
-  oltre alle opzioni (maiuscole/minuscole, parola intera).
-- **Trova successivo** F3 / **Trova precedente** Maiusc+F3.
+  oltre alle opzioni (maiuscole/minuscole, parola intera, regex).
+  **Sostituisci…** (Ctrl+H) apre la stessa barra con il fuoco nel campo di
+  sostituzione. ESC la chiude.
+- **Trova successivo** (F3) e **Trova precedente** (Maiusc+F3) ripetono l'ultima
+  ricerca senza tornare alla barra, anche se è chiusa; se non hai ancora cercato
+  nulla, F3 apre la barra. La ricerca riparte da capo alla fine del documento.
 - La barra evidenzia **tutte** le corrispondenze nel documento e mostra un contatore **«N di M»** (su quale corrispondenza sei, sul totale). **Sostituisci tutto** le sostituisce tutte in una volta.
 
 ## Struttura del documento
@@ -310,8 +334,9 @@ menu digitando parte del suo nome.
 
 ## Statistiche del documento
 
-- **Visualizza → Statistiche del documento…** mostra parole, caratteri,
-  paragrafi, frasi e tempo di lettura stimato (del documento o della selezione).
+- **Visualizza → Statistiche del documento…** mostra parole, caratteri (con e
+  senza spazi), paragrafi, frasi e tempo di lettura stimato (del documento o
+  della selezione).
 - **Visualizza → Mostra conteggio parole** attiva un contatore permanente nella
   barra di stato.
 - **Visualizza → Mostra riga e colonna** mostra la posizione del cursore (riga e
@@ -409,17 +434,24 @@ propone di recuperare ciò che stavi scrivendo.
 | Salva                     | Ctrl+S           |
 | Salva come                | Ctrl+Maiusc+S    |
 | Stampa                    | Ctrl+P           |
+| Preferenze                | Ctrl+,           |
 | Annulla / Ripeti          | Ctrl+Z / Ctrl+Y  |
 | Grassetto / Corsivo       | Ctrl+B / Ctrl+I  |
+| Sottolineato / Barrato    | Ctrl+U / Ctrl+Maiusc+X |
+| Codice in linea           | Ctrl+E           |
+| Collegamento              | Ctrl+K           |
 | Evidenzia (==marca==)     | Ctrl+Maiusc+H    |
 | Apice / Pedice            | Ctrl+Maiusc++ / Ctrl+Maiusc+- |
-| Sottolineato              | Ctrl+U           |
 | Incolla come testo semplice | Ctrl+Maiusc+V  |
 | Incolla come Markdown     | Ctrl+Alt+V       |
-| Trova                     | Ctrl+F           |
+| Trova / Sostituisci       | Ctrl+F / Ctrl+H  |
 | Trova successivo/precedente | F3 / Maiusc+F3 |
 | Titolo H1 … H6            | Ctrl+1 … Ctrl+6  |
 | Alza / abbassa titolo     | Ctrl+Maiusc+[ / Ctrl+Maiusc+] |
+| Elenco puntato / numerato / attività | Ctrl+Maiusc+U / Ctrl+Maiusc+O / Ctrl+Maiusc+T |
+| Aumenta / riduci rientro  | Ctrl+] / Ctrl+[  |
+| Citazione                 | Ctrl+Maiusc+Q    |
+| Blocco di codice          | Ctrl+Maiusc+K    |
 | Inserisci formula         | Ctrl+Maiusc+F    |
 | Inserisci nota            | Ctrl+Maiusc+N    |
 | Vai al titolo             | Ctrl+G           |
@@ -435,3 +467,8 @@ propone di recuperare ciò che stavi scrivendo.
 | Modalità focus            | F12              |
 | Zoom + / − / Normale      | Ctrl++ / Ctrl+− / Ctrl+0 |
 | Aiuto                     | F1               |
+
+> **Ctrl+Maiusc+K** fa due cose a seconda di dove sei: nell'editor visuale
+> applica un **blocco di codice**; nella vista del codice **cancella la riga**.
+> Non vanno in conflitto perché le azioni di formattazione sono disattivate
+> mentre il pannello del codice ha il fuoco.

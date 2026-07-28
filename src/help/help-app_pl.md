@@ -70,6 +70,8 @@ Możesz mieć otwartych kilka dokumentów naraz, każdy w osobnej **karcie**:
 - **Otwórz ponownie zamkniętą kartę** (Ctrl+Shift+R) otwiera ponownie ostatnio
   zamkniętą kartę (tylko te, które miały plik na dysku).
 - Etykieta pokazuje nazwę pliku i kropkę (•), gdy są niezapisane zmiany.
+- **Kliknięcie prawym przyciskiem** na karcie oferuje **Otwórz folder
+  zawierający**, **Kopiuj nazwę pliku** i **Kopiuj pełną ścieżkę**.
 - Przy zamykaniu aplikacji otwarte dokumenty są zapamiętywane i wszystkie otwierane
   ponownie przy następnym uruchomieniu.
 
@@ -84,9 +86,9 @@ Służy do metadanych takich jak `title`, `lang` itp., używanych przy eksporcie
 Zaznacz fragment i nadaj formatowanie paskiem narzędzi lub menu **Format**:
 
 - **Pogrubienie** (Ctrl+B), **Kursywa** (Ctrl+I), **Podkreślenie** (Ctrl+U),
-  **Przekreślenie**.
-- **Kod w wierszu** dla fragmentów o `stałej szerokości`.
-- **Odnośnik**: dodaje `[tekst](url)` na zaznaczeniu.
+  **Przekreślenie** (Ctrl+Shift+X).
+- **Kod w wierszu** (Ctrl+E) dla fragmentów o `stałej szerokości`.
+- **Odnośnik** (Ctrl+K): dodaje `[tekst](url)` na zaznaczeniu.
 - **Wyróżnij** (Ctrl+Shift+H): otacza zaznaczenie znacznikami `==znacznik==`; tekst
   pojawia się z tłem wyróżnienia. Ponieważ `==` nie jest standardową składnią
   Markdown, zapisuje się jako zwykły tekst.
@@ -110,20 +112,26 @@ spacja → nagłówek H1…H6; `>` → cytat; `-`, `*` lub `+` → lista punktow
 - **Nagłówki** H1–H6 z **Format → Nagłówek** lub przez Ctrl+1 … Ctrl+6.
   **Podnieś/obniż** nagłówek przy kursorze o jeden poziom przez
   Ctrl+Shift+[ / Ctrl+Shift+].
-- **Listy**: punktowane, numerowane i zadań (z polem wyboru). Enter na końcu
+- **Listy**: punktowane (Ctrl+Shift+U), numerowane (Ctrl+Shift+O) i zadań
+  (Ctrl+Shift+T, z polem wyboru). Enter na końcu
   punktu tworzy automatycznie następny; Enter na pustym punkcie opuszcza listę.
   **Kliknięcie pola wyboru** zadania zaznacza je lub odznacza.
-- **Cytat** (`>` na początku akapitu) i **blok kodu** stosuje się z paska; oba
+- **Cytat** (Ctrl+Shift+Q, `>` na początku akapitu) i **blok kodu**
+  (Ctrl+Shift+K) stosuje się z paska; oba
   poprawnie wracają do Markdown. Za pomocą **Format → Język bloku…** wybierasz
   język bloku kodu (gdy kursor jest w jego wnętrzu), aby jego składnia została
   podświetlona.
 - Po **najechaniu** kursorem na blok kodu, w prawym górnym rogu pojawiają się jego **język** (kliknij, aby zmienić) i przycisk **kopiowania** kodu.
-- **Wcięcie**: **Format → Zwiększ/Zmniejsz wcięcie** zagnieżdża listy i cytaty.
+- **Wcięcie**: **Format → Zwiększ/Zmniejsz wcięcie** (Ctrl+] / Ctrl+[) zagnieżdża
+  listy i cytaty.
 
 ## Przekształcanie tekstu i schowek
 
-- **Edycja → Przekształć tekst** działa na zaznaczeniu: **WIELKIE LITERY**, **małe
-  litery**, **Kapitalizuj** i **Sortuj wiersze**.
+- **Edycja → Przekształć tekst** zmienia wielkość liter: **WIELKIE LITERY**,
+  **małe litery** i **Kapitalizuj**. Działa na zaznaczeniu albo, gdy nic nie jest
+  zaznaczone, na słowie pod kursorem.
+- **Edycja → Sortuj wiersze** sortuje alfabetycznie zaznaczone wiersze. Tu
+  zaznaczenie jest konieczne: bez niego nic się nie dzieje.
 - **Inteligentna typografia** (w tym samym menu) zamienia w zaznaczeniu myślniki
   `--`/`---` na `–`/`—`, `...` na `…` oraz proste cudzysłowy na typograficzne w
   zależności od kontekstu.
@@ -147,10 +155,14 @@ spacja → nagłówek H1…H6; `>` → cytat; `-`, `*` lub `+` → lista punktow
   zaznaczenie jest użyte jako tekst.
 - **Ctrl+kliknięcie** odnośnika otwiera go w przeglądarce systemowej; po najechaniu
   myszą URL pojawia się w dymku obok kursora i na pasku stanu.
-- **Obrazy**: przeciągnij plik, wklej obraz ze schowka lub użyj **Wstaw → Wklej
-  obraz**. Obraz jest zapisywany jako PNG obok `.md` i wstawiany jako
-  `![alt](ścieżka-względna)`; dzięki temu przetrwa konwersję do Markdown (obrazy
-  osadzone nie).
+- **Wstaw → Obraz…** pyta o tekst alternatywny i ścieżkę pliku (lub adres URL).
+  Jeśli dokument jest już zapisany, ścieżka zapisuje się jako **względna** wobec
+  `.md`, żeby dokument pozostał przenośny.
+- **Wklejenie obrazu** ze schowka (Ctrl+V lub **Wstaw → Wklej obraz**) zapisuje
+  go jako PNG obok `.md` i wstawia jako `![alt](ścieżka-względna)`, zamiast go
+  osadzać: dzięki temu przetrwa konwersję do Markdown (obrazy osadzone nie).
+- Przeciągnięcie pliku obrazu na okno **nie** wstawia go: jak każdy inny plik,
+  zostaje otwarty w karcie.
 
 ## Przypisy
 
@@ -168,6 +180,8 @@ spacja → nagłówek H1…H6; `>` → cytat; `-`, `*` lub `+` → lista punktow
   wiersz to `[!NOTE]`, `[!TIP]`, `[!IMPORTANT]`, `[!WARNING]` lub `[!CAUTION]`.
   Jest pokazywany z zabarwionym tłem i kolorowym tytułem oraz zapisywany jako
   Markdown zgodny z GitHubem.
+- **Wstaw → Linia pozioma** wstawia między blokami linię oddzielającą (`---` w
+  Markdown).
 - **Wstaw → Symbole specjalne…** otwiera mapę znaków według kategorii
   (matematyczne, greka, strzałki, waluty, interpunkcja…); kliknięcie wstawia symbol,
   a okno pozostaje otwarte, aby wstawić kilka.
@@ -193,7 +207,8 @@ za pomocą paru kliknięć: podpis, szablon tabeli, często powtarzane ostrzeże
 
 - Gdy kursor jest **wewnątrz tabeli**, nad nią pojawia się **pływający pasek** z przyciskami do wstawiania/usuwania wierszy i kolumn oraz wyrównywania kolumny.
 - **Tab** przechodzi do następnej komórki, a **Shift+Tab** do poprzedniej; **Tab** w ostatniej komórce dodaje wiersz.
-- **Tabela → Wstaw tabelę…** pyta o wiersze i kolumny.
+- **Wstaw → Tabela…** pyta o wiersze i kolumny i tworzy tabelę w miejscu
+  kursora.
 - **Wstaw → Tabela ze schowka** zamienia w tabelę dane TSV/CSV (kolumny rozdzielone
   tabulatorami lub przecinkami) skopiowane z arkusza kalkulacyjnego lub pliku CSV.
 - Akcje menu **Tabela** (dodaj/usuń wiersz lub kolumnę, wyrównaj kolumnę) są
@@ -254,6 +269,10 @@ zapisanego Markdown.
   instalacji dla Twojego systemu operacyjnego; blok pozostaje kodem.
 - Obraz jest tylko prezentacją: nie jest zapisywany w Markdown i nie liczy się jako
   niezapisana zmiana.
+- **Widok → Podgląd diagramów** włącza lub wyłącza ten automatyczny podgląd
+  (domyślnie włączony). Wyłącz go, jeśli wolisz zostawić bloki jako kod — na
+  przykład gdy sam wstawiasz pod blokiem wcześniej wyrenderowany obraz i nie
+  chcesz go widzieć podwójnie.
 
 Na przykład blok kodu oznaczony `mermaid` zawierający `flowchart LR  A --> B
 --> C` jest wyświetlany jako odpowiedni schemat blokowy.
@@ -274,8 +293,11 @@ Na przykład blok kodu oznaczony `mermaid` zawierający `flowchart LR  A --> B
 ## Znajdź i zamień
 
 - **Znajdź** (Ctrl+F) otwiera dolny pasek z polami do wyszukiwania i zamiany oraz
-  opcjami (wielkość liter, całe słowo).
-- **Znajdź następny** F3 / **Znajdź poprzedni** Shift+F3.
+  opcjami (wielkość liter, całe słowo, wyrażenia regularne). **Zamień…** (Ctrl+H)
+  otwiera ten sam pasek z fokusem w polu zamiany. ESC go zamyka.
+- **Znajdź następny** (F3) i **Znajdź poprzedni** (Shift+F3) powtarzają ostatnie
+  wyszukiwanie bez wracania do paska, nawet gdy jest zamknięty; jeśli jeszcze nic
+  nie szukałeś, F3 otwiera pasek. Wyszukiwanie zawija się na końcu dokumentu.
 - Pasek podświetla **wszystkie** dopasowania w dokumencie i pokazuje licznik **„N z M”** (na którym dopasowaniu jesteś, z ilu). **Zamień wszystko** zamienia je wszystkie naraz.
 
 ## Struktura dokumentu
@@ -303,8 +325,8 @@ jego nazwy.
 
 ## Statystyki dokumentu
 
-- **Widok → Statystyki dokumentu…** pokazuje słowa, znaki, akapity, zdania i
-  szacowany czas czytania (dokumentu lub zaznaczenia).
+- **Widok → Statystyki dokumentu…** pokazuje słowa, znaki (ze spacjami i bez),
+  akapity, zdania i szacowany czas czytania (dokumentu lub zaznaczenia).
 - **Widok → Pokaż licznik słów** włącza stały licznik na pasku stanu.
 - **Widok → Pokaż wiersz i kolumnę** pokazuje pozycję kursora (wiersz i kolumna)
   na pasku stanu.
@@ -397,17 +419,24 @@ proponuje odzyskanie tego, co pisałeś.
 | Zapisz                    | Ctrl+S           |
 | Zapisz jako               | Ctrl+Shift+S     |
 | Drukuj                    | Ctrl+P           |
+| Preferencje               | Ctrl+,           |
 | Cofnij / Ponów            | Ctrl+Z / Ctrl+Y  |
 | Pogrubienie / Kursywa     | Ctrl+B / Ctrl+I  |
+| Podkreślenie / Przekreślenie | Ctrl+U / Ctrl+Shift+X |
+| Kod w wierszu             | Ctrl+E           |
+| Odnośnik                  | Ctrl+K           |
 | Wyróżnij (==znacznik==)    | Ctrl+Shift+H     |
 | Indeks górny / dolny      | Ctrl+Shift++ / Ctrl+Shift+- |
-| Podkreślenie              | Ctrl+U           |
 | Wklej jako zwykły tekst   | Ctrl+Shift+V     |
 | Wklej jako Markdown       | Ctrl+Alt+V       |
-| Znajdź                    | Ctrl+F           |
+| Znajdź / Zamień           | Ctrl+F / Ctrl+H  |
 | Znajdź następny/poprzedni | F3 / Shift+F3    |
 | Nagłówek H1 … H6          | Ctrl+1 … Ctrl+6  |
 | Podnieś / obniż nagłówek  | Ctrl+Shift+[ / Ctrl+Shift+] |
+| Lista punktowana / numerowana / zadań | Ctrl+Shift+U / Ctrl+Shift+O / Ctrl+Shift+T |
+| Zwiększ / zmniejsz wcięcie | Ctrl+] / Ctrl+[ |
+| Cytat                     | Ctrl+Shift+Q     |
+| Blok kodu                 | Ctrl+Shift+K     |
 | Wstaw wzór                | Ctrl+Shift+F     |
 | Wstaw przypis             | Ctrl+Shift+N     |
 | Przejdź do nagłówka       | Ctrl+G           |
@@ -423,3 +452,7 @@ proponuje odzyskanie tego, co pisałeś.
 | Tryb skupienia            | F12              |
 | Powiększenie + / − / Normalne | Ctrl++ / Ctrl+− / Ctrl+0 |
 | Pomoc                     | F1               |
+
+> **Ctrl+Shift+K** robi dwie rzeczy zależnie od miejsca: w edytorze wizualnym
+> stosuje **blok kodu**, a w widoku kodu **usuwa wiersz**. Nie kolidują, bo
+> działania formatowania są wyłączone, dopóki panel kodu ma fokus.

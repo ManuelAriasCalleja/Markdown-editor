@@ -41,12 +41,12 @@ QString helpSuffix()
     }
 }
 
-// Ancla (slug) de un encabezado, con la misma regla que usan los enlaces del
-// índice en los .md de ayuda: minúsculas, sin acentos (se descomponen y se
-// descartan las marcas), la puntuación se borra y los espacios/guiones colapsan a
-// un único guion. Así `## Enlaces e imágenes` → `enlaces-e-imagenes`, que es el
-// destino que escribe `[Enlaces e imágenes](#enlaces-e-imagenes)`.
-QString headingSlug(const QString &text)
+}  // namespace
+
+// Declarada en helpdialog.h (namespace mdhelp) para que tst_help pueda validar
+// con ella los índices de los 18 .md de ayuda: cada `](#ancla)` del índice tiene
+// que caer en un encabezado real, en los nueve idiomas.
+QString mdhelp::headingSlug(const QString &text)
 {
     const QString decomposed = text.normalized(QString::NormalizationForm_D);
     QString slug;
@@ -69,8 +69,6 @@ QString headingSlug(const QString &text)
     }
     return slug;
 }
-
-} // namespace
 
 HelpDialog::HelpDialog(QWidget *parent)
     : QDialog(parent)
@@ -122,7 +120,7 @@ void HelpDialog::loadPage(const QString &resourcePath)
     for (QTextBlock b = doc->begin(); b != doc->end(); b = b.next()) {
         if (b.blockFormat().headingLevel() <= 0)
             continue;
-        const QString slug = headingSlug(b.text());
+        const QString slug = mdhelp::headingSlug(b.text());
         if (slug.isEmpty())
             continue;
         QTextCursor cur(b);

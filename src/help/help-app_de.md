@@ -74,6 +74,8 @@ Sie können mehrere Dokumente gleichzeitig geöffnet haben, jedes in seinem eige
   Dokument.
 - **Geschlossenen Tab wieder öffnen** (Strg+Umschalt+R) öffnet den zuletzt
   geschlossenen Tab wieder (nur solche mit Datei auf der Festplatte).
+- **Rechtsklick** auf einen Tab bietet **Enthaltenden Ordner öffnen**,
+  **Dateinamen kopieren** und **Vollständigen Pfad kopieren**.
 - Die Beschriftung zeigt den Dateinamen und einen Punkt (•) bei ungespeicherten
   Änderungen.
 - Beim Schließen der Anwendung werden die offenen Dokumente gemerkt und beim
@@ -92,9 +94,9 @@ Markieren Sie einen Abschnitt und wenden Sie die Formatierung über die
 Symbolleiste oder das Menü **Format** an:
 
 - **Fett** (Strg+B), **Kursiv** (Strg+I), **Unterstrichen** (Strg+U),
-  **Durchgestrichen**.
-- **Inline-Code** für `monospace`-Abschnitte.
-- **Link**: fügt `[Text](url)` über der Auswahl ein.
+  **Durchgestrichen** (Strg+Umschalt+X).
+- **Inline-Code** (Strg+E) für `monospace`-Abschnitte.
+- **Link** (Strg+K): fügt `[Text](url)` über der Auswahl ein.
 - **Hervorheben** (Strg+Umschalt+H): umschließt die Auswahl mit `==Markierung==`; der
   Text erscheint mit Hervorhebungshintergrund. Da `==` keine Standard-Markdown-Syntax
   ist, wird es als literaler Text gespeichert.
@@ -120,22 +122,27 @@ Leerzeichen → Überschrift H1…H6; `>` → Zitat; `-`, `*` oder `+` → Aufz�
 - **Überschriften** H1–H6 über **Format → Überschrift** oder mit Strg+1 … Strg+6.
   **Höher-/Tieferstufen** der Überschrift am Cursor um eine Ebene mit
   Strg+Umschalt+[ / Strg+Umschalt+].
-- **Listen**: Aufzählungen, nummerierte und Aufgabenlisten (mit Kontrollkästchen).
+- **Listen**: Aufzählungen (Strg+Umschalt+U), nummerierte (Strg+Umschalt+O) und
+  Aufgabenlisten (Strg+Umschalt+T, mit Kontrollkästchen).
   Enter am Ende eines Punktes erstellt automatisch den nächsten; Enter auf einem
   leeren Punkt verlässt die Liste. Ein **Klick auf das Kontrollkästchen** einer
   Aufgabe schaltet sie um.
-- **Zitat** (`>` am Anfang eines Absatzes) und **Codeblock** werden über die
+- **Zitat** (Strg+Umschalt+Q, `>` am Anfang eines Absatzes) und **Codeblock**
+  (Strg+Umschalt+K) werden über die
   Symbolleiste angewendet; beide werden korrekt nach Markdown zurückgewandelt.
   Mit **Format → Sprache des Blocks…** wählen Sie die Sprache eines Codeblocks
   (mit dem Cursor darin), damit dessen Syntax hervorgehoben wird.
 - Wenn du mit dem Mauszeiger über einen Codeblock fährst, erscheinen oben rechts seine **Sprache** (zum Ändern anklicken) und eine Schaltfläche zum **Kopieren**.
-- **Einrückung**: **Format → Einzug vergrößern/verkleinern** verschachtelt Listen
-  und Zitate.
+- **Einrückung**: **Format → Einzug vergrößern/verkleinern** (Strg+] / Strg+[)
+  verschachtelt Listen und Zitate.
 
 ## Text umwandeln und Zwischenablage
 
-- **Bearbeiten → Text umwandeln** wirkt auf die Auswahl: **GROSSBUCHSTABEN**,
-  **kleinbuchstaben**, **Großschreibung** und **Zeilen sortieren**.
+- **Bearbeiten → Text umwandeln** ändert die Groß-/Kleinschreibung:
+  **GROSSBUCHSTABEN**, **kleinbuchstaben** und **Großschreibung**. Es wirkt auf
+  die Auswahl oder, wenn nichts ausgewählt ist, auf das Wort unter dem Cursor.
+- **Bearbeiten → Zeilen sortieren** sortiert die ausgewählten Zeilen
+  alphabetisch. Hier ist eine Auswahl nötig: ohne sie passiert nichts.
 - **Intelligente Typografie** (im selben Menü) wandelt in der Auswahl die
   Bindestriche `--`/`---` in `–`/`—`, `...` in `…` und gerade Anführungszeichen
   je nach Kontext in typografische um.
@@ -160,10 +167,15 @@ Leerzeichen → Überschrift H1…H6; `>` → Zitat; `-`, `*` oder `+` → Aufz�
   Auswahl wird als Text übernommen.
 - **Strg+Klick** auf einen Link öffnet ihn im Systembrowser; beim Überfahren mit
   der Maus wird die URL in einem Hinweis neben dem Cursor und in der Statusleiste angezeigt.
-- **Bilder**: Ziehen Sie eine Datei, fügen Sie ein Bild aus der Zwischenablage
-  ein oder verwenden Sie **Einfügen → Bild einfügen**. Das Bild wird als PNG neben
-  der `.md` gespeichert und als `![alt](relativer-pfad)` eingefügt; so übersteht
-  es den Round-Trip nach Markdown (eingebettete Bilder nicht).
+- **Einfügen → Bild…** fragt nach dem Alternativtext und dem Dateipfad (oder
+  einer URL). Ist das Dokument bereits gespeichert, wird der Pfad **relativ** zur
+  `.md` geschrieben, damit das Dokument portabel bleibt.
+- **Ein Bild einfügen** aus der Zwischenablage (Strg+V oder **Einfügen → Bild
+  einfügen**) speichert es als PNG neben der `.md` und fügt es als
+  `![alt](relativer-pfad)` ein, statt es einzubetten: So übersteht es den
+  Round-Trip nach Markdown (eingebettete Bilder nicht).
+- Eine Bilddatei auf das Fenster zu ziehen fügt sie **nicht** ein: Wie jede
+  andere Datei wird sie in einem Tab geöffnet.
 
 ## Fußnoten
 
@@ -181,6 +193,8 @@ Leerzeichen → Überschrift H1…H6; `>` → Zitat; `-`, `*` oder `+` → Aufz�
   erste Zeile `[!NOTE]`, `[!TIP]`, `[!IMPORTANT]`, `[!WARNING]` oder `[!CAUTION]`
   ist. Es wird mit getöntem Hintergrund und farbigem Titel angezeigt und als
   GitHub-kompatibles Markdown gespeichert.
+- **Einfügen → Horizontale Linie** fügt zwischen Blöcken eine Trennlinie ein
+  (`---` in Markdown).
 - **Einfügen → Sonderzeichen…** öffnet eine Zeichentabelle nach Kategorien
   (mathematisch, griechisch, Pfeile, Währung, Interpunktion…); ein Klick fügt das
   Zeichen ein und der Dialog bleibt zum Einfügen mehrerer offen.
@@ -208,7 +222,8 @@ ein Hinweis, den Sie oft wiederholen…
 
 - Wenn der Cursor **in einer Tabelle** steht, erscheint darüber eine **schwebende Leiste** mit Schaltflächen zum Einfügen/Löschen von Zeilen und Spalten und zum Ausrichten der Spalte.
 - **Tab** springt zur nächsten Zelle und **Umschalt+Tab** zur vorherigen; **Tab** in der letzten Zelle fügt eine Zeile hinzu.
-- **Tabelle → Tabelle einfügen…** fragt nach Zeilen und Spalten.
+- **Einfügen → Tabelle…** fragt nach Zeilen und Spalten und erstellt die Tabelle
+  an der Cursorposition.
 - **Einfügen → Tabelle aus Zwischenablage** wandelt aus einer Tabellenkalkulation
   oder einer CSV-Datei kopierte TSV/CSV-Daten (durch Tabulatoren oder Kommas
   getrennte Spalten) in eine Tabelle um.
@@ -270,6 +285,10 @@ gespeicherte Markdown zu verändern.
   Installationsbefehl für Ihr Betriebssystem; der Block bleibt als Code.
 - Das Bild dient nur der Darstellung: Es wird nicht ins Markdown geschrieben und
   zählt nicht als ungespeicherte Änderung.
+- **Ansicht → Diagramme vorschauen** schaltet diese automatische Vorschau ein
+  oder aus (standardmäßig ein). Schalten Sie sie aus, wenn Sie die Blöcke lieber
+  als Code belassen — etwa wenn Sie selbst bereits ein vorgerendertes Bild unter
+  den Block setzen und es nicht doppelt sehen möchten.
 
 Zum Beispiel wird ein als `mermaid` markierter Codeblock mit `flowchart LR  A
 --> B --> C` als das entsprechende Flussdiagramm vorgeschaut.
@@ -291,8 +310,12 @@ Zum Beispiel wird ein als `mermaid` markierter Codeblock mit `flowchart LR  A
 ## Suchen und Ersetzen
 
 - **Suchen** (Strg+F) öffnet unten eine Leiste mit Feldern zum Suchen und Ersetzen
-  sowie Optionen (Groß-/Kleinschreibung, ganzes Wort).
-- **Weitersuchen** F3 / **Rückwärts suchen** Umschalt+F3.
+  sowie Optionen (Groß-/Kleinschreibung, ganzes Wort, Regex). **Ersetzen…**
+  (Strg+H) öffnet dieselbe Leiste mit dem Fokus im Ersetzen-Feld. ESC schließt sie.
+- **Weitersuchen** (F3) und **Rückwärts suchen** (Umschalt+F3) wiederholen die
+  letzte Suche, ohne zur Leiste zurückzukehren, auch wenn sie geschlossen ist;
+  wenn Sie noch nichts gesucht haben, öffnet F3 die Leiste. Die Suche beginnt am
+  Ende wieder von vorn.
 - Die Leiste hebt **alle** Treffer im Dokument hervor und zeigt einen Zähler **„N von M“** (auf welchem Treffer von wie vielen). **Alle ersetzen** ersetzt alle auf einmal.
 
 ## Dokumentgliederung
@@ -322,8 +345,9 @@ Sie einen Teil ihres Namens eingeben.
 
 ## Dokumentstatistik
 
-- **Ansicht → Dokumentstatistik…** zeigt Wörter, Zeichen, Absätze, Sätze und die
-  geschätzte Lesezeit (des Dokuments oder der Auswahl).
+- **Ansicht → Dokumentstatistik…** zeigt Wörter, Zeichen (mit und ohne
+  Leerzeichen), Absätze, Sätze und die geschätzte Lesezeit (des Dokuments oder
+  der Auswahl).
 - **Ansicht → Wortzähler anzeigen** aktiviert einen dauerhaften Zähler in der
   Statusleiste.
 - **Ansicht → Zeile und Spalte anzeigen** zeigt die Cursorposition (Zeile und
@@ -423,17 +447,24 @@ automatisch gespeichert. Schließt die Anwendung unerwartet, bietet sie beim ern
 | Speichern                 | Strg+S           |
 | Speichern unter           | Strg+Umschalt+S  |
 | Drucken                   | Strg+P           |
+| Einstellungen             | Strg+,           |
 | Rückgängig / Wiederholen  | Strg+Z / Strg+Y  |
 | Fett / Kursiv             | Strg+B / Strg+I  |
+| Unterstrichen / Durchgestrichen | Strg+U / Strg+Umschalt+X |
+| Inline-Code               | Strg+E           |
+| Link                      | Strg+K           |
 | Hervorheben (==Markierung==) | Strg+Umschalt+H |
 | Hochgestellt / Tiefgestellt | Strg+Umschalt++ / Strg+Umschalt+- |
-| Unterstrichen             | Strg+U           |
 | Als Klartext einfügen     | Strg+Umschalt+V  |
 | Als Markdown einfügen     | Strg+Alt+V       |
-| Suchen                    | Strg+F           |
+| Suchen / Ersetzen         | Strg+F / Strg+H  |
 | Weiter-/Rückwärtssuchen   | F3 / Umschalt+F3 |
 | Überschrift H1 … H6       | Strg+1 … Strg+6  |
 | Überschrift höher-/tieferstufen | Strg+Umschalt+[ / Strg+Umschalt+] |
+| Aufzählung / nummeriert / Aufgaben | Strg+Umschalt+U / Strg+Umschalt+O / Strg+Umschalt+T |
+| Einzug vergrößern / verkleinern | Strg+] / Strg+[ |
+| Zitat                     | Strg+Umschalt+Q  |
+| Codeblock                 | Strg+Umschalt+K  |
 | Formel einfügen           | Strg+Umschalt+F  |
 | Fußnote einfügen          | Strg+Umschalt+N  |
 | Zu Überschrift gehen      | Strg+G           |
@@ -449,3 +480,8 @@ automatisch gespeichert. Schließt die Anwendung unerwartet, bietet sie beim ern
 | Fokusmodus                | F12              |
 | Zoom + / − / Normal       | Strg++ / Strg+− / Strg+0 |
 | Hilfe                     | F1               |
+
+> **Strg+Umschalt+K** tut je nach Ort zweierlei: Im visuellen Editor wendet es
+> einen **Codeblock** an, in der Quelltextansicht **löscht es die Zeile**. Sie
+> kollidieren nicht, weil die Formatierungsaktionen deaktiviert sind, solange das
+> Quelltextfeld den Fokus hat.

@@ -530,6 +530,7 @@ if(Qt6Test_FOUND)
         tst_imageobject
         tst_chromezoom
         tst_shortcuts
+        tst_help
         tst_filecontroller
         tst_formulacontroller)
         add_executable(${test} tests/${test}.cpp)
@@ -554,6 +555,11 @@ if(Qt6Test_FOUND)
         set_tests_properties(${test} PROPERTIES
             ENVIRONMENT "QT_QPA_PLATFORM=${_qpa}")
     endforeach()
+
+    # tst_help valida los .md de ayuda tal como se empaquetan, leyéndolos del
+    # recurso Qt. El .qrc solo está en el ejecutable (la biblioteca no lo lleva),
+    # así que se compila también dentro de este test.
+    target_sources(tst_help PRIVATE src/resources.qrc)
 
     # Los golden tests necesitan la ruta a las referencias en el árbol fuente.
     target_compile_definitions(tst_goldenexport PRIVATE
