@@ -564,13 +564,17 @@ if(Qt6Test_FOUND)
         DOCX_FIXTURE_DIR="${CMAKE_CURRENT_SOURCE_DIR}/tests/fixtures/docx")
 
     # Fuzzer del round-trip: se COMPILA pero NO se registra como prueba de CTest.
-    # Es una herramienta de fuzzing manual/bajo demanda:
+    # Se ejecuta a mano:
     #     QT_QPA_PLATFORM=offscreen ./build/tst_roundtripfuzz
-    # No es una guardia de CI porque sus entradas adversarias pueden desbordar la
-    # pila DENTRO del parser Markdown de Qt según el build de Qt del entorno (visto
-    # en el runner de CI, no reproducible en local ni con la pila reducida). Mantener
-    # un test así en el gate bloquearía releases sin poder depurarlo. Su valor ya se
-    # cobró: cazó el desbordamiento de recursión del parser TeX (tope de profundidad).
+    # y en CI desde el job `fuzz`, que lo invoca directamente (no por ctest, que
+    # no lo ve) bajo ASan/UBSan y NO puede bloquear el workflow. Fuera del gate
+    # porque sus entradas adversarias van contra el parser Markdown de Qt, donde
+    # ya han aparecido dos fallos ajenos a esta app —un desbordamiento de pila
+    # dependiente del build de Qt y el cuelgue de setMarkdown en Windows—: con un
+    # test así en el gate, un fallo de Qt bloquearía la release. Su valor está en
+    # avisar, y lo ha dado dos veces: cazó el desbordamiento de recursión del
+    # parser TeX (de donde salió el tope de profundidad) y el cuelgue de Windows
+    # (de donde salió el rodeo de mdrender::protect).
     add_executable(tst_roundtripfuzz tests/tst_roundtripfuzz.cpp)
     target_link_libraries(tst_roundtripfuzz PRIVATE md-editor-core Qt6::Test)
 

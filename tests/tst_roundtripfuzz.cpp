@@ -15,12 +15,18 @@
 // pasa, DOS veces, por la ruta REAL de abrir/guardar de la app:
 //   body → mdrender::setMarkdownWithExtensions(editor) → mdtable::documentMarkdown
 //
-// Invariante comprobada: **no crashea**. Es la red de verdad bajo ASan/UBSan (lo
-// corre CI): mete miles de combinaciones —fórmulas, tablas, notas al pie,
-// admoniciones, listas anidadas, código, y caracteres que estresan el escapado
-// (`* _ [ ] \ & | # < >` …)— por todo el pipeline de carga/render/serialización,
-// buscando accesos inválidos, asserts o cuelgues. La doble pasada ejercita también
-// la re-carga de la salida ya serializada.
+// Invariante comprobada: **no crashea**. Mete miles de combinaciones —fórmulas,
+// tablas, notas al pie, admoniciones, listas anidadas, código, y caracteres que
+// estresan el escapado (`* _ [ ] \ & | # < >` …)— por todo el pipeline de
+// carga/render/serialización, buscando accesos inválidos, asserts o cuelgues. La
+// doble pasada ejercita también la re-carga de la salida ya serializada.
+//
+// **Dónde corre.** No está registrado en CTest (ver el comentario de CMakeLists):
+// lo ejecuta a mano quien quiera y, en CI, el job `fuzz`, que lo invoca directo
+// bajo ASan/UBSan y no puede bloquear el workflow. Ojo con la tentación de
+// meterlo en el job de sanitizers: ese corre `ctest`, que no lo ve, así que
+// durante un tiempo los comentarios afirmaron que se fuzzeaba bajo sanitizers
+// cuando en realidad no se hacía nunca.
 //
 // **Por qué NO se comprueba convergencia/idempotencia aquí.** Sería lo natural en un
 // round-trip, pero `QTextDocument::toMarkdown` de Qt NO es idempotente para

@@ -217,6 +217,68 @@ jobs:
           ASAN_OPTIONS: detect_leaks=0
           UBSAN_OPTIONS: print_stacktrace=1:halt_on_error=1
 
+  # El fuzzer del round-trip, en su propio job y SIN capacidad de bloquear
+  # (`continue-on-error`). Las dos mitades de esa decisión importan:
+  #
+  #   • Job aparte y no bloqueante porque mete entrada adversaria por el pipeline
+  #     de carga/serialización, y un fallo suyo no debe impedir publicar una
+  #     release: su papel es avisar, no vetar. `continue-on-error` (en vez de
+  #     tragarse el código de salida con `exit 0`) deja el fallo VISIBLE en la
+  #     interfaz de Actions; lo que no hace es tumbar el workflow.
+  #
+  #   • Bajo sanitizers porque hasta ahora NO se ejecutaba con ellos, al
+  #     contrario de lo que decían sus comentarios: no está registrado en ctest
+  #     (a propósito, ver CMakeLists) y el job de sanitizers corre `ctest`, así
+  #     que la herramienta que cazaría un fallo de memoria en el fuzzeo no se le
+  #     había aplicado nunca. Aquí se invoca el ejecutable directamente, que es
+  #     la única forma de que ASan/UBSan lleguen a él.
+  #
+  # En Windows se ejecuta dentro de build-test, no aquí: allí el binario ya está
+  # compilado y correrlo sale gratis, mientras que un job propio obligaría a
+  # rehacer toda la build de Windows para 2000 casos.
+  fuzz:
+    name: Round-trip fuzzer (ASan/UBSan, informativo)
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    # Un cuelgue del fuzzer no debe quemar el presupuesto de Actions: sin tope,
+    # un caso que no termine se lleva las 6 horas por defecto.
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v4
+        with:
+          version: '6.8.2'
+          cache: true
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libhunspell-dev hunspell-en-us \
+            libgl1-mesa-dev libxkbcommon-x11-0 libfontconfig1 libdbus-1-3 \
+            libegl1 libxcb-cursor0 libxcb-icccm4 libxcb-image0 libxcb-keysyms1 \
+            libxcb-randr0 libxcb-render-util0 libxcb-shape0 libxcb-sync1 \
+            libxcb-xfixes0 libxcb-xinerama0 libxcb-xkb1 libxkbcommon0
+
+      - name: Configure
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -DENABLE_SANITIZERS=ON
+
+      # --parallel 2: igual que el job de sanitizers, compilar instrumentado
+      # dispara la RAM de cc1plus y con todos los núcleos el runner se queda sin
+      # memoria.
+      - name: Build the fuzzer
+        run: cmake --build build --parallel 2 --target tst_roundtripfuzz
+
+      # Directo al ejecutable: no está en ctest, así que esta es la única vía.
+      - name: Fuzz
+        run: ./build/tst_roundtripfuzz
+        env:
+          QT_QPA_PLATFORM: offscreen
+          ASAN_OPTIONS: detect_leaks=0
+          UBSAN_OPTIONS: print_stacktrace=1:halt_on_error=1
+
   clang-tidy:
     name: clang-tidy
     runs-on: ubuntu-latest
