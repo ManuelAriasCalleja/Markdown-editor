@@ -131,37 +131,35 @@ jobs:
           }
           exit 0
 
-      # EXPERIMENTO (temporal). tst_roundtripfuzz —que no está registrado en
-      # ctest, ver CMakeLists— revienta en Windows con 0xC0000005 con LOS DOS
-      # plugins, así que el cuelgue es real. MD_FUZZ_TRACE escribe el índice de
-      # cada caso en stderr sin buffer: el último impreso antes de morir es el
-      # que lo provoca, y como el PRNG es determinista ese índice reproduce el
-      # mismo documento en cualquier sistema.
-      - name: Locate the fuzzer crash (Windows)
+      # DIAGNÓSTICO (temporal, mientras el cuelgue esté sin resolver).
+      # Ya se sabe que tst_roundtripfuzz —que no está registrado en ctest, ver
+      # CMakeLists— muere en Windows con 0xC0000005 en el caso 281, PASADA 1, y
+      # cuál es la cadena exacta de 119 caracteres que se le pasa a setMarkdown.
+      # Lo que falta es saber si Qt revienta con ella POR SÍ SOLO: eso lo prueba
+      # `qtmdrepro`, que enlaza únicamente Qt. Se ejecuta una variante por
+      # proceso (un fallo mata el proceso y se llevaría el resto de la batería)
+      # y se anota el código de salida de cada una: las variantes van de la
+      # cadena completa a fragmentos de un constructo, así que la primera que
+      # muera acota el disparador sin necesidad de depurador.
+      - name: Bare-Qt repro of the setMarkdown crash (Windows)
         if: always() && runner.os == 'Windows'
         shell: pwsh
         env:
           QT_QPA_PLATFORM: windows
-          MD_FUZZ_TRACE: '1'
         run: |
-          $err = Join-Path $env:RUNNER_TEMP "fuzz-trace.txt"
-          & build/Release/tst_roundtripfuzz.exe 2>$err | Out-Null
-          Write-Host "=== tst_roundtripfuzz: exit=$LASTEXITCODE"
-          if (Test-Path $err) {
-            $lines = Get-Content $err
-            $ultimo = $lines | Where-Object { $_ -match '^\s*caso \d+ pasada' } | Select-Object -Last 1
-            Write-Host "--- última pasada trazada (la que revienta): $ultimo"
-          }
-          # Y ahora solo ese caso, volcando la entrada exacta de cada pasada:
-          # el último volcado antes de morir ES la cadena que mata a setMarkdown.
-          if ($ultimo -match 'caso (\d+)') {
-            $env:MD_FUZZ_ONLY = $Matches[1]
-            $solo = Join-Path $env:RUNNER_TEMP "fuzz-solo.txt"
-            & build/Release/tst_roundtripfuzz.exe 2>$solo | Out-Null
-            Write-Host "=== solo el caso $($Matches[1]): exit=$LASTEXITCODE"
-            if (Test-Path $solo) {
-              Get-Content $solo | Where-Object { $_ -match 'entrada pasada|Nearby symbol|Exception code' } |
-                ForEach-Object { Write-Host "    $_" }
+          $exe = "build/Release/qtmdrepro.exe"
+          # Sin argumentos lista las variantes: el número vive en el .cpp, no aquí.
+          $listado = & $exe
+          $total = [int]$listado[0]
+          Write-Host "=== $total variantes, una por proceso"
+          foreach ($features in @('nohtml', 'github')) {
+            Write-Host "--- features: $features"
+            for ($i = 0; $i -lt $total; $i++) {
+              $nombre = ($listado[$i + 1] -split ' ', 2)[1]
+              & $exe $i $features 2>&1 | Out-Null
+              $code = $LASTEXITCODE
+              $marca = if ($code -eq 0) { "ok  " } else { "CAE " }
+              Write-Host ("    {0}variante {1,2} ({2}): exit={3}" -f $marca, $i, $nombre, $code)
             }
           }
           exit 0

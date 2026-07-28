@@ -574,6 +574,12 @@ if(Qt6Test_FOUND)
     add_executable(tst_roundtripfuzz tests/tst_roundtripfuzz.cpp)
     target_link_libraries(tst_roundtripfuzz PRIVATE md-editor-core Qt6::Test)
 
+    # Reproductor del cuelgue del fuzzer en Windows. Enlaza SOLO Qt —nada de
+    # md-editor-core, que es justo lo que demuestra— y ejecuta una variante por
+    # proceso porque el fallo mata el proceso. Ver tools/qtmdrepro.cpp.
+    add_executable(qtmdrepro tools/qtmdrepro.cpp)
+    target_link_libraries(qtmdrepro PRIVATE Qt6::Widgets)
+
     # Guard de i18n: las traducciones deben estar completas y al día con el
     # código. Usa el lupdate de Qt6 (no el del PATH, que suele ser de Qt5).
     # Es un script de shell, así que solo se registra donde hay bash (no Windows).
