@@ -5,7 +5,7 @@ TeX formulas, aligned tables, highlighted code, document templates, and export t
 PDF/DOCX/ODT/LaTeX — lightweight, portable (Qt6/C++17, zero external
 dependencies), in 9 languages.
 
-![Version](https://img.shields.io/badge/version-2.8.0-blue)
+![Version](https://img.shields.io/badge/version-2.8.1-blue)
 ![License](https://img.shields.io/badge/license-GPL--3.0-blue)
 ![Platforms](https://img.shields.io/badge/platforms-Linux%20%7C%20Windows%20%7C%20macOS-green)
 
@@ -17,9 +17,9 @@ dependencies), in 9 languages.
 
 | System | File | Notes |
 |--------|------|-------|
-| **Linux** (x86_64) | [`md-editor-2.8.0-x86_64.AppImage`](https://github.com/ManuelAriasCalleja/Markdown-editor/releases/latest) | Single-file executable. `chmod +x` and double-click. |
-| **Windows** (x64) | [`md-editor-2.8.0-windows-x64.zip`](https://github.com/ManuelAriasCalleja/Markdown-editor/releases/latest) | Portable: unzip and run `md-editor.exe`. |
-| **macOS** (Apple Silicon + Intel) | [`md-editor-2.8.0-macos-universal.dmg`](https://github.com/ManuelAriasCalleja/Markdown-editor/releases/latest) | First launch: Ctrl-click → *Open* (binary not signed). |
+| **Linux** (x86_64) | [`md-editor-2.8.1-x86_64.AppImage`](https://github.com/ManuelAriasCalleja/Markdown-editor/releases/latest) | Single-file executable. `chmod +x` and double-click. |
+| **Windows** (x64) | [`md-editor-2.8.1-windows-x64.zip`](https://github.com/ManuelAriasCalleja/Markdown-editor/releases/latest) | Portable: unzip and run `md-editor.exe`. |
+| **macOS** (Apple Silicon + Intel) | [`md-editor-2.8.1-macos-universal.dmg`](https://github.com/ManuelAriasCalleja/Markdown-editor/releases/latest) | First launch: Ctrl-click → *Open* (binary not signed). |
 
 > All downloads, including previous versions, on the
 > [releases page](https://github.com/ManuelAriasCalleja/Markdown-editor/releases).
@@ -119,7 +119,19 @@ Full list under *Help → Manual* inside the app.
 
 - CMake ≥ 3.16
 - Qt 6.5 or higher (modules `Widgets`, `PrintSupport`, `LinguistTools`, `Test`)
+  **plus its private headers**: the ODF export uses Qt's private QZip. On
+  Debian/Ubuntu these ship in a separate package from `qt6-base-dev`, and
+  without them CMake fails at configure time with *"Imported target
+  `Qt6::GuiPrivate` includes non-existent path"*.
 - A C++17 compiler (GCC 9+, Clang 10+, MSVC 19.20+)
+- **Optional**: Hunspell, for spell checking. Without it everything else builds
+  and the spell checker is simply inactive. On Linux the dictionaries are the
+  system ones (`hunspell-en-us`, `hunspell-es`…).
+
+```bash
+# Debian / Ubuntu
+sudo apt-get install cmake g++ qt6-base-dev qt6-base-private-dev libhunspell-dev
+```
 
 ### Linux / macOS
 
@@ -145,8 +157,9 @@ build\Release\md-editor.exe
 ctest --test-dir build --output-on-failure
 ```
 
-Tests use **Qt Test** and run headless (`QT_QPA_PLATFORM=offscreen`, set by
-CMake).
+Tests use **Qt Test**. CMake picks the platform plugin per system: headless
+(`offscreen`) on Linux and macOS, native on Windows — where `offscreen` has no
+font database, which breaks Markdown serialisation and silences the test output.
 
 ### Installation (Linux, optional)
 

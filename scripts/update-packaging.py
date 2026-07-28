@@ -32,6 +32,11 @@ METAINFO = PKG / "flatpak" / "io.github.manuelariascalleja.Markdown-editor.metai
 FLATPAK = PKG / "flatpak" / "io.github.manuelariascalleja.Markdown-editor.yaml"
 SCOOP = PKG / "scoop" / "md-editor.json"
 HOMEBREW = PKG / "homebrew" / "md-editor.rb"
+# El README no es un manifiesto, pero es la primera página que ve cualquiera y
+# tiene la versión escrita en dos sitios (la insignia y los nombres de fichero de
+# la tabla de descargas). Se quedaba atrás exactamente igual que los manifiestos
+# —y más a la vista—, así que va en el mismo automatismo.
+README = ROOT / "README.md"
 
 
 def run(*cmd: str) -> str:
@@ -116,6 +121,20 @@ def main() -> int:
         (r'sha256 "[0-9a-f]{64}"', f'sha256 "{digests["dmg"]}"', 1),
     ]):
         changed.append(HOMEBREW)
+
+    # README: la insignia de versión y los tres nombres de fichero de la tabla de
+    # descargas. Los enlaces de esa tabla apuntan a `releases/latest`, así que no
+    # se rompen al quedarse atrás; lo que envejece es el texto, que anuncia una
+    # versión que ya no es la última. Un nombre por sistema, de ahí el 1 en cada
+    # regla: si algún día se añade otro artefacto, esto aborta y hay que venir.
+    if edit(README, [
+        (r'badge/version-[\d.]+-blue', f'badge/version-{version}-blue', 1),
+        (r'md-editor-[\d.]+-x86_64\.AppImage', f'md-editor-{version}-x86_64.AppImage', 1),
+        (r'md-editor-[\d.]+-windows-x64\.zip', f'md-editor-{version}-windows-x64.zip', 1),
+        (r'md-editor-[\d.]+-macos-universal\.dmg',
+         f'md-editor-{version}-macos-universal.dmg', 1),
+    ]):
+        changed.append(README)
 
     # Flatpak: compila desde el tag, así que van tag y commit fijado.
     if edit(FLATPAK, [
