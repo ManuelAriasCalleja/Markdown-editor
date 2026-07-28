@@ -17,6 +17,8 @@ class TestMarkdownRender : public QObject
     Q_OBJECT
 private slots:
     void protectWrapsMathAndFootnotes();
+    void protectAlwaysEndsWithNewline();
+    void thematicBreakSandwichSurvivesLoad();
     void rendersMathFootnotesAndAdmonitions();
     void nullSafe();
     void imageMarkdownNeverLeavesAltEmpty();
@@ -29,6 +31,36 @@ void TestMarkdownRender::protectWrapsMathAndFootnotes()
     // El protector envuelve las fórmulas para que md4c no se coma `_`/`*`.
     const QString out = mdrender::protect(QStringLiteral("Una $x_i$ y [^1]: nota"));
     QVERIFY(out != QStringLiteral("Una $x_i$ y [^1]: nota"));  // algo se ha protegido
+}
+
+// El salto de línea final que añade `protect` es un RODEO a un fallo de Qt:
+// `setMarkdown` mata el proceso en Windows (0xC0000005) con un documento que
+// empieza y acaba por regla temática `---` sin salto final —el caso mínimo son
+// seis caracteres, `---\n\n---`—, y basta un `\n` al final para esquivarlo.
+// Lo cazó tst_roundtripfuzz (caso 281); ver el comentario en markdownrender.cpp.
+void TestMarkdownRender::protectAlwaysEndsWithNewline()
+{
+    QVERIFY(mdrender::protect(QStringLiteral("---\n\n---")).endsWith(QLatin1Char('\n')));
+    QVERIFY(mdrender::protect(QStringLiteral("texto")).endsWith(QLatin1Char('\n')));
+    QVERIFY(mdrender::protect(QString()).endsWith(QLatin1Char('\n')));
+
+    // No se acumulan saltos: lo que ya termina en `\n` se deja como está.
+    QCOMPARE(mdrender::protect(QStringLiteral("texto\n")), QStringLiteral("texto\n"));
+}
+
+// El documento del caso 281 del fuzzer, reducido a lo que dispara el fallo. En
+// Windows sin el rodeo esto no falla: mata el proceso, así que llegar al final
+// del test ES la comprobación. En Linux/macOS pasa igual (el fallo es de
+// Windows), pero el caso se queda aquí para que nadie retire el rodeo sin más.
+void TestMarkdownRender::thematicBreakSandwichSurvivesLoad()
+{
+    for (const QString &md : {QStringLiteral("---\n\n---"),
+                              QStringLiteral("---\n\nx\n\n---"),
+                              QStringLiteral("---\n\n- [ ] tarea\n\n!bang `a&b`\n\n---")}) {
+        QTextEdit edit;
+        mdrender::setMarkdownWithExtensions(&edit, md);
+        QVERIFY(edit.document() != nullptr);
+    }
 }
 
 void TestMarkdownRender::rendersMathFootnotesAndAdmonitions()

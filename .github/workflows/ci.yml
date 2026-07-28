@@ -131,17 +131,17 @@ jobs:
           }
           exit 0
 
-      # DIAGNÓSTICO (temporal, mientras el cuelgue esté sin resolver).
-      # Ya se sabe que tst_roundtripfuzz —que no está registrado en ctest, ver
-      # CMakeLists— muere en Windows con 0xC0000005 en el caso 281, PASADA 1, y
-      # cuál es la cadena exacta de 119 caracteres que se le pasa a setMarkdown.
-      # Lo que falta es saber si Qt revienta con ella POR SÍ SOLO: eso lo prueba
-      # `qtmdrepro`, que enlaza únicamente Qt. Se ejecuta una variante por
-      # proceso (un fallo mata el proceso y se llevaría el resto de la batería)
-      # y se anota el código de salida de cada una: las variantes van de la
-      # cadena completa a fragmentos de un constructo, así que la primera que
-      # muera acota el disparador sin necesidad de depurador.
-      - name: Bare-Qt repro of the setMarkdown crash (Windows)
+      # `QTextDocument::setMarkdown` mata el proceso en Windows (0xC0000005) con
+      # un documento que empieza y acaba por regla temática `---` sin salto de
+      # línea final. Es un fallo de Qt —`qtmdrepro` enlaza SOLO Qt, sin
+      # md-editor-core— y el editor lo rodea añadiendo ese `\n` en
+      # `mdrender::protect()`. Ver el comentario largo en tools/qtmdrepro.cpp.
+      #
+      # Este paso es el CENTINELA del rodeo, no una guardia: informa y no falla.
+      # Lo que hay que mirar es cuándo `minimo` DEJA de caer, porque eso
+      # significará que Qt lo ha arreglado y que se puede retirar el rodeo.
+      # Una variante por proceso, que el fallo mata el proceso.
+      - name: Qt setMarkdown crash sentinel (Windows)
         if: always() && runner.os == 'Windows'
         shell: pwsh
         env:
@@ -152,8 +152,6 @@ jobs:
           $listado = & $exe
           $total = [int]$listado[0]
           Write-Host "=== $total variantes, una por proceso"
-          # Solo con las features reales del editor: la primera ronda ya probó
-          # que quitar MarkdownNoHTML no cambia nada (cae con las dos).
           for ($i = 0; $i -lt $total; $i++) {
             $nombre = ($listado[$i + 1] -split ' ', 2)[1]
             & $exe $i 2>&1 | Out-Null
@@ -161,6 +159,20 @@ jobs:
             $marca = if ($code -eq 0) { "ok  " } else { "CAE " }
             Write-Host ("    {0}variante {1,2} ({2}): exit={3}" -f $marca, $i, $nombre, $code)
           }
+          exit 0
+
+      # Y la comprobación de que el rodeo hace su trabajo donde se descubrió el
+      # fallo: el fuzzer completo, que hasta ahora moría en el caso 281. No está
+      # registrado en ctest (ver CMakeLists), así que se ejecuta a mano. Informa
+      # y no falla: la decisión de devolverlo o no al gate es aparte.
+      - name: Round-trip fuzzer (Windows, informativo)
+        if: always() && runner.os == 'Windows'
+        shell: pwsh
+        env:
+          QT_QPA_PLATFORM: windows
+        run: |
+          & build/Release/tst_roundtripfuzz.exe 2>&1 | Out-Null
+          Write-Host "=== tst_roundtripfuzz: exit=$LASTEXITCODE"
           exit 0
 
   sanitizers:

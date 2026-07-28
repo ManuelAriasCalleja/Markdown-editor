@@ -54,44 +54,32 @@ const QString kCompleta = arma({kRegla, kTareas, kParrafo, kRegla});
 
 QList<Variante> variantes()
 {
-    // Tercera ronda. Lo que ya está establecido:
-    //   1ª — con Qt PELADO (esto no enlaza md-editor-core) la cadena completa
-    //        revienta en Windows: el fallo es de Qt, no del editor. Ningún
-    //        fragmento aislado cae, y MarkdownNoHTML es indiferente.
-    //   2ª — bisecando: caen TODAS las variantes que conservan las dos reglas
-    //        temáticas, y pasan las tres que se quedan sin alguna
-    //        (sin-regla-inicial, sin-regla-final, sin-reglas). El contenido
-    //        intermedio da igual: cae con un simple `!bang` en medio. Y
-    //        `completa-ascii` cae, o sea que los acentos no pintan nada —la
-    //        hipótesis del descuadre UTF-8/UTF-16 queda descartada.
+    // Bisección terminada (tres rondas de CI). Conclusiones, que son las que
+    // dejan esta lista reducida a lo que sigue aportando algo:
+    //   • Con Qt PELADO —esto no enlaza md-editor-core— el documento revienta en
+    //     Windows con 0xC0000005: el fallo es de Qt, no del editor.
+    //   • El caso mínimo son SEIS caracteres: `---\n\n---`.
+    //   • Solo con el marcador `---`: `***` y `- - -` pasan, y el mixto también.
+    //     Es la forma ambigua (regla temática / subrayado setext / delimitador
+    //     de front matter) la que lo dispara.
+    //   • Solo con exactamente dos: con tres reglas pasa, y `---\n---` pegadas
+    //     también.
+    //   • MarkdownNoHTML es indiferente, y los acentos no pintan nada
+    //     (`completa-ascii` caía igual), pese a que la traza pasa por
+    //     `convertToUtf8`.
+    //   • Un `\n` final lo esquiva, tanto en el mínimo como en el documento real.
+    //     Ese es el rodeo que aplica `mdrender::protect()`.
     //
-    // Luego el disparador es que el documento EMPIECE y ACABE por regla
-    // temática; ninguna de las dos por separado basta. Esta ronda busca el caso
-    // mínimo publicable (para el reporte aguas arriba) y, sobre todo, si algo
-    // tan barato como un salto de línea final lo esquiva: eso sería el rodeo que
-    // el editor puede aplicar mientras Qt no lo arregle.
-    const QString x = QStringLiteral("x");
-
+    // Lo que queda aquí es la evidencia mínima para el reporte aguas arriba y,
+    // sobre todo, el CENTINELA: cuando `minimo` deje de caer en el CI de
+    // Windows, Qt lo habrá arreglado y se podrá retirar el rodeo de `protect()`
+    // (y este programa con él).
     return {
-        {"completa", kCompleta},  // control: tiene que caer
-
-        // Candidatos a caso mínimo.
-        {"regla-x-regla", arma({kRegla, x, kRegla})},
-        {"regla-regla", arma({kRegla, kRegla})},
-        {"reglas-pegadas", kRegla + QLatin1Char('\n') + kRegla},
-
-        // ¿Basta un salto de línea al final para esquivarlo? (posible rodeo)
-        {"regla-x-regla-nl", arma({kRegla, x, kRegla}) + QLatin1Char('\n')},
-        {"completa-nl", kCompleta + QLatin1Char('\n')},
-
-        // ¿Es cosa del marcador `---` o de cualquier regla temática?
-        {"asteriscos", QStringLiteral("***\n\nx\n\n***")},
-        {"guiones-espaciados", QStringLiteral("- - -\n\nx\n\n- - -")},
-        {"mixto", QStringLiteral("---\n\nx\n\n***")},
-
-        // Con más de dos reglas, y con la regla final seguida de algo.
-        {"tres-reglas", arma({kRegla, x, kRegla, x, kRegla})},
-        {"regla-x-regla-x", arma({kRegla, x, kRegla, x})},
+        {"minimo", QStringLiteral("---\n\n---")},           // debe CAER en Windows
+        {"minimo-nl", QStringLiteral("---\n\n---\n")},      // el rodeo: debe pasar
+        {"completa", kCompleta},                            // debe CAER en Windows
+        {"completa-nl", kCompleta + QLatin1Char('\n')},     // el rodeo: debe pasar
+        {"asteriscos", QStringLiteral("***\n\nx\n\n***")},  // otro marcador: pasa
     };
 }
 
