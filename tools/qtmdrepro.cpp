@@ -54,44 +54,44 @@ const QString kCompleta = arma({kRegla, kTareas, kParrafo, kRegla});
 
 QList<Variante> variantes()
 {
-    // Segunda ronda. La primera dejó dos hechos: con Qt PELADO la cadena
-    // completa revienta en Windows (luego es un fallo de Qt, no del editor), y
-    // NINGÚN fragmento aislado lo hace —ni el párrafo, ni las tareas, ni el
-    // enlace con `\`, ni el code span con `&`, ni el inline-code con TeX—, así
-    // que hace falta el documento entero. Toca bisecarlo.
+    // Tercera ronda. Lo que ya está establecido:
+    //   1ª — con Qt PELADO (esto no enlaza md-editor-core) la cadena completa
+    //        revienta en Windows: el fallo es de Qt, no del editor. Ningún
+    //        fragmento aislado cae, y MarkdownNoHTML es indiferente.
+    //   2ª — bisecando: caen TODAS las variantes que conservan las dos reglas
+    //        temáticas, y pasan las tres que se quedan sin alguna
+    //        (sin-regla-inicial, sin-regla-final, sin-reglas). El contenido
+    //        intermedio da igual: cae con un simple `!bang` en medio. Y
+    //        `completa-ascii` cae, o sea que los acentos no pintan nada —la
+    //        hipótesis del descuadre UTF-8/UTF-16 queda descartada.
     //
-    // Hipótesis de trabajo, que es lo que ordena esta lista: el fallo está en
-    // `convertToUtf8` según la traza, y los ÚNICOS caracteres no-ASCII del
-    // documento son la `ü` y la `ñ` de la primera tarea. Si el importador
-    // Markdown de Qt mezcla desplazamientos en BYTES de UTF-8 con índices en
-    // UTF-16 —clase de fallo conocida—, hacen falta las dos cosas a la vez: un
-    // carácter multibyte que descuadre la cuenta y documento suficiente por
-    // delante para que el índice torcido acabe fuera del buffer. Eso explicaría
-    // por qué los fragmentos cortos con acentos pasan y el documento no.
-    // `completa-ascii` es la variante que decide: misma estructura exacta, solo
-    // que `ü`→`u` y `ñ`→`n`. Si esa pasa, la hipótesis se sostiene.
-    const QString tarea1Ascii = QStringLiteral("- [ ] **uber** ~~nino~~");
-    const QString tareasAscii = tarea1Ascii + QLatin1Char('\n') + kTarea2;
+    // Luego el disparador es que el documento EMPIECE y ACABE por regla
+    // temática; ninguna de las dos por separado basta. Esta ronda busca el caso
+    // mínimo publicable (para el reporte aguas arriba) y, sobre todo, si algo
+    // tan barato como un salto de línea final lo esquiva: eso sería el rodeo que
+    // el editor puede aplicar mientras Qt no lo arregle.
+    const QString x = QStringLiteral("x");
 
     return {
         {"completa", kCompleta},  // control: tiene que caer
-        {"completa-ascii", arma({kRegla, tareasAscii, kParrafo, kRegla})},
 
-        // Qué bloques hacen falta. Se quita uno cada vez, dejando el resto igual.
-        {"sin-regla-inicial", arma({kTareas, kParrafo, kRegla})},
-        {"sin-regla-final", arma({kRegla, kTareas, kParrafo})},
-        {"sin-reglas", arma({kTareas, kParrafo})},
-        {"sin-tarea-2", arma({kRegla, kTarea1, kParrafo, kRegla})},
-        {"sin-tareas", arma({kRegla, kParrafo, kRegla})},
-        {"sin-parrafo", arma({kRegla, kTareas, kRegla})},
+        // Candidatos a caso mínimo.
+        {"regla-x-regla", arma({kRegla, x, kRegla})},
+        {"regla-regla", arma({kRegla, kRegla})},
+        {"reglas-pegadas", kRegla + QLatin1Char('\n') + kRegla},
 
-        // Qué parte del párrafo hace falta, con el resto del documento intacto.
-        {"parrafo-solo-bang", arma({kRegla, kTareas, QStringLiteral("!bang"), kRegla})},
-        {"parrafo-sin-tex", arma({kRegla, kTareas,
-                                  QStringLiteral("!bang [hash#](http://e.com/back\\slash) `a&b`"),
-                                  kRegla})},
-        {"parrafo-sin-enlace", arma({kRegla, kTareas,
-                                     QStringLiteral("!bang `a&b` ``$\\sqrt{x}$``"), kRegla})},
+        // ¿Basta un salto de línea al final para esquivarlo? (posible rodeo)
+        {"regla-x-regla-nl", arma({kRegla, x, kRegla}) + QLatin1Char('\n')},
+        {"completa-nl", kCompleta + QLatin1Char('\n')},
+
+        // ¿Es cosa del marcador `---` o de cualquier regla temática?
+        {"asteriscos", QStringLiteral("***\n\nx\n\n***")},
+        {"guiones-espaciados", QStringLiteral("- - -\n\nx\n\n- - -")},
+        {"mixto", QStringLiteral("---\n\nx\n\n***")},
+
+        // Con más de dos reglas, y con la regla final seguida de algo.
+        {"tres-reglas", arma({kRegla, x, kRegla, x, kRegla})},
+        {"regla-x-regla-x", arma({kRegla, x, kRegla, x})},
     };
 }
 
