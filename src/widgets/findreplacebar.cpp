@@ -141,6 +141,22 @@ void FindReplaceBar::closeBar()
     m_editor->setFocus();
 }
 
+void FindReplaceBar::findAgain(bool backward)
+{
+    // Sin término no hay nada que repetir: abrir la barra es lo útil (y lo que
+    // espera quien pulsa F3 al llegar al documento). Con término se busca aunque
+    // la barra esté oculta, sin robarle el foco al editor: el resultado se ve en
+    // el propio documento y en el mensaje de estado.
+    if (m_findEdit->text().isEmpty()) {
+        showFind();
+        return;
+    }
+    if (backward)
+        findPrev();
+    else
+        findNext();
+}
+
 QList<mdfind::Match> FindReplaceBar::currentMatches() const
 {
     if (!m_editor || m_findEdit->text().isEmpty())

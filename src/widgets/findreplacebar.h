@@ -31,6 +31,10 @@ public:
 public slots:
     void showFind();      ///< muestra la barra y enfoca el campo de búsqueda
     void showReplace();   ///< como showFind() pero enfoca el campo de reemplazo
+    /// \brief Repite la última búsqueda (F3 / Mayús+F3) sin pasar por la barra.
+    /// Si aún no hay término que repetir, abre la barra en vez de no hacer nada.
+    /// \param backward true para buscar hacia atrás.
+    void findAgain(bool backward = false);
 
 signals:
     /// \brief Reporta un mensaje de resultado para mostrar en la barra de estado.

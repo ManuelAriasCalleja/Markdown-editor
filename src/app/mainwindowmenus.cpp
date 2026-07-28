@@ -174,7 +174,10 @@ void MainWindow::createFileMenu()
     connect(openFolderAction, &QAction::triggered, this, [this] { m_stack->file()->openContainingFolder(); });
 
     QAction *closeTabAction = fileMenu->addAction(tr("&Cerrar pestaña"));
-    closeTabAction->setShortcut(QKeySequence::Close);  // Ctrl+W
+    // setShortcutS (plural): QKeySequence::Close tiene DOS enlaces en X11 (Ctrl+F4
+    // y Ctrl+W) y el singular se quedaría solo con el primero, así que Ctrl+W —el
+    // que todo el mundo usa y el que documenta la ayuda— no funcionaba.
+    closeTabAction->setShortcuts(QKeySequence::Close);
     connect(closeTabAction, &QAction::triggered, this, [this] { closeTab(-1); });
 
     QAction *reopenTabAction = fileMenu->addAction(tr("Reabrir pestaña cerrada"));
@@ -367,13 +370,31 @@ void MainWindow::createEditMenu()
     findAction->setShortcut(QKeySequence::Find);                       // Ctrl+F
     connect(findAction, &QAction::triggered, m_findBar, &FindReplaceBar::showFind);
 
+    // F3 / Mayús+F3 explícitos, NO QKeySequence::FindNext/FindPrevious: el juego
+    // estándar incluye Ctrl+G y Ctrl+Shift+G, y Ctrl+G ya es «Ir a encabezado».
+    // Registrar ambos dejaría el atajo ambiguo y Qt no dispararía ninguno de los dos.
+    QAction *findNextAction = editMenu->addAction(tr("Buscar siguiente"));
+    findNextAction->setShortcut(QKeySequence(Qt::Key_F3));
+    connect(findNextAction, &QAction::triggered, m_findBar,
+            [this] { m_findBar->findAgain(false); });
+
+    QAction *findPrevAction = editMenu->addAction(tr("Buscar anterior"));
+    findPrevAction->setShortcut(QKeySequence(Qt::SHIFT | Qt::Key_F3));
+    connect(findPrevAction, &QAction::triggered, m_findBar,
+            [this] { m_findBar->findAgain(true); });
+
     QAction *replaceAction = editMenu->addAction(tr("Reemplazar..."));
     replaceAction->setShortcut(QKeySequence::Replace);                 // Ctrl+H
     connect(replaceAction, &QAction::triggered, m_findBar, &FindReplaceBar::showReplace);
 
     editMenu->addSeparator();
     QAction *prefsAction = editMenu->addAction(tr("&Preferencias..."));
-    prefsAction->setShortcut(QKeySequence::Preferences);   // Ctrl+, (donde exista)
+    // QKeySequence::Preferences viene VACÍO en X11 (solo macOS lo define), así que
+    // el atajo hay que ponerlo a mano donde falte: sin esto, la entrada se quedaba
+    // sin atajo en Linux y en Windows pese a anunciarse Ctrl+, en la ayuda.
+    prefsAction->setShortcut(QKeySequence(QKeySequence::Preferences).isEmpty()
+                                 ? QKeySequence(Qt::CTRL | Qt::Key_Comma)
+                                 : QKeySequence(QKeySequence::Preferences));
     prefsAction->setMenuRole(QAction::PreferencesRole);    // en macOS va al menú de app
     connect(prefsAction, &QAction::triggered, this, &MainWindow::openPreferences);
 }

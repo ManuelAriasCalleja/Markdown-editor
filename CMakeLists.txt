@@ -529,6 +529,7 @@ if(Qt6Test_FOUND)
         tst_tablifecycle
         tst_imageobject
         tst_chromezoom
+        tst_shortcuts
         tst_filecontroller
         tst_formulacontroller)
         add_executable(${test} tests/${test}.cpp)
