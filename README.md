@@ -59,7 +59,10 @@ Privacy & Security* and click **Open anyway**.
 - **Multiple documents in tabs**: open several files at once, each in its own
   tab; the open tabs reopen on the next launch.
 - **Clean round-trip**: what you open is what you save. Aligned tables, quotes,
-  nested lists, task lists, footnotes, code blocks with syntax highlighting.
+  nested lists, task lists, footnotes, code blocks with syntax highlighting,
+  `==highlight==` and `^super^` / `~sub~` script.
+- **Type Markdown and it formats itself**: `# `, `> `, `- `, `1. ` at the start of
+  a line become the heading, quote or list in place, marker included.
 - **TeX formulas** `$…$` and `$$…$$` with real super- and subscripts and a
   live preview — no external dependencies. Double-click to edit.
 - **Diagrams**: `mermaid` and `plantuml` code blocks are previewed as an image
@@ -67,6 +70,11 @@ Privacy & Security* and click **Open anyway**.
   gracefully with an install hint if it is missing).
 - **Admonitions / callouts** (`> [!NOTE]`, `[!TIP]`, `[!IMPORTANT]`, `[!WARNING]`,
   `[!CAUTION]`) shown as coloured boxes, round-trip compatible with GitHub.
+- **Tables without the syntax**: a floating bar appears over the table to add or
+  remove rows and columns and set the column alignment; `Tab` walks the cells and
+  adds a row at the end; rows can be sorted by a column.
+- **Code blocks**: hovering shows the language (click to change it) and a button
+  that copies the block.
 - **Spell checking** (Hunspell): misspellings underlined in the document's
   language, with suggestions and a personal dictionary.
 - **Document templates** (*File → New from template*) and **reusable snippets**
@@ -81,11 +89,13 @@ Privacy & Security* and click **Open anyway**.
 - **Navigable outline panel** (F9), find and replace (Ctrl+F / Ctrl+H),
   autosave and crash recovery.
 - **Distraction-free mode** (F11) and **focus mode** (typewriter scrolling +
-  dimming), full-interface zoom (Ctrl+wheel), 6 light and dark themes including a
-  warm night light, Markdown source view (Ctrl+Shift+M).
+  dimming), full-interface zoom (Ctrl+wheel), 8 light and dark themes (including
+  GitHub, Monokai, Solarized and a true high-contrast one) plus an automatic warm
+  night light, Markdown source view and side-by-side split view.
 - **9 languages**: Spanish, English, German, French, Italian, Portuguese,
   Polish, Dutch and Romanian.
-- **Paste / drop images** from the clipboard straight to disk as `![](path)`.
+- **Paste images** from the clipboard straight to disk as `![](path)`, instead of
+  embedding them — so the Markdown stays portable.
 - **External file watching**: if the file changes on disk, the app detects it
   and offers to reload.
 - **Accessibility**: accessible names on the editor, panels and controls; status
@@ -98,12 +108,20 @@ Privacy & Security* and click **Open anyway**.
 |----------|--------|
 | `Ctrl+N` / `Ctrl+O` / `Ctrl+S` | New / Open / Save |
 | `Ctrl+Shift+S` / `Ctrl+P` | Save as… / Print |
+| `Ctrl+W` / `Ctrl+Shift+R` | Close tab / reopen the last closed one |
 | `Ctrl+B` / `Ctrl+I` / `Ctrl+U` | Bold / Italic / Underline |
-| `Ctrl+K` / `Ctrl+Shift+F` | Insert link / formula |
+| `Ctrl+E` / `Ctrl+K` | Inline code / link |
+| `Ctrl+1`…`Ctrl+6` | Heading levels 1 to 6 |
+| `Ctrl+Shift+U` / `Ctrl+Shift+O` / `Ctrl+Shift+T` | Bullet / numbered / task list |
+| `Ctrl+Shift+F` | Insert formula |
+| `Ctrl+F` / `Ctrl+H` / `F3` | Find / replace / find next |
+| `Ctrl+G` / `Ctrl+L` | Go to heading / line |
 | `Ctrl++` / `Ctrl+-` / `Ctrl+0` | Zoom in / out / reset |
-| `Ctrl+Shift+M` | View / edit the Markdown source |
+| `Ctrl+Shift+M` / `Ctrl+Shift+D` | Markdown source view / split view |
 | `Ctrl+Shift+P` | Command palette (find & run any action) |
-| `F11` / `F9` / `F1` | Distraction-free / Outline / Help |
+| `Ctrl+,` | Preferences |
+| `F11` / `F12` | Distraction-free mode / focus mode |
+| `F9` / `F1` | Outline / Help |
 
 Full list under *Help → Manual* inside the app.
 
