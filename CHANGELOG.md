@@ -5,6 +5,34 @@ Todos los cambios relevantes de **md-editor** se documentan en este archivo.
 El formato sigue, a grandes rasgos, [Keep a Changelog](https://keepachangelog.com/es/),
 y el proyecto usa [versionado semántico](https://semver.org/lang/es/).
 
+## [2.8.1] — 2026-07-28
+
+Versión de mantenimiento. Sin funciones nuevas: dos fallos que impedían usar el
+programa —uno al abrir cierto documento en Windows, otro al compilarlo con un Qt
+reciente— y el remate del portugués.
+
+### Corregido
+- **Windows: abrir un documento que cierre con `---` cerraba el programa.**
+  Cualquier `.md` que empezara y acabara por una regla horizontal `---` y no
+  terminara en salto de línea mataba el editor al abrirlo, sin mensaje. El fallo
+  no era del editor sino de Qt (una escritura fuera de rango en el importador de
+  Markdown, corregida por Qt en la 6.9); mientras se soporten las versiones
+  afectadas, el editor lo rodea. El caso mínimo eran seis caracteres.
+- **Portugués: una sola norma en toda la interfaz.** Se mezclaban vocabulario
+  europeo y brasileño para los mismos conceptos, y se veía en la misma sesión: el
+  menú decía «Salvar» mientras el resto hablaba de «ficheiro», y los diálogos de
+  abrir y guardar ofrecían «Ficheiros Markdown» y «Arquivos Markdown». Se ha
+  uniformado a la norma brasileña.
+
+### Cambiado
+- **Compila con Qt 6.11.** La configuración fallaba con las versiones recientes
+  de Qt, que ya no definen solo el objetivo `Qt6::GuiPrivate` que usa la
+  exportación a ODF; ahora se cubren las dos formas sin condicionar por número de
+  versión. Quien tuviera un Qt reciente no podía compilar la 2.8.0.
+- **Las pruebas se ejecutan también en Windows y macOS**, no solo en Linux: hasta
+  ahora los binarios de esas dos plataformas se publicaban sin que se hubiera
+  ejecutado ni una prueba sobre ellos. De ahí salió el fallo de Windows de arriba.
+
 ## [2.8.0] — 2026-07-25
 
 Repaso a fondo de la exportación y la importación: cada corrección nació de un
@@ -466,7 +494,8 @@ aplicaba; la suite pasa en build normal y bajo ASan+UBSan, y clang-tidy queda li
 - CI/CD multiplataforma (Linux AppImage, Windows ZIP, macOS DMG) y publicación
   de releases por tag.
 
-[Sin publicar]: https://github.com/ManuelAriasCalleja/Markdown-editor/compare/v1.2.0...HEAD
+[Sin publicar]: https://github.com/ManuelAriasCalleja/Markdown-editor/compare/v2.8.1...HEAD
+[2.8.1]: https://github.com/ManuelAriasCalleja/Markdown-editor/compare/v2.8.0...v2.8.1
 [1.2.0]: https://github.com/ManuelAriasCalleja/Markdown-editor/compare/v1.1.1...v1.2.0
 [1.1.1]: https://github.com/ManuelAriasCalleja/Markdown-editor/compare/v1.1.0...v1.1.1
 [1.1.0]: https://github.com/ManuelAriasCalleja/Markdown-editor/compare/v1.0.2...v1.1.0
