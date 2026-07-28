@@ -38,8 +38,8 @@ modules:
     sources:
       - type: git
         url: https://github.com/ManuelAriasCalleja/Markdown-editor.git
-        tag: v2.8.1
-        commit: b3d3f73932e909e43f3c0f1b9bb5ec9573aaff8c
+        tag: v2.8.2
+        commit: 2cde25ce4406df938cfee505f65420271985dc03
       - type: file
         path: io.github.manuelariascalleja.Markdown-editor.metainfo.xml
     # Flathub exige que el .desktop, el icono y el metainfo se llamen como el

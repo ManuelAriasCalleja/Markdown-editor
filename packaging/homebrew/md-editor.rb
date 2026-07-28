@@ -1,6 +1,6 @@
 cask "md-editor" do
-  version "2.8.1"
-  sha256 "cd91e36648e3adfa572dfafb846903913d9b7810f6c2168fccac74c517171b61"
+  version "2.8.2"
+  sha256 "138e584f620992ad7dd6e8f44c8c3cbe9832b05ccb58037b5aa55805b44094be"
 
   url "https://github.com/ManuelAriasCalleja/Markdown-editor/releases/download/v#{version}/md-editor-#{version}-macos-universal.dmg",
       verified: "github.com/ManuelAriasCalleja/Markdown-editor/"

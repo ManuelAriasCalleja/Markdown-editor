@@ -5,7 +5,7 @@ TeX formulas, aligned tables, highlighted code, document templates, and export t
 PDF/DOCX/ODT/LaTeX — lightweight, portable (Qt6/C++17, zero external
 dependencies), in 9 languages.
 
-![Version](https://img.shields.io/badge/version-2.8.1-blue)
+![Version](https://img.shields.io/badge/version-2.8.2-blue)
 ![License](https://img.shields.io/badge/license-GPL--3.0-blue)
 ![Platforms](https://img.shields.io/badge/platforms-Linux%20%7C%20Windows%20%7C%20macOS-green)
 
@@ -17,9 +17,9 @@ dependencies), in 9 languages.
 
 | System | File | Notes |
 |--------|------|-------|
-| **Linux** (x86_64) | [`md-editor-2.8.1-x86_64.AppImage`](https://github.com/ManuelAriasCalleja/Markdown-editor/releases/latest) | Single-file executable. `chmod +x` and double-click. |
-| **Windows** (x64) | [`md-editor-2.8.1-windows-x64.zip`](https://github.com/ManuelAriasCalleja/Markdown-editor/releases/latest) | Portable: unzip and run `md-editor.exe`. |
-| **macOS** (Apple Silicon + Intel) | [`md-editor-2.8.1-macos-universal.dmg`](https://github.com/ManuelAriasCalleja/Markdown-editor/releases/latest) | First launch: Ctrl-click → *Open* (binary not signed). |
+| **Linux** (x86_64) | [`md-editor-2.8.2-x86_64.AppImage`](https://github.com/ManuelAriasCalleja/Markdown-editor/releases/latest) | Single-file executable. `chmod +x` and double-click. |
+| **Windows** (x64) | [`md-editor-2.8.2-windows-x64.zip`](https://github.com/ManuelAriasCalleja/Markdown-editor/releases/latest) | Portable: unzip and run `md-editor.exe`. |
+| **macOS** (Apple Silicon + Intel) | [`md-editor-2.8.2-macos-universal.dmg`](https://github.com/ManuelAriasCalleja/Markdown-editor/releases/latest) | First launch: Ctrl-click → *Open* (binary not signed). |
 
 > All downloads, including previous versions, on the
 > [releases page](https://github.com/ManuelAriasCalleja/Markdown-editor/releases).
