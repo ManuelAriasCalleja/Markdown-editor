@@ -5,6 +5,58 @@ Todos los cambios relevantes de **md-editor** se documentan en este archivo.
 El formato sigue, a grandes rasgos, [Keep a Changelog](https://keepachangelog.com/es/),
 y el proyecto usa [versionado semántico](https://semver.org/lang/es/).
 
+## [2.8.2] — 2026-07-28
+
+Versión de mantenimiento. Tres atajos que se anunciaban y no funcionaban, el
+manual puesto al día con lo que hace de verdad el programa, y los iconos de lista
+de la barra rediseñados para que se distingan al tamaño al que se ven.
+
+### Corregido
+- **Ctrl+W no cerraba la pestaña.** El atajo se registraba con la constante
+  estándar de Qt, que en X11 tiene dos enlaces (Ctrl+F4 y Ctrl+W) de los que solo
+  se aplicaba el primero. Ahora valen los dos.
+- **F3 y Mayús+F3 no buscaban nada.** «Buscar siguiente» y «Buscar anterior»
+  estaban documentados en el manual pero no existían: no había ni acción de menú
+  ni atajo, solo los botones de la barra de búsqueda. Ahora repiten la última
+  búsqueda aunque la barra esté cerrada, sin quitarle el foco al editor, y abren
+  la barra si aún no se ha buscado nada.
+- **Preferencias se quedaba sin atajo.** La constante estándar de Qt para
+  «Preferencias» viene vacía fuera de macOS, así que Ctrl+, —anunciado en el
+  manual— no hacía nada en Linux ni en Windows.
+- **El manual describía cosas que no eran.** Decía que el diálogo de crear tabla
+  está en el menú Tabla (está en Insertar), que «Ordenar líneas» vive dentro de
+  «Transformar texto» (es una entrada aparte, y la única que exige selección) y
+  que arrastrar un archivo de imagen la inserta en el documento —arrastrar un
+  archivo lo abre en una pestaña, sea imagen o no; lo que guarda la imagen a
+  disco es pegarla del portapapeles—.
+
+### Cambiado
+- **Iconos de lista de la barra: se distinguen de un vistazo.** Los tres
+  compartían el 80 % del dibujo y se diferenciaban en un marcador de 5-6 px, con
+  las cifras «1 2 3» dibujadas con la fuente a un tamaño al que el suavizado las
+  deja en tres manchas grises. Pasan a dos renglones —que libera altura para el
+  marcador—, con las cifras trazadas a mano con el mismo grosor que las líneas y
+  las tareas como marcas de verificación sin recuadro. Los cuatro iconos de
+  formato (N/C/S/T) se centran ahora por la mancha real de la letra, no por la
+  caja de línea, que los dejaba altos dentro del botón.
+- **Manual completo en los nueve idiomas.** Se documentan el menú contextual de
+  las pestañas, «Insertar → Imagen…» y «Regla horizontal», Ctrl+H, los caracteres
+  sin espacios de las estadísticas y una tabla de atajos con los que faltaban
+  (Ctrl+E, Ctrl+K, Ctrl+Shift+X/Q/K/U/O/T, Ctrl+] y Ctrl+[, Ctrl+,). La guía de
+  Markdown incorpora las cuatro extensiones que el editor admite y no explicaba
+  —`==resaltado==`, `^super^`/`~sub~`, admoniciones y bloques mermaid/plantuml—
+  y el front matter.
+- **La página del proyecto (README) cuenta lo que hay**: reglas de entrada, barra
+  flotante de tablas, overlay de los bloques de código, vista dividida, los ocho
+  temas y una tabla de atajos de diecisiete filas en vez de ocho.
+
+### Añadido
+- Dos pruebas que vigilan lo que nadie compila: los atajos de la ventana
+  (incluida la ausencia de atajos ambiguos, que es lo que rompe uno sin avisar) y
+  los dieciocho archivos de ayuda —que cada enlace del índice caiga en un
+  encabezado real y que ninguna traducción se quede corta de secciones—. La
+  segunda encontró dos anclas rotas en el índice polaco.
+
 ## [2.8.1] — 2026-07-28
 
 Versión de mantenimiento. Sin funciones nuevas: dos fallos que impedían usar el
@@ -494,7 +546,8 @@ aplicaba; la suite pasa en build normal y bajo ASan+UBSan, y clang-tidy queda li
 - CI/CD multiplataforma (Linux AppImage, Windows ZIP, macOS DMG) y publicación
   de releases por tag.
 
-[Sin publicar]: https://github.com/ManuelAriasCalleja/Markdown-editor/compare/v2.8.1...HEAD
+[Sin publicar]: https://github.com/ManuelAriasCalleja/Markdown-editor/compare/v2.8.2...HEAD
+[2.8.2]: https://github.com/ManuelAriasCalleja/Markdown-editor/compare/v2.8.1...v2.8.2
 [2.8.1]: https://github.com/ManuelAriasCalleja/Markdown-editor/compare/v2.8.0...v2.8.1
 [1.2.0]: https://github.com/ManuelAriasCalleja/Markdown-editor/compare/v1.1.1...v1.2.0
 [1.1.1]: https://github.com/ManuelAriasCalleja/Markdown-editor/compare/v1.1.0...v1.1.1
