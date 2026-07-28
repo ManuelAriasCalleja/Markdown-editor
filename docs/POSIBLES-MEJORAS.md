@@ -702,6 +702,35 @@ documento nuevo modificado para no sobrescribir la fuente.
 - ✅ **Símbolos especiales por categorías** — *Insertar → Símbolos especiales…*
   (módulo `mdsymbols` + diálogo `SymbolPicker`, 8 categorías).
 
+### Iconos de la barra flotante de tablas (2026-07-28)
+
+- ⬜ **Rehacer los siete iconos de `makeTableIcon`** (insertar/eliminar fila y
+  columna, alinear columna), que quedaron sin tocar cuando en la 2.8.2 se
+  rediseñaron los de lista y los de formato de carácter. Dos motivos, por orden
+  de importancia:
+  - **La insignia `+`/`−` es diminuta y está pegada a la retícula.** «Insertar
+    fila» y «eliminar fila» son el mismo dibujo salvo un trazo vertical de esa
+    insignia (radio `0,13 × N`), así que a tamaño real se distinguen por unos dos
+    píxeles; y como cae pegada al borde de las líneas, se lee como una línea más
+    de la tabla en vez de como una insignia —en «eliminar columna» la raya de
+    arriba parece el techo de la tabla, no un menos—. Es peor aquí que en la
+    barra de formato porque esta barra pinta a `fontMetrics().height() × 0,85`
+    ≈ 16 px (`EditorStack`, la llamada a `applyIcons`), aún más pequeño que los
+    18-22 px de la otra. Arreglo: separar la insignia de la retícula y darle
+    tamaño, o llevarla a una esquina como hacen los juegos de iconos que
+    distinguen «añadir» de «quitar».
+  - **Desajuste de familia.** Los de lista pasaron a dos renglones con trazo
+    grueso; estos siguen con la retícula de tres renglones finos. Nunca se ven a
+    la vez —una barra es de ventana y la otra flotante sobre la tabla—, así que
+    no chirría, pero ya no son el mismo juego.
+
+  Los **tres de alineación se salvan**: son el icono clásico de tres líneas con la
+  del medio más corta y se leen bien a cualquier tamaño; el trabajo es en los
+  cuatro de fila/columna. El banco de pruebas de `Auxiliar/icons` (variantes
+  parametrizadas + láminas de contacto a 18/22/28/36 px en claro y oscuro) sirve
+  para ensayarlo sin tocar `src/`: hoy solo cubre lista y formato, habría que
+  añadirle los de tabla. Prioridad baja: hoy son **ambiguos, no ilegibles**.
+
 ## ♿ Accesibilidad
 
 Ya hay una **primera capa** de accesibilidad (ver lo marcado ✅ abajo): nombres
