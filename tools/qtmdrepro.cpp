@@ -19,6 +19,7 @@
 
 #include <QApplication>
 #include <QString>
+#include <QStringList>
 #include <QTextDocument>
 
 #include <cstdio>
@@ -32,41 +33,65 @@ struct Variante
     QString texto;
 };
 
-// La cadena completa es la que produce `mdrender::protect()` sobre el documento
-// del caso 281 (verificado volcándola carácter a carácter): el cuerpo original
-// con la fórmula envuelta en inline-code doble. Se escribe aquí literal, sin
-// llamar a `protect`, para no arrastrar el proyecto.
-const QString kCompleta = QStringLiteral(
-    "---\n"
-    "\n"
-    "- [ ] **über** ~~niño~~\n"
-    "- [ ] **c_d** *dato* c_d\n"
-    "\n"
-    "!bang [hash#](http://e.com/back\\slash) `a&b` ``$\\sqrt{x}$``\n"
-    "\n"
-    "---");
+// Las piezas del documento del caso 281, tal cual salen de `mdrender::protect()`
+// (verificado volcando la cadena carácter a carácter): el cuerpo original con la
+// fórmula envuelta en inline-code doble. Se escriben aquí literales, sin llamar a
+// `protect`, para no arrastrar el proyecto.
+const QString kRegla = QStringLiteral("---");
+const QString kTarea1 = QStringLiteral("- [ ] **über** ~~niño~~");
+const QString kTarea2 = QStringLiteral("- [ ] **c_d** *dato* c_d");
+const QString kParrafo =
+    QStringLiteral("!bang [hash#](http://e.com/back\\slash) `a&b` ``$\\sqrt{x}$``");
+
+// Los bloques se separan por línea en blanco, como en el documento original.
+QString arma(const QStringList &bloques)
+{
+    return bloques.join(QStringLiteral("\n\n"));
+}
+
+const QString kTareas = kTarea1 + QLatin1Char('\n') + kTarea2;
+const QString kCompleta = arma({kRegla, kTareas, kParrafo, kRegla});
 
 QList<Variante> variantes()
 {
+    // Segunda ronda. La primera dejó dos hechos: con Qt PELADO la cadena
+    // completa revienta en Windows (luego es un fallo de Qt, no del editor), y
+    // NINGÚN fragmento aislado lo hace —ni el párrafo, ni las tareas, ni el
+    // enlace con `\`, ni el code span con `&`, ni el inline-code con TeX—, así
+    // que hace falta el documento entero. Toca bisecarlo.
+    //
+    // Hipótesis de trabajo, que es lo que ordena esta lista: el fallo está en
+    // `convertToUtf8` según la traza, y los ÚNICOS caracteres no-ASCII del
+    // documento son la `ü` y la `ñ` de la primera tarea. Si el importador
+    // Markdown de Qt mezcla desplazamientos en BYTES de UTF-8 con índices en
+    // UTF-16 —clase de fallo conocida—, hacen falta las dos cosas a la vez: un
+    // carácter multibyte que descuadre la cuenta y documento suficiente por
+    // delante para que el índice torcido acabe fuera del buffer. Eso explicaría
+    // por qué los fragmentos cortos con acentos pasan y el documento no.
+    // `completa-ascii` es la variante que decide: misma estructura exacta, solo
+    // que `ü`→`u` y `ñ`→`n`. Si esa pasa, la hipótesis se sostiene.
+    const QString tarea1Ascii = QStringLiteral("- [ ] **uber** ~~nino~~");
+    const QString tareasAscii = tarea1Ascii + QLatin1Char('\n') + kTarea2;
+
     return {
-        {"completa", kCompleta},
-        // El párrafo suelto: los tres constructos sospechosos juntos, sin las
-        // listas de tareas ni las reglas temáticas.
-        {"parrafo", QStringLiteral(
-             "!bang [hash#](http://e.com/back\\slash) `a&b` ``$\\sqrt{x}$``")},
-        // Cada constructo del párrafo por separado.
-        {"enlace-barra", QStringLiteral("[hash#](http://e.com/back\\slash)")},
-        {"enlace-simple", QStringLiteral("[a](http://e.com/x)")},
-        {"code-amp", QStringLiteral("`a&b`")},
-        {"code-doble-tex", QStringLiteral("``$\\sqrt{x}$``")},
-        {"bang", QStringLiteral("!bang")},
-        // Las listas de tareas con acentuadas (los únicos no-ASCII del caso).
-        {"tareas", QStringLiteral(
-             "- [ ] **über** ~~niño~~\n- [ ] **c_d** *dato* c_d")},
-        {"tarea-acentos", QStringLiteral("- [ ] **über** ~~niño~~")},
-        // Regla temática pegada a una lista de tareas: el arranque del documento.
-        {"regla-tareas", QStringLiteral("---\n\n- [ ] **über** ~~niño~~")},
-        {"regla", QStringLiteral("---")},
+        {"completa", kCompleta},  // control: tiene que caer
+        {"completa-ascii", arma({kRegla, tareasAscii, kParrafo, kRegla})},
+
+        // Qué bloques hacen falta. Se quita uno cada vez, dejando el resto igual.
+        {"sin-regla-inicial", arma({kTareas, kParrafo, kRegla})},
+        {"sin-regla-final", arma({kRegla, kTareas, kParrafo})},
+        {"sin-reglas", arma({kTareas, kParrafo})},
+        {"sin-tarea-2", arma({kRegla, kTarea1, kParrafo, kRegla})},
+        {"sin-tareas", arma({kRegla, kParrafo, kRegla})},
+        {"sin-parrafo", arma({kRegla, kTareas, kRegla})},
+
+        // Qué parte del párrafo hace falta, con el resto del documento intacto.
+        {"parrafo-solo-bang", arma({kRegla, kTareas, QStringLiteral("!bang"), kRegla})},
+        {"parrafo-sin-tex", arma({kRegla, kTareas,
+                                  QStringLiteral("!bang [hash#](http://e.com/back\\slash) `a&b`"),
+                                  kRegla})},
+        {"parrafo-sin-enlace", arma({kRegla, kTareas,
+                                     QStringLiteral("!bang `a&b` ``$\\sqrt{x}$``"), kRegla})},
     };
 }
 

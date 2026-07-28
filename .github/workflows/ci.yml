@@ -152,15 +152,14 @@ jobs:
           $listado = & $exe
           $total = [int]$listado[0]
           Write-Host "=== $total variantes, una por proceso"
-          foreach ($features in @('nohtml', 'github')) {
-            Write-Host "--- features: $features"
-            for ($i = 0; $i -lt $total; $i++) {
-              $nombre = ($listado[$i + 1] -split ' ', 2)[1]
-              & $exe $i $features 2>&1 | Out-Null
-              $code = $LASTEXITCODE
-              $marca = if ($code -eq 0) { "ok  " } else { "CAE " }
-              Write-Host ("    {0}variante {1,2} ({2}): exit={3}" -f $marca, $i, $nombre, $code)
-            }
+          # Solo con las features reales del editor: la primera ronda ya probó
+          # que quitar MarkdownNoHTML no cambia nada (cae con las dos).
+          for ($i = 0; $i -lt $total; $i++) {
+            $nombre = ($listado[$i + 1] -split ' ', 2)[1]
+            & $exe $i 2>&1 | Out-Null
+            $code = $LASTEXITCODE
+            $marca = if ($code -eq 0) { "ok  " } else { "CAE " }
+            Write-Host ("    {0}variante {1,2} ({2}): exit={3}" -f $marca, $i, $nombre, $code)
           }
           exit 0
 
