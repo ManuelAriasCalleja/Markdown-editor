@@ -15,6 +15,9 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
+  # A mano, para el barrido de versiones de Qt (job `qt-version-sweep`), que no
+  # tiene sentido pagar en cada push: solo cambia cuando sale una versión de Qt.
+  workflow_dispatch:
 
 jobs:
   build-test:
@@ -278,6 +281,84 @@ jobs:
           QT_QPA_PLATFORM: offscreen
           ASAN_OPTIONS: detect_leaks=0
           UBSAN_OPTIONS: print_stacktrace=1:halt_on_error=1
+
+  # ¿En qué versiones de Qt está el cuelgue de `setMarkdown` en Windows? Es la
+  # primera pregunta de cualquier reporte aguas arriba («¿lo has probado en la
+  # última?»), y también la que dirá cuándo se puede retirar el rodeo de
+  # `mdrender::protect()`.
+  #
+  # Solo `workflow_dispatch`: la respuesta únicamente cambia cuando sale una
+  # versión nueva de Qt, así que no se paga en cada push. Se lanza a mano con
+  #     gh workflow run ci.yml
+  # Compila SOLO `qtmdrepro` (que enlaza únicamente Qt6::Widgets), no el
+  # proyecto entero, así que cada versión cuesta poco más que la descarga de Qt.
+  qt-version-sweep:
+    name: Qt sweep — setMarkdown crash (Windows, Qt ${{ matrix.qt }})
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: windows-latest
+    continue-on-error: true
+    timeout-minutes: 30
+    strategy:
+      # Que falte una versión o falle una no debe ocultar el resto del cuadro:
+      # lo que interesa es la tabla completa.
+      fail-fast: false
+      matrix:
+        qt: ['6.8.2', '6.9.*', '6.10.*', '6.11.*']
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v4
+        with:
+          version: ${{ matrix.qt }}
+          arch: win64_msvc2022_64
+          cache: true
+
+      - name: Configure
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+
+      - name: Build the repro
+        run: cmake --build build --config Release --target qtmdrepro
+
+      # Una variante por proceso: el fallo mata el proceso.
+      - name: Run the variants
+        shell: pwsh
+        env:
+          QT_QPA_PLATFORM: windows
+        run: |
+          $exe = "build/Release/qtmdrepro.exe"
+          $listado = & $exe
+          $total = [int]$listado[0]
+          Write-Host "=== Qt ${{ matrix.qt }} (real: $(qmake -query QT_VERSION))"
+          for ($i = 0; $i -lt $total; $i++) {
+            $nombre = ($listado[$i + 1] -split ' ', 2)[1]
+            & $exe $i 2>&1 | Out-Null
+            $code = $LASTEXITCODE
+            $marca = if ($code -eq 0) { "ok  " } else { "CAE " }
+            Write-Host ("    {0}variante {1,2} ({2}): exit={3}" -f $marca, $i, $nombre, $code)
+          }
+          exit 0
+
+      # La traza del reporte se capturó sobre el documento grande, no sobre el
+      # caso mínimo que el reporte enseña. Aquí se saca donde toca, con el
+      # depurador de consola del Windows SDK que traen los runners: `-g -G` se
+      # salta los puntos de parada inicial y final, y `-c "g;kv;q"` arranca,
+      # espera al fallo y vuelca la pila con argumentos.
+      - name: Stack trace of the minimal case
+        shell: pwsh
+        env:
+          QT_QPA_PLATFORM: windows
+        run: |
+          $cdb = "C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\cdb.exe"
+          if (-not (Test-Path $cdb)) {
+            Write-Host "cdb.exe no está en la imagen; sin traza."
+            exit 0
+          }
+          # Variante 0 = `minimo` (---\n\n---), la que debe caer.
+          & $cdb -g -G -c "g;kv;q" build/Release/qtmdrepro.exe 0 2>&1 |
+            Select-String -Pattern 'Qt|qtmdrepro|Access violation|ExceptionCode|^[0-9a-f]{8}' |
+            Select-Object -First 40 | ForEach-Object { Write-Host $_ }
+          exit 0
 
   clang-tidy:
     name: clang-tidy
