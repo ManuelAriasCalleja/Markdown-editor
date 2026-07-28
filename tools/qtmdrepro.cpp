@@ -69,11 +69,13 @@ QList<Variante> variantes()
     //     `convertToUtf8`.
     //   • Un `\n` final lo esquiva, tanto en el mínimo como en el documento real.
     //     Ese es el rodeo que aplica `mdrender::protect()`.
+    //   • **Ya está arreglado en Qt**: cae en 6.8.2 y pasa en 6.9.3 y 6.10.3
+    //     (job `qt-version-sweep`). No hay nada que reportar aguas arriba.
     //
-    // Lo que queda aquí es la evidencia mínima para el reporte aguas arriba y,
-    // sobre todo, el CENTINELA: cuando `minimo` deje de caer en el CI de
-    // Windows, Qt lo habrá arreglado y se podrá retirar el rodeo de `protect()`
-    // (y este programa con él).
+    // Lo que queda aquí es el CENTINELA del rodeo. Mientras se soporte Qt 6.8 o
+    // anterior, `minimo` seguirá cayendo en el CI de Windows y el rodeo de
+    // `protect()` hace falta; el día que la versión mínima suba lo bastante,
+    // dejará de caer y se podrán retirar los dos (el rodeo y este programa).
     return {
         {"minimo", QStringLiteral("---\n\n---")},           // debe CAER en Windows
         {"minimo-nl", QStringLiteral("---\n\n---\n")},      // el rodeo: debe pasar

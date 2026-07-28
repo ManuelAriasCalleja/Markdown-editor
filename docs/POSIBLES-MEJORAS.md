@@ -649,43 +649,43 @@ documento nuevo modificado para no sobrescribir la fuente.
     el cierre de un *fence* que sigue a una lista. Ambos **se estabilizan en una
     pasada** (no crecen, no hay pérdida de datos); arreglarlos exigiría des-wrappear
     la salida de Qt, con riesgo alto y valor casi nulo.
-- ⬜ **El fuzzer no corre bajo sanitizers, al contrario de lo que dice el código.**
-  El comentario del punto anterior —y el del propio `CMakeLists`— afirma que
-  `tst_roundtripfuzz` es «la red de verdad bajo ASan/UBSan, lo corre CI». No es
-  cierto: **no está registrado en CTest** (a propósito, ver el comentario largo en
-  `CMakeLists.txt`) y el *job* de sanitizers ejecuta `ctest`, así que nunca lo
-  toca. La herramienta que cazaría un fallo de memoria en el fuzzeo jamás se ha
-  aplicado sobre él. Al ejecutarlo a mano instrumentado (25-07-2026, primera vez)
-  pasa limpio los 2000 casos, así que no hay nada pendiente que arreglar ahí; lo
-  que hay que decidir es cómo cubrirlo sin devolverlo al *gate* —un *job* aparte
-  que lo ejecute bajo ASan y que pueda fallar sin bloquear la release, por
-  ejemplo— y, mientras tanto, corregir el comentario para que no prometa una red
-  que no existe.
-- ⬜ **Cuelgue del fuzzer en Windows (acotado, sin resolver).** Al añadir Windows a
-  la matriz de CI (25-07-2026) apareció que `tst_roundtripfuzz.exe` muere allí con
-  `0xC0000005` a los ~250 ms. Lo que se sabe:
-  - **Caso 281**, 115 caracteres. El PRNG es determinista, así que ese índice
-    reproduce el mismo documento en cualquier sistema:
-    `---` / lista de tareas con `**über**` y `~~niño~~` / un párrafo con
-    `[hash#](http://e.com/back\slash)`, `` `a&b` `` y `$\sqrt{x}$`.
-  - **Dónde muere:** `QTextDocument::setMarkdown` → `QTextMarkdownImporter::import`
-    → `QtPrivate::convertToUtf8` → `QUtf8::convertFromUnicode`. Es decir, **dentro
-    de Qt**, convirtiendo la cadena de entrada para dársela a md4c.
-  - **Descartado:** desbordamiento de pila y anidamiento profundo (el documento son
-    115 caracteres y la traza no muestra recursión); el artefacto del plugin
-    `offscreen` (falla igual con el plugin nativo); y un fallo de memoria visible
-    desde Linux (limpio bajo ASan+UBSan, caso aislado y los 2000).
-  - **Lo que falta:** saber cuál de las dos pasadas lo mata —la segunda recibe la
-    salida ya serializada, que no es la misma cadena— y con esa cadena exacta
-    intentar reproducirlo con **Qt a secas**, sin nada de este proyecto. Si un
-    `setMarkdown()` pelado revienta, es un fallo de Qt en Windows: tocaría
-    reportarlo aguas arriba y rodearlo. La instrumentación ya está puesta:
-    `MD_FUZZ_TRACE=1` traza cada pasada y `MD_FUZZ_ONLY=N` vuelca la entrada exacta
-    escapada carácter a carácter.
-  - **Prioridad:** baja en cuanto a usuarios —el fuzzer no es el editor, y el
-    documento es entrada sintética—, pero es la única evidencia de que
-    `setMarkdown` puede morir con contenido de tamaño normal, así que conviene
-    llegar al fondo antes de descartarlo.
+- ✅ **El fuzzer no corría bajo sanitizers, al contrario de lo que decía el
+  código.** El comentario del punto anterior —y el del propio `CMakeLists`—
+  afirmaba que `tst_roundtripfuzz` era «la red de verdad bajo ASan/UBSan, lo corre
+  CI». No era cierto: **no está registrado en CTest** (a propósito) y el *job* de
+  sanitizers ejecuta `ctest`, así que nunca lo tocaba. *Hecho (28-07-2026):* hay un
+  *job* `fuzz` propio que lo invoca **directamente** —única vía, al no estar en
+  ctest— bajo ASan/UBSan, con `continue-on-error` para que no pueda bloquear una
+  release y `timeout-minutes` para que un cuelgue no queme el presupuesto de
+  Actions. `continue-on-error` y no tragarse el código de salida con `exit 0`: así
+  el fallo sigue **visible** en Actions, que un fuzzer que falla en silencio no
+  vale para nada. Los comentarios mentirosos, corregidos.
+- ✅ **Cuelgue del fuzzer en Windows: era un fallo de Qt, ya arreglado aguas
+  arriba.** Apareció al añadir Windows a la matriz de CI (25-07-2026):
+  `tst_roundtripfuzz.exe` moría allí con `0xC0000005` a los ~250 ms, en el caso
+  281. *Resuelto (28-07-2026)* tras tres rondas de bisección en CI:
+  - **No era del editor.** `tools/qtmdrepro`, que enlaza **solo `Qt6::Widgets`**,
+    revienta igual: `QTextDocument::setMarkdown` mata el proceso en Windows con un
+    documento que empieza y acaba por regla temática `---` sin salto de línea
+    final. **El caso mínimo son seis caracteres: `---\n\n---`.**
+  - **Dónde:** escritura fuera de rango en `QUtf8::convertFromUnicode`
+    (`mov byte ptr [rdx],cl`), vía `QtPrivate::convertToUtf8` ←
+    `QTextMarkdownImporter::import` ← `QTextDocument::setMarkdown`.
+  - **Particularidades:** solo con el marcador `---` (con `***` o `- - -` no pasa,
+    ni mezclándolos), solo con exactamente dos (con tres no pasa, ni con
+    `---\n---` pegadas), el contenido intermedio es indiferente y las
+    `MarkdownFeatures` también. Los acentos **no** pintan nada pese a que la traza
+    pase por `convertToUtf8`: esa fue la primera hipótesis y se probó y descartó.
+  - **Ya está arreglado en Qt.** El barrido de versiones (*job*
+    `qt-version-sweep`, solo `workflow_dispatch`) lo confirma: cae en **6.8.2** y
+    pasa en **6.9.3** y **6.10.3**. No hace falta reportarlo aguas arriba. (6.11
+    quedó sin probar: `aqtinstall` no encuentra sus datos, cosa del instalador.)
+  - **El rodeo se queda** mientras se soporte Qt 6.8 o anterior: `mdrender::protect()`
+    garantiza un `\n` final, que es inocuo por construcción —no cambia la
+    semántica del Markdown— y cubre el caso real, porque esto no era entrada
+    sintética: **cualquier `.md` que cerrase con `---` sin salto final tumbaba el
+    editor al abrirlo en Windows**. Para retirarlo hay que ver a `qtmdrepro`
+    dejar de caer en el CI de Windows, que para eso está.
 - ✅ **Golden tests de exportadores** — *Hecho:* `tst_goldenexport` fija la salida
   exacta de los serializadores propios y deterministas para un documento canónico,
   contra referencias en `tests/golden/` (LaTeX, el XML de DOCX/ODF, las piezas del
