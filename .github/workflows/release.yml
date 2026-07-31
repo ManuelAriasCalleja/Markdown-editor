@@ -184,6 +184,29 @@ jobs:
           Copy-Item build/Release/md-editor.exe dist/
           & windeployqt.exe --release --no-system-d3d-compiler --no-opengl-sw dist/md-editor.exe
 
+      # Paso de humo, hermano del de Linux: arranca el árbol que va a ir dentro
+      # del ZIP. Aquí hay una trampa propia de Windows — install-qt-action mete el
+      # Qt del runner en el PATH, y una DLL que windeployqt hubiera olvidado se
+      # encontraría por ahí: el paquete pasaría la prueba en el CI y fallaría en la
+      # máquina del usuario. Por eso se ejecuta con un PATH mínimo (dist + system32),
+      # que es lo más parecido a un Windows limpio.
+      - name: Smoke test (arrancar el .exe desplegado)
+        shell: pwsh
+        run: |
+          Set-Content -Path smoke.md -Value "# Prueba`n`nTexto **con formato**, ``código`` y `$E = mc^2`$."
+          $env:QT_QPA_PLATFORM = 'offscreen'   # el runner no tiene escritorio
+          $env:PATH = "$PWD\dist;$env:SystemRoot\System32;$env:SystemRoot"
+          $p = Start-Process -FilePath dist\md-editor.exe -ArgumentList 'smoke.md' `
+                 -PassThru -RedirectStandardOutput smoke-out.txt -RedirectStandardError smoke-err.txt
+          Start-Sleep -Seconds 10
+          if ($p.HasExited) {
+            Write-Host "El .exe terminó solo (código $($p.ExitCode)). Salida:"
+            Get-Content smoke-out.txt, smoke-err.txt -ErrorAction SilentlyContinue
+            exit 1
+          }
+          Stop-Process -Id $p.Id -Force
+          Write-Host "OK: el .exe desplegado arrancó y abrió el documento"
+
       # --- Firma del .exe (solo si SIGN_ENABLED). El ZIP de abajo recoge el
       #     .exe ya firmado porque SignPath lo devuelve sobre el propio dist/. ---
       - name: Upload unsigned .exe for SignPath
@@ -291,6 +314,48 @@ jobs:
           cd build
           macdeployqt md-editor.app -dmg
           mv md-editor.dmg "../md-editor-${VERSION}-macos-universal.dmg"
+
+      # Paso de humo, hermano del de Linux y el de Windows: arranca el binario de
+      # DENTRO del .app (el mismo que monta el usuario desde el DMG). La trampa
+      # aquí no es el PATH sino los install names: si macdeployqt no reescribiera
+      # alguna referencia, el binario tiraría del Qt del runner por ruta absoluta
+      # —arrancaría en el CI y no en el Mac de nadie más—, así que primero se
+      # comprueba con otool que no queda ninguna referencia fuera del bundle.
+      - name: Smoke test (arrancar el .app empaquetado)
+        run: |
+          set -u
+          APP=build/md-editor.app
+          BIN="$APP/Contents/MacOS/md-editor"
+
+          # 1. Ninguna biblioteca puede venir de fuera del bundle (ni del Qt del
+          #    runner ni de /usr/local): solo del sistema o de @rpath/@executable_path.
+          echo "Dependencias del binario:"
+          otool -L "$BIN"
+          # Solo las líneas de dependencia (empiezan por espacio; las de cabecera
+          # «… (architecture arm64):» del binario universal van a columna 0). Se
+          # usa [[:space:]], no \s: el grep de macOS es BSD y no entiende \s.
+          if otool -L "$BIN" \
+               | grep -E '^[[:space:]]' \
+               | grep -vE '@(rpath|executable_path|loader_path)|^[[:space:]]+/usr/lib/|^[[:space:]]+/System/'; then
+            echo "Hay dependencias fuera del bundle: el DMG no funcionaría en otro Mac"
+            exit 1
+          fi
+
+          # 2. Y que arranque de verdad, con un documento y sin escritorio.
+          printf '# Prueba\n\nTexto **con formato**, `código` y $E = mc^2$.\n' > smoke.md
+          QT_QPA_PLATFORM=offscreen "$BIN" smoke.md > smoke.log 2>&1 &
+          pid=$!
+          sleep 10
+          if kill -0 "$pid" 2>/dev/null; then
+            kill "$pid" 2>/dev/null || true
+            wait "$pid" 2>/dev/null || true
+            echo "OK: el .app empaquetado arrancó y abrió el documento"
+          else
+            wait "$pid" 2>/dev/null
+            echo "El binario del .app terminó solo. Salida:"
+            cat smoke.log
+            exit 1
+          fi
 
       - uses: actions/upload-artifact@v6
         with:

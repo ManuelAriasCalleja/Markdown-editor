@@ -26,12 +26,50 @@ dependencies), in 9 languages.
 
 ---
 
+## Installing on Linux
+
+The AppImage is a single self-contained executable — no installation, no root:
+
+1. `chmod +x md-editor-*-x86_64.AppImage`
+2. Run it (double-click, or `./md-editor-*-x86_64.AppImage document.md`).
+
+**If it does not start:**
+
+- *`dlopen(): error loading libfuse.so.2`* — AppImages mount themselves with
+  FUSE 2, which recent distributions no longer install by default. Either install
+  it (`sudo apt install libfuse2` on Debian/Ubuntu, `sudo dnf install fuse-libs`
+  on Fedora) or skip the mount altogether:
+  `./md-editor-*-x86_64.AppImage --appimage-extract-and-run`.
+- *`Could not load the Qt platform plugin "xcb"`* — a minimal or container-based
+  system is missing the X libraries Qt needs:
+  `sudo apt install libxcb-cursor0 libxkbcommon-x11-0 libfontconfig1`. Adding
+  `QT_DEBUG_PLUGINS=1` to the command prints which library is missing.
+- *Nothing happens on double-click* — the execute bit (step 1) is missing. Some
+  file managers stay silent about it; run it from a terminal to see the error.
+- The AppImage does not add itself to the applications menu. If you want an
+  entry, either use [AppImageLauncher](https://github.com/TheAssassin/AppImageLauncher)
+  or install from source (`sudo ./install.sh`), which does register it.
+
+---
+
 ## Installing on Windows
 
 The Windows build is portable: **unzip and run `md-editor.exe`** — no installer.
 The binary is not signed yet, so SmartScreen may show a blue *"Windows protected
 your PC"* screen on first run. To proceed, click **More info → Run anyway**. This
 only happens until the build earns SmartScreen reputation (or gets code-signed).
+
+**If it does not start:**
+
+- *`VCRUNTIME140.dll was not found`* (or `MSVCP140.dll`) — the app is built with
+  Microsoft's compiler and needs its runtime, which most machines already have.
+  Install the [Visual C++ Redistributable (x64)](https://aka.ms/vs/17/release/vc_redist.x64.exe).
+- *The app starts and closes immediately, or complains about a missing DLL* —
+  make sure you **extracted the whole ZIP**, not just `md-editor.exe`. The Qt
+  DLLs and the `platforms\` folder next to it are part of the program.
+- *Windows keeps warning about every file* — right-click the downloaded **ZIP** →
+  *Properties* → **Unblock**, and extract it again. Windows marks files that come
+  from the internet, and the mark survives extraction.
 
 ---
 
@@ -49,6 +87,17 @@ is expected and the app is safe — to open it the first time:
 You only need to do this once; afterwards it launches normally with a
 double-click. Alternatively, after the blocked attempt, go to *System Settings →
 Privacy & Security* and click **Open anyway**.
+
+**If it does not start:**
+
+- *"md-editor is damaged and can't be opened. You should move it to the Trash"* —
+  the download is not corrupt: this is the quarantine flag macOS puts on unsigned
+  downloads. Remove it and open normally:
+  `xattr -dr com.apple.quarantine /Applications/md-editor.app`.
+- *Ctrl-click → Open does not offer an "Open" button* — on macOS 15 (Sequoia) and
+  later that shortcut is gone for unsigned apps. Launch it once (it will be
+  blocked), then go to *System Settings → Privacy & Security*, scroll down and
+  click **Open Anyway**.
 
 ---
 
