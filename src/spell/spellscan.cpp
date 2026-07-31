@@ -4,6 +4,7 @@
 #include "spellscan.h"
 
 #include <QChar>
+#include <QHash>
 
 namespace mdspell {
 
@@ -91,6 +92,80 @@ QString pickDictionary(const QString &lang, const QStringList &available)
             variants.append(a);
     variants.sort();
     return variants.isEmpty() ? QString() : variants.first();
+}
+
+QString dictionaryPackage(const QString &lang)
+{
+    // es → hunspell-es; en_US → hunspell-en-us. Debian, Fedora y Arch usan la
+    // misma convención de nombre (cambia el gestor, no el paquete).
+    QString code = lang;
+    code.replace(QLatin1Char('_'), QLatin1Char('-'));
+    return QStringLiteral("hunspell-") + code.toLower();
+}
+
+QString dictionaryInstallCommand(const QString &lang, const QString &productType)
+{
+    const QString pkg = dictionaryPackage(lang);
+    const QString os = productType.toLower();
+    // Familias con gestor propio; el resto cae en apt, que es lo más extendido.
+    if (os == QLatin1String("fedora") || os == QLatin1String("rhel")
+        || os == QLatin1String("centos") || os == QLatin1String("rocky")
+        || os == QLatin1String("almalinux"))
+        return QStringLiteral("sudo dnf install ") + pkg;
+    if (os == QLatin1String("arch") || os == QLatin1String("manjaro")
+        || os == QLatin1String("endeavouros"))
+        return QStringLiteral("sudo pacman -S ") + pkg;
+    if (os.startsWith(QLatin1String("opensuse")) || os == QLatin1String("suse")
+        || os == QLatin1String("sled") || os == QLatin1String("sles"))
+        return QStringLiteral("sudo zypper install ") + pkg;
+    if (os == QLatin1String("alpine"))
+        return QStringLiteral("sudo apk add ") + pkg;
+    // macOS y Windows no tienen repositorio de diccionarios: sin orden que dar.
+    if (os == QLatin1String("macos") || os == QLatin1String("osx")
+        || os == QLatin1String("windows") || os == QLatin1String("winnt"))
+        return QString();
+    return QStringLiteral("sudo apt install ") + pkg;
+}
+
+QPair<QString, QString> dictionaryUrls(const QString &lang)
+{
+    // Misma tabla que scripts/fetch-dictionaries.sh (ver el comentario del .h).
+    static const QHash<QString, QString> kPaths = {
+        {QStringLiteral("es_es"), QStringLiteral("es/es_ES")},
+        {QStringLiteral("en_us"), QStringLiteral("en/en_US")},
+        {QStringLiteral("de_de"), QStringLiteral("de/de_DE_frami")},
+        {QStringLiteral("fr_fr"), QStringLiteral("fr_FR/dictionaries/fr")},
+        {QStringLiteral("it_it"), QStringLiteral("it_IT/it_IT")},
+        {QStringLiteral("pt_br"), QStringLiteral("pt_BR/pt_BR")},
+        {QStringLiteral("pl_pl"), QStringLiteral("pl_PL/pl_PL")},
+        {QStringLiteral("nl_nl"), QStringLiteral("nl_NL/nl_NL")},
+        {QStringLiteral("ro_ro"), QStringLiteral("ro/ro_RO")},
+    };
+    // Un idioma sin región (es, de…) se resuelve a la variante que se empaqueta,
+    // que es lo que el usuario espera al pedir «español» sin más.
+    static const QHash<QString, QString> kBase = {
+        {QStringLiteral("es"), QStringLiteral("es_es")},
+        {QStringLiteral("en"), QStringLiteral("en_us")},
+        {QStringLiteral("de"), QStringLiteral("de_de")},
+        {QStringLiteral("fr"), QStringLiteral("fr_fr")},
+        {QStringLiteral("it"), QStringLiteral("it_it")},
+        {QStringLiteral("pt"), QStringLiteral("pt_br")},
+        {QStringLiteral("pl"), QStringLiteral("pl_pl")},
+        {QStringLiteral("nl"), QStringLiteral("nl_nl")},
+        {QStringLiteral("ro"), QStringLiteral("ro_ro")},
+    };
+
+    QString key = lang.toLower();
+    key.replace(QLatin1Char('-'), QLatin1Char('_'));
+    if (!kPaths.contains(key))
+        key = kBase.value(key.section(QLatin1Char('_'), 0, 0));
+    const QString path = kPaths.value(key);
+    if (path.isEmpty())
+        return {};
+
+    const QString base = QStringLiteral(
+        "https://raw.githubusercontent.com/LibreOffice/dictionaries/master/");
+    return {base + path + QStringLiteral(".aff"), base + path + QStringLiteral(".dic")};
 }
 
 } // namespace mdspell

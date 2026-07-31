@@ -5,6 +5,7 @@
 /// \brief Lógica pura del corrector: tokenización de palabras y selección de diccionario.
 
 #include <QList>
+#include <QPair>
 #include <QString>
 #include <QStringList>
 
@@ -46,6 +47,31 @@ QList<Word> tokenize(const QString &text);
 /// \param available basenames de diccionario disponibles.
 /// \return el basename elegido tal cual aparece en `available`, o vacío si no hay ninguno.
 QString pickDictionary(const QString &lang, const QStringList &available);
+
+/// \brief Nombre del paquete de diccionario de una distribución para `lang`
+/// (`es` → `hunspell-es`, `en_US` → `hunspell-en-us`). Es la convención que
+/// siguen Debian/Ubuntu, Fedora y Arch.
+QString dictionaryPackage(const QString &lang);
+
+/// \brief Orden con la que el usuario instala a mano el diccionario de `lang` en
+/// su sistema, según `productType` (`QSysInfo::productType()`: "ubuntu", "debian",
+/// "fedora", "arch"…). Fuera de Linux no hay repositorio de diccionarios que
+/// valga, así que devuelve vacío y el llamante ofrece la vía manual.
+/// \param lang código o basename del diccionario (`es`, `es_ES`…).
+/// \param productType identificador del sistema; vacío = familia Debian (lo más común).
+QString dictionaryInstallCommand(const QString &lang, const QString &productType);
+
+/// \brief Par de URLs (.aff y .dic) del diccionario de `lang` en el repositorio de
+/// diccionarios de LibreOffice, para poder descargarlo desde el programa.
+///
+/// Solo los nueve idiomas de la interfaz: las rutas de ese repositorio no siguen
+/// un patrón (el alemán es `de/de_DE_frami`, el francés `fr_FR/dictionaries/fr`),
+/// así que se listan a mano y para el resto se devuelve vacío (el llamante ofrece
+/// entonces la instalación manual). Es la MISMA tabla que usa
+/// `scripts/fetch-dictionaries.sh` al empaquetar: si cambia una ruta upstream,
+/// hay que tocar los dos sitios (el script lo detecta al publicar, con `--fail`).
+/// \return {url del .aff, url del .dic}, o dos cadenas vacías si no se conoce.
+QPair<QString, QString> dictionaryUrls(const QString &lang);
 
 } // namespace mdspell
 

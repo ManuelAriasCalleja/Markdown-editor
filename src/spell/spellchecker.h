@@ -57,6 +57,19 @@ public:
     /// \brief Idiomas (basenames de diccionario) disponibles en las rutas de búsqueda.
     static QStringList availableLanguages();
 
+    /// \brief ¿Se compiló esta build CON soporte de corrección (Hunspell)?
+    ///
+    /// Distinto de `isAvailable()`: sirve para no decirle al usuario «instala el
+    /// diccionario» cuando lo que falta es el motor y no hay diccionario que
+    /// valga. Hasta la 2.8.3 los binarios publicados salieron así, sin avisar.
+    static bool isEngineAvailable();
+
+    /// \brief Carpeta de diccionarios del usuario (escribible), la primera que se
+    /// consulta: es donde el programa descarga los que faltan y donde el usuario
+    /// puede copiar un `.aff`/`.dic` a mano en cualquier plataforma. No se crea
+    /// aquí; la crea quien escriba en ella.
+    static QString userDictionaryDir();
+
 private:
     struct Impl;
     std::unique_ptr<Impl> d;

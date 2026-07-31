@@ -30,6 +30,12 @@ private slots:
     void pickDictionaryFallsBackToBase();
     void pickDictionaryFallsBackToAnyRegion();
     void pickDictionaryReturnsEmptyWhenAbsent();
+
+    void packageNameFollowsDistroConvention();
+    void installCommandPerDistroFamily();
+    void installCommandEmptyOutsideLinux();
+    void dictionaryUrlsCoverInterfaceLanguages();
+    void dictionaryUrlsEmptyForUnknownLanguage();
 };
 
 void TestSpellScan::tokenizeSplitsOnWhitespaceAndPunctuation()
@@ -113,6 +119,69 @@ void TestSpellScan::pickDictionaryReturnsEmptyWhenAbsent()
     const QStringList avail{QStringLiteral("es"), QStringLiteral("en_US")};
     QCOMPARE(mdspell::pickDictionary(QStringLiteral("de"), avail), QString());
     QCOMPARE(mdspell::pickDictionary(QStringLiteral("es"), QStringList()), QString());
+}
+
+void TestSpellScan::packageNameFollowsDistroConvention()
+{
+    // Debian, Fedora y Arch nombran igual el paquete: hunspell-<idioma en
+    // minúsculas y con guion>, aunque el diccionario se llame es_ES.
+    QCOMPARE(mdspell::dictionaryPackage(QStringLiteral("es")), QStringLiteral("hunspell-es"));
+    QCOMPARE(mdspell::dictionaryPackage(QStringLiteral("en_US")), QStringLiteral("hunspell-en-us"));
+    QCOMPARE(mdspell::dictionaryPackage(QStringLiteral("pt_BR")), QStringLiteral("hunspell-pt-br"));
+}
+
+void TestSpellScan::installCommandPerDistroFamily()
+{
+    // La orden que se le enseña al usuario tiene que ser la de SU distribución:
+    // «sudo apt install» en Fedora no sirve de nada.
+    QCOMPARE(mdspell::dictionaryInstallCommand(QStringLiteral("es"), QStringLiteral("ubuntu")),
+             QStringLiteral("sudo apt install hunspell-es"));
+    QCOMPARE(mdspell::dictionaryInstallCommand(QStringLiteral("es"), QStringLiteral("fedora")),
+             QStringLiteral("sudo dnf install hunspell-es"));
+    QCOMPARE(mdspell::dictionaryInstallCommand(QStringLiteral("es"), QStringLiteral("arch")),
+             QStringLiteral("sudo pacman -S hunspell-es"));
+    QCOMPARE(mdspell::dictionaryInstallCommand(QStringLiteral("es"), QStringLiteral("opensuse-leap")),
+             QStringLiteral("sudo zypper install hunspell-es"));
+    // Distribución desconocida: apt, que es lo más extendido, en vez de nada.
+    QCOMPARE(mdspell::dictionaryInstallCommand(QStringLiteral("es"), QStringLiteral("loquesea")),
+             QStringLiteral("sudo apt install hunspell-es"));
+}
+
+void TestSpellScan::installCommandEmptyOutsideLinux()
+{
+    // Windows y macOS no tienen repositorio de diccionarios: no hay orden que dar
+    // y el llamante ofrece la vía manual (copiar los ficheros en su carpeta).
+    QVERIFY(mdspell::dictionaryInstallCommand(QStringLiteral("es"), QStringLiteral("windows")).isEmpty());
+    QVERIFY(mdspell::dictionaryInstallCommand(QStringLiteral("es"), QStringLiteral("macos")).isEmpty());
+}
+
+void TestSpellScan::dictionaryUrlsCoverInterfaceLanguages()
+{
+    // Los nueve idiomas de la interfaz tienen que poder descargarse desde el
+    // programa; son los mismos que empaqueta scripts/fetch-dictionaries.sh.
+    const QStringList langs = {QStringLiteral("es"), QStringLiteral("en"), QStringLiteral("de"),
+                               QStringLiteral("fr"), QStringLiteral("it"), QStringLiteral("pt"),
+                               QStringLiteral("pl"), QStringLiteral("nl"), QStringLiteral("ro")};
+    for (const QString &lang : langs) {
+        const auto urls = mdspell::dictionaryUrls(lang);
+        QVERIFY2(urls.first.endsWith(QStringLiteral(".aff")), qPrintable(lang));
+        QVERIFY2(urls.second.endsWith(QStringLiteral(".dic")), qPrintable(lang));
+        // El .aff y el .dic tienen que ser del MISMO diccionario: mezclarlos daría
+        // un diccionario que carga y corrige mal.
+        QCOMPARE(urls.first.chopped(4), urls.second.chopped(4));
+    }
+    // La variante regional y el idioma a secas llevan al mismo sitio.
+    QCOMPARE(mdspell::dictionaryUrls(QStringLiteral("es_ES")),
+             mdspell::dictionaryUrls(QStringLiteral("es")));
+    QCOMPARE(mdspell::dictionaryUrls(QStringLiteral("pt-BR")),
+             mdspell::dictionaryUrls(QStringLiteral("pt")));
+}
+
+void TestSpellScan::dictionaryUrlsEmptyForUnknownLanguage()
+{
+    // Idioma fuera de los nueve: sin descarga (el programa ofrece la vía manual).
+    QVERIFY(mdspell::dictionaryUrls(QStringLiteral("ja")).first.isEmpty());
+    QVERIFY(mdspell::dictionaryUrls(QString()).first.isEmpty());
 }
 
 QTEST_MAIN(TestSpellScan)

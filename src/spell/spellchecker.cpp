@@ -6,6 +6,7 @@
 #include "spellscan.h"
 
 #include <QCoreApplication>
+#include <QStandardPaths>
 #include <QDir>
 #include <QFileInfo>
 #include <QHash>
@@ -25,7 +26,12 @@ QStringList searchPaths()
 {
     QStringList paths;
     const QString appDir = QCoreApplication::applicationDirPath();
-    paths << appDir + QStringLiteral("/dictionaries")               // junto al .exe (Windows) / binario
+    // La primera es la del usuario y va DELANTE a propósito: es la única en la que
+    // se puede escribir (dentro de un AppImage, un .app o Archivos de programa no),
+    // así que es donde caen los diccionarios que el propio programa descarga o que
+    // el usuario copia a mano, y desde ahí puede sustituir al del sistema.
+    paths << SpellChecker::userDictionaryDir()
+          << appDir + QStringLiteral("/dictionaries")               // junto al .exe (Windows) / binario
           << appDir + QStringLiteral("/../Resources/dictionaries")  // dentro del .app (macOS)
           << appDir + QStringLiteral("/../share/hunspell")          // <prefix>/share/hunspell (instalación)
           << QStringLiteral("/usr/share/hunspell")                  // diccionarios del sistema (Linux)
@@ -192,4 +198,22 @@ QStringList SpellChecker::availableLanguages()
     QStringList langs = availableDictionaries().keys();
     langs.sort();
     return langs;
+}
+
+bool SpellChecker::isEngineAvailable()
+{
+#ifdef HAVE_HUNSPELL
+    return true;
+#else
+    return false;
+#endif
+}
+
+QString SpellChecker::userDictionaryDir()
+{
+    // AppLocalDataLocation es escribible en las tres plataformas (~/.local/share,
+    // %LOCALAPPDATA%, ~/Library/Application Support) y sobrevive a actualizar el
+    // programa, al contrario que la carpeta del ejecutable.
+    return QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation)
+           + QStringLiteral("/dictionaries");
 }

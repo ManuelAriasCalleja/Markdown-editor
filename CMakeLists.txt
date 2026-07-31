@@ -35,7 +35,10 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
-find_package(Qt6 REQUIRED COMPONENTS Widgets PrintSupport LinguistTools)
+# Network: solo lo usa DictionaryInstaller, para descargar un diccionario cuando
+# el usuario lo pide (ver src/spell/dictionaryinstaller.h). Es parte de Qt, no
+# una dependencia de terceros nueva.
+find_package(Qt6 REQUIRED COMPONENTS Widgets PrintSupport Network LinguistTools)
 
 # Qt6::GuiPrivate (el QZip del export ODF, ver más abajo) hay que asegurarlo a
 # mano porque las dos formas de obtenerlo son excluyentes según la versión:
@@ -203,6 +206,7 @@ add_library(md-editor-core STATIC
     src/diagram/diagramrenderer.h
     # --- spell ---
     src/spell/spellchecker.cpp
+    src/spell/dictionaryinstaller.cpp
     src/spell/spellchecker.h
     src/spell/spellcontroller.cpp
     src/spell/spellcontroller.h
@@ -252,7 +256,7 @@ add_library(md-editor-core STATIC
 # exporters.cpp reempaqueta el ODF para incrustarle el idioma sin dependencias
 # externas. Es API privada de Qt (puede cambiar entre versiones), pero no añade
 # ninguna biblioteca de terceros.
-target_link_libraries(md-editor-core PUBLIC Qt6::Widgets Qt6::PrintSupport Qt6::GuiPrivate)
+target_link_libraries(md-editor-core PUBLIC Qt6::Widgets Qt6::PrintSupport Qt6::Network Qt6::GuiPrivate)
 target_include_directories(md-editor-core PUBLIC
     src
     src/app

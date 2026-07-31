@@ -87,6 +87,11 @@ void setLineSpacing(int percent);
 bool spellCheck();
 void setSpellCheck(bool on);
 
+/// \brief ¿Avisar cuando falta el diccionario del idioma del documento? Activado por
+/// defecto; el propio aviso ofrece desactivarlo («No volver a avisar»).
+bool spellMissingWarning();
+void setSpellMissingWarning(bool on);
+
 /// \brief Idioma de corrección forzado (basename de diccionario, p. ej. "en_US"). Vacío
 /// = automático (se deduce del documento: front matter › idioma de la app ›
 /// locale del sistema).

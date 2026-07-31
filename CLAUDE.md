@@ -441,9 +441,25 @@ añadir lógica nueva: hay un `tst_*` por módulo.
   `SpellChecker` (se lo enchufa al highlighter), el interruptor activado/
   desactivado y el menú contextual de sugerencias. `applyLanguage()` elige el
   diccionario por el idioma del documento (front matter › ajuste › locale) en cada
-  `documentLoaded` y al arrancar, y rehace el resaltado; si falta el diccionario
-  emite `statusMessage`. La lista personal vive en
+  `documentLoaded` y al arrancar, y rehace el resaltado. La lista personal vive en
   `AppSettings::personalDictionary`.
+  **Cuando falta el diccionario** no basta con degradar en silencio (el usuario no
+  sabe por qué no se subraya nada): además del mensaje de la barra de estado, sale
+  un aviso —**una vez por idioma y sesión**, con «No volver a avisar» persistido en
+  `AppSettings::spellMissingWarning`— que dice qué falta y **cómo instalarlo**: en
+  Linux la orden del gestor de paquetes de SU distribución
+  (`mdspell::dictionaryInstallCommand`, por `QSysInfo::productType()`), y en
+  Windows/macOS la carpeta donde copiarlo. El aviso distingue «falta el
+  diccionario» de «esta build no trae corrector»
+  (`SpellChecker::isEngineAvailable()`): mandar a instalar un diccionario cuando no
+  hay motor es un callejón sin salida. El botón **«Descargar e instalar»**
+  (`DictionaryInstaller`) lo baja del repositorio de LibreOffice a
+  `SpellChecker::userDictionaryDir()` —la primera ruta de búsqueda y la única
+  escribible: dentro de un AppImage o un `.app` no se puede escribir— y recarga el
+  idioma. Es **el único sitio del programa que usa la red**, y solo al pulsar el
+  botón; las URLs (`mdspell::dictionaryUrls`) son la misma tabla que
+  `scripts/fetch-dictionaries.sh`, así que una ruta que cambie upstream hay que
+  tocarla en los dos sitios.
 
 ### Fórmulas TeX (`mdmath`)
 

@@ -5,11 +5,13 @@
 /// \brief Integración del corrector ortográfico en el editor WYSIWYG (idioma y menú contextual).
 
 #include <QObject>
+#include <QSet>
 #include <QString>
 
 #include "spellchecker.h"
 
 class CodeBlockHighlighter;
+class DictionaryInstaller;
 class DocumentIo;
 class QContextMenuEvent;
 class QTextEdit;
@@ -51,11 +53,23 @@ signals:
     void statusMessage(const QString &text, int timeoutMs);
 
 private:
+    /// Avisa (una vez por idioma y sesión) de que falta el diccionario, con las
+    /// instrucciones de instalación de la plataforma. No hace nada si el usuario
+    /// pidió no volver a avisar.
+    void warnMissingDictionary(const QString &code);
+    /// El diálogo en sí (se llama diferido: llega en mitad de la carga del
+    /// documento y un modal ahí sale mal colocado).
+    void showMissingDictionaryDialog(const QString &code);
+    /// Descarga el diccionario a la carpeta del usuario y recarga el idioma.
+    void downloadDictionary(const QString &code);
+
     QTextEdit *m_editor = nullptr;
     CodeBlockHighlighter *m_highlighter = nullptr;
     DocumentIo *m_documentIo = nullptr;
     SpellChecker m_checker;       // motor; lo consume el highlighter
     bool m_enabled = true;        // interruptor del corrector (Ver → ...)
+    QSet<QString> m_warnedLanguages;  // idiomas ya avisados en esta sesión
+    DictionaryInstaller *m_installer = nullptr;  // perezoso: solo si se descarga
 };
 
 #endif // SPELLCONTROLLER_H
