@@ -112,6 +112,12 @@ void SpellController::warnMissingDictionary(const QString &code)
 {
     if (!AppSettings::spellMissingWarning() || m_warnedLanguages.contains(code))
         return;
+    // Arranques automatizados (pruebas, paso de humo del empaquetado): el aviso es
+    // una ventana que ahí no hay quien cierre, y además roba los atajos de la
+    // principal mientras esté abierta. Se calla; el mensaje de la barra de estado
+    // sigue saliendo.
+    if (qEnvironmentVariableIsSet("MD_EDITOR_NO_POPUPS"))
+        return;
     m_warnedLanguages.insert(code);
 
     // Diferido: esto se dispara al cargar un documento, y un diálogo modal en
@@ -122,25 +128,41 @@ void SpellController::warnMissingDictionary(const QString &code)
 
 void SpellController::showMissingDictionaryDialog(const QString &code)
 {
+    // NO se usa exec(): este aviso lo dispara la carga de un documento, y un
+    // `exec()` ahí bloquea el hilo dentro de la ruta de apertura —en las pruebas
+    // automáticas eso es un cuelgue (dos tests se quedaron colgados en el CI, sin
+    // nadie que pulsara nada) y en la aplicación real congela la apertura de la
+    // sesión—. Con `open()` el diálogo es modal para su ventana pero asíncrono: se
+    // muestra y el programa sigue; la respuesta se atiende en `finished`. Y NO
+    // modal para su ventana, sino suelto: es un aviso, no una pregunta que haya
+    // que contestar para seguir editando, y un modal de ventana secuestra el
+    // teclado de la principal (con él, un atajo tan normal como F6 dejaba de
+    // llegar al editor).
     const QString label = languageLabel(code);
-    QMessageBox box(m_editor ? m_editor->window() : nullptr);
-    box.setIcon(QMessageBox::Information);
-    box.setWindowTitle(QCoreApplication::translate("MainWindow", "Corrección ortográfica"));
+    auto *box = new QMessageBox(m_editor ? m_editor->window() : nullptr);
+    box->setAttribute(Qt::WA_DeleteOnClose);
+    box->setWindowModality(Qt::NonModal);
+    // Y sin robar el foco: aparece mientras el usuario ya está escribiendo, así que
+    // no debe quedarse con el teclado (además de ser molesto, dejaba sin efecto los
+    // atajos de la ventana principal mientras estuviera abierto).
+    box->setAttribute(Qt::WA_ShowWithoutActivating);
+    box->setIcon(QMessageBox::Information);
+    box->setWindowTitle(QCoreApplication::translate("MainWindow", "Corrección ortográfica"));
 
     if (!SpellChecker::isEngineAvailable()) {
         // Ni motor: decirle que instale un diccionario sería mandarlo a un callejón
         // sin salida, porque no habría nada que lo leyera.
-        box.setText(QCoreApplication::translate("MainWindow",
+        box->setText(QCoreApplication::translate("MainWindow",
             "Esta versión del programa se compiló sin corrector ortográfico."));
-        box.setInformativeText(QCoreApplication::translate("MainWindow",
+        box->setInformativeText(QCoreApplication::translate("MainWindow",
             "No se subrayarán las faltas. Si la has compilado tú, instala Hunspell "
             "(libhunspell-dev, brew install hunspell o vcpkg) y vuelve a compilar."));
-        box.setStandardButtons(QMessageBox::Ok);
-        box.exec();
+        box->setStandardButtons(QMessageBox::Ok);
+        box->show();
         return;
     }
 
-    box.setText(QCoreApplication::translate("MainWindow",
+    box->setText(QCoreApplication::translate("MainWindow",
         "No hay diccionario de %1, así que la corrección está desactivada en este "
         "documento.").arg(label));
 
@@ -159,26 +181,28 @@ void SpellController::showMissingDictionaryDialog(const QString &code)
                   "esta carpeta:\n\n    %1").arg(QDir::toNativeSeparators(
                       SpellChecker::userDictionaryDir()));
     }
-    box.setInformativeText(how);
+    box->setInformativeText(how);
 
     // Descarga directa: no pide contraseña, no depende del gestor de paquetes y
     // vale en las tres plataformas. Solo para los idiomas de los que se conoce el
     // origen (los nueve de la interfaz).
     QPushButton *install = nullptr;
     if (DictionaryInstaller::canInstall(code)) {
-        install = box.addButton(QCoreApplication::translate("MainWindow",
+        install = box->addButton(QCoreApplication::translate("MainWindow",
                       "Descargar e instalar"), QMessageBox::AcceptRole);
     }
-    box.addButton(QMessageBox::Close);
+    box->addButton(QMessageBox::Close);
     auto *dontAsk = new QCheckBox(
-        QCoreApplication::translate("MainWindow", "No volver a avisar"), &box);
-    box.setCheckBox(dontAsk);
+        QCoreApplication::translate("MainWindow", "No volver a avisar"), box);
+    box->setCheckBox(dontAsk);
 
-    box.exec();
-    if (dontAsk->isChecked())
-        AppSettings::setSpellMissingWarning(false);
-    if (install && box.clickedButton() == install)
-        downloadDictionary(code);
+    connect(box, &QMessageBox::finished, this, [this, box, install, dontAsk, code] {
+        if (dontAsk->isChecked())
+            AppSettings::setSpellMissingWarning(false);
+        if (install && box->clickedButton() == install)
+            downloadDictionary(code);
+    });
+    box->show();
 }
 
 void SpellController::downloadDictionary(const QString &code)

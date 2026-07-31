@@ -585,8 +585,14 @@ if(Qt6Test_FOUND)
         else()
             set(_qpa "offscreen")
         endif()
+        # MD_EDITOR_NO_POPUPS: nada de ventanas emergentes automáticas. Las pruebas
+        # construyen MainWindow y abren documentos, y un aviso que aparece solo —el
+        # del diccionario que falta, que salta si el runner no tiene el del idioma
+        # del sistema— es una segunda ventana que nadie va a cerrar: bloqueaba dos
+        # pruebas en el CI. Vale también para cualquier arranque automatizado (el
+        # paso de humo del release lo usa).
         set_tests_properties(${test} PROPERTIES
-            ENVIRONMENT "QT_QPA_PLATFORM=${_qpa}")
+            ENVIRONMENT "QT_QPA_PLATFORM=${_qpa};MD_EDITOR_NO_POPUPS=1")
     endforeach()
 
     # tst_help valida los .md de ayuda tal como se empaquetan, leyéndolos del

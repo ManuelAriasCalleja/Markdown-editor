@@ -111,7 +111,7 @@ jobs:
           # Devuelve 0 si el programa sigue vivo tras arrancar. La salida va a
           # smoke.log para poder volcarla si falla.
           arranca() {
-            QT_QPA_PLATFORM=offscreen "$@" ./"$APPIMAGE" smoke.md > smoke.log 2>&1 &
+            QT_QPA_PLATFORM=offscreen MD_EDITOR_NO_POPUPS=1 "$@" ./"$APPIMAGE" smoke.md > smoke.log 2>&1 &
             local pid=$!
             sleep 10
             if kill -0 "$pid" 2>/dev/null; then
@@ -221,6 +221,7 @@ jobs:
         run: |
           Set-Content -Path smoke.md -Value "# Prueba`n`nTexto **con formato**, ``código`` y `$E = mc^2`$."
           $env:QT_QPA_PLATFORM = 'offscreen'   # el runner no tiene escritorio
+          $env:MD_EDITOR_NO_POPUPS = '1'       # ni avisos que nadie pueda cerrar
           $env:PATH = "$PWD\dist;$env:SystemRoot\System32;$env:SystemRoot"
           $p = Start-Process -FilePath dist\md-editor.exe -ArgumentList 'smoke.md' `
                  -PassThru -RedirectStandardOutput smoke-out.txt -RedirectStandardError smoke-err.txt
@@ -403,7 +404,7 @@ jobs:
 
           # 2. Y que arranque de verdad, con un documento y sin escritorio.
           printf '# Prueba\n\nTexto **con formato**, `código` y $E = mc^2$.\n' > smoke.md
-          QT_QPA_PLATFORM=offscreen "$BIN" smoke.md > smoke.log 2>&1 &
+          QT_QPA_PLATFORM=offscreen MD_EDITOR_NO_POPUPS=1 "$BIN" smoke.md > smoke.log 2>&1 &
           pid=$!
           sleep 10
           if kill -0 "$pid" 2>/dev/null; then
