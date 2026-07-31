@@ -753,15 +753,35 @@ necesita un Hunspell con su `.a`/`.lib` estático: Homebrew (`brew install
 hunspell`) o vcpkg (`hunspell:x64-windows-static`). Con `-DSPELL_CHECK_STATIC=OFF`
 vuelve al enlace dinámico.
 
-**Diccionarios del corrector.** Linux usa los del sistema (`/usr/share/hunspell`);
-Windows/macOS no tienen, así que se empaquetan. La carpeta `dictionaries/` (con su
-`README.md`; los `.aff/.dic` están en `.gitignore` por licencias y tamaño) es el
-punto de empaquetado: si tiene ficheros, `CMakeLists.txt` los instala donde
-`SpellChecker::searchPaths()` los busca — junto al `.exe` (Windows), en
-`Contents/Resources/dictionaries` (macOS), o `<prefix>/share/hunspell` (Linux). El
-script `scripts/bundle-dictionaries.sh` copia ahí los del sistema (los 9 idiomas
-de la interfaz) para una build de Win/Mac. Es un bloque `install` **condicional**
-(vacío = no-op), así que no afecta a la build de Linux.
+**El motor tiene que ir en el paquete, y eso no se ve.** Hasta la 2.8.3 inclusive,
+los tres binarios descargables salieron **sin corrector**: `release.yml` no
+instalaba Hunspell en ningún sistema, CMake dejaba `HAVE_HUNSPELL` sin definir y
+`SpellChecker` compilaba como stub inerte. Nada lo avisaba —«no encontrado» era un
+simple `message(STATUS)`— y los tests del corrector pasan igual (se saltan solos
+sin motor). Dos defensas contra que se repita: los jobs de release configuran con
+**`SPELL_CHECK_REQUIRED=ON`**, que convierte «Hunspell no encontrado» en error de
+configuración, y la detección tiene **respaldo sin `pkg-config`**
+(`find_path`/`find_library`), que es lo que dejaba fuera a Windows. Cómo se obtiene
+el motor en cada job: `libhunspell-dev` (Linux), vcpkg
+`hunspell:x64-windows-static-md` —estático pero con CRT dinámico, como Qt— y, en
+macOS, **compilado de fuente universal** (`-arch arm64 -arch x86_64`): `brew
+install hunspell` solo da la arquitectura del runner y la mitad x86_64 no
+enlazaría.
+
+**Diccionarios del corrector.** Linux usa los del sistema (`/usr/share/hunspell`) y
+**no los empaqueta** (duplicarían 5 MB de lo que el escritorio ya suele traer);
+Windows y macOS no tienen ninguno, así que viajan los **9 idiomas de la interfaz**
+dentro del paquete. No están en el repositorio (`.gitignore`: son de terceros,
+pesan 24 MB sin comprimir y cambian por su cuenta): los trae al empaquetar
+`scripts/fetch-dictionaries.sh <destino>` desde el repositorio de diccionarios de
+LibreOffice, con las licencias de cada idioma en `licenses/<idioma>/` y un
+`THIRDPARTY-DICTIONARIES.txt`. Ojo con los nombres: el destino se normaliza a
+`<idioma>_<REGIÓN>` porque upstream el alemán es `de_DE_frami` y el francés
+`fr_FR/dictionaries/fr`, y con esos nombres `mdspell::pickDictionary` no los
+encontraría. El script no usa `python`/`jq` a propósito: corre también en el runner
+de Windows (Git Bash). Sigue existiendo `scripts/bundle-dictionaries.sh`, que copia
+los del sistema para una build local de Win/Mac, y el bloque `install` condicional
+de `dictionaries/` para quien prefiera esa vía.
 
 ## Internacionalización (importante y con trampas)
 

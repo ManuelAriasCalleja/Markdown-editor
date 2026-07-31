@@ -29,13 +29,25 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y \
             libgl1-mesa-dev libxkbcommon-x11-0 libfontconfig1 \
-            libfuse2 file
+            libfuse2 file \
+            libhunspell-dev
+          # libhunspell-dev: sin él CMake deja HAVE_HUNSPELL sin definir y el
+          # corrector viaja como un stub inerte — el programa anuncia corrector y
+          # el binario publicado no lo tiene. Trae también el .a, así que el motor
+          # va DENTRO del ejecutable y no hay nada de Hunspell que desplegar.
+          #
+          # Los DICCIONARIOS no se empaquetan en Linux: aquí sí hay del sistema
+          # (/usr/share/hunspell), que es de donde los toma cualquier programa del
+          # escritorio, y meterlos engordaría el AppImage 5 MB para duplicar lo que
+          # el usuario suele tener ya. Si le falta el suyo, el programa se lo dice
+          # y le ofrece instalarlo (ver SpellController).
 
       - name: Configure & build
         run: |
           cmake -S . -B build \
             -DCMAKE_BUILD_TYPE=Release \
-            -DCMAKE_INSTALL_PREFIX=/usr
+            -DCMAKE_INSTALL_PREFIX=/usr \
+            -DSPELL_CHECK_REQUIRED=ON
           # Solo el ejecutable (arrastra md-editor-core), NO los ~44 tests: la
           # release no los necesita (el CI ya los compila y ejecuta) y
           # compilarlos todos con --parallel sin tope agota la RAM del runner
@@ -166,10 +178,24 @@ jobs:
           cache: true
           arch: 'win64_msvc2022_64'
 
+      # Hunspell para el corrector. Se usa el triplete `static-md`: Hunspell
+      # estático (viaja dentro del .exe, nada que desplegar) pero con el runtime de
+      # C dinámico (/MD), que es como está compilado Qt — mezclar /MT con /MD no
+      # enlaza. vcpkg viene preinstalado en el runner.
+      - name: Install Hunspell (vcpkg)
+        shell: pwsh
+        run: |
+          & "$env:VCPKG_INSTALLATION_ROOT\vcpkg.exe" install hunspell:x64-windows-static-md
+          "HUNSPELL_PREFIX=$env:VCPKG_INSTALLATION_ROOT\installed\x64-windows-static-md" `
+            | Out-File -FilePath $env:GITHUB_ENV -Append
+
       - name: Configure & build
         shell: pwsh
         run: |
-          cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+          # CMAKE_PREFIX_PATH lleva a Hunspell: en Windows no hay pkg-config, así
+          # que lo encuentra el respaldo find_path/find_library del CMakeLists.
+          cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DSPELL_CHECK_REQUIRED=ON `
+                "-DCMAKE_PREFIX_PATH=$env:HUNSPELL_PREFIX"
           # Solo el ejecutable, no los tests (los cubre el CI): evita OOM del
           # runner al compilar las ~44 unidades de test en paralelo.
           cmake --build build --config Release --parallel --target md-editor
@@ -230,6 +256,15 @@ jobs:
           wait-for-completion: true
           # Devuelve el .exe firmado sobre dist/, sustituyendo al sin firmar.
           output-artifact-directory: dist
+
+      # Diccionarios: Windows no tiene ninguno del sistema, así que sin esto el
+      # corrector se queda sin nada que consultar. Van junto al .exe, en
+      # dictionaries\\, que es la primera ruta que mira SpellChecker::searchPaths.
+      - name: Bundle dictionaries
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: ./scripts/fetch-dictionaries.sh dist/dictionaries
 
       - name: Package as portable ZIP
         shell: pwsh
@@ -296,10 +331,32 @@ jobs:
       # CMAKE_OSX_ARCHITECTURES="arm64;x86_64" produce un binario universal
       # que corre tanto en Apple Silicon como en Intel. Requiere que Qt esté
       # también compilado universal — los binarios oficiales de Qt 6.5+ lo son.
+      # Hunspell para el corrector. NO vale `brew install hunspell`: Homebrew lo
+      # instala solo para la arquitectura del runner (arm64) y el binario de aquí
+      # es universal, así que la mitad x86_64 no enlazaría. Se compila de fuente
+      # con las dos arquitecturas de una vez, estático (viaja dentro del binario).
+      - name: Build universal Hunspell
+        run: |
+          curl -sSL --fail --max-time 300 \
+            https://github.com/hunspell/hunspell/releases/download/v1.7.2/hunspell-1.7.2.tar.gz \
+            | tar xz
+          cd hunspell-1.7.2
+          ARCHS="-arch arm64 -arch x86_64"
+          ./configure --prefix="$PWD/../hunspell-universal" \
+            --disable-shared --enable-static --disable-dependency-tracking \
+            CFLAGS="$ARCHS -O2" CXXFLAGS="$ARCHS -O2" LDFLAGS="$ARCHS"
+          make -j3
+          make install
+          # Comprobación explícita: si saliera de una sola arquitectura, el enlace
+          # del universal fallaría más tarde con un error mucho menos claro.
+          lipo -info ../hunspell-universal/lib/libhunspell-1.7.a
+
       - name: Configure & build (universal)
         run: |
           cmake -S . -B build \
             -DCMAKE_BUILD_TYPE=Release \
+            -DSPELL_CHECK_REQUIRED=ON \
+            "-DCMAKE_PREFIX_PATH=$PWD/hunspell-universal" \
             "-DCMAKE_OSX_ARCHITECTURES=arm64;x86_64"
           # Solo el ejecutable, no los tests (los cubre el CI): evita OOM del
           # runner al compilar las ~44 unidades de test en paralelo.
@@ -311,6 +368,9 @@ jobs:
       - name: Package as DMG
         run: |
           VERSION="${GITHUB_REF_NAME#v}"
+          # Diccionarios dentro del bundle (macOS tampoco tiene del sistema):
+          # Contents/Resources/dictionaries es donde los busca SpellChecker.
+          ./scripts/fetch-dictionaries.sh build/md-editor.app/Contents/Resources/dictionaries
           cd build
           macdeployqt md-editor.app -dmg
           mv md-editor.dmg "../md-editor-${VERSION}-macos-universal.dmg"

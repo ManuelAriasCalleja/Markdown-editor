@@ -289,10 +289,33 @@ target_compile_definitions(md-editor-core PUBLIC APP_VERSION="${PROJECT_VERSION}
 #     y configurar con -DCMAKE_TOOLCHAIN_FILE=<vcpkg>/scripts/buildsystems/vcpkg.cmake
 option(SPELL_CHECK "Corrector ortográfico (requiere Hunspell)" ON)
 option(SPELL_CHECK_STATIC "Enlazar Hunspell estáticamente (binario autocontenido)" ON)
+# Que Hunspell sea opcional está bien para quien compila; para lo que se PUBLICA
+# es una trampa: hasta la 2.8.3 los tres binarios descargables salieron sin
+# corrector —nadie instalaba Hunspell en el workflow— y nada lo avisó, porque
+# «no encontrado» solo imprime un STATUS. Los jobs de release configuran con
+# SPELL_CHECK_REQUIRED=ON para que eso rompa la build en vez de silenciarse.
+option(SPELL_CHECK_REQUIRED "Fallar si no se encuentra Hunspell (para empaquetar)" OFF)
 if(SPELL_CHECK)
     find_package(PkgConfig QUIET)
     if(PkgConfig_FOUND)
         pkg_check_modules(HUNSPELL hunspell)
+    endif()
+    # Respaldo sin pkg-config: en Windows no suele estar (y vcpkg no siempre deja
+    # un .pc utilizable), así que sin esto el corrector se quedaba fuera de la
+    # build de Windows aunque Hunspell estuviera instalado — y el binario que se
+    # publicaba no tenía corrector sin que nada lo avisara. Busca cabecera y
+    # biblioteca a mano; el bloque de abajo (estático/dinámico) sigue igual.
+    if(NOT HUNSPELL_FOUND)
+        find_path(HUNSPELL_INCLUDE_DIR NAMES hunspell/hunspell.hxx hunspell.hxx)
+        find_library(HUNSPELL_LIBRARY NAMES hunspell hunspell-1.7 libhunspell)
+        if(HUNSPELL_INCLUDE_DIR AND HUNSPELL_LIBRARY)
+            set(HUNSPELL_FOUND TRUE)
+            set(HUNSPELL_INCLUDE_DIRS ${HUNSPELL_INCLUDE_DIR})
+            set(HUNSPELL_LIBRARIES ${HUNSPELL_LIBRARY})
+            set(HUNSPELL_VERSION "sin pkg-config")
+            message(STATUS "Corrector ortográfico: Hunspell encontrado sin pkg-config "
+                           "(${HUNSPELL_LIBRARY})")
+        endif()
     endif()
     if(HUNSPELL_FOUND)
         target_compile_definitions(md-editor-core PUBLIC HAVE_HUNSPELL)
@@ -327,6 +350,12 @@ if(SPELL_CHECK)
             message(STATUS "Corrector ortográfico: Hunspell ${HUNSPELL_VERSION} (dinámico)")
         endif()
         target_link_libraries(md-editor-core PUBLIC ${_hunspell_link})
+    elseif(SPELL_CHECK_REQUIRED)
+        message(FATAL_ERROR
+                "Corrector ortográfico: Hunspell no encontrado y SPELL_CHECK_REQUIRED=ON. "
+                "El binario saldría SIN corrector; para empaquetar hay que instalarlo "
+                "(libhunspell-dev / brew install hunspell / vcpkg) o compilarlo aparte y "
+                "apuntar CMAKE_PREFIX_PATH a su prefijo.")
     else()
         message(STATUS "Corrector ortográfico: Hunspell no encontrado, se omite "
                        "(instala libhunspell-dev / brew / vcpkg para activarlo)")
