@@ -38,7 +38,7 @@
 
   <screenshots>
     <screenshot type="default">
-      <caption>Editing a document in WYSIWYG mode</caption>
+      <caption>Editing a document in WYSIWYG mode: 2-D TeX formulas, highlighted code, a table and a task list</caption>
       <image>https://raw.githubusercontent.com/ManuelAriasCalleja/Markdown-editor/main/docs/screenshot.png</image>
     </screenshot>
   </screenshots>

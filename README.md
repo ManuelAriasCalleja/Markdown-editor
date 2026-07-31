@@ -9,7 +9,7 @@ dependencies), in 9 languages.
 ![License](https://img.shields.io/badge/license-GPL--3.0-blue)
 ![Platforms](https://img.shields.io/badge/platforms-Linux%20%7C%20Windows%20%7C%20macOS-green)
 
-![md-editor editing a document with TeX formulas, a code block, a chart, a table and a nested task list, with the outline panel open](docs/screenshot.png)
+![md-editor editing a document in a tab, with TeX formulas laid out in 2-D, a highlighted code block, a chart, callouts, a table and a nested task list, and the outline panel open](docs/screenshot.png)
 
 ---
 
