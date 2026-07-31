@@ -19,6 +19,16 @@ qreal scaledPointSize(qreal base, int delta)
     return qMax(qreal(1), base + delta);
 }
 
+QSize scaledWindowSize(const QSize &base, qreal scale, const QSize &limit)
+{
+    if (scale <= 0)
+        return base;
+    QSize target(qRound(base.width() * scale), qRound(base.height() * scale));
+    if (limit.isValid())
+        target = target.boundedTo(limit);
+    return target;
+}
+
 int menuMinimumWidth(const QMenu &menu)
 {
     const QFontMetrics fm(menu.font());

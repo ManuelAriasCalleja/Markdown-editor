@@ -193,6 +193,17 @@ private slots:
     // menús y desde applyChromeZoom: Qt cachea anchuras de QAction en la
     // primera medición, así que la fuente «correcta» tiene que estar antes.
     void applyMenuFontScale();
+    // Escala la fuente de un diálogo al nivel de zoom actual. Los diálogos son
+    // ventanas propias y Qt NO les propaga la fuente de la ventana padre (solo lo
+    // haría con WA_WindowPropagation), así que se quedaban al tamaño base mientras
+    // el editor y el resto del chrome seguían al zoom. Se la fija de forma explícita
+    // —no basta la fuente por clase de QApplication: sus hijos no la heredarían—, y
+    // así los rótulos, botones y listas de dentro también crecen. Quién se la aplica
+    // a cada diálogo: el filtro de eventos al pulirlo (los que se abren) y
+    // applyChromeZoom (los no modales que ya estén abiertos). La base es la fuente
+    // de QApplication (que el zoom no toca, a diferencia de la de los menús), así
+    // que reaplicarlo cuantas veces haga falta da siempre el mismo resultado.
+    void applyDialogZoom(QWidget *dialog) const;
     // Calcula con la QFontMetrics actual el ancho mínimo que cada QMenu
     // necesita para mostrar todas sus acciones (texto + atajo + flecha de
     // submenú) sin elidir, y se lo fija como minimumWidth. Workaround para un
@@ -351,6 +362,7 @@ private:
     qreal m_baseToolBarPointSize = 0;
     qreal m_baseFindBarPointSize = 0;
     qreal m_baseStatusBarPointSize = 0;
+    qreal m_baseTabBarPointSize = 0;
     qreal m_baseSourceFontPointSize = 0;
     int m_zoomDelta = 0;
     QToolBar *m_formatToolBar = nullptr;

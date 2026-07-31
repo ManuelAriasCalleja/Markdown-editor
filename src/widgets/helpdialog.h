@@ -33,9 +33,23 @@ class HelpDialog : public QDialog
 public:
     explicit HelpDialog(QWidget *parent = nullptr);
 
+protected:
+    // Recalcula el ancho del índice cuando cambia la fuente (el zoom de la
+    // interfaz se la fija desde MainWindow tras crear el diálogo).
+    void changeEvent(QEvent *event) override;
+
 private:
     // Carga un .md del recurso /help y lo muestra en el visor.
     void loadPage(const QString &resourcePath);
+    // Ajusta el ancho de la columna del índice al de sus rótulos con la fuente
+    // actual. No puede ser un ancho fijo en píxeles: con el zoom subido (o en un
+    // idioma de rótulos largos) el texto se veía recortado.
+    void updateIndexWidth();
+    // Da a la ventana el tamaño de lectura que corresponde a la fuente actual
+    // (proporcional a cuánto ha crecido respecto a la de la aplicación, y como mucho
+    // lo que quepa en la pantalla): con la fuente ampliada, en el mismo ancho cabe
+    // menos texto y las líneas se parten de forma poco natural.
+    void updateWindowSize();
 
     QListWidget *m_index;
     QTextBrowser *m_viewer;

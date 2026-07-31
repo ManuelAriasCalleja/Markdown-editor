@@ -69,6 +69,8 @@
 #include <QPixmap>
 #include <QResizeEvent>
 #include <QShowEvent>
+#include <QFontMetrics>
+#include <QGridLayout>
 #include <QLabel>
 
 #include <QMenu>
@@ -241,7 +243,17 @@ MainWindow::MainWindow(QWidget *parent)
     m_baseFindBarPointSize = m_findBar->font().pointSizeF();
     m_baseStatusBarPointSize = statusBar()->font().pointSizeF();
     m_baseOutlinePointSize = m_outline->font().pointSizeF();
+    // La barra de pestañas (los nombres de los documentos abiertos) se toma de la
+    // QTabBar, no del QTabWidget: fijarle la fuente al contenedor se propagaría a
+    // los editores de cada pestaña, que llevan su propio tamaño.
+    m_baseTabBarPointSize = m_tabs->tabBar()->font().pointSizeF();
     applyZoom();
+
+    // Filtro a nivel de aplicación: sirve para escalar con el zoom la fuente de los
+    // diálogos —de cualquiera, los abra quien los abra— en cuanto se pulen, antes de
+    // mostrarse (ver el bloque de QEvent::Polish en eventFilter). El resto del filtro
+    // sigue despachando por objeto vigilado, así que no le afecta.
+    qApp->installEventFilter(this);
 
     // En el modo sin distracciones se ocultan menú y barras; registra sus atajos a
     // nivel de ventana para que sigan funcionando.
@@ -406,21 +418,43 @@ void MainWindow::showHelpDialog()
 
 void MainWindow::showAboutDialog()
 {
+    const QString version = tr("Versión %1").arg(QStringLiteral(APP_VERSION));
+    const QString author = tr("Desarrollado por Manuel Arias Calleja");
+    const QString summary = tr("Editor WYSIWYG de Markdown en Qt6 + C++17.");
+
     QMessageBox box(this);
+    // El zoom de la interfaz le fija la fuente al pulirlo (filtro de MainWindow), y
+    // eso no pasa hasta mostrarlo. Se adelanta aquí porque abajo se mide el texto con
+    // la fuente de la caja: si no, se mediría con la base y saldría estrecha.
+    box.ensurePolished();
     box.setWindowTitle(tr("Acerca de"));
-    box.setIconPixmap(
+    // La foto tampoco sigue a la fuente por sí sola: se escala al mismo factor que
+    // el texto para que no se quede diminuta al lado con el zoom subido.
+    const QPixmap photo =
         QPixmap(QStringLiteral(":/icons/manuel-arias-calleja.jpg"))
-            .scaledToWidth(160, Qt::SmoothTransformation));
+            .scaledToWidth(qRound(160 * uiScaleFactor()), Qt::SmoothTransformation);
+    box.setIconPixmap(photo);
     box.setTextFormat(Qt::RichText);
-    box.setText(
-        QStringLiteral("<h3>md-editor</h3>")
-        + QStringLiteral("<p>") + tr("Versión %1").arg(QStringLiteral(APP_VERSION))
-        + QStringLiteral("</p>")
-        + QStringLiteral("<p>") + tr("Desarrollado por Manuel Arias Calleja")
-        + QStringLiteral("</p>")
-        + QStringLiteral("<p>") + tr("Editor WYSIWYG de Markdown en Qt6 + C++17.")
-        + QStringLiteral("</p>"));
+    box.setText(QStringLiteral("<h3>md-editor</h3>")
+                + QStringLiteral("<p>") + version + QStringLiteral("</p>")
+                + QStringLiteral("<p>") + author + QStringLiteral("</p>")
+                + QStringLiteral("<p>") + summary + QStringLiteral("</p>"));
     box.setStandardButtons(QMessageBox::Ok);
+    // El ancho del texto lo decide QMessageBox, y a la medida de la fuente base: con
+    // el zoom subido, en esos píxeles cabe menos y las frases se partían por donde no
+    // toca. No sirve quitarle el ajuste de línea al rótulo (QMessageBox se lo vuelve
+    // a poner al mostrarse); lo que sí respeta es el mínimo de su rejilla, así que se
+    // le mete un espaciador del ancho que piden las frases medidas con la fuente
+    // real. Son tres líneas cortas: no hay riesgo de salirse de la pantalla.
+    if (auto *grid = qobject_cast<QGridLayout *>(box.layout())) {
+        const QFontMetrics fm(box.font());
+        int text = 0;
+        for (const QString &line : {version, author, summary})
+            text = qMax(text, fm.horizontalAdvance(line));
+        grid->addItem(new QSpacerItem(photo.width() + text + fm.height() * 4, 0,
+                                      QSizePolicy::Minimum, QSizePolicy::Fixed),
+                      grid->rowCount(), 0, 1, grid->columnCount());
+    }
     box.exec();
 }
 

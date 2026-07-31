@@ -37,6 +37,11 @@ bool FormulaController::askFormula(QString *tex, bool *block,
                                    const QString &initialTex, bool initialBlock)
 {
     QDialog dlg(m_parent);
+    // El zoom de la interfaz le fija la fuente al pulirlo (filtro de MainWindow), y
+    // eso pasa al mostrarlo. Se adelanta aquí porque la vista previa deriva SU tamaño
+    // del del diálogo (×1.25 abajo): sin esto se calcularía sobre la fuente base y la
+    // fórmula se vería pequeña dentro de un diálogo ampliado.
+    dlg.ensurePolished();
     dlg.setWindowTitle(QCoreApplication::translate("MainWindow", "Insertar fórmula"));
     auto *form = new QFormLayout;
     auto *edit = new QPlainTextEdit(&dlg);

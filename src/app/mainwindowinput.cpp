@@ -65,6 +65,17 @@
 
 bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 {
+    // Zoom de los diálogos. Este filtro está instalado también en QApplication, así
+    // que ve el «pulido» (Polish) de cualquier widget de la aplicación: el momento
+    // justo antes de mostrarse, y el primero en el que Qt ya sabe de qué clase es
+    // (durante el constructor todavía no). Es la única forma de alcanzarlos a TODOS
+    // sin escalarlos uno a uno: los abren MainWindow, EditorStack y sus
+    // controladores, y unos cuantos son de Qt (QMessageBox, QInputDialog). Nunca
+    // consume el evento: el diálogo tiene que seguir puliéndose.
+    if (event->type() == QEvent::Polish) {
+        if (auto *dialog = qobject_cast<QDialog *>(watched))
+            applyDialogZoom(dialog);
+    }
     // El documento activo aún puede no estar fijado mientras se construye una
     // pestaña (llegan eventos de layout antes); en ese caso, procesamiento normal.
     if (!m_stack)

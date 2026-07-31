@@ -4,6 +4,8 @@
 #include "symbolpicker.h"
 
 #include <QDialogButtonBox>
+#include <QEvent>
+#include <QFontMetrics>
 #include <QGridLayout>
 #include <QScrollArea>
 #include <QTabWidget>
@@ -21,10 +23,6 @@ SymbolPicker::SymbolPicker(QWidget *parent)
     auto *tabs = new QTabWidget(this);
     layout->addWidget(tabs);
 
-    // Símbolos algo más grandes que el texto base, para que se lean bien.
-    QFont symbolFont = font();
-    symbolFont.setPointSizeF(symbolFont.pointSizeF() * 1.4);
-
     constexpr int kColumns = 12;
     for (const mdsymbols::Category &category : mdsymbols::categories()) {
         auto *page = new QWidget;
@@ -35,9 +33,8 @@ SymbolPicker::SymbolPicker(QWidget *parent)
         for (const QString &symbol : category.symbols) {
             auto *button = new QToolButton(page);
             button->setText(symbol);
-            button->setFont(symbolFont);
             button->setAutoRaise(true);
-            button->setFixedSize(34, 34);
+            m_buttons << button;  // su fuente y su celda las fija updateSymbolMetrics
             const uint cp = symbol.toUcs4().value(0);
             button->setToolTip(QStringLiteral("U+%1")
                                    .arg(cp, 4, 16, QLatin1Char('0')).toUpper());
@@ -60,5 +57,30 @@ SymbolPicker::SymbolPicker(QWidget *parent)
     connect(buttons, &QDialogButtonBox::rejected, this, &QDialog::hide);
     layout->addWidget(buttons);
 
+    updateSymbolMetrics();
     resize(540, 380);
+}
+
+void SymbolPicker::changeEvent(QEvent *event)
+{
+    QDialog::changeEvent(event);
+    // La fuente del diálogo la fija MainWindow (zoom de la interfaz) al mostrarlo, y
+    // puede volver a cambiarla mientras sigue abierto (no es modal): los símbolos y
+    // sus celdas, que llevan tamaño propio, tienen que seguirla.
+    if (event->type() == QEvent::FontChange)
+        updateSymbolMetrics();
+}
+
+void SymbolPicker::updateSymbolMetrics()
+{
+    // Símbolos algo más grandes que el texto del diálogo, para que se lean bien; su
+    // celda, cuadrada y dimensionada con ellos. Ni una cosa ni otra pueden ser fijas
+    // en píxeles: con el zoom subido los glifos no cabrían en la casilla.
+    QFont symbolFont = font();
+    symbolFont.setPointSizeF(symbolFont.pointSizeF() * 1.4);
+    const int side = QFontMetrics(symbolFont).height() * 3 / 2;
+    for (QToolButton *button : std::as_const(m_buttons)) {
+        button->setFont(symbolFont);
+        button->setFixedSize(side, side);
+    }
 }

@@ -4,6 +4,7 @@
 /// \file
 /// \brief Funciones puras de apoyo al zoom de la interfaz (escalado de fuentes, ancho de menús).
 
+#include <QSize>
 #include <QtGlobal>  // qreal
 
 class QMenu;
@@ -21,6 +22,15 @@ namespace chromezoom {
 /// \return <= 0 si `base` no es válido (la fuente no usa puntos), para que quien
 /// llame no escale ese widget.
 qreal scaledPointSize(qreal base, int delta);
+
+/// \brief Tamaño que debe tener una ventana de lectura cuya fuente ha crecido en el
+/// factor `scale`, partiendo del tamaño `base` (el cómodo con la fuente sin zoom) y
+/// sin pasar de `limit` (la pantalla disponible; si no es válido, no hay tope).
+///
+/// Con la fuente ampliada, en el mismo ancho en píxeles cabe menos texto y las líneas
+/// se parten de forma poco natural: la ventana tiene que crecer con ella.
+/// \return `base` tal cual si `scale` no es válido (<= 0).
+QSize scaledWindowSize(const QSize &base, qreal scale, const QSize &limit = QSize());
 
 /// \brief Ancho mínimo (px) que un QMenu necesita para mostrar todas sus acciones —texto
 /// (sin el mnemonic `&`) + columnas de atajo, indicador de check y flecha de

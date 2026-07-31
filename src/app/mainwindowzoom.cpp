@@ -9,10 +9,13 @@
 #include "mainwindow.h"
 
 #include <QApplication>
+#include <QDialog>
 #include <QFont>
 #include <QMenu>
 #include <QMenuBar>
 #include <QStatusBar>
+#include <QTabBar>
+#include <QTabWidget>
 #include <QWidget>
 
 #include "appsettings.h"
@@ -80,6 +83,33 @@ void MainWindow::applyMenuFontScale()
     QApplication::setFont(mf, "QMenu");
 }
 
+void MainWindow::applyDialogZoom(QWidget *dialog) const
+{
+    // Un diálogo es una ventana propia: Qt solo propaga la fuente del padre a los
+    // hijos que NO son ventana (salvo con WA_WindowPropagation), así que los diálogos
+    // tomaban la fuente de QApplication y se quedaban al tamaño base mientras el
+    // editor, los menús y las barras seguían al zoom.
+    //
+    // Se les fija de forma EXPLÍCITA, no por clase: `QApplication::setFont(f,
+    // "QDialog")` escala el marco del diálogo, pero sus hijos no la heredan —Qt solo
+    // hace que un hijo herede la fuente del padre si este la tiene puesta a mano o si
+    // el propio hijo no resuelve ninguna fuente de clase (y el tema de la plataforma
+    // pone unas cuantas)—, así que los rótulos y botones de dentro se quedaban
+    // pequeños. Con la fuente explícita, el hijo la hereda por la máscara de
+    // resolución del padre y crece todo el contenido.
+    //
+    // La base es la fuente de la aplicación, que el zoom NO toca (a diferencia de la
+    // de los menús), así que reaplicarlo no la va acumulando.
+    if (!dialog)
+        return;
+    QFont f = QApplication::font();
+    const qreal size = chromezoom::scaledPointSize(f.pointSizeF(), m_zoomDelta);
+    if (size <= 0)
+        return;  // la fuente de la aplicación no usa puntos: no la escalamos
+    f.setPointSizeF(size);
+    dialog->setFont(f);
+}
+
 void MainWindow::forceMenuWidths()
 {
     // Qt 6.8 con la plataforma gtk3 cachea las anchuras de las QAction al primer
@@ -121,8 +151,18 @@ void MainWindow::applyChromeZoom()
     updateToolBarIcons();  // el tamaño de los iconos sigue a la fuente de la barra
     scale(m_findBar, m_baseFindBarPointSize);
     scale(statusBar(), m_baseStatusBarPointSize);
+    // Los rótulos de las pestañas (nombres de los documentos abiertos). Se escala la
+    // QTabBar, no el QTabWidget: la fuente de este último se propagaría a los
+    // editores de cada pestaña, que ya llevan su propio tamaño.
+    if (m_tabs)
+        scale(m_tabs->tabBar(), m_baseTabBarPointSize);
     scale(m_stack->split()->sourceEditor(), m_baseSourceFontPointSize);
     scale(m_outline, m_baseOutlinePointSize);
+    // Los diálogos que estén abiertos ahora mismo: los no modales (el manual, el mapa
+    // de caracteres) se quedan a un lado mientras se cambia el zoom. Los que se abran
+    // después los coge el filtro de eventos al pulirlos (ver eventFilter).
+    for (QDialog *dialog : findChildren<QDialog *>())
+        applyDialogZoom(dialog);
     // La columna del modo sin distracciones es en px: escálala como la fuente.
     if (m_distraction)
         m_distraction->setUiScale(uiScaleFactor());

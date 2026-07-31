@@ -299,11 +299,54 @@ añadir lógica nueva: hay un `tst_*` por módulo.
   rutas **no vacías** (el documento nuevo inicial no debe pisarlo).
 - **Zoom de toda la interfaz.** `applyChromeZoom()` escala, partiendo de tamaños
   base, no solo el editor: menú **y cada `QMenu`** (los desplegables no heredan la
-  fuente de la barra), barras, estado, fuente, panel de esquema e iconos de la
-  barra de formato (`updateToolBarIcons`).
-- **`eventFilter` de `MainWindow`.** Es solo un despachador: delega en tres
-  sub-manejadores según el objeto vigilado (cada uno devuelve `bool`, el primero
-  que consume gana): `handleViewportEvent` (zoom con Ctrl+rueda; abrir enlaces con
+  fuente de la barra), barras, estado, fuente, panel de esquema, **rótulos de las
+  pestañas** e iconos de la barra de formato (`updateToolBarIcons`). Las pestañas se
+  escalan en la `QTabBar`, **no** en el `QTabWidget`: la fuente del contenedor se
+  propagaría a los editores de cada pestaña, que llevan su propio tamaño.
+- **Zoom de los diálogos.** Van aparte del resto del chrome porque son **ventanas
+  propias**: Qt no les propaga la fuente del padre (solo con `WA_WindowPropagation`),
+  así que tomaban la de `QApplication` y se quedaban al tamaño base. `applyDialogZoom`
+  se la fija **explícitamente**; la base es siempre `QApplication::font()`, que el
+  zoom no toca, así que reaplicarlo no acumula. Dos decisiones que parecen de más y
+  no lo son:
+  - **No sirve la fuente por clase** (`QApplication::setFont(f, "QDialog")`, como sí
+    se hace con los menús): escala el marco del diálogo, pero **sus hijos no la
+    heredan** —Qt solo hereda del padre si este la tiene puesta a mano o si el hijo
+    no resuelve ninguna fuente de clase, y el tema de la plataforma pone unas
+    cuantas—, así que los rótulos y botones de dentro se quedaban pequeños.
+  - **Quién se la aplica a cada diálogo**: el `eventFilter`, instalado también en
+    `QApplication`, al ver su `QEvent::Polish` (justo antes de mostrarse, y el primer
+    momento en que Qt sabe de qué clase es el widget). Es lo único que los alcanza a
+    todos sin escalarlos uno a uno: los abren `MainWindow`, `EditorStack` y sus
+    controladores, y unos cuantos son de Qt (`QMessageBox`, `QInputDialog`). Los ya
+    abiertos —el manual y el mapa de caracteres son no modales— los re-escala
+    `applyChromeZoom` recorriendo `findChildren<QDialog *>()`. Los diálogos nativos
+    del sistema (`QFileDialog` en Linux) los pinta el escritorio: van a su aire.
+
+  Un diálogo que derive tamaños de su propia fuente **al construirse** no se entera
+  (el Polish llega después): el mapa de caracteres (`SymbolPicker`, símbolos a ×1.4 y
+  su celda) y el ancho del índice del manual lo recalculan en `changeEvent`
+  (`QEvent::FontChange`), y el diálogo de fórmulas y «Acerca de» se adelantan con
+  `ensurePolished()` antes de medir con esa fuente. Nada de esto puede ser un tamaño
+  fijo en píxeles: con el zoom subido, el texto no cabe en la casilla.
+- **Tamaño de las ventanas de texto con el zoom.** Escalar solo la fuente no basta en
+  las ventanas que son texto corrido: en el mismo ancho en píxeles cabe menos y las
+  líneas se parten de forma poco natural. La ventana tiene que crecer con la fuente:
+  - **Manual** (`HelpDialog::updateWindowSize`, en cada `FontChange`): parte del
+    tamaño cómodo con la fuente base (820×620) y lo escala por lo que haya crecido
+    esta, sin pasar del 90 % de la pantalla. El cálculo puro es
+    `chromezoom::scaledWindowSize`.
+  - **«Acerca de»** es un `QMessageBox`, que decide él el ancho del texto y a la
+    medida de la fuente base. Quitarle el ajuste de línea al rótulo **no vale** (se lo
+    vuelve a poner al mostrarse); lo que sí respeta es el mínimo de su rejilla, así
+    que se le mete un `QSpacerItem` del ancho que piden las frases medidas con la
+    fuente real. Depende de cómo Qt maqueta el `QMessageBox`: lo vigila
+    `aboutBoxWidensWithZoom` en `tst_chromezoom`.
+- **`eventFilter` de `MainWindow`.** Está instalado en los editores de la pestaña
+  activa **y en `QApplication`** (esto último solo para el `QEvent::Polish` de los
+  diálogos, ver «Zoom de los diálogos»); por lo demás es un despachador: delega en
+  tres sub-manejadores según el objeto vigilado (cada uno devuelve `bool`, el
+  primero que consume gana): `handleViewportEvent` (zoom con Ctrl+rueda; abrir enlaces con
   Ctrl+clic/hover; arrastrar-soltar un archivo; clic sobre la casilla de una tarea
   `mdtask` y sobre una referencia de nota al pie `mdfootnote`), `handleEditorKeyPress`
   (protección de fórmulas, shortcodes `:nombre:` y **auto-emparejado** en `m_editor`)
