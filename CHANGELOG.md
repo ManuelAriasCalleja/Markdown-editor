@@ -5,6 +5,28 @@ Todos los cambios relevantes de **md-editor** se documentan en este archivo.
 El formato sigue, a grandes rasgos, [Keep a Changelog](https://keepachangelog.com/es/),
 y el proyecto usa [versionado semántico](https://semver.org/lang/es/).
 
+## [2.8.3] — 2026-07-31
+
+Versión de mantenimiento. El zoom de la interfaz llegaba al editor pero se dejaba
+fuera dos sitios que se ven tanto como él: los rótulos de las pestañas y todos los
+diálogos.
+
+### Corregido
+- **El zoom no llegaba a las pestañas ni a los diálogos.** Con el zoom subido, los
+  nombres de los documentos abiertos y las ventanas de Preferencias, el manual,
+  «Acerca de», el mapa de caracteres, las fórmulas o cualquier aviso seguían con la
+  letra del principio: justo la letra pequeña que uno amplía por no verla. Un
+  diálogo es una ventana propia y Qt no le propaga la fuente de la ventana
+  principal, así que ahora se la fija el editor a cada uno en cuanto se abre —los
+  abra quien los abra, incluidos los diálogos del propio Qt—, y los que estén
+  abiertos la siguen si se cambia el zoom.
+- **El manual y «Acerca de» partían las líneas donde no tocaba.** Con la letra
+  ampliada, en la misma anchura de ventana cabe menos texto. Ahora las dos ventanas
+  crecen con la fuente (el manual, hasta lo que quepa en la pantalla).
+- **Los símbolos del mapa de caracteres no cabían en su casilla** al ampliar, y la
+  columna del índice del manual recortaba sus rótulos: ambos tamaños eran fijos en
+  píxeles y ahora se miden con la fuente en uso.
+
 ## [2.8.2] — 2026-07-28
 
 Versión de mantenimiento. Tres atajos que se anunciaban y no funcionaban, el
@@ -546,7 +568,8 @@ aplicaba; la suite pasa en build normal y bajo ASan+UBSan, y clang-tidy queda li
 - CI/CD multiplataforma (Linux AppImage, Windows ZIP, macOS DMG) y publicación
   de releases por tag.
 
-[Sin publicar]: https://github.com/ManuelAriasCalleja/Markdown-editor/compare/v2.8.2...HEAD
+[Sin publicar]: https://github.com/ManuelAriasCalleja/Markdown-editor/compare/v2.8.3...HEAD
+[2.8.3]: https://github.com/ManuelAriasCalleja/Markdown-editor/compare/v2.8.2...v2.8.3
 [2.8.2]: https://github.com/ManuelAriasCalleja/Markdown-editor/compare/v2.8.1...v2.8.2
 [2.8.1]: https://github.com/ManuelAriasCalleja/Markdown-editor/compare/v2.8.0...v2.8.1
 [1.2.0]: https://github.com/ManuelAriasCalleja/Markdown-editor/compare/v1.1.1...v1.2.0
