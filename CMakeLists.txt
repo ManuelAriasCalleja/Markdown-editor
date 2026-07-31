@@ -323,7 +323,23 @@ if(SPELL_CHECK)
     endif()
     if(HUNSPELL_FOUND)
         target_compile_definitions(md-editor-core PUBLIC HAVE_HUNSPELL)
-        target_include_directories(md-editor-core PUBLIC ${HUNSPELL_INCLUDE_DIRS})
+        # `hunspell.pc` declara `Cflags: -I${includedir}/hunspell`, es decir la
+        # carpeta INTERIOR, mientras que el código incluye <hunspell/hunspell.hxx>.
+        # En Debian eso cuela de milagro porque la cabecera está además bajo
+        # /usr/include, que el compilador mira siempre; con Hunspell en un prefijo
+        # propio —el universal que se compila para macOS— no hay tal red y la
+        # compilación se cae con «'hunspell/hunspell.hxx' file not found». Se añade
+        # también el directorio padre, así valen las dos formas de incluirlo.
+        set(_hunspell_incs ${HUNSPELL_INCLUDE_DIRS})
+        foreach(_dir IN LISTS HUNSPELL_INCLUDE_DIRS)
+            get_filename_component(_leaf "${_dir}" NAME)
+            if(_leaf STREQUAL "hunspell")
+                get_filename_component(_parent "${_dir}" DIRECTORY)
+                list(APPEND _hunspell_incs "${_parent}")
+            endif()
+        endforeach()
+        list(REMOVE_DUPLICATES _hunspell_incs)
+        target_include_directories(md-editor-core PUBLIC ${_hunspell_incs})
 
         set(_hunspell_link ${HUNSPELL_LIBRARIES})  # dinámico por defecto del pkg
         if(SPELL_CHECK_STATIC)
