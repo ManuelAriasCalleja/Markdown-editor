@@ -77,6 +77,59 @@ jobs:
           # versión para que la página de releases muestre nombres claros.
           mv md-editor-*.AppImage "md-editor-${VERSION}-x86_64.AppImage"
 
+      # Paso de humo: hasta aquí NADIE ejecutaba nunca el artefacto que se
+      # descarga. El ci.yml compila y prueba el código en los tres sistemas, pero
+      # este job construye solo `--target md-editor` y publicaba el AppImage sin
+      # arrancarlo ni una vez: un empaquetado incompleto —un plugin de Qt que
+      # linuxdeploy no metiera, una librería sin desplegar— pasa las 70 pruebas y
+      # llega igual al usuario, porque eso no es código, es el paquete.
+      #
+      # Se arranca con el plugin `offscreen` (el runner no tiene servidor
+      # gráfico) y con un documento, para recorrer la ruta real de uso: arranque,
+      # traductores, sesión y carga del Markdown. El programa no tiene una opción
+      # tipo `--version` que salga sola (su primer argumento es el archivo a
+      # abrir), así que el criterio es: si sigue vivo a los 10 s, arrancó; si ha
+      # terminado por su cuenta, se ha caído y se vuelca su salida.
+      - name: Smoke test (arrancar el AppImage con un documento)
+        run: |
+          set -u
+          printf '# Prueba\n\nTexto **con formato**, `código` y $E = mc^2$.\n' > smoke.md
+          APPIMAGE="$(ls md-editor-*-x86_64.AppImage)"
+
+          # Devuelve 0 si el programa sigue vivo tras arrancar. La salida va a
+          # smoke.log para poder volcarla si falla.
+          arranca() {
+            QT_QPA_PLATFORM=offscreen "$@" ./"$APPIMAGE" smoke.md > smoke.log 2>&1 &
+            local pid=$!
+            sleep 10
+            if kill -0 "$pid" 2>/dev/null; then
+              kill "$pid" 2>/dev/null || true
+              wait "$pid" 2>/dev/null || true
+              return 0
+            fi
+            wait "$pid" 2>/dev/null
+            return 1
+          }
+
+          if arranca env; then
+            echo "OK: el AppImage arrancó y abrió el documento"
+            exit 0
+          fi
+
+          # Puede ser el runtime, no el paquete: si FUSE falla en el runner, el
+          # AppImage no se monta. Se reintenta extrayéndolo, que es lo que ya se
+          # hace con linuxdeploy más arriba; si así arranca, el paquete está bien.
+          echo "No arrancó montándose; salida:"
+          cat smoke.log
+          echo "Reintento sin FUSE (APPIMAGE_EXTRACT_AND_RUN=1)..."
+          if arranca env APPIMAGE_EXTRACT_AND_RUN=1; then
+            echo "OK: arrancó extraído — el paquete está bien, falló el montaje FUSE del runner"
+            exit 0
+          fi
+          echo "El AppImage no arranca. Salida:"
+          cat smoke.log
+          exit 1
+
       - uses: actions/upload-artifact@v6
         with:
           name: linux
