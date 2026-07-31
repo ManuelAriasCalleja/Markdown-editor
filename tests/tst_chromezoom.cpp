@@ -355,9 +355,13 @@ void TestChromeZoom::symbolPickerFollowsZoom()
     QVERIFY(button->font().pointSizeF() > picker->font().pointSizeF());
     const int baseSide = button->maximumWidth();  // la celda es de tama\u00f1o fijo
 
-    QVERIFY(QMetaObject::invokeMethod(&w, "zoomInText"));
-    QCOMPARE(picker->font().pointSizeF(), baseApp + 3);
-    // Y la casilla crece con el s\u00edmbolo (si no, el glifo ampliado se recorta).
+    // Y la casilla crece con el s\u00edmbolo (si no, el glifo ampliado se recorta). Se
+    // ampl\u00eda de varios pasos, no de uno: la celda sale de QFontMetrics::height(), que
+    // es un entero de p\u00edxeles y con algunas fuentes da el mismo valor para dos
+    // tama\u00f1os en puntos seguidos (as\u00ed fallaba en el CI de Linux, no en local).
+    for (int i = 0; i < 5; ++i)
+        QVERIFY(QMetaObject::invokeMethod(&w, "zoomInText"));
+    QCOMPARE(picker->font().pointSizeF(), baseApp + 7);
     QVERIFY(button->maximumWidth() > baseSide);
 }
 
