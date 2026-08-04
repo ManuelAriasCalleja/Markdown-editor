@@ -89,8 +89,8 @@ en su carpeta):
 - `markdown/` — lógica Markdown pura compartida: `markdownrender` (pipeline de
   carga), `tableedit` (serialización canónica), y las extensiones ligeras
   (`footnotes`, `tasklist`, `shortcodes`, `admonitions`, `texttransform`,
-  `markdowntidy`, `codespanfix`, `urldetect`, `richpaste`, `doctemplates`,
-  `docstats`, `symbolcatalog`, `snippets`).
+  `markdowntidy`, `codespanfix`, `charformatfix`, `urldetect`, `richpaste`,
+  `doctemplates`, `docstats`, `symbolcatalog`, `snippets`).
 - `highlight/` — resaltado: `CodeBlockHighlighter`, `languageregistry`.
 - `math/` — motor TeX (`mathblocks`/`texparser`/`mathlayout`/`mathobject`) +
   `FormulaController`.
@@ -377,6 +377,28 @@ añadir lógica nueva: hay un `tst_*` por módulo.
   `<algo>` como HTML en línea y se traga ese texto y el de alrededor al cargar
   (pérdida de datos); con NoHTML son texto literal y el round-trip converge. Lo usan
   `setMarkdownWithExtensions` (carga) y `mdtable::documentMarkdown` (`toMarkdown`).
+- **Reparación del formato que deja el importador de Qt (`mdcharfix`).** Primera
+  pasada de `renderPasses` (antes que las extensiones, que heredan de ella).
+  `setMarkdown` deja dos defectos de PRESENTACIÓN —no tocan el Markdown, y el test
+  `roundTripIsUnchanged` lo vigila— que se veían en pantalla y se arrastraban a las
+  exportaciones:
+  - **Un encabezado se corta a media línea.** Qt solo pone el tamaño y la negrita
+    del encabezado al PRIMER fragmento del bloque: en cuanto aparece un span en
+    línea (código, negrita, cursiva, un enlace), ese span **y todo lo que va
+    detrás** se quedan con el formato del cuerpo. `## … los `module-info` las
+    vigilan` salía con «module-info» pequeño y «las vigilan» ni grande ni en
+    negrita. `repairHeadingRuns` repone en todos los fragmentos el paso relativo
+    del nivel (`FontSizeAdjustment` = `4 - nivel`, el mismo que usa Qt) y la
+    negrita. Se deriva del **nivel del bloque**, no de otro fragmento, porque un
+    encabezado puede EMPEZAR por un span y entonces no queda ninguno bien.
+  - **El código no sigue al zoom.** Qt clava en los runs de código un
+    `FontPointSize` ABSOLUTO = el tamaño por defecto al importar; como el zoom
+    cambia la fuente del documento (`editor->setFont`), el código se quedaba al
+    tamaño de carga mientras la prosa crecía. `unpinCodeFontSize` lo retira para que
+    herede. Ojo al reconocerlos: el span en línea lleva `fontFixedPitch`, pero los
+    BLOQUES de código (vallados **e** indentados) no —solo la familia monospace—,
+    así que se miran por `BlockCodeLanguage` del bloque. `cloneForExport` ya hacía
+    esto mismo para la exportación; ahora sale bien desde la carga.
 - **Tareas, notas al pie, shortcodes, tipografía y admoniciones (extensiones
   ligeras).** Módulos puros que Qt no entiende pero **tampoco estorba** al
   round-trip (sus pasadas de render las orquesta `mdrender`, arriba):

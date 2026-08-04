@@ -120,6 +120,8 @@ add_library(md-editor-core STATIC
     # --- markdown ---
     src/markdown/admonitions.cpp
     src/markdown/admonitions.h
+    src/markdown/charformatfix.cpp
+    src/markdown/charformatfix.h
     src/markdown/codespanfix.cpp
     src/markdown/codespanfix.h
     src/markdown/csvtable.cpp
@@ -567,6 +569,7 @@ if(Qt6Test_FOUND)
         tst_autopair
         tst_markdowntidy
         tst_codespanfix
+        tst_charformatfix
         tst_goldenexport
         tst_recovery
         tst_appsettings

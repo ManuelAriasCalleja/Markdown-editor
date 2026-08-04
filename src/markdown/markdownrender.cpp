@@ -10,6 +10,7 @@
 #include <QTextEdit>
 
 #include "admonitions.h"
+#include "charformatfix.h"
 #include "footnotes.h"
 #include "mathblocks.h"
 #include "supsub.h"
@@ -54,6 +55,11 @@ void mdrender::renderPasses(QTextDocument *doc)
     // (parpadeo visible al cargar un archivo grande) y las fusiona en un solo undo.
     QTextCursor cursor(doc);
     cursor.beginEditBlock();
+    // Antes que nada: reponer el formato de carácter que el importador de Qt deja
+    // mal (encabezados cortados tras un span, tamaño de código clavado). Va primero
+    // para que las demás pasadas partan del formato bueno: los runs de una fórmula
+    // heredan el del code span protegido, que en un encabezado ya viene arreglado.
+    mdcharfix::apply(doc);
     mdmath::renderMathInDocument(doc);
     mdfootnote::renderFootnotesInDocument(doc);
     mdadmonition::renderAdmonitionsInDocument(doc);
