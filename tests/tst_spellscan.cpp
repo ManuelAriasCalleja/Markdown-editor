@@ -176,8 +176,16 @@ void TestSpellScan::installCommandEmptyOutsideLinux()
 
 void TestSpellScan::dictionaryUrlsCoverInterfaceLanguages()
 {
-    // Los nueve idiomas de la interfaz tienen que poder descargarse desde el
-    // programa; son los mismos que empaqueta scripts/fetch-dictionaries.sh.
+    // Los idiomas de la interfaz tienen que poder descargarse desde el programa; son
+    // los mismos que empaqueta scripts/fetch-dictionaries.sh.
+    //
+    // El chino simplificado (`zh_CN`) es el décimo idioma de la interfaz y NO está en
+    // esta lista, a propósito: Hunspell corrige palabras separadas por espacios y el
+    // chino no las separa, así que no existe diccionario suyo en el repositorio de
+    // LibreOffice ni en ninguna otra parte. No es una laguna que haya que tapar más
+    // adelante. Que eso no se le presente al usuario como un fallo lo garantiza
+    // `mdspell::hasHunspellDictionary` (ver `languagesWithoutAnyDictionary`): con esos
+    // idiomas no se ofrece descarga, ni orden de instalación, ni aviso.
     const QStringList langs = {QStringLiteral("es"), QStringLiteral("en"), QStringLiteral("de"),
                                QStringLiteral("fr"), QStringLiteral("it"), QStringLiteral("pt"),
                                QStringLiteral("pl"), QStringLiteral("nl"), QStringLiteral("ro")};

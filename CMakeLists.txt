@@ -437,6 +437,7 @@ qt_add_translations(md-editor
         translations/md-editor_pl.ts
         translations/md-editor_nl.ts
         translations/md-editor_ro.ts
+        translations/md-editor_zh_CN.ts
     RESOURCE_PREFIX "/i18n"
 )
 

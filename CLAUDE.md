@@ -10,7 +10,7 @@ opcionalmente (vista de fuente a pantalla completa o vista dividida con render y
 código en paralelo, ver «Modo fuente y vista dividida» abajo). Al guardar se
 serializa con `QTextDocument::toMarkdown()` (con retoques para tablas, fórmulas y
 notas al pie, ver abajo). La interfaz y todos los textos están en español (idioma
-de origen) con traducciones a 8 idiomas más.
+de origen) con traducciones a 9 idiomas más.
 
 ## Comandos
 
@@ -895,7 +895,8 @@ enlazaría.
 
 **Diccionarios del corrector.** Linux usa los del sistema (`/usr/share/hunspell`) y
 **no los empaqueta** (duplicarían 5 MB de lo que el escritorio ya suele traer);
-Windows y macOS no tienen ninguno, así que viajan los **9 idiomas de la interfaz**
+Windows y macOS no tienen ninguno, así que viajan los **9 idiomas de la interfaz
+que tienen diccionario** (el chino no: ver el corrector, arriba)
 dentro del paquete. No están en el repositorio (`.gitignore`: son de terceros,
 pesan 24 MB sin comprimir y cambian por su cuenta): los trae al empaquetar
 `scripts/fetch-dictionaries.sh <destino>` desde el repositorio de diccionarios de

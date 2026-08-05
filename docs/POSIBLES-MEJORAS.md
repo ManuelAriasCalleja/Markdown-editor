@@ -1095,15 +1095,36 @@ donde eso decide qué recurso se abre (A4). Nada de esto necesita a B ni a C.
 
 #### Fase B — la interfaz
 
-- ⬜ **B1. `translations/md-editor_zh_CN.ts`** + su línea en `TS_FILES`
+- ✅ **B1. `translations/md-editor_zh_CN.ts`** + su línea en `TS_FILES`
   (`CMakeLists.txt:435`). Son **478 mensajes**. `tst_translations` falla ante
   cualquier `type="unfinished"`, así que no admite entrega parcial. El chino tiene
   **una sola forma de plural**, así que los `%n` no dan trabajo extra (a diferencia
   del polaco y el rumano, que piden tres). Verificar que `QTranslator::load`
   (`src/app/main.cpp:55`) resuelve `QLocale("zh_CN")` al `.qm` con ese nombre: Qt
   prueba antes `zh_Hans_CN`/`zh_Hans`.
-- ⬜ **B2. Una línea en el menú** `Ver → Idioma`: `{ "zh_CN", "简体中文" }` en
-  `src/app/mainwindowmenus.cpp:1053` (autónimo, no se traduce).
+
+  *Hecho (2026-08-05):* los **486** mensajes (crecieron con A1, A2 y B7) traducidos
+  al chino simplificado, con `tst_translations` en verde, que es lo que garantiza que
+  no queda ni un `type="unfinished"`. Se conservan los aceleradores con la convención
+  china (`&Archivo` → `文件(&A)`), los marcadores `%1`/`%n` y los saltos de línea; lo
+  comprobó un script de validación antes de escribir nada, y no un repaso a ojo. Las
+  claves del front matter de las plantillas (`title:`, `author:`, `date:`…) se dejan
+  en inglés: las lee `mdexport::frontMatterValue`, traducirlas las rompería.
+  El aviso sobre `QTranslator::load` estaba justificado y se quedaba corto: `zh_CN` y
+  `zh` sí resuelven al `.qm` (Qt prueba `zh-Hans-CN`, `zh-CN`, `zh`), pero **`zh_SG`
+  no** —sus uiLanguages son `zh-Hans-SG` y `zh-SG`, y nunca llega al idioma a secas—,
+  así que un sistema en chino de Singapur, que escribe en simplificado, se habría
+  quedado en inglés. `main.cpp` reintenta con la etiqueta canónica de A4
+  (`mdlang::canonicalTag`, que sabe que `zh_SG` es `zh_CN`) por nombre de archivo. No
+  se toca el `locale`: de él dependen el formato de números y las traducciones de Qt,
+  y ahí la región sí manda. Verificado con un sondeo sobre los `.qm` reales:
+  `zh_CN`/`zh`/`zh_SG` cargan el simplificado; `zh_TW`/`zh_HK` no cargan nada (no hay
+  tradicional) y caen al inglés, que es lo correcto; `de_AT`, `pt_BR` y `es_MX` siguen
+  resolviendo como antes.
+- ✅ **B2. Una línea en el menú** `Ver → Idioma`: `{ "zh_CN", "简体中文" }` en
+  `src/app/mainwindowmenus.cpp:1053` (autónimo, no se traduce). *Hecho (2026-08-05).*
+  Se entrega junto a B1 y no antes: el menú que ofrece un idioma sin `.qm` deja al
+  usuario en español, que es la misma trampa de orden que C3 antes que C1.
 - ⬜ **B3. El manual**: `src/help/help-app_zh_CN.md` y `help-markdown_zh_CN.md`
   (**~700 líneas**), sus dos entradas en `src/resources.qrc:30` y el sufijo en las
   dos listas de `tests/tst_help.cpp` (la de idiomas con manual y la fila `zh_CN` de
@@ -1141,14 +1162,27 @@ donde eso decide qué recurso se abre (A4). Nada de esto necesita a B ni a C.
   option 'spanish'». No es una regresión —el campo babel del español no se ha
   tocado—, pero sugiere que `provide=*` podría convenirle a todos los idiomas: sería
   un cambio aparte, con su propia comprobación motor a motor.
-- ⬜ **B5. Excepción explícita en `tst_spellscan`.** El test
+- ✅ **B5. Excepción explícita en `tst_spellscan`.** El test
   `dictionaryUrlsCoverInterfaceLanguages` (`tests/tst_spellscan.cpp:158`) afirma que
   **todo idioma de la interfaz se puede descargar desde el programa**; el chino sería
   el primero que no. No basta con quitarlo de la lista: hay que dejar escrito por qué
   (y que A2 se encarga de que eso no se note como un fallo).
-- ⬜ **B6. Metadatos y cifras**: `Comment[zh_CN]` en `md-editor.desktop:22`,
+
+  *Hecho (2026-08-05):* el chino no se añade a la lista y el comentario del test dice
+  por qué —no existe diccionario Hunspell suyo en ninguna parte, no es una laguna que
+  tapar— y a qué remitirse para ver que el usuario no lo percibe como un fallo
+  (`hasHunspellDictionary`, `languagesWithoutAnyDictionary`).
+- ✅ **B6. Metadatos y cifras**: `Comment[zh_CN]` en `md-editor.desktop:22`,
   «9 languages» en `packaging/flatpak/…metainfo.xml:23`, «9 idiomas» en
   `packaging/scoop/md-editor.json:3` y «8 idiomas más» en `CLAUDE.md:13`.
+
+  *Hecho (2026-08-05)*, y con dos sitios más que la lista no recogía: el **README**
+  («in 9 languages» y la lista de idiomas de las características) y un
+  `GenericName[zh_CN]` en el `.desktop`, que solo tenía apuntado el `Comment`. Al
+  revés, un «9» que **no** se toca: el de los diccionarios que viajan en el paquete de
+  Windows y macOS (`CLAUDE.md`), porque el chino sigue sin tener; se reformula para
+  que se entienda que ya no son «los de la interfaz» sino los que tienen diccionario.
+  El CHANGELOG tampoco se toca: es registro histórico.
 - ✅ **B7. Comprobar la fuente en el PDF.** El editor usa la fuente del documento;
   en un sistema cuya fuente no tenga dibujados los ideogramas chinos, el PDF
   exportado saldría con cajas vacías en lugar del texto. Verificar (Linux con y sin

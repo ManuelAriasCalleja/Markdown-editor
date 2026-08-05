@@ -4,6 +4,7 @@
 #include "mainwindow.h"
 
 #include "appsettings.h"
+#include "langtag.h"
 
 #include <QApplication>
 #include <QIcon>
@@ -54,6 +55,19 @@ int main(int argc, char *argv[])
 
         bool loaded = appTranslator.load(locale, QStringLiteral("md-editor"),
                                          QStringLiteral("_"), QStringLiteral(":/i18n"));
+        if (!loaded) {
+            // Qt busca el .qm recorriendo las uiLanguages del locale, y para algunas no
+            // llega nunca al idioma a secas: `zh_SG` prueba «zh-Hans-SG» y «zh-SG», y se
+            // queda sin traducción aunque el .qm del chino simplificado esté ahí (en
+            // Singapur se escribe en simplificado). La etiqueta canónica es justo la que
+            // sabe eso, así que se reintenta con ella por nombre de archivo, sin volver a
+            // pasar por el algoritmo de uiLanguages. No se toca `locale`: de él dependen
+            // el formato de números y las traducciones de Qt, y ahí sí manda la región.
+            const QString tag = mdlang::canonicalTag(locale.name());
+            if (!tag.isEmpty())
+                loaded = appTranslator.load(QStringLiteral("md-editor_") + tag,
+                                            QStringLiteral(":/i18n"));
+        }
         if (!loaded && langPref.isEmpty() && locale.language() != QLocale::Spanish) {
             // Automático con idioma del sistema no soportado: inglés como respaldo.
             locale = QLocale(QLocale::English);

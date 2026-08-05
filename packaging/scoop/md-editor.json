@@ -1,6 +1,6 @@
 {
     "version": "2.8.4",
-    "description": "Editor/visor WYSIWYG de Markdown en Qt6 (round-trip a Markdown puro, fórmulas TeX, 9 idiomas).",
+    "description": "Editor/visor WYSIWYG de Markdown en Qt6 (round-trip a Markdown puro, fórmulas TeX, 10 idiomas).",
     "homepage": "https://github.com/ManuelAriasCalleja/Markdown-editor",
     "license": "GPL-3.0-only",
     "architecture": {

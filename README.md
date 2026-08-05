@@ -3,7 +3,7 @@
 A Markdown editor where you write on the rendered text and save clean Markdown.
 TeX formulas, aligned tables, highlighted code, document templates, and export to
 PDF/DOCX/ODT/LaTeX — lightweight, portable (Qt6/C++17, zero external
-dependencies), in 9 languages.
+dependencies), in 10 languages.
 
 ![Version](https://img.shields.io/badge/version-2.8.4-blue)
 ![License](https://img.shields.io/badge/license-GPL--3.0-blue)
@@ -141,8 +141,8 @@ Privacy & Security* and click **Open anyway**.
   dimming), full-interface zoom (Ctrl+wheel), 8 light and dark themes (including
   GitHub, Monokai, Solarized and a true high-contrast one) plus an automatic warm
   night light, Markdown source view and side-by-side split view.
-- **9 languages**: Spanish, English, German, French, Italian, Portuguese,
-  Polish, Dutch and Romanian.
+- **10 languages**: Spanish, English, German, French, Italian, Portuguese,
+  Polish, Dutch, Romanian and Simplified Chinese.
 - **Paste images** from the clipboard straight to disk as `![](path)`, instead of
   embedding them — so the Markdown stays portable.
 - **External file watching**: if the file changes on disk, the app detects it
