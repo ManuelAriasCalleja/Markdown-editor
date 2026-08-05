@@ -916,7 +916,8 @@ lo que hay que arreglar es el remate del portugués.
   también a `src/help/help-app_pt.md`, que además citaba nombres de menú que ya no
   coincidían con la interfaz (`Ligação` por `Link`, `Anular` por `Desfazer`) y dos
   anclas del índice. Sin tocar código.
-- ✅ **No ampliar el juego de idiomas** (decisión, no tarea). Los 9 actuales son
+- ✅ **No ampliar el juego de idiomas** (decisión, no tarea; **reabierta el 2026-08-05
+  para el chino simplificado**, ver la sección siguiente). Los 9 actuales son
   justo aquellos a los que la aplicación **entera** puede dar servicio, no solo la
   interfaz: el corrector necesita un diccionario Hunspell y la exportación a LaTeX
   monta el preámbulo con `babel` sobre `inputenc`+`T1` (`exportlatex.cpp`), que cubre
@@ -933,6 +934,139 @@ lo que hay que arreglar es el remate del portugués.
   de arriba: hay diccionario Hunspell y `babel` los soporta. Único trabajo de código:
   el ruso y el ucraniano piden `T2A` en el `fontenc` del preámbulo LaTeX (tres
   líneas) para que el cirílico de un documento no tumbe la compilación.
+
+### Añadir el chino simplificado — `zh_CN` / 简体中文 (2026-08-05)
+
+Reabre el punto anterior. La frontera que se puso entonces («solo idiomas a los que
+la aplicación **entera** puede dar servicio») era **técnica, no lingüística**, así
+que el plan la ataca de frente: **primero los cuatro arreglos de código**, que
+valen por sí solos —hoy el editor ya maltrata un documento en chino aunque la
+interfaz esté en español— y **después** la traducción, que es donde está el 90 % del
+tiempo. Las tres fases son independientes: se puede parar tras la A y haber ganado
+algo.
+
+Se elige **simplificado (`zh_CN`)** y no tradicional: es el que cubre más hablantes
+y el que Qt resuelve por defecto en `zh_Hans`. El tradicional (`zh_TW`) sería una
+segunda tanda con los mismos ficheros, no un `left(2)` del mismo.
+
+#### Fase A — arreglos de código (previos, independientes del idioma de la interfaz)
+
+- ⬜ **A1. La exportación a LaTeX borra el texto chino, sin avisar.** `latexEscape`
+  (`src/export/exportlatex.cpp:90`) descarta todo punto de código ≥
+  `kHighSymbolStart` (0x2190) que no esté en `highSymbolMap()`, y los ideogramas Han
+  empiezan en U+4E00; `codeBlockSanitize` (línea 106) hace lo mismo dentro de
+  `alltt`. Un documento en chino exporta **a un `.tex` sin texto**. El descarte se
+  puso para que pdfLaTeX+T1 no abortara ante un emoji, y es correcto para eso; lo
+  que falta es distinguir «símbolo suelto que no se compone» de «la lengua del
+  documento». Además `babel` no tiene opción `chinese`: hacen falta los paquetes
+  `ctex`/`xeCJK`, que **solo funcionan con Xe/LuaLaTeX**, así que el preámbulo
+  portable con `iftex` (`exportlatex.cpp:344`) no vale tal cual —la rama de pdfLaTeX
+  no sabe componer ideogramas chinos de ninguna manera—. Decisión a tomar: emitir un
+  preámbulo para chino y **documentar que ese `.tex` hay que compilarlo con
+  XeLaTeX**, o avisar al exportar. Caso en `tst_exporters`.
+- ⬜ **A2. El corrector no tiene salida limpia para un idioma sin diccionario.** No
+  existe diccionario Hunspell de chino en el repositorio de LibreOffice, así que ni
+  `scripts/fetch-dictionaries.sh` ni `DictionaryInstaller` pueden darlo. Hoy
+  `SpellController::applyLanguage` (`src/spell/spellcontroller.cpp:68`) degrada a «no
+  disponible» y saca el aviso de *falta el diccionario, instálalo así*, con el botón
+  «Descargar e instalar» —**un callejón sin salida**, exactamente el caso que el
+  código ya se cuida de evitar cuando no hay motor
+  (`SpellChecker::isEngineAvailable`). Hace falta una **tercera rama**: idioma sin
+  diccionario que exista en ninguna parte → ni aviso ni botón, solo el mensaje de
+  barra de estado. Aparte, `mdspell::tokenize` (`spellscan.cpp:22`) usa
+  `isLetterOrNumber()`, así que una frase china sin espacios sale como **una sola
+  palabra** de 40 caracteres: aunque apareciera un diccionario, subrayaría el
+  párrafo entero. Lo barato es **no tokenizar** los rangos Han (saltarlos como ya se
+  salta el código en línea).
+- ⬜ **A3. El contador de palabras cuenta párrafos.** `mdstats::analyze`
+  (`src/markdown/docstats.cpp:24`) parte por `\s+`; en chino no hay espacios entre
+  palabras, así que un párrafo entero cuenta como **1 palabra** y el tiempo de
+  lectura queda absurdo. Convención habitual: cada ideograma cuenta como una palabra
+  y la velocidad de lectura sube (~300–500 caracteres/minuto frente a las 200
+  palabras/minuto de ahora). Módulo puro, con `tst_docstats`: es el arreglo más
+  barato de los cuatro.
+- ⬜ **A4. Simplificado y tradicional no se distinguen.** `helpSuffix()`
+  (`src/widgets/helpdialog.cpp:36`) elige el manual con un `switch` sobre
+  `locale.language()`, y `QLocale::Chinese` vale lo mismo para `zh_CN` que para
+  `zh_TW`: hay que mirar `locale.script()` (`QLocale::SimplifiedHanScript`). Lo
+  mismo en `mdexport::languageForCode` (`src/export/exporters.cpp:48`), que
+  normaliza con `code.left(2)` y colapsa ambos en `zh`, y en
+  `mdspell::pickDictionary`, que hace `section('_', 0, 0)`. Si no se arregla ahora,
+  añadir el tradicional más adelante obliga a rehacerlo.
+
+#### Fase B — la interfaz
+
+- ⬜ **B1. `translations/md-editor_zh_CN.ts`** + su línea en `TS_FILES`
+  (`CMakeLists.txt:435`). Son **478 mensajes**. `tst_translations` falla ante
+  cualquier `type="unfinished"`, así que no admite entrega parcial. El chino tiene
+  **una sola forma de plural**, así que los `%n` no dan trabajo extra (a diferencia
+  del polaco y el rumano, que piden tres). Verificar que `QTranslator::load`
+  (`src/app/main.cpp:55`) resuelve `QLocale("zh_CN")` al `.qm` con ese nombre: Qt
+  prueba antes `zh_Hans_CN`/`zh_Hans`.
+- ⬜ **B2. Una línea en el menú** `Ver → Idioma`: `{ "zh_CN", "简体中文" }` en
+  `src/app/mainwindowmenus.cpp:1053` (autónimo, no se traduce).
+- ⬜ **B3. El manual**: `src/help/help-app_zh_CN.md` y `help-markdown_zh_CN.md`
+  (**~700 líneas**), sus dos entradas en `src/resources.qrc:30`, el `case` de
+  `helpSuffix()` y el sufijo en la lista de `tests/tst_help.cpp:34`. Ojo: `tst_help`
+  valida que **cada `](#ancla)` del índice caiga en un encabezado real**, y
+  `mdhelp::headingSlug` normaliza en NFD y filtra: hay que comprobar qué produce con
+  encabezados en Han (probablemente anclas vacías o colisiones), y quizá dejar los
+  títulos del índice en el original con el chino al lado.
+- ⬜ **B4. Fila en `mdexport::languages()`** (`src/export/exporters.cpp:45`), que es
+  lo que alimenta el `lang` de ODF/HTML/EPUB y el `babel` de LaTeX. El campo babel
+  queda pendiente de lo que se decida en A1; `fo:language`/`fo:country` son
+  `zh`/`CN`.
+- ⬜ **B5. Excepción explícita en `tst_spellscan`.** El test
+  `dictionaryUrlsCoverInterfaceLanguages` (`tests/tst_spellscan.cpp:158`) afirma que
+  **todo idioma de la interfaz se puede descargar desde el programa**; el chino sería
+  el primero que no. No basta con quitarlo de la lista: hay que dejar escrito por qué
+  (y que A2 se encarga de que eso no se note como un fallo).
+- ⬜ **B6. Metadatos y cifras**: `Comment[zh_CN]` en `md-editor.desktop:22`,
+  «9 languages» en `packaging/flatpak/…metainfo.xml:23`, «9 idiomas» en
+  `packaging/scoop/md-editor.json:3` y «8 idiomas más» en `CLAUDE.md:13`.
+- ⬜ **B7. Comprobar la fuente en el PDF.** El editor usa la fuente del documento;
+  en un sistema cuya fuente no tenga dibujados los ideogramas chinos, el PDF
+  exportado saldría con cajas vacías en lugar del texto. Verificar (Linux con y sin
+  el paquete de fuentes `fonts-noto-cjk`, Windows, macOS) y, si hace falta, un respaldo
+  de familia al exportar. Es lo único de esta fase que no se puede dar por hecho
+  desde el código.
+
+#### Fase C — la wiki
+
+La wiki (`wiki/`) son **5 páginas por idioma** más dos parciales compartidos; el
+rumano ocupa 381 líneas. No la toca ningún test ni CI: se publica a mano copiando
+la carpeta al repositorio `.wiki.git` (`wiki/README.md`), así que aquí el riesgo no
+es romper el build sino **dejarla a medias y que el selector de idioma lleve a un
+404**.
+
+- ⬜ **C1. Las cinco páginas**: `Home-zh.md`, `Instalacion-zh.md`, `Uso-zh.md`,
+  `Caracteristicas-zh.md`, `Atajos-zh.md` (~380 líneas). Mantener el sufijo de dos
+  letras del resto (`-zh`), no `-zh_CN`: es el esquema de nombres que ya usa la wiki
+  y GitHub no los interpreta, son solo nombres de página.
+- ⬜ **C2. `wiki/_Sidebar.md`**: un bloque `<details><summary>简体中文</summary>` con
+  los cinco enlaces, al final, como los demás.
+- ⬜ **C3. `wiki/_Footer.md`**: añadir `· [ZH](Home-zh)` al selector de idioma. Es
+  **una línea y aparece en todas las páginas**: si se hace antes que C1, cada página
+  de la wiki gana un enlace roto.
+- ⬜ **C4. `wiki/README.md`**: la tabla de páginas (solo documenta el es y el en
+  explícitamente; conviene que el chino no quede fuera del inventario).
+- ⬜ **C5. La cifra «9 idiomas» dentro del texto de la wiki**: aparece en
+  `Caracteristicas*.md` y `Home*.md` **de los nueve idiomas**, cada una en su lengua
+  («9 Sprachen», «9 languages»…). Es la parte más fácil de olvidar.
+
+#### Coste y orden
+
+| Fase | Trabajo | Grueso |
+|---|---|---|
+| A (código) | 4 arreglos, todos con test | ~1 día; **valen sin B ni C** |
+| B (interfaz) | 478 cadenas + ~700 líneas de manual | días, casi todo traducción |
+| C (wiki) | ~380 líneas + 4 ficheros de índice | medio día |
+
+Y el coste **recurrente** que ya señalaba la revisión de 2026-07-25 y que este
+cambio empeora: `tst_translations` no deja pasar una cadena sin traducir, así que a
+partir de aquí **cada `tr()` nuevo son 10 ficheros que tocar**, y cada cambio en el
+manual, 10 `.md` × 2. Ese es el argumento real contra la ampliación; el chino lo
+compensa por número de usuarios potenciales, pero no lo elimina.
 
 ## 📋 Proyecto / comunidad
 
