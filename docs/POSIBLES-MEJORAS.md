@@ -951,20 +951,71 @@ segunda tanda con los mismos ficheros, no un `left(2)` del mismo.
 
 #### Fase A — arreglos de código (previos, independientes del idioma de la interfaz)
 
-- ⬜ **A1. La exportación a LaTeX borra el texto chino, sin avisar.** `latexEscape`
+**Completa (2026-08-05), los cuatro puntos.** El editor ya no maltrata un documento
+en chino: exporta su texto a LaTeX (A1), no lo subraya entero ni manda a instalar un
+paquete inexistente (A2), lo cuenta bien (A3) y distingue simplificado de tradicional
+donde eso decide qué recurso se abre (A4). Nada de esto necesita a B ni a C.
+
+- ✅ **A1. La exportación a LaTeX borra el texto chino, sin avisar.** `latexEscape`
   (`src/export/exportlatex.cpp:90`) descarta todo punto de código ≥
   `kHighSymbolStart` (0x2190) que no esté en `highSymbolMap()`, y los ideogramas Han
   empiezan en U+4E00; `codeBlockSanitize` (línea 106) hace lo mismo dentro de
   `alltt`. Un documento en chino exporta **a un `.tex` sin texto**. El descarte se
   puso para que pdfLaTeX+T1 no abortara ante un emoji, y es correcto para eso; lo
-  que falta es distinguir «símbolo suelto que no se compone» de «la lengua del
-  documento». Además `babel` no tiene opción `chinese`: hacen falta los paquetes
-  `ctex`/`xeCJK`, que **solo funcionan con Xe/LuaLaTeX**, así que el preámbulo
-  portable con `iftex` (`exportlatex.cpp:344`) no vale tal cual —la rama de pdfLaTeX
-  no sabe componer ideogramas chinos de ninguna manera—. Decisión a tomar: emitir un
-  preámbulo para chino y **documentar que ese `.tex` hay que compilarlo con
-  XeLaTeX**, o avisar al exportar. Caso en `tst_exporters`.
-- ⬜ **A2. El corrector no tiene salida limpia para un idioma sin diccionario.** No
+  que falta es distinguir «símbolo suelto que no se compone» de «la escritura del
+  documento».
+
+  **Decidido (2026-08-05): detectar, pero no bloquear.** «No se puede exportar»
+  sería falso: el chino en LaTeX funciona bien, solo que **con otro compilador**
+  (`xelatex`/`lualatex` con `ctex`/`xeCJK`; `pdflatex` no puede, y `babel` no tiene
+  opción `chinese`). Bloquear castigaría además el caso pequeño: quien cita tres
+  ideogramas en un documento en español se quedaría sin exportar nada. Y lo caro de
+  las tres salidas posibles —callar, bloquear, o emitir el preámbulo correcto— es
+  **detectar**, que hace falta en las tres; emitir el preámbulo son unas líneas más.
+  Plan:
+
+  1. **La detección va dentro del escapado, no en una pasada aparte**: `latexEscape`
+     y `codeBlockSanitize` ya recorren el texto carácter a carácter, así que basta
+     con **apuntar lo que descartan** en vez de tirarlo en silencio.
+  2. **Distinguir escritura de símbolo suelto.** Si el punto de código pertenece a
+     una escritura de verdad (ideogramas Han, kana japonés, hangul coreano y su
+     puntuación) → **se emite** y se marca el documento como «pide un motor
+     Unicode». Si es un símbolo o un emoji sin equivalente → se descarta como hasta
+     ahora, pero **contándolo**.
+  3. **Preámbulo condicional**: con ideogramas, la rama no-pdfTeX de `iftex`
+     (`exportlatex.cpp:345`) carga `ctex`; la de pdfTeX, un `\errmessage` que dice
+     en una línea qué pasa y con qué compilar. Un fallo claro es mejor que el
+     «Unicode character not set up for use with LaTeX» que saldría si no.
+     Y encabeza el `.tex` un comentario con la orden correcta.
+  4. **Aviso al exportar, sin bloquear**: *el documento lleva texto chino, japonés o
+     coreano; el archivo ya lleva la configuración necesaria, pero hay que
+     compilarlo con `xelatex`*. Y, en su caso, *se han omitido N caracteres sin
+     equivalente* — que **hoy pasa constantemente y nadie se entera** (emoji,
+     dingbats): es el mismo aviso, y es la parte que aprovecha a todo el mundo, no
+     solo a quien escriba chino.
+  5. **Vía de retorno**: `toLatex` es una función pura que devuelve el texto, así
+     que el aviso sale por un parámetro de salida (`LatexIssues *`, como el
+     `QString *error` que ya usa el descriptor de exportación); quien traduce y
+     muestra el mensaje es `ExportController`, no el módulo puro. Casos en
+     `tst_exporters`.
+
+  *Hecho (2026-08-05), los cinco puntos:* `isScriptChar` separa escritura de
+  símbolo en `latexEscape` y `codeBlockSanitize`; `mdexport::LatexIssues`
+  (`needsUnicodeEngine`, `droppedSymbols`) sale por parámetro de `toLatex`; el
+  preámbulo se decide **después** del cuerpo (es lo que permite que dependa de lo
+  aparecido en él) y el título se escapa el primero, porque puede traer ideogramas
+  aunque el cuerpo no; `ExportController::reportLatexIssues` avisa sin bloquear.
+  Tests `latexKeepsCjkAndAsksForUnicodeEngine` y `latexReportsDroppedSymbols`.
+  *Verificado compilando de verdad* (`texlive-lang-chinese` + `texlive-xetex`), que
+  es como se descubren los fallos de este exportador: un documento con ideogramas
+  compila con **`xelatex` sin un solo error**, y el PDF lleva el texto —encabezado,
+  prosa mezclada con español, celdas de tabla y el comentario de dentro del bloque
+  de código—, que es justo lo que antes desaparecía; el mismo documento se detiene
+  en `pdflatex` con nuestro mensaje; y un documento latino sigue compilando con
+  `pdflatex` como antes. `lualatex` no se pudo probar, pero por una avería ajena:
+  falla igual con un documento latino sin una línea de chino (le falta el script de
+  `luaotfload` que genera la caché de fuentes).
+- ✅ **A2. El corrector no tiene salida limpia para un idioma sin diccionario.** No
   existe diccionario Hunspell de chino en el repositorio de LibreOffice, así que ni
   `scripts/fetch-dictionaries.sh` ni `DictionaryInstaller` pueden darlo. Hoy
   `SpellController::applyLanguage` (`src/spell/spellcontroller.cpp:68`) degrada a «no
@@ -978,14 +1029,37 @@ segunda tanda con los mismos ficheros, no un `left(2)` del mismo.
   palabra** de 40 caracteres: aunque apareciera un diccionario, subrayaría el
   párrafo entero. Lo barato es **no tokenizar** los rangos Han (saltarlos como ya se
   salta el código en línea).
-- ⬜ **A3. El contador de palabras cuenta párrafos.** `mdstats::analyze`
+
+  *Hecho (2026-08-05):* `mdspell::hasHunspellDictionary` separa «no está instalado»
+  de «no existe» —lista corta y cerrada: chino, japonés y coreano, las escrituras
+  que no separan palabras con espacios, que es lo que Hunspell necesita— y con ellas
+  `applyLanguage` se queda en el mensaje de barra de estado, sin diálogo, sin orden
+  de instalación de un paquete inexistente y sin botón de descarga. `tokenize` trata
+  esas escrituras como separador, así que ya no subraya el párrafo entero y las
+  palabras latinas de en medio (`混合español`) se siguen corrigiendo. El menú *Ver →
+  Idioma de corrección* no hizo falta tocarlo: lo llena
+  `SpellChecker::availableLanguages()` con los diccionarios que hay en disco, y ahí
+  el chino no va a aparecer nunca. Tests `tokenizeSkipsUnsegmentedScripts` y
+  `languagesWithoutAnyDictionary`.
+- ✅ **A3. El contador de palabras cuenta párrafos.** `mdstats::analyze`
   (`src/markdown/docstats.cpp:24`) parte por `\s+`; en chino no hay espacios entre
   palabras, así que un párrafo entero cuenta como **1 palabra** y el tiempo de
   lectura queda absurdo. Convención habitual: cada ideograma cuenta como una palabra
   y la velocidad de lectura sube (~300–500 caracteres/minuto frente a las 200
   palabras/minuto de ahora). Módulo puro, con `tst_docstats`: es el arreglo más
   barato de los cuatro.
-- ⬜ **A4. Simplificado y tradicional no se distinguen.** `helpSuffix()`
+
+  *Hecho (2026-08-05):* cada ideograma, kana o sílaba hangul cuenta como una palabra
+  y **corta** la palabra latina en la que aparezca (`混合español` son tres, no un
+  token de cinco caracteres que nadie sabría explicar); su puntuación no cuenta,
+  igual que no cuenta la latina. El tiempo de lectura **suma los dos ritmos** en vez
+  de dividir el total por uno solo: los ideogramas van a `wordsPerMinute * 2`,
+  derivado del parámetro y no una segunda constante, para que quien suba la
+  velocidad las suba a la vez. `DocStats::cjkChars` deja ver de qué se compone el
+  total. Para un texto latino el recuento sale idéntico al de antes (los tramos
+  entre blancos son los mismos), y eso lo fija un caso del test. Tests
+  `countsCjkCharactersAsWords` y `cjkReadingTimeUsesItsOwnPace`.
+- ✅ **A4. Simplificado y tradicional no se distinguen.** `helpSuffix()`
   (`src/widgets/helpdialog.cpp:36`) elige el manual con un `switch` sobre
   `locale.language()`, y `QLocale::Chinese` vale lo mismo para `zh_CN` que para
   `zh_TW`: hay que mirar `locale.script()` (`QLocale::SimplifiedHanScript`). Lo
@@ -993,6 +1067,31 @@ segunda tanda con los mismos ficheros, no un `left(2)` del mismo.
   normaliza con `code.left(2)` y colapsa ambos en `zh`, y en
   `mdspell::pickDictionary`, que hace `section('_', 0, 0)`. Si no se arregla ahora,
   añadir el tradicional más adelante obliga a rehacerlo.
+
+  *Hecho (2026-08-05):* la normalización deja de estar copiada en cada sitio y pasa
+  a un módulo puro, `mdlang::canonicalTag` (`src/app/langtag.{h,cpp}`, con
+  `tst_langtag`): `es`/`es_ES`/`es-ES` → `es`, y el chino a `zh_CN` o `zh_TW` según
+  el **sistema de escritura**, no el territorio, porque el territorio se queda
+  corto —`zh_SG` es simplificado y `zh_HK` tradicional, y ninguno se llama `CN` ni
+  `TW`—; `QLocale` deduce el script aunque solo se le dé el territorio. Solo el
+  chino se consulta a `QLocale`: para los demás vale el prefijo de la cadena,
+  porque un código que Qt no reconoce devuelve el locale «C» y de ahí saldría un
+  idioma que nadie pidió (caso `emptyAndUnknownStayHarmless`).
+  El `switch` de `helpSuffix()` desaparece: `mdhelp::helpSuffixForLanguage` compone
+  el sufijo con la etiqueta canónica y **comprueba que el recurso existe**, así que
+  un idioma sin manual traducido cae al inglés en vez de abrir un visor vacío y
+  estrenar un manual nuevo es soltar sus dos `.md` en el `.qrc` —sin tocar código—.
+  Eso convierte B3 en menos trabajo del que decía y hace que este arreglo se note
+  antes de que exista el chino: hoy ya no hay lista de idiomas que ampliar a mano.
+  Lo cubre `suffixPicksTheManualOfTheLanguage` en `tst_help`, con las filas de
+  `zh_CN`/`zh_TW` esperando `_en` y una nota de que ese día pasarán a fallar, que es
+  el aviso que se quiere.
+  `mdspell::pickDictionary` **no se toca, a propósito**: ahí `zh` no es una etiqueta
+  de recurso sino el nombre del archivo de diccionario que se busca en disco, y
+  colapsar la región es justo lo que tiene que hacer (`es_MX` → `es`). Para el chino
+  da igual: A2 ya establece que no existe diccionario Hunspell de ninguna de sus dos
+  escrituras, y `hasHunspellDictionary` responde que no para `zh_CN` y `zh_TW` por
+  igual (lo fija `languagesWithoutAnyDictionary`).
 
 #### Fase B — la interfaz
 
@@ -1006,8 +1105,10 @@ segunda tanda con los mismos ficheros, no un `left(2)` del mismo.
 - ⬜ **B2. Una línea en el menú** `Ver → Idioma`: `{ "zh_CN", "简体中文" }` en
   `src/app/mainwindowmenus.cpp:1053` (autónimo, no se traduce).
 - ⬜ **B3. El manual**: `src/help/help-app_zh_CN.md` y `help-markdown_zh_CN.md`
-  (**~700 líneas**), sus dos entradas en `src/resources.qrc:30`, el `case` de
-  `helpSuffix()` y el sufijo en la lista de `tests/tst_help.cpp:34`. Ojo: `tst_help`
+  (**~700 líneas**), sus dos entradas en `src/resources.qrc:30` y el sufijo en las
+  dos listas de `tests/tst_help.cpp` (la de idiomas con manual y la fila `zh_CN` de
+  `suffixPicksTheManualOfTheLanguage`, que hoy espera `_en`). **Código, ninguno**:
+  desde A4 el sufijo lo decide el recurso. Ojo: `tst_help`
   valida que **cada `](#ancla)` del índice caiga en un encabezado real**, y
   `mdhelp::headingSlug` normaliza en NFD y filtra: hay que comprobar qué produce con
   encabezados en Han (probablemente anclas vacías o colisiones), y quizá dejar los

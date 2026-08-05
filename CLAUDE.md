@@ -78,7 +78,7 @@ en su carpeta):
 
 - `app/` — el *shell* de ventana: `MainWindow` y sus 5 unidades de traducción
   (`mainwindow`/`menus`/`input`/`zoom`/`session`), `main`, `appsettings`
-  (persistencia), `chromezoom`.
+  (persistencia), `chromezoom`, `langtag` (normalización de códigos de idioma).
 - `editor/` — núcleo de edición: `EditorStack`, `FocusEditor`, los controladores de
   formato/inserción/tabla y los gestos puros (`autopair`, `listcontinuation`,
   `blockconstructs`, `typewriter`).
@@ -190,7 +190,8 @@ parser de fuente / motor TeX→runs / maquetación 2D), `footnotes` (`mdfootnote
 (`mdtask`), `shortcodes` (`mdshortcode`), `symbolcatalog` (`mdsymbols`), `urldetect`
 (`mdurl`), `richpaste` (`mdrichpaste`), `doctemplates` (`mdtemplate`),
 `admonitions` (`mdadmonition`), `texttransform` (`mdtext`), `docstats`
-(`mdstats`), `blockconstructs` (`mdblock`), `outline`
+(`mdstats`), `langtag` (`mdlang::canonicalTag`; etiqueta canónica de idioma, ver
+«Internacionalización»), `blockconstructs` (`mdblock`), `outline`
 (`mdoutline::headingsOf`; vive aparte de `OutlinePanel` para que quien solo quiere
 el índice —la exportación a EPUB, por ejemplo— no arrastre un `QDockWidget`; lo
 mismo con `mdcommands` en `app/commands.h`), `spellscan` (`mdspell`; tokenización de palabras y
@@ -458,7 +459,13 @@ añadir lógica nueva: hay un `tst_*` por módulo.
 - **Estadísticas del documento.** `mdstats::analyze` (palabras, caracteres,
   párrafos, frases, tiempo de lectura) alimenta el contador de la barra de estado
   y el diálogo de estadísticas, sobre el texto plano del editor activo o la
-  selección.
+  selección. **No parte por `\s+`**: el chino, el japonés y el coreano no separan
+  las palabras con espacios, así que hacerlo contaba un párrafo entero como UNA
+  palabra y daba un tiempo de lectura absurdo. Cada ideograma, kana o sílaba hangul
+  cuenta como una palabra (y corta la palabra latina en la que aparezca: `混合
+  español` son tres), su puntuación no cuenta, y el tiempo suma los dos ritmos
+  porque no se leen igual de rápido (`wordsPerMinute * 2` para los ideogramas). Para
+  un texto latino el resultado es idéntico al de antes.
 - **Diagramas (opcional, Mermaid/PlantUML).** Como Mermaid es JS y PlantUML es
   Java, no hay motor C++: se renderizan ejecutando la herramienta externa
   (`plantuml` / `mmdc`) si está instalada — degradación elegante, **sin
@@ -512,6 +519,18 @@ añadir lógica nueva: hay un `tst_*` por módulo.
   botón; las URLs (`mdspell::dictionaryUrls`) son la misma tabla que
   `scripts/fetch-dictionaries.sh`, así que una ruta que cambie upstream hay que
   tocarla en los dos sitios.
+  Hay un **tercer** caso, que es el mismo callejón sin salida por otra puerta:
+  idiomas para los que **no existe** diccionario Hunspell en ninguna parte (chino,
+  japonés y coreano: Hunspell corrige palabras separadas por espacios, y esas
+  escrituras no lo están). `mdspell::hasHunspellDictionary` los distingue de «no
+  está instalado», y con ellos `applyLanguage` se queda en el mensaje de la barra de
+  estado: ni aviso, ni orden de instalación de un paquete que no existe
+  (`hunspell-zh`), ni botón de descarga sin nada que descargar. Por lo mismo,
+  `mdspell::tokenize` **no tokeniza** esas escrituras (para `isLetterOrNumber` son
+  letras, así que una frase china entera salía como UNA palabra y el párrafo
+  aparecía subrayado de punta a punta); las palabras latinas que haya entremedias sí
+  se siguen corrigiendo. El menú *Ver → Idioma de corrección* no necesita nada de
+  esto: lo llena `SpellChecker::availableLanguages()` con lo que hay en disco.
 
 ### Fórmulas TeX (`mdmath`)
 
@@ -719,6 +738,23 @@ una fórmula muy anidada (`\frac{\frac{…}}`, `x^{y^{…}}`) desbordaba la pila
     arranque de una lista numerada (`5.` → `\setcounter{enumi}{4}`), el nivel de
     las citas anidadas, y que una lista o un bloque de código **dentro** de una
     cita siguen dentro de ella (`BlockQuoteLevel` los marca).
+  - **Una escritura no es un símbolo suelto.** El descarte de todo lo que pasa de
+    `kHighSymbolStart` (0x2190) está bien para un emoji, pero los ideogramas chinos
+    empiezan en U+4E00: un documento en chino, japonés o coreano exportaba **a un
+    `.tex` sin su texto, y en silencio**. `isScriptChar` separa ambos casos: lo que
+    es escritura (Han, kana, hangul, bopomofo, su puntuación y las formas de ancho
+    completo) **se emite siempre**; lo que es símbolo se sigue descartando, pero
+    ahora **se cuenta**. Las dos cosas salen por `LatexIssues` (parámetro de salida
+    de `toLatex`), y quien traduce y avisa es `ExportController::reportLatexIssues`
+    —el módulo es puro y no traduce—. **No se bloquea la exportación**: el chino en
+    LaTeX funciona, solo que con otro motor, y bloquear castigaría a quien cita tres
+    ideogramas en un documento en español. Con escritura presente, el preámbulo
+    cambia: `ctex` en la rama Unicode de `iftex` (elige fuente del sistema él solo,
+    y va **antes** que `babel` para que los rótulos los siga fijando el idioma del
+    documento) y un `\errmessage` en la de pdfTeX, que no puede componerlas de
+    ninguna manera —un fallo con motivo es mejor que el «Unicode character not set
+    up for use with LaTeX»—. Ese `.tex` **ya solo compila con `xelatex`/`lualatex`**;
+    lo dicen un comentario en su cabecera y el aviso al exportar.
   *Limitación:* una tabla dentro de un elemento de lista sale fuera de la lista,
   porque Qt tampoco la anida en el documento: no hay información que usar.
   **Imágenes: export autocontenido.** `toLatex` recibe la ruta del `.tex` y **trae
@@ -878,3 +914,29 @@ cmake --build build --target update_translations   # lupdate: refresca los .ts
 - Cadenas que **no** deben traducirse: nombres de fichero generados (p. ej.
   `imagen-<fecha>.png`) usan `QStringLiteral`, no `tr()`. El test `tst_translations`
   solo corre con `bash`, así que en Windows ese test se omite (guard en CMake).
+- **Etiqueta canónica de idioma (`mdlang::canonicalTag`).** Los códigos llegan de
+  sitios muy distintos y escritos de todas las maneras —el ajuste del menú, el
+  locale del sistema, el `lang:` del front matter de un documento ajeno (`es`,
+  `es-ES`, `es_ES`, `zh-Hans`)— y todos tienen que acabar en el **mismo nombre** para
+  encontrar el mismo recurso. Antes cada consumidor normalizaba por su cuenta
+  (`code.left(2)`, `section('_', 0, 0)`, un `switch` sobre `QLocale::Language`), y
+  las tres formas colapsan el chino simplificado y el tradicional en un solo `zh`
+  aunque sean **dos recursos distintos** (manual y traducción propios). El módulo
+  puro `langtag` lo centraliza: recorta la región (`es_ES` → `es`) y decide el chino
+  por su **sistema de escritura**, no por el territorio —`zh_SG` es simplificado y
+  `zh_HK` tradicional, y ninguno se llama `CN` ni `TW`—, así que `zh`/`zh_CN`/
+  `zh-Hans`/`zh_SG` → `zh_CN` y `zh-Hant`/`zh_TW`/`zh_HK` → `zh_TW`. **Solo el chino
+  se consulta a `QLocale`**: un código que Qt no reconoce devuelve el locale «C», y
+  de ahí saldría un idioma que nadie pidió, así que para el resto vale el prefijo de
+  la cadena. Lo usan `mdhelp::helpSuffixForLanguage` y `mdexport::languageForCode`.
+  No lo usa `mdspell::pickDictionary`, y es deliberado: ahí el código no nombra un
+  recurso del programa sino el **archivo de diccionario** que se busca en disco, donde
+  colapsar la región (`es_MX` → `es`) es lo correcto.
+- **Qué manual abre cada idioma** (`mdhelp::helpSuffixForLanguage`,
+  `helpdialog.cpp`): el sufijo se compone con la etiqueta canónica (`de` → `_de`; el
+  español es la base, sin sufijo) y **se comprueba que el recurso existe**; si no,
+  cae al inglés. Así un idioma de la interfaz cuyo manual aún no esté traducido no
+  abre un visor en blanco, y **estrenar un manual es soltar sus dos `.md` en el
+  `.qrc`**, sin lista de `case` que ampliar. Lo vigila
+  `suffixPicksTheManualOfTheLanguage` en `tst_help`, que además exige que el sufijo
+  devuelto lleve a un archivo legible.

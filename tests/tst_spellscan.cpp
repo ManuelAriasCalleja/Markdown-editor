@@ -26,6 +26,7 @@ private slots:
     void tokenizeSplitsOnHyphen();
     void tokenizeHandlesUnicodeLetters();
     void tokenizeOffsetsAreCorrect();
+    void tokenizeSkipsUnsegmentedScripts();
     void pickDictionaryExactRegion();
     void pickDictionaryFallsBackToBase();
     void pickDictionaryFallsBackToAnyRegion();
@@ -36,6 +37,7 @@ private slots:
     void installCommandEmptyOutsideLinux();
     void dictionaryUrlsCoverInterfaceLanguages();
     void dictionaryUrlsEmptyForUnknownLanguage();
+    void languagesWithoutAnyDictionary();
 };
 
 void TestSpellScan::tokenizeSplitsOnWhitespaceAndPunctuation()
@@ -88,6 +90,23 @@ void TestSpellScan::tokenizeOffsetsAreCorrect()
     QCOMPARE(ws.at(0).length, 2);
     QCOMPARE(ws.at(1).start, 3);
     QCOMPARE(ws.at(1).length, 2);
+}
+
+// Las escrituras sin espacios entre palabras no se tokenizan: para
+// `isLetterOrNumber` son letras, así que una frase china entera salía como UNA
+// palabra que ningún diccionario reconoce y el párrafo aparecía subrayado de punta
+// a punta. Lo latino que haya entremedias sí se sigue corrigiendo.
+void TestSpellScan::tokenizeSkipsUnsegmentedScripts()
+{
+    QCOMPARE(words(QString::fromUtf8(u8"中文文本，混合")), QStringList());
+    QCOMPARE(words(QString::fromUtf8(u8"日本語のテキスト")), QStringList());
+    QCOMPARE(words(QString::fromUtf8(u8"한국어 텍스트")), QStringList());
+    // Mezcla, con y sin espacio: solo salen las palabras latinas.
+    QCOMPARE(words(QString::fromUtf8(u8"混合español y 中文")),
+             (QStringList{QString::fromUtf8(u8"español"), QStringLiteral("y")}));
+    // Y no se ha roto nada de lo de siempre.
+    QCOMPARE(words(QStringLiteral("Hola mundo")),
+             (QStringList{QStringLiteral("Hola"), QStringLiteral("mundo")}));
 }
 
 void TestSpellScan::pickDictionaryExactRegion()
@@ -182,6 +201,27 @@ void TestSpellScan::dictionaryUrlsEmptyForUnknownLanguage()
     // Idioma fuera de los nueve: sin descarga (el programa ofrece la vía manual).
     QVERIFY(mdspell::dictionaryUrls(QStringLiteral("ja")).first.isEmpty());
     QVERIFY(mdspell::dictionaryUrls(QString()).first.isEmpty());
+}
+
+// «No está instalado» y «no existe» son dos cosas distintas: al primero se le dice
+// al usuario cómo instalarlo; al segundo, solo que no lo va a haber. Confundirlos
+// mandaba a instalar `hunspell-zh`, que no existe en ninguna distribución.
+void TestSpellScan::languagesWithoutAnyDictionary()
+{
+    QVERIFY(!mdspell::hasHunspellDictionary(QStringLiteral("zh")));
+    QVERIFY(!mdspell::hasHunspellDictionary(QStringLiteral("zh_CN")));
+    QVERIFY(!mdspell::hasHunspellDictionary(QStringLiteral("zh-TW")));
+    QVERIFY(!mdspell::hasHunspellDictionary(QStringLiteral("ja")));
+    QVERIFY(!mdspell::hasHunspellDictionary(QStringLiteral("ko_KR")));
+    // Los idiomas de la interfaz sí tienen diccionario, y también los que no
+    // empaquetamos pero existen (ruso, turco): a esos hay que mandarlos a instalar.
+    for (const QString &lang : {QStringLiteral("es"), QStringLiteral("en_US"),
+                                QStringLiteral("de"), QStringLiteral("fr"),
+                                QStringLiteral("it"), QStringLiteral("pt_BR"),
+                                QStringLiteral("pl"), QStringLiteral("nl"),
+                                QStringLiteral("ro"), QStringLiteral("ru"),
+                                QStringLiteral("tr")})
+        QVERIFY2(mdspell::hasHunspellDictionary(lang), qPrintable(lang));
 }
 
 QTEST_MAIN(TestSpellScan)

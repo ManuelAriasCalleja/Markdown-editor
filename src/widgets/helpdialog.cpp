@@ -5,6 +5,7 @@
 
 #include "appsettings.h"
 #include "chromezoom.h"
+#include "langtag.h"
 
 #include <QApplication>
 #include <QEvent>
@@ -24,29 +25,32 @@
 
 namespace {
 
-// Sufijo del archivo de ayuda según el idioma activo de la interfaz. Se replica
-// la resolución de main.cpp: si el usuario ha elegido un idioma, ese; si no, el
-// del sistema. El español es la base (sufijo vacío: `help-app.md`); el resto de
-// idiomas con manual traducido llevan su sufijo (`help-app_de.md`, …); cualquier
-// idioma sin manual cae al inglés.
-QString helpSuffix()
+// Idioma activo de la interfaz, con la misma resolución que main.cpp: si el usuario
+// ha elegido uno, ese; si no, el del sistema.
+QString activeLanguage()
 {
     const QString pref = AppSettings::language();
-    const QLocale locale = pref.isEmpty() ? QLocale::system() : QLocale(pref);
-    switch (locale.language()) {
-    case QLocale::Spanish:    return QString();
-    case QLocale::German:     return QStringLiteral("_de");
-    case QLocale::French:     return QStringLiteral("_fr");
-    case QLocale::Italian:    return QStringLiteral("_it");
-    case QLocale::Portuguese: return QStringLiteral("_pt");
-    case QLocale::Polish:     return QStringLiteral("_pl");
-    case QLocale::Dutch:      return QStringLiteral("_nl");
-    case QLocale::Romanian:   return QStringLiteral("_ro");
-    default:                  return QStringLiteral("_en");
-    }
+    return pref.isEmpty() ? QLocale::system().name() : pref;
 }
 
 }  // namespace
+
+// El sufijo sale de la etiqueta canónica y se comprueba contra los recursos: antes
+// era una lista de `case` sobre QLocale::Language que había que ampliar a mano con
+// cada manual nuevo y que, además, no podía distinguir el chino simplificado del
+// tradicional (`QLocale::Chinese` vale para los dos).
+QString mdhelp::helpSuffixForLanguage(const QString &code)
+{
+    const QString tag = mdlang::canonicalTag(code);
+    if (tag.isEmpty() || tag == QStringLiteral("es"))
+        return QString();  // el español es la base, sin sufijo
+    QString suffix = QLatin1Char('_') + tag;
+    if (QFile::exists(QStringLiteral(":/help/help-app%1.md").arg(suffix))
+        && QFile::exists(QStringLiteral(":/help/help-markdown%1.md").arg(suffix))) {
+        return suffix;
+    }
+    return QStringLiteral("_en");  // idioma sin manual traducido
+}
 
 // Declarada en helpdialog.h (namespace mdhelp) para que tst_help pueda validar
 // con ella los índices de los 18 .md de ayuda: cada `](#ancla)` del índice tiene
@@ -96,7 +100,7 @@ HelpDialog::HelpDialog(QWidget *parent)
     layout->addWidget(m_index);
     layout->addWidget(m_viewer, 1);
 
-    const QString suffix = helpSuffix();  // "", "_de", …, "_en"
+    const QString suffix = mdhelp::helpSuffixForLanguage(activeLanguage());
     connect(m_index, &QListWidget::currentRowChanged, this, [this, suffix](int row) {
         const QString page = row == 1 ? QStringLiteral("help-markdown")
                                       : QStringLiteral("help-app");

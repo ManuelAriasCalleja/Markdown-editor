@@ -48,6 +48,18 @@ QList<Word> tokenize(const QString &text);
 /// \return el basename elegido tal cual aparece en `available`, o vacío si no hay ninguno.
 QString pickDictionary(const QString &lang, const QStringList &available);
 
+/// \brief ¿Existe siquiera un diccionario Hunspell del idioma `lang`?
+///
+/// No es «¿está instalado?» (eso lo dice `pickDictionary`), sino si tiene sentido
+/// pedirle al usuario que lo instale. Hunspell corrige palabras delimitadas por
+/// espacios, y el chino, el japonés y el coreano no separan así: no hay diccionario
+/// suyo ni en las distribuciones ni upstream, y no lo va a haber. Mandar a instalar
+/// `hunspell-zh` es un callejón sin salida, igual que ofrecer instalar un
+/// diccionario cuando la build no trae motor.
+/// \param lang código de idioma (`zh`, `zh_CN`, `es-ES`…); se aceptan `-`/`_` y cualquier caja.
+/// \return false solo para las lenguas que no tienen diccionario en ninguna parte.
+bool hasHunspellDictionary(const QString &lang);
+
 /// \brief Nombre del paquete de diccionario de una distribución para `lang`
 /// (`es` → `hunspell-es`, `en_US` → `hunspell-en-us`). Es la convención que
 /// siguen Debian/Ubuntu, Fedora y Arch.

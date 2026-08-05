@@ -47,5 +47,13 @@
             <numerusform>~%n min</numerusform>
         </translation>
     </message>
+    <message numerus="yes">
+        <location filename="../../src/export/exportcontroller.cpp" line="467"/>
+        <source>Se ha omitido %n carácter sin equivalente en LaTeX (símbolos o emoji).</source>
+        <translation>
+            <numerusform>Se ha omitido %n carácter sin equivalente en LaTeX (símbolos o emoji).</numerusform>
+            <numerusform>Se han omitido %n caracteres sin equivalente en LaTeX (símbolos o emoji).</numerusform>
+        </translation>
+    </message>
 </context>
 </TS>

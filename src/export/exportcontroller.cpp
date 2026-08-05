@@ -437,11 +437,41 @@ bool ExportController::exportLatex()
         // LaTeX usa el documento ORIGINAL (no el clon plano): toLatex emite las
         // fórmulas verbatim desde sus propiedades de math.
         /*needsLanguage=*/true, /*useFlatClone=*/false, /*needsBaseUrl=*/false,
-        [](const QTextDocument *doc, const QString &path, const mdexport::Language &lang,
-           const QString &title, QString *error) {
+        [this](const QTextDocument *doc, const QString &path, const mdexport::Language &lang,
+               const QString &title, QString *error) {
             // Se pasa `path` para que las imágenes que pdflatex no soporta (SVG…) se
             // rasterizen a un PNG junto al .tex.
-            return writeUtf8File(path, mdexport::toLatex(doc, lang, title, path), error);
+            mdexport::LatexIssues issues;
+            const QString tex = mdexport::toLatex(doc, lang, title, path, &issues);
+            if (!writeUtf8File(path, tex, error))
+                return false;
+            reportLatexIssues(issues);  // el archivo ya está escrito: esto solo informa
+            return true;
         },
     });
+}
+
+void ExportController::reportLatexIssues(const mdexport::LatexIssues &issues) const
+{
+    QStringList notes;
+    if (issues.needsUnicodeEngine) {
+        // Es la única incidencia que cambia lo que el usuario tiene que HACER: el
+        // .tex lleva ya la configuración, pero pdflatex no le servirá.
+        notes << QCoreApplication::translate(
+            "MainWindow",
+            "El documento contiene texto en chino, japonés o coreano. El archivo ya "
+            "incluye la configuración necesaria, pero hay que compilarlo con «xelatex» "
+            "o «lualatex»: «pdflatex» no puede componer esas escrituras.");
+    }
+    if (issues.droppedSymbols > 0) {
+        notes << QCoreApplication::translate(
+            "MainWindow",
+            "Se ha omitido %n carácter sin equivalente en LaTeX (símbolos o emoji).",
+            nullptr, issues.droppedSymbols);
+    }
+    if (notes.isEmpty())
+        return;
+    QMessageBox::information(m_parent,
+                             QCoreApplication::translate("MainWindow", "Exportar a LaTeX"),
+                             notes.join(QStringLiteral("\n\n")));
 }

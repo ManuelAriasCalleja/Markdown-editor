@@ -16,7 +16,7 @@ class QTextDocument;
 class QWidget;
 class DocumentIo;
 class SplitViewController;
-namespace mdexport { struct Language; }
+namespace mdexport { struct Language; struct LatexIssues; }
 
 /// \brief Exportación e impresión del documento: PDF, HTML, ODF (.odt), LaTeX (.tex),
 /// DOCX (.docx), EPUB (.epub) e imprimir. Orquesta los serializadores puros de
@@ -123,6 +123,12 @@ private:
     // Flujo común de exportación a archivo: vuelca la fuente, (pide idioma), pide
     // ruta, prepara el documento, llama a `exp.write` y muestra el resultado.
     bool runExport(const FileExporter &exp);
+
+    // Cuenta lo que el .tex no ha podido trasladar tal cual (ver mdexport::toLatex).
+    // NO bloquea la exportación: el archivo ya está escrito y es válido; esto solo
+    // evita que el usuario se entere al compilar, o peor, nunca. Es aquí y no en
+    // `mdexport` porque el módulo es puro y no traduce.
+    void reportLatexIssues(const mdexport::LatexIssues &issues) const;
 
     QTextEdit *m_editor = nullptr;          // editor WYSIWYG (no es propiedad nuestra)
     DocumentIo *m_documentIo = nullptr;

@@ -19,6 +19,17 @@ namespace mdhelp {
 /// el destino que escribe `[Enlaces e imágenes](#enlaces-e-imagenes)`.
 QString headingSlug(const QString &text);
 
+/// \brief Sufijo del archivo de ayuda para el idioma `code` (`de` → `_de`), o vacío
+/// para el español, que es la base (`help-app.md`).
+///
+/// Se decide con la etiqueta canónica (`mdlang::canonicalTag`) y **comprobando que
+/// el recurso existe**: un idioma de la interfaz cuyo manual todavía no esté
+/// traducido cae al inglés en vez de abrir un visor vacío, y añadir un manual es
+/// soltar los dos `.md` en el `.qrc` sin tocar código. Consulta los recursos de Qt,
+/// así que no es pura del todo, pero sí determinista y sin GUI (`tst_help`).
+/// \param code idioma pedido en cualquier forma (`de`, `es_ES`, `zh-Hant`); vacío = español.
+QString helpSuffixForLanguage(const QString &code);
+
 }  // namespace mdhelp
 
 /// \brief Ventana de ayuda con dos secciones: «Uso de la aplicación» y «Markdown».

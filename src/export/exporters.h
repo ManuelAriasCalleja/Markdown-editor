@@ -52,14 +52,29 @@ struct PdfInfo {
 /// Función pura (los campos van a QPrinter::setDocName/setCreator).
 PdfInfo pdfDocumentInfo(const QString &frontMatter);
 
+/// \brief Lo que `toLatex` no ha podido trasladar tal cual, para poder avisar al
+/// usuario en vez de perderlo en silencio (que es lo que se hacía antes).
+struct LatexIssues {
+    /// El documento trae ideogramas chinos, kana japonés o hangul coreano: se
+    /// emiten (y el preámbulo se prepara para ellos), pero el .tex ya SOLO compila
+    /// con xelatex/lualatex, nunca con pdflatex.
+    bool needsUnicodeEngine = false;
+    /// Símbolos y emoji sin equivalente en LaTeX que se han descartado para no
+    /// romper la compilación. Se descartaban ya; lo nuevo es contarlos.
+    int droppedSymbols = 0;
+};
+
 /// \brief Serializa el documento a un .tex completo (preámbulo + cuerpo), con babel del
 /// idioma dado y, si `title` no está vacío, `\maketitle`.
 /// \param outputTexPath ruta del .tex de destino. Si se da, las imágenes que
 /// pdflatex no sabe incluir (SVG, GIF, BMP…) se rasterizan a un PNG escrito en esa
 /// misma carpeta y se referencian; si está vacía (p.ej. en tests), se referencian
 /// tal cual. Salvo por ese efecto de escritura de PNGs, la función es pura.
+/// \param issues si no es nulo, recibe lo que no se ha podido trasladar (ver
+/// LatexIssues). Quien traduce y muestra el aviso es ExportController: este módulo
+/// solo informa de lo que ha pasado.
 QString toLatex(const QTextDocument *doc, const Language &language, const QString &title,
-                const QString &outputTexPath = QString());
+                const QString &outputTexPath = QString(), LatexIssues *issues = nullptr);
 
 /// \brief Devuelve el XML `styles.xml` que fija el idioma del ODF. Pura y testeable.
 QByteArray odfStylesXml(const Language &language);

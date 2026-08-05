@@ -13,9 +13,32 @@ bool isApostrophe(QChar c)
 {
     return c == QLatin1Char('\'') || c == QChar(0x2019);  // ' y ’ tipográfico
 }
+// Escrituras sin espacios entre palabras (ideogramas chinos, kana japonés, hangul
+// coreano y su puntuación). Para `isLetterOrNumber` son letras, así que una frase
+// china entera salía como UNA palabra de decenas de caracteres, que ningún
+// diccionario reconoce: el párrafo aparecía subrayado de punta a punta. Aquí
+// cuentan como separador, de modo que no se corrigen y las palabras latinas que
+// haya entremedias (`混合español`) sí se siguen extrayendo.
+// (`mdexport` tiene su propia copia de estos rangos para decidir el motor de LaTeX:
+// el corrector es opcional y la exportación no puede depender de él.)
+bool isUnsegmentedScript(char32_t c)
+{
+    return (c >= 0x1100 && c <= 0x11FF)     // jamo hangul
+        || (c >= 0x3000 && c <= 0x303F)     // puntuación china/japonesa
+        || (c >= 0x3040 && c <= 0x30FF)     // hiragana y katakana
+        || (c >= 0x3100 && c <= 0x318F)     // bopomofo y jamo de compatibilidad
+        || (c >= 0x3400 && c <= 0x4DBF)     // ideogramas, extensión A
+        || (c >= 0x4E00 && c <= 0x9FFF)     // ideogramas, bloque principal
+        || (c >= 0xAC00 && c <= 0xD7AF)     // sílabas hangul
+        || (c >= 0xF900 && c <= 0xFAFF)     // ideogramas de compatibilidad
+        || (c >= 0xFF00 && c <= 0xFFEF);    // formas de ancho completo
+    // Los ideogramas de los planos altos (extensión B en adelante) no hacen falta
+    // aquí: llegan como pareja de suplentes, y un suplente suelto no es «letra»
+    // para Qt, así que ya no entra en ninguna palabra.
+}
 bool isWordChar(QChar c)
 {
-    return c.isLetterOrNumber() || isApostrophe(c);
+    return (c.isLetterOrNumber() || isApostrophe(c)) && !isUnsegmentedScript(c.unicode());
 }
 }  // namespace
 
@@ -92,6 +115,22 @@ QString pickDictionary(const QString &lang, const QStringList &available)
             variants.append(a);
     variants.sort();
     return variants.isEmpty() ? QString() : variants.first();
+}
+
+bool hasHunspellDictionary(const QString &lang)
+{
+    // Lista corta y cerrada a propósito: solo las lenguas cuya escritura no separa
+    // palabras con espacios, que es lo que Hunspell necesita para corregir. No es
+    // una lista de «idiomas que no empaquetamos» —para esos sí existe diccionario y
+    // sí hay que decirle al usuario que lo instale—, sino de los que no existen.
+    static const QStringList kNoDictionary = {
+        QStringLiteral("zh"),  // chino
+        QStringLiteral("ja"),  // japonés
+        QStringLiteral("ko"),  // coreano
+    };
+    QString key = lang.toLower();
+    key.replace(QLatin1Char('-'), QLatin1Char('_'));
+    return !kNoDictionary.contains(key.section(QLatin1Char('_'), 0, 0));
 }
 
 QString dictionaryPackage(const QString &lang)

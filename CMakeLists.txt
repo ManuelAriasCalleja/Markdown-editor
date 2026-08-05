@@ -66,6 +66,8 @@ add_library(md-editor-core STATIC
     src/app/chromezoom.h
     src/app/commands.cpp
     src/app/commands.h
+    src/app/langtag.cpp
+    src/app/langtag.h
     src/app/mainwindow.cpp
     src/app/mainwindow.h
     src/app/mainwindowinput.cpp
@@ -540,6 +542,7 @@ if(Qt6Test_FOUND)
         tst_markdownroundtrip
         tst_outline
         tst_docstats
+        tst_langtag
         tst_nav
         tst_csvtable
         tst_closedtabstack

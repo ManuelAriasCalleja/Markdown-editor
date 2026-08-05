@@ -18,6 +18,8 @@ class TestHelp : public QObject
 
 private slots:
     void slugMatchesTheIndexConvention();
+    void suffixPicksTheManualOfTheLanguage_data();
+    void suffixPicksTheManualOfTheLanguage();
     void everyIndexLinkResolves_data();
     void everyIndexLinkResolves();
     void translationsHaveTheSameSections_data();
@@ -73,6 +75,56 @@ void TestHelp::slugMatchesTheIndexConvention()
              QStringLiteral("snippets-fragmentos-reutilizables"));
     QCOMPARE(mdhelp::headingSlug(QStringLiteral("Extensiones que admite md-editor")),
              QStringLiteral("extensiones-que-admite-md-editor"));
+}
+
+// Qué manual abre cada idioma. Antes era un `switch` sobre `QLocale::Language`, que
+// no podía distinguir el chino simplificado del tradicional (`QLocale::Chinese` vale
+// para los dos) y había que ampliar a mano con cada manual nuevo. Ahora sale de la
+// etiqueta canónica y de que el recurso exista, así que este test es lo que vigila
+// las dos reglas: el idioma con manual abre el SUYO y el que no lo tiene cae al
+// inglés, nunca a un visor vacío.
+void TestHelp::suffixPicksTheManualOfTheLanguage_data()
+{
+    QTest::addColumn<QString>("code");
+    QTest::addColumn<QString>("suffix");
+
+    // El español es la base: sin sufijo. Vacío = «sin preferencia», que en el
+    // diálogo llega solo si el locale del sistema tampoco dice nada.
+    QTest::newRow("es") << QStringLiteral("es") << QString();
+    QTest::newRow("es_ES") << QStringLiteral("es_ES") << QString();
+    QTest::newRow("es-MX") << QStringLiteral("es-MX") << QString();
+    QTest::newRow("vacio") << QString() << QString();
+
+    // Los ocho traducidos, en cualquiera de sus formas.
+    QTest::newRow("de") << QStringLiteral("de") << QStringLiteral("_de");
+    QTest::newRow("de_AT") << QStringLiteral("de_AT") << QStringLiteral("_de");
+    QTest::newRow("en_US") << QStringLiteral("en_US") << QStringLiteral("_en");
+    QTest::newRow("fr") << QStringLiteral("fr") << QStringLiteral("_fr");
+    QTest::newRow("it") << QStringLiteral("it") << QStringLiteral("_it");
+    QTest::newRow("pt-BR") << QStringLiteral("pt-BR") << QStringLiteral("_pt");
+    QTest::newRow("pl") << QStringLiteral("pl") << QStringLiteral("_pl");
+    QTest::newRow("nl") << QStringLiteral("nl") << QStringLiteral("_nl");
+    QTest::newRow("ro") << QStringLiteral("ro") << QStringLiteral("_ro");
+
+    // Sin manual traducido → inglés. El chino está aquí mientras no exista
+    // `help-app_zh_CN.md`; el día que se añada al .qrc, esta fila pasará a fallar y
+    // hay que moverla arriba: es justo el aviso que se busca, porque el sufijo lo
+    // decide el recurso y no hay código que tocar para estrenarlo.
+    QTest::newRow("zh_CN") << QStringLiteral("zh_CN") << QStringLiteral("_en");
+    QTest::newRow("zh_TW") << QStringLiteral("zh_TW") << QStringLiteral("_en");
+    QTest::newRow("ja") << QStringLiteral("ja") << QStringLiteral("_en");
+    QTest::newRow("desconocido") << QStringLiteral("qqq_XX") << QStringLiteral("_en");
+}
+
+void TestHelp::suffixPicksTheManualOfTheLanguage()
+{
+    QFETCH(QString, code);
+    QFETCH(QString, suffix);
+    QCOMPARE(mdhelp::helpSuffixForLanguage(code), suffix);
+    // El sufijo que devuelva tiene que llevar a un manual que se pueda leer: es la
+    // única forma de que el diálogo no se abra en blanco.
+    for (const char *doc : kDocuments)
+        QVERIFY(!readHelp(QString::fromLatin1(doc) + suffix).isEmpty());
 }
 
 void TestHelp::everyIndexLinkResolves_data()

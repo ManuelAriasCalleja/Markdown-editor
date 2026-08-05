@@ -1112,7 +1112,7 @@
     </message>
     <message>
         <location filename="../src/app/mainwindowmenus.cpp" line="928"/>
-        <location filename="../src/spell/spellcontroller.cpp" line="128"/>
+        <location filename="../src/spell/spellcontroller.cpp" line="163"/>
         <source>Corrección ortográfica</source>
         <translation>Corectare ortografică</translation>
     </message>
@@ -1484,6 +1484,7 @@
     </message>
     <message>
         <location filename="../src/export/exportcontroller.cpp" line="432"/>
+        <location filename="../src/export/exportcontroller.cpp" line="475"/>
         <source>Exportar a LaTeX</source>
         <translation>Exportă în LaTeX</translation>
     </message>
@@ -1496,6 +1497,20 @@
         <location filename="../src/export/exportcontroller.cpp" line="436"/>
         <source>Exportado a LaTeX: %1</source>
         <translation>Exportat în LaTeX: %1</translation>
+    </message>
+    <message>
+        <location filename="../src/export/exportcontroller.cpp" line="460"/>
+        <source>El documento contiene texto en chino, japonés o coreano. El archivo ya incluye la configuración necesaria, pero hay que compilarlo con «xelatex» o «lualatex»: «pdflatex» no puede componer esas escrituras.</source>
+        <translation>Documentul conține text în chineză, japoneză sau coreeană. Fișierul include deja configurația necesară, dar trebuie compilat cu „xelatex” sau „lualatex”: „pdflatex” nu poate compune aceste scrieri.</translation>
+    </message>
+    <message numerus="yes">
+        <location filename="../src/export/exportcontroller.cpp" line="467"/>
+        <source>Se ha omitido %n carácter sin equivalente en LaTeX (símbolos o emoji).</source>
+        <translation>
+            <numerusform>A fost omis %n caracter fără echivalent în LaTeX (simboluri sau emoji).</numerusform>
+            <numerusform>Au fost omise %n caractere fără echivalent în LaTeX (simboluri sau emoji).</numerusform>
+            <numerusform>Au fost omise %n de caractere fără echivalent în LaTeX (simboluri sau emoji).</numerusform>
+        </translation>
     </message>
     <message>
         <location filename="../src/app/mainwindow.cpp" line="277"/>
@@ -1692,27 +1707,32 @@
         <translation>Nu există file închise de redeschis.</translation>
     </message>
     <message>
-        <location filename="../src/spell/spellcontroller.cpp" line="100"/>
+        <location filename="../src/spell/spellcontroller.cpp" line="106"/>
+        <source>No hay corrección ortográfica para %1: Hunspell no tiene diccionario de ese idioma.</source>
+        <translation>Nu există corectare ortografică pentru %1: Hunspell nu are dicționar pentru limba aceasta.</translation>
+    </message>
+    <message>
+        <location filename="../src/spell/spellcontroller.cpp" line="113"/>
         <source>Sin diccionario de corrección para «%1»: instálalo (Hunspell) o desactiva el corrector en «Ver».</source>
         <translation>Niciun dicționar de corectare pentru „%1”: instalează-l (Hunspell) sau dezactivează corectarea din „Vizualizare”.</translation>
     </message>
     <message>
-        <location filename="../src/spell/spellcontroller.cpp" line="133"/>
+        <location filename="../src/spell/spellcontroller.cpp" line="168"/>
         <source>Esta versión del programa se compiló sin corrector ortográfico.</source>
         <translation>Această versiune a programului a fost compilată fără corector ortografic.</translation>
     </message>
     <message>
-        <location filename="../src/spell/spellcontroller.cpp" line="135"/>
+        <location filename="../src/spell/spellcontroller.cpp" line="170"/>
         <source>No se subrayarán las faltas. Si la has compilado tú, instala Hunspell (libhunspell-dev, brew install hunspell o vcpkg) y vuelve a compilar.</source>
         <translation>Greșelile nu vor fi subliniate. Dacă ați compilat-o dumneavoastră, instalați Hunspell (libhunspell-dev, brew install hunspell sau vcpkg) și recompilați.</translation>
     </message>
     <message>
-        <location filename="../src/spell/spellcontroller.cpp" line="143"/>
+        <location filename="../src/spell/spellcontroller.cpp" line="178"/>
         <source>No hay diccionario de %1, así que la corrección está desactivada en este documento.</source>
         <translation>Nu există dicționar pentru %1, așa că verificarea ortografică este dezactivată în acest document.</translation>
     </message>
     <message>
-        <location filename="../src/spell/spellcontroller.cpp" line="154"/>
+        <location filename="../src/spell/spellcontroller.cpp" line="189"/>
         <source>Puedes instalarlo con tu gestor de paquetes:
 
     %1</source>
@@ -1721,7 +1741,7 @@
     %1</translation>
     </message>
     <message>
-        <location filename="../src/spell/spellcontroller.cpp" line="157"/>
+        <location filename="../src/spell/spellcontroller.cpp" line="192"/>
         <source>Puedes instalarlo copiando los archivos .aff y .dic del idioma en esta carpeta:
 
     %1</source>
@@ -1730,42 +1750,42 @@
     %1</translation>
     </message>
     <message>
-        <location filename="../src/spell/spellcontroller.cpp" line="169"/>
+        <location filename="../src/spell/spellcontroller.cpp" line="204"/>
         <source>Descargar e instalar</source>
         <translation>Descarcă și instalează</translation>
     </message>
     <message>
-        <location filename="../src/spell/spellcontroller.cpp" line="174"/>
+        <location filename="../src/spell/spellcontroller.cpp" line="209"/>
         <source>No volver a avisar</source>
         <translation>Nu mai avertiza</translation>
     </message>
     <message>
-        <location filename="../src/spell/spellcontroller.cpp" line="191"/>
+        <location filename="../src/spell/spellcontroller.cpp" line="228"/>
         <source>Diccionario instalado.</source>
         <translation>Dicționar instalat.</translation>
     </message>
     <message>
-        <location filename="../src/spell/spellcontroller.cpp" line="195"/>
+        <location filename="../src/spell/spellcontroller.cpp" line="232"/>
         <source>No se pudo descargar el diccionario: %1</source>
         <translation>Nu s-a putut descărca dicționarul: %1</translation>
     </message>
     <message>
-        <location filename="../src/spell/spellcontroller.cpp" line="200"/>
+        <location filename="../src/spell/spellcontroller.cpp" line="237"/>
         <source>Descargando el diccionario…</source>
         <translation>Se descarcă dicționarul…</translation>
     </message>
     <message>
-        <location filename="../src/spell/spellcontroller.cpp" line="238"/>
+        <location filename="../src/spell/spellcontroller.cpp" line="275"/>
         <source>(sin sugerencias)</source>
         <translation>(nicio sugestie)</translation>
     </message>
     <message>
-        <location filename="../src/spell/spellcontroller.cpp" line="257"/>
+        <location filename="../src/spell/spellcontroller.cpp" line="294"/>
         <source>Añadir «%1» al diccionario</source>
         <translation>Adaugă „%1” în dicționar</translation>
     </message>
     <message>
-        <location filename="../src/spell/spellcontroller.cpp" line="263"/>
+        <location filename="../src/spell/spellcontroller.cpp" line="300"/>
         <source>Ignorar «%1»</source>
         <translation>Ignoră „%1”</translation>
     </message>

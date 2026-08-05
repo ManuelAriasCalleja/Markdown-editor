@@ -5,6 +5,7 @@
 
 #include "exporters.h"
 
+#include "langtag.h"
 #include "mathblocks.h"
 #include "printdecor.h"
 
@@ -48,8 +49,10 @@ QList<Language> languages()
 
 Language languageForCode(const QString &code)
 {
-    // Normaliza "es-ES"/"es_ES" → "es".
-    const QString base = code.left(2).toLower();
+    // Normaliza "es-ES"/"es_ES" → "es". NO vale `code.left(2)`: el chino
+    // simplificado y el tradicional necesitan entradas distintas (babel y fo:language
+    // no son los mismos) y ese recorte los dejaba en un solo "zh".
+    const QString base = mdlang::canonicalTag(code);
     const QList<Language> langs = languages();
     for (const Language &l : langs)
         if (l.code == base)

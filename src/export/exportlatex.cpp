@@ -63,11 +63,40 @@ const QHash<uint, QString> &highSymbolMap()
     return m;
 }
 
-QString latexEscape(const QString &s)
+// ¿El punto de código pertenece a una ESCRITURA (no a un símbolo suelto)? Ideogramas
+// chinos, kana japonés, hangul coreano, bopomofo y la puntuación y las formas de
+// ancho completo que los acompañan. La distinción es la clave de todo esto: un emoji
+// que no se puede componer se descarta y no pasa nada, pero descartar una escritura
+// entera es borrar el documento. Lo que caiga aquí se emite y obliga a xelatex.
+bool isScriptChar(uint cp)
+{
+    return (cp >= 0x1100 && cp <= 0x11FF)     // jamo hangul
+        || (cp >= 0x3000 && cp <= 0x303F)     // puntuación china/japonesa (、。「」)
+        || (cp >= 0x3040 && cp <= 0x30FF)     // hiragana y katakana
+        || (cp >= 0x3100 && cp <= 0x312F)     // bopomofo
+        || (cp >= 0x3130 && cp <= 0x318F)     // jamo hangul de compatibilidad
+        || (cp >= 0x3400 && cp <= 0x4DBF)     // ideogramas, extensión A
+        || (cp >= 0x4E00 && cp <= 0x9FFF)     // ideogramas, bloque principal
+        || (cp >= 0xAC00 && cp <= 0xD7AF)     // sílabas hangul
+        || (cp >= 0xF900 && cp <= 0xFAFF)     // ideogramas de compatibilidad
+        || (cp >= 0xFF00 && cp <= 0xFFEF)     // formas de ancho completo (，！)
+        || (cp >= 0x20000 && cp <= 0x2FA1F);  // ideogramas, extensiones B y siguientes
+}
+
+QString latexEscape(const QString &s, LatexIssues *issues = nullptr)
 {
     QString out;
     out.reserve(s.size());
     for (const uint cp : s.toUcs4()) {
+        // Antes que nada: una escritura se conserva SIEMPRE, esté por encima o por
+        // debajo del corte de símbolos (el jamo hangul cae por debajo).
+        if (isScriptChar(cp)) {
+            const char32_t c = cp;  // el overload de uint está obsoleto en Qt 6
+            out += QString::fromUcs4(&c, 1);
+            if (issues)
+                issues->needsUnicodeEngine = true;
+            continue;
+        }
         switch (cp) {
         case u'\\': out += QStringLiteral("\\textbackslash{}"); continue;
         case u'&':  out += QStringLiteral("\\&"); continue;
@@ -91,20 +120,33 @@ QString latexEscape(const QString &s)
             out += QChar(static_cast<char16_t>(cp));  // latino/puntuación: lo compone el motor
         else if (const auto it = highSymbolMap().constFind(cp); it != highSymbolMap().cend())
             out += it.value();
-        // else: símbolo/emoji sin equivalente → se omite (evita el fallo de pdflatex)
+        // Símbolo/emoji sin equivalente → se omite (evita el fallo de pdflatex), pero
+        // se cuenta: hasta ahora desaparecía sin que el usuario llegara a saberlo.
+        else if (issues)
+            ++issues->droppedSymbols;
     }
     return out;
 }
 
 // Versión para entornos verbatim, donde no caben comandos LaTeX: conserva el
 // texto literal y solo descarta los símbolos/emoji altos que romperían pdflatex.
-QString codeBlockSanitize(const QString &s)
+QString codeBlockSanitize(const QString &s, LatexIssues *issues = nullptr)
 {
     QString out;
     out.reserve(s.size());
     for (const uint cp : s.toUcs4()) {
-        if (cp >= kHighSymbolStart)
+        if (isScriptChar(cp)) {  // un comentario en chino dentro del código, p.ej.
+            const char32_t c = cp;  // el overload de uint está obsoleto en Qt 6
+            out += QString::fromUcs4(&c, 1);
+            if (issues)
+                issues->needsUnicodeEngine = true;
+            continue;
+        }
+        if (cp >= kHighSymbolStart) {
+            if (issues)
+                ++issues->droppedSymbols;
             continue;  // símbolo/emoji que pdflatex+T1 no compone
+        }
         switch (cp) {
         case u'\\': out += QStringLiteral("\\textbackslash{}"); continue;
         case u'{':  out += QStringLiteral("\\{"); continue;
@@ -221,7 +263,11 @@ QString imageLatex(const QString &name, LatexImages &images)
 // LaTeX (negrita, cursiva, subrayado, tachado, código, enlaces e imágenes).
 // `ignoreBold` evita el \textbf en los encabezados (que Qt marca en negrita y en
 // LaTeX ya lo son), para no producir \section{\textbf{...}}.
-QString inlineLatex(const QTextBlock &block, LatexImages &images, bool ignoreBold = false)
+// `issues` recoge lo intraducible del TEXTO del documento (ver LatexIssues). Las
+// rutas de imagen no pasan por ahí a propósito: un carácter raro en un nombre de
+// fichero es otro problema, y no dice nada de la escritura del documento.
+QString inlineLatex(const QTextBlock &block, LatexImages &images, LatexIssues *issues,
+                    bool ignoreBold = false)
 {
     QString out;
     QString lastMathTex;  // sigue el grupo de fórmula abierto (evita repetir)
@@ -248,7 +294,7 @@ QString inlineLatex(const QTextBlock &block, LatexImages &images, bool ignoreBol
             out += imageLatex(cf.toImageFormat().name(), images);
             continue;
         }
-        QString t = latexEscape(frag.text());
+        QString t = latexEscape(frag.text(), issues);
         if (t.isEmpty())
             continue;
         // Super/subíndice que NO viene de una fórmula: los de `x^2^`/`H~2~O`
@@ -297,7 +343,7 @@ QString columnSpec(const QTextTable *table)
     return spec;
 }
 
-QString tableLatex(QTextTable *table, LatexImages &images)
+QString tableLatex(QTextTable *table, LatexImages &images, LatexIssues *issues)
 {
     QString out = QStringLiteral("\\begin{tabular}{%1}\n\\hline\n").arg(columnSpec(table));
     for (int r = 0; r < table->rows(); ++r) {
@@ -309,7 +355,7 @@ QString tableLatex(QTextTable *table, LatexImages &images)
             for (; !fit.atEnd(); ++fit) {
                 const QTextBlock b = fit.currentBlock();
                 if (b.isValid())
-                    text += inlineLatex(b, images);
+                    text += inlineLatex(b, images, issues);
             }
             cells << text;
         }
@@ -337,17 +383,51 @@ QString headingCommand(int level, const QString &text)
 // \maketitle si hay título). Portable entre motores: pdfLaTeX usa inputenc/T1;
 // LuaLaTeX y XeLaTeX usan fontspec (Unicode nativo). Así el .tex compila con
 // cualquiera. El cuerpo y el \end{document} los añade toLatex.
-static QString latexPreamble(const Language &language, const QString &title)
+static QString latexPreamble(const Language &language, const QString &title,
+                             LatexIssues *issues)
 {
+    // El título se escapa lo PRIMERO: puede traer ideogramas él solo (un documento
+    // titulado en chino con el cuerpo en español), y de eso depende el preámbulo.
+    const QString escapedTitle = title.isEmpty() ? QString() : latexEscape(title, issues);
+    const bool cjk = issues && issues->needsUnicodeEngine;
+
     QString out;
+    if (cjk) {
+        // Con ideogramas el .tex ya no es portable entre motores, así que lo primero
+        // que se ve al abrirlo es con qué se compila.
+        out += QStringLiteral(
+            "% Este documento contiene texto en chino, japonés o coreano.\n"
+            "% Compílalo con:  xelatex documento.tex   (o lualatex)\n"
+            "% pdflatex NO puede componer esas escrituras.\n");
+    }
     out += QStringLiteral("\\documentclass[11pt]{article}\n");
     out += QStringLiteral("\\usepackage{iftex}\n");
-    out += QStringLiteral("\\ifPDFTeX\n"
-                          "  \\usepackage[utf8]{inputenc}\n"
-                          "  \\usepackage[T1]{fontenc}\n"
-                          "\\else\n"
-                          "  \\usepackage{fontspec}\n"
-                          "\\fi\n");
+    if (cjk) {
+        // ctex (sobre xeCJK) elige por sí solo una fuente con ideogramas de las
+        // instaladas en el sistema, que es lo que hace que el .tex compile tal cual
+        // en Windows, macOS y Linux sin que el usuario configure nada. Va ANTES que
+        // babel para que los rótulos («Índice», «Cuadro») los siga fijando el idioma
+        // del documento, no ctex.
+        // En pdfTeX no hay nada que hacer —ninguna combinación de inputenc/fontenc
+        // compone ideogramas—, así que se aborta con una línea que explique el motivo
+        // en vez de dejar el críptico «Unicode character not set up for use with
+        // LaTeX». Sin acentos: es un mensaje del propio TeX.
+        out += QStringLiteral(
+            "\\ifPDFTeX\n"
+            "  \\errmessage{Este documento tiene texto chino/japones/coreano:"
+            " compilalo con xelatex o lualatex, no con pdflatex}\n"
+            "\\else\n"
+            "  \\usepackage{fontspec}\n"
+            "  \\usepackage[UTF8]{ctex}\n"
+            "\\fi\n");
+    } else {
+        out += QStringLiteral("\\ifPDFTeX\n"
+                              "  \\usepackage[utf8]{inputenc}\n"
+                              "  \\usepackage[T1]{fontenc}\n"
+                              "\\else\n"
+                              "  \\usepackage{fontspec}\n"
+                              "\\fi\n");
+    }
     out += QStringLiteral("\\usepackage[%1]{babel}\n").arg(language.babel);
     out += QStringLiteral("\\usepackage{amsmath}\n");
     out += QStringLiteral("\\usepackage{amssymb}\n");
@@ -356,17 +436,22 @@ static QString latexPreamble(const Language &language, const QString &title)
     out += QStringLiteral("\\usepackage{graphicx}\n");
     out += QStringLiteral("\\usepackage[export]{adjustbox}\n");  // max width en imágenes
     out += QStringLiteral("\\usepackage{hyperref}\n");
-    if (!title.isEmpty())
-        out += QStringLiteral("\\title{%1}\n\\author{}\n\\date{}\n").arg(latexEscape(title));
+    if (!escapedTitle.isEmpty())
+        out += QStringLiteral("\\title{%1}\n\\author{}\n\\date{}\n").arg(escapedTitle);
     out += QStringLiteral("\\begin{document}\n");
-    if (!title.isEmpty())
+    if (!escapedTitle.isEmpty())  // `\maketitle` sin `\title` deja un título vacío
         out += QStringLiteral("\\maketitle\n");
     return out;
 }
 
 QString toLatex(const QTextDocument *doc, const Language &language, const QString &title,
-                const QString &outputTexPath)
+                const QString &outputTexPath, LatexIssues *issuesOut)
 {
+    // Un destino siempre válido evita comprobar el puntero en cada carácter; si el
+    // llamante no quiere el parte de incidencias, se tira al salir.
+    LatexIssues discarded;
+    LatexIssues *issues = issuesOut ? issuesOut : &discarded;
+
     // Contexto de conversión de imágenes: si nos dan la ruta del .tex, las imágenes
     // que pdflatex no soporta (SVG…) se rasterizan a un PNG junto a él. Sin ruta
     // (tests), la conversión queda inactiva y las imágenes se referencian tal cual.
@@ -430,7 +515,7 @@ QString toLatex(const QTextDocument *doc, const Language &language, const QStrin
             if (!doneTables.contains(table)) {
                 closeLists(); closeQuote(); closeCode();
                 doneTables.append(table);
-                body += tableLatex(table, images) + QLatin1Char('\n');
+                body += tableLatex(table, images, issues) + QLatin1Char('\n');
             }
             continue;
         }
@@ -447,7 +532,7 @@ QString toLatex(const QTextDocument *doc, const Language &language, const QStrin
             // compilar entero—. En alltt solo `\ { }` conservan su significado, y
             // codeBlockSanitize los escapa: el resto es literal pase lo que pase.
             if (!inCode) { body += QStringLiteral("\\begin{alltt}\n"); inCode = true; }
-            body += codeBlockSanitize(block.text()) + QLatin1Char('\n');
+            body += codeBlockSanitize(block.text(), issues) + QLatin1Char('\n');
             continue;
         }
         closeCode();
@@ -459,7 +544,7 @@ QString toLatex(const QTextDocument *doc, const Language &language, const QStrin
             continue;
         }
 
-        const QString text = inlineLatex(block, images);
+        const QString text = inlineLatex(block, images, issues);
 
         // Listas (viñetas, numeradas y tareas) con anidamiento por sangría.
         if (QTextList *list = block.textList()) {
@@ -526,13 +611,16 @@ QString toLatex(const QTextDocument *doc, const Language &language, const QStrin
         // Encabezado o párrafo normal.
         const int level = bf.headingLevel();
         if (level >= 1)
-            body += headingCommand(level, inlineLatex(block, images, /*ignoreBold=*/true));
+            body += headingCommand(level,
+                                   inlineLatex(block, images, issues, /*ignoreBold=*/true));
         else
             body += text + QStringLiteral("\n\n");
     }
     closeLists(); closeQuote(); closeCode();
 
-    return latexPreamble(language, title) + body + QStringLiteral("\\end{document}\n");
+    // El preámbulo va el ÚLTIMO a propósito: depende de lo que haya aparecido en el
+    // cuerpo (los ideogramas cambian los paquetes y el motor exigido).
+    return latexPreamble(language, title, issues) + body + QStringLiteral("\\end{document}\n");
 }
 
 }  // namespace mdexport

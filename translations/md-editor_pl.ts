@@ -1112,7 +1112,7 @@
     </message>
     <message>
         <location filename="../src/app/mainwindowmenus.cpp" line="928"/>
-        <location filename="../src/spell/spellcontroller.cpp" line="128"/>
+        <location filename="../src/spell/spellcontroller.cpp" line="163"/>
         <source>Corrección ortográfica</source>
         <translation>Sprawdzanie pisowni</translation>
     </message>
@@ -1484,6 +1484,7 @@
     </message>
     <message>
         <location filename="../src/export/exportcontroller.cpp" line="432"/>
+        <location filename="../src/export/exportcontroller.cpp" line="475"/>
         <source>Exportar a LaTeX</source>
         <translation>Eksportuj do LaTeX</translation>
     </message>
@@ -1496,6 +1497,20 @@
         <location filename="../src/export/exportcontroller.cpp" line="436"/>
         <source>Exportado a LaTeX: %1</source>
         <translation>Wyeksportowano do LaTeX: %1</translation>
+    </message>
+    <message>
+        <location filename="../src/export/exportcontroller.cpp" line="460"/>
+        <source>El documento contiene texto en chino, japonés o coreano. El archivo ya incluye la configuración necesaria, pero hay que compilarlo con «xelatex» o «lualatex»: «pdflatex» no puede componer esas escrituras.</source>
+        <translation>Dokument zawiera tekst chiński, japoński lub koreański. Plik zawiera już potrzebną konfigurację, ale trzeba go skompilować programem „xelatex” lub „lualatex”: „pdflatex” nie potrafi składać tych pism.</translation>
+    </message>
+    <message numerus="yes">
+        <location filename="../src/export/exportcontroller.cpp" line="467"/>
+        <source>Se ha omitido %n carácter sin equivalente en LaTeX (símbolos o emoji).</source>
+        <translation>
+            <numerusform>Pominięto %n znak bez odpowiednika w LaTeX-u (symbole lub emoji).</numerusform>
+            <numerusform>Pominięto %n znaki bez odpowiednika w LaTeX-u (symbole lub emoji).</numerusform>
+            <numerusform>Pominięto %n znaków bez odpowiednika w LaTeX-u (symbole lub emoji).</numerusform>
+        </translation>
     </message>
     <message>
         <location filename="../src/app/mainwindow.cpp" line="277"/>
@@ -1692,27 +1707,32 @@
         <translation>Brak zamkniętych kart do ponownego otwarcia.</translation>
     </message>
     <message>
-        <location filename="../src/spell/spellcontroller.cpp" line="100"/>
+        <location filename="../src/spell/spellcontroller.cpp" line="106"/>
+        <source>No hay corrección ortográfica para %1: Hunspell no tiene diccionario de ese idioma.</source>
+        <translation>Brak sprawdzania pisowni dla języka %1: Hunspell nie ma słownika tego języka.</translation>
+    </message>
+    <message>
+        <location filename="../src/spell/spellcontroller.cpp" line="113"/>
         <source>Sin diccionario de corrección para «%1»: instálalo (Hunspell) o desactiva el corrector en «Ver».</source>
         <translation>Brak słownika sprawdzania pisowni dla „%1”: zainstaluj go (Hunspell) lub wyłącz sprawdzanie w „Widok”.</translation>
     </message>
     <message>
-        <location filename="../src/spell/spellcontroller.cpp" line="133"/>
+        <location filename="../src/spell/spellcontroller.cpp" line="168"/>
         <source>Esta versión del programa se compiló sin corrector ortográfico.</source>
         <translation>Ta wersja programu została skompilowana bez sprawdzania pisowni.</translation>
     </message>
     <message>
-        <location filename="../src/spell/spellcontroller.cpp" line="135"/>
+        <location filename="../src/spell/spellcontroller.cpp" line="170"/>
         <source>No se subrayarán las faltas. Si la has compilado tú, instala Hunspell (libhunspell-dev, brew install hunspell o vcpkg) y vuelve a compilar.</source>
         <translation>Błędy nie będą podkreślane. Jeśli kompilowałeś ją samodzielnie, zainstaluj Hunspell (libhunspell-dev, brew install hunspell lub vcpkg) i skompiluj ponownie.</translation>
     </message>
     <message>
-        <location filename="../src/spell/spellcontroller.cpp" line="143"/>
+        <location filename="../src/spell/spellcontroller.cpp" line="178"/>
         <source>No hay diccionario de %1, así que la corrección está desactivada en este documento.</source>
         <translation>Brak słownika %1, więc sprawdzanie pisowni jest wyłączone w tym dokumencie.</translation>
     </message>
     <message>
-        <location filename="../src/spell/spellcontroller.cpp" line="154"/>
+        <location filename="../src/spell/spellcontroller.cpp" line="189"/>
         <source>Puedes instalarlo con tu gestor de paquetes:
 
     %1</source>
@@ -1721,7 +1741,7 @@
     %1</translation>
     </message>
     <message>
-        <location filename="../src/spell/spellcontroller.cpp" line="157"/>
+        <location filename="../src/spell/spellcontroller.cpp" line="192"/>
         <source>Puedes instalarlo copiando los archivos .aff y .dic del idioma en esta carpeta:
 
     %1</source>
@@ -1730,42 +1750,42 @@
     %1</translation>
     </message>
     <message>
-        <location filename="../src/spell/spellcontroller.cpp" line="169"/>
+        <location filename="../src/spell/spellcontroller.cpp" line="204"/>
         <source>Descargar e instalar</source>
         <translation>Pobierz i zainstaluj</translation>
     </message>
     <message>
-        <location filename="../src/spell/spellcontroller.cpp" line="174"/>
+        <location filename="../src/spell/spellcontroller.cpp" line="209"/>
         <source>No volver a avisar</source>
         <translation>Nie ostrzegaj ponownie</translation>
     </message>
     <message>
-        <location filename="../src/spell/spellcontroller.cpp" line="191"/>
+        <location filename="../src/spell/spellcontroller.cpp" line="228"/>
         <source>Diccionario instalado.</source>
         <translation>Zainstalowano słownik.</translation>
     </message>
     <message>
-        <location filename="../src/spell/spellcontroller.cpp" line="195"/>
+        <location filename="../src/spell/spellcontroller.cpp" line="232"/>
         <source>No se pudo descargar el diccionario: %1</source>
         <translation>Nie udało się pobrać słownika: %1</translation>
     </message>
     <message>
-        <location filename="../src/spell/spellcontroller.cpp" line="200"/>
+        <location filename="../src/spell/spellcontroller.cpp" line="237"/>
         <source>Descargando el diccionario…</source>
         <translation>Pobieranie słownika…</translation>
     </message>
     <message>
-        <location filename="../src/spell/spellcontroller.cpp" line="238"/>
+        <location filename="../src/spell/spellcontroller.cpp" line="275"/>
         <source>(sin sugerencias)</source>
         <translation>(brak podpowiedzi)</translation>
     </message>
     <message>
-        <location filename="../src/spell/spellcontroller.cpp" line="257"/>
+        <location filename="../src/spell/spellcontroller.cpp" line="294"/>
         <source>Añadir «%1» al diccionario</source>
         <translation>Dodaj „%1” do słownika</translation>
     </message>
     <message>
-        <location filename="../src/spell/spellcontroller.cpp" line="263"/>
+        <location filename="../src/spell/spellcontroller.cpp" line="300"/>
         <source>Ignorar «%1»</source>
         <translation>Ignoruj „%1”</translation>
     </message>

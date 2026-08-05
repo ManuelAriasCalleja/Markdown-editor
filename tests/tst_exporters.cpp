@@ -42,6 +42,8 @@ private slots:
     void latexKeepsOrderedListStart();
     void latexHeadingNotDoublyBold();
     void latexSanitizesHighUnicode();
+    void latexKeepsCjkAndAsksForUnicodeEngine();
+    void latexReportsDroppedSymbols();
     void latexConvertsMathUnicodeToCommands();
     void latexBundlesImagesSelfContained();
     void odfStylesCarryLanguage();
@@ -325,6 +327,68 @@ void TestExporters::latexSanitizesHighUnicode()
     // Preámbulo portable entre motores.
     QVERIFY(tex.contains(QStringLiteral("\\usepackage{iftex}")));
     QVERIFY(tex.contains(QStringLiteral("\\usepackage{fontspec}")));
+}
+
+// Los ideogramas NO son un símbolo suelto que se pueda descartar: descartarlos era
+// exportar un .tex sin el texto del documento, y en silencio. Se conservan, el
+// preámbulo se prepara para ellos y toLatex lo cuenta para que se pueda avisar.
+void TestExporters::latexKeepsCjkAndAsksForUnicodeEngine()
+{
+    QTextDocument doc;
+    doc.setMarkdown(QString::fromUtf8(u8"# 标题\n\n中文文本 y texto español.\n\n```\n// 注释\n```\n"));
+    mdexport::LatexIssues issues;
+    const QString tex = mdexport::toLatex(
+        &doc, mdexport::languageForCode(QStringLiteral("es")), QString::fromUtf8(u8"文档"),
+        QString(), &issues);
+
+    QVERIFY(issues.needsUnicodeEngine);
+    QCOMPARE(issues.droppedSymbols, 0);
+    // El texto está: en el cuerpo, en el encabezado, en el título y en el código.
+    QVERIFY(tex.contains(QString::fromUtf8(u8"中文文本")));
+    QVERIFY(tex.contains(QString::fromUtf8(u8"\\section{标题}")));
+    QVERIFY(tex.contains(QString::fromUtf8(u8"\\title{文档}")));
+    QVERIFY(tex.contains(QString::fromUtf8(u8"注释")));
+    QVERIFY(tex.contains(QString::fromUtf8(u8"texto español")));  // lo latino, intacto
+    // Preámbulo: ctex en la rama Unicode y un error legible en la de pdflatex (que
+    // no puede componer ideogramas de ninguna manera).
+    QVERIFY(tex.contains(QStringLiteral("\\usepackage[UTF8]{ctex}")));
+    QVERIFY(tex.contains(QStringLiteral("\\errmessage{")));
+    QVERIFY(tex.contains(QStringLiteral("xelatex")));
+    // El mensaje de TeX va sin acentos a propósito (lo compone el propio TeX).
+    const int err = tex.indexOf(QStringLiteral("\\errmessage{"));
+    const QString msg = tex.mid(err, tex.indexOf(QLatin1Char('}'), err) - err);
+    for (const QChar c : msg)
+        QVERIFY2(c.unicode() < 128, qPrintable(msg));
+    // Un documento sin ideogramas no arrastra nada de esto.
+    QTextDocument plain;
+    plain.setMarkdown(QStringLiteral("Solo texto.\n"));
+    mdexport::LatexIssues none;
+    const QString latin = mdexport::toLatex(
+        &plain, mdexport::languageForCode(QStringLiteral("es")), QString(), QString(), &none);
+    QVERIFY(!none.needsUnicodeEngine);
+    QVERIFY(!latin.contains(QStringLiteral("ctex")));
+    QVERIFY(latin.contains(QStringLiteral("\\usepackage[utf8]{inputenc}")));  // portable
+}
+
+// Lo que sí se descarta (símbolos y emoji) se sigue descartando —rompería
+// pdflatex—, pero ahora se cuenta: antes desaparecía sin que nadie se enterara.
+void TestExporters::latexReportsDroppedSymbols()
+{
+    QTextDocument doc;
+    doc.setMarkdown(QStringLiteral("Cohete 🚀 y otro 🛰\n\n```\ncode 🚀\n```\n"));
+    mdexport::LatexIssues issues;
+    const QString tex = mdexport::toLatex(
+        &doc, mdexport::languageForCode(QStringLiteral("es")), QString(), QString(), &issues);
+    QCOMPARE(issues.droppedSymbols, 3);  // dos en la prosa y uno en el bloque de código
+    QVERIFY(!issues.needsUnicodeEngine);
+    QVERIFY(!tex.contains(QStringLiteral("🚀")));
+    // El ✅ tiene equivalente: se convierte, no se descarta (no cuenta como omitido).
+    QTextDocument ok;
+    ok.setMarkdown(QStringLiteral("✅ hecho\n"));
+    mdexport::LatexIssues none;
+    mdexport::toLatex(&ok, mdexport::languageForCode(QStringLiteral("es")), QString(),
+                      QString(), &none);
+    QCOMPARE(none.droppedSymbols, 0);
 }
 
 void TestExporters::latexConvertsMathUnicodeToCommands()

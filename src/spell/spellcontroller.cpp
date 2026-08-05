@@ -96,6 +96,19 @@ void SpellController::applyLanguage()
     // activado pero no se cargó diccionario para el idioma pedido (degrada en
     // silencio, así que sin esto el usuario no sabría por qué no subraya).
     if (!m_checker.isAvailable()) {
+        // Idioma sin diccionario Hunspell en NINGUNA parte (chino, japonés,
+        // coreano): se dice y se acaba ahí. El aviso normal mandaría a instalar un
+        // paquete que no existe y ofrecería un botón de descarga sin nada que
+        // descargar, que es el mismo callejón sin salida que ya se evita cuando la
+        // build no trae motor.
+        if (!mdspell::hasHunspellDictionary(code)) {
+            emit statusMessage(
+                QCoreApplication::translate("MainWindow",
+                    "No hay corrección ortográfica para %1: Hunspell no tiene "
+                    "diccionario de ese idioma.").arg(languageLabel(code)),
+                8000);
+            return;
+        }
         emit statusMessage(
             QCoreApplication::translate("MainWindow",
                 "Sin diccionario de corrección para «%1»: instálalo (Hunspell) o "
