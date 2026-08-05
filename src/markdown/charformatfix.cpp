@@ -10,6 +10,8 @@
 #include <QTextDocument>
 #include <QTextFragment>
 
+#include "headingemphasis.h"  // marcar el énfasis antes de reponer la negrita
+
 namespace {
 
 // Un cambio de formato pendiente. Se recogen todos antes de aplicarlos: cambiar el
@@ -60,6 +62,11 @@ void mdcharfix::repairHeadingRuns(QTextDocument *doc)
 {
     if (!doc)
         return;
+    // El énfasis del fuente (`**negrita**`) hay que anotarlo AQUÍ, antes de reponer la
+    // negrita estructural del encabezado: después ya no se distingue una de otra y se
+    // perdería al guardar. Va dentro de esta función, y no en el pipeline, para que el
+    // orden no dependa de que nadie lo reordene (ver mdheademph).
+    mdheademph::markExplicitBold(doc);
     QList<FormatEdit> edits;
     for (QTextBlock b = doc->begin(); b.isValid(); b = b.next()) {
         const int level = b.blockFormat().headingLevel();

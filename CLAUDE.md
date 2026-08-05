@@ -89,7 +89,7 @@ en su carpeta):
 - `markdown/` — lógica Markdown pura compartida: `markdownrender` (pipeline de
   carga), `tableedit` (serialización canónica), y las extensiones ligeras
   (`footnotes`, `tasklist`, `shortcodes`, `admonitions`, `texttransform`,
-  `markdowntidy`, `codespanfix`, `charformatfix`, `urldetect`, `richpaste`,
+  `markdowntidy`, `codespanfix`, `charformatfix`, `headingemphasis`, `urldetect`, `richpaste`,
   `doctemplates`, `docstats`, `symbolcatalog`, `snippets`).
 - `highlight/` — resaltado: `CodeBlockHighlighter`, `languageregistry`.
 - `math/` — motor TeX (`mathblocks`/`texparser`/`mathlayout`/`mathobject`) +
@@ -235,7 +235,37 @@ añadir lógica nueva: hay un `tst_*` por módulo.
   `> \[!NOTE]` de las admoniciones (`mdadmonition::unescapeMarkers`, ver abajo) y
   revierte el sobre-escapado de Qt dentro de los code spans en línea
   (`mdcodespan::unescapeInlineCode`: Qt antepone `\` a `\ & < * [ !` dentro del
-  código, que `setMarkdown` re-lee literal y se duplicaría en cada guardado).
+  código, que `setMarkdown` re-lee literal y se duplicaría en cada guardado), y
+  reinyecta el énfasis de los encabezados (`mdheademph`, abajo).
+- **Énfasis dentro de un encabezado (`mdheademph`).** Otro «lo lee al abrir y lo
+  descarta al guardar» de Qt, este con **pérdida de contenido**: `## uno **negrita**
+  y *cursiva* fin` volvía a disco como `## uno negrita y cursiva fin` (negrita,
+  cursiva y tachado; el código en línea y los enlaces sí los emite). Solo pasa en
+  encabezados: en párrafos, citas, listas, tareas y celdas de tabla Qt emite las
+  marcas bien. El arreglo va en dos mitades porque la información se destruye entre
+  una y otra:
+  - Al **cargar**, `markExplicitBold` anota con `ExplicitBoldProperty` los runs que
+    venían en negrita del fuente. Hay que hacerlo **antes** de que
+    `mdcharfix::repairHeadingRuns` ponga la negrita ESTRUCTURAL en todo el bloque
+    (arriba), porque después las dos negritas son la misma; por eso lo llama esa
+    función y no el pipeline, para que no dependa de que nadie reordene las pasadas.
+    Se distinguen por el tamaño: Qt le pone `FontSizeAdjustment` al run del
+    encabezado y no al span de énfasis (y lo pone en los seis niveles, también el
+    paso 0 del h4). La cursiva y el tachado no necesitan anotarse: un encabezado no
+    los lleva de suyo.
+  - Al **guardar**, `replaceWithSentinels`/`restoreFromSentinels` en
+    `documentMarkdown`, con la misma técnica de centinelas PUA que las fórmulas.
+    Corre **después** de las fórmulas: sus runs son cursiva, y antes saldrían
+    envueltos en `*…*`. Los centinelas van en formato plano (dentro de un span de
+    código Qt escaparía las marcas), los runs contiguos con el mismo énfasis
+    comparten un par (`**x****y**` no es negrita para ningún lector) y no abarcan los
+    espacios de los extremos (`*x *` tampoco lo es).
+
+  *Limitaciones:* la negrita que el usuario aplique a mano dentro de un encabezado no
+  se guarda (el encabezado ya está en negrita, así que no hay nada que la distinga de
+  la estructural; la cursiva y el tachado sí). Y `**` sobre PARTE de un enlace
+  (`[a **b**](u)`) sale como dos enlaces: eso lo parte Qt por su cuenta, también en
+  un párrafo y ya antes de este arreglo.
 - **Front matter.** Si el archivo empieza por `---…---`/`+++…+++`, `DocumentIo` lo
   separa antes de `setMarkdown` (para que no se tome por una regla horizontal), lo
   conserva verbatim y lo reescribe al guardar. No se renderiza ni se edita. Se

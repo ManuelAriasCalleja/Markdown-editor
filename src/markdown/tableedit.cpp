@@ -7,6 +7,7 @@
 #include "admonitions.h"
 #include "codespanfix.h"
 #include "diagramdoc.h"
+#include "headingemphasis.h"
 #include "markdownrender.h"
 #include "mathblocks.h"
 #include "supsub.h"
@@ -192,14 +193,20 @@ QString documentMarkdown(const QTextDocument *doc)
     // «modificado», porque isModified compara la salida de esta función).
     mddiagram::removePreviewBlocks(clone.get());
     const mdmath::MathSentinelTable table = mdmath::replaceMathWithSentinels(clone.get());
+    // Énfasis dentro de un encabezado: toMarkdown lo lee al cargar pero no lo emite al
+    // guardar (`## a **b**` volvía a disco como `## a b`), así que a centinelas también.
+    // DESPUÉS de las fórmulas: sus runs son cursiva, y si siguieran aquí se emitirían
+    // como `*…*` alrededor de una fórmula que ya es su propia sentinela.
+    mdheademph::replaceWithSentinels(clone.get());
     // Super/subíndice de texto: también a centinelas PUA antes de serializar (su
     // formato de vertical-align lo perdería toMarkdown, que no lo sabe emitir).
     mdsupsub::replaceWithSentinels(clone.get());
     const QString md = injectAlignments(clone->toMarkdown(mdrender::kMarkdownFeatures),
                                         columnAlignments(clone.get()));
-    // Reinyecta fórmulas, super/sub y deshace el escape `> \[!NOTE]` de las admoniciones.
-    const QString restored = mdadmonition::unescapeMarkers(
-        mdsupsub::restoreFromSentinels(mdmath::restoreMathFromSentinels(md, table)));
+    // Reinyecta fórmulas, super/sub, el énfasis de los encabezados y deshace el escape
+    // `> \[!NOTE]` de las admoniciones.
+    const QString restored = mdadmonition::unescapeMarkers(mdheademph::restoreFromSentinels(
+        mdsupsub::restoreFromSentinels(mdmath::restoreMathFromSentinels(md, table))));
     // Deshace el sobre-escapado de Qt dentro de los code spans en línea (`\`, `&`…
     // se duplicarían en cada guardado si no; ver mdcodespan).
     return mdcodespan::unescapeInlineCode(restored);

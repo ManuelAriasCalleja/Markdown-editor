@@ -134,6 +134,8 @@ add_library(md-editor-core STATIC
     src/markdown/footnotes.h
     src/markdown/find.cpp
     src/markdown/find.h
+    src/markdown/headingemphasis.cpp
+    src/markdown/headingemphasis.h
     src/markdown/inputrules.cpp
     src/markdown/inputrules.h
     src/markdown/mark.cpp
@@ -570,6 +572,7 @@ if(Qt6Test_FOUND)
         tst_markdowntidy
         tst_codespanfix
         tst_charformatfix
+        tst_headingemphasis
         tst_goldenexport
         tst_recovery
         tst_appsettings

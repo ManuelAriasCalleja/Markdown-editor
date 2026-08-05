@@ -26,6 +26,10 @@ namespace mdcharfix {
 /// texto y «las vigilan» ni grande ni en negrita, como si el encabezado se cortara
 /// a media línea. Se deriva del nivel del bloque (no de otro fragmento) porque un
 /// encabezado puede EMPEZAR por un span, en cuyo caso no queda ninguno bien.
+///
+/// Antes de reponer nada llama a `mdheademph::markExplicitBold`: al poner la negrita
+/// estructural en todo el bloque deja de poder distinguirse del `**` del fuente, y esa
+/// es la única ventana para anotarlo (si no, se perdería al guardar).
 void repairHeadingRuns(QTextDocument *doc);
 
 /// Quita el tamaño de fuente ABSOLUTO que Qt clava en los runs de código (spans en
