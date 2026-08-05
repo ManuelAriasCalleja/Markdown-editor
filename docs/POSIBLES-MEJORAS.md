@@ -1134,6 +1134,18 @@ donde eso decide qué recurso se abre (A4). Nada de esto necesita a B ni a C.
   `mdhelp::headingSlug` normaliza en NFD y filtra: hay que comprobar qué produce con
   encabezados en Han (probablemente anclas vacías o colisiones), y quizá dejar los
   títulos del índice en el original con el chino al lado.
+
+  *A medias (2026-08-05):* está escrito `help-markdown_zh_CN.md` (la página de
+  sintaxis, 14 secciones) y **falta `help-app_zh_CN.md`**, que es el grueso (475
+  líneas). Todavía **no se ha conectado**: ni las entradas del `.qrc` ni las dos
+  listas de `tst_help`, precisamente para no declarar un manual que está a medias —
+  con el `.qrc` puesto, el chino abriría la página de sintaxis y una de aplicación
+  vacía; sin él, sigue cayendo al inglés, que es un estado coherente. Lo que sí se
+  despejó es la duda del ancla: **los ideogramas sobreviven a `headingSlug`**
+  (`isLetterOrNumber` los da por letras), así que el índice enlaza en chino
+  (`](#数学公式)`) sin romanizar nada y sin colisiones; las anclas no se escriben a
+  mano, las genera un script con el mismo algoritmo que el C++. El recuento de
+  encabezados y de anclas coincide con el español, que es lo que compara `tst_help`.
 - ✅ **B4. Fila en `mdexport::languages()`** (`src/export/exporters.cpp:45`), que es
   lo que alimenta el `lang` de ODF/HTML/EPUB y el `babel` de LaTeX. El campo babel
   queda pendiente de lo que se decida en A1; `fo:language`/`fo:country` son
