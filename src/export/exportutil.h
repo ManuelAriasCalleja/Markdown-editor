@@ -25,6 +25,17 @@ struct ImageData {
     bool isNull() const { return bytes.isEmpty(); }
 };
 
+/// \brief ¿El punto de código pertenece a una ESCRITURA CJK (no a un símbolo suelto)?
+///
+/// Ideogramas chinos, kana japonés, hangul coreano, bopomofo y la puntuación y las
+/// formas de ancho completo que los acompañan. La distinción es la clave de dos
+/// arreglos distintos, y por eso la tabla de rangos vive en un solo sitio: un emoji
+/// que no se puede componer se descarta y no pasa nada, pero descartar una escritura
+/// entera es borrar el documento. En LaTeX, lo que caiga aquí se emite y obliga a
+/// xelatex (`latexEscape`); en el PDF, obliga a comprobar que hay fuente que lo
+/// dibuje (`cjkScriptsIn`).
+bool isScriptChar(uint cp);
+
 /// \brief Ruta local legible del recurso `name` resuelta contra `baseUrl` (las rutas
 /// relativas del Markdown), o "" si es remota o no existe.
 QString localFileFor(const QString &name, const QUrl &baseUrl);

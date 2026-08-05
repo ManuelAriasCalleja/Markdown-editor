@@ -678,6 +678,22 @@ una fórmula muy anidada (`\frac{\frac{…}}`, `x^{y^{…}}`) desbordaba la pila
   clona por dentro y el clon copia los recursos explícitos pero NO la baseUrl ni
   la caché: las imágenes relativas desaparecían de la rama sin números de página;
   `bakeImageResources` fija lo resuelto como recurso explícito antes de imprimir.
+- **PDF e impresión: la fuente del chino, el japonés y el coreano.** Aquí el texto se
+  pinta con las fuentes del SISTEMA (a diferencia de HTML/DOCX/ODF/EPUB, donde las
+  pone quien abre el archivo), y lo que ninguna sepa dibujar **no sale, y no deja
+  hueco**: comprobado exportando sin ninguna fuente CJK instalada, del PDF
+  desaparecen el encabezado, la prosa, las celdas de la tabla y el comentario del
+  bloque de código, y el resto del documento sale como si tal cosa —la misma pérdida
+  silenciosa que el LaTeX de antes—. Lo que **no** hace falta es un respaldo de
+  familia al exportar: si hay alguna fuente CJK en el sistema, Qt recurre a ella sola
+  aunque el documento use una latina, y el PDF sale bien y con esa fuente incrustada.
+  Así que el arreglo es avisar: `mdexport::cjkScriptsIn` (pura) dice qué escrituras
+  usa el documento —`han`/`kana`/`hangul` por separado, porque tener fuente china no
+  salva al hangul de un documento coreano— y `ExportController::reportMissingCjkFont`
+  se lo pregunta a `QFontDatabase::families(...)` y avisa **sin bloquear** la
+  exportación, como `reportLatexIssues`. Los rangos que definen «esto es escritura
+  CJK» viven en un solo sitio (`isScriptChar`, en `exportutil.h`): los comparten esta
+  comprobación y el escape de LaTeX, que tienen que estar de acuerdo.
 - **Orquestación dirigida por datos.** Los cinco formatos basados en archivo
   (HTML/ODF/LaTeX/DOCX/EPUB) comparten `ExportController::runExport(FileExporter)`:
   un descriptor declara título/filtro/extensión, mensajes, si pide idioma, si usa el
@@ -687,7 +703,12 @@ una fórmula muy anidada (`\frac{\frac{…}}`, `x^{y^{…}}`) desbordaba la pila
   traducirlos ahí. PDF/impresión van aparte (usan `QPrinter`, no un *writer*).
 - **Idioma del documento**: ODF y LaTeX lo incrustan. Se pregunta al exportar
   (`QInputDialog`), por defecto el `lang`/`language` del front matter › ajuste de la
-  app › locale del sistema. Tabla código→{babel, fo:language} en `mdexport`.
+  app › locale del sistema. Tabla código→{babel, fo:language} en `mdexport`. El
+  código de cada fila es la **etiqueta canónica** (`mdlang::canonicalTag`), por eso
+  el chino es `zh_CN` y no `zh`: simplificado y tradicional son filas distintas. Y su
+  campo babel son **dos opciones**, `provide=*,chinese`: no existe `chinese.ldf`, así
+  que `[chinese]{babel}` aborta con «Unknown option» y `provide=*` —lo que el propio
+  error sugiere— carga el idioma de su `.ini`.
 - **HTML**: el cuerpo lo escribe Qt (`toHtml`), pero `mdexport::toHtmlDocument` le
   añade lo que Qt no pone y el documento sí sabe: `lang` en `<html>` (sin él, ni el
   lector de pantalla ni la separación silábica saben el idioma), `<title>` (sin él

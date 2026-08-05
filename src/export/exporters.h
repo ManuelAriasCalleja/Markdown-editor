@@ -22,9 +22,9 @@ namespace mdexport {
 
 /// \brief Un idioma soportado por la exportación, con los nombres que cada formato pide.
 struct Language {
-    QString code;        ///< ISO 639-1: "es", "en"…
+    QString code;        ///< etiqueta canónica (`mdlang::canonicalTag`): "es", "en", "zh_CN"…
     QString name;        ///< nombre nativo para el selector: "Español", "English"…
-    QString babel;       ///< paquete babel de LaTeX: "spanish", "ngerman"…
+    QString babel;       ///< opciones de babel en LaTeX: "spanish", "ngerman"…
     QString odfLang;     ///< fo:language del ODF: "es"
     QString odfCountry;  ///< fo:country del ODF: "ES"
 };
@@ -35,6 +35,26 @@ QList<Language> languages();
 /// \brief Idioma para un código ISO (admite "es", "es-ES", "es_ES"); si no se reconoce,
 /// devuelve el inglés como recurso seguro.
 Language languageForCode(const QString &code);
+
+/// \brief Escrituras CJK que aparecen en un documento.
+///
+/// Hace falta saberlo antes de imprimir o exportar a PDF: ahí el texto se pinta con
+/// las fuentes del sistema, y lo que ninguna sepa dibujar **no sale**. Y no sale como
+/// una caja vacía, que al menos se vería: desaparece, igual que desaparecía del .tex
+/// antes de A1. Comprobado exportando en un sistema sin ninguna fuente CJK: del PDF
+/// se cae el encabezado, la prosa, las celdas de la tabla y el comentario del bloque
+/// de código, y el resto del documento sale como si tal cosa.
+struct CjkScripts {
+    bool han = false;     ///< ideogramas (chino, y los kanji del japonés)
+    bool kana = false;    ///< hiragana y katakana (japonés)
+    bool hangul = false;  ///< jamo y sílabas hangul (coreano)
+
+    bool any() const { return han || kana || hangul; }
+};
+
+/// \brief Qué escrituras CJK usa el documento (ninguna, en la inmensa mayoría de los
+/// casos). Pura: solo mira el texto, no consulta las fuentes instaladas.
+CjkScripts cjkScriptsIn(const QTextDocument *doc);
 
 /// \brief Valor de una clave del front matter (`clave: valor` o `clave = valor`), sin
 /// comillas envolventes; "" si no está. Sirve para leer `lang`/`language`/`title`.

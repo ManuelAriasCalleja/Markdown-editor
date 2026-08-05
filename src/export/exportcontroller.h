@@ -104,6 +104,14 @@ private:
     // print() de Qt (conducta original).
     void renderToPrinter(QTextDocument *doc, QPrinter *printer) const;
 
+    // Avisa si el documento lleva texto chino, japonés o coreano y en el sistema no
+    // hay NINGUNA fuente que sepa dibujarlo: ese texto no aparece en el PDF ni en el
+    // papel, y no deja ni una caja vacía en su sitio. Es el mismo criterio que en
+    // LaTeX (reportLatexIssues): no se bloquea la exportación —el resto del documento
+    // sale bien— pero tampoco se pierde texto sin decirlo. Sin CJK no hace nada, que
+    // es el caso de casi todos los documentos.
+    void reportMissingCjkFont(const QTextDocument *doc) const;
+
     // Descriptor de un formato de exportación basado en archivo (HTML/ODF/LaTeX/
     // DOCX/EPUB). Los textos van como QT_TRANSLATE_NOOP("MainWindow", ...) para que
     // lupdate los extraiga sin traducirlos aquí; runExport los traduce al usarlos.

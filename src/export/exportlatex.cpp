@@ -63,25 +63,8 @@ const QHash<uint, QString> &highSymbolMap()
     return m;
 }
 
-// ¿El punto de código pertenece a una ESCRITURA (no a un símbolo suelto)? Ideogramas
-// chinos, kana japonés, hangul coreano, bopomofo y la puntuación y las formas de
-// ancho completo que los acompañan. La distinción es la clave de todo esto: un emoji
-// que no se puede componer se descarta y no pasa nada, pero descartar una escritura
-// entera es borrar el documento. Lo que caiga aquí se emite y obliga a xelatex.
-bool isScriptChar(uint cp)
-{
-    return (cp >= 0x1100 && cp <= 0x11FF)     // jamo hangul
-        || (cp >= 0x3000 && cp <= 0x303F)     // puntuación china/japonesa (、。「」)
-        || (cp >= 0x3040 && cp <= 0x30FF)     // hiragana y katakana
-        || (cp >= 0x3100 && cp <= 0x312F)     // bopomofo
-        || (cp >= 0x3130 && cp <= 0x318F)     // jamo hangul de compatibilidad
-        || (cp >= 0x3400 && cp <= 0x4DBF)     // ideogramas, extensión A
-        || (cp >= 0x4E00 && cp <= 0x9FFF)     // ideogramas, bloque principal
-        || (cp >= 0xAC00 && cp <= 0xD7AF)     // sílabas hangul
-        || (cp >= 0xF900 && cp <= 0xFAFF)     // ideogramas de compatibilidad
-        || (cp >= 0xFF00 && cp <= 0xFFEF)     // formas de ancho completo (，！)
-        || (cp >= 0x20000 && cp <= 0x2FA1F);  // ideogramas, extensiones B y siguientes
-}
+// isScriptChar vive en exportutil.h/exporters.cpp: la misma tabla de rangos decide
+// lo que LaTeX conserva y lo que el PDF necesita comprobar (ver `cjkScriptsIn`).
 
 QString latexEscape(const QString &s, LatexIssues *issues = nullptr)
 {
@@ -389,6 +372,11 @@ static QString latexPreamble(const Language &language, const QString &title,
     // El título se escapa lo PRIMERO: puede traer ideogramas él solo (un documento
     // titulado en chino con el cuerpo en español), y de eso depende el preámbulo.
     const QString escapedTitle = title.isEmpty() ? QString() : latexEscape(title, issues);
+    // Lo decide lo que TRAE el documento, no el idioma con el que se exporta: un
+    // documento marcado como chino pero escrito en pinyin no necesita nada de esto y
+    // se queda con el preámbulo portable. Los rótulos que babel pondría en chino
+    // («目录», «表») no llegan a aparecer porque este serializador no emite ni
+    // \tableofcontents ni \caption; comprobado compilándolo con los dos motores.
     const bool cjk = issues && issues->needsUnicodeEngine;
 
     QString out;

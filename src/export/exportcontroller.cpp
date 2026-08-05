@@ -12,6 +12,7 @@
 #include <QFile>
 #include <QMimeData>
 #include <QFileDialog>
+#include <QFontDatabase>
 #include <QSaveFile>
 #include <QFileInfo>
 #include <QInputDialog>
@@ -219,6 +220,7 @@ bool ExportController::print()
         mdexport::cloneForExport(m_editor->document()));
     renderToPrinter(flat.get(), &printer);
     emit statusMessage(QCoreApplication::translate("MainWindow", "Documento enviado a la impresora."), 4000);
+    reportMissingCjkFont(flat.get());  // el papel sufre lo mismo que el PDF
     return true;
 }
 
@@ -349,6 +351,7 @@ bool ExportController::exportPdf()
     renderToPrinter(flat.get(), &printer);
 
     emit statusMessage(QCoreApplication::translate("MainWindow", "Exportado a PDF: %1").arg(path), 4000);
+    reportMissingCjkFont(flat.get());  // el PDF ya está escrito: esto solo informa
     return true;
 }
 
@@ -449,6 +452,41 @@ bool ExportController::exportLatex()
             return true;
         },
     });
+}
+
+void ExportController::reportMissingCjkFont(const QTextDocument *doc) const
+{
+    const mdexport::CjkScripts used = mdexport::cjkScriptsIn(doc);
+    if (!used.any())
+        return;
+
+    // Se pregunta por cada escritura que el documento use, no por «CJK» en bloque:
+    // tener instalada una fuente china no salva al hangul de un documento coreano.
+    // Basta con que a UNA le falte fuente para que se pierda ese texto.
+    const auto noFontFor = [](QFontDatabase::WritingSystem ws) {
+        return QFontDatabase::families(ws).isEmpty();
+    };
+    const bool missing =
+        (used.han && noFontFor(QFontDatabase::SimplifiedChinese)
+         && noFontFor(QFontDatabase::TraditionalChinese) && noFontFor(QFontDatabase::Japanese))
+        || (used.kana && noFontFor(QFontDatabase::Japanese))
+        || (used.hangul && noFontFor(QFontDatabase::Korean));
+    if (!missing)
+        return;
+
+    // Qt recurre por su cuenta a cualquier otra fuente instalada que tenga los
+    // glifos, así que llegar aquí significa que no hay ninguna en todo el sistema: no
+    // es cosa de la fuente elegida en el editor y cambiarla no arregla nada.
+    QMessageBox::warning(
+        m_parent, QCoreApplication::translate("MainWindow", "Fuente no disponible"),
+        QCoreApplication::translate(
+            "MainWindow",
+            "El documento tiene texto en chino, japonés o coreano y en este sistema no "
+            "hay ninguna fuente instalada que sepa dibujarlo: ese texto NO aparecerá en "
+            "el resultado (ni siquiera como recuadros vacíos). El resto del documento "
+            "sale correctamente.\n\n"
+            "Instala una fuente con esas escrituras —por ejemplo «Noto Sans CJK»— y "
+            "vuelve a exportar."));
 }
 
 void ExportController::reportLatexIssues(const mdexport::LatexIssues &issues) const

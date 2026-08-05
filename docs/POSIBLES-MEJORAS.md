@@ -1113,10 +1113,34 @@ donde eso decide qué recurso se abre (A4). Nada de esto necesita a B ni a C.
   `mdhelp::headingSlug` normaliza en NFD y filtra: hay que comprobar qué produce con
   encabezados en Han (probablemente anclas vacías o colisiones), y quizá dejar los
   títulos del índice en el original con el chino al lado.
-- ⬜ **B4. Fila en `mdexport::languages()`** (`src/export/exporters.cpp:45`), que es
+- ✅ **B4. Fila en `mdexport::languages()`** (`src/export/exporters.cpp:45`), que es
   lo que alimenta el `lang` de ODF/HTML/EPUB y el `babel` de LaTeX. El campo babel
   queda pendiente de lo que se decida en A1; `fo:language`/`fo:country` son
   `zh`/`CN`.
+
+  *Hecho (2026-08-05):* fila `zh_CN` / 简体中文 / `provide=*,chinese` / `zh` / `CN`.
+  El campo babel era la incógnita y no se decidía leyendo: **no existe
+  `chinese.ldf`**, así que `\usepackage[chinese]{babel}` aborta con «Unknown option»,
+  y la salida es `provide=*` —que carga el idioma de su `.ini`— que es justo lo que el
+  propio error de babel sugiere. Con eso los rótulos salen en chino («目录», «表 1»),
+  aunque este serializador no llegue a emitirlos (no hay `\tableofcontents` ni
+  `\caption`). Como el campo son las OPCIONES de babel y no una sola, las dos caben
+  sin tocar la estructura.
+  Se probó también atar el preámbulo Unicode al **idioma** y no solo a los caracteres
+  del cuerpo, con la idea de que los rótulos chinos de babel lo necesitaban. Se
+  descartó porque el experimento dijo lo contrario: sin `\tableofcontents` ni
+  `\caption` esos rótulos no aparecen, y forzarlo le quitaba `pdflatex` a un documento
+  marcado como chino pero escrito en pinyin, que compila con los dos motores. Lo fija
+  `latexPreambleFollowsTheTextNotTheLanguage`, para que nadie lo «arregle» de vuelta.
+  Verificado exportando con el código real y compilando: documento con ideogramas →
+  `xelatex` OK y el PDF lleva encabezado, prosa mezclada, celdas de tabla, comentario
+  del bloque de código y la fórmula; el mismo en pinyin → OK con `pdflatex` **y** con
+  `xelatex`. Tests en `languageLookupNormalizesCode`.
+  *Aviso de entorno, ajeno a este cambio:* en esta máquina no está
+  `texlive-lang-spanish`, así que un `.tex` en español falla con el mismo «Unknown
+  option 'spanish'». No es una regresión —el campo babel del español no se ha
+  tocado—, pero sugiere que `provide=*` podría convenirle a todos los idiomas: sería
+  un cambio aparte, con su propia comprobación motor a motor.
 - ⬜ **B5. Excepción explícita en `tst_spellscan`.** El test
   `dictionaryUrlsCoverInterfaceLanguages` (`tests/tst_spellscan.cpp:158`) afirma que
   **todo idioma de la interfaz se puede descargar desde el programa**; el chino sería
@@ -1125,12 +1149,41 @@ donde eso decide qué recurso se abre (A4). Nada de esto necesita a B ni a C.
 - ⬜ **B6. Metadatos y cifras**: `Comment[zh_CN]` en `md-editor.desktop:22`,
   «9 languages» en `packaging/flatpak/…metainfo.xml:23`, «9 idiomas» en
   `packaging/scoop/md-editor.json:3` y «8 idiomas más» en `CLAUDE.md:13`.
-- ⬜ **B7. Comprobar la fuente en el PDF.** El editor usa la fuente del documento;
+- ✅ **B7. Comprobar la fuente en el PDF.** El editor usa la fuente del documento;
   en un sistema cuya fuente no tenga dibujados los ideogramas chinos, el PDF
   exportado saldría con cajas vacías en lugar del texto. Verificar (Linux con y sin
   el paquete de fuentes `fonts-noto-cjk`, Windows, macOS) y, si hace falta, un respaldo
   de familia al exportar. Es lo único de esta fase que no se puede dar por hecho
   desde el código.
+
+  *Hecho (2026-08-05), y el resultado no fue el que anticipaba el punto.* Dos
+  escenarios, exportando a PDF con el camino real (`cloneForExport` +
+  `paintPaginated`) y mirando el PDF con `pdffonts`/`pdftotext`:
+  1. **Con alguna fuente CJK instalada** (aunque el documento use una latina, aquí
+     «DejaVu Sans»): **no hay nada que arreglar**. Qt recurre por su cuenta a otra
+     familia instalada y el PDF sale con el texto y con esas fuentes **incrustadas**.
+     Un respaldo de familia al exportar habría sido código de más.
+  2. **Sin ninguna fuente CJK** (simulado con un `FONTCONFIG_FILE` que solo expone
+     DejaVu): **no salen cajas vacías, sale nada**. El texto chino **desaparece** del
+     PDF —encabezado, prosa, celdas de la tabla, el comentario del bloque de
+     código— y el resto del documento sale como si tal cosa. Es la misma clase de
+     fallo que A1 (pérdida silenciosa), y ningún respaldo de familia lo arregla: no
+     se puede dibujar un glifo que no existe en el sistema.
+
+  El arreglo es, por tanto, **avisar**, no sustituir: `mdexport::cjkScriptsIn`
+  (pura, con test) dice qué escrituras usa el documento y
+  `ExportController::reportMissingCjkFont` pregunta a `QFontDatabase::families(...)`
+  por cada una —tener fuente china no salva al hangul de un documento coreano— y saca
+  un aviso al terminar. No bloquea la exportación, igual que
+  `reportLatexIssues`: el resto del documento sale bien. Va en **PDF e impresión**,
+  que comparten el problema; HTML/DOCX/ODF/EPUB no, porque ahí las fuentes las pone
+  quien abre el archivo.
+  De paso, `isScriptChar` (los rangos que definen «esto es escritura CJK») pasa de
+  ser privado de `exportlatex.cpp` a `exportutil.h`: ahora lo comparten el escape de
+  LaTeX y esta comprobación, y no hay dos tablas de rangos que se puedan desincronizar.
+  *Queda sin comprobar en el sistema real:* Windows y macOS, que traen fuentes CJK de
+  serie (el aviso no debería saltar nunca allí), y que la propia caja de aviso se ve
+  bien —el disparo se ha verificado por sus dos piezas, no abriendo el diálogo—.
 
 #### Fase C — la wiki
 

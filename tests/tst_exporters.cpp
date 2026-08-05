@@ -43,6 +43,8 @@ private slots:
     void latexHeadingNotDoublyBold();
     void latexSanitizesHighUnicode();
     void latexKeepsCjkAndAsksForUnicodeEngine();
+    void latexPreambleFollowsTheTextNotTheLanguage();
+    void cjkScriptsAreDetectedOnePerWritingSystem();
     void latexReportsDroppedSymbols();
     void latexConvertsMathUnicodeToCommands();
     void latexBundlesImagesSelfContained();
@@ -89,6 +91,22 @@ void TestExporters::languageLookupNormalizesCode()
              QStringLiteral("ngerman"));
     // Desconocido → inglés de recurso.
     QCOMPARE(mdexport::languageForCode(QStringLiteral("xx")).code, QStringLiteral("en"));
+
+    // El chino no se puede pedir con `[chinese]{babel}`: no existe `chinese.ldf` y
+    // babel aborta con «Unknown option». La vía es `provide=*`, que es lo que el
+    // propio error indica. Comprobado compilando con xelatex, no leyendo la
+    // documentación: es la única manera de saber si un .tex sirve.
+    const mdexport::Language zh = mdexport::languageForCode(QStringLiteral("zh_CN"));
+    QCOMPARE(zh.code, QStringLiteral("zh_CN"));
+    QCOMPARE(zh.babel, QStringLiteral("provide=*,chinese"));
+    QCOMPARE(zh.odfLang, QStringLiteral("zh"));
+    QCOMPARE(zh.odfCountry, QStringLiteral("CN"));
+    // Cualquier forma de escribirlo lleva a la misma fila (mdlang::canonicalTag).
+    QCOMPARE(mdexport::languageForCode(QStringLiteral("zh-Hans")).code, zh.code);
+    QCOMPARE(mdexport::languageForCode(QStringLiteral("zh_SG")).code, zh.code);
+    // El tradicional todavía no tiene fila: cae al inglés, como cualquier idioma que
+    // no esté en la tabla. Es una fila de una línea el día que se quiera.
+    QCOMPARE(mdexport::languageForCode(QStringLiteral("zh_TW")).code, QStringLiteral("en"));
 }
 
 void TestExporters::frontMatterValueReadsKeys()
@@ -368,6 +386,80 @@ void TestExporters::latexKeepsCjkAndAsksForUnicodeEngine()
     QVERIFY(!none.needsUnicodeEngine);
     QVERIFY(!latin.contains(QStringLiteral("ctex")));
     QVERIFY(latin.contains(QStringLiteral("\\usepackage[utf8]{inputenc}")));  // portable
+}
+
+// Quién decide el preámbulo: lo que el documento TRAE, no el idioma con el que se
+// exporta. Parece que debería ser el idioma —sus rótulos son ideogramas—, y por ahí
+// se empezó; pero este serializador no emite ni \tableofcontents ni \caption, así que
+// esos rótulos no llegan a aparecer, y forzar el motor Unicode por el idioma le
+// quitaba pdflatex a un documento que compila perfectamente con él. Comprobado con
+// los dos motores sobre el .tex que sale de aquí.
+void TestExporters::latexPreambleFollowsTheTextNotTheLanguage()
+{
+    QTextDocument doc;
+    doc.setMarkdown(QStringLiteral("# Zhongwen\n\nDocumento en chino escrito en pinyin.\n"));
+    mdexport::LatexIssues issues;
+    const QString tex = mdexport::toLatex(
+        &doc, mdexport::languageForCode(QStringLiteral("zh_CN")), QString(), QString(), &issues);
+
+    // El idioma sí llega: babel lo lleva con la sintaxis que el chino necesita.
+    QVERIFY(tex.contains(QStringLiteral("\\usepackage[provide=*,chinese]{babel}")));
+    // Pero el documento sigue siendo portable: sin ideogramas, no hay nada que pedirle
+    // a xelatex.
+    QVERIFY(!issues.needsUnicodeEngine);
+    QVERIFY(!tex.contains(QStringLiteral("ctex")));
+    QVERIFY(tex.contains(QStringLiteral("\\usepackage[utf8]{inputenc}")));
+
+    // Con un solo ideograma en el cuerpo, el mismo idioma sí arrastra ctex, y va
+    // ANTES que babel para que los rótulos los siga fijando el idioma del documento.
+    QTextDocument han;
+    han.setMarkdown(QString::fromUtf8("# 中文\n"));
+    mdexport::LatexIssues hanIssues;
+    const QString hanTex = mdexport::toLatex(
+        &han, mdexport::languageForCode(QStringLiteral("zh_CN")), QString(), QString(), &hanIssues);
+    QVERIFY(hanIssues.needsUnicodeEngine);
+    QVERIFY(hanTex.indexOf(QStringLiteral("{ctex}"))
+            < hanTex.indexOf(QStringLiteral("{babel}")));
+}
+
+// Qué escrituras CJK trae el documento, que es lo que hay que preguntarle luego a
+// las fuentes del sistema. Se distinguen las tres porque no se cubren entre sí:
+// tener una fuente china instalada no dibuja el hangul de un documento coreano.
+void TestExporters::cjkScriptsAreDetectedOnePerWritingSystem()
+{
+    const auto scriptsOf = [](const QString &markdown) {
+        QTextDocument doc;
+        doc.setMarkdown(markdown);
+        return mdexport::cjkScriptsIn(&doc);
+    };
+
+    // El caso de casi todos los documentos: nada que comprobar.
+    const mdexport::CjkScripts none = scriptsOf(QStringLiteral("Texto **normal** en español.\n"));
+    QVERIFY(!none.any());
+
+    const mdexport::CjkScripts han = scriptsOf(QString::fromUtf8("# 中文\n\nmezclado con español\n"));
+    QVERIFY(han.han);
+    QVERIFY(!han.kana);
+    QVERIFY(!han.hangul);
+
+    // El japonés lleva kana Y kanji: los kanji son ideogramas, así que marca las dos.
+    const mdexport::CjkScripts ja = scriptsOf(QString::fromUtf8("日本語のテキスト\n"));
+    QVERIFY(ja.kana);
+    QVERIFY(ja.han);
+
+    const mdexport::CjkScripts ko = scriptsOf(QString::fromUtf8("한국어 텍스트\n"));
+    QVERIFY(ko.hangul);
+    QVERIFY(!ko.han);
+    QVERIFY(!ko.kana);
+
+    // La puntuación de ancho completo acompaña a las tres y no dice a cuál: no marca
+    // escritura por su cuenta. Si lo hiciera, un «，» suelto en un documento en
+    // español sacaría un aviso sobre fuentes chinas que no viene a cuento.
+    QVERIFY(!scriptsOf(QString::fromUtf8("Texto con una coma ancha， y ya\n")).any());
+    // Pero acompañando a un ideograma, lo que manda es el ideograma.
+    QVERIFY(scriptsOf(QString::fromUtf8("中文，好\n")).han);
+    // El documento nulo no revienta (rutas de exportación sin documento).
+    QVERIFY(!mdexport::cjkScriptsIn(nullptr).any());
 }
 
 // Lo que sí se descarta (símbolos y emoji) se sigue descartando —rompería

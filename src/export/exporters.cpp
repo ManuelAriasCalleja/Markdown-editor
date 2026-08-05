@@ -5,6 +5,7 @@
 
 #include "exporters.h"
 
+#include "exportutil.h"
 #include "langtag.h"
 #include "mathblocks.h"
 #include "printdecor.h"
@@ -44,6 +45,13 @@ QList<Language> languages()
         {QStringLiteral("pl"), QStringLiteral("Polski"),    QStringLiteral("polish"),     QStringLiteral("pl"), QStringLiteral("PL")},
         {QStringLiteral("nl"), QStringLiteral("Nederlands"),QStringLiteral("dutch"),      QStringLiteral("nl"), QStringLiteral("NL")},
         {QStringLiteral("ro"), QStringLiteral("Română"),    QStringLiteral("romanian"),   QStringLiteral("ro"), QStringLiteral("RO")},
+        // El chino no tiene `chinese.ldf`, así que `[chinese]{babel}` aborta con
+        // «Unknown option»; la vía es `provide=*`, que carga el idioma de su fichero
+        // .ini y es lo que el propio error de babel indica. El campo son las opciones
+        // de babel, no una sola, así que caben las dos. Comprobado compilando: con
+        // `provide=*,chinese` los rótulos salen en chino («目录», «表 1»), aunque este
+        // serializador no llegue a emitirlos (no hay \tableofcontents ni \caption).
+        {QStringLiteral("zh_CN"), QStringLiteral("简体中文"), QStringLiteral("provide=*,chinese"), QStringLiteral("zh"), QStringLiteral("CN")},
     };
 }
 
@@ -58,6 +66,47 @@ Language languageForCode(const QString &code)
         if (l.code == base)
             return l;
     return langs.at(1);  // inglés como recurso seguro
+}
+
+bool isScriptChar(uint cp)
+{
+    return (cp >= 0x1100 && cp <= 0x11FF)     // jamo hangul
+        || (cp >= 0x3000 && cp <= 0x303F)     // puntuación china/japonesa (、。「」)
+        || (cp >= 0x3040 && cp <= 0x30FF)     // hiragana y katakana
+        || (cp >= 0x3100 && cp <= 0x312F)     // bopomofo
+        || (cp >= 0x3130 && cp <= 0x318F)     // jamo hangul de compatibilidad
+        || (cp >= 0x3400 && cp <= 0x4DBF)     // ideogramas, extensión A
+        || (cp >= 0x4E00 && cp <= 0x9FFF)     // ideogramas, bloque principal
+        || (cp >= 0xAC00 && cp <= 0xD7AF)     // sílabas hangul
+        || (cp >= 0xF900 && cp <= 0xFAFF)     // ideogramas de compatibilidad
+        || (cp >= 0xFF00 && cp <= 0xFFEF)     // formas de ancho completo (，！)
+        || (cp >= 0x20000 && cp <= 0x2FA1F);  // ideogramas, extensiones B y siguientes
+}
+
+CjkScripts cjkScriptsIn(const QTextDocument *doc)
+{
+    CjkScripts used;
+    if (!doc)
+        return used;
+    // Se mira el texto plano entero: da igual en qué bloque esté: si un solo
+    // ideograma no tiene fuente, ese ideograma no sale.
+    for (const uint cp : doc->toPlainText().toUcs4()) {
+        if (!isScriptChar(cp))
+            continue;
+        // La puntuación y las formas de ancho completo no se reparten: acompañan a
+        // cualquiera de las tres y no dicen a cuál, así que no marcan escritura
+        // (marcarlas por su cuenta habría hecho saltar el aviso por un solo «，»).
+        if (cp >= 0x3040 && cp <= 0x30FF)
+            used.kana = true;
+        else if ((cp >= 0x1100 && cp <= 0x11FF) || (cp >= 0x3130 && cp <= 0x318F)
+                 || (cp >= 0xAC00 && cp <= 0xD7AF))
+            used.hangul = true;
+        else if ((cp >= 0x3400 && cp <= 0x4DBF) || (cp >= 0x4E00 && cp <= 0x9FFF)
+                 || (cp >= 0xF900 && cp <= 0xFAFF) || (cp >= 0x20000 && cp <= 0x2FA1F)
+                 || (cp >= 0x3100 && cp <= 0x312F))
+            used.han = true;
+    }
+    return used;
 }
 
 QString frontMatterValue(const QString &frontMatter, const QString &key)

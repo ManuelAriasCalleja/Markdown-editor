@@ -252,22 +252,22 @@
 <context>
     <name>HelpDialog</name>
     <message>
-        <location filename="../src/widgets/helpdialog.cpp" line="81"/>
+        <location filename="../src/widgets/helpdialog.cpp" line="85"/>
         <source>Ayuda</source>
         <translation>Ajuda</translation>
     </message>
     <message>
-        <location filename="../src/widgets/helpdialog.cpp" line="85"/>
+        <location filename="../src/widgets/helpdialog.cpp" line="89"/>
         <source>Uso de la aplicación</source>
         <translation>Uso da aplicação</translation>
     </message>
     <message>
-        <location filename="../src/widgets/helpdialog.cpp" line="86"/>
+        <location filename="../src/widgets/helpdialog.cpp" line="90"/>
         <source>Markdown</source>
         <translation>Markdown</translation>
     </message>
     <message>
-        <location filename="../src/widgets/helpdialog.cpp" line="152"/>
+        <location filename="../src/widgets/helpdialog.cpp" line="156"/>
         <source>No se pudo cargar la ayuda.</source>
         <translation>Não foi possível carregar a ajuda.</translation>
     </message>
@@ -1332,73 +1332,73 @@
         <translation>Clique duas vezes na fórmula para editá-la (Ctrl+Shift+F para inserir outra).</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="215"/>
+        <location filename="../src/export/exportcontroller.cpp" line="216"/>
         <source>Imprimir</source>
         <translation>Imprimir</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="221"/>
+        <location filename="../src/export/exportcontroller.cpp" line="222"/>
         <source>Documento enviado a la impresora.</source>
         <translation>Documento enviado para a impressora.</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="86"/>
+        <location filename="../src/export/exportcontroller.cpp" line="87"/>
         <source>Idioma del documento</source>
         <translation>Idioma do documento</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="87"/>
+        <location filename="../src/export/exportcontroller.cpp" line="88"/>
         <source>Idioma para la exportación:</source>
         <translation>Idioma para a exportação:</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="249"/>
-        <location filename="../src/export/exportcontroller.cpp" line="267"/>
+        <location filename="../src/export/exportcontroller.cpp" line="251"/>
+        <location filename="../src/export/exportcontroller.cpp" line="269"/>
         <source>No hay texto seleccionado.</source>
         <translation>Nenhum texto selecionado.</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="254"/>
+        <location filename="../src/export/exportcontroller.cpp" line="256"/>
         <source>Imprimir selección</source>
         <translation>Imprimir seleção</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="258"/>
+        <location filename="../src/export/exportcontroller.cpp" line="260"/>
         <source>Selección enviada a la impresora.</source>
         <translation>Seleção enviada para a impressora.</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="271"/>
+        <location filename="../src/export/exportcontroller.cpp" line="273"/>
         <source>Exportar selección a PDF</source>
         <translation>Exportar seleção para PDF</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="290"/>
+        <location filename="../src/export/exportcontroller.cpp" line="292"/>
         <source>Vista previa de impresión</source>
         <translation>Pré-visualização de impressão</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="317"/>
+        <location filename="../src/export/exportcontroller.cpp" line="319"/>
         <source>Copiado como HTML al portapapeles.</source>
         <translation>Copiado como HTML para a área de transferência.</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="332"/>
+        <location filename="../src/export/exportcontroller.cpp" line="334"/>
         <source>Copiado como Markdown al portapapeles.</source>
         <translation>Copiado como Markdown para a área de transferência.</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="376"/>
+        <location filename="../src/export/exportcontroller.cpp" line="379"/>
         <source>Exportar a ODF</source>
         <translation>Exportar para ODF</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="377"/>
+        <location filename="../src/export/exportcontroller.cpp" line="380"/>
         <source>Documento ODF (*.odt)</source>
         <translation>Documento ODF (*.odt)</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="379"/>
+        <location filename="../src/export/exportcontroller.cpp" line="382"/>
         <source>No se pudo exportar a ODF:
 %1
 
@@ -1409,22 +1409,22 @@
 %2</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="380"/>
+        <location filename="../src/export/exportcontroller.cpp" line="383"/>
         <source>Exportado a ODF: %1</source>
         <translation>Exportado para ODF: %1</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="389"/>
+        <location filename="../src/export/exportcontroller.cpp" line="392"/>
         <source>Exportar a DOCX</source>
         <translation>Exportar para DOCX</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="390"/>
+        <location filename="../src/export/exportcontroller.cpp" line="393"/>
         <source>Documento Word (*.docx)</source>
         <translation>Documento Word (*.docx)</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="392"/>
+        <location filename="../src/export/exportcontroller.cpp" line="395"/>
         <source>No se pudo exportar a DOCX:
 %1
 
@@ -1435,22 +1435,22 @@
 %2</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="393"/>
+        <location filename="../src/export/exportcontroller.cpp" line="396"/>
         <source>Exportado a DOCX: %1</source>
         <translation>Exportado para DOCX: %1</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="402"/>
+        <location filename="../src/export/exportcontroller.cpp" line="405"/>
         <source>Exportar a EPUB</source>
         <translation>Exportar para EPUB</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="403"/>
+        <location filename="../src/export/exportcontroller.cpp" line="406"/>
         <source>Libro EPUB (*.epub)</source>
         <translation>Livro EPUB (*.epub)</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="405"/>
+        <location filename="../src/export/exportcontroller.cpp" line="408"/>
         <source>No se pudo exportar a EPUB:
 %1
 
@@ -1461,48 +1461,62 @@
 %2</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="406"/>
+        <location filename="../src/export/exportcontroller.cpp" line="409"/>
         <source>Exportado a EPUB: %1</source>
         <translation>Exportado para EPUB: %1</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="415"/>
+        <location filename="../src/export/exportcontroller.cpp" line="418"/>
         <source>Exportar a texto plano</source>
         <translation>Exportar para texto simples</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="416"/>
+        <location filename="../src/export/exportcontroller.cpp" line="419"/>
         <source>Texto plano (*.txt)</source>
         <translation>Texto simples (*.txt)</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="419"/>
+        <location filename="../src/export/exportcontroller.cpp" line="422"/>
         <source>Exportado a texto plano: %1</source>
         <translation>Exportado para texto simples: %1</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="432"/>
-        <location filename="../src/export/exportcontroller.cpp" line="475"/>
+        <location filename="../src/export/exportcontroller.cpp" line="435"/>
+        <location filename="../src/export/exportcontroller.cpp" line="513"/>
         <source>Exportar a LaTeX</source>
         <translation>Exportar para LaTeX</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="433"/>
+        <location filename="../src/export/exportcontroller.cpp" line="436"/>
         <source>Documento LaTeX (*.tex)</source>
         <translation>Documento LaTeX (*.tex)</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="436"/>
+        <location filename="../src/export/exportcontroller.cpp" line="439"/>
         <source>Exportado a LaTeX: %1</source>
         <translation>Exportado para LaTeX: %1</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="460"/>
+        <location filename="../src/export/exportcontroller.cpp" line="481"/>
+        <source>Fuente no disponible</source>
+        <translation>Tipo de letra não disponível</translation>
+    </message>
+    <message>
+        <location filename="../src/export/exportcontroller.cpp" line="482"/>
+        <source>El documento tiene texto en chino, japonés o coreano y en este sistema no hay ninguna fuente instalada que sepa dibujarlo: ese texto NO aparecerá en el resultado (ni siquiera como recuadros vacíos). El resto del documento sale correctamente.
+
+Instala una fuente con esas escrituras —por ejemplo «Noto Sans CJK»— y vuelve a exportar.</source>
+        <translation>O documento contém texto em chinês, japonês ou coreano e neste sistema não há nenhum tipo de letra instalado que o saiba desenhar: esse texto NÃO aparecerá no resultado (nem sequer como quadrados vazios). O resto do documento é exportado corretamente.
+
+Instale um tipo de letra com essas escritas — por exemplo «Noto Sans CJK» — e exporte novamente.</translation>
+    </message>
+    <message>
+        <location filename="../src/export/exportcontroller.cpp" line="498"/>
         <source>El documento contiene texto en chino, japonés o coreano. El archivo ya incluye la configuración necesaria, pero hay que compilarlo con «xelatex» o «lualatex»: «pdflatex» no puede componer esas escrituras.</source>
         <translation>O documento contém texto em chinês, japonês ou coreano. O arquivo já inclui a configuração necessária, mas é preciso compilá-lo com «xelatex» ou «lualatex»: o «pdflatex» não consegue compor essas escritas.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/export/exportcontroller.cpp" line="467"/>
+        <location filename="../src/export/exportcontroller.cpp" line="505"/>
         <source>Se ha omitido %n carácter sin equivalente en LaTeX (símbolos o emoji).</source>
         <translation>
             <numerusform>%n caractere sem equivalente em LaTeX foi omitido (símbolos ou emoji).</numerusform>
@@ -1902,29 +1916,29 @@ Deseja recuperá-los?</translation>
         <translation>Linhas de dados:</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="338"/>
+        <location filename="../src/export/exportcontroller.cpp" line="340"/>
         <source>Exportar a PDF</source>
         <translation>Exportar para PDF</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="272"/>
-        <location filename="../src/export/exportcontroller.cpp" line="338"/>
+        <location filename="../src/export/exportcontroller.cpp" line="274"/>
+        <location filename="../src/export/exportcontroller.cpp" line="340"/>
         <source>PDF (*.pdf)</source>
         <translation>PDF (*.pdf)</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="280"/>
-        <location filename="../src/export/exportcontroller.cpp" line="351"/>
+        <location filename="../src/export/exportcontroller.cpp" line="282"/>
+        <location filename="../src/export/exportcontroller.cpp" line="353"/>
         <source>Exportado a PDF: %1</source>
         <translation>Exportado para PDF: %1</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="358"/>
+        <location filename="../src/export/exportcontroller.cpp" line="361"/>
         <source>Exportar a HTML</source>
         <translation>Exportar para HTML</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="359"/>
+        <location filename="../src/export/exportcontroller.cpp" line="362"/>
         <source>HTML (*.html *.htm)</source>
         <translation>HTML (*.html *.htm)</translation>
     </message>
@@ -1937,14 +1951,14 @@ Deseja recuperá-los?</translation>
         <location filename="../src/app/mainwindowsession.cpp" line="198"/>
         <location filename="../src/io/filecontroller.cpp" line="80"/>
         <location filename="../src/io/filecontroller.cpp" line="143"/>
-        <location filename="../src/export/exportcontroller.cpp" line="167"/>
+        <location filename="../src/export/exportcontroller.cpp" line="168"/>
         <source>Error</source>
         <translation>Erro</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="361"/>
-        <location filename="../src/export/exportcontroller.cpp" line="418"/>
-        <location filename="../src/export/exportcontroller.cpp" line="435"/>
+        <location filename="../src/export/exportcontroller.cpp" line="364"/>
+        <location filename="../src/export/exportcontroller.cpp" line="421"/>
+        <location filename="../src/export/exportcontroller.cpp" line="438"/>
         <source>No se pudo escribir:
 %1
 
@@ -1955,7 +1969,7 @@ Deseja recuperá-los?</translation>
 %2</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="362"/>
+        <location filename="../src/export/exportcontroller.cpp" line="365"/>
         <source>Exportado a HTML: %1</source>
         <translation>Exportado para HTML: %1</translation>
     </message>
