@@ -1095,6 +1095,10 @@ donde eso decide qué recurso se abre (A4). Nada de esto necesita a B ni a C.
 
 #### Fase B — la interfaz
 
+**Completa (2026-08-06), los siete puntos.** La interfaz, el manual, la exportación y
+los metadatos están en chino simplificado; queda solo la wiki (fase C), que no la toca
+ningún test ni CI.
+
 - ✅ **B1. `translations/md-editor_zh_CN.ts`** + su línea en `TS_FILES`
   (`CMakeLists.txt:435`). Son **478 mensajes**. `tst_translations` falla ante
   cualquier `type="unfinished"`, así que no admite entrega parcial. El chino tiene
@@ -1125,7 +1129,7 @@ donde eso decide qué recurso se abre (A4). Nada de esto necesita a B ni a C.
   `src/app/mainwindowmenus.cpp:1053` (autónimo, no se traduce). *Hecho (2026-08-05).*
   Se entrega junto a B1 y no antes: el menú que ofrece un idioma sin `.qm` deja al
   usuario en español, que es la misma trampa de orden que C3 antes que C1.
-- ⬜ **B3. El manual**: `src/help/help-app_zh_CN.md` y `help-markdown_zh_CN.md`
+- ✅ **B3. El manual**: `src/help/help-app_zh_CN.md` y `help-markdown_zh_CN.md`
   (**~700 líneas**), sus dos entradas en `src/resources.qrc:30` y el sufijo en las
   dos listas de `tests/tst_help.cpp` (la de idiomas con manual y la fila `zh_CN` de
   `suffixPicksTheManualOfTheLanguage`, que hoy espera `_en`). **Código, ninguno**:
@@ -1146,6 +1150,19 @@ donde eso decide qué recurso se abre (A4). Nada de esto necesita a B ni a C.
   (`](#数学公式)`) sin romanizar nada y sin colisiones; las anclas no se escriben a
   mano, las genera un script con el mismo algoritmo que el C++. El recuento de
   encabezados y de anclas coincide con el español, que es lo que compara `tst_help`.
+
+  *Hecho (2026-08-06):* escrito `help-app_zh_CN.md` (las 27 secciones del español,
+  incluida la tabla de atajos) y **conectado**: las dos entradas del `.qrc` y las dos
+  listas de `tst_help`. Los rótulos de menú del manual no se han traducido de nuevo:
+  salen de `md-editor_zh_CN.ts` (B1), porque un manual que llame a las cosas de otra
+  manera que la interfaz es peor que no tenerlo. Código, ninguno, como decía el punto.
+  La fila `zh_CN` de `suffixPicksTheManualOfTheLanguage` pasa a esperar `_zh_CN` —el
+  sufijo lleva la región, porque `zh_TW` sería otro recurso y no una variante del
+  mismo— y se le añaden las formas que canonizan a simplificado (`zh`, `zh-Hans`,
+  `zh_SG`), que abren las tres el mismo manual, y `zh_HK` junto a `zh_TW`, que siguen
+  cayendo al inglés mientras no exista el tradicional. Aprovechando el repaso, dos
+  cifras que B1 dejó desfasadas en `CLAUDE.md`: la lista de `.ts` y «los 8 .ts
+  objetivo».
 - ✅ **B4. Fila en `mdexport::languages()`** (`src/export/exporters.cpp:45`), que es
   lo que alimenta el `lang` de ODF/HTML/EPUB y el `babel` de LaTeX. El campo babel
   queda pendiente de lo que se decida en A1; `fo:language`/`fo:country` son

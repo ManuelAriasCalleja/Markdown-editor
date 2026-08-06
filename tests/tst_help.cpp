@@ -7,7 +7,7 @@
 
 #include "helpdialog.h"
 
-// La ayuda son 18 archivos Markdown (dos documentos × nueve idiomas) que nadie
+// La ayuda son 20 archivos Markdown (dos documentos × diez idiomas) que nadie
 // compila: un enlace del índice que no cae en ningún encabezado, o una sección
 // que se añade en español y se olvida en las traducciones, no da ningún error —
 // simplemente el usuario pulsa y no pasa nada, o lee un manual incompleto.
@@ -31,9 +31,9 @@ private:
     static QStringList indexAnchors(const QString &markdown);
 };
 
-// Los nueve idiomas con manual: el español es la base (sufijo vacío).
+// Los diez idiomas con manual: el español es la base (sufijo vacío).
 static const char *const kSuffixes[] = {"", "_en", "_de", "_fr", "_it",
-                                        "_pt", "_pl", "_nl", "_ro"};
+                                        "_pt", "_pl", "_nl", "_ro", "_zh_CN"};
 static const char *const kDocuments[] = {"help-app", "help-markdown"};
 
 QString TestHelp::readHelp(const QString &resource)
@@ -95,7 +95,7 @@ void TestHelp::suffixPicksTheManualOfTheLanguage_data()
     QTest::newRow("es-MX") << QStringLiteral("es-MX") << QString();
     QTest::newRow("vacio") << QString() << QString();
 
-    // Los ocho traducidos, en cualquiera de sus formas.
+    // Los nueve traducidos, en cualquiera de sus formas.
     QTest::newRow("de") << QStringLiteral("de") << QStringLiteral("_de");
     QTest::newRow("de_AT") << QStringLiteral("de_AT") << QStringLiteral("_de");
     QTest::newRow("en_US") << QStringLiteral("en_US") << QStringLiteral("_en");
@@ -105,13 +105,19 @@ void TestHelp::suffixPicksTheManualOfTheLanguage_data()
     QTest::newRow("pl") << QStringLiteral("pl") << QStringLiteral("_pl");
     QTest::newRow("nl") << QStringLiteral("nl") << QStringLiteral("_nl");
     QTest::newRow("ro") << QStringLiteral("ro") << QStringLiteral("_ro");
+    // El chino simplificado ya tiene manual; el sufijo lleva la región porque
+    // `zh_TW` es otro recurso, no una variante del mismo (de ahí que las formas de
+    // abajo, que canonizan a simplificado, abran las tres el mismo manual).
+    QTest::newRow("zh_CN") << QStringLiteral("zh_CN") << QStringLiteral("_zh_CN");
+    QTest::newRow("zh") << QStringLiteral("zh") << QStringLiteral("_zh_CN");
+    QTest::newRow("zh-Hans") << QStringLiteral("zh-Hans") << QStringLiteral("_zh_CN");
+    QTest::newRow("zh_SG") << QStringLiteral("zh_SG") << QStringLiteral("_zh_CN");
 
-    // Sin manual traducido → inglés. El chino está aquí mientras no exista
-    // `help-app_zh_CN.md`; el día que se añada al .qrc, esta fila pasará a fallar y
-    // hay que moverla arriba: es justo el aviso que se busca, porque el sufijo lo
-    // decide el recurso y no hay código que tocar para estrenarlo.
-    QTest::newRow("zh_CN") << QStringLiteral("zh_CN") << QStringLiteral("_en");
+    // Sin manual traducido → inglés. El chino tradicional sigue aquí: canoniza a
+    // `zh_TW`, para el que no hay `help-app_zh_TW.md`, así que cae al inglés en vez
+    // de abrir el simplificado.
     QTest::newRow("zh_TW") << QStringLiteral("zh_TW") << QStringLiteral("_en");
+    QTest::newRow("zh_HK") << QStringLiteral("zh_HK") << QStringLiteral("_en");
     QTest::newRow("ja") << QStringLiteral("ja") << QStringLiteral("_en");
     QTest::newRow("desconocido") << QStringLiteral("qqq_XX") << QStringLiteral("_en");
 }

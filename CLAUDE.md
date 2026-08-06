@@ -912,7 +912,7 @@ de `dictionaries/` para quien prefiera esa vía.
 ## Internacionalización (importante y con trampas)
 
 Todos los textos visibles pasan por `tr()`. El idioma de origen es el **español**;
-hay `.ts` para en, de, fr, it, pt, pl, nl, ro en `translations/`. El test
+hay `.ts` para en, de, fr, it, pt, pl, nl, ro, zh_CN en `translations/`. El test
 `tst_translations` (script `tests/check-translations.sh`) **falla** si algún `.ts`
 tiene cadenas sin traducir (`type="unfinished"`) o se desincroniza del código.
 
@@ -920,7 +920,7 @@ Flujo al añadir/cambiar texto con `tr()`:
 
 ```bash
 cmake --build build --target update_translations   # lupdate: refresca los .ts
-# traducir las nuevas entradas en los 8 .ts objetivo, luego recompilar
+# traducir las nuevas entradas en los 9 .ts objetivo, luego recompilar
 ```
 
 - **`md-editor_es.ts` es parcial a propósito** (solo las formas de plural, que el

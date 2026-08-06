@@ -29,5 +29,7 @@
         <file alias="help-markdown_nl.md">help/help-markdown_nl.md</file>
         <file alias="help-app_ro.md">help/help-app_ro.md</file>
         <file alias="help-markdown_ro.md">help/help-markdown_ro.md</file>
+        <file alias="help-app_zh_CN.md">help/help-app_zh_CN.md</file>
+        <file alias="help-markdown_zh_CN.md">help/help-markdown_zh_CN.md</file>
     </qresource>
 </RCC>

@@ -53,8 +53,8 @@ QString mdhelp::helpSuffixForLanguage(const QString &code)
 }
 
 // Declarada en helpdialog.h (namespace mdhelp) para que tst_help pueda validar
-// con ella los índices de los 18 .md de ayuda: cada `](#ancla)` del índice tiene
-// que caer en un encabezado real, en los nueve idiomas.
+// con ella los índices de los 20 .md de ayuda: cada `](#ancla)` del índice tiene
+// que caer en un encabezado real, en los diez idiomas.
 QString mdhelp::headingSlug(const QString &text)
 {
     const QString decomposed = text.normalized(QString::NormalizationForm_D);
