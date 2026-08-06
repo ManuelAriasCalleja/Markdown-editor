@@ -954,6 +954,20 @@ Se elige **simplificado (`zh_CN`)** y no tradicional: es el que cubre más habla
 y el que Qt resuelve por defecto en `zh_Hans`. El tradicional (`zh_TW`) sería una
 segunda tanda con los mismos ficheros, no un `left(2)` del mismo.
 
+- ✅ **El chino tradicional (`zh_TW`) se descarta** (decisión de 2026-08-06, tomada al
+  cerrar las tres fases; no es una tarea pendiente ni un cabo suelto). El motivo no es
+  el trabajo inicial sino el **recurrente**, que es el mismo argumento que ya pesaba
+  contra ampliar el juego de idiomas: con diez, cada `tr()` nuevo son diez `.ts` que
+  traducir antes de que `tst_translations` deje pasar la suite, y cada retoque del
+  manual, diez `.md` × 2. El undécimo idioma añadiría eso, otro manual de ~700 líneas
+  y otras cinco páginas de wiki, para un público que además lee el simplificado con
+  mucha menos fricción de la que hay entre dos idiomas distintos. Lo que **sí** queda
+  hecho es que la infraestructura no le cierra la puerta —`mdlang::canonicalTag`
+  separa las dos escrituras, `helpSuffixForLanguage` elige el manual por el recurso y
+  `mdexport::languages()` tiene una fila por escritura—, así que retomarlo sería
+  traducir, no rediseñar. Lo fija `suffixPicksTheManualOfTheLanguage`, cuyas filas
+  `zh_TW`/`zh_HK` esperan el inglés **a propósito**.
+
 #### Fase A — arreglos de código (previos, independientes del idioma de la interfaz)
 
 **Completa (2026-08-05), los cuatro puntos.** El editor ya no maltrata un documento
