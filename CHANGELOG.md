@@ -5,6 +5,61 @@ Todos los cambios relevantes de **md-editor** se documentan en este archivo.
 El formato sigue, a grandes rasgos, [Keep a Changelog](https://keepachangelog.com/es/),
 y el proyecto usa [versionado semántico](https://semver.org/lang/es/).
 
+## [2.9.0] — 2026-08-06
+
+El décimo idioma de la interfaz, **chino simplificado**, y sobre todo lo que hubo
+que arreglar antes para que mereciera la pena: hasta ahora md-editor **maltrataba un
+documento en chino, japonés o coreano** aunque la interfaz estuviera en español, y lo
+hacía en silencio. De ahí que la mitad de esta versión sean correcciones que le
+sirven también a quien solo cita tres ideogramas en un texto en español.
+
+### Añadido
+- **Interfaz en chino simplificado (简体中文)**, en *Ver → Idioma*: los menús, los
+  diálogos y los mensajes, el **manual integrado** (F1) con sus dos páginas y las
+  cinco páginas de la wiki. El chino tradicional no está: quien tenga el sistema en
+  `zh_TW` seguirá viendo la interfaz en inglés.
+- **Aviso al exportar a LaTeX cuando el documento lleva escritura china, japonesa o
+  coreana.** El `.tex` sale ya con la configuración necesaria (`ctex`), pero hay que
+  compilarlo con `xelatex` o `lualatex`: `pdflatex` no puede componer esas escrituras
+  de ninguna manera, y ahora se detiene con un mensaje que lo dice en vez de con el
+  error indescifrable de LaTeX.
+- **Aviso, también al exportar a LaTeX, de los caracteres que se omiten** por no
+  tener equivalente (emoji, dingbats…). Pasaba desde siempre y en silencio; no
+  bloquea la exportación, solo dice cuántos han sido.
+- **Aviso cuando el PDF va a salir sin el texto chino, japonés o coreano** porque el
+  sistema no tiene ninguna fuente que sepa dibujarlo. Ahí el texto no sale como
+  cuadraditos: **no sale**, y el resto del documento se imprime como si tal cosa.
+  Vale igual para *Imprimir*.
+
+### Corregido
+- **La exportación a LaTeX borraba el texto chino, japonés y coreano, sin avisar.**
+  Un documento entero en esas escrituras producía un `.tex` sin su texto: el
+  descarte de caracteres «raros», puesto para que un emoji no tumbara la
+  compilación, se llevaba por delante los ideogramas. Ahora se distingue una
+  escritura de un símbolo suelto: la escritura se emite siempre.
+- **El corrector ortográfico subrayaba de punta a punta los párrafos en chino,
+  japonés y coreano** —para él, una frase sin espacios era una única palabra de
+  cuarenta caracteres— y, encima, ofrecía instalar un diccionario Hunspell que **no
+  existe** para esos idiomas, con su botón de descarga sin nada que descargar. Ahora
+  no se tokenizan esas escrituras (las palabras latinas intercaladas se siguen
+  corrigiendo) y el programa se limita a decir en la barra de estado que ahí no hay
+  corrección posible.
+- **El contador de palabras contaba un párrafo entero como una palabra** en esos
+  idiomas, que no separan las palabras con espacios, y daba un tiempo de lectura
+  absurdo. Ahora cada ideograma, kana o sílaba hangul cuenta como una palabra y el
+  tiempo suma los dos ritmos de lectura. En un texto latino el recuento no cambia.
+- **Los encabezados perdían la negrita, la cursiva y el tachado al guardar.**
+  `## uno **negrita** y *cursiva* fin` volvía al disco como `## uno negrita y
+  cursiva fin`: pérdida real de contenido, y solo en los encabezados (en párrafos,
+  citas, listas y celdas de tabla se guardaban bien).
+- **Un encabezado se quedaba a medias en cuanto llevaba algo en línea.** Con un
+  fragmento de código, un enlace o una palabra en negrita dentro, ese fragmento y
+  **todo lo que iba detrás** se veían con el tamaño y el peso del cuerpo, no los del
+  encabezado. Se veía en pantalla y se arrastraba a las exportaciones.
+- **El código no seguía al zoom**: los bloques y los fragmentos de código se
+  quedaban al tamaño que tenían al abrir el documento mientras la prosa crecía o
+  menguaba.
+
 ## [2.8.4] — 2026-07-31
 
 Versión de mantenimiento, y con una corrección que valía por sí sola: **el
