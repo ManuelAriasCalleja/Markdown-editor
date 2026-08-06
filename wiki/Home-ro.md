@@ -23,8 +23,8 @@ Markdown curat.
 - **Corector ortografic** opțional (Hunspell) și **diagrame** Mermaid/PlantUML.
 - **Export** în PDF, HTML, ODF (.odt), DOCX (.docx), LaTeX (.tex) și EPUB (.epub),
   păstrând limba documentului și formatul formulelor.
-- **Vizualizare**: 1) 6 teme deschise și întunecate, 2) zoom pentru întreaga interfață,
-  3) interfață tradusă în 9 limbi.
+- **Vizualizare**: 1) 8 teme deschise și întunecate, 2) zoom pentru întreaga interfață,
+  3) interfață tradusă în 10 limbi.
 
 ## Cum începi
 

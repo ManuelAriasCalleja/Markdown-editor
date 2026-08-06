@@ -28,7 +28,8 @@ barras. ESC ou F11 saem.
 
 ## Temas e luz quente noturna
 
-- **Seis temas**: Claro, Escuro, GitHub Light, GitHub Dark, Monokai e Alto contraste.
+- **Oito temas**: Claro, Escuro, GitHub Light, GitHub Dark, Monokai, Alto contraste,
+  Solarized Light e Solarized Dark.
 - **Luz quente noturna** (ativada por predefinição): atenua o azul do fundo de forma
   automática e gradual consoante a hora, para reduzir a fadiga visual à noite.
   Neutra de dia (07–19 h), vai aquecendo à tarde (19–23 h), máxima à noite
@@ -114,5 +115,6 @@ Ctrl+F / Ctrl+H, com anterior/seguinte, substituir tudo e sensibilidade a maiús
 
 ## Internacionalização
 
-Interface em 9 idiomas: espanhol, inglês, alemão, francês, italiano, português, polaco,
-neerlandês e romeno (Exibir → Idioma; aplica-se ao reiniciar).
+Interface em 10 idiomas: espanhol, inglês, alemão, francês, italiano, português, polaco,
+neerlandês, romeno e chinês simplificado (Exibir → Idioma; aplica-se de imediato: a
+janela é reconstruída).

@@ -28,7 +28,8 @@ Leisten. ESC oder F11 verlassen ihn.
 
 ## Designs und warmes Nachtlicht
 
-- **Sechs Designs**: Hell, Dunkel, GitHub Light, GitHub Dark, Monokai und Hoher Kontrast.
+- **Acht Designs**: Hell, Dunkel, GitHub Light, GitHub Dark, Monokai, Hoher Kontrast,
+  Solarized Light und Solarized Dark.
 - **Warmes Nachtlicht** (standardmäßig aktiviert): dämpft das Blau des Hintergrunds
   automatisch und schrittweise je nach Uhrzeit, um die Ermüdung der Augen in der Nacht zu
   verringern. Neutral tagsüber (07–19 Uhr), wird abends wärmer (19–23 Uhr), maximal nachts
@@ -116,6 +117,6 @@ Ctrl+F / Ctrl+H, mit vorherige/nächste, alles ersetzen und Groß-/Kleinschreibu
 
 ## Internationalisierung
 
-Oberfläche in 9 Sprachen: Spanisch, Englisch, Deutsch, Französisch, Italienisch,
-Portugiesisch, Polnisch, Niederländisch und Rumänisch (Ansicht → Sprache; wird beim Neustart
-angewendet).
+Oberfläche in 10 Sprachen: Spanisch, Englisch, Deutsch, Französisch, Italienisch,
+Portugiesisch, Polnisch, Niederländisch, Rumänisch und vereinfachtes Chinesisch
+(Ansicht → Sprache; wird sofort angewendet – das Fenster wird neu aufgebaut).

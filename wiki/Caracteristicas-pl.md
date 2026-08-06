@@ -29,8 +29,8 @@ czytania i bez pasków. ESC lub F11 kończą tryb.
 
 ## Motywy i ciepłe światło nocne
 
-- **Sześć motywów**: Jasny, Ciemny, GitHub Light, GitHub Dark, Monokai i Wysoki
-  kontrast.
+- **Osiem motywów**: Jasny, Ciemny, GitHub Light, GitHub Dark, Monokai, Wysoki
+  kontrast, Solarized Light i Solarized Dark.
 - **Ciepłe światło nocne** (domyślnie włączone): wytłumia niebieski odcień tła
   automatycznie i stopniowo w zależności od pory, aby zmniejszyć zmęczenie wzroku w
   nocy. Neutralne w dzień (07–19 h), ociepla się po południu (19–23 h), maksymalne w
@@ -119,6 +119,6 @@ wielkości liter.
 
 ## Internacjonalizacja
 
-Interfejs w 9 językach: hiszpański, angielski, niemiecki, francuski, włoski,
-portugalski, polski, niderlandzki i rumuński (Widok → Język; stosuje się po ponownym
-uruchomieniu).
+Interfejs w 10 językach: hiszpański, angielski, niemiecki, francuski, włoski,
+portugalski, polski, niderlandzki, rumuński i chiński uproszczony (Widok → Język;
+stosuje się natychmiast — okno jest budowane na nowo).

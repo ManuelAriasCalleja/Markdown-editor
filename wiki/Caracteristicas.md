@@ -28,7 +28,8 @@ barras. ESC o F11 salen.
 
 ## Temas y luz cálida nocturna
 
-- **Seis temas**: Claro, Oscuro, GitHub Light, GitHub Dark, Monokai y Alto contraste.
+- **Ocho temas**: Claro, Oscuro, GitHub Light, GitHub Dark, Monokai, Alto contraste,
+  Solarized Light y Solarized Dark.
 - **Luz cálida nocturna** (activada por defecto): atenúa el azul del fondo de forma
   automática y gradual según la hora, para reducir la fatiga visual de noche.
   Neutra de día (07–19 h), va calentándose por la tarde (19–23 h), máxima de noche
@@ -114,5 +115,6 @@ Ctrl+F / Ctrl+H, con anterior/siguiente, reemplazar todo y sensibilidad a mayús
 
 ## Internacionalización
 
-Interfaz en 9 idiomas: español, inglés, alemán, francés, italiano, portugués, polaco,
-neerlandés y rumano (Ver → Idioma; se aplica al reiniciar).
+Interfaz en 10 idiomas: español, inglés, alemán, francés, italiano, portugués, polaco,
+neerlandés, rumano y chino simplificado (Ver → Idioma; se aplica al instante: la
+ventana se recrea).

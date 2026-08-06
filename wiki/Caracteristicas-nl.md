@@ -28,7 +28,8 @@ werkbalken. ESC of F11 sluiten af.
 
 ## Thema's en warm nachtlicht
 
-- **Zes thema's**: Licht, Donker, GitHub Light, GitHub Dark, Monokai en Hoog contrast.
+- **Acht thema's**: Licht, Donker, GitHub Light, GitHub Dark, Monokai, Hoog contrast,
+  Solarized Light en Solarized Dark.
 - **Warm nachtlicht** (standaard ingeschakeld): dempt het blauw van de achtergrond
   automatisch en geleidelijk naargelang het tijdstip, om vermoeide ogen 's nachts te
   verminderen. Neutraal overdag (07–19 u), wordt 's avonds warmer (19–23 u), maximaal
@@ -117,5 +118,6 @@ Ctrl+F / Ctrl+H, met vorige/volgende, alles vervangen en hoofdlettergevoeligheid
 
 ## Internationalisatie
 
-Interface in 9 talen: Spaans, Engels, Duits, Frans, Italiaans, Portugees, Pools,
-Nederlands en Roemeens (Beeld → Taal; wordt bij het herstarten toegepast).
+Interface in 10 talen: Spaans, Engels, Duits, Frans, Italiaans, Portugees, Pools,
+Nederlands, Roemeens en vereenvoudigd Chinees (Beeld → Taal; wordt direct toegepast —
+het venster wordt opnieuw opgebouwd).

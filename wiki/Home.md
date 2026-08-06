@@ -24,8 +24,8 @@ limpio.
 - **Corrector ortográfico** opcional (Hunspell) y **diagramas** Mermaid/PlantUML.
 - **Exportación** a PDF, HTML, ODF (.odt), DOCX (.docx), LaTeX (.tex) y EPUB (.epub),
   conservando el idioma del documento y el formato de las fórmulas.
-- **Visualización**: 1) 6 temas claros y oscuros, 2) zoom de toda la interfaz, 3)
-  interfaz traducida a 9 idiomas.
+- **Visualización**: 1) 8 temas claros y oscuros, 2) zoom de toda la interfaz, 3)
+  interfaz traducida a 10 idiomas.
 
 ## Empezar
 

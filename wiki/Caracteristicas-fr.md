@@ -29,8 +29,8 @@ barres. ESC ou F11 en sortent.
 
 ## Thèmes et lumière chaude nocturne
 
-- **Six thèmes** : Clair, Sombre, GitHub Light, GitHub Dark, Monokai et Contraste
-  élevé.
+- **Huit thèmes** : Clair, Sombre, GitHub Light, GitHub Dark, Monokai, Contraste
+  élevé, Solarized Light et Solarized Dark.
 - **Lumière chaude nocturne** (activée par défaut) : atténue le bleu du fond de façon
   automatique et progressive selon l'heure, pour réduire la fatigue visuelle la nuit.
   Neutre le jour (07–19 h), elle se réchauffe l'après-midi (19–23 h), atteint son
@@ -121,5 +121,6 @@ Ctrl+F / Ctrl+H, avec précédent/suivant, remplacer tout et sensibilité à la 
 
 ## Internationalisation
 
-Interface en 9 langues : espagnol, anglais, allemand, français, italien, portugais,
-polonais, néerlandais et roumain (Affichage → Langue ; appliquée au redémarrage).
+Interface en 10 langues : espagnol, anglais, allemand, français, italien, portugais,
+polonais, néerlandais, roumain et chinois simplifié (Affichage → Langue ; appliquée
+immédiatement — la fenêtre est reconstruite).

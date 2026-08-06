@@ -25,8 +25,8 @@ schone Markdown geserialiseerd.
 - **Spellingcontrole** optioneel (Hunspell) en **diagrammen** Mermaid/PlantUML.
 - **Export** naar PDF, HTML, ODF (.odt), DOCX (.docx), LaTeX (.tex) en EPUB (.epub),
   met behoud van de taal van het document en de opmaak van de formules.
-- **Weergave**: 1) 6 lichte en donkere thema's, 2) zoom van de hele interface, 3)
-  interface vertaald in 9 talen.
+- **Weergave**: 1) 8 lichte en donkere thema's, 2) zoom van de hele interface, 3)
+  interface vertaald in 10 talen.
 
 ## Beginnen
 

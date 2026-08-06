@@ -25,8 +25,8 @@ wird stets sauberes Markdown serialisiert.
 - **Rechtschreibprüfung** optional (Hunspell) und **Diagramme** Mermaid/PlantUML.
 - **Export** nach PDF, HTML, ODF (.odt), DOCX (.docx), LaTeX (.tex) und EPUB (.epub),
   unter Beibehaltung der Dokumentsprache und der Formatierung der Formeln.
-- **Darstellung**: 1) 6 helle und dunkle Designs, 2) Zoom der gesamten Oberfläche, 3)
-  Oberfläche in 9 Sprachen übersetzt.
+- **Darstellung**: 1) 8 helle und dunkle Designs, 2) Zoom der gesamten Oberfläche, 3)
+  Oberfläche in 10 Sprachen übersetzt.
 
 ## Loslegen
 

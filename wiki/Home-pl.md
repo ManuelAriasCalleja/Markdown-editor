@@ -25,8 +25,8 @@ serializowany do czystego Markdownu.
 - **Sprawdzanie pisowni** opcjonalne (Hunspell) oraz **diagramy** Mermaid/PlantUML.
 - **Eksport** do PDF, HTML, ODF (.odt), DOCX (.docx), LaTeX (.tex) i EPUB (.epub),
   z zachowaniem języka dokumentu i formatowania wzorów.
-- **Wyświetlanie**: 1) 6 motywów jasnych i ciemnych, 2) powiększenie całego interfejsu,
-  3) interfejs przetłumaczony na 9 języków.
+- **Wyświetlanie**: 1) 8 motywów jasnych i ciemnych, 2) powiększenie całego interfejsu,
+  3) interfejs przetłumaczony na 10 języków.
 
 ## Na początek
 

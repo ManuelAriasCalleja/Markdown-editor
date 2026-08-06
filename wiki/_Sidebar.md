@@ -80,3 +80,12 @@
 - [Caracteristici](Caracteristicas-ro)
 - [Scurtături de tastatură](Atajos-ro)
 </details>
+
+<details><summary>简体中文</summary>
+
+- [首页](Home-zh)
+- [安装](Instalacion-zh)
+- [使用](Uso-zh)
+- [功能特性](Caracteristicas-zh)
+- [键盘快捷键](Atajos-zh)
+</details>

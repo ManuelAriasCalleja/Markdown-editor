@@ -28,7 +28,8 @@ ESC sau F11 ies.
 
 ## Teme și lumină caldă nocturnă
 
-- **Șase teme**: Luminoasă, Întunecată, GitHub Light, GitHub Dark, Monokai și Contrast ridicat.
+- **Opt teme**: Luminoasă, Întunecată, GitHub Light, GitHub Dark, Monokai, Contrast
+  ridicat, Solarized Light și Solarized Dark.
 - **Lumina caldă nocturnă** (activată implicit): atenuează albastrul fundalului în mod
   automat și gradual în funcție de oră, pentru a reduce oboseala vizuală pe timpul nopții.
   Neutră ziua (07–19 h), se încălzește seara (19–23 h), maximă noaptea (23–06 h) și se
@@ -115,5 +116,6 @@ majuscule/minuscule.
 
 ## Internaționalizare
 
-Interfață în 9 limbi: spaniolă, engleză, germană, franceză, italiană, portugheză, poloneză,
-neerlandeză și română (Vizualizare → Limbă; se aplică la repornire).
+Interfață în 10 limbi: spaniolă, engleză, germană, franceză, italiană, portugheză, poloneză,
+neerlandeză, română și chineză simplificată (Vizualizare → Limbă; se aplică imediat —
+fereastra este reconstruită).

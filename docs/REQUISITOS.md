@@ -418,7 +418,7 @@ final de este documento).
 
 - **RF-I18N-01 — Idioma de la interfaz.** *Ver → Idioma*: Automático (sistema),
   Español, English, Deutsch, Français, Italiano, Português, Polski, Nederlands,
-  Română (9 idiomas).
+  Română, 简体中文 (10 idiomas).
 - **RF-I18N-02 — Cambio en caliente.** El cambio de idioma se aplica recreando la
   ventana (reabriendo las pestañas); idioma de origen español, respaldo a inglés.
 - **RF-I18N-03 — Cobertura total.** Todos los textos visibles están traducidos; los
@@ -429,7 +429,7 @@ final de este documento).
 
 - **RF-AYU-01 — Manual** (`F1`): ventana no modal con dos secciones («Uso de la
   aplicación» y «Markdown»), renderizadas con el motor del editor y localizadas a los
-  9 idiomas.
+  10 idiomas.
 - **RF-AYU-02 — Acerca de** con datos de autor y versión.
 
 ## 22. Plantillas y snippets
@@ -825,7 +825,7 @@ final de este documento).
 
 ## C20. Internacionalización · _RF-I18N-\*_
 
-- [ ] *Ver → Idioma* ofrece Automático + 9 idiomas; al cambiar, la interfaz se recrea
+- [ ] *Ver → Idioma* ofrece Automático + 10 idiomas; al cambiar, la interfaz se recrea
       y reabre las pestañas, ya traducida. _(RF-I18N-01, RF-I18N-02)_
 - [ ] Revisar que no quedan textos sin traducir en el idioma elegido (los plurales y
       tooltips de atajos correctos). _(RF-I18N-03)_

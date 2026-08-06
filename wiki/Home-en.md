@@ -22,8 +22,8 @@ and edit on either side. On save it always serializes back to clean Markdown.
 - **Spell checker** optional (Hunspell) and **diagrams** Mermaid/PlantUML.
 - **Export** to PDF, HTML, ODF (.odt), DOCX (.docx), LaTeX (.tex) and EPUB (.epub),
   preserving the document language and the formula formatting.
-- **Display**: 1) 6 light and dark themes, 2) full-interface zoom, 3) interface
-  translated into 9 languages.
+- **Display**: 1) 8 light and dark themes, 2) full-interface zoom, 3) interface
+  translated into 10 languages.
 
 ## Getting started
 

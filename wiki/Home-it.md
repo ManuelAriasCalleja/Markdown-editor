@@ -24,8 +24,8 @@ in Markdown pulito.
 - **Correttore ortografico** opzionale (Hunspell) e **diagrammi** Mermaid/PlantUML.
 - **Esportazione** in PDF, HTML, ODF (.odt), DOCX (.docx), LaTeX (.tex) ed EPUB (.epub),
   conservando la lingua del documento e il formato delle formule.
-- **Visualizzazione**: 1) 6 temi chiari e scuri, 2) zoom dell'intera interfaccia, 3)
-  interfaccia tradotta in 9 lingue.
+- **Visualizzazione**: 1) 8 temi chiari e scuri, 2) zoom dell'intera interfaccia, 3)
+  interfaccia tradotta in 10 lingue.
 
 ## Per iniziare
 

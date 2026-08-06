@@ -937,6 +937,11 @@ lo que hay que arreglar es el remate del portugués.
 
 ### Añadir el chino simplificado — `zh_CN` / 简体中文 (2026-08-05)
 
+**Completo (2026-08-06): las tres fases.** El chino simplificado es el décimo idioma
+de la aplicación —interfaz, manual, exportación, metadatos y wiki—, y los cuatro
+arreglos de la fase A le sirven además a cualquiera que escriba CJK con la interfaz en
+otro idioma. Lo que sigue queda como registro de por qué se hizo cada cosa así.
+
 Reabre el punto anterior. La frontera que se puso entonces («solo idiomas a los que
 la aplicación **entera** puede dar servicio») era **técnica, no lingüística**, así
 que el plan la ataca de frente: **primero los cuatro arreglos de código**, que
@@ -1256,20 +1261,49 @@ la carpeta al repositorio `.wiki.git` (`wiki/README.md`), así que aquí el ries
 es romper el build sino **dejarla a medias y que el selector de idioma lleve a un
 404**.
 
-- ⬜ **C1. Las cinco páginas**: `Home-zh.md`, `Instalacion-zh.md`, `Uso-zh.md`,
+**Completa (2026-08-06), los cinco puntos**, y en el orden que el propio plan
+imponía: primero las páginas, después el índice y el selector.
+
+- ✅ **C1. Las cinco páginas**: `Home-zh.md`, `Instalacion-zh.md`, `Uso-zh.md`,
   `Caracteristicas-zh.md`, `Atajos-zh.md` (~380 líneas). Mantener el sufijo de dos
   letras del resto (`-zh`), no `-zh_CN`: es el esquema de nombres que ya usa la wiki
   y GitHub no los interpreta, son solo nombres de página.
-- ⬜ **C2. `wiki/_Sidebar.md`**: un bloque `<details><summary>简体中文</summary>` con
-  los cinco enlaces, al final, como los demás.
-- ⬜ **C3. `wiki/_Footer.md`**: añadir `· [ZH](Home-zh)` al selector de idioma. Es
+
+  *Hecho (2026-08-06):* 358 líneas, con la terminología del manual (B3) y de la
+  interfaz (B1), no una traducción suelta. Los enlaces internos apuntan a las páginas
+  chinas (`[安装](Instalacion-zh)`), como hacen las demás traducciones, y el ancla de
+  `Caracteristicas-zh#tex-公式` sobrevive al *slug* de GitHub igual que en el manual.
+- ✅ **C2. `wiki/_Sidebar.md`**: un bloque `<details><summary>简体中文</summary>` con
+  los cinco enlaces, al final, como los demás. *Hecho (2026-08-06).*
+- ✅ **C3. `wiki/_Footer.md`**: añadir `· [ZH](Home-zh)` al selector de idioma. Es
   **una línea y aparece en todas las páginas**: si se hace antes que C1, cada página
-  de la wiki gana un enlace roto.
-- ⬜ **C4. `wiki/README.md`**: la tabla de páginas (solo documenta el es y el en
+  de la wiki gana un enlace roto. *Hecho (2026-08-06)*, después de C1, y comprobado
+  con un verificador de enlaces sobre las 47 páginas: ningún destino sin página.
+- ✅ **C4. `wiki/README.md`**: la tabla de páginas (solo documenta el es y el en
   explícitamente; conviene que el chino no quede fuera del inventario).
-- ⬜ **C5. La cifra «9 idiomas» dentro del texto de la wiki**: aparece en
+
+  *Hecho (2026-08-06):* en vez de añadir una fila por idioma (que volvería a quedarse
+  corta con el siguiente), la tabla pasa a listar las cinco páginas y **una fila para
+  los sufijos**. Se documenta además por qué el sufijo es de dos letras aunque el
+  idioma tenga variantes, que es la decisión que C1 tomaba sin dejar rastro.
+- ✅ **C5. La cifra «9 idiomas» dentro del texto de la wiki**: aparece en
   `Caracteristicas*.md` y `Home*.md` **de los nueve idiomas**, cada una en su lengua
   («9 Sprachen», «9 languages»…). Es la parte más fácil de olvidar.
+
+  *Hecho (2026-08-06):* los 18 ficheros, y no solo la cifra: la **lista** de idiomas
+  de `Caracteristicas*.md` los enumera uno a uno, así que en cada lengua hay que
+  añadir «chino simplificado» con su conjunción. Fuera de la wiki quedaban tres sitios
+  más con la misma cifra, que se corrigen de paso porque la wiki se genera de ellos:
+  `docs/REQUISITOS.md` (RF-I18N-01, RF-AYU-01 y la lista de comprobación C20) y
+  `dictionaries/README.md`, donde el «9» sí se queda pero pasa a decir **por qué** son
+  nueve y no diez (el chino no tiene diccionario Hunspell).
+
+  Aprovechando que había que tocar esas mismas dos frases en los diez idiomas, se
+  corrigen **dos datos que la wiki daba mal desde antes del chino**, y que un lector
+  chino habría heredado si se hubieran copiado sin más: los temas son **ocho** desde
+  que se añadieron Solarized Light y Solarized Dark (la wiki decía seis en las nueve
+  lenguas), y el cambio de idioma **se aplica al instante** recreando la ventana, no
+  «al reiniciar».
 
 #### Coste y orden
 

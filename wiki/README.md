@@ -12,11 +12,11 @@ cambios relevantes.
 | Archivo | Página en la wiki |
 |---|---|
 | `Home.md` | Inicio (español) |
-| `Home-en.md` | Inicio (inglés) |
 | `Instalacion.md` | Instalación |
 | `Uso.md` | Uso |
 | `Caracteristicas.md` | Características |
 | `Atajos.md` | Atajos de teclado |
+| `*-en`, `-de`, `-fr`, `-it`, `-pt`, `-pl`, `-nl`, `-ro`, `-zh` | las mismas cinco páginas en los otros nueve idiomas (`Home-en.md`, `Uso-zh.md`…) |
 | `_Sidebar.md` | Barra lateral (visible en todas las páginas) |
 | `_Footer.md` | Pie con el selector de idioma (visible en todas las páginas) |
 
@@ -47,14 +47,19 @@ lateral y el selector de idioma solo se escriben una vez.
 
 ## Añadir más idiomas
 
-El proyecto tiene interfaz en 9 idiomas. Para traducir la wiki, duplica cada página
+El proyecto tiene interfaz en 10 idiomas. Para traducir la wiki, duplica cada página
 con el sufijo del idioma (`Instalacion-en`, `Uso-fr`, etc.), enlázalas en
 `_Sidebar.md` y amplía el selector de `_Footer.md`. Por ejemplo:
 
 ```markdown
-🌐 [ES](Home) · [EN](Home-en) · [DE](Home-de) · [FR](Home-fr) · [IT](Home-it) · [PT](Home-pt) · [PL](Home-pl) · [NL](Home-nl) · [RO](Home-ro)
+🌐 [ES](Home) · [EN](Home-en) · [DE](Home-de) · [FR](Home-fr) · [IT](Home-it) · [PT](Home-pt) · [PL](Home-pl) · [NL](Home-nl) · [RO](Home-ro) · [ZH](Home-zh)
 ```
 
-Si mantener 9 idiomas a mano se hace pesado, conviene plantear una migración a
+El sufijo es de **dos letras** aunque el idioma tenga variantes (`-zh`, no `-zh_CN`):
+es el esquema que ya usan las demás páginas y GitHub no lo interpreta, son solo
+nombres de página. El día que se añada el chino tradicional habrá que decidir uno
+(`-zh-tw`), pero no antes.
+
+Si mantener 10 idiomas a mano se hace pesado, conviene plantear una migración a
 **GitHub Pages** con un generador estático (Docusaurus o MkDocs) que ofrezca i18n y
 selector de idioma automáticos.

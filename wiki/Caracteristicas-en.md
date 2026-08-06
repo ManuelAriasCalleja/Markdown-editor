@@ -27,7 +27,8 @@ or F11 exit.
 
 ## Themes and warm night light
 
-- **Six themes**: Light, Dark, GitHub Light, GitHub Dark, Monokai and High contrast.
+- **Eight themes**: Light, Dark, GitHub Light, GitHub Dark, Monokai, High contrast,
+  Solarized Light and Solarized Dark.
 - **Warm night light** (on by default): dims the blue of the background automatically
   and gradually according to the time of day, to reduce eye strain at night. Neutral
   during the day (07–19 h), warming up in the evening (19–23 h), at its maximum at
@@ -112,5 +113,6 @@ Ctrl+F / Ctrl+H, with previous/next, replace all and case sensitivity.
 
 ## Internationalization
 
-Interface in 9 languages: Spanish, English, German, French, Italian, Portuguese,
-Polish, Dutch and Romanian (View → Language; applied on restart).
+Interface in 10 languages: Spanish, English, German, French, Italian, Portuguese,
+Polish, Dutch, Romanian and Simplified Chinese (View → Language; applied instantly —
+the window is rebuilt).

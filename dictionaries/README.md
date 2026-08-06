@@ -31,7 +31,7 @@ documento (`es_ES`, `en_US`, `de_DE`…); ver `mdspell::pickDictionary`.
 - **Licencias**: cada diccionario tiene la suya (GPL/LGPL/MPL/BSD según idioma e
   origen). Hay que respetarlas al redistribuir. El proyecto es GPL-3.0, compatible
   con las habituales, pero la elección de qué incluir es del empaquetador.
-- **Tamaño**: los 9 idiomas suman decenas de MB; no tiene sentido cargar el repo
+- **Tamaño**: los 9 idiomas con diccionario suman decenas de MB; no tiene sentido cargar el repo
   con ellos.
 
 Por eso los `.aff/.dic` están en `.gitignore`: cópialos tú al compilar para
@@ -41,7 +41,8 @@ distribución.
 
 ## Atajo en Linux
 
-Para copiar aquí los diccionarios del sistema de los 9 idiomas de la interfaz:
+Para copiar aquí los diccionarios del sistema de los 9 idiomas de la interfaz que
+tienen diccionario Hunspell (todos menos el chino):
 
 ```sh
 ./scripts/bundle-dictionaries.sh

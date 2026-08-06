@@ -25,8 +25,8 @@ sérialisé en Markdown propre.
 - **Correcteur orthographique** en option (Hunspell) et **diagrammes** Mermaid/PlantUML.
 - **Export** vers PDF, HTML, ODF (.odt), DOCX (.docx), LaTeX (.tex) et EPUB (.epub),
   en conservant la langue du document et le format des formules.
-- **Affichage** : 1) 6 thèmes clairs et sombres, 2) zoom de toute l'interface, 3)
-  interface traduite en 9 langues.
+- **Affichage** : 1) 8 thèmes clairs et sombres, 2) zoom de toute l'interface, 3)
+  interface traduite en 10 langues.
 
 ## Pour commencer
 
