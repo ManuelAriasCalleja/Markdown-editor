@@ -44,6 +44,9 @@
   </screenshots>
 
   <releases>
+    <release version="2.9.0" date="2026-08-06">
+      <url type="details">https://github.com/ManuelAriasCalleja/Markdown-editor/releases/tag/v2.9.0</url>
+    </release>
     <release version="2.8.4" date="2026-07-31">
       <url type="details">https://github.com/ManuelAriasCalleja/Markdown-editor/releases/tag/v2.8.4</url>
     </release>
