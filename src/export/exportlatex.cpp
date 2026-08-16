@@ -63,22 +63,50 @@ const QHash<uint, QString> &highSymbolMap()
     return m;
 }
 
-// isScriptChar vive en exportutil.h/exporters.cpp: la misma tabla de rangos decide
-// lo que LaTeX conserva y lo que el PDF necesita comprobar (ver `cjkScriptsIn`).
+// isCjkScriptChar/isCjkCompanionChar viven en exportutil.h/exporters.cpp: la misma
+// tabla de rangos decide lo que LaTeX conserva y lo que el PDF necesita comprobar
+// (ver `cjkScriptsIn`).
+
+// Un acompañante CJK (`，。`) que NO es texto de esa escritura, plegado a la forma
+// estrecha equivalente, que es el mismo signo y sí lo compone pdflatex. Devuelve el
+// punto de código tal cual si no hay forma estrecha (`。` no la tiene): entonces sigue
+// el camino de cualquier otro símbolo, que es descartarlo contándolo.
+uint foldFullWidth(uint cp)
+{
+    if (cp >= 0xFF01 && cp <= 0xFF5E)  // ＡＢＣ，！ → ABC,!
+        return cp - 0xFEE0;
+    if (cp == 0x3000)  // espacio ideográfico
+        return u' ';
+    return cp;
+}
 
 QString latexEscape(const QString &s, LatexIssues *issues = nullptr)
 {
     QString out;
     out.reserve(s.size());
-    for (const uint cp : s.toUcs4()) {
+    for (const uint raw : s.toUcs4()) {
         // Antes que nada: una escritura se conserva SIEMPRE, esté por encima o por
         // debajo del corte de símbolos (el jamo hangul cae por debajo).
-        if (isScriptChar(cp)) {
-            const char32_t c = cp;  // el overload de uint está obsoleto en Qt 6
+        if (isCjkScriptChar(raw)) {
+            const char32_t c = raw;  // el overload de uint está obsoleto en Qt 6
             out += QString::fromUcs4(&c, 1);
             if (issues)
                 issues->needsUnicodeEngine = true;
             continue;
+        }
+        uint cp = raw;
+        // Su puntuación y las formas de ancho completo solo son texto CJK si el
+        // documento TRAE esa escritura, cosa que toLatex ya ha decidido antes de
+        // serializar nada (y no el orden en que aparezcan los caracteres). Sueltas en
+        // un documento en español son el rastro de un pegado, y no valen un preámbulo
+        // de chino que le quite pdflatex al documento entero.
+        if (isCjkCompanionChar(cp)) {
+            if (issues && issues->needsUnicodeEngine) {
+                const char32_t c = cp;
+                out += QString::fromUcs4(&c, 1);
+                continue;
+            }
+            cp = foldFullWidth(cp);  // `＆` acaba en el switch de abajo, como un `&`
         }
         switch (cp) {
         case u'\\': out += QStringLiteral("\\textbackslash{}"); continue;
@@ -117,13 +145,22 @@ QString codeBlockSanitize(const QString &s, LatexIssues *issues = nullptr)
 {
     QString out;
     out.reserve(s.size());
-    for (const uint cp : s.toUcs4()) {
-        if (isScriptChar(cp)) {  // un comentario en chino dentro del código, p.ej.
-            const char32_t c = cp;  // el overload de uint está obsoleto en Qt 6
+    for (const uint raw : s.toUcs4()) {
+        if (isCjkScriptChar(raw)) {  // un comentario en chino dentro del código, p.ej.
+            const char32_t c = raw;  // el overload de uint está obsoleto en Qt 6
             out += QString::fromUcs4(&c, 1);
             if (issues)
                 issues->needsUnicodeEngine = true;
             continue;
+        }
+        uint cp = raw;
+        if (isCjkCompanionChar(cp)) {  // ver latexEscape: solo es texto CJK en un texto CJK
+            if (issues && issues->needsUnicodeEngine) {
+                const char32_t c = cp;
+                out += QString::fromUcs4(&c, 1);
+                continue;
+            }
+            cp = foldFullWidth(cp);
         }
         if (cp >= kHighSymbolStart) {
             if (issues)
@@ -369,8 +406,6 @@ QString headingCommand(int level, const QString &text)
 static QString latexPreamble(const Language &language, const QString &title,
                              LatexIssues *issues)
 {
-    // El título se escapa lo PRIMERO: puede traer ideogramas él solo (un documento
-    // titulado en chino con el cuerpo en español), y de eso depende el preámbulo.
     const QString escapedTitle = title.isEmpty() ? QString() : latexEscape(title, issues);
     // Lo decide lo que TRAE el documento, no el idioma con el que se exporta: un
     // documento marcado como chino pero escrito en pinyin no necesita nada de esto y
@@ -439,6 +474,13 @@ QString toLatex(const QTextDocument *doc, const Language &language, const QStrin
     // llamante no quiere el parte de incidencias, se tira al salir.
     LatexIssues discarded;
     LatexIssues *issues = issuesOut ? issuesOut : &discarded;
+
+    // Si el documento trae escritura CJK se decide AQUÍ, antes de serializar nada, y
+    // no carácter a carácter: de ello depende si un «，» es texto (documento chino) o
+    // el rastro de un pegado (documento en español), y esa respuesta no puede
+    // depender de si el ideograma que lo acompaña aparece antes o después. El título
+    // cuenta aparte: no está en el documento y puede ser el único que los traiga.
+    issues->needsUnicodeEngine = cjkScriptsIn(doc).any() || cjkScriptsIn(title).any();
 
     // Contexto de conversión de imágenes: si nos dan la ruta del .tex, las imágenes
     // que pdflatex no soporta (SVG…) se rasterizan a un PNG junto a él. Sin ruta
@@ -532,7 +574,15 @@ QString toLatex(const QTextDocument *doc, const Language &language, const QStrin
             continue;
         }
 
-        const QString text = inlineLatex(block, images, issues);
+        // Un encabezado se emite sin \textbf (ya lo compone LaTeX en negrita), y eso
+        // hay que saberlo ANTES de escapar el bloque: pasarlo dos veces por
+        // inlineLatex contaba dos veces los símbolos descartados y escribía DOS copias
+        // de cada imagen traída junto al .tex, la segunda huérfana. Las condiciones
+        // son las de la rama de encabezado de abajo, a la que solo se llega si el
+        // bloque no es un elemento de lista ni parte de una cita.
+        const bool asHeading = bf.headingLevel() >= 1 && !block.textList()
+                               && bf.intProperty(QTextFormat::BlockQuoteLevel) <= 0;
+        const QString text = inlineLatex(block, images, issues, /*ignoreBold=*/asHeading);
 
         // Listas (viñetas, numeradas y tareas) con anidamiento por sangría.
         if (QTextList *list = block.textList()) {
@@ -597,17 +647,16 @@ QString toLatex(const QTextDocument *doc, const Language &language, const QStrin
         closeQuote();
 
         // Encabezado o párrafo normal.
-        const int level = bf.headingLevel();
-        if (level >= 1)
-            body += headingCommand(level,
-                                   inlineLatex(block, images, issues, /*ignoreBold=*/true));
+        if (asHeading)
+            body += headingCommand(bf.headingLevel(), text);
         else
             body += text + QStringLiteral("\n\n");
     }
     closeLists(); closeQuote(); closeCode();
 
-    // El preámbulo va el ÚLTIMO a propósito: depende de lo que haya aparecido en el
-    // cuerpo (los ideogramas cambian los paquetes y el motor exigido).
+    // El preámbulo va el ÚLTIMO a propósito: los paquetes y el motor exigido dependen
+    // de la escritura del documento (que se pre-calculó arriba, sobre el cuerpo y el
+    // título a la vez).
     return latexPreamble(language, title, issues) + body + QStringLiteral("\\end{document}\n");
 }
 

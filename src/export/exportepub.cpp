@@ -30,7 +30,7 @@ QString epubContentXhtml(const QString &bodyInner, const QString &title,
                "<head>\n<meta charset=\"utf-8\"/>\n<title>%2</title>\n"
                "<link rel=\"stylesheet\" type=\"text/css\" href=\"style.css\"/>\n"
                "</head>\n<body>\n%3\n</body>\n</html>\n")
-        .arg(language.code, title.toHtmlEscaped(), bodyInner);
+        .arg(language.bcp47(), title.toHtmlEscaped(), bodyInner);
 }
 
 QByteArray epubContainerXml()
@@ -84,7 +84,7 @@ QByteArray epubContentOpf(const Language &language, const QString &title,
                "    <itemref idref=\"content\"/>\n"
                "  </spine>\n"
                "</package>\n")
-        .arg(uuid, title.toHtmlEscaped(), language.code, modified, images)
+        .arg(uuid, title.toHtmlEscaped(), language.bcp47(), modified, images)
         .toUtf8();
 }
 
@@ -167,7 +167,7 @@ QByteArray epubNavXhtml(const Language &language, const QString &title,
                "<body>\n<nav epub:type=\"toc\" id=\"toc\">\n<h1>%2</h1>\n"
                "%3</nav>\n"
                "</body>\n</html>\n")
-        .arg(language.code, t, list)
+        .arg(language.bcp47(), t, list)
         .toUtf8();
 }
 

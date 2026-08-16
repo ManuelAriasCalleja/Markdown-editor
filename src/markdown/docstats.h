@@ -19,7 +19,7 @@ struct DocStats {
     int chars = 0;           ///< todos los caracteres (incluidos los blancos)
     int charsNoSpaces = 0;   ///< sin espacios ni otros caracteres en blanco
     int paragraphs = 0;      ///< líneas con algún carácter no blanco
-    int sentences = 0;       ///< grupos consecutivos de signos . ! ? … finales
+    int sentences = 0;       ///< grupos consecutivos de signos finales ( . ! ? … 。！？ )
     int cjkChars = 0;        ///< cuántas de las `words` son ideogramas/kana/hangul
     double readingMinutes = 0.0;  ///< ver analyze: las dos escrituras se leen a ritmos distintos
 };

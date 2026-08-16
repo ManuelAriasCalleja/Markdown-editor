@@ -19,6 +19,9 @@ private slots:
     void normalizesParagraphSeparator();
     void countsCjkCharactersAsWords();
     void cjkReadingTimeUsesItsOwnPace();
+    void countsHalfAndFullWidthForms();
+    void countsAstralIdeographs();
+    void countsCjkSentenceTerminators();
 };
 
 void TestDocStats::emptyTextIsAllZero()
@@ -136,6 +139,50 @@ void TestDocStats::cjkReadingTimeUsesItsOwnPace()
     const mdstats::DocStats mix = mdstats::analyze(
         QStringLiteral("palabra ").repeated(200) + han, 200);
     QCOMPARE(mix.readingMinutes, 2.0);
+}
+
+// El bloque de formas de ancho completo y medio tiene de todo, y meterlo entero en
+// «esto corta una palabra latina» sin meterlo en «esto es una palabra CJK» dejaba a
+// sus caracteres sin contar por NADIE: «ＡＢＣ» daba cero palabras y cero tiempo de
+// lectura, que es el mismo disparate que se vino a arreglar.
+void TestDocStats::countsHalfAndFullWidthForms()
+{
+    // Letras y cifras de ancho completo: texto latino escrito ancho, una palabra.
+    QCOMPARE(mdstats::analyze(QString::fromUtf8(u8"ＡＢＣ")).words, 1);
+    QCOMPARE(mdstats::analyze(QString::fromUtf8(u8"ＡＢＣ　１２３")).words, 2);
+    // Su puntuación sigue cortando, igual que la estrecha.
+    QCOMPARE(mdstats::analyze(QString::fromUtf8(u8"ＡＢＣ，ＤＥＦ")).words, 2);
+
+    // Katakana de ancho medio: japonés de verdad (lo escribe cualquier IME), y como
+    // tal cada carácter es una palabra.
+    const mdstats::DocStats ja = mdstats::analyze(QString::fromUtf8(u8"ｶﾀｶﾅ"));
+    QCOMPARE(ja.words, 4);
+    QCOMPARE(ja.cjkChars, 4);
+    QVERIFY(ja.readingMinutes > 0.0);
+}
+
+// Los planos astrales son ideogramas enteros: un nombre propio de la extensión B no
+// era palabra CJK ni cortaba la latina, así que el párrafo salía como UNA palabra.
+void TestDocStats::countsAstralIdeographs()
+{
+    const QString ext = QString::fromUcs4(U"\U00020BB7\U00020BB7");  // 𠮷𠮷
+    const mdstats::DocStats st = mdstats::analyze(ext);
+    QCOMPARE(st.words, 2);
+    QCOMPARE(st.cjkChars, 2);
+    QCOMPARE(st.chars, 2);  // dos puntos de código, no cuatro unidades UTF-16
+
+    // Y cortan la palabra latina en la que aparezcan, como el resto de la escritura.
+    QCOMPARE(mdstats::analyze(QString::fromUcs4(U"uno\U00020BB7dos")).words, 3);
+}
+
+// El chino y el japonés no terminan la frase con un punto ASCII: sin sus signos, el
+// diálogo de estadísticas decía «Frases: 0» para un documento entero en chino.
+void TestDocStats::countsCjkSentenceTerminators()
+{
+    QCOMPARE(mdstats::analyze(QString::fromUtf8(u8"中文。好。")).sentences, 2);
+    QCOMPARE(mdstats::analyze(QString::fromUtf8(u8"好！真的？")).sentences, 2);
+    // Y siguen colapsando en grupo, como los de la ASCII: «。。」» es un final.
+    QCOMPARE(mdstats::analyze(QString::fromUtf8(u8"中文。。好")).sentences, 1);
 }
 
 QTEST_MAIN(TestDocStats)

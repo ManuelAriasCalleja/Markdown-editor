@@ -45,6 +45,8 @@ private slots:
     void latexKeepsCjkAndAsksForUnicodeEngine();
     void latexPreambleFollowsTheTextNotTheLanguage();
     void cjkScriptsAreDetectedOnePerWritingSystem();
+    void latexCompanionCharsDoNotForceTheCjkPreamble();
+    void latexSerializesEachBlockOnce();
     void latexReportsDroppedSymbols();
     void latexConvertsMathUnicodeToCommands();
     void latexBundlesImagesSelfContained();
@@ -60,6 +62,7 @@ private slots:
     void htmlDocumentCarriesLanguageAndTitle();
     void htmlEmbedsImagesSelfContained();
     void epubBuildersAreWellFormedXml();
+    void epubLanguageTagsAreBcp47();
     void epubTocIsBuiltFromHeadings();
     void epubNavNestingIsWellFormed();
     void epubStyleCoversTaskCheckboxes();
@@ -462,6 +465,95 @@ void TestExporters::cjkScriptsAreDetectedOnePerWritingSystem()
     QVERIFY(!mdexport::cjkScriptsIn(nullptr).any());
 }
 
+// La misma regla que `cjkScriptsIn` aplica al aviso de fuentes tiene que valer para
+// el preámbulo: la puntuación CJK y las formas de ancho completo acompañan a las tres
+// escrituras y no son ninguna. Un «，» pegado en un documento en español le cambiaba
+// el preámbulo entero —ctex, `\errmessage` en la rama de pdfTeX y un aviso de que hay
+// que compilar con xelatex— a un documento sin una sola letra china.
+void TestExporters::latexCompanionCharsDoNotForceTheCjkPreamble()
+{
+    QTextDocument doc;
+    doc.setMarkdown(QString::fromUtf8(u8"Una coma pegada de otro sitio， y ya está.\n"));
+    mdexport::LatexIssues issues;
+    const QString tex = mdexport::toLatex(
+        &doc, mdexport::languageForCode(QStringLiteral("es")), QString(), QString(), &issues);
+
+    QVERIFY(!issues.needsUnicodeEngine);
+    QVERIFY(!tex.contains(QStringLiteral("ctex")));
+    QVERIFY(tex.contains(QStringLiteral("\\usepackage[utf8]{inputenc}")));  // sigue portable
+    // Y el signo no se pierde: se pliega a la forma estrecha, que es la misma coma y
+    // esta sí la compone pdflatex.
+    QVERIFY(tex.contains(QStringLiteral("otro sitio, y ya")));
+    QVERIFY(!tex.contains(QString::fromUtf8(u8"，")));
+
+    // Al plegarse puede caer en un carácter especial de LaTeX: hay que escaparlo, no
+    // soltarlo crudo (un `&` suelto es un error de compilación).
+    QTextDocument amp;
+    amp.setMarkdown(QString::fromUtf8(u8"Uno ＆ dos\n"));
+    const QString ampTex =
+        mdexport::toLatex(&amp, mdexport::languageForCode(QStringLiteral("es")), QString());
+    QVERIFY(ampTex.contains(QStringLiteral("Uno \\& dos")));
+
+    // En un documento que SÍ trae la escritura, esa misma puntuación es texto y se
+    // conserva tal cual (ctex la compone).
+    QTextDocument zh;
+    zh.setMarkdown(QString::fromUtf8(u8"中文，好。\n"));
+    mdexport::LatexIssues zhIssues;
+    const QString zhTex = mdexport::toLatex(
+        &zh, mdexport::languageForCode(QStringLiteral("zh_CN")), QString(), QString(), &zhIssues);
+    QVERIFY(zhIssues.needsUnicodeEngine);
+    QVERIFY(zhTex.contains(QString::fromUtf8(u8"中文，好。")));
+
+    // La regla no puede depender del ORDEN: la coma va ANTES del primer ideograma y
+    // tiene que conservarse igual (por eso la escritura se decide antes de serializar).
+    QTextDocument before;
+    before.setMarkdown(QString::fromUtf8(u8"，中文\n"));
+    const QString beforeTex =
+        mdexport::toLatex(&before, mdexport::languageForCode(QStringLiteral("zh_CN")), QString());
+    QVERIFY(beforeTex.contains(QString::fromUtf8(u8"，中文")));
+
+    // Y un título en chino con el cuerpo en español también cuenta como escritura.
+    QTextDocument es;
+    es.setMarkdown(QStringLiteral("Cuerpo en español.\n"));
+    mdexport::LatexIssues titleIssues;
+    mdexport::toLatex(&es, mdexport::languageForCode(QStringLiteral("es")),
+                      QString::fromUtf8(u8"文档"), QString(), &titleIssues);
+    QVERIFY(titleIssues.needsUnicodeEngine);
+}
+
+// Cada bloque se serializa UNA vez. Los encabezados pasaban dos veces por
+// inlineLatex (una para el texto y otra para quitarle la negrita), y eso no es
+// gratis: contaba dos veces los símbolos descartados y escribía DOS copias de cada
+// imagen traída junto al .tex, la segunda huérfana y sin que nadie la referenciara.
+void TestExporters::latexSerializesEachBlockOnce()
+{
+    QTextDocument doc;
+    doc.setMarkdown(QString::fromUtf8(u8"# Titulo 🚀\n"));
+    mdexport::LatexIssues issues;
+    const QString tex = mdexport::toLatex(
+        &doc, mdexport::languageForCode(QStringLiteral("es")), QString(), QString(), &issues);
+    QCOMPARE(issues.droppedSymbols, 1);  // un cohete, contado una vez
+    QVERIFY(tex.contains(QStringLiteral("\\section{Titulo")));
+
+    // Una imagen dentro de un encabezado se trae una sola vez.
+    QTemporaryDir srcDir;
+    QVERIFY(srcDir.isValid());
+    QImage red(10, 10, QImage::Format_RGB32);
+    red.fill(Qt::red);
+    QVERIFY(red.save(srcDir.filePath(QStringLiteral("pic.png")), "PNG"));
+
+    QTextDocument withImage;
+    withImage.setBaseUrl(QUrl::fromLocalFile(srcDir.path() + QLatin1Char('/')));
+    withImage.setMarkdown(QStringLiteral("# Titulo ![a](pic.png)\n"));
+    QTemporaryDir outDir;
+    QVERIFY(outDir.isValid());
+    const QString texPath = outDir.filePath(QStringLiteral("salida.tex"));
+    mdexport::toLatex(&withImage, mdexport::languageForCode(QStringLiteral("es")),
+                      QString(), texPath);
+    QVERIFY(QFile::exists(outDir.filePath(QStringLiteral("salida-img1.png"))));
+    QVERIFY(!QFile::exists(outDir.filePath(QStringLiteral("salida-img2.png"))));
+}
+
 // Lo que sí se descarta (símbolos y emoji) se sigue descartando —rompería
 // pdflatex—, pero ahora se cuenta: antes desaparecía sin que nadie se enterara.
 void TestExporters::latexReportsDroppedSymbols()
@@ -773,6 +865,39 @@ void TestExporters::epubBuildersAreWellFormedXml()
     QVERIFY(opf.contains("dcterms:modified"));
     QVERIFY(isWellFormedXml(mdexport::epubNavXhtml(es, QStringLiteral("T"))));
     QVERIFY(isWellFormedXml(mdexport::epubTocNcx(QStringLiteral("T"), QStringLiteral("abc-123"))));
+}
+
+// El código de idioma del programa es la etiqueta CANÓNICA («zh_CN»), que separa con
+// guion bajo porque así se llaman sus recursos. XML no admite esa forma: `_` no es un
+// separador válido de subetiqueta BCP 47, así que `xml:lang="zh_CN"` invalida el libro
+// para epubcheck y deja al lector sin idioma (separación silábica y lectura en voz
+// alta incluidas). El EPUB es el único formato que emite `code` tal cual —ODF y DOCX
+// van por odfLang/odfCountry—, así que la traducción es suya.
+void TestExporters::epubLanguageTagsAreBcp47()
+{
+    const mdexport::Language zh = mdexport::languageForCode(QStringLiteral("zh_CN"));
+    QCOMPARE(zh.code, QStringLiteral("zh_CN"));  // la canónica no cambia
+    QCOMPARE(zh.bcp47(), QStringLiteral("zh-CN"));
+
+    const QByteArray opf = mdexport::epubContentOpf(
+        zh, QStringLiteral("书"), {}, QStringLiteral("abc-123"),
+        QStringLiteral("2026-01-01T00:00:00Z"));
+    QVERIFY(opf.contains("<dc:language>zh-CN</dc:language>"));
+    QVERIFY(!opf.contains("zh_CN"));
+    QVERIFY(isWellFormedXml(opf));
+
+    const QString xhtml =
+        mdexport::epubContentXhtml(QStringLiteral("<p>x</p>"), QStringLiteral("书"), zh);
+    QVERIFY(xhtml.contains(QStringLiteral("xml:lang=\"zh-CN\"")));
+    QVERIFY(xhtml.contains(QStringLiteral("lang=\"zh-CN\"")));
+    QVERIFY(!xhtml.contains(QStringLiteral("zh_CN")));
+
+    const QByteArray nav = mdexport::epubNavXhtml(zh, QStringLiteral("书"));
+    QVERIFY(nav.contains("xml:lang=\"zh-CN\""));
+    QVERIFY(!nav.contains("zh_CN"));
+
+    // Los nueve idiomas cuyo código no lleva región salen exactamente igual que antes.
+    QCOMPARE(mdexport::languageForCode(QStringLiteral("es")).bcp47(), QStringLiteral("es"));
 }
 
 // El libro llegaba al lector con UNA entrada de índice («el documento»), sin

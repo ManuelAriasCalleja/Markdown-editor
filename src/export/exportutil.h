@@ -25,16 +25,27 @@ struct ImageData {
     bool isNull() const { return bytes.isEmpty(); }
 };
 
-/// \brief ¿El punto de código pertenece a una ESCRITURA CJK (no a un símbolo suelto)?
+/// \brief ¿El punto de código es de una ESCRITURA CJK (no un símbolo suelto)?
 ///
-/// Ideogramas chinos, kana japonés, hangul coreano, bopomofo y la puntuación y las
-/// formas de ancho completo que los acompañan. La distinción es la clave de dos
-/// arreglos distintos, y por eso la tabla de rangos vive en un solo sitio: un emoji
-/// que no se puede componer se descarta y no pasa nada, pero descartar una escritura
-/// entera es borrar el documento. En LaTeX, lo que caiga aquí se emite y obliga a
+/// Ideogramas chinos (incluidos los planos astrales), kana japonés —también el de
+/// ancho medio—, hangul coreano y bopomofo. La distinción es la clave de dos arreglos
+/// distintos, y por eso la tabla de rangos vive en un solo sitio: un emoji que no se
+/// puede componer se descarta y no pasa nada, pero descartar una escritura entera es
+/// borrar el documento. En LaTeX, lo que caiga aquí se emite siempre y obliga a
 /// xelatex (`latexEscape`); en el PDF, obliga a comprobar que hay fuente que lo
 /// dibuje (`cjkScriptsIn`).
-bool isScriptChar(uint cp);
+bool isCjkScriptChar(uint cp);
+
+/// \brief ¿Es un ACOMPAÑANTE de esas escrituras (`，。「」`, formas de ancho completo)?
+///
+/// Va aparte de `isCjkScriptChar` porque no dice nada de la escritura del documento:
+/// acompaña a las tres por igual y aparece suelto en documentos que no son CJK, de
+/// donde llega pegado. Tratarlo como escritura le cambiaba el preámbulo entero a un
+/// documento en español por un solo «，» (y `cjkScriptsIn` ya aplicaba la regla
+/// contraria para el aviso de fuentes, así que los dos consumidores de la misma tabla
+/// no estaban de acuerdo). Quien decide si aquí hay texto o un rastro de un pegado es
+/// el llamante, mirando si el documento trae la escritura de verdad.
+bool isCjkCompanionChar(uint cp);
 
 /// \brief Ruta local legible del recurso `name` resuelta contra `baseUrl` (las rutas
 /// relativas del Markdown), o "" si es remota o no existe.

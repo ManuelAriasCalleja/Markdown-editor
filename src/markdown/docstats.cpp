@@ -12,8 +12,8 @@ namespace {
 
 // ¿Es un carácter de una escritura que no separa las palabras con espacios y en la
 // que, por tanto, cada carácter cuenta como una palabra? Ideogramas chinos, kana
-// japonés y sílabas hangul. NO entra su puntuación (`，。「」`, U+3000-303F y las
-// formas de ancho completo): un signo no es una palabra, aquí tampoco.
+// japonés y sílabas hangul. NO entra su puntuación (`，。「」`, U+3000-303F): un signo
+// no es una palabra, aquí tampoco.
 // (`mdspell` y `mdexport` tienen sus propias copias de rangos parecidos, con otro
 // criterio y otro fin; ninguno de los tres puede depender de los otros dos.)
 bool isCjkWordChar(char32_t c)
@@ -22,7 +22,13 @@ bool isCjkWordChar(char32_t c)
         || (c >= 0x3400 && c <= 0x4DBF)     // ideogramas, extensión A
         || (c >= 0x4E00 && c <= 0x9FFF)     // ideogramas, bloque principal
         || (c >= 0xAC00 && c <= 0xD7AF)     // sílabas hangul
-        || (c >= 0xF900 && c <= 0xFAFF);    // ideogramas de compatibilidad
+        || (c >= 0xF900 && c <= 0xFAFF)     // ideogramas de compatibilidad
+        || (c >= 0xFF66 && c <= 0xFF9F)     // katakana de ancho medio (ｶﾀｶﾅ)
+        || (c >= 0xFFA0 && c <= 0xFFDC)     // jamo hangul de ancho medio
+        // Los planos 2 y 3 son ideográficos enteros. Sin ellos, un nombre propio
+        // escrito con ideogramas de la extensión B (𠮷) no era ni palabra CJK ni
+        // palabra latina: no lo contaba nadie y el párrafo entero salía como una.
+        || (c >= 0x20000 && c <= 0x3FFFF);
 }
 
 // ¿Corta este carácter una palabra latina? Además de los blancos, cualquier cosa de
@@ -30,9 +36,18 @@ bool isCjkWordChar(char32_t c)
 // no un token de cinco caracteres que ningún recuento sabría explicar.
 bool breaksLatinWord(char32_t c)
 {
-    return isCjkWordChar(c)
-        || (c >= 0x3000 && c <= 0x303F)     // puntuación china/japonesa
-        || (c >= 0xFF00 && c <= 0xFFEF);    // formas de ancho completo
+    if (isCjkWordChar(c))
+        return true;
+    if (c >= 0x3000 && c <= 0x303F)     // puntuación china/japonesa
+        return true;
+    // Formas de ancho completo: las letras y las cifras (`ＡＢＣ`, `１２３`) son texto
+    // latino escrito ancho y cuentan como tal —cortar por ellas las dejaba fuera de
+    // los dos recuentos, y «ＡＢＣ» era cero palabras—; su puntuación (`，！`) corta,
+    // igual que corta la de toda la vida.
+    if (c >= 0xFF01 && c <= 0xFF5E)
+        return !QChar::isLetterOrNumber(c - 0xFEE0);
+    return (c >= 0xFF5F && c <= 0xFF65)     // paréntesis anchos y puntuación de ancho medio
+        || (c >= 0xFFE0 && c <= 0xFFEE);    // símbolos de ancho completo y medio (￥│)
 }
 
 }  // namespace
@@ -99,12 +114,17 @@ mdstats::DocStats mdstats::analyze(const QString &input, int wordsPerMinute)
     st.paragraphs = paragraphs;
 
     // Frases: cada grupo consecutivo de signos de fin de frase ( . ! ? … ) cuenta
-    // una vez, de modo que «¿…?», «...» o «!?» no inflan el recuento.
+    // una vez, de modo que «¿…?», «...» o «!?» no inflan el recuento. El chino y el
+    // japonés terminan la frase con SUS signos (`。！？`), no con los de la ASCII: sin
+    // ellos, un documento entero en chino salía con «Frases: 0».
     int sentences = 0;
     bool inTerminator = false;
     for (const QChar &c : text) {
         const bool term = c == QLatin1Char('.') || c == QLatin1Char('!')
-                          || c == QLatin1Char('?') || c == QChar(0x2026);  // …
+                          || c == QLatin1Char('?') || c == QChar(0x2026)   // …
+                          || c == QChar(0x3002)                            // 。
+                          || c == QChar(0xFF01) || c == QChar(0xFF1F)      // ！？
+                          || c == QChar(0xFF0E) || c == QChar(0xFF61);     // ．｡
         if (term && !inTerminator)
             ++sentences;
         inTerminator = term;

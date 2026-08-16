@@ -465,7 +465,14 @@ añadir lógica nueva: hay un `tst_*` por módulo.
   cuenta como una palabra (y corta la palabra latina en la que aparezca: `混合
   español` son tres), su puntuación no cuenta, y el tiempo suma los dos ritmos
   porque no se leen igual de rápido (`wordsPerMinute * 2` para los ideogramas). Para
-  un texto latino el resultado es idéntico al de antes.
+  un texto latino el resultado es idéntico al de antes. Dos cosas que la primera
+  versión de esos rangos se dejó fuera y no contaba **nadie** (ni palabra latina ni
+  palabra CJK, así que desaparecían del recuento): el bloque de ancho completo y
+  medio, que no es homogéneo —las letras y cifras (`ＡＢＣ`) son texto latino escrito
+  ancho, el katakana de ancho medio (`ｶﾀｶﾅ`) es japonés y solo su puntuación corta—,
+  y los planos astrales 2 y 3, ideográficos enteros (`𠮷`, de uso corriente en
+  nombres propios). Las frases se cuentan además por `。！？`: con los signos de la
+  ASCII solamente, un documento en chino salía con «Frases: 0».
 - **Diagramas (opcional, Mermaid/PlantUML).** Como Mermaid es JS y PlantUML es
   Java, no hay motor C++: se renderizan ejecutando la herramienta externa
   (`plantuml` / `mmdc`) si está instalada — degradación elegante, **sin
@@ -692,8 +699,21 @@ una fórmula muy anidada (`\frac{\frac{…}}`, `x^{y^{…}}`) desbordaba la pila
   salva al hangul de un documento coreano— y `ExportController::reportMissingCjkFont`
   se lo pregunta a `QFontDatabase::families(...)` y avisa **sin bloquear** la
   exportación, como `reportLatexIssues`. Los rangos que definen «esto es escritura
-  CJK» viven en un solo sitio (`isScriptChar`, en `exportutil.h`): los comparten esta
-  comprobación y el escape de LaTeX, que tienen que estar de acuerdo.
+  CJK» viven en un solo sitio (`cjkKindOf`, en `exporters.cpp`, tras
+  `isCjkScriptChar`/`isCjkCompanionChar` de `exportutil.h`): los comparten esta
+  comprobación y el escape de LaTeX, que tienen que estar de acuerdo. Y la
+  distinción **escritura / acompañante** es justo donde dejaron de estarlo: la
+  puntuación CJK y las formas de ancho completo (`，。「」`) acompañan a las tres
+  escrituras y no son ninguna, así que no marcan escritura para el aviso de fuentes
+  —si lo hicieran, un solo «，» sacaría un aviso sobre fuentes chinas en un documento
+  en español—, pero la tabla del exportador de LaTeX sí las trataba como escritura y
+  a ese mismo documento le cambiaba el preámbulo entero (ctex, `\errmessage` en la
+  rama de pdfTeX y la exigencia de xelatex) por un carácter pegado. Ahora **el
+  acompañante solo es texto CJK si el documento trae la escritura**, cosa que
+  `toLatex` decide de una vez antes de serializar nada (no carácter a carácter, que
+  dependería de si el ideograma aparece antes o después); suelto, se pliega a su
+  forma estrecha (`＆` → `\&`, escapado como el signo que ahora es) y el `.tex` se
+  queda portable.
 - **Orquestación dirigida por datos.** Los cinco formatos basados en archivo
   (HTML/ODF/LaTeX/DOCX/EPUB) comparten `ExportController::runExport(FileExporter)`:
   un descriptor declara título/filtro/extensión, mensajes, si pide idioma, si usa el
@@ -759,13 +779,20 @@ una fórmula muy anidada (`\frac{\frac{…}}`, `x^{y^{…}}`) desbordaba la pila
     arranque de una lista numerada (`5.` → `\setcounter{enumi}{4}`), el nivel de
     las citas anidadas, y que una lista o un bloque de código **dentro** de una
     cita siguen dentro de ella (`BlockQuoteLevel` los marca).
+  - **Cada bloque se serializa una sola vez.** `inlineLatex` no es una función pura
+    que se pueda llamar dos veces por si acaso: cuenta incidencias en `LatexIssues`
+    y **escribe las imágenes** junto al `.tex`. Los encabezados pasaban dos veces
+    (una para el texto y otra con `ignoreBold`), así que informaban del doble de
+    símbolos descartados y dejaban dos copias de cada imagen, la segunda huérfana.
+    Si el bloque es un encabezado se decide **antes** de escaparlo.
   - **Una escritura no es un símbolo suelto.** El descarte de todo lo que pasa de
     `kHighSymbolStart` (0x2190) está bien para un emoji, pero los ideogramas chinos
     empiezan en U+4E00: un documento en chino, japonés o coreano exportaba **a un
-    `.tex` sin su texto, y en silencio**. `isScriptChar` separa ambos casos: lo que
-    es escritura (Han, kana, hangul, bopomofo, su puntuación y las formas de ancho
-    completo) **se emite siempre**; lo que es símbolo se sigue descartando, pero
-    ahora **se cuenta**. Las dos cosas salen por `LatexIssues` (parámetro de salida
+    `.tex` sin su texto, y en silencio**. `isCjkScriptChar` separa ambos casos: lo
+    que es escritura (Han —planos astrales incluidos—, kana, hangul, bopomofo)
+    **se emite siempre**; lo que es símbolo se sigue descartando, pero ahora **se
+    cuenta**. Su puntuación va por `isCjkCompanionChar` y no es lo uno ni lo otro:
+    ver arriba, en el aviso de fuentes del PDF. Las dos cosas salen por `LatexIssues` (parámetro de salida
     de `toLatex`), y quien traduce y avisa es `ExportController::reportLatexIssues`
     —el módulo es puro y no traduce—. **No se bloquea la exportación**: el chino en
     LaTeX funciona, solo que con otro motor, y bloquear castigaría a quien cita tres
@@ -805,8 +832,16 @@ una fórmula muy anidada (`\frac{\frac{…}}`, `x^{y^{…}}`) desbordaba la pila
   `META-INF/container.xml`, OPF, `nav.xhtml`, `toc.ncx`, CSS, un XHTML) con el QZip
   privado. **Reutiliza el HTML de Qt** (`toHtml`) como cuerpo, saneado a XHTML con
   `htmlBodyToXhtml` (`&nbsp;`→`&#160;`, elementos vacíos cerrados). Las piezas XML
-  son funciones puras (`epubContentOpf`, `epubNavXhtml`, etc.). Tres cosas que hay
-  que mantener, las tres nacidas de un libro que salía mal:
+  son funciones puras (`epubContentOpf`, `epubNavXhtml`, etc.). Cuatro cosas que hay
+  que mantener, las cuatro nacidas de un libro que salía mal:
+  - El idioma va por **`Language::bcp47()`, no por `Language::code`**. El `code` es
+    la etiqueta canónica del programa (`mdlang::canonicalTag`), que separa con `_`
+    porque así se llaman sus recursos; XML no admite esa forma, así que un
+    `xml:lang="zh_CN"`/`<dc:language>zh_CN</dc:language>` invalida el libro entero
+    para epubcheck y deja al lector sin idioma (separación silábica y lectura en voz
+    alta incluidas). El EPUB es el único formato que emite `code` tal cual —ODF y
+    DOCX van por `odfLang`/`odfCountry`, y por eso no les pasó—, y no se vio hasta
+    que hubo un idioma con región: los otros nueve son iguales en las dos formas.
   - **El índice se arma con los encabezados** (`mdoutline::headingsOf`), anidado por
     niveles, y `epubAnchorHeadings` pone un `id` a cada `<hN>` del cuerpo para que
     los enlaces salten a alguna parte. Antes el libro llegaba al lector con una sola

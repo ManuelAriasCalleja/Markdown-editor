@@ -68,45 +68,78 @@ Language languageForCode(const QString &code)
     return langs.at(1);  // inglés como recurso seguro
 }
 
-bool isScriptChar(uint cp)
+namespace {
+
+/// A qué escritura CJK pertenece un carácter, si es que pertenece a alguna.
+enum class CjkKind { None, Han, Kana, Hangul, Companion };
+
+/// Una SOLA tabla de rangos para las tres preguntas que se le hacen a un carácter:
+/// de qué escritura es (`cjkScriptsIn`, para el aviso de fuentes del PDF), si hay que
+/// conservarlo pase lo que pase (`latexEscape`) y si es solo un acompañante que no
+/// dice a cuál de las tres acompaña. Tenerla repartida por consumidor fue justo lo
+/// que dejó a los dos primeros aplicando criterios distintos.
+CjkKind cjkKindOf(uint cp)
 {
-    return (cp >= 0x1100 && cp <= 0x11FF)     // jamo hangul
-        || (cp >= 0x3000 && cp <= 0x303F)     // puntuación china/japonesa (、。「」)
-        || (cp >= 0x3040 && cp <= 0x30FF)     // hiragana y katakana
-        || (cp >= 0x3100 && cp <= 0x312F)     // bopomofo
-        || (cp >= 0x3130 && cp <= 0x318F)     // jamo hangul de compatibilidad
-        || (cp >= 0x3400 && cp <= 0x4DBF)     // ideogramas, extensión A
-        || (cp >= 0x4E00 && cp <= 0x9FFF)     // ideogramas, bloque principal
-        || (cp >= 0xAC00 && cp <= 0xD7AF)     // sílabas hangul
-        || (cp >= 0xF900 && cp <= 0xFAFF)     // ideogramas de compatibilidad
-        || (cp >= 0xFF00 && cp <= 0xFFEF)     // formas de ancho completo (，！)
-        || (cp >= 0x20000 && cp <= 0x2FA1F);  // ideogramas, extensiones B y siguientes
+    if ((cp >= 0x3040 && cp <= 0x30FF)       // hiragana y katakana
+        || (cp >= 0xFF66 && cp <= 0xFF9F))   // katakana de ancho medio (ｶﾀｶﾅ)
+        return CjkKind::Kana;
+    if ((cp >= 0x1100 && cp <= 0x11FF)       // jamo hangul
+        || (cp >= 0x3130 && cp <= 0x318F)    // jamo hangul de compatibilidad
+        || (cp >= 0xAC00 && cp <= 0xD7AF)    // sílabas hangul
+        || (cp >= 0xFFA0 && cp <= 0xFFDC))   // jamo hangul de ancho medio
+        return CjkKind::Hangul;
+    if ((cp >= 0x3100 && cp <= 0x312F)       // bopomofo
+        || (cp >= 0x3400 && cp <= 0x4DBF)    // ideogramas, extensión A
+        || (cp >= 0x4E00 && cp <= 0x9FFF)    // ideogramas, bloque principal
+        || (cp >= 0xF900 && cp <= 0xFAFF)    // ideogramas de compatibilidad
+        // Los planos 2 y 3 son ideográficos ENTEROS (extensiones B a I y las que
+        // vengan): cortar en el final de una extensión concreta dejaba fuera los
+        // ideogramas de las siguientes, que son nombres propios de uso corriente.
+        || (cp >= 0x20000 && cp <= 0x3FFFF))
+        return CjkKind::Han;
+    if ((cp >= 0x3000 && cp <= 0x303F)       // puntuación china/japonesa (、。「」)
+        || (cp >= 0xFF01 && cp <= 0xFF65)    // formas de ancho completo y medio (，！｡)
+        || (cp >= 0xFFE0 && cp <= 0xFFEE))   // símbolos de ancho completo y medio (￥│)
+        return CjkKind::Companion;
+    return CjkKind::None;
+}
+
+}  // namespace
+
+bool isCjkScriptChar(uint cp)
+{
+    const CjkKind kind = cjkKindOf(cp);
+    return kind != CjkKind::None && kind != CjkKind::Companion;
+}
+
+bool isCjkCompanionChar(uint cp)
+{
+    return cjkKindOf(cp) == CjkKind::Companion;
+}
+
+CjkScripts cjkScriptsIn(const QString &text)
+{
+    CjkScripts used;
+    for (const uint cp : text.toUcs4()) {
+        // Los acompañantes no se reparten: la puntuación y las formas de ancho
+        // completo valen para cualquiera de las tres y no dicen a cuál, así que no
+        // marcan escritura (marcarlas habría sacado el aviso por un solo «，»).
+        switch (cjkKindOf(cp)) {
+        case CjkKind::Kana:   used.kana = true; break;
+        case CjkKind::Hangul: used.hangul = true; break;
+        case CjkKind::Han:    used.han = true; break;
+        case CjkKind::Companion:
+        case CjkKind::None:   break;
+        }
+    }
+    return used;
 }
 
 CjkScripts cjkScriptsIn(const QTextDocument *doc)
 {
-    CjkScripts used;
-    if (!doc)
-        return used;
-    // Se mira el texto plano entero: da igual en qué bloque esté: si un solo
+    // Se mira el texto plano entero: da igual en qué bloque esté, si un solo
     // ideograma no tiene fuente, ese ideograma no sale.
-    for (const uint cp : doc->toPlainText().toUcs4()) {
-        if (!isScriptChar(cp))
-            continue;
-        // La puntuación y las formas de ancho completo no se reparten: acompañan a
-        // cualquiera de las tres y no dicen a cuál, así que no marcan escritura
-        // (marcarlas por su cuenta habría hecho saltar el aviso por un solo «，»).
-        if (cp >= 0x3040 && cp <= 0x30FF)
-            used.kana = true;
-        else if ((cp >= 0x1100 && cp <= 0x11FF) || (cp >= 0x3130 && cp <= 0x318F)
-                 || (cp >= 0xAC00 && cp <= 0xD7AF))
-            used.hangul = true;
-        else if ((cp >= 0x3400 && cp <= 0x4DBF) || (cp >= 0x4E00 && cp <= 0x9FFF)
-                 || (cp >= 0xF900 && cp <= 0xFAFF) || (cp >= 0x20000 && cp <= 0x2FA1F)
-                 || (cp >= 0x3100 && cp <= 0x312F))
-            used.han = true;
-    }
-    return used;
+    return doc ? cjkScriptsIn(doc->toPlainText()) : CjkScripts();
 }
 
 QString frontMatterValue(const QString &frontMatter, const QString &key)

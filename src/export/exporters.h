@@ -27,6 +27,16 @@ struct Language {
     QString babel;       ///< opciones de babel en LaTeX: "spanish", "ngerman"…
     QString odfLang;     ///< fo:language del ODF: "es"
     QString odfCountry;  ///< fo:country del ODF: "ES"
+
+    /// \brief El código como etiqueta de idioma BCP 47 ("zh_CN" → "zh-CN").
+    ///
+    /// `code` es la etiqueta CANÓNICA del programa, que separa con `_` porque así se
+    /// llaman los recursos (traducciones, manual). XML no admite esa forma: el guion
+    /// bajo no es un separador válido de subetiqueta, así que un `xml:lang="zh_CN"`
+    /// invalida el EPUB entero para epubcheck y deja al lector sin saber el idioma
+    /// (separación silábica y lectura en voz alta incluidas). Los nueve idiomas cuyo
+    /// código no lleva región salen igual que antes.
+    QString bcp47() const { return QString(code).replace(QLatin1Char('_'), QLatin1Char('-')); }
 };
 
 /// \brief Los idiomas ofrecidos en el diálogo de exportación (los mismos que la UI).
@@ -55,6 +65,9 @@ struct CjkScripts {
 /// \brief Qué escrituras CJK usa el documento (ninguna, en la inmensa mayoría de los
 /// casos). Pura: solo mira el texto, no consulta las fuentes instaladas.
 CjkScripts cjkScriptsIn(const QTextDocument *doc);
+/// \brief Igual, sobre un texto suelto: el título de la exportación no está en el
+/// documento y puede traer ideogramas él solo.
+CjkScripts cjkScriptsIn(const QString &text);
 
 /// \brief Valor de una clave del front matter (`clave: valor` o `clave = valor`), sin
 /// comillas envolventes; "" si no está. Sirve para leer `lang`/`language`/`title`.
