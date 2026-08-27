@@ -5,6 +5,44 @@ Todos los cambios relevantes de **md-editor** se documentan en este archivo.
 El formato sigue, a grandes rasgos, [Keep a Changelog](https://keepachangelog.com/es/),
 y el proyecto usa [versionado semántico](https://semver.org/lang/es/).
 
+## [2.9.1] — 2026-08-27
+
+Versión de mantenimiento: dos regresiones que estropeaban lo impreso y lo
+exportado, la revisión del soporte CJK que estrenó la 2.9.0, y una barra de tabla
+que tapaba el texto en vez de dejarlo leer.
+
+### Corregido
+- **El PDF y la impresión salían con la tinta del tema de pantalla, no en negro.**
+  Con un tema oscuro, el documento entero se imprimía en su color de texto claro
+  sobre el blanco del papel —con Solarized Dark, ilegible de punta a punta—.
+  Ocurría solo con los números de página activados, que es la rama que pagina a
+  mano. Los colores propios del documento (enlaces, código resaltado,
+  admoniciones) se siguen respetando.
+- **El EPUB salía con un idioma que no es válido en XML** (`xml:lang="zh_CN"`):
+  epubcheck rechazaba el libro y el lector se quedaba sin idioma —separación
+  silábica y lectura en voz alta incluidas—. Solo afectaba al chino, el único
+  idioma con región.
+- **Un solo signo de puntuación chino cambiaba el `.tex` entero.** Bastaba un «，»
+  pegado en un documento en español para que la exportación a LaTeX exigiera
+  compilar con `xelatex` y avisara de una escritura que el documento no tenía.
+  Ahora la puntuación de ancho completo solo cuenta como texto chino, japonés o
+  coreano si el documento trae de verdad esa escritura; suelta se escapa como el
+  signo que es y el `.tex` se queda portable.
+- **La exportación a LaTeX dejaba una copia huérfana de cada imagen** que hubiera
+  en un encabezado, y contaba el doble de símbolos descartados de los que había.
+- **Las estadísticas no veían parte del texto chino, japonés y coreano.** Las
+  formas de ancho completo y medio («ＡＢＣ», «ｶﾀｶﾅ») y los ideogramas de los
+  planos astrales no los contaba nadie, y un documento entero en chino salía con
+  «Frases: 0» porque no se reconocía «。！？» como fin de frase.
+
+### Cambiado
+- **La barra de herramientas de tabla es ahora una fila propia sobre el editor**,
+  en vez de flotar pegada al borde superior de la tabla. Ahí caía casi siempre
+  sobre la última línea del párrafo anterior y sus iconos opacos la dejaban
+  ilegible. Como fila no tapa nada; a cambio, el documento se desplaza un poco al
+  aparecer. De paso, se oculta también en el modo fuente y sus iconos siguen al
+  tema y al zoom mientras está visible.
+
 ## [2.9.0] — 2026-08-06
 
 El décimo idioma de la interfaz, **chino simplificado**, y sobre todo lo que hubo
@@ -667,7 +705,9 @@ aplicaba; la suite pasa en build normal y bajo ASan+UBSan, y clang-tidy queda li
 - CI/CD multiplataforma (Linux AppImage, Windows ZIP, macOS DMG) y publicación
   de releases por tag.
 
-[Sin publicar]: https://github.com/ManuelAriasCalleja/Markdown-editor/compare/v2.8.4...HEAD
+[Sin publicar]: https://github.com/ManuelAriasCalleja/Markdown-editor/compare/v2.9.1...HEAD
+[2.9.1]: https://github.com/ManuelAriasCalleja/Markdown-editor/compare/v2.9.0...v2.9.1
+[2.9.0]: https://github.com/ManuelAriasCalleja/Markdown-editor/compare/v2.8.4...v2.9.0
 [2.8.4]: https://github.com/ManuelAriasCalleja/Markdown-editor/compare/v2.8.3...v2.8.4
 [2.8.3]: https://github.com/ManuelAriasCalleja/Markdown-editor/compare/v2.8.2...v2.8.3
 [2.8.2]: https://github.com/ManuelAriasCalleja/Markdown-editor/compare/v2.8.1...v2.8.2
