@@ -685,6 +685,18 @@ una fórmula muy anidada (`\frac{\frac{…}}`, `x^{y^{…}}`) desbordaba la pila
   clona por dentro y el clon copia los recursos explícitos pero NO la baseUrl ni
   la caché: las imágenes relativas desaparecían de la rama sin números de página;
   `bakeImageResources` fija lo resuelto como recurso explícito antes de imprimir.
+- **PDF e impresión: la tinta es NEGRA, no la del tema.** El texto sin color propio
+  se pinta con la paleta de la **aplicación**, así que el tema de pantalla se colaba
+  en el papel: con Solarized Dark, el PDF entero salía en el crema del tema
+  (#eee8d5) sobre blanco, ilegible de punta a punta. `QTextDocument::print()` fuerza
+  el negro por su cuenta, pero la rama con números de página pagina a mano y usaba
+  `drawContents`, que **no** lo hace (pinta con `QPalette()` = la de la app). Por eso
+  cada página va por `mdexport::paintDocumentPage`, que arma el `PaintContext` con
+  `QPalette::Text` en negro; el pie del número también fija su lápiz. Los colores
+  explícitos del documento (enlaces, resaltado horneado del código, admoniciones)
+  viven en los formatos de carácter y no los toca esto. Lo vigila
+  `printedPageUsesBlackInkNotThemeColor` en `tst_exporters`, que pinta sobre un
+  QImage con una paleta clara y exige tinta oscura.
 - **PDF e impresión: la fuente del chino, el japonés y el coreano.** Aquí el texto se
   pinta con las fuentes del SISTEMA (a diferencia de HTML/DOCX/ODF/EPUB, donde las
   pone quien abre el archivo), y lo que ninguna sepa dibujar **no sale, y no deja

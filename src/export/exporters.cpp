@@ -19,6 +19,7 @@
 #include <QFont>
 #include <QFontMetricsF>
 #include <QPainter>
+#include <QPalette>
 #include <QPrinter>
 #include <QRegularExpression>
 #include <QTextBlock>
@@ -377,6 +378,23 @@ void clampImagesToWidth(QTextDocument *doc, qreal maxWidth, qreal dpiScale)
     }
 }
 
+void paintDocumentPage(QPainter *painter, QTextDocument *doc, const QRectF &pageBody)
+{
+    if (!painter || !doc)
+        return;
+    // Tinta del texto que NO lleva color propio: negra, como el papel espera. No
+    // vale `QTextDocument::drawContents`, que pinta con la paleta de la APLICACIÓN
+    // (ver la nota de la cabecera): con un tema oscuro el cuerpo salía impreso en
+    // el color de texto del tema sobre el blanco del papel.
+    QAbstractTextDocumentLayout::PaintContext ctx;
+    ctx.palette.setColor(QPalette::Text, Qt::black);
+    ctx.clip = pageBody;
+    painter->save();
+    painter->setClipRect(pageBody, Qt::IntersectClip);
+    doc->documentLayout()->draw(painter, ctx);
+    painter->restore();
+}
+
 void paintPaginated(QPrinter *printer, QTextDocument *doc, bool footerPageNumbers)
 {
     if (!printer || !doc)
@@ -406,12 +424,13 @@ void paintPaginated(QPrinter *printer, QTextDocument *doc, bool footerPageNumber
         const QRectF pageBody(0, bodySize.height() * i, bodySize.width(), bodySize.height());
         painter.setClipRect(QRectF(0, 0, bodySize.width(), bodySize.height()));
         painter.translate(0, -pageBody.top());
-        doc->drawContents(&painter, pageBody);
+        paintDocumentPage(&painter, doc, pageBody);
         painter.restore();
         // Pie con el número de página, centrado bajo el cuerpo.
         if (footerPageNumbers) {
             painter.save();
             painter.setFont(doc->defaultFont());
+            painter.setPen(Qt::black);  // el pie es tinta, no color de tema
             const QRectF footer(0, bodySize.height(), printable.width(), footerH);
             painter.drawText(footer, Qt::AlignHCenter | Qt::AlignVCenter,
                              mdprintdecor::pageNumberText(i + 1, pages));

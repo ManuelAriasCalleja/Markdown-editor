@@ -5,7 +5,10 @@
 #include <QDir>
 #include <QFile>
 #include <QFont>
+#include <QGuiApplication>
 #include <QImage>
+#include <QPainter>
+#include <QPalette>
 #include <QTemporaryDir>
 #include <QTextBlock>
 #include <QTextCursor>
@@ -74,6 +77,7 @@ private slots:
     void printClampsOversizedImages();
     void printBakesRelativeImageResources();
     void cloneNormalizesFontSizeAwayFromZoom();
+    void printedPageUsesBlackInkNotThemeColor();
     void cloneCodeInheritsBodyFontSize();
 };
 
@@ -1199,6 +1203,42 @@ void TestExporters::cloneCodeInheritsBodyFontSize()
                                         .arg(it.fragment().text())));
     // El HTML no emite el tamaño de pantalla en el código.
     QVERIFY(!flat->toHtml().contains(QStringLiteral("font-size:30")));
+}
+
+// El texto SIN color propio se imprime en negro, venga de donde venga el tema de
+// pantalla. Regresión real: al paginar a mano (los números de página) se usaba
+// `QTextDocument::drawContents`, que pinta con la paleta de la APLICACIÓN; con un
+// tema oscuro el PDF salía con el cuerpo en el color de texto del tema (un crema
+// casi blanco) sobre el blanco del papel, ilegible de punta a punta.
+void TestExporters::printedPageUsesBlackInkNotThemeColor()
+{
+    const QPalette saved = QGuiApplication::palette();
+    QPalette dark = saved;
+    dark.setColor(QPalette::Text, QColor(0xee, 0xe8, 0xd5));  // Solarized Dark
+    dark.setColor(QPalette::WindowText, QColor(0xee, 0xe8, 0xd5));
+    QGuiApplication::setPalette(dark);
+
+    QTextDocument doc;
+    doc.setMarkdown(QStringLiteral("Texto del cuerpo sin color propio.\n"));
+    doc.setPageSize(QSizeF(400, 400));
+
+    QImage paper(400, 200, QImage::Format_RGB32);
+    paper.fill(Qt::white);
+    {
+        QPainter painter(&paper);
+        mdexport::paintDocumentPage(&painter, &doc, QRectF(0, 0, 400, 200));
+    }
+    QGuiApplication::setPalette(saved);
+
+    // Tiene que haber tinta oscura sobre el papel: con el fallo, el píxel más
+    // oscuro de la página era el propio crema del tema (238, 232, 213).
+    int darkest = 255;
+    for (int y = 0; y < paper.height(); ++y)
+        for (int x = 0; x < paper.width(); ++x)
+            darkest = qMin(darkest, qGray(paper.pixel(x, y)));
+    QVERIFY2(darkest < 64, qPrintable(QStringLiteral("píxel más oscuro: %1 (el texto "
+                                                     "sale con el color del tema)")
+                                          .arg(darkest)));
 }
 
 QTEST_MAIN(TestExporters)

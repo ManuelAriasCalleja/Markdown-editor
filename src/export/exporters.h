@@ -8,6 +8,8 @@
 #include <QList>
 #include <QString>
 
+class QPainter;
+class QRectF;
 class QTextDocument;
 class QPrinter;
 
@@ -254,6 +256,18 @@ void clampImagesToWidth(QTextDocument *doc, qreal maxWidth, qreal dpiScale = 1.0
 /// del PDF cuando los números de página están desactivados (la rama `doc->print`).
 /// MUTA `doc` (pásale un clon, como hacen las rutas de impresión).
 void bakeImageResources(QTextDocument *doc);
+
+/// \brief Pinta en `painter` la franja `pageBody` de `doc` (una página), con la
+/// tinta del PAPEL: el texto sin color propio sale negro.
+///
+/// No vale `QTextDocument::drawContents`: pinta con un PaintContext cuya paleta es
+/// la de la APLICACIÓN, así que con un tema oscuro el cuerpo salía impreso en el
+/// color de texto del tema (un crema casi blanco en Solarized Dark) sobre el blanco
+/// del papel — ilegible. `QTextDocument::print()` fuerza el negro por su cuenta; al
+/// pintar nosotros la paginación hay que hacer lo mismo. Los colores explícitos del
+/// documento (enlaces, resaltado del código, admoniciones) viven en los formatos de
+/// carácter y no los toca esto.
+void paintDocumentPage(QPainter *painter, QTextDocument *doc, const QRectF &pageBody);
 
 /// \brief Vuelca `doc` en `printer` paginando A MANO con QPainter/newPage(), para
 /// poder añadir un pie con el número de página (`footerPageNumbers`). Reserva la
