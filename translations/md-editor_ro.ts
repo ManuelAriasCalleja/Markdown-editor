@@ -109,7 +109,7 @@
         <translation>Începe să scrii. Formatează cu bara de instrumente sau tastând Markdown.</translation>
     </message>
     <message>
-        <location filename="../src/editor/editorstack.cpp" line="723"/>
+        <location filename="../src/editor/editorstack.cpp" line="736"/>
         <source>Fórmula: %1</source>
         <translation>Formulă: %1</translation>
     </message>
@@ -1172,17 +1172,17 @@
         <translation>Colorează fundalul editorului în chihlimbar în funcție de oră, mai cald noaptea</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="1072"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="1073"/>
         <source>A&amp;yuda</source>
         <translation>A&amp;jutor</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="1073"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="1074"/>
         <source>&amp;Manual</source>
         <translation>&amp;Manual</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="1077"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="1078"/>
         <source>&amp;Acerca de</source>
         <translation>&amp;Despre</translation>
     </message>
@@ -1202,7 +1202,7 @@
         <translation>Editor WYSIWYG Markdown în Qt6 + C++17.</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="1083"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="1084"/>
         <source>Formato</source>
         <translation>Format</translation>
     </message>
@@ -2124,7 +2124,7 @@ Dorești să îl recuperezi?</translation>
         <translation>Centrează linia cursorului și estompează tot în afară de paragraful curent</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="1056"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="1057"/>
         <source>Idioma</source>
         <translation>Limbă</translation>
     </message>
@@ -3099,37 +3099,42 @@ Acesta este un editor Markdown **vizual**: scrii și formatezi pe textul deja ra
 <context>
     <name>TableToolbar</name>
     <message>
-        <location filename="../src/widgets/tabletoolbar.cpp" line="22"/>
+        <location filename="../src/widgets/tabletoolbar.cpp" line="19"/>
+        <source>Herramientas de tabla</source>
+        <translation>Instrumente pentru tabel</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/tabletoolbar.cpp" line="28"/>
         <source>Insertar fila debajo</source>
         <translation>Inserează rând dedesubt</translation>
     </message>
     <message>
-        <location filename="../src/widgets/tabletoolbar.cpp" line="23"/>
+        <location filename="../src/widgets/tabletoolbar.cpp" line="29"/>
         <source>Eliminar fila</source>
         <translation>Șterge rândul</translation>
     </message>
     <message>
-        <location filename="../src/widgets/tabletoolbar.cpp" line="24"/>
+        <location filename="../src/widgets/tabletoolbar.cpp" line="30"/>
         <source>Insertar columna a la derecha</source>
         <translation>Inserează coloană la dreapta</translation>
     </message>
     <message>
-        <location filename="../src/widgets/tabletoolbar.cpp" line="25"/>
+        <location filename="../src/widgets/tabletoolbar.cpp" line="31"/>
         <source>Eliminar columna</source>
         <translation>Șterge coloana</translation>
     </message>
     <message>
-        <location filename="../src/widgets/tabletoolbar.cpp" line="26"/>
+        <location filename="../src/widgets/tabletoolbar.cpp" line="32"/>
         <source>Alinear la columna a la izquierda</source>
         <translation>Aliniază coloana la stânga</translation>
     </message>
     <message>
-        <location filename="../src/widgets/tabletoolbar.cpp" line="27"/>
+        <location filename="../src/widgets/tabletoolbar.cpp" line="33"/>
         <source>Centrar la columna</source>
         <translation>Centrează coloana</translation>
     </message>
     <message>
-        <location filename="../src/widgets/tabletoolbar.cpp" line="28"/>
+        <location filename="../src/widgets/tabletoolbar.cpp" line="34"/>
         <source>Alinear la columna a la derecha</source>
         <translation>Aliniază coloana la dreapta</translation>
     </message>

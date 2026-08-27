@@ -5,6 +5,7 @@
 /// \brief Conjunto completo de un documento abierto (editor y sus colaboradores): la unidad por pestaña.
 
 #include <QWidget>
+#include <QColor>
 #include <QString>
 #include <QList>
 #include <QTextEdit>  // para QTextEdit::ExtraSelection en las firmas de las capas
@@ -236,7 +237,9 @@ private:
     CodeBlockHighlighter *m_highlighter = nullptr;
     CodeBlockOverlay *m_codeOverlay = nullptr;  // etiqueta lenguaje + copiar (al pasar el ratón)
     int m_codeOverlayFirstBlock = -1;           // primer bloque del fence bajo el ratón
-    TableToolbar *m_tableBar = nullptr;         // barra flotante cuando el cursor está en tabla
+    TableToolbar *m_tableBar = nullptr;         // fila de herramientas, visible dentro de una tabla
+    QColor m_tableBarInk;                       // último color de icono aplicado (tema)
+    int m_tableBarIconPx = 0;                   // último tamaño de icono aplicado (zoom)
     DocumentIo *m_documentIo = nullptr;
     ThemeController *m_theme = nullptr;
     SpellController *m_spell = nullptr;

@@ -173,7 +173,13 @@ de `EditorStack` o `MainWindow`):
 - **Edición e inserción**: `FormatController` (marcas de carácter, encabezados,
   listas, sangrías + estado de acciones), `InsertController` (enlaces, imágenes,
   tablas, regla, notas al pie, símbolos), `TableController` (edición contextual de
-  tablas), `FormulaController` (fórmulas TeX: insertar/editar/proteger; registra
+  tablas), `TableToolbar` (los siete botones de tabla; es una **fila propia** encima
+  del editor, no un overlay: flotando pegada a la tabla tapaba la última línea del
+  párrafo anterior y sus iconos opacos la dejaban ilegible. Como fila ocupa su
+  espacio y no tapa nada; a cambio, el documento se desplaza al aparecer. La
+  muestra/oculta `EditorStack::updateTableToolbar` con el cursor y con el modo de
+  vista —en modo fuente el `cursorPositionChanged` del WYSIWYG no llega, así que
+  también escucha `tableActionsShouldUpdate`—), `FormulaController` (fórmulas TeX: insertar/editar/proteger; registra
   el pintor 2D `MathObject`), `BlockConstructs` (citas y bloques de código),
   `CodeBlockHighlighter` +
   `LanguageRegistry` (resaltado), `SymbolPicker` (diálogo no modal «mapa de

@@ -1,8 +1,9 @@
 /// \file
-/// \brief Implementación de la barra flotante de tabla.
+/// \brief Implementación de la fila de herramientas de tabla.
 
 #include "tabletoolbar.h"
 
+#include <QFrame>
 #include <QHBoxLayout>
 #include <QToolButton>
 
@@ -12,6 +13,11 @@ TableToolbar::TableToolbar(QWidget *parent) : QWidget(parent)
 {
     setFocusPolicy(Qt::NoFocus);
     setAttribute(Qt::WA_ShowWithoutActivating);
+    // Es chrome, no documento: pinta su propio fondo (el de la ventana) para
+    // separarse visualmente del editor, que usa el color Base del tema.
+    setAutoFillBackground(true);
+    setAccessibleName(tr("Herramientas de tabla"));
+    setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
 
     struct Item {
         Op op;
@@ -29,7 +35,7 @@ TableToolbar::TableToolbar(QWidget *parent) : QWidget(parent)
     };
 
     auto *layout = new QHBoxLayout(this);
-    layout->setContentsMargins(0, 0, 0, 0);
+    layout->setContentsMargins(4, 2, 4, 2);
     layout->setSpacing(1);
     for (int i = 0; i < 7; ++i) {
         auto *button = new QToolButton(this);
@@ -40,7 +46,15 @@ TableToolbar::TableToolbar(QWidget *parent) : QWidget(parent)
         connect(button, &QToolButton::clicked, this, [this, op] { emit operationRequested(op); });
         layout->addWidget(button);
         m_buttons[i] = button;
+        // Separadores entre los tres grupos (filas | columnas | alineación).
+        if (op == RowDelete || op == ColDelete) {
+            auto *sep = new QFrame(this);
+            sep->setFrameShape(QFrame::VLine);
+            sep->setFrameShadow(QFrame::Sunken);
+            layout->addWidget(sep);
+        }
     }
+    layout->addStretch();  // los botones se quedan a la izquierda, no se estiran
 }
 
 void TableToolbar::applyIcons(const QColor &color, int px, qreal dpr)
@@ -52,5 +66,7 @@ void TableToolbar::applyIcons(const QColor &color, int px, qreal dpr)
         m_buttons[i]->setIcon(formaticons::makeTableIcon(kinds[i], color, px, dpr));
         m_buttons[i]->setIconSize(QSize(px, px));
     }
-    adjustSize();
+    // Ya no se dimensiona a sí misma: la coloca el layout del EditorStack, al que
+    // basta con avisarle de que su tamaño preferido ha cambiado.
+    updateGeometry();
 }

@@ -109,7 +109,7 @@
         <translation>Begin met typen. Opmaken met de werkbalk of door Markdown te typen.</translation>
     </message>
     <message>
-        <location filename="../src/editor/editorstack.cpp" line="723"/>
+        <location filename="../src/editor/editorstack.cpp" line="736"/>
         <source>Fórmula: %1</source>
         <translation>Formule: %1</translation>
     </message>
@@ -1170,17 +1170,17 @@
         <translation>Kleurt de achtergrond van de editor amberkleurig op basis van het tijdstip, &apos;s nachts warmer</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="1072"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="1073"/>
         <source>A&amp;yuda</source>
         <translation>&amp;Help</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="1073"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="1074"/>
         <source>&amp;Manual</source>
         <translation>&amp;Handleiding</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="1077"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="1078"/>
         <source>&amp;Acerca de</source>
         <translation>&amp;Over</translation>
     </message>
@@ -1200,7 +1200,7 @@
         <translation>WYSIWYG-Markdown-editor in Qt6 + C++17.</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="1083"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="1084"/>
         <source>Formato</source>
         <translation>Opmaak</translation>
     </message>
@@ -2118,7 +2118,7 @@ Wil je het herstellen?</translation>
         <translation>Centreert de cursorregel en dimt alles behalve de huidige alinea</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="1056"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="1057"/>
         <source>Idioma</source>
         <translation>Taal</translation>
     </message>
@@ -3093,37 +3093,42 @@ Verwijder deze tekst en begin met schrijven.
 <context>
     <name>TableToolbar</name>
     <message>
-        <location filename="../src/widgets/tabletoolbar.cpp" line="22"/>
+        <location filename="../src/widgets/tabletoolbar.cpp" line="19"/>
+        <source>Herramientas de tabla</source>
+        <translation>Tabelgereedschap</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/tabletoolbar.cpp" line="28"/>
         <source>Insertar fila debajo</source>
         <translation>Rij eronder invoegen</translation>
     </message>
     <message>
-        <location filename="../src/widgets/tabletoolbar.cpp" line="23"/>
+        <location filename="../src/widgets/tabletoolbar.cpp" line="29"/>
         <source>Eliminar fila</source>
         <translation>Rij verwijderen</translation>
     </message>
     <message>
-        <location filename="../src/widgets/tabletoolbar.cpp" line="24"/>
+        <location filename="../src/widgets/tabletoolbar.cpp" line="30"/>
         <source>Insertar columna a la derecha</source>
         <translation>Kolom rechts invoegen</translation>
     </message>
     <message>
-        <location filename="../src/widgets/tabletoolbar.cpp" line="25"/>
+        <location filename="../src/widgets/tabletoolbar.cpp" line="31"/>
         <source>Eliminar columna</source>
         <translation>Kolom verwijderen</translation>
     </message>
     <message>
-        <location filename="../src/widgets/tabletoolbar.cpp" line="26"/>
+        <location filename="../src/widgets/tabletoolbar.cpp" line="32"/>
         <source>Alinear la columna a la izquierda</source>
         <translation>Kolom links uitlijnen</translation>
     </message>
     <message>
-        <location filename="../src/widgets/tabletoolbar.cpp" line="27"/>
+        <location filename="../src/widgets/tabletoolbar.cpp" line="33"/>
         <source>Centrar la columna</source>
         <translation>Kolom centreren</translation>
     </message>
     <message>
-        <location filename="../src/widgets/tabletoolbar.cpp" line="28"/>
+        <location filename="../src/widgets/tabletoolbar.cpp" line="34"/>
         <source>Alinear la columna a la derecha</source>
         <translation>Kolom rechts uitlijnen</translation>
     </message>

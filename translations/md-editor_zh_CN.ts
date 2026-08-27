@@ -109,7 +109,7 @@
         <translation>开始输入吧。可以使用工具栏设置格式，也可以直接键入 Markdown。</translation>
     </message>
     <message>
-        <location filename="../src/editor/editorstack.cpp" line="723"/>
+        <location filename="../src/editor/editorstack.cpp" line="736"/>
         <source>Fórmula: %1</source>
         <translation>公式：%1</translation>
     </message>
@@ -1481,27 +1481,27 @@
         <translation>自动（跟随系统）</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="1056"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="1057"/>
         <source>Idioma</source>
         <translation>语言</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="1072"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="1073"/>
         <source>A&amp;yuda</source>
         <translation>帮助(&amp;Y)</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="1073"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="1074"/>
         <source>&amp;Manual</source>
         <translation>手册(&amp;M)</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="1077"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="1078"/>
         <source>&amp;Acerca de</source>
         <translation>关于(&amp;A)</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowmenus.cpp" line="1083"/>
+        <location filename="../src/app/mainwindowmenus.cpp" line="1084"/>
         <source>Formato</source>
         <translation>格式</translation>
     </message>
@@ -3073,37 +3073,42 @@ Instala una fuente con esas escrituras —por ejemplo «Noto Sans CJK»— y vue
 <context>
     <name>TableToolbar</name>
     <message>
-        <location filename="../src/widgets/tabletoolbar.cpp" line="22"/>
+        <location filename="../src/widgets/tabletoolbar.cpp" line="19"/>
+        <source>Herramientas de tabla</source>
+        <translation>表格工具</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/tabletoolbar.cpp" line="28"/>
         <source>Insertar fila debajo</source>
         <translation>在下方插入行</translation>
     </message>
     <message>
-        <location filename="../src/widgets/tabletoolbar.cpp" line="23"/>
+        <location filename="../src/widgets/tabletoolbar.cpp" line="29"/>
         <source>Eliminar fila</source>
         <translation>删除行</translation>
     </message>
     <message>
-        <location filename="../src/widgets/tabletoolbar.cpp" line="24"/>
+        <location filename="../src/widgets/tabletoolbar.cpp" line="30"/>
         <source>Insertar columna a la derecha</source>
         <translation>在右侧插入列</translation>
     </message>
     <message>
-        <location filename="../src/widgets/tabletoolbar.cpp" line="25"/>
+        <location filename="../src/widgets/tabletoolbar.cpp" line="31"/>
         <source>Eliminar columna</source>
         <translation>删除列</translation>
     </message>
     <message>
-        <location filename="../src/widgets/tabletoolbar.cpp" line="26"/>
+        <location filename="../src/widgets/tabletoolbar.cpp" line="32"/>
         <source>Alinear la columna a la izquierda</source>
         <translation>将该列左对齐</translation>
     </message>
     <message>
-        <location filename="../src/widgets/tabletoolbar.cpp" line="27"/>
+        <location filename="../src/widgets/tabletoolbar.cpp" line="33"/>
         <source>Centrar la columna</source>
         <translation>将该列居中</translation>
     </message>
     <message>
-        <location filename="../src/widgets/tabletoolbar.cpp" line="28"/>
+        <location filename="../src/widgets/tabletoolbar.cpp" line="34"/>
         <source>Alinear la columna a la derecha</source>
         <translation>将该列右对齐</translation>
     </message>

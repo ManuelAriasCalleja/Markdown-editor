@@ -101,8 +101,10 @@ EditorStack::EditorStack(FindReplaceBar *findBar, OutlinePanel *outline,
     connect(m_editor->verticalScrollBar(), &QScrollBar::valueChanged, this,
             [this] { hideCodeBlockOverlay(); });
 
-    // Barra flotante de tabla: aparece sobre la tabla en la que está el cursor.
-    m_tableBar = new TableToolbar(m_editor->viewport());
+    // Fila de herramientas de tabla: aparece encima del editor cuando el cursor está
+    // en una tabla. NO flota sobre el documento (antes sí, y tapaba la última línea
+    // del párrafo anterior a la tabla, que era ilegible bajo los iconos opacos).
+    m_tableBar = new TableToolbar(this);
     m_tableBar->hide();
     connect(m_tableBar, &TableToolbar::operationRequested, this, [this](TableToolbar::Op op) {
         switch (op) {
@@ -118,8 +120,8 @@ EditorStack::EditorStack(FindReplaceBar *findBar, OutlinePanel *outline,
     });
     connect(m_editor, &QTextEdit::cursorPositionChanged, this,
             &EditorStack::updateTableToolbar);
-    connect(m_editor->verticalScrollBar(), &QScrollBar::valueChanged, this,
-            [this] { m_tableBar->hide(); });
+    // Ya no hace falta ocultarla al desplazar: al ser una fila, no hay posición sobre
+    // el documento que pueda quedarse obsoleta.
 
     // Previsualización de diagramas (Mermaid/PlantUML) bajo cada bloque de código.
     m_diagrams = new DiagramController(m_editor, this);
@@ -170,9 +172,12 @@ EditorStack::EditorStack(FindReplaceBar *findBar, OutlinePanel *outline,
             this, [this] { emit windowModifiedChanged(true); });
     m_split->setRenderBody([this](const QString &body) { setBodyMarkdown(body); });
 
-    // La vista (QSplitter con WYSIWYG + fuente) es el contenido de este widget.
+    // La vista (QSplitter con WYSIWYG + fuente) es el contenido de este widget, con la
+    // fila de herramientas de tabla encima (oculta salvo dentro de una tabla).
     auto *layout = new QVBoxLayout(this);
     layout->setContentsMargins(0, 0, 0, 0);
+    layout->setSpacing(0);
+    layout->addWidget(m_tableBar);
     layout->addWidget(m_split->splitView());
 
     // Comandos de formato y sincronización de sus acciones con el cursor.
@@ -183,6 +188,11 @@ EditorStack::EditorStack(FindReplaceBar *findBar, OutlinePanel *outline,
     m_table = new TableController(m_editor, m_split, m_documentIo, this);
     connect(m_split, &SplitViewController::tableActionsShouldUpdate,
             m_table, &TableController::updateActions);
+    // Al pasar a modo fuente el cursor del WYSIWYG no se mueve, así que su
+    // cursorPositionChanged no llega: sin esto, la fila se quedaría visible sobre un
+    // editor de código donde no pinta nada.
+    connect(m_split, &SplitViewController::tableActionsShouldUpdate,
+            this, &EditorStack::updateTableToolbar);
     connect(m_table, &TableController::modifiedChanged,
             this, &EditorStack::windowModifiedChanged);
     connect(m_format, &FormatController::actionsUpdated,
@@ -328,25 +338,28 @@ void EditorStack::hideCodeBlockOverlay()
 
 void EditorStack::updateTableToolbar()
 {
-    QTextTable *table = m_editor->textCursor().currentTable();
-    if (!table) {
+    // Solo con el cursor dentro de una tabla, y solo si el editor WYSIWYG está a la
+    // vista: en modo fuente el cursor de este editor no se mueve y seguiría diciendo
+    // que está en una tabla que el usuario ya no ve.
+    const bool inTable = m_editor->textCursor().currentTable() != nullptr
+                         && !m_split->sourceMode();
+    if (!inTable) {
         m_tableBar->hide();
         return;
     }
-    // Repinta los iconos solo al aparecer (no en cada movimiento del cursor); siguen
-    // al tema (color del texto) y al zoom (tamaño acorde a la fuente del editor).
-    if (!m_tableBar->isVisible()) {
-        const QColor ink = m_editor->viewport()->palette().color(QPalette::Text);
-        const int px = qMax(12, int(m_editor->fontMetrics().height() * 0.85));
+    // Los iconos siguen al tema (color del texto) y al zoom (tamaño acorde a la fuente
+    // del editor). Se repintan solo cuando alguno de los dos cambia: la fila ahora
+    // permanece visible mientras se recorre la tabla, así que no basta con hacerlo al
+    // aparecer (se quedaría con el color o el tamaño anteriores), ni conviene rehacerlo
+    // en cada movimiento del cursor.
+    const QColor ink = m_editor->viewport()->palette().color(QPalette::Text);
+    const int px = qMax(12, int(m_editor->fontMetrics().height() * 0.85));
+    if (ink != m_tableBarInk || px != m_tableBarIconPx) {
+        m_tableBarInk = ink;
+        m_tableBarIconPx = px;
         m_tableBar->applyIcons(ink, px, m_editor->devicePixelRatioF());
     }
-    // Sobre el borde superior de la tabla, pegada a su izquierda; si no cabe arriba
-    // (tabla al principio), justo debajo del borde.
-    const QRect r = m_editor->cursorRect(table->firstCursorPosition());
-    const int y = r.top() - m_tableBar->height() - 2;
-    m_tableBar->move(qMax(0, r.left() - 4), y < 0 ? r.top() + 2 : y);
     m_tableBar->show();
-    m_tableBar->raise();
 }
 
 bool EditorStack::navigateTableCell(bool forward)
@@ -437,6 +450,11 @@ void EditorStack::setContentScale(qreal scale)
     // remida las imágenes al nuevo zoom. No edita el documento: no toca undo/modificado.
     QTextDocument *doc = m_editor->document();
     doc->markContentsDirty(0, doc->characterCount());
+    // Los iconos de la fila de tabla se dimensionan con la fuente del editor, que el
+    // zoom acaba de cambiar. Si está a la vista hay que repintarlos ya: si no, se
+    // quedarían al tamaño anterior hasta el siguiente movimiento del cursor.
+    if (m_tableBar && m_tableBar->isVisible())
+        updateTableToolbar();
 }
 
 void EditorStack::setBodyMarkdown(const QString &body)
