@@ -5,7 +5,6 @@
 
 #include <QCryptographicHash>
 #include <QPalette>
-#include <QSysInfo>
 #include <QTextBlock>
 #include <QTextCursor>
 #include <QTextDocument>
@@ -16,6 +15,7 @@
 #include "appsettings.h"
 #include "diagramdoc.h"
 #include "diagramrenderer.h"
+#include "installcmd.h"
 
 namespace {
 QString sourceHash(const QString &source)
@@ -30,18 +30,13 @@ QString toolDisplayName(mddiagram::Kind kind)
                                             : QStringLiteral("PlantUML");
 }
 
-// Orden de instalación según el sistema operativo en EJECUCIÓN (QSysInfo, sin
-// `#ifdef Q_OS_*`). Mermaid va por npm en las tres plataformas; PlantUML cambia.
+// Orden de instalación según el sistema en EJECUCIÓN y su distribución (ver
+// `mdinstall`). Mermaid va por npm en las tres plataformas; PlantUML cambia.
 QString installCommand(mddiagram::Kind kind)
 {
     if (kind == mddiagram::Kind::Mermaid)
         return QStringLiteral("npm install -g @mermaid-js/mermaid-cli");
-    const QString kernel = QSysInfo::kernelType();  // "linux" / "darwin" / "winnt"
-    if (kernel == QLatin1String("darwin"))
-        return QStringLiteral("brew install plantuml");
-    if (kernel == QLatin1String("winnt"))
-        return QStringLiteral("choco install plantuml");
-    return QStringLiteral("sudo apt install plantuml");
+    return mdinstall::plantUmlCommand(mdinstall::currentPlatform());
 }
 }  // namespace
 
@@ -129,9 +124,15 @@ QString DiagramController::placeholderText(mddiagram::Kind kind) const
 {
     // El símbolo de aviso fuera del tr() para no obligar a traducirlo; la orden
     // tampoco se traduce. %1 = nombre de la herramienta, %2 = orden de instalación.
-    return QStringLiteral("⚠ ")
-           + tr("%1 no está instalado. Para previsualizar este diagrama: %2")
-                 .arg(toolDisplayName(kind), installCommand(kind));
+    // Mermaid se instala con npm, que viene con Node.js: sin decirlo, la orden falla
+    // con «npm: orden no encontrada» a quien no lo tiene.
+    const QString text = kind == mddiagram::Kind::Mermaid
+        ? tr("%1 no está instalado, así que este diagrama no se puede previsualizar. "
+             "Instálalo con «%2» (necesita Node.js) o desactiva «Ver → Previsualizar "
+             "diagramas».")
+        : tr("%1 no está instalado, así que este diagrama no se puede previsualizar. "
+             "Instálalo con «%2» o desactiva «Ver → Previsualizar diagramas».");
+    return QStringLiteral("⚠ ") + text.arg(toolDisplayName(kind), installCommand(kind));
 }
 
 void DiagramController::refresh()
@@ -248,9 +249,21 @@ void DiagramController::notifyPendingFailure()
     if (m_notifiedFailures.contains(hash))
         return;
     m_notifiedFailures.insert(hash);
-    emit statusMessage(tr("No se pudo previsualizar el diagrama %1: %2")
-                           .arg(toolDisplayName(m_pendingFailKind), m_pendingFailError),
-                       6000);
+    // La herramienta vuelca en stderr trazas de decenas de líneas (mmdc, una pila de
+    // Node entera): en la barra de estado solo cabe, y solo sirve, la primera.
+    QString reason;
+    for (const QString &line : m_pendingFailError.split(QLatin1Char('\n'))) {
+        if (!line.trimmed().isEmpty()) {
+            reason = line.trimmed().left(160);
+            break;
+        }
+    }
+    const QString text = reason.isEmpty()
+        ? tr("No se pudo previsualizar el diagrama %1: revisa su sintaxis.")
+              .arg(toolDisplayName(m_pendingFailKind))
+        : tr("No se pudo previsualizar el diagrama %1: revisa su sintaxis (%2).")
+              .arg(toolDisplayName(m_pendingFailKind), reason);
+    emit statusMessage(text, 8000);
 }
 
 void DiagramController::setPreviewBlock(int lastBlockNumber, const QString &hash,

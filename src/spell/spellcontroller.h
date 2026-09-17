@@ -62,6 +62,10 @@ private:
     void showMissingDictionaryDialog(const QString &code);
     /// Descarga el diccionario a la carpeta del usuario y recarga el idioma.
     void downloadDictionary(const QString &code);
+    // Cómo instalar a mano el diccionario de `code` (orden o carpeta), para los avisos.
+    static QString manualInstallText(const QString &code);
+    // Aviso de descarga fallida, con «Reintentar» y la vía manual.
+    void showDownloadFailedDialog(const QString &code, const QString &error);
 
     QTextEdit *m_editor = nullptr;
     CodeBlockHighlighter *m_highlighter = nullptr;
@@ -70,6 +74,7 @@ private:
     bool m_enabled = true;        // interruptor del corrector (Ver → ...)
     QSet<QString> m_warnedLanguages;  // idiomas ya avisados en esta sesión
     DictionaryInstaller *m_installer = nullptr;  // perezoso: solo si se descarga
+    QString m_downloadCode;  // idioma de la descarga en curso
 };
 
 #endif // SPELLCONTROLLER_H

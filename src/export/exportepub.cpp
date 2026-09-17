@@ -8,6 +8,7 @@
 
 #include <QDateTime>
 #include <QFileInfo>
+#include <QCoreApplication>
 #include <QFile>
 #include <QHash>
 #include <QList>
@@ -304,7 +305,7 @@ bool writeEpub(const QTextDocument *doc, const QString &path, const Language &la
 
     if (zip.status() != QZipWriter::NoError) {
         if (error)
-            *error = QStringLiteral("Error al escribir el paquete EPUB.");
+            *error = QString::fromUtf8(QT_TRANSLATE_NOOP("MainWindow", "Error al escribir el paquete EPUB."));
         return false;
     }
     return true;

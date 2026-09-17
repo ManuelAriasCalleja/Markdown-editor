@@ -45,14 +45,32 @@
 <context>
     <name>DiagramController</name>
     <message>
-        <location filename="../src/diagram/diagramcontroller.cpp" line="133"/>
         <source>%1 no está instalado. Para previsualizar este diagrama: %2</source>
-        <translation>%1 is niet geïnstalleerd. Om dit diagram te bekijken: %2</translation>
+        <translation type="vanished">%1 is niet geïnstalleerd. Om dit diagram te bekijken: %2</translation>
     </message>
     <message>
-        <location filename="../src/diagram/diagramcontroller.cpp" line="251"/>
         <source>No se pudo previsualizar el diagrama %1: %2</source>
-        <translation>Kan het %1-diagram niet voorvertonen: %2</translation>
+        <translation type="vanished">Kan het %1-diagram niet voorvertonen: %2</translation>
+    </message>
+    <message>
+        <location filename="../src/diagram/diagramcontroller.cpp" line="130"/>
+        <source>%1 no está instalado, así que este diagrama no se puede previsualizar. Instálalo con «%2» (necesita Node.js) o desactiva «Ver → Previsualizar diagramas».</source>
+        <translation>%1 is niet geïnstalleerd, dus dit diagram kan niet worden voorvertoond. Installeer het met «%2» (vereist Node.js) of schakel «Beeld → Diagrammen voorvertonen» uit.</translation>
+    </message>
+    <message>
+        <location filename="../src/diagram/diagramcontroller.cpp" line="133"/>
+        <source>%1 no está instalado, así que este diagrama no se puede previsualizar. Instálalo con «%2» o desactiva «Ver → Previsualizar diagramas».</source>
+        <translation>%1 is niet geïnstalleerd, dus dit diagram kan niet worden voorvertoond. Installeer het met «%2» of schakel «Beeld → Diagrammen voorvertonen» uit.</translation>
+    </message>
+    <message>
+        <location filename="../src/diagram/diagramcontroller.cpp" line="262"/>
+        <source>No se pudo previsualizar el diagrama %1: revisa su sintaxis.</source>
+        <translation>Kan het %1-diagram niet voorvertonen: controleer de syntaxis.</translation>
+    </message>
+    <message>
+        <location filename="../src/diagram/diagramcontroller.cpp" line="264"/>
+        <source>No se pudo previsualizar el diagrama %1: revisa su sintaxis (%2).</source>
+        <translation>Kan het %1-diagram niet voorvertonen: controleer de syntaxis (%2).</translation>
     </message>
 </context>
 <context>
@@ -109,7 +127,7 @@
         <translation>Begin met typen. Opmaken met de werkbalk of door Markdown te typen.</translation>
     </message>
     <message>
-        <location filename="../src/editor/editorstack.cpp" line="736"/>
+        <location filename="../src/editor/editorstack.cpp" line="741"/>
         <source>Fórmula: %1</source>
         <translation>Formule: %1</translation>
     </message>
@@ -275,7 +293,7 @@
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="309"/>
+        <location filename="../src/app/mainwindow.cpp" line="310"/>
         <source>Editor Markdown WYSIWYG — escribe y da formato con la barra superior</source>
         <translation>WYSIWYG-Markdown-editor — typ en maak op met de bovenste werkbalk</translation>
     </message>
@@ -606,7 +624,7 @@
     </message>
     <message>
         <location filename="../src/app/mainwindowmenus.cpp" line="469"/>
-        <location filename="../src/editor/insertcontroller.cpp" line="118"/>
+        <location filename="../src/editor/insertcontroller.cpp" line="119"/>
         <source>Enlace</source>
         <translation>Koppeling</translation>
     </message>
@@ -757,9 +775,9 @@
     </message>
     <message>
         <location filename="../src/app/mainwindowmenus.cpp" line="608"/>
-        <location filename="../src/editor/insertcontroller.cpp" line="188"/>
-        <location filename="../src/editor/insertcontroller.cpp" line="205"/>
-        <location filename="../src/editor/insertcontroller.cpp" line="247"/>
+        <location filename="../src/editor/insertcontroller.cpp" line="189"/>
+        <location filename="../src/editor/insertcontroller.cpp" line="206"/>
+        <location filename="../src/editor/insertcontroller.cpp" line="250"/>
         <source>Pegar imagen</source>
         <translation>Afbeelding plakken</translation>
     </message>
@@ -1110,7 +1128,8 @@
     </message>
     <message>
         <location filename="../src/app/mainwindowmenus.cpp" line="928"/>
-        <location filename="../src/spell/spellcontroller.cpp" line="163"/>
+        <location filename="../src/spell/spellcontroller.cpp" line="177"/>
+        <location filename="../src/spell/spellcontroller.cpp" line="265"/>
         <source>Corrección ortográfica</source>
         <translation>Spellingcontrole</translation>
     </message>
@@ -1185,17 +1204,17 @@
         <translation>&amp;Over</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="430"/>
+        <location filename="../src/app/mainwindow.cpp" line="431"/>
         <source>Acerca de</source>
         <translation>Over</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="422"/>
+        <location filename="../src/app/mainwindow.cpp" line="423"/>
         <source>Desarrollado por Manuel Arias Calleja</source>
         <translation>Ontwikkeld door Manuel Arias Calleja</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="423"/>
+        <location filename="../src/app/mainwindow.cpp" line="424"/>
         <source>Editor WYSIWYG de Markdown en Qt6 + C++17.</source>
         <translation>WYSIWYG-Markdown-editor in Qt6 + C++17.</translation>
     </message>
@@ -1205,7 +1224,7 @@
         <translation>Opmaak</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="502"/>
+        <location filename="../src/app/mainwindow.cpp" line="503"/>
         <source>Selección: </source>
         <translation>Selectie: </translation>
     </message>
@@ -1225,69 +1244,68 @@
         <translation>Taal (leeg = geen):</translation>
     </message>
     <message>
-        <location filename="../src/editor/insertcontroller.cpp" line="119"/>
+        <location filename="../src/editor/insertcontroller.cpp" line="120"/>
         <source>Texto:</source>
         <translation>Tekst:</translation>
     </message>
     <message>
-        <location filename="../src/editor/insertcontroller.cpp" line="120"/>
+        <location filename="../src/editor/insertcontroller.cpp" line="121"/>
         <source>URL:</source>
         <translation>URL:</translation>
     </message>
     <message>
-        <location filename="../src/editor/insertcontroller.cpp" line="152"/>
+        <location filename="../src/editor/insertcontroller.cpp" line="153"/>
         <source>imagen</source>
         <translation>afbeelding</translation>
     </message>
     <message>
-        <location filename="../src/editor/insertcontroller.cpp" line="154"/>
+        <location filename="../src/editor/insertcontroller.cpp" line="155"/>
         <source>Insertar imagen</source>
         <translation>Afbeelding invoegen</translation>
     </message>
     <message>
-        <location filename="../src/editor/insertcontroller.cpp" line="155"/>
-        <location filename="../src/editor/insertcontroller.cpp" line="206"/>
+        <location filename="../src/editor/insertcontroller.cpp" line="156"/>
+        <location filename="../src/editor/insertcontroller.cpp" line="207"/>
         <source>Texto alternativo:</source>
         <translation>Alternatieve tekst:</translation>
     </message>
     <message>
-        <location filename="../src/editor/insertcontroller.cpp" line="156"/>
+        <location filename="../src/editor/insertcontroller.cpp" line="157"/>
         <source>Ruta o URL:</source>
         <translation>Pad of URL:</translation>
     </message>
     <message>
-        <location filename="../src/editor/insertcontroller.cpp" line="189"/>
+        <location filename="../src/editor/insertcontroller.cpp" line="190"/>
         <source>El portapapeles no contiene ninguna imagen.</source>
         <translation>Het klembord bevat geen afbeelding.</translation>
     </message>
     <message>
-        <location filename="../src/editor/insertcontroller.cpp" line="237"/>
+        <location filename="../src/editor/insertcontroller.cpp" line="238"/>
         <source>Guardar imagen pegada</source>
         <translation>Geplakte afbeelding opslaan</translation>
     </message>
     <message>
-        <location filename="../src/editor/insertcontroller.cpp" line="239"/>
+        <location filename="../src/editor/insertcontroller.cpp" line="240"/>
         <source>Imagen PNG (*.png)</source>
         <translation>PNG-afbeelding (*.png)</translation>
     </message>
     <message>
-        <location filename="../src/editor/insertcontroller.cpp" line="248"/>
         <source>No se pudo guardar la imagen en «%1».</source>
-        <translation>Kan de afbeelding niet opslaan in “%1”.</translation>
+        <translation type="vanished">Kan de afbeelding niet opslaan in “%1”.</translation>
     </message>
     <message>
-        <location filename="../src/editor/insertcontroller.cpp" line="270"/>
+        <location filename="../src/editor/insertcontroller.cpp" line="275"/>
         <source>No se puede insertar una tabla dentro de otra. Coloca el cursor fuera de la tabla.</source>
         <translation>Je kunt geen tabel in een andere tabel invoegen. Plaats de cursor buiten de tabel.</translation>
     </message>
     <message>
-        <location filename="../src/editor/insertcontroller.cpp" line="327"/>
+        <location filename="../src/editor/insertcontroller.cpp" line="332"/>
         <source>Insertar índice</source>
         <translation>Inhoudsopgave invoegen</translation>
     </message>
     <message>
         <location filename="../src/app/mainwindowinput.cpp" line="409"/>
-        <location filename="../src/editor/insertcontroller.cpp" line="328"/>
+        <location filename="../src/editor/insertcontroller.cpp" line="333"/>
         <source>El documento no tiene encabezados.</source>
         <translation>Het document bevat geen koppen.</translation>
     </message>
@@ -1332,177 +1350,215 @@
         <translation>Dubbelklik op de formule om deze te bewerken (Ctrl+Shift+F om er een andere in te voegen).</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="216"/>
+        <location filename="../src/export/exportcontroller.cpp" line="247"/>
         <source>Imprimir</source>
         <translation>Afdrukken</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="222"/>
+        <location filename="../src/export/exportcontroller.cpp" line="253"/>
         <source>Documento enviado a la impresora.</source>
         <translation>Document naar de printer gestuurd.</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="87"/>
+        <location filename="../src/export/exportcontroller.cpp" line="88"/>
         <source>Idioma del documento</source>
         <translation>Documenttaal</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="88"/>
+        <location filename="../src/export/exportcontroller.cpp" line="89"/>
         <source>Idioma para la exportación:</source>
         <translation>Taal voor de export:</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="251"/>
-        <location filename="../src/export/exportcontroller.cpp" line="269"/>
+        <location filename="../src/export/exportcontroller.cpp" line="170"/>
+        <location filename="../src/export/exportcontroller.cpp" line="195"/>
+        <source>No se pudo exportar</source>
+        <translation>Exporteren mislukt</translation>
+    </message>
+    <message>
+        <location filename="../src/export/exportcontroller.cpp" line="196"/>
+        <source>No se pudo exportar a PDF «%1».</source>
+        <translation>Kan niet exporteren naar PDF «%1».</translation>
+    </message>
+    <message>
+        <location filename="../src/export/exportcontroller.cpp" line="282"/>
+        <location filename="../src/export/exportcontroller.cpp" line="300"/>
         <source>No hay texto seleccionado.</source>
         <translation>Er is geen tekst geselecteerd.</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="256"/>
+        <location filename="../src/export/exportcontroller.cpp" line="287"/>
         <source>Imprimir selección</source>
         <translation>Selectie afdrukken</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="260"/>
+        <location filename="../src/export/exportcontroller.cpp" line="291"/>
         <source>Selección enviada a la impresora.</source>
         <translation>Selectie naar de printer gestuurd.</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="273"/>
+        <location filename="../src/export/exportcontroller.cpp" line="304"/>
         <source>Exportar selección a PDF</source>
         <translation>Selectie naar PDF exporteren</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="292"/>
+        <location filename="../src/export/exportcontroller.cpp" line="323"/>
         <source>Vista previa de impresión</source>
         <translation>Afdrukvoorbeeld</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="319"/>
+        <location filename="../src/export/exportcontroller.cpp" line="350"/>
         <source>Copiado como HTML al portapapeles.</source>
         <translation>Gekopieerd als HTML naar het klembord.</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="334"/>
+        <location filename="../src/export/exportcontroller.cpp" line="365"/>
         <source>Copiado como Markdown al portapapeles.</source>
         <translation>Gekopieerd als Markdown naar het klembord.</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="379"/>
+        <location filename="../src/export/exportcontroller.cpp" line="395"/>
+        <source>No se pudo exportar a HTML «%1».</source>
+        <translation>Kan niet exporteren naar HTML «%1».</translation>
+    </message>
+    <message>
+        <location filename="../src/export/exportcontroller.cpp" line="410"/>
         <source>Exportar a ODF</source>
         <translation>Naar ODF exporteren</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="380"/>
+        <location filename="../src/export/exportcontroller.cpp" line="411"/>
         <source>Documento ODF (*.odt)</source>
         <translation>ODF-document (*.odt)</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="382"/>
+        <location filename="../src/export/exportcontroller.cpp" line="413"/>
+        <source>No se pudo exportar a ODF «%1».</source>
+        <translation>Kan niet exporteren naar ODF «%1».</translation>
+    </message>
+    <message>
+        <location filename="../src/export/exportcontroller.cpp" line="426"/>
+        <source>No se pudo exportar a DOCX «%1».</source>
+        <translation>Kan niet exporteren naar DOCX «%1».</translation>
+    </message>
+    <message>
+        <location filename="../src/export/exportcontroller.cpp" line="439"/>
+        <source>No se pudo exportar a EPUB «%1».</source>
+        <translation>Kan niet exporteren naar EPUB «%1».</translation>
+    </message>
+    <message>
         <source>No se pudo exportar a ODF:
 %1
 
 %2</source>
-        <translation>Kon niet naar ODF exporteren:
+        <translation type="vanished">Kon niet naar ODF exporteren:
 %1
 
 %2</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="383"/>
+        <location filename="../src/export/exportcontroller.cpp" line="414"/>
         <source>Exportado a ODF: %1</source>
         <translation>Geëxporteerd naar ODF: %1</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="392"/>
+        <location filename="../src/export/exportcontroller.cpp" line="423"/>
         <source>Exportar a DOCX</source>
         <translation>Naar DOCX exporteren</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="393"/>
+        <location filename="../src/export/exportcontroller.cpp" line="424"/>
         <source>Documento Word (*.docx)</source>
         <translation>Word-document (*.docx)</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="395"/>
         <source>No se pudo exportar a DOCX:
 %1
 
 %2</source>
-        <translation>Kon niet naar DOCX exporteren:
+        <translation type="vanished">Kon niet naar DOCX exporteren:
 %1
 
 %2</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="396"/>
+        <location filename="../src/export/exportcontroller.cpp" line="427"/>
         <source>Exportado a DOCX: %1</source>
         <translation>Geëxporteerd naar DOCX: %1</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="405"/>
+        <location filename="../src/export/exportcontroller.cpp" line="436"/>
         <source>Exportar a EPUB</source>
         <translation>Naar EPUB exporteren</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="406"/>
+        <location filename="../src/export/exportcontroller.cpp" line="437"/>
         <source>Libro EPUB (*.epub)</source>
         <translation>EPUB-boek (*.epub)</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="408"/>
         <source>No se pudo exportar a EPUB:
 %1
 
 %2</source>
-        <translation>Kon niet naar EPUB exporteren:
+        <translation type="vanished">Kon niet naar EPUB exporteren:
 %1
 
 %2</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="409"/>
+        <location filename="../src/export/exportcontroller.cpp" line="440"/>
         <source>Exportado a EPUB: %1</source>
         <translation>Naar EPUB geëxporteerd: %1</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="418"/>
+        <location filename="../src/export/exportcontroller.cpp" line="449"/>
         <source>Exportar a texto plano</source>
         <translation>Naar platte tekst exporteren</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="419"/>
+        <location filename="../src/export/exportcontroller.cpp" line="450"/>
         <source>Texto plano (*.txt)</source>
         <translation>Platte tekst (*.txt)</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="422"/>
+        <location filename="../src/export/exportcontroller.cpp" line="452"/>
+        <source>No se pudo exportar a texto plano «%1».</source>
+        <translation>Kan niet exporteren naar platte tekst «%1».</translation>
+    </message>
+    <message>
+        <location filename="../src/export/exportcontroller.cpp" line="453"/>
         <source>Exportado a texto plano: %1</source>
         <translation>Naar platte tekst geëxporteerd: %1</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="435"/>
-        <location filename="../src/export/exportcontroller.cpp" line="513"/>
+        <location filename="../src/export/exportcontroller.cpp" line="466"/>
+        <location filename="../src/export/exportcontroller.cpp" line="544"/>
         <source>Exportar a LaTeX</source>
         <translation>Naar LaTeX exporteren</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="436"/>
+        <location filename="../src/export/exportcontroller.cpp" line="467"/>
         <source>Documento LaTeX (*.tex)</source>
         <translation>LaTeX-document (*.tex)</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="439"/>
+        <location filename="../src/export/exportcontroller.cpp" line="469"/>
+        <source>No se pudo exportar a LaTeX «%1».</source>
+        <translation>Kan niet exporteren naar LaTeX «%1».</translation>
+    </message>
+    <message>
+        <location filename="../src/export/exportcontroller.cpp" line="470"/>
         <source>Exportado a LaTeX: %1</source>
         <translation>Geëxporteerd naar LaTeX: %1</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="481"/>
+        <location filename="../src/export/exportcontroller.cpp" line="512"/>
         <source>Fuente no disponible</source>
         <translation>Lettertype niet beschikbaar</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="482"/>
+        <location filename="../src/export/exportcontroller.cpp" line="513"/>
         <source>El documento tiene texto en chino, japonés o coreano y en este sistema no hay ninguna fuente instalada que sepa dibujarlo: ese texto NO aparecerá en el resultado (ni siquiera como recuadros vacíos). El resto del documento sale correctamente.
 
 Instala una fuente con esas escrituras —por ejemplo «Noto Sans CJK»— y vuelve a exportar.</source>
@@ -1511,12 +1567,12 @@ Instala una fuente con esas escrituras —por ejemplo «Noto Sans CJK»— y vue
 Installeer een lettertype met die schriften — bijvoorbeeld ‘Noto Sans CJK’ — en exporteer opnieuw.</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="498"/>
+        <location filename="../src/export/exportcontroller.cpp" line="529"/>
         <source>El documento contiene texto en chino, japonés o coreano. El archivo ya incluye la configuración necesaria, pero hay que compilarlo con «xelatex» o «lualatex»: «pdflatex» no puede componer esas escrituras.</source>
         <translation>Het document bevat Chinese, Japanse of Koreaanse tekst. Het bestand bevat al de vereiste configuratie, maar het moet worden gecompileerd met “xelatex” of “lualatex”: “pdflatex” kan die schriften niet zetten.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/export/exportcontroller.cpp" line="505"/>
+        <location filename="../src/export/exportcontroller.cpp" line="536"/>
         <source>Se ha omitido %n carácter sin equivalente en LaTeX (símbolos o emoji).</source>
         <translation>
             <numerusform>%n teken zonder LaTeX-equivalent is weggelaten (symbolen of emoji).</numerusform>
@@ -1524,27 +1580,27 @@ Installeer een lettertype met die schriften — bijvoorbeeld ‘Noto Sans CJK’
         </translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="277"/>
+        <location filename="../src/app/mainwindow.cpp" line="278"/>
         <source>Contador de palabras</source>
         <translation>Woordteller</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="283"/>
+        <location filename="../src/app/mainwindow.cpp" line="284"/>
         <source>Línea y columna</source>
         <translation>Regel en kolom</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="351"/>
+        <location filename="../src/app/mainwindow.cpp" line="352"/>
         <source>El archivo se eliminó o movió en disco.</source>
         <translation>Het bestand is verwijderd of verplaatst op de schijf.</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="421"/>
+        <location filename="../src/app/mainwindow.cpp" line="422"/>
         <source>Versión %1</source>
         <translation>Versie %1</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/app/mainwindow.cpp" line="549"/>
+        <location filename="../src/app/mainwindow.cpp" line="550"/>
         <source>~%n min</source>
         <translation>
             <numerusform>~%n min</numerusform>
@@ -1552,12 +1608,12 @@ Installeer een lettertype met die schriften — bijvoorbeeld ‘Noto Sans CJK’
         </translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="512"/>
+        <location filename="../src/app/mainwindow.cpp" line="513"/>
         <source>Ln %1, Col %2</source>
         <translation>Rg %1, Kol %2</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/app/mainwindow.cpp" line="493"/>
+        <location filename="../src/app/mainwindow.cpp" line="494"/>
         <source>%1 palabra(s)</source>
         <translation>
             <numerusform>%1 woord</numerusform>
@@ -1565,7 +1621,7 @@ Installeer een lettertype met die schriften — bijvoorbeeld ‘Noto Sans CJK’
         </translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/app/mainwindow.cpp" line="495"/>
+        <location filename="../src/app/mainwindow.cpp" line="496"/>
         <source>%1 carácter(es)</source>
         <translation>
             <numerusform>%1 teken</numerusform>
@@ -1573,174 +1629,247 @@ Installeer een lettertype met die schriften — bijvoorbeeld ‘Noto Sans CJK’
         </translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="526"/>
+        <location filename="../src/app/mainwindow.cpp" line="527"/>
         <source>Estadísticas del documento</source>
         <translation>Documentstatistieken</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="528"/>
+        <location filename="../src/app/mainwindow.cpp" line="529"/>
         <source>Palabras:</source>
         <translation>Woorden:</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="529"/>
+        <location filename="../src/app/mainwindow.cpp" line="530"/>
         <source>Caracteres:</source>
         <translation>Tekens:</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="530"/>
+        <location filename="../src/app/mainwindow.cpp" line="531"/>
         <source>Caracteres (sin espacios):</source>
         <translation>Tekens (zonder spaties):</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="532"/>
+        <location filename="../src/app/mainwindow.cpp" line="533"/>
         <source>Párrafos:</source>
         <translation>Alinea&apos;s:</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="533"/>
+        <location filename="../src/app/mainwindow.cpp" line="534"/>
         <source>Frases:</source>
         <translation>Zinnen:</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="534"/>
+        <location filename="../src/app/mainwindow.cpp" line="535"/>
         <source>Tiempo de lectura:</source>
         <translation>Leestijd:</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="558"/>
+        <location filename="../src/app/mainwindow.cpp" line="559"/>
         <source>~%1 h</source>
         <translation>~%1 h</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="559"/>
+        <location filename="../src/app/mainwindow.cpp" line="560"/>
         <source>~%1 h %2 min</source>
         <translation>~%1 h %2 min</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="744"/>
+        <location filename="../src/app/mainwindow.cpp" line="745"/>
         <source>Copiar nombre del archivo</source>
         <translation>Bestandsnaam kopiëren</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="745"/>
+        <location filename="../src/app/mainwindow.cpp" line="746"/>
         <source>Copiar ruta completa</source>
         <translation>Volledig pad kopiëren</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="790"/>
+        <location filename="../src/app/mainwindow.cpp" line="791"/>
         <source>Abrir</source>
         <translation>Openen</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="791"/>
+        <location filename="../src/app/mainwindow.cpp" line="792"/>
         <source>Archivos Markdown (*.md *.markdown *.txt);;Todos los archivos (*)</source>
         <translation>Markdown-bestanden (*.md *.markdown *.txt);;Alle bestanden (*)</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="799"/>
+        <location filename="../src/app/mainwindow.cpp" line="800"/>
         <source>Importar HTML</source>
         <translation>HTML importeren</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="800"/>
+        <location filename="../src/app/mainwindow.cpp" line="801"/>
         <source>Páginas HTML (*.html *.htm);;Todos los archivos (*)</source>
         <translation>HTML-pagina&apos;s (*.html *.htm);;Alle bestanden (*)</translation>
     </message>
     <message>
         <location filename="../src/app/mainwindow.cpp" line="807"/>
-        <location filename="../src/app/mainwindow.cpp" line="830"/>
+        <location filename="../src/app/mainwindow.cpp" line="831"/>
+        <location filename="../src/app/mainwindow.cpp" line="838"/>
+        <location filename="../src/app/mainwindow.cpp" line="898"/>
+        <location filename="../src/app/mainwindow.cpp" line="923"/>
+        <source>No se pudo importar</source>
+        <translation>Importeren mislukt</translation>
+    </message>
+    <message>
+        <location filename="../src/app/mainwindow.cpp" line="808"/>
+        <location filename="../src/app/mainwindow.cpp" line="832"/>
+        <source>No se pudo leer «%1».</source>
+        <translation>Kan «%1» niet lezen.</translation>
+    </message>
+    <message>
+        <location filename="../src/app/mainwindow.cpp" line="839"/>
+        <source>No se pudo sacar texto de «%1».</source>
+        <translation>Kan geen tekst halen uit «%1».</translation>
+    </message>
+    <message>
+        <location filename="../src/app/mainwindow.cpp" line="844"/>
+        <source>Puede que el libro esté protegido con DRM (los comprados en tiendas suelen estarlo), que esté dañado o que no sea realmente un EPUB. Prueba con una copia sin DRM o ábrelo y vuelve a exportarlo desde un programa como Calibre.</source>
+        <translation>Het boek is mogelijk beveiligd met DRM (in winkels gekochte boeken meestal wel), beschadigd of geen echt EPUB. Probeer een kopie zonder DRM, of open het in een programma als Calibre en exporteer het opnieuw.</translation>
+    </message>
+    <message>
+        <location filename="../src/app/mainwindow.cpp" line="859"/>
+        <source>Falta Pandoc</source>
+        <translation>Pandoc ontbreekt</translation>
+    </message>
+    <message>
+        <location filename="../src/app/mainwindow.cpp" line="860"/>
+        <source>Para importar DOCX, ODT, RTF, LaTeX y otros formatos hace falta Pandoc, un programa aparte que no está instalado.</source>
+        <translation>Voor het importeren van DOCX, ODT, RTF, LaTeX en andere formaten is Pandoc nodig, een apart programma dat niet is geïnstalleerd.</translation>
+    </message>
+    <message>
+        <location filename="../src/app/mainwindow.cpp" line="864"/>
+        <source>Instálalo con:
+
+    %1
+
+o descárgalo de https://pandoc.org/installing.html. No hace falta reiniciar md-editor: basta con volver a importar.</source>
+        <translation>Installeer het met:
+
+    %1
+
+of download het van https://pandoc.org/installing.html. md-editor hoeft niet opnieuw te starten: importeer gewoon opnieuw.</translation>
+    </message>
+    <message>
+        <location filename="../src/app/mainwindow.cpp" line="899"/>
+        <source>Pandoc no pudo convertir «%1».</source>
+        <translation>Pandoc kon «%1» niet converteren.</translation>
+    </message>
+    <message>
+        <location filename="../src/app/mainwindow.cpp" line="902"/>
+        <source>La conversión tardó más de 30 segundos y se canceló. Si el documento es muy grande, conviértelo desde una terminal, sin límite de tiempo:
+
+    pandoc &quot;%1&quot; -t gfm -o documento.md</source>
+        <translation>De conversie duurde langer dan 30 seconden en is geannuleerd. Is het document erg groot, converteer het dan in een terminal, zonder tijdslimiet:
+
+    pandoc &quot;%1&quot; -t gfm -o document.md</translation>
+    </message>
+    <message>
+        <location filename="../src/app/mainwindow.cpp" line="906"/>
+        <source>Puede que el archivo esté dañado, protegido con contraseña, o que su extensión no corresponda a su formato real. Prueba a abrirlo con su programa original y guardarlo de nuevo.</source>
+        <translation>Het bestand is mogelijk beschadigd of met een wachtwoord beveiligd, of de extensie past niet bij het echte formaat. Open het in het oorspronkelijke programma en sla het opnieuw op.</translation>
+    </message>
+    <message>
+        <location filename="../src/app/mainwindow.cpp" line="910"/>
+        <source>Motivo que da Pandoc: %1</source>
+        <translation>Door Pandoc opgegeven reden: %1</translation>
+    </message>
+    <message>
+        <location filename="../src/app/mainwindow.cpp" line="924"/>
+        <source>«%1» no contiene texto que importar.</source>
+        <translation>«%1» bevat geen tekst om te importeren.</translation>
+    </message>
+    <message>
+        <location filename="../src/app/mainwindow.cpp" line="927"/>
+        <source>Pandoc lo leyó sin errores, pero el resultado está vacío. Suele pasar con documentos que solo tienen imágenes (por ejemplo, páginas escaneadas), cuyo texto no se puede extraer.</source>
+        <translation>Pandoc heeft het zonder fouten gelezen, maar het resultaat is leeg. Dat gebeurt meestal bij documenten met alleen afbeeldingen (bijvoorbeeld gescande pagina&apos;s), waarvan de tekst niet te extraheren is.</translation>
+    </message>
+    <message>
         <source>No se pudo leer el archivo:
 %1</source>
-        <translation>Kan het bestand niet lezen:
+        <translation type="vanished">Kan het bestand niet lezen:
 %1</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="822"/>
+        <location filename="../src/app/mainwindow.cpp" line="824"/>
         <source>Importar EPUB</source>
         <translation>EPUB importeren</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="823"/>
+        <location filename="../src/app/mainwindow.cpp" line="825"/>
         <source>Libros EPUB (*.epub);;Todos los archivos (*)</source>
         <translation>EPUB-boeken (*.epub);;Alle bestanden (*)</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="837"/>
         <source>No se pudo importar el EPUB. Comprueba que el archivo es válido.</source>
-        <translation>Het EPUB kon niet worden geïmporteerd. Controleer of het bestand geldig is.</translation>
+        <translation type="vanished">Het EPUB kon niet worden geïmporteerd. Controleer of het bestand geldig is.</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="848"/>
         <source>Pandoc no encontrado</source>
-        <translation>Pandoc niet gevonden</translation>
+        <translation type="vanished">Pandoc niet gevonden</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="849"/>
         <source>Para importar estos formatos hace falta Pandoc. Instálalo con:
 
 %1</source>
-        <translation>Voor het importeren van deze formaten is Pandoc nodig. Installeer het met:
+        <translation type="vanished">Voor het importeren van deze formaten is Pandoc nodig. Installeer het met:
 
 %1</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="855"/>
+        <location filename="../src/app/mainwindow.cpp" line="874"/>
         <source>Importar con Pandoc</source>
         <translation>Importeren met Pandoc</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="856"/>
+        <location filename="../src/app/mainwindow.cpp" line="875"/>
         <source>Documentos compatibles (%1);;Todos los archivos (*)</source>
         <translation>Ondersteunde documenten (%1);;Alle bestanden (*)</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="881"/>
         <source>Pandoc no pudo convertir el archivo.</source>
-        <translation>Pandoc kon het bestand niet converteren.</translation>
+        <translation type="vanished">Pandoc kon het bestand niet converteren.</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="892"/>
         <source>El archivo no produjo ningún contenido.</source>
-        <translation>Het bestand leverde geen inhoud op.</translation>
+        <translation type="vanished">Het bestand leverde geen inhoud op.</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="901"/>
+        <location filename="../src/app/mainwindow.cpp" line="940"/>
         <source>Imágenes extraídas a: %1</source>
         <translation>Afbeeldingen uitgepakt naar: %1</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="987"/>
+        <location filename="../src/app/mainwindow.cpp" line="1026"/>
         <source>No hay pestañas cerradas para reabrir.</source>
         <translation>Er zijn geen gesloten tabbladen om opnieuw te openen.</translation>
     </message>
     <message>
-        <location filename="../src/spell/spellcontroller.cpp" line="106"/>
+        <location filename="../src/spell/spellcontroller.cpp" line="118"/>
         <source>No hay corrección ortográfica para %1: Hunspell no tiene diccionario de ese idioma.</source>
         <translation>Geen spellingcontrole voor %1: Hunspell heeft geen woordenboek voor die taal.</translation>
     </message>
     <message>
-        <location filename="../src/spell/spellcontroller.cpp" line="113"/>
+        <location filename="../src/spell/spellcontroller.cpp" line="125"/>
         <source>Sin diccionario de corrección para «%1»: instálalo (Hunspell) o desactiva el corrector en «Ver».</source>
         <translation>Geen spellingwoordenboek voor “%1”: installeer het (Hunspell) of schakel de spellingcontrole uit in “Beeld”.</translation>
     </message>
     <message>
-        <location filename="../src/spell/spellcontroller.cpp" line="168"/>
         <source>Esta versión del programa se compiló sin corrector ortográfico.</source>
-        <translation>Deze versie van het programma is gecompileerd zonder spellingcontrole.</translation>
+        <translation type="vanished">Deze versie van het programma is gecompileerd zonder spellingcontrole.</translation>
     </message>
     <message>
-        <location filename="../src/spell/spellcontroller.cpp" line="170"/>
         <source>No se subrayarán las faltas. Si la has compilado tú, instala Hunspell (libhunspell-dev, brew install hunspell o vcpkg) y vuelve a compilar.</source>
-        <translation>Fouten worden niet onderstreept. Als u het zelf hebt gecompileerd, installeer Hunspell (libhunspell-dev, brew install hunspell of vcpkg) en compileer opnieuw.</translation>
+        <translation type="vanished">Fouten worden niet onderstreept. Als u het zelf hebt gecompileerd, installeer Hunspell (libhunspell-dev, brew install hunspell of vcpkg) en compileer opnieuw.</translation>
     </message>
     <message>
-        <location filename="../src/spell/spellcontroller.cpp" line="178"/>
+        <location filename="../src/spell/spellcontroller.cpp" line="211"/>
         <source>No hay diccionario de %1, así que la corrección está desactivada en este documento.</source>
         <translation>Er is geen woordenboek voor %1, dus de spellingcontrole staat uit in dit document.</translation>
     </message>
     <message>
-        <location filename="../src/spell/spellcontroller.cpp" line="189"/>
+        <location filename="../src/spell/spellcontroller.cpp" line="244"/>
         <source>Puedes instalarlo con tu gestor de paquetes:
 
     %1</source>
@@ -1749,7 +1878,7 @@ Installeer een lettertype met die schriften — bijvoorbeeld ‘Noto Sans CJK’
     %1</translation>
     </message>
     <message>
-        <location filename="../src/spell/spellcontroller.cpp" line="192"/>
+        <location filename="../src/spell/spellcontroller.cpp" line="247"/>
         <source>Puedes instalarlo copiando los archivos .aff y .dic del idioma en esta carpeta:
 
     %1</source>
@@ -1758,42 +1887,93 @@ Installeer een lettertype met die schriften — bijvoorbeeld ‘Noto Sans CJK’
     %1</translation>
     </message>
     <message>
-        <location filename="../src/spell/spellcontroller.cpp" line="204"/>
+        <location filename="../src/spell/spellcontroller.cpp" line="221"/>
         <source>Descargar e instalar</source>
         <translation>Downloaden en installeren</translation>
     </message>
     <message>
-        <location filename="../src/spell/spellcontroller.cpp" line="209"/>
+        <location filename="../src/spell/spellcontroller.cpp" line="104"/>
+        <source>Corrector ortográfico no disponible: esta copia del programa se compiló sin él.</source>
+        <translation>Spellingcontrole niet beschikbaar: deze kopie van het programma is zonder gecompileerd.</translation>
+    </message>
+    <message>
+        <location filename="../src/spell/spellcontroller.cpp" line="179"/>
         <source>No volver a avisar</source>
         <translation>Niet meer waarschuwen</translation>
     </message>
     <message>
-        <location filename="../src/spell/spellcontroller.cpp" line="228"/>
+        <location filename="../src/spell/spellcontroller.cpp" line="193"/>
+        <source>El corrector ortográfico no funciona en esta copia del programa.</source>
+        <translation>De spellingcontrole werkt niet in deze kopie van het programma.</translation>
+    </message>
+    <message>
+        <location filename="../src/spell/spellcontroller.cpp" line="195"/>
+        <source>Se compiló sin Hunspell, el motor de corrección, así que no se subrayará ninguna falta. Instalar diccionarios no lo arregla.
+
+Cómo solucionarlo:
+• Usa una versión publicada (AppImage, ZIP o DMG), que ya lo incluye.
+• Si has compilado el programa tú, instala Hunspell y vuelve a compilarlo e instalarlo:
+
+    %1</source>
+        <translation>Het is gecompileerd zonder Hunspell, de controle-engine, dus er worden geen fouten onderstreept. Woordenboeken installeren lost dit niet op.
+
+Zo los je het op:
+• Gebruik een uitgebrachte versie (AppImage, ZIP of DMG), waar het al in zit.
+• Heb je het programma zelf gecompileerd, installeer dan Hunspell en compileer en installeer het opnieuw:
+
+    %1</translation>
+    </message>
+    <message>
+        <location filename="../src/spell/spellcontroller.cpp" line="255"/>
+        <source>Después, vuelve a abrir el documento para que se active.</source>
+        <translation>Open daarna het document opnieuw om het te activeren.</translation>
+    </message>
+    <message>
+        <location filename="../src/spell/spellcontroller.cpp" line="266"/>
+        <source>No se pudo descargar el diccionario de %1.</source>
+        <translation>Kan het woordenboek voor %1 niet downloaden.</translation>
+    </message>
+    <message>
+        <location filename="../src/spell/spellcontroller.cpp" line="268"/>
+        <source>Comprueba la conexión a Internet y pulsa «Reintentar».</source>
+        <translation>Controleer de internetverbinding en klik op «Opnieuw proberen».</translation>
+    </message>
+    <message>
+        <location filename="../src/spell/spellcontroller.cpp" line="273"/>
+        <source>Motivo: %1</source>
+        <translation>Reden: %1</translation>
+    </message>
+    <message>
+        <location filename="../src/spell/spellcontroller.cpp" line="276"/>
+        <source>Reintentar</source>
+        <translation>Opnieuw proberen</translation>
+    </message>
+    <message>
+        <location filename="../src/spell/spellcontroller.cpp" line="293"/>
         <source>Diccionario instalado.</source>
         <translation>Woordenboek geïnstalleerd.</translation>
     </message>
     <message>
-        <location filename="../src/spell/spellcontroller.cpp" line="232"/>
         <source>No se pudo descargar el diccionario: %1</source>
-        <translation>Kon het woordenboek niet downloaden: %1</translation>
+        <translation type="vanished">Kon het woordenboek niet downloaden: %1</translation>
     </message>
     <message>
-        <location filename="../src/spell/spellcontroller.cpp" line="237"/>
+        <location filename="../src/spell/spellcontroller.cpp" line="304"/>
         <source>Descargando el diccionario…</source>
         <translation>Woordenboek downloaden…</translation>
     </message>
     <message>
-        <location filename="../src/spell/spellcontroller.cpp" line="275"/>
+        <location filename="../src/spell/spellcontroller.cpp" line="342"/>
         <source>(sin sugerencias)</source>
         <translation>(geen suggesties)</translation>
     </message>
     <message>
-        <location filename="../src/spell/spellcontroller.cpp" line="294"/>
+        <location filename="../src/spell/spellcontroller.cpp" line="361"/>
         <source>Añadir «%1» al diccionario</source>
         <translation>«%1» toevoegen aan woordenboek</translation>
     </message>
     <message>
-        <location filename="../src/spell/spellcontroller.cpp" line="300"/>
+        <location filename="../src/spell/spellcontroller.cpp" line="367"/>
         <source>Ignorar «%1»</source>
         <translation>«%1» negeren</translation>
     </message>
@@ -1823,12 +2003,12 @@ Installeer een lettertype met die schriften — bijvoorbeeld ‘Noto Sans CJK’
         <translation>Voetnoot [^%1] heeft geen definitie</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowsession.cpp" line="67"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="69"/>
         <source>Recuperar documentos</source>
         <translation>Documenten herstellen</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowsession.cpp" line="68"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="70"/>
         <source>Se encontraron documentos con cambios sin guardar de una sesión anterior:
 %1
 
@@ -1839,137 +2019,139 @@ Installeer een lettertype met die schriften — bijvoorbeeld ‘Noto Sans CJK’
 Wil je ze herstellen?</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowsession.cpp" line="156"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="158"/>
         <source>El archivo cambió en disco: recargado.</source>
         <translation>Het bestand is op de schijf gewijzigd: opnieuw geladen.</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowsession.cpp" line="163"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="165"/>
         <source>Archivo modificado en disco</source>
         <translation>Bestand gewijzigd op schijf</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowsession.cpp" line="164"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="166"/>
         <source>«%1» ha cambiado en disco y tienes cambios sin guardar.</source>
         <translation>‘%1’ is op de schijf gewijzigd en je hebt niet-opgeslagen wijzigingen.</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowsession.cpp" line="167"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="169"/>
         <source>¿Recargar la versión del disco (perderás tus cambios) o conservar los tuyos?</source>
         <translation>De versie op de schijf herladen (je verliest je wijzigingen) of die van jou behouden?</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowsession.cpp" line="168"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="170"/>
         <source>Recargar</source>
         <translation>Herladen</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowsession.cpp" line="170"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="172"/>
         <source>Conservar los míos</source>
         <translation>Mijne behouden</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowsession.cpp" line="199"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="200"/>
+        <source>No se pudo recargar</source>
+        <translation>Opnieuw laden mislukt</translation>
+    </message>
+    <message>
+        <location filename="../src/app/mainwindowsession.cpp" line="201"/>
+        <source>No se pudo recargar «%1» desde el disco.</source>
+        <translation>Kan «%1» niet opnieuw laden van schijf.</translation>
+    </message>
+    <message>
         <source>No se pudo recargar el archivo:
 %1
 
 %2</source>
-        <translation>Kon het bestand niet herladen:
+        <translation type="vanished">Kon het bestand niet herladen:
 %1
 
 %2</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowsession.cpp" line="225"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="228"/>
         <source>Revertir a lo guardado</source>
         <translation>Terugzetten naar opgeslagen versie</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowsession.cpp" line="226"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="229"/>
         <source>Se descartarán los cambios sin guardar de «%1» y se recargará la versión del disco. ¿Continuar?</source>
         <translation>De niet-opgeslagen wijzigingen in “%1” worden verworpen en de versie op schijf wordt opnieuw geladen. Doorgaan?</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowsession.cpp" line="234"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="237"/>
         <source>Revertido a la versión guardada.</source>
         <translation>Teruggezet naar de opgeslagen versie.</translation>
     </message>
     <message>
-        <location filename="../src/editor/insertcontroller.cpp" line="207"/>
+        <location filename="../src/editor/insertcontroller.cpp" line="208"/>
         <source>imagen pegada</source>
         <translation>geplakte afbeelding</translation>
     </message>
     <message>
-        <location filename="../src/editor/insertcontroller.cpp" line="269"/>
-        <location filename="../src/editor/insertcontroller.cpp" line="278"/>
+        <location filename="../src/editor/insertcontroller.cpp" line="251"/>
+        <source>No se pudo guardar la imagen pegada en «%1», así que no se ha insertado.</source>
+        <translation>Kan de geplakte afbeelding niet opslaan in «%1», dus die is niet ingevoegd.</translation>
+    </message>
+    <message>
+        <location filename="../src/editor/insertcontroller.cpp" line="274"/>
+        <location filename="../src/editor/insertcontroller.cpp" line="283"/>
         <source>Insertar tabla</source>
         <translation>Tabel invoegen</translation>
     </message>
     <message>
-        <location filename="../src/editor/insertcontroller.cpp" line="286"/>
+        <location filename="../src/editor/insertcontroller.cpp" line="291"/>
         <source>Columnas:</source>
         <translation>Kolommen:</translation>
     </message>
     <message>
-        <location filename="../src/editor/insertcontroller.cpp" line="287"/>
+        <location filename="../src/editor/insertcontroller.cpp" line="292"/>
         <source>Filas de datos:</source>
         <translation>Gegevensrijen:</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="340"/>
+        <location filename="../src/export/exportcontroller.cpp" line="371"/>
         <source>Exportar a PDF</source>
         <translation>Naar PDF exporteren</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="274"/>
-        <location filename="../src/export/exportcontroller.cpp" line="340"/>
+        <location filename="../src/export/exportcontroller.cpp" line="305"/>
+        <location filename="../src/export/exportcontroller.cpp" line="371"/>
         <source>PDF (*.pdf)</source>
         <translation>PDF (*.pdf)</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="282"/>
-        <location filename="../src/export/exportcontroller.cpp" line="353"/>
+        <location filename="../src/export/exportcontroller.cpp" line="313"/>
+        <location filename="../src/export/exportcontroller.cpp" line="384"/>
         <source>Exportado a PDF: %1</source>
         <translation>Geëxporteerd naar PDF: %1</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="361"/>
+        <location filename="../src/export/exportcontroller.cpp" line="392"/>
         <source>Exportar a HTML</source>
         <translation>Naar HTML exporteren</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="362"/>
+        <location filename="../src/export/exportcontroller.cpp" line="393"/>
         <source>HTML (*.html *.htm)</source>
         <translation>HTML (*.html *.htm)</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="806"/>
-        <location filename="../src/app/mainwindow.cpp" line="829"/>
-        <location filename="../src/app/mainwindow.cpp" line="836"/>
-        <location filename="../src/app/mainwindow.cpp" line="880"/>
-        <location filename="../src/app/mainwindow.cpp" line="891"/>
-        <location filename="../src/app/mainwindowsession.cpp" line="198"/>
-        <location filename="../src/io/filecontroller.cpp" line="80"/>
-        <location filename="../src/io/filecontroller.cpp" line="143"/>
-        <location filename="../src/export/exportcontroller.cpp" line="168"/>
         <source>Error</source>
-        <translation>Fout</translation>
+        <translation type="vanished">Fout</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="364"/>
-        <location filename="../src/export/exportcontroller.cpp" line="421"/>
-        <location filename="../src/export/exportcontroller.cpp" line="438"/>
         <source>No se pudo escribir:
 %1
 
 %2</source>
-        <translation>Kon niet schrijven:
+        <translation type="vanished">Kon niet schrijven:
 %1
 
 %2</translation>
     </message>
     <message>
-        <location filename="../src/export/exportcontroller.cpp" line="365"/>
+        <location filename="../src/export/exportcontroller.cpp" line="396"/>
         <source>Exportado a HTML: %1</source>
         <translation>Geëxporteerd naar HTML: %1</translation>
     </message>
@@ -1979,72 +2161,90 @@ Wil je ze herstellen?</translation>
         <translation>Ctrl+klik om de koppeling te openen: %1</translation>
     </message>
     <message>
-        <location filename="../src/io/filecontroller.cpp" line="81"/>
         <source>No se pudo abrir el archivo:
 %1
 
 %2</source>
-        <translation>Kon het bestand niet openen:
+        <translation type="vanished">Kon het bestand niet openen:
 %1
 
 %2</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="743"/>
-        <location filename="../src/io/filecontroller.cpp" line="105"/>
+        <location filename="../src/app/mainwindow.cpp" line="744"/>
+        <location filename="../src/io/filecontroller.cpp" line="107"/>
         <source>Abrir carpeta contenedora</source>
         <translation>Map van document openen</translation>
     </message>
     <message>
-        <location filename="../src/io/filecontroller.cpp" line="106"/>
+        <location filename="../src/io/filecontroller.cpp" line="108"/>
         <source>Guarda el documento primero para abrir su carpeta.</source>
         <translation>Sla het document eerst op om de map ervan te openen.</translation>
     </message>
     <message>
-        <location filename="../src/io/filecontroller.cpp" line="125"/>
+        <location filename="../src/io/filecontroller.cpp" line="127"/>
         <source>Guardar como</source>
         <translation>Opslaan als</translation>
     </message>
     <message>
-        <location filename="../src/io/filecontroller.cpp" line="127"/>
+        <location filename="../src/io/filecontroller.cpp" line="129"/>
         <source>Archivos Markdown (*.md *.markdown);;Todos los archivos (*)</source>
         <translation>Markdown-bestanden (*.md *.markdown);;Alle bestanden (*)</translation>
     </message>
     <message>
-        <location filename="../src/io/filecontroller.cpp" line="144"/>
         <source>No se pudo guardar el archivo:
 %1
 
 %2</source>
-        <translation>Kon het bestand niet opslaan:
+        <translation type="vanished">Kon het bestand niet opslaan:
 %1
 
 %2</translation>
     </message>
     <message>
-        <location filename="../src/io/filecontroller.cpp" line="152"/>
+        <location filename="../src/io/filecontroller.cpp" line="82"/>
+        <source>No se pudo abrir</source>
+        <translation>Openen mislukt</translation>
+    </message>
+    <message>
+        <location filename="../src/io/filecontroller.cpp" line="83"/>
+        <source>No se pudo abrir «%1».</source>
+        <translation>Kan «%1» niet openen.</translation>
+    </message>
+    <message>
+        <location filename="../src/io/filecontroller.cpp" line="148"/>
+        <source>No se pudo guardar</source>
+        <translation>Opslaan mislukt</translation>
+    </message>
+    <message>
+        <location filename="../src/io/filecontroller.cpp" line="149"/>
+        <source>No se pudo guardar «%1». Tus cambios siguen en el editor: no cierres el documento hasta guardarlo.</source>
+        <translation>Kan «%1» niet opslaan. Je wijzigingen staan nog in de editor: sluit het document pas als je het hebt opgeslagen.</translation>
+    </message>
+    <message>
+        <location filename="../src/io/filecontroller.cpp" line="159"/>
         <source>Guardado: %1</source>
         <translation>Opgeslagen: %1</translation>
     </message>
     <message>
-        <location filename="../src/io/filecontroller.cpp" line="163"/>
+        <location filename="../src/io/filecontroller.cpp" line="170"/>
         <source>md-editor</source>
         <translation>md-editor</translation>
     </message>
     <message>
-        <location filename="../src/io/filecontroller.cpp" line="164"/>
+        <location filename="../src/io/filecontroller.cpp" line="171"/>
         <source>El documento tiene cambios sin guardar.
 ¿Quieres guardarlos?</source>
         <translation>Het document heeft niet-opgeslagen wijzigingen.
 Wilt u ze opslaan?</translation>
     </message>
     <message>
-        <location filename="../src/io/filecontroller.cpp" line="241"/>
+        <location filename="../src/io/filecontroller.cpp" line="248"/>
         <source>Documento recuperado de la sesión anterior</source>
         <translation>Document hersteld uit de vorige sessie</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowsession.cpp" line="63"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="65"/>
         <source>(sin título)</source>
         <translation>(naamloos)</translation>
     </message>
@@ -2063,26 +2263,26 @@ Wilt u ze opslaan?</translation>
 Wil je het herstellen?</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowsession.cpp" line="71"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="73"/>
         <source>Recuperar</source>
         <translation>Herstellen</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowsession.cpp" line="72"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="74"/>
         <source>Descartar</source>
         <translation>Negeren</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="631"/>
-        <location filename="../src/app/mainwindow.cpp" line="709"/>
-        <location filename="../src/app/mainwindow.cpp" line="1001"/>
-        <location filename="../src/app/mainwindowsession.cpp" line="141"/>
+        <location filename="../src/app/mainwindow.cpp" line="632"/>
+        <location filename="../src/app/mainwindow.cpp" line="710"/>
+        <location filename="../src/app/mainwindow.cpp" line="1040"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="143"/>
         <source>Sin título</source>
         <translation>Naamloos</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="708"/>
-        <location filename="../src/app/mainwindowsession.cpp" line="143"/>
+        <location filename="../src/app/mainwindow.cpp" line="709"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="145"/>
         <source>%1[*] — md-editor</source>
         <translation>%1[*] — md-editor</translation>
     </message>
@@ -2123,7 +2323,7 @@ Wil je het herstellen?</translation>
         <translation>Taal</translation>
     </message>
     <message>
-        <location filename="../src/io/filecontroller.cpp" line="90"/>
+        <location filename="../src/io/filecontroller.cpp" line="92"/>
         <source>%1 — front matter conservado</source>
         <translation>%1 — front matter behouden</translation>
     </message>
@@ -2887,6 +3087,26 @@ Dit is een **visuele** Markdown-editor: je schrijft en maakt op in de weergegeve
 Verwijder deze tekst en begin met schrijven.
 </translation>
     </message>
+    <message>
+        <location filename="../src/export/exportdocx.cpp" line="553"/>
+        <source>Error al escribir el paquete DOCX.</source>
+        <translation>Fout bij het schrijven van het DOCX-pakket.</translation>
+    </message>
+    <message>
+        <location filename="../src/export/exportepub.cpp" line="308"/>
+        <source>Error al escribir el paquete EPUB.</source>
+        <translation>Fout bij het schrijven van het EPUB-pakket.</translation>
+    </message>
+    <message>
+        <location filename="../src/export/exportodf.cpp" line="93"/>
+        <source>QTextDocumentWriter falló al generar el ODF.</source>
+        <translation>QTextDocumentWriter kon het ODF-bestand niet aanmaken.</translation>
+    </message>
+    <message>
+        <location filename="../src/export/exportodf.cpp" line="131"/>
+        <source>Error al escribir el paquete ODF.</source>
+        <translation>Fout bij het schrijven van het ODF-pakket.</translation>
+    </message>
 </context>
 <context>
     <name>OutlinePanel</name>
@@ -2958,17 +3178,17 @@ Verwijder deze tekst en begin met schrijven.
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../src/editor/insertcontroller.cpp" line="73"/>
+        <location filename="../src/editor/insertcontroller.cpp" line="74"/>
         <source>...</source>
         <translation>...</translation>
     </message>
     <message>
-        <location filename="../src/editor/insertcontroller.cpp" line="76"/>
+        <location filename="../src/editor/insertcontroller.cpp" line="77"/>
         <source>Elegir imagen</source>
         <translation>Afbeelding kiezen</translation>
     </message>
     <message>
-        <location filename="../src/editor/insertcontroller.cpp" line="77"/>
+        <location filename="../src/editor/insertcontroller.cpp" line="78"/>
         <source>Imágenes (*.png *.jpg *.jpeg *.gif *.bmp *.svg);;Todos (*)</source>
         <translation>Afbeeldingen (*.png *.jpg *.jpeg *.gif *.bmp *.svg);;Alle (*)</translation>
     </message>
@@ -3195,6 +3415,69 @@ Verwijder deze tekst en begin met schrijven.
         <location filename="../src/widgets/usertemplatesdialog.cpp" line="149"/>
         <source>Nueva plantilla</source>
         <translation>Nieuw sjabloon</translation>
+    </message>
+</context>
+<context>
+    <name>mdfileerr</name>
+    <message>
+        <location filename="../src/io/fileerrors.cpp" line="40"/>
+        <source>El archivo ya no está ahí: puede que se haya movido, renombrado o borrado, o que esté en una unidad que ya no está conectada.</source>
+        <translation>Het bestand staat er niet meer: het is misschien verplaatst, hernoemd of verwijderd, of het staat op een schijf die niet meer is aangesloten.</translation>
+    </message>
+    <message>
+        <location filename="../src/io/fileerrors.cpp" line="43"/>
+        <source>Es una carpeta, no un archivo. Elige un archivo dentro de ella.</source>
+        <translation>Dit is een map, geen bestand. Kies een bestand in die map.</translation>
+    </message>
+    <message>
+        <location filename="../src/io/fileerrors.cpp" line="45"/>
+        <source>No tienes permiso para leerlo. Pide acceso a su propietario o cambia sus permisos.</source>
+        <translation>Je hebt geen toestemming om het te lezen. Vraag de eigenaar om toegang of wijzig de rechten.</translation>
+    </message>
+    <message>
+        <location filename="../src/io/fileerrors.cpp" line="47"/>
+        <source>Comprueba que la unidad sigue conectada y que otro programa no lo tiene bloqueado, y vuelve a intentarlo.</source>
+        <translation>Controleer of de schijf nog is aangesloten en of geen ander programma het vergrendelt, en probeer het opnieuw.</translation>
+    </message>
+    <message>
+        <location filename="../src/io/fileerrors.cpp" line="52"/>
+        <source>La carpeta «%1» ya no existe (puede que se haya borrado o que la unidad se haya desconectado). Elige otra carpeta.</source>
+        <translation>De map «%1» bestaat niet meer (misschien is die verwijderd of is de schijf losgekoppeld). Kies een andere map.</translation>
+    </message>
+    <message>
+        <location filename="../src/io/fileerrors.cpp" line="55"/>
+        <source>Ya hay una carpeta con ese nombre. Elige otro nombre.</source>
+        <translation>Er bestaat al een map met die naam. Kies een andere naam.</translation>
+    </message>
+    <message>
+        <location filename="../src/io/fileerrors.cpp" line="57"/>
+        <source>El archivo es de solo lectura o pertenece a otro usuario. Guárdalo con otro nombre o en otra carpeta, o cambia sus permisos.</source>
+        <translation>Het bestand is alleen-lezen of is van een andere gebruiker. Sla het op onder een andere naam of in een andere map, of wijzig de rechten.</translation>
+    </message>
+    <message>
+        <location filename="../src/io/fileerrors.cpp" line="60"/>
+        <source>No tienes permiso para escribir en la carpeta «%1». Elige otra carpeta, por ejemplo una dentro de tu carpeta personal.</source>
+        <translation>Je hebt geen schrijfrechten voor de map «%1». Kies een andere map, bijvoorbeeld een in je persoonlijke map.</translation>
+    </message>
+    <message>
+        <location filename="../src/io/fileerrors.cpp" line="64"/>
+        <source>El disco está lleno. Libera espacio o elige otra unidad y vuelve a intentarlo.</source>
+        <translation>De schijf is vol. Maak ruimte vrij of kies een andere schijf en probeer het opnieuw.</translation>
+    </message>
+    <message>
+        <location filename="../src/io/fileerrors.cpp" line="67"/>
+        <source>La unidad es de solo lectura. Elige una carpeta en otra unidad.</source>
+        <translation>De schijf is alleen-lezen. Kies een map op een andere schijf.</translation>
+    </message>
+    <message>
+        <location filename="../src/io/fileerrors.cpp" line="68"/>
+        <source>Comprueba que la unidad sigue conectada y que otro programa no tiene el archivo abierto, y vuelve a intentarlo.</source>
+        <translation>Controleer of de schijf nog is aangesloten en of geen ander programma het bestand open heeft, en probeer het opnieuw.</translation>
+    </message>
+    <message>
+        <location filename="../src/io/fileerrors.cpp" line="78"/>
+        <source>Motivo que da el sistema: %1</source>
+        <translation>Door het systeem opgegeven reden: %1</translation>
     </message>
 </context>
 </TS>

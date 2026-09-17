@@ -10,6 +10,7 @@
 
 #include "mainwindow.h"
 
+#include <QDir>
 #include <QFileInfo>
 #include <QMessageBox>
 #include <QPushButton>
@@ -22,6 +23,7 @@
 #include "documentio.h"
 #include "editorstack.h"
 #include "filecontroller.h"
+#include "fileerrors.h"
 #include "recentfilesmanager.h"
 #include "recoverymanager.h"
 #include "splitviewcontroller.h"
@@ -195,9 +197,10 @@ void MainWindow::reloadFromDisk()
 
     QString error;
     if (!m_stack->documentIo()->load(path, &error)) {  // emite currentFileChanged → revigila
-        QMessageBox::warning(this, tr("Error"),
-                             tr("No se pudo recargar el archivo:\n%1\n\n%2")
-                                 .arg(path, error));
+        mdfileerr::showError(this, tr("No se pudo recargar"),
+                             tr("No se pudo recargar «%1» desde el disco.")
+                                 .arg(QDir::toNativeSeparators(path)),
+                             path, error, mdfileerr::Op::Read);
         return;
     }
     // Si el panel de fuente está visible (modo fuente o vista dividida), su texto

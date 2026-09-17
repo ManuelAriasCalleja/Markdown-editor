@@ -42,6 +42,10 @@ Opciones:
 Variables de entorno:
   PREFIX   Destino de instalación (por defecto /usr/local). Se usa sudo solo si
            hace falta para escribir ahí. Ej.: PREFIX="$HOME/.local" ./install.sh
+  SPELL_CHECK_REQUIRED
+           ON por defecto: si falta Hunspell (libhunspell-dev), la instalación se
+           detiene en vez de instalar un programa sin corrector ortográfico.
+           Con OFF se instala igualmente sin él.
 EOF
 }
 
@@ -61,19 +65,38 @@ DEST="$PREFIX/bin/$TARGET"
 APPS_DIR="$PREFIX/share/applications"
 ICONS_DIR="$PREFIX/share/icons/hicolor"
 
-# 1) Configura la build elegida. Es idempotente: si la caché ya tiene estos
-#    ajustes, CMake no hace nada.
+# 1) Configura la build elegida. Lo que se INSTALA exige el corrector
+#    (SPELL_CHECK_REQUIRED=ON): sin libhunspell-dev, CMake lo omitía en silencio
+#    —su aviso iba a /dev/null— y el binario instalado arrancaba avisando de que
+#    no tenía corrector. Así falla aquí, con el motivo y la orden para arreglarlo,
+#    en vez de instalar un programa a medias (SPELL_CHECK_REQUIRED=OFF lo permite).
+#    Es idempotente: si la caché ya tiene estos ajustes, CMake no hace nada.
+SPELL_CHECK_REQUIRED="${SPELL_CHECK_REQUIRED:-ON}"
+if [ "$MINIMAL" -eq 1 ]; then BUILD_DIR="build-min"; else BUILD_DIR="build"; fi
+
+# Una carpeta de build creada con `sudo ./install.sh` es de root, y la siguiente
+# ejecución sin sudo moría con un «Cannot open file for write: CMakeCache.txt.tmp»
+# que no dice nada útil.
+if [ -d "$BUILD_DIR" ] && [ ! -w "$BUILD_DIR" ]; then
+    echo "Error: la carpeta $BUILD_DIR/ no es tuya (probablemente se creó con sudo)," >&2
+    echo "así que no se puede compilar en ella. Devuélvela a tu usuario con:" >&2
+    echo "" >&2
+    echo "    sudo chown -R \"\$(id -un)\": $BUILD_DIR" >&2
+    echo "" >&2
+    echo "o vuelve a ejecutar la instalación con sudo." >&2
+    exit 1
+fi
+
 if [ "$MINIMAL" -eq 1 ]; then
-    BUILD_DIR="build-min"
     echo "==> Configurando (tamaño mínimo) en $BUILD_DIR/"
     cmake -S . -B "$BUILD_DIR" \
         -DCMAKE_BUILD_TYPE=MinSizeRel \
         -DCMAKE_CXX_FLAGS="-Os -ffunction-sections -fdata-sections" \
-        -DCMAKE_EXE_LINKER_FLAGS="-Wl,--gc-sections -s" >/dev/null
+        -DCMAKE_EXE_LINKER_FLAGS="-Wl,--gc-sections -s" \
+        -DSPELL_CHECK_REQUIRED="$SPELL_CHECK_REQUIRED" >/dev/null
 else
-    BUILD_DIR="build"
     echo "==> Configurando (build normal) en $BUILD_DIR/"
-    cmake -S . -B "$BUILD_DIR" >/dev/null
+    cmake -S . -B "$BUILD_DIR" -DSPELL_CHECK_REQUIRED="$SPELL_CHECK_REQUIRED" >/dev/null
 fi
 BIN="$BUILD_DIR/$TARGET"
 

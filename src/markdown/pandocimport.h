@@ -56,8 +56,8 @@ QString htmlTablesToMarkdown(const QString &markdown);
 /// traducible del filtro lo pone quien abre el diálogo. Función pura.
 QString pandocFilePattern();
 
-/// Orden de instalación de Pandoc según el sistema en ejecución (QSysInfo, sin
-/// `#ifdef`), para sugerirla cuando no está instalado. Función pura.
+/// Orden de instalación de Pandoc según el sistema en ejecución (y su distribución,
+/// ver `mdinstall`), para sugerirla cuando no está instalado.
 QString pandocInstallCommand();
 
 }  // namespace mdimport

@@ -35,6 +35,9 @@ modules:
       # dejarlo activado solo produce un aviso de CMake y cae igualmente a
       # dinámico.
       - -DSPELL_CHECK_STATIC=OFF
+      # Como en release.yml: si el SDK dejara de traer Hunspell, que falle la
+      # build en vez de publicar un Flatpak sin corrector.
+      - -DSPELL_CHECK_REQUIRED=ON
     sources:
       - type: git
         url: https://github.com/ManuelAriasCalleja/Markdown-editor.git

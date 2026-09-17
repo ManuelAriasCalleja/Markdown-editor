@@ -197,7 +197,13 @@ parser de fuente / motor TeX→runs / maquetación 2D), `footnotes` (`mdfootnote
 (`mdurl`), `richpaste` (`mdrichpaste`), `doctemplates` (`mdtemplate`),
 `admonitions` (`mdadmonition`), `texttransform` (`mdtext`), `docstats`
 (`mdstats`), `langtag` (`mdlang::canonicalTag`; etiqueta canónica de idioma, ver
-«Internacionalización»), `blockconstructs` (`mdblock`), `outline`
+«Internacionalización»), `installcmd` (`mdinstall`; la orden de instalación de lo que
+falta —Pandoc, PlantUML, el motor de Hunspell— según la distribución del
+usuario, para que los avisos no manden `sudo apt` a un Fedora), `fileerrors`
+(`mdfileerr`; convierte un fallo de abrir/guardar/exportar en causa y remedio
+mirando el estado real del disco —carpeta desaparecida, sin permiso, disco lleno—
+en vez de mostrar el `errorString()` del sistema a secas; `showError` es el aviso
+común de todos esos fallos), `blockconstructs` (`mdblock`), `outline`
 (`mdoutline::headingsOf`; vive aparte de `OutlinePanel` para que quien solo quiere
 el índice —la exportación a EPUB, por ejemplo— no arrastre un `QDockWidget`; lo
 mismo con `mdcommands` en `app/commands.h`), `spellscan` (`mdspell`; tokenización de palabras y

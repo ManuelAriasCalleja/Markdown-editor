@@ -33,6 +33,7 @@
 #include "appsettings.h"
 #include "documentio.h"
 #include "exporters.h"
+#include "fileerrors.h"
 #include "richpaste.h"
 #include "splitviewcontroller.h"
 #include "tableedit.h"
@@ -165,12 +166,42 @@ bool ExportController::runExport(const FileExporter &exp)
 
     QString error;
     if (!exp.write(doc, path, language, exportTitle(), &error)) {
-        QMessageBox::warning(m_parent, QCoreApplication::translate("MainWindow", "Error"),
+        mdfileerr::showError(m_parent,
+                             QCoreApplication::translate("MainWindow", "No se pudo exportar"),
                              QCoreApplication::translate("MainWindow", exp.errorMsg)
-                                 .arg(path, error));
+                                 .arg(QDir::toNativeSeparators(path)),
+                             // Los escritores (puros) no traducen: marcan sus
+                             // mensajes con QT_TRANSLATE_NOOP y se traducen aquí. Un
+                             // errorString() del sistema no está en el catálogo y
+                             // pasa tal cual.
+                             path, QCoreApplication::translate("MainWindow",
+                                                               error.toUtf8().constData()),
+                             mdfileerr::Op::Write);
         return false;
     }
     emit statusMessage(QCoreApplication::translate("MainWindow", exp.okMsg).arg(path), 4000);
+    return true;
+}
+
+bool ExportController::checkWritable(const QString &path) const
+{
+    // QPrinter no avisa si no puede crear el PDF: pinta sobre nada y el programa
+    // anunciaba «Exportado a PDF» sin que existiera archivo alguno. Se prueba antes a
+    // abrirlo (en modo añadir, para no truncar uno que ya estuviera ahí).
+    const bool existed = QFileInfo::exists(path);
+    QFile probe(path);
+    if (!probe.open(QIODevice::WriteOnly | QIODevice::Append)) {
+        mdfileerr::showError(m_parent,
+                             QCoreApplication::translate("MainWindow", "No se pudo exportar"),
+                             QCoreApplication::translate("MainWindow",
+                                 "No se pudo exportar a PDF «%1».")
+                                 .arg(QDir::toNativeSeparators(path)),
+                             path, probe.errorString(), mdfileerr::Op::Write);
+        return false;
+    }
+    probe.close();
+    if (!existed)
+        QFile::remove(path);
     return true;
 }
 
@@ -272,7 +303,7 @@ bool ExportController::exportSelectionPdf()
     const QString path = promptSavePath(
         QCoreApplication::translate("MainWindow", "Exportar selección a PDF"),
         QCoreApplication::translate("MainWindow", "PDF (*.pdf)"), QStringLiteral("pdf"));
-    if (path.isEmpty())
+    if (path.isEmpty() || !checkWritable(path))
         return false;
     QPrinter printer(QPrinter::HighResolution);
     printer.setOutputFormat(QPrinter::PdfFormat);
@@ -339,7 +370,7 @@ bool ExportController::exportPdf()
     m_split->commitSourceToDocument();
     const QString path = promptSavePath(QCoreApplication::translate("MainWindow", "Exportar a PDF"), QCoreApplication::translate("MainWindow", "PDF (*.pdf)"),
                                         QStringLiteral("pdf"));
-    if (path.isEmpty())
+    if (path.isEmpty() || !checkWritable(path))
         return false;
 
     QPrinter printer(QPrinter::HighResolution);
@@ -361,7 +392,7 @@ bool ExportController::exportHtml()
         QT_TRANSLATE_NOOP("MainWindow", "Exportar a HTML"),
         QT_TRANSLATE_NOOP("MainWindow", "HTML (*.html *.htm)"),
         QStringLiteral("html"),
-        QT_TRANSLATE_NOOP("MainWindow", "No se pudo escribir:\n%1\n\n%2"),
+        QT_TRANSLATE_NOOP("MainWindow", "No se pudo exportar a HTML «%1»."),
         QT_TRANSLATE_NOOP("MainWindow", "Exportado a HTML: %1"),
         // Idioma: va en `<html lang>`, como en los demás formatos. baseUrl: hace
         // falta para resolver las imágenes de ruta relativa y embeberlas.
@@ -379,7 +410,7 @@ bool ExportController::exportOdf()
         QT_TRANSLATE_NOOP("MainWindow", "Exportar a ODF"),
         QT_TRANSLATE_NOOP("MainWindow", "Documento ODF (*.odt)"),
         QStringLiteral("odt"),
-        QT_TRANSLATE_NOOP("MainWindow", "No se pudo exportar a ODF:\n%1\n\n%2"),
+        QT_TRANSLATE_NOOP("MainWindow", "No se pudo exportar a ODF «%1»."),
         QT_TRANSLATE_NOOP("MainWindow", "Exportado a ODF: %1"),
         /*needsLanguage=*/true, /*useFlatClone=*/true, /*needsBaseUrl=*/false,
         &mdexport::writeOdf,
@@ -392,7 +423,7 @@ bool ExportController::exportDocx()
         QT_TRANSLATE_NOOP("MainWindow", "Exportar a DOCX"),
         QT_TRANSLATE_NOOP("MainWindow", "Documento Word (*.docx)"),
         QStringLiteral("docx"),
-        QT_TRANSLATE_NOOP("MainWindow", "No se pudo exportar a DOCX:\n%1\n\n%2"),
+        QT_TRANSLATE_NOOP("MainWindow", "No se pudo exportar a DOCX «%1»."),
         QT_TRANSLATE_NOOP("MainWindow", "Exportado a DOCX: %1"),
         /*needsLanguage=*/true, /*useFlatClone=*/true, /*needsBaseUrl=*/true,
         &mdexport::writeDocx,
@@ -405,7 +436,7 @@ bool ExportController::exportEpub()
         QT_TRANSLATE_NOOP("MainWindow", "Exportar a EPUB"),
         QT_TRANSLATE_NOOP("MainWindow", "Libro EPUB (*.epub)"),
         QStringLiteral("epub"),
-        QT_TRANSLATE_NOOP("MainWindow", "No se pudo exportar a EPUB:\n%1\n\n%2"),
+        QT_TRANSLATE_NOOP("MainWindow", "No se pudo exportar a EPUB «%1»."),
         QT_TRANSLATE_NOOP("MainWindow", "Exportado a EPUB: %1"),
         /*needsLanguage=*/true, /*useFlatClone=*/true, /*needsBaseUrl=*/true,
         &mdexport::writeEpub,
@@ -418,7 +449,7 @@ bool ExportController::exportPlainText()
         QT_TRANSLATE_NOOP("MainWindow", "Exportar a texto plano"),
         QT_TRANSLATE_NOOP("MainWindow", "Texto plano (*.txt)"),
         QStringLiteral("txt"),
-        QT_TRANSLATE_NOOP("MainWindow", "No se pudo escribir:\n%1\n\n%2"),
+        QT_TRANSLATE_NOOP("MainWindow", "No se pudo exportar a texto plano «%1»."),
         QT_TRANSLATE_NOOP("MainWindow", "Exportado a texto plano: %1"),
         // Clon plano: expande las fórmulas 2D a runs, así toPlainText() recoge su texto.
         /*needsLanguage=*/false, /*useFlatClone=*/true, /*needsBaseUrl=*/false,
@@ -435,7 +466,7 @@ bool ExportController::exportLatex()
         QT_TRANSLATE_NOOP("MainWindow", "Exportar a LaTeX"),
         QT_TRANSLATE_NOOP("MainWindow", "Documento LaTeX (*.tex)"),
         QStringLiteral("tex"),
-        QT_TRANSLATE_NOOP("MainWindow", "No se pudo escribir:\n%1\n\n%2"),
+        QT_TRANSLATE_NOOP("MainWindow", "No se pudo exportar a LaTeX «%1»."),
         QT_TRANSLATE_NOOP("MainWindow", "Exportado a LaTeX: %1"),
         // LaTeX usa el documento ORIGINAL (no el clon plano): toLatex emite las
         // fórmulas verbatim desde sus propiedades de math.

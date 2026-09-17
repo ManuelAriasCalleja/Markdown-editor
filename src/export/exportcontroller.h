@@ -103,6 +103,8 @@ private:
     // números de página está activo, pagina a mano y añade el pie; si no, usa el
     // print() de Qt (conducta original).
     void renderToPrinter(QTextDocument *doc, QPrinter *printer) const;
+    // ¿Se puede crear el PDF en `path`? Si no, avisa (con la causa) y devuelve false.
+    bool checkWritable(const QString &path) const;
 
     // Avisa si el documento lleva texto chino, japonés o coreano y en el sistema no
     // hay NINGUNA fuente que sepa dibujarlo: ese texto no aparece en el PDF ni en el
@@ -119,7 +121,7 @@ private:
         const char *title;     // título del diálogo de guardar
         const char *filter;    // filtro de archivos del diálogo
         QString ext;           // extensión por defecto (sin punto)
-        const char *errorMsg;  // mensaje de error (con %1=ruta, %2=detalle)
+        const char *errorMsg;  // titular del error (con %1=ruta); la pista la pone mdfileerr
         const char *okMsg;     // mensaje de éxito (con %1=ruta)
         bool needsLanguage;    // ¿preguntar el idioma del documento?
         bool useFlatClone;     // ¿exportar el clon «plano» (cloneForExport) o el original?

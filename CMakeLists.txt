@@ -53,6 +53,26 @@ find_package(Qt6 REQUIRED COMPONENTS Widgets PrintSupport Network LinguistTools)
 if(NOT TARGET Qt6::GuiPrivate)
     find_package(Qt6 REQUIRED COMPONENTS GuiPrivate)
 endif()
+# En Debian/Ubuntu el target existe aunque falten las cabeceras privadas (vienen
+# en otro paquete), y CMake falla más adelante con un críptico «Imported target
+# "Qt6::GuiPrivate" includes non-existent path». Se comprueba aquí para decir qué
+# falta y cómo instalarlo.
+get_target_property(_qt_private_incs Qt6::GuiPrivate INTERFACE_INCLUDE_DIRECTORIES)
+if(_qt_private_incs)
+    foreach(_dir IN LISTS _qt_private_incs)
+        if(NOT _dir MATCHES "\\$<" AND NOT EXISTS "${_dir}")
+            message(FATAL_ERROR
+                "Faltan las cabeceras privadas de Qt6 (no existe ${_dir}).\n"
+                "La exportación a ODF/DOCX/EPUB las necesita y vienen en un paquete "
+                "aparte. Instálalo y vuelve a configurar:\n"
+                "  Debian/Ubuntu:  sudo apt install qt6-base-private-dev\n"
+                "  Fedora:         sudo dnf install qt6-qtbase-private-devel\n"
+                "  openSUSE:       sudo zypper install qt6-base-private-devel\n"
+                "(En Arch, macOS/Homebrew y el instalador oficial de Qt ya vienen "
+                "incluidas.)")
+        endif()
+    endforeach()
+endif()
 
 # Toda la lógica vive en una biblioteca estática para poder enlazarla tanto
 # desde el ejecutable como desde las pruebas. El ejecutable es solo main().
@@ -66,6 +86,8 @@ add_library(md-editor-core STATIC
     src/app/chromezoom.h
     src/app/commands.cpp
     src/app/commands.h
+    src/app/installcmd.cpp
+    src/app/installcmd.h
     src/app/langtag.cpp
     src/app/langtag.h
     src/app/mainwindow.cpp
@@ -115,6 +137,8 @@ add_library(md-editor-core STATIC
     src/io/documentio.h
     src/io/filecontroller.cpp
     src/io/filecontroller.h
+    src/io/fileerrors.cpp
+    src/io/fileerrors.h
     src/io/recentfilesmanager.cpp
     src/io/recentfilesmanager.h
     src/io/recoverymanager.cpp
@@ -378,13 +402,27 @@ if(SPELL_CHECK)
         target_link_libraries(md-editor-core PUBLIC ${_hunspell_link})
     elseif(SPELL_CHECK_REQUIRED)
         message(FATAL_ERROR
-                "Corrector ortográfico: Hunspell no encontrado y SPELL_CHECK_REQUIRED=ON. "
-                "El binario saldría SIN corrector; para empaquetar hay que instalarlo "
-                "(libhunspell-dev / brew install hunspell / vcpkg) o compilarlo aparte y "
-                "apuntar CMAKE_PREFIX_PATH a su prefijo.")
+            "Corrector ortográfico: no se encuentra Hunspell (sus cabeceras de desarrollo).\n"
+            "Sin él el programa compilaría SIN corrector y avisaría de ello al arrancar.\n"
+            "Tener la biblioteca instalada (libhunspell-1.7-0) no basta: hace falta el "
+            "paquete de desarrollo. Instálalo y vuelve a configurar:\n"
+            "  Debian/Ubuntu:  sudo apt install libhunspell-dev hunspell-es\n"
+            "  Fedora:         sudo dnf install hunspell-devel hunspell-es\n"
+            "  Arch:           sudo pacman -S hunspell hunspell-es_es\n"
+            "  openSUSE:       sudo zypper install hunspell-devel\n"
+            "  macOS:          brew install hunspell\n"
+            "  Windows:        vcpkg install hunspell:x64-windows-static-md\n"
+            "Si está en un prefijo propio, apunta CMAKE_PREFIX_PATH a él. Para compilar "
+            "a propósito sin corrector: -DSPELL_CHECK_REQUIRED=OFF "
+            "(con install.sh: SPELL_CHECK_REQUIRED=OFF ./install.sh).")
     else()
-        message(STATUS "Corrector ortográfico: Hunspell no encontrado, se omite "
-                       "(instala libhunspell-dev / brew / vcpkg para activarlo)")
+        # WARNING y no STATUS: un STATUS se pierde entre cien líneas, y el
+        # resultado es un programa que al arrancar dice que no tiene corrector.
+        message(WARNING "Corrector ortográfico: Hunspell no encontrado, el programa "
+                        "se compilará SIN corrector. Para activarlo instala su paquete "
+                        "de desarrollo (Debian/Ubuntu: sudo apt install libhunspell-dev; "
+                        "Fedora: hunspell-devel; macOS: brew install hunspell; Windows: "
+                        "vcpkg) y vuelve a configurar.")
     endif()
 endif()
 
@@ -544,6 +582,8 @@ if(Qt6Test_FOUND)
         tst_outline
         tst_docstats
         tst_langtag
+        tst_installcmd
+        tst_fileerrors
         tst_nav
         tst_csvtable
         tst_closedtabstack

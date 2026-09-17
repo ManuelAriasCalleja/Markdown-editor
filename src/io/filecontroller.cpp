@@ -18,6 +18,7 @@
 
 #include "appsettings.h"
 #include "documentio.h"
+#include "fileerrors.h"
 #include "focuseditor.h"
 #include "recoverymanager.h"
 #include "splitviewcontroller.h"
@@ -77,10 +78,11 @@ bool FileController::openFile(const QString &path)
 
     QString error;
     if (!m_documentIo->load(path, &error)) {
-        QMessageBox::warning(m_parent, QCoreApplication::translate("MainWindow", "Error"),
+        mdfileerr::showError(m_parent,
+                             QCoreApplication::translate("MainWindow", "No se pudo abrir"),
                              QCoreApplication::translate("MainWindow",
-                                 "No se pudo abrir el archivo:\n%1\n\n%2")
-                                 .arg(path, error));
+                                 "No se pudo abrir «%1».").arg(QDir::toNativeSeparators(path)),
+                             path, error, mdfileerr::Op::Read);
         emit loadFailed(path);  // si venía de recientes y ya no es accesible
         return false;
     }
@@ -140,10 +142,15 @@ bool FileController::writeToFile(const QString &path)
     m_split->commitSourceToDocument();  // si estamos en fuente, aplica los cambios primero
     QString error;
     if (!m_documentIo->write(path, &error)) {
-        QMessageBox::warning(m_parent, QCoreApplication::translate("MainWindow", "Error"),
+        // El documento sigue abierto y con sus cambios: decirlo evita que el usuario
+        // crea que los ha perdido y cierre sin guardarlos en otro sitio.
+        mdfileerr::showError(m_parent,
+                             QCoreApplication::translate("MainWindow", "No se pudo guardar"),
                              QCoreApplication::translate("MainWindow",
-                                 "No se pudo guardar el archivo:\n%1\n\n%2")
-                                 .arg(path, error));
+                                 "No se pudo guardar «%1». Tus cambios siguen en el "
+                                 "editor: no cierres el documento hasta guardarlo.")
+                                 .arg(QDir::toNativeSeparators(path)),
+                             path, error, mdfileerr::Op::Write);
         return false;
     }
     // Guardado en disco: el borrador de recuperación ya no hace falta.

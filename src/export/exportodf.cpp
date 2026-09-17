@@ -4,6 +4,7 @@
 
 #include "exporters.h"
 
+#include <QCoreApplication>
 #include <QFile>
 #include <QTextDocument>
 #include <QBuffer>
@@ -89,7 +90,7 @@ bool writeOdf(const QTextDocument *doc, const QString &path, const Language &lan
         QTextDocumentWriter writer(&buffer, "ODF");
         if (!writer.write(doc)) {
             if (error)
-                *error = QStringLiteral("QTextDocumentWriter falló al generar el ODF.");
+                *error = QString::fromUtf8(QT_TRANSLATE_NOOP("MainWindow", "QTextDocumentWriter falló al generar el ODF."));
             return false;
         }
     }
@@ -127,7 +128,7 @@ bool writeOdf(const QTextDocument *doc, const QString &path, const Language &lan
 
     if (writer.status() != QZipWriter::NoError) {
         if (error)
-            *error = QStringLiteral("Error al escribir el paquete ODF.");
+            *error = QString::fromUtf8(QT_TRANSLATE_NOOP("MainWindow", "Error al escribir el paquete ODF."));
         return false;
     }
     return true;

@@ -6,6 +6,7 @@
 #include "exportutil.h"
 #include "mathblocks.h"
 
+#include <QCoreApplication>
 #include <QFile>
 #include <QImage>
 #include <QRegularExpression>
@@ -549,7 +550,7 @@ bool writeDocx(const QTextDocument *doc, const QString &path, const Language &la
 
     if (zip.status() != QZipWriter::NoError) {
         if (error)
-            *error = QStringLiteral("Error al escribir el paquete DOCX.");
+            *error = QString::fromUtf8(QT_TRANSLATE_NOOP("MainWindow", "Error al escribir el paquete DOCX."));
         return false;
     }
     return true;

@@ -3,13 +3,13 @@
 
 #include "pandocimport.h"
 
+#include "installcmd.h"
 #include "markdownrender.h"
 
 #include <QFileInfo>
 #include <QRegularExpression>
 #include <QXmlStreamReader>
 #include <QStandardPaths>
-#include <QSysInfo>
 
 #include <utility>
 
@@ -347,12 +347,7 @@ QString pandocFilePattern()
 
 QString pandocInstallCommand()
 {
-    const QString kernel = QSysInfo::kernelType();  // "linux" / "darwin" / "winnt"
-    if (kernel == QLatin1String("darwin"))
-        return QStringLiteral("brew install pandoc");
-    if (kernel == QLatin1String("winnt"))
-        return QStringLiteral("choco install pandoc");
-    return QStringLiteral("sudo apt install pandoc");
+    return mdinstall::pandocCommand(mdinstall::currentPlatform());
 }
 
 }  // namespace mdimport

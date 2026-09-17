@@ -6,6 +6,8 @@
 #include <QChar>
 #include <QHash>
 
+#include "installcmd.h"
+
 namespace mdspell {
 
 namespace {
@@ -144,26 +146,11 @@ QString dictionaryPackage(const QString &lang)
 
 QString dictionaryInstallCommand(const QString &lang, const QString &productType)
 {
-    const QString pkg = dictionaryPackage(lang);
-    const QString os = productType.toLower();
-    // Familias con gestor propio; el resto cae en apt, que es lo más extendido.
-    if (os == QLatin1String("fedora") || os == QLatin1String("rhel")
-        || os == QLatin1String("centos") || os == QLatin1String("rocky")
-        || os == QLatin1String("almalinux"))
-        return QStringLiteral("sudo dnf install ") + pkg;
-    if (os == QLatin1String("arch") || os == QLatin1String("manjaro")
-        || os == QLatin1String("endeavouros"))
-        return QStringLiteral("sudo pacman -S ") + pkg;
-    if (os.startsWith(QLatin1String("opensuse")) || os == QLatin1String("suse")
-        || os == QLatin1String("sled") || os == QLatin1String("sles"))
-        return QStringLiteral("sudo zypper install ") + pkg;
-    if (os == QLatin1String("alpine"))
-        return QStringLiteral("sudo apk add ") + pkg;
     // macOS y Windows no tienen repositorio de diccionarios: sin orden que dar.
-    if (os == QLatin1String("macos") || os == QLatin1String("osx")
-        || os == QLatin1String("windows") || os == QLatin1String("winnt"))
+    const mdinstall::Platform platform = mdinstall::platformFor(productType);
+    if (platform == mdinstall::Platform::MacOS || platform == mdinstall::Platform::Windows)
         return QString();
-    return QStringLiteral("sudo apt install ") + pkg;
+    return mdinstall::packageCommand(platform, dictionaryPackage(lang));
 }
 
 QPair<QString, QString> dictionaryUrls(const QString &lang)

@@ -24,7 +24,7 @@
 <context>
     <name>MainWindow</name>
     <message numerus="yes">
-        <location filename="../../src/app/mainwindow.cpp" line="493"/>
+        <location filename="../../src/app/mainwindow.cpp" line="494"/>
         <source>%1 palabra(s)</source>
         <translation>
             <numerusform>%1 palabra</numerusform>
@@ -32,7 +32,7 @@
         </translation>
     </message>
     <message numerus="yes">
-        <location filename="../../src/app/mainwindow.cpp" line="495"/>
+        <location filename="../../src/app/mainwindow.cpp" line="496"/>
         <source>%1 carácter(es)</source>
         <translation>
             <numerusform>%1 carácter</numerusform>
@@ -40,7 +40,7 @@
         </translation>
     </message>
     <message numerus="yes">
-        <location filename="../../src/app/mainwindow.cpp" line="549"/>
+        <location filename="../../src/app/mainwindow.cpp" line="550"/>
         <source>~%n min</source>
         <translation>
             <numerusform>~%n min</numerusform>
@@ -48,7 +48,7 @@
         </translation>
     </message>
     <message numerus="yes">
-        <location filename="../../src/export/exportcontroller.cpp" line="505"/>
+        <location filename="../../src/export/exportcontroller.cpp" line="536"/>
         <source>Se ha omitido %n carácter sin equivalente en LaTeX (símbolos o emoji).</source>
         <translation>
             <numerusform>Se ha omitido %n carácter sin equivalente en LaTeX (símbolos o emoji).</numerusform>

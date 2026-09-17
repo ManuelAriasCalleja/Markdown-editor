@@ -26,6 +26,7 @@
 #include "codehighlighter.h"
 #include "documentio.h"
 #include "exporters.h"
+#include "installcmd.h"
 #include "mathblocks.h"
 #include "spellscan.h"
 
@@ -96,6 +97,17 @@ void SpellController::applyLanguage()
     // activado pero no se cargó diccionario para el idioma pedido (degrada en
     // silencio, así que sin esto el usuario no sabría por qué no subraya).
     if (!m_checker.isAvailable()) {
+        // Sin motor no hay diccionario que valga: el mensaje genérico de abajo
+        // («instálalo») mandaba a instalar un diccionario que nada iba a leer.
+        if (!SpellChecker::isEngineAvailable()) {
+            emit statusMessage(
+                QCoreApplication::translate("MainWindow",
+                    "Corrector ortográfico no disponible: esta copia del programa se "
+                    "compiló sin él."),
+                8000);
+            warnMissingDictionary(code);
+            return;
+        }
         // Idioma sin diccionario Hunspell en NINGUNA parte (chino, japonés,
         // coreano): se dice y se acaba ahí. El aviso normal mandaría a instalar un
         // paquete que no existe y ofrecería un botón de descarga sin nada que
@@ -123,7 +135,9 @@ void SpellController::applyLanguage()
 
 void SpellController::warnMissingDictionary(const QString &code)
 {
-    if (!AppSettings::spellMissingWarning() || m_warnedLanguages.contains(code))
+    // Sin motor el aviso es el mismo para todos los idiomas: una vez por sesión.
+    const QString key = SpellChecker::isEngineAvailable() ? code : QStringLiteral("*");
+    if (!AppSettings::spellMissingWarning() || m_warnedLanguages.contains(key))
         return;
     // Arranques automatizados (pruebas, paso de humo del empaquetado): el aviso es
     // una ventana que ahí no hay quien cierre, y además roba los atajos de la
@@ -131,7 +145,7 @@ void SpellController::warnMissingDictionary(const QString &code)
     // sigue saliendo.
     if (qEnvironmentVariableIsSet("MD_EDITOR_NO_POPUPS"))
         return;
-    m_warnedLanguages.insert(code);
+    m_warnedLanguages.insert(key);
 
     // Diferido: esto se dispara al cargar un documento, y un diálogo modal en
     // mitad del trazado inicial del editor sale mal colocado (misma razón por la
@@ -161,16 +175,35 @@ void SpellController::showMissingDictionaryDialog(const QString &code)
     box->setAttribute(Qt::WA_ShowWithoutActivating);
     box->setIcon(QMessageBox::Information);
     box->setWindowTitle(QCoreApplication::translate("MainWindow", "Corrección ortográfica"));
+    auto *dontAsk = new QCheckBox(
+        QCoreApplication::translate("MainWindow", "No volver a avisar"), box);
+    box->setCheckBox(dontAsk);
 
     if (!SpellChecker::isEngineAvailable()) {
         // Ni motor: decirle que instale un diccionario sería mandarlo a un callejón
-        // sin salida, porque no habría nada que lo leyera.
+        // sin salida, porque no habría nada que lo leyera. Lo que arregla esto es
+        // RECOMPILAR con Hunspell (o usar un paquete publicado, que ya lo trae), y
+        // eso es lo que tiene que decir, con la orden de su sistema.
+        const mdinstall::Platform platform = mdinstall::currentPlatform();
+        QString command = mdinstall::hunspellEngineCommand(platform);
+        const QString dictionary = mdspell::dictionaryInstallCommand(code, QSysInfo::productType());
+        if (!dictionary.isEmpty() && mdspell::hasHunspellDictionary(code))
+            command += QLatin1Char(' ') + mdspell::dictionaryPackage(code);
+        box->setIcon(QMessageBox::Warning);
         box->setText(QCoreApplication::translate("MainWindow",
-            "Esta versión del programa se compiló sin corrector ortográfico."));
+            "El corrector ortográfico no funciona en esta copia del programa."));
         box->setInformativeText(QCoreApplication::translate("MainWindow",
-            "No se subrayarán las faltas. Si la has compilado tú, instala Hunspell "
-            "(libhunspell-dev, brew install hunspell o vcpkg) y vuelve a compilar."));
-        box->setStandardButtons(QMessageBox::Ok);
+            "Se compiló sin Hunspell, el motor de corrección, así que no se subrayará "
+            "ninguna falta. Instalar diccionarios no lo arregla.\n\n"
+            "Cómo solucionarlo:\n"
+            "• Usa una versión publicada (AppImage, ZIP o DMG), que ya lo incluye.\n"
+            "• Si has compilado el programa tú, instala Hunspell y vuelve a compilarlo "
+            "e instalarlo:\n\n    %1").arg(command));
+        box->addButton(QMessageBox::Close);
+        connect(box, &QMessageBox::finished, this, [dontAsk] {
+            if (dontAsk->isChecked())
+                AppSettings::setSpellMissingWarning(false);
+        });
         box->show();
         return;
     }
@@ -178,7 +211,29 @@ void SpellController::showMissingDictionaryDialog(const QString &code)
     box->setText(QCoreApplication::translate("MainWindow",
         "No hay diccionario de %1, así que la corrección está desactivada en este "
         "documento.").arg(label));
+    box->setInformativeText(manualInstallText(code));
 
+    // Descarga directa: no pide contraseña, no depende del gestor de paquetes y
+    // vale en las tres plataformas. Solo para los idiomas de los que se conoce el
+    // origen (los nueve de la interfaz).
+    QPushButton *install = nullptr;
+    if (DictionaryInstaller::canInstall(code)) {
+        install = box->addButton(QCoreApplication::translate("MainWindow",
+                      "Descargar e instalar"), QMessageBox::AcceptRole);
+    }
+    box->addButton(QMessageBox::Close);
+
+    connect(box, &QMessageBox::finished, this, [this, box, install, dontAsk, code] {
+        if (dontAsk->isChecked())
+            AppSettings::setSpellMissingWarning(false);
+        if (install && box->clickedButton() == install)
+            downloadDictionary(code);
+    });
+    box->show();
+}
+
+QString SpellController::manualInstallText(const QString &code)
+{
     // Instrucciones para instalarlo a mano: en Linux, el paquete de la
     // distribución; en Windows y macOS no hay repositorio, así que se indica la
     // carpeta (que además es donde deja el diccionario el botón de descargar).
@@ -194,25 +249,34 @@ void SpellController::showMissingDictionaryDialog(const QString &code)
                   "esta carpeta:\n\n    %1").arg(QDir::toNativeSeparators(
                       SpellChecker::userDictionaryDir()));
     }
-    box->setInformativeText(how);
+    // Sin esto parecía que instalarlo no había servido: el idioma se elige al
+    // cargar el documento, no al vuelo.
+    return how + QStringLiteral("\n\n")
+           + QCoreApplication::translate("MainWindow",
+                 "Después, vuelve a abrir el documento para que se active.");
+}
 
-    // Descarga directa: no pide contraseña, no depende del gestor de paquetes y
-    // vale en las tres plataformas. Solo para los idiomas de los que se conoce el
-    // origen (los nueve de la interfaz).
-    QPushButton *install = nullptr;
-    if (DictionaryInstaller::canInstall(code)) {
-        install = box->addButton(QCoreApplication::translate("MainWindow",
-                      "Descargar e instalar"), QMessageBox::AcceptRole);
-    }
+void SpellController::showDownloadFailedDialog(const QString &code, const QString &error)
+{
+    auto *box = new QMessageBox(m_editor ? m_editor->window() : nullptr);
+    box->setAttribute(Qt::WA_DeleteOnClose);
+    box->setWindowModality(Qt::NonModal);
+    box->setIcon(QMessageBox::Warning);
+    box->setWindowTitle(QCoreApplication::translate("MainWindow", "Corrección ortográfica"));
+    box->setText(QCoreApplication::translate("MainWindow",
+        "No se pudo descargar el diccionario de %1.").arg(languageLabel(code)));
+    QString info = QCoreApplication::translate("MainWindow",
+        "Comprueba la conexión a Internet y pulsa «Reintentar».")
+        + QStringLiteral("\n\n") + manualInstallText(code);
+    if (!error.trimmed().isEmpty())
+        info += QStringLiteral("\n\n")
+                + QCoreApplication::translate("MainWindow", "Motivo: %1").arg(error.trimmed());
+    box->setInformativeText(info);
+    QPushButton *retry = box->addButton(
+        QCoreApplication::translate("MainWindow", "Reintentar"), QMessageBox::AcceptRole);
     box->addButton(QMessageBox::Close);
-    auto *dontAsk = new QCheckBox(
-        QCoreApplication::translate("MainWindow", "No volver a avisar"), box);
-    box->setCheckBox(dontAsk);
-
-    connect(box, &QMessageBox::finished, this, [this, box, install, dontAsk, code] {
-        if (dontAsk->isChecked())
-            AppSettings::setSpellMissingWarning(false);
-        if (install && box->clickedButton() == install)
+    connect(box, &QMessageBox::finished, this, [this, box, retry, code] {
+        if (box->clickedButton() == retry)
             downloadDictionary(code);
     });
     box->show();
@@ -220,6 +284,7 @@ void SpellController::showMissingDictionaryDialog(const QString &code)
 
 void SpellController::downloadDictionary(const QString &code)
 {
+    m_downloadCode = code;
     if (!m_installer) {
         m_installer = new DictionaryInstaller(this);
         connect(m_installer, &DictionaryInstaller::finished, this,
@@ -229,8 +294,10 @@ void SpellController::downloadDictionary(const QString &code)
                             "Diccionario instalado."), 5000);
                         applyLanguage();  // recargar: ahora sí está
                     } else {
-                        emit statusMessage(QCoreApplication::translate("MainWindow",
-                            "No se pudo descargar el diccionario: %1").arg(error), 8000);
+                        // Un aviso que se lee, no un mensaje fugaz: el usuario acaba
+                        // de pedir la descarga y tiene que saber qué hacer ahora.
+                        emit statusMessage(QString(), 0);
+                        showDownloadFailedDialog(m_downloadCode, error);
                     }
                 });
     }

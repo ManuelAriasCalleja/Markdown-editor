@@ -16,6 +16,7 @@
 #include "exportcontroller.h"
 #include "exporters.h"
 #include "filecontroller.h"
+#include "fileerrors.h"
 #include "formatcontroller.h"
 #include "formulacontroller.h"
 #include "insertcontroller.h"
@@ -803,8 +804,9 @@ void MainWindow::importHtml()
 
     QFile file(path);
     if (!file.open(QIODevice::ReadOnly)) {
-        QMessageBox::warning(this, tr("Error"),
-                             tr("No se pudo leer el archivo:\n%1").arg(path));
+        mdfileerr::showError(this, tr("No se pudo importar"),
+                             tr("No se pudo leer «%1».").arg(QDir::toNativeSeparators(path)),
+                             path, file.errorString(), mdfileerr::Op::Read);
         return;
     }
     const QString html = mdimport::decodeHtml(file.readAll());
@@ -826,15 +828,25 @@ void MainWindow::importEpub()
 
     QFile file(path);
     if (!file.open(QIODevice::ReadOnly)) {
-        QMessageBox::warning(this, tr("Error"),
-                             tr("No se pudo leer el archivo:\n%1").arg(path));
+        mdfileerr::showError(this, tr("No se pudo importar"),
+                             tr("No se pudo leer «%1».").arg(QDir::toNativeSeparators(path)),
+                             path, file.errorString(), mdfileerr::Op::Read);
         return;
     }
     const QString markdown = mdimport::epubToMarkdown(file.readAll());
     if (markdown.isEmpty()) {
-        QMessageBox::warning(
-            this, tr("Error"),
-            tr("No se pudo importar el EPUB. Comprueba que el archivo es válido."));
+        QMessageBox box(QMessageBox::Warning, tr("No se pudo importar"),
+                        tr("No se pudo sacar texto de «%1».")
+                            .arg(QFileInfo(path).fileName()),
+                        QMessageBox::Ok, this);
+        // El DRM es la causa más común con diferencia: casi todo libro comprado lo
+        // lleva, y desde fuera es un EPUB como cualquier otro.
+        box.setInformativeText(tr(
+            "Puede que el libro esté protegido con DRM (los comprados en tiendas "
+            "suelen estarlo), que esté dañado o que no sea realmente un EPUB. Prueba "
+            "con una copia sin DRM o ábrelo y vuelve a exportarlo desde un programa "
+            "como Calibre."));
+        box.exec();
         return;
     }
     addTab();
@@ -844,10 +856,17 @@ void MainWindow::importEpub()
 void MainWindow::importWithPandoc()
 {
     if (!mdimport::pandocAvailable()) {
-        QMessageBox::information(
-            this, tr("Pandoc no encontrado"),
-            tr("Para importar estos formatos hace falta Pandoc. Instálalo con:\n\n%1")
+        QMessageBox box(QMessageBox::Information, tr("Falta Pandoc"),
+                        tr("Para importar DOCX, ODT, RTF, LaTeX y otros formatos hace "
+                           "falta Pandoc, un programa aparte que no está instalado."),
+                        QMessageBox::Ok, this);
+        box.setInformativeText(
+            tr("Instálalo con:\n\n    %1\n\no descárgalo de "
+               "https://pandoc.org/installing.html. No hace falta reiniciar md-editor: "
+               "basta con volver a importar.")
                 .arg(mdimport::pandocInstallCommand()));
+        box.setTextInteractionFlags(Qt::TextSelectableByMouse);
+        box.exec();
         return;
     }
 
@@ -873,12 +892,25 @@ void MainWindow::importWithPandoc()
     QProcess pandoc;
     pandoc.start(QStringLiteral("pandoc"), mdimport::pandocArguments(path, mediaDir));
     // Síncrono: la importación es una acción puntual y el resultado se necesita ya.
-    if (!pandoc.waitForFinished(30000) || pandoc.exitStatus() != QProcess::NormalExit
-        || pandoc.exitCode() != 0) {
+    const bool finished = pandoc.waitForFinished(30000);
+    if (!finished || pandoc.exitStatus() != QProcess::NormalExit || pandoc.exitCode() != 0) {
         const QString err = QString::fromUtf8(pandoc.readAllStandardError()).trimmed();
-        QMessageBox::warning(
-            this, tr("Error"),
-            tr("Pandoc no pudo convertir el archivo.") + (err.isEmpty() ? QString() : "\n\n" + err));
+        QMessageBox box(QMessageBox::Warning, tr("No se pudo importar"),
+                        tr("Pandoc no pudo convertir «%1».").arg(QFileInfo(path).fileName()),
+                        QMessageBox::Ok, this);
+        QString info = !finished && pandoc.error() == QProcess::Timedout
+            ? tr("La conversión tardó más de 30 segundos y se canceló. Si el documento "
+                 "es muy grande, conviértelo desde una terminal, sin límite de tiempo:"
+                 "\n\n    pandoc \"%1\" -t gfm -o documento.md")
+                  .arg(QDir::toNativeSeparators(path))
+            : tr("Puede que el archivo esté dañado, protegido con contraseña, o que su "
+                 "extensión no corresponda a su formato real. Prueba a abrirlo con su "
+                 "programa original y guardarlo de nuevo.");
+        if (!err.isEmpty())
+            info += QStringLiteral("\n\n") + tr("Motivo que da Pandoc: %1").arg(err);
+        box.setInformativeText(info);
+        box.setTextInteractionFlags(Qt::TextSelectableByMouse);
+        box.exec();
         return;
     }
     // Lo que GFM no sabe expresar, Pandoc lo emite como HTML crudo; y el editor
@@ -888,8 +920,15 @@ void MainWindow::importWithPandoc()
     const QString markdown = mdimport::htmlTablesToMarkdown(
         mdimport::repairImages(QString::fromUtf8(pandoc.readAllStandardOutput())));
     if (markdown.trimmed().isEmpty()) {
-        QMessageBox::warning(this, tr("Error"),
-                             tr("El archivo no produjo ningún contenido."));
+        QMessageBox box(QMessageBox::Information, tr("No se pudo importar"),
+                        tr("«%1» no contiene texto que importar.")
+                            .arg(QFileInfo(path).fileName()),
+                        QMessageBox::Ok, this);
+        box.setInformativeText(tr(
+            "Pandoc lo leyó sin errores, pero el resultado está vacío. Suele pasar con "
+            "documentos que solo tienen imágenes (por ejemplo, páginas escaneadas), "
+            "cuyo texto no se puede extraer."));
+        box.exec();
         return;
     }
     addTab();

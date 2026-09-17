@@ -32,6 +32,7 @@
 
 #include "admonitions.h"
 #include "documentio.h"
+#include "fileerrors.h"
 #include "footnotes.h"
 #include "markdownrender.h"
 #include "outline.h"
@@ -243,10 +244,14 @@ bool InsertController::handlePastedImage(const QMimeData *source)
     }
 
     if (!image.save(savePath, "PNG")) {
-        QMessageBox::warning(
+        // La imagen no se inserta: con un enlace a un archivo que no existe, el
+        // documento la perdería al reabrirlo sin que nadie lo notara.
+        mdfileerr::showError(
             m_parent, QCoreApplication::translate("MainWindow", "Pegar imagen"),
             QCoreApplication::translate("MainWindow",
-                "No se pudo guardar la imagen en «%1».").arg(savePath));
+                "No se pudo guardar la imagen pegada en «%1», así que no se ha "
+                "insertado.").arg(QDir::toNativeSeparators(savePath)),
+            savePath, QString(), mdfileerr::Op::Write);
         return true;
     }
 
