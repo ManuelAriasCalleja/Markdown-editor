@@ -7,7 +7,8 @@
 # release. Detalle y tabla por versión en docs/DESCARGAS-HISTORICO.md.
 HISTORICAL_DELETED=38
 
-API_URL="https://api.github.com/repos/ManuelAriasCalleja/Markdown-editor/releases"
+REPO_URL="https://api.github.com/repos/ManuelAriasCalleja/Markdown-editor"
+API_URL="$REPO_URL/releases"
 
 json=$(curl -s "$API_URL")
 
@@ -43,3 +44,8 @@ echo "---"
 echo "Vivas (total): $live_total"
 echo "Histórico borrado (sin desglose por SO): $HISTORICAL_DELETED"
 echo "Total acumulado: $((live_total + HISTORICAL_DELETED))"
+
+# Estrellas del repositorio (stargazers_count del endpoint del propio repo).
+stars=$(curl -s "$REPO_URL" | jq '.stargazers_count // "?"')
+echo "---"
+echo "Estrellas: $stars"
