@@ -5,6 +5,32 @@ Todos los cambios relevantes de **md-editor** se documentan en este archivo.
 El formato sigue, a grandes rasgos, [Keep a Changelog](https://keepachangelog.com/es/),
 y el proyecto usa [versionado semántico](https://semver.org/lang/es/).
 
+## [2.9.2] — 2026-09-30
+
+Versión de mantenimiento: el AppImage vuelve a arrancar en las distribuciones que
+no son de este mismo año, y los mensajes de error dicen qué ha pasado y cómo
+arreglarlo en vez de un «no se pudo» a secas.
+
+### Corregido
+- **El AppImage no arrancaba en sistemas con una glibc anterior a la 2.38**
+  (Ubuntu 22.04, Debian 12 y sus derivadas): se compilaba en Ubuntu 24.04 y tanto
+  el programa como las bibliotecas que lleva dentro exigían su glibc. Ahora se
+  compila en la LTS más antigua con soporte (glibc 2.35), y la publicación falla
+  si algo del paquete pide una más nueva.
+- **Exportar a PDF a una carpeta sin permiso de escritura anunciaba «Exportado»
+  sin crear nada.** Ahora se comprueba antes y se avisa.
+
+### Cambiado
+- **Los mensajes de error explican la causa y el remedio.** Al abrir, guardar,
+  recargar, exportar o pegar una imagen se mira el estado real del disco (carpeta
+  desaparecida, solo lectura, sin permiso, disco lleno) y se dice qué hacer; el
+  motivo del sistema queda como detalle. Los avisos de Pandoc, diagramas y EPUB
+  con DRM dan la orden de instalación de la distribución del usuario.
+- **El corrector distingue «falta el motor» de «falta el diccionario».** En una
+  build sin Hunspell ya no manda a instalar un diccionario que no arreglaría nada:
+  explica que falta el motor y cómo recompilar con él. Una descarga de diccionario
+  fallida ofrece «Reintentar».
+
 ## [2.9.1] — 2026-08-27
 
 Versión de mantenimiento: dos regresiones que estropeaban lo impreso y lo
@@ -705,7 +731,8 @@ aplicaba; la suite pasa en build normal y bajo ASan+UBSan, y clang-tidy queda li
 - CI/CD multiplataforma (Linux AppImage, Windows ZIP, macOS DMG) y publicación
   de releases por tag.
 
-[Sin publicar]: https://github.com/ManuelAriasCalleja/Markdown-editor/compare/v2.9.1...HEAD
+[Sin publicar]: https://github.com/ManuelAriasCalleja/Markdown-editor/compare/v2.9.2...HEAD
+[2.9.2]: https://github.com/ManuelAriasCalleja/Markdown-editor/compare/v2.9.1...v2.9.2
 [2.9.1]: https://github.com/ManuelAriasCalleja/Markdown-editor/compare/v2.9.0...v2.9.1
 [2.9.0]: https://github.com/ManuelAriasCalleja/Markdown-editor/compare/v2.8.4...v2.9.0
 [2.8.4]: https://github.com/ManuelAriasCalleja/Markdown-editor/compare/v2.8.3...v2.8.4
