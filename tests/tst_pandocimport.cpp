@@ -215,7 +215,8 @@ void TestPandocImport::installCommandMentionsPandoc()
 {
     const QString cmd = mdimport::pandocInstallCommand();
     QVERIFY(!cmd.isEmpty());
-    QVERIFY(cmd.contains(QStringLiteral("pandoc")));
+    // Sin distinguir mayúsculas: en Windows es el ID de winget, «JohnMacFarlane.Pandoc».
+    QVERIFY2(cmd.contains(QStringLiteral("pandoc"), Qt::CaseInsensitive), qPrintable(cmd));
 }
 
 void TestPandocImport::availabilityDoesNotCrash()
