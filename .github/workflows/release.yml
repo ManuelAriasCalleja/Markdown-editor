@@ -14,7 +14,14 @@ jobs:
   # -----------------------------------------------------------------
   build-linux:
     name: Linux (AppImage)
-    runs-on: ubuntu-latest
+    # La LTS MÁS ANTIGUA con soporte, no `ubuntu-latest`. Un AppImage no trae su
+    # glibc: usa la del sistema del usuario, y el binario y cada biblioteca que
+    # linuxdeploy mete (glib, dbus, krb5, xkbcommon…) exigen como mínimo la glibc
+    # del sistema donde se compilaron. Compilado en la 24.04 pedía GLIBC_2.38 y no
+    # arrancaba en ninguna distribución anterior (la 22.04, Debian 12…): el
+    # catálogo de appimage.github.io lo rechazó por eso. Cuando GitHub retire este
+    # runner, pasar a la siguiente LTS y bajar kMaxGlibc del paso de comprobación.
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v5
 
@@ -88,6 +95,24 @@ jobs:
           # linuxdeploy genera md-editor-x86_64.AppImage; lo renombramos con
           # versión para que la página de releases muestre nombres claros.
           mv md-editor-*.AppImage "md-editor-${VERSION}-x86_64.AppImage"
+
+      # Que no vuelva a colarse una glibc nueva sin que nadie lo vea: el paso de
+      # humo arranca el AppImage en ESTE runner, que tiene la glibc con la que se
+      # compiló, así que ahí siempre funciona. Se mira qué versión máxima de
+      # símbolo GLIBC_ piden los ELF del AppDir y se falla si pasa del tope.
+      - name: Check glibc requirement
+        run: |
+          kMaxGlibc=2.35   # la de ubuntu-22.04
+          needed=$(find AppDir -type f \( -perm -u+x -o -name '*.so*' \) -print0 \
+            | xargs -0 -r objdump -T 2>/dev/null \
+            | grep -o 'GLIBC_[0-9.]*' | sed 's/GLIBC_//' | sort -uV | tail -n1)
+          echo "glibc mínima que exige el AppImage: ${needed:-ninguna}"
+          if [ -n "$needed" ] && [ "$(printf '%s\n%s\n' "$kMaxGlibc" "$needed" | sort -V | tail -n1)" != "$kMaxGlibc" ]; then
+            echo "::error::El AppImage exige GLIBC_$needed (> $kMaxGlibc): no arrancará en sistemas más antiguos"
+            find AppDir -type f \( -perm -u+x -o -name '*.so*' \) -print0 \
+              | xargs -0 -r -I{} sh -c 'objdump -T "{}" 2>/dev/null | grep -q "GLIBC_$0" && echo "  {}"' "$needed"
+            exit 1
+          fi
 
       # Paso de humo: hasta aquí NADIE ejecutaba nunca el artefacto que se
       # descarga. El ci.yml compila y prueba el código en los tres sistemas, pero
