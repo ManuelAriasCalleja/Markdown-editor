@@ -27,6 +27,7 @@
 #include "fileerrors.h"
 #include "focuseditor.h"
 #include "recentfilesmanager.h"
+#include "singleinstance.h"
 #include "recoverymanager.h"
 #include "splitviewcontroller.h"
 
@@ -76,7 +77,7 @@ void MainWindow::closeTabForPath(const QString &path)
         const EditorStack *s = stackAt(i);
         const QString file = s ? s->documentIo()->currentFile() : QString();
         if (!file.isEmpty() && QFileInfo(file).absoluteFilePath() == wanted) {
-            closeTab(i);
+            closeTabImpl(i, false);
             // closeTab deja un documento nuevo si era la última pestaña. Una ventana
             // que solo tiene eso (y sin tocar) ya no pinta nada: se cierra. Si el
             // cierre de la pestaña se canceló (cambios nuevos), el documento sigue
@@ -87,6 +88,7 @@ void MainWindow::closeTabForPath(const QString &path)
                     && !rest->documentIo()->isModified()) {
                     // Durante un arrastre, destruir la ventana tumbaría el QDrag que
                     // la espera en exec(): se cierra cuando éste termine.
+                    m_skipSessionSave = true;
                     if (m_draggingTab)
                         m_closeWhenDragEnds = true;
                     else
@@ -100,6 +102,8 @@ void MainWindow::closeTabForPath(const QString &path)
 
 void MainWindow::setCursorPosition(int position)
 {
+    if (position < 0)
+        return;  // desconocida (venía del modo fuente): se queda donde la carga la deje
     QTextEdit *ed = m_stack->editor();
     QTextCursor c = ed->textCursor();
     c.setPosition(qBound(0, position, qMax(0, ed->document()->characterCount() - 1)));
@@ -118,12 +122,21 @@ void MainWindow::startSession(const QString &cmdLineFile)
     // asentado). Si arranca oculto, lo hará el primer F9 (visibilityChanged).
     normalizeOutlineWidth();
 
+    // Si hay OTRA instancia viva (llegamos aquí sin archivo porque no contestó a tiempo,
+    // o con --new-window sin ruta), sus borradores de autoguardado y su sesión no son
+    // «de una sesión anterior»: ofrecerlos y BORRARLOS se llevaría por delante el
+    // trabajo sin guardar de esa ventana, y reabrir sus pestañas duplicaría los
+    // documentos. Esta ventana empieza en blanco.
+    const bool othersAlive =
+        !m_instanceName.isEmpty() && SingleInstance::otherInstancesAlive(m_instanceName);
+
     // Prioridad: archivo de la línea de comandos > recuperar borradores > reabrir
     // la sesión. Sin returns prematuros: todas las ramas confluyen en el arranque
     // del autoguardado al final.
     if (!cmdLineFile.isEmpty()) {
         m_stack->file()->openFile(cmdLineFile);
-    } else if (const QList<RecoveryManager::Draft> drafts = RecoveryManager::leftoverDrafts();
+    } else if (const QList<RecoveryManager::Draft> drafts =
+                   othersAlive ? QList<RecoveryManager::Draft>() : RecoveryManager::leftoverDrafts();
                !drafts.isEmpty()) {
         // Quedaron borradores de un cierre anómalo (uno por pestaña con cambios sin
         // guardar): ofrecer recuperarlos TODOS, no solo el último.
@@ -157,7 +170,7 @@ void MainWindow::startSession(const QString &cmdLineFile)
     // deduplica —si un documento ya está abierto (p. ej. un borrador recuperado con
     // su ruta), salta a él— y reusa la pestaña vacía inicial solo si sigue vacía;
     // así, tras recuperar, se restauran también las pestañas que estaban guardadas.
-    if (cmdLineFile.isEmpty()) {
+    if (cmdLineFile.isEmpty() && !othersAlive) {
         QStringList session = AppSettings::openFiles();
         if (session.isEmpty()) {
             const QString last = AppSettings::lastFile();  // compatibilidad: una sola

@@ -84,11 +84,17 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
             applyDialogZoom(dialog);
     }
     // Pestaña arrastrada desde otra ventana, soltada en cualquier punto de ESTA.
-    if (auto *w = qobject_cast<QWidget *>(watched); w && w->window() == this
-                                                   && handleTabDropEvent(event))
-        return true;
+    // (Se mira primero el tipo: este filtro ve TODOS los eventos de la aplicación.)
+    const QEvent::Type type = event->type();
+    if (type == QEvent::DragEnter || type == QEvent::DragMove || type == QEvent::Drop) {
+        if (auto *w = qobject_cast<QWidget *>(watched); w && w->window() == this
+                                                       && handleTabDropEvent(event))
+            return true;
+    }
     // Barra de pestañas (el filtro está en QApplication, así que la ve).
-    if (m_tabs && watched == m_tabs->tabBar() && handleTabBarEvent(event))
+    if ((type == QEvent::MouseButtonPress || type == QEvent::MouseButtonRelease
+         || type == QEvent::MouseMove)
+        && m_tabs && watched == m_tabs->tabBar() && handleTabBarEvent(event))
         return true;
     // El documento activo aún puede no estar fijado mientras se construye una
     // pestaña (llegan eventos de layout antes); en ese caso, procesamiento normal.
@@ -119,9 +125,17 @@ bool MainWindow::handleTabBarEvent(QEvent *event)
     switch (event->type()) {
     case QEvent::MouseButtonPress: {
         const auto *me = static_cast<QMouseEvent *>(event);
-        m_tabPressStack = me->button() == Qt::LeftButton
-                              ? stackAt(bar->tabAt(me->position().toPoint()))
-                              : nullptr;
+        m_tabPressStack = nullptr;
+        if (me->button() != Qt::LeftButton)
+            return false;
+        const QPoint pos = me->position().toPoint();
+        const int index = bar->tabAt(pos);
+        // Pulsar sobre el botón de cerrar no es agarrar la pestaña.
+        for (const auto side : {QTabBar::LeftSide, QTabBar::RightSide})
+            if (const QWidget *button = index >= 0 ? bar->tabButton(index, side) : nullptr;
+                button && button->geometry().contains(pos))
+                return false;
+        m_tabPressStack = stackAt(index);
         return false;
     }
     case QEvent::MouseButtonRelease:
@@ -129,15 +143,23 @@ bool MainWindow::handleTabBarEvent(QEvent *event)
         return false;
     case QEvent::MouseMove: {
         const auto *me = static_cast<QMouseEvent *>(event);
-        // Sin socket propio la ventana destino no sabría a quién avisar. Con una sola
-        // pestaña también se puede: al adoptarla, esta ventana se cierra sola.
-        if (!m_tabPressStack || !(me->buttons() & Qt::LeftButton) || m_instanceName.isEmpty())
+        if (!m_tabPressStack || !(me->buttons() & Qt::LeftButton))
             return false;
         if (!mdtabdrag::leftBar(me->position().toPoint(), bar->rect(),
                                 QApplication::startDragDistance() * 4))
             return false;
         EditorStack *stack = m_tabPressStack;
-        m_tabPressStack = nullptr;
+        m_tabPressStack = nullptr;  // una vez por pulsación
+        // «Sin título»: nada que llevar. No se consume el movimiento, que el
+        // reordenado de la barra siga su curso.
+        if (stack->documentIo()->currentFile().isEmpty())
+            return false;
+        // Sin socket propio la ventana destino no sabría a quién avisar.
+        if (m_instanceName.isEmpty()) {
+            showStatusMessage(tr("Arrastrar entre ventanas no está disponible en esta sesión."));
+            return false;
+        }
+        // Con una sola pestaña también se puede: al adoptarla, esta ventana se cierra sola.
         startTabDrag(stack);
         return true;
     }
@@ -164,8 +186,7 @@ void MainWindow::startTabDrag(EditorStack *stack)
     m_tabs->setCurrentWidget(stack);
     if (!stack->file()->maybeSave())
         return;
-    const mdtabdrag::Payload payload{path, stack->editor()->textCursor().position(),
-                                     m_instanceName};
+    const mdtabdrag::Payload payload{path, handoffCursor(stack), m_instanceName};
     auto *drag = new QDrag(bar);
     drag->setMimeData(mdtabdrag::toMime(payload));
     drag->setPixmap(bar->grab(bar->tabRect(index)));
@@ -205,7 +226,7 @@ bool MainWindow::handleTabDropEvent(QEvent *event)
         openExternalPaths({payload.path});
         if (!hasOpenFile(payload.path))
             return;  // la carga falló: la pestaña original se conserva
-        setCursorPosition(payload.cursor);
+        setCursorPosition(payload.cursor);  // -1 (venía del modo fuente): no mueve nada
         SingleInstance::sendTo(payload.source, {SingleInstance::kAdopted, {payload.path}});
     });
     return true;

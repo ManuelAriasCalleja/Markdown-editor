@@ -1,11 +1,13 @@
 #include <QtTest>
 
+#include "appsettings.h"
 #include "mainwindow.h"
 #include "tabdrag.h"
 
 #include <QDragEnterEvent>
 #include <QDropEvent>
 #include <QSettings>
+#include <QTabWidget>
 #include <QTemporaryDir>
 #include <QTextEdit>
 
@@ -25,6 +27,8 @@ private slots:
     void windowAcceptsForeignTabOverTheEditor();
     void windowOpensTheDroppedTab();
     void windowClosesWhenItsLastTabIsAdopted();
+    void adoptedTabIsNotOfferedForReopening();
+    void emptiedWindowDoesNotOverwriteTheSession();
 };
 
 void TestTabDrag::mimeRoundTrips()
@@ -49,6 +53,10 @@ void TestTabDrag::mimeRejectsForeignAndBroken()
     QMimeData broken;
     broken.setData(mdtabdrag::kMimeType, "basura");
     QVERIFY(!mdtabdrag::fromMime(&broken, out));
+    // -1 = cursor desconocido (venía del modo fuente): viaja tal cual.
+    std::unique_ptr<QMimeData> unknown(mdtabdrag::toMime({QStringLiteral("/a.md"), -1, QStringLiteral("x")}));
+    QVERIFY(mdtabdrag::fromMime(unknown.get(), out));
+    QCOMPARE(out.cursor, -1);
     // Sin ruta no hay nada que abrir.
     std::unique_ptr<QMimeData> empty(mdtabdrag::toMime({QString(), 0, QStringLiteral("x")}));
     QVERIFY(!mdtabdrag::fromMime(empty.get(), out));
@@ -159,6 +167,44 @@ void TestTabDrag::windowClosesWhenItsLastTabIsAdopted()
     QVERIFY(w.hasOpenFile(path));
     w.closeTabForPath(path);
     QTRY_VERIFY(!w.isVisible());
+}
+
+void TestTabDrag::adoptedTabIsNotOfferedForReopening()
+{
+    QTemporaryDir dir;
+    const QString a = dir.filePath(QStringLiteral("a.md"));
+    const QString b = dir.filePath(QStringLiteral("b.md"));
+    for (const QString &p : {a, b}) {
+        QFile f(p);
+        QVERIFY(f.open(QIODevice::WriteOnly));
+        f.write("# x\n");
+    }
+    MainWindow w;
+    w.show();
+    w.openExternalPaths({a, b});
+    w.closeTabForPath(a);         // traspasada a otra ventana
+    QVERIFY(w.m_closedTabs.isEmpty());
+    w.closeTab(w.m_tabs->currentIndex());  // cerrada por el usuario: sí se recuerda
+    QVERIFY(!w.m_closedTabs.isEmpty());
+}
+
+void TestTabDrag::emptiedWindowDoesNotOverwriteTheSession()
+{
+    QTemporaryDir dir;
+    const QString a = dir.filePath(QStringLiteral("a.md"));
+    QFile f(a);
+    QVERIFY(f.open(QIODevice::WriteOnly));
+    f.write("# x\n");
+    f.close();
+    AppSettings::setOpenFiles({QStringLiteral("/otra/ventana.md")});  // la sesión de otra
+    {
+        MainWindow w;
+        w.show();
+        w.openExternalPaths({a});
+        w.closeTabForPath(a);
+        QTRY_VERIFY(!w.isVisible());
+    }
+    QCOMPARE(AppSettings::openFiles(), QStringList{QStringLiteral("/otra/ventana.md")});
 }
 
 QTEST_MAIN(TestTabDrag)

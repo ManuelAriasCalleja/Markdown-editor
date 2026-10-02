@@ -367,6 +367,15 @@ añadir lógica nueva: hay un `tst_*` por módulo.
   única pestaña: al adoptarla (`closeTabForPath`), una ventana que se queda solo con un
   documento nuevo sin tocar **se cierra sola** —diferido a que termine el `QDrag`
   (`m_closeWhenDragEnds`), que si no se destruiría bajo su propio `exec()`—.
+  Detalles que salieron de la revisión: el registro vive en un directorio **privado del
+  usuario** (`XDG_RUNTIME_DIR`, o una carpeta 0700 propia comprobando el dueño; sin
+  garantías no hay registro, nunca una ruta ajena) y el socket es `UserAccessOption`;
+  `startSession` no ofrece ni borra borradores ni reabre la sesión si hay **otra
+  instancia viva** (`otherInstancesAlive`: serían los de esa ventana); lo traspasado
+  se cierra con `closeTabImpl(…, false)` para que no entre en «reabrir pestaña
+  cerrada»; la ventana vaciada por un traspaso **no escribe** `openFiles`
+  (`m_skipSessionSave`); el cursor viaja como -1 si el panel activo es el de fuente
+  (no es una posición del WYSIWYG); y el botón de cerrar no agarra la pestaña.
   El `.desktop` lleva `%F` (varios archivos). *Limitaciones:* en Wayland el
   compositor puede negar el `activateWindow()` (haría falta *xdg-activation*); macOS
   pasaría por `QFileOpenEvent`, aún sin manejar; la sesión de pestañas

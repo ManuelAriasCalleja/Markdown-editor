@@ -21,7 +21,7 @@ extern const QString kMimeType;
 /// Lo que lleva el arrastre.
 struct Payload {
     QString path;    ///< documento (siempre guardado: el origen lo exige antes)
-    int cursor = 0;  ///< posición del cursor en el editor WYSIWYG
+    int cursor = 0;  ///< posición del cursor en el editor WYSIWYG; -1 = desconocida (modo fuente)
     QString source;  ///< nombre de la instancia de origen (a quien avisar al adoptarlo)
 };
 

@@ -78,6 +78,7 @@ class MainWindow : public QMainWindow
 
 public:
     explicit MainWindow(QWidget *parent = nullptr);
+    ~MainWindow() override;
 
     /// \brief Decide qué mostrar al arrancar (se invoca diferido desde main()): un
     /// archivo de la línea de comandos tiene prioridad; si no, se ofrece recuperar
@@ -331,6 +332,12 @@ private:
     // Cierra la pestaña `index` (pregunta si tiene cambios sin guardar). No cierra
     // la última: la deja como documento nuevo.
     void closeTab(int index);
+    // closeTab con la opción de no apuntar el documento en «reabrir pestaña cerrada»
+    // (cuando se cierra porque pasó a otra ventana, reabrirlo lo duplicaría).
+    void closeTabImpl(int index, bool remember);
+    // Posición del cursor para llevarla a otra ventana: la del WYSIWYG, o -1 si el
+    // panel activo es el de fuente (su posición es de otro texto, no vale allí).
+    static int handoffCursor(const EditorStack *stack);
     // Reabre la última pestaña cerrada que tenía archivo en disco (Ctrl+Shift+R).
     void reopenClosedTab();
     // Documento de la pestaña `index` (o la actual con -1), o nullptr.
@@ -348,6 +355,7 @@ private:
     void openInNewWindow(EditorStack *stack);
     void launchNewWindow(EditorStack *stack);
     QString m_instanceName;  // socket de esta instancia (ver setInstanceName)
+    bool m_skipSessionSave = false;   // ventana vaciada por un traspaso: no pisa la sesión
     bool m_draggingTab = false;       // dentro de QDrag::exec() de startTabDrag
     bool m_closeWhenDragEnds = false; // la ventana quedó vacía durante el arrastre
     QPointer<EditorStack> m_tabPressStack;  // pestaña sobre la que se pulsó el ratón

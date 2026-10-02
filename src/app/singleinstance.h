@@ -49,7 +49,10 @@ public:
 
     /// \brief Nombre del socket de la instancia de este proceso (por usuario y PID).
     static QString instanceName(qint64 pid);
-    /// \brief Fichero de registro por defecto (por usuario).
+    /// \brief Fichero de registro por defecto, en un directorio **privado del usuario**
+    /// (`XDG_RUNTIME_DIR` o, a falta de él, una carpeta 0700 propia bajo la temporal,
+    /// comprobando que el dueño es el usuario). Vacío si no hay dónde ponerlo con
+    /// garantías: sin registro no hay entrega entre instancias, nunca una ruta ajena.
     static QString registryFile();
 
     /// \brief Serializa un mensaje para el socket (puro, para los tests).
@@ -59,6 +62,11 @@ public:
 
     /// \brief Instancias registradas, de la más antigua a la más reciente.
     static QStringList registeredNames(const QString &registry = registryFile());
+
+    /// \brief ¿Hay otra instancia viva además de `self`? Comprueba que aceptan la conexión
+    /// (las entradas huérfanas de un cierre anómalo no cuentan, y se retiran).
+    static bool otherInstancesAlive(const QString &self, const QString &registry = registryFile(),
+                                    int timeoutMs = 300);
 
     /// \brief Entrega `message` a la instancia `name`. Falso si no está o no lo recibió.
     static bool sendTo(const QString &name, const Message &message, int timeoutMs = 1500);

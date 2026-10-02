@@ -10,6 +10,7 @@
 #include <QIODevice>
 #include <QLocalSocket>
 #include <QLockFile>
+#include <QStandardPaths>
 
 namespace {
 constexpr quint32 kMagic = 0x4D44454Du;  // "MDEM"
@@ -28,6 +29,8 @@ QString userName()
 template <typename F>
 void editRegistry(const QString &registry, F edit)
 {
+    if (registry.isEmpty())
+        return;
     QLockFile lock(registry + QStringLiteral(".lock"));
     lock.setStaleLockTime(5000);
     if (!lock.tryLock(2000))
@@ -41,6 +44,26 @@ void editRegistry(const QString &registry, F edit)
 }
 
 enum class SendResult { Ok, NoServer, Failed };
+
+/// Carpeta privada del usuario para el registro, o vacío si no hay garantías.
+QString privateRegistryDir()
+{
+    QString dir = QStandardPaths::writableLocation(QStandardPaths::RuntimeLocation);
+    if (!dir.isEmpty() && QFileInfo(dir).isDir() && QFileInfo(dir).isWritable())
+        return dir;
+    // Sin directorio de ejecución por usuario (otros sistemas, o un entorno mínimo): una
+    // carpeta propia bajo la temporal, que es compartida. Solo vale si la creamos
+    // nosotros, o ya era nuestra, y sin acceso para nadie más.
+    dir = QDir::tempPath() + QStringLiteral("/md-editor-%1").arg(userName());
+    if (!QDir().mkpath(dir))
+        return {};
+    const QFileInfo info(dir);
+    if (info.isSymLink() || !info.isDir() || info.owner() != QFileInfo(QDir::homePath()).owner())
+        return {};
+    QFile::setPermissions(dir, QFileDevice::ReadOwner | QFileDevice::WriteOwner
+                                   | QFileDevice::ExeOwner);
+    return dir;
+}
 
 SendResult trySend(const QString &name, const QByteArray &data, int timeoutMs)
 {
@@ -103,7 +126,8 @@ QString SingleInstance::instanceName(qint64 pid)
 
 QString SingleInstance::registryFile()
 {
-    return QDir::tempPath() + QStringLiteral("/md-editor-%1.instances").arg(userName());
+    const QString dir = privateRegistryDir();
+    return dir.isEmpty() ? QString() : dir + QStringLiteral("/md-editor.instances");
 }
 
 QByteArray SingleInstance::encode(const Message &message)
@@ -141,9 +165,36 @@ bool SingleInstance::decode(const QByteArray &data, Message &message)
 QStringList SingleInstance::registeredNames(const QString &registry)
 {
     QStringList names;
+    if (registry.isEmpty())
+        return names;
     if (QFile f(registry); f.open(QIODevice::ReadOnly | QIODevice::Text))
         names = QString::fromUtf8(f.readAll()).split(QLatin1Char('\n'), Qt::SkipEmptyParts);
     return names;
+}
+
+bool SingleInstance::otherInstancesAlive(const QString &self, const QString &registry,
+                                         int timeoutMs)
+{
+    QStringList dead;
+    bool alive = false;
+    for (const QString &name : registeredNames(registry)) {
+        if (name == self)
+            continue;
+        QLocalSocket socket;
+        socket.connectToServer(name);
+        if (socket.waitForConnected(timeoutMs))
+            alive = true;
+        else if (socket.error() == QLocalSocket::ServerNotFoundError
+                 || socket.error() == QLocalSocket::ConnectionRefusedError)
+            dead << name;
+        socket.abort();
+    }
+    if (!dead.isEmpty())
+        editRegistry(registry, [&dead](QStringList &list) {
+            for (const QString &n : dead)
+                list.removeAll(n);
+        });
+    return alive;
 }
 
 bool SingleInstance::sendTo(const QString &name, const Message &message, int timeoutMs)
@@ -179,6 +230,8 @@ bool SingleInstance::sendToLatest(const Message &message, const QString &registr
 
 bool SingleInstance::listen(const QString &name, const QString &registry)
 {
+    // El socket, solo para el usuario: por defecto otros usuarios podrían conectarse.
+    m_server.setSocketOptions(QLocalServer::UserAccessOption);
     if (!m_server.listen(name)) {
         // Un cierre anómalo deja el fichero del socket: sin servidor detrás, se retira.
         QLocalServer::removeServer(name);

@@ -20,6 +20,8 @@ private slots:
     void fallsBackWhenTheLatestCloses();
     void prunesDeadEntries();
     void adoptedReachesTheOrigin();
+    void detectsOtherLiveInstances();
+    void registryIsPrivateToTheUser();
 
 private:
     static QString uniq(const char *tag)
@@ -152,6 +154,35 @@ void TestSingleInstance::adoptedReachesTheOrigin()
     const auto msg = spy.first().first().value<SingleInstance::Message>();
     QCOMPARE(msg.command, SingleInstance::kAdopted);
     QCOMPARE(msg.args, (QStringList{QStringLiteral("/x.md")}));
+}
+
+void TestSingleInstance::detectsOtherLiveInstances()
+{
+    SingleInstance me, other;
+    QVERIFY(me.listen(uniq("g"), registry()));
+    // Solo yo (más una entrada huérfana de un cierre anómalo): no hay otra viva.
+    QFile f(registry());
+    QVERIFY(f.open(QIODevice::Append | QIODevice::Text));
+    f.write(("\n" + uniq("huerfana")).toUtf8());
+    f.close();
+    QVERIFY(!SingleInstance::otherInstancesAlive(me.name(), registry(), 300));
+    QCOMPARE(SingleInstance::registeredNames(registry()), (QStringList{me.name()}));  // y se retira
+    // Con otra viva, sí. (La conexión se acepta a nivel de sistema: no hace falta bucle.)
+    QVERIFY(other.listen(uniq("h"), registry()));
+    QVERIFY(SingleInstance::otherInstancesAlive(me.name(), registry(), 300));
+    // Registro inutilizable (vacío): sin otras, sin error.
+    QVERIFY(!SingleInstance::otherInstancesAlive(me.name(), QString(), 100));
+}
+
+void TestSingleInstance::registryIsPrivateToTheUser()
+{
+    const QString file = SingleInstance::registryFile();
+    if (file.isEmpty())
+        QSKIP("sin directorio privado en este entorno (válido: no hay registro)");
+    const QFileInfo dir(QFileInfo(file).absolutePath());
+    QVERIFY(dir.isDir());
+    QVERIFY(!(dir.permissions() & (QFileDevice::ReadGroup | QFileDevice::WriteGroup
+                                   | QFileDevice::ReadOther | QFileDevice::WriteOther)));
 }
 
 QTEST_MAIN(TestSingleInstance)

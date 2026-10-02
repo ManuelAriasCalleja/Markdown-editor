@@ -767,6 +767,11 @@ void MainWindow::showTabContextMenu(const QPoint &pos)
         openInNewWindow(stack);
 }
 
+int MainWindow::handoffCursor(const EditorStack *stack)
+{
+    return stack->activeEditor() == stack->editor() ? stack->editor()->textCursor().position() : -1;
+}
+
 void MainWindow::openInNewWindow(EditorStack *stack)
 {
     const QString path = stack->documentIo()->currentFile();
@@ -783,8 +788,9 @@ void MainWindow::openInNewWindow(EditorStack *stack)
 void MainWindow::launchNewWindow(EditorStack *stack)
 {
     const QString path = stack->documentIo()->currentFile();
-    QStringList args{QStringLiteral("--new-window"),
-                     QStringLiteral("--cursor=%1").arg(stack->editor()->textCursor().position())};
+    QStringList args{QStringLiteral("--new-window")};
+    if (const int cursor = handoffCursor(stack); cursor >= 0)
+        args << QStringLiteral("--cursor=%1").arg(cursor);
     if (!m_instanceName.isEmpty())
         args << QStringLiteral("--handoff-from=") + m_instanceName;
     args << QStringLiteral("--") << path;
@@ -1027,7 +1033,19 @@ void MainWindow::openPathInTab(const QString &path)
     }
 }
 
+MainWindow::~MainWindow()
+{
+    // El filtro está también en QApplication: mientras se destruyen los hijos
+    // (m_tabs incluido) aún le llegarían eventos y tocaría punteros ya liberados.
+    qApp->removeEventFilter(this);
+}
+
 void MainWindow::closeTab(int index)
+{
+    closeTabImpl(index, true);
+}
+
+void MainWindow::closeTabImpl(int index, bool remember)
 {
     EditorStack *stack = stackAt(index);
     if (!stack)
@@ -1041,7 +1059,8 @@ void MainWindow::closeTab(int index)
     if (stack->recovery())
         stack->recovery()->clearDraft();
     // Recuerda su ruta para poder reabrirla (solo documentos con archivo en disco).
-    closedtabs::push(m_closedTabs, stack->documentIo()->currentFile());
+    if (remember)
+        closedtabs::push(m_closedTabs, stack->documentIo()->currentFile());
     if (m_tabs->count() == 1) {
         stack->documentIo()->reset();  // última pestaña: queda como documento nuevo
         // Si estaba en modo fuente, el panel de fuente conservaba el texto del
@@ -1109,7 +1128,10 @@ void MainWindow::closeEvent(QCloseEvent *event)
         if (!f.isEmpty())
             openFiles << f;
     }
-    AppSettings::setOpenFiles(openFiles);
+    // Una ventana que se vació porque su documento pasó a otra no tiene sesión que
+    // contar: con otras ventanas abiertas, guardaría una lista vacía encima de la suya.
+    if (!m_skipSessionSave)
+        AppSettings::setOpenFiles(openFiles);
     // Tamaño/posición y disposición de barras (si se cierra sin distracciones, el
     // controlador devuelve el estado previo a entrar, no la pantalla completa).
     AppSettings::setWindowGeometry(m_distraction->sessionGeometry());

@@ -30,7 +30,7 @@ bool fromMime(const QMimeData *mime, Payload &payload)
     Payload p;
     qint32 cursor = 0;
     in >> p.path >> cursor >> p.source;
-    if (in.status() != QDataStream::Ok || !in.atEnd() || p.path.isEmpty() || cursor < 0)
+    if (in.status() != QDataStream::Ok || !in.atEnd() || p.path.isEmpty() || cursor < -1)
         return false;
     p.cursor = cursor;
     payload = p;
