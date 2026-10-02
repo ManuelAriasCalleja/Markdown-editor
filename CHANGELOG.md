@@ -5,6 +5,40 @@ Todos los cambios relevantes de **md-editor** se documentan en este archivo.
 El formato sigue, a grandes rasgos, [Keep a Changelog](https://keepachangelog.com/es/),
 y el proyecto usa [versionado semántico](https://semver.org/lang/es/).
 
+## [2.10.0] — 2026-10-02
+
+Varias ventanas que se coordinan: abrir un archivo desde el explorador ya no crea
+un programa nuevo por cada uno, y las pestañas se pueden llevar de una ventana a
+otra.
+
+### Añadido
+- **Abrir desde el explorador reutiliza la ventana existente.** Un `.md` abierto
+  con el editor en marcha llega a la última ventana creada, en una pestaña nueva,
+  en vez de arrancar otro proceso. Si algún editor ya tenía ese archivo abierto, se
+  trae esa ventana al frente en lugar de duplicarlo. Se aceptan varios archivos a la
+  vez.
+- **Abrir en una nueva ventana.** El menú contextual de una pestaña (con más de una)
+  lleva el documento a una ventana nueva, con el cursor en el mismo sitio, y cierra
+  la pestaña de origen.
+- **Arrastrar una pestaña a otra ventana.** Al sacarla de la barra y soltarla en
+  otra ventana del editor, el documento se abre allí en la misma posición. Soltar
+  fuera, o cancelar, no pierde nada. Si la ventana de origen se queda vacía, se
+  cierra sola.
+
+### Cambiado
+- **Las ventanas se anotan en un registro propio del usuario**, en su directorio de
+  ejecución (o una carpeta privada), y los sockets son solo del usuario.
+- **Una ventana que arranca junto a otra ya viva** no ofrece ni borra los borradores
+  de autoguardado de esa ventana, ni reabre su sesión.
+- **Los mensajes entre ventanas esperan a que no haya un diálogo abierto**, y las
+  esperas por una ventana que no contesta están acotadas.
+- **El lanzador de escritorio acepta varios archivos** (`%F`).
+
+### Limitaciones
+- La sesión de pestañas se guarda al cerrar cada ventana: con varias abiertas, queda
+  la de la última que se cierra.
+- En Wayland el escritorio puede negarse a traer la ventana al frente.
+
 ## [2.9.2] — 2026-09-30
 
 Versión de mantenimiento: el AppImage vuelve a arrancar en las distribuciones que
