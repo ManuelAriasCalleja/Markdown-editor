@@ -135,6 +135,7 @@ MainWindow::MainWindow(QWidget *parent)
     m_tabs = new QTabWidget(this);
     m_tabs->setTabsClosable(true);
     m_tabs->setMovable(true);
+    setAcceptDrops(true);  // pestañas arrastradas desde otra ventana (dropEvent)
     m_tabs->setDocumentMode(true);
     // Sin esto, una sola pestaña se estira hasta llenar todo el ancho (el defecto
     // de QTabBar es expandir): se vería desproporcionada, sobre todo en el modo
@@ -776,6 +777,12 @@ void MainWindow::openInNewWindow(EditorStack *stack)
     m_tabs->setCurrentWidget(stack);
     if (!stack->file()->maybeSave())
         return;
+    launchNewWindow(stack);
+}
+
+void MainWindow::launchNewWindow(EditorStack *stack)
+{
+    const QString path = stack->documentIo()->currentFile();
     QStringList args{QStringLiteral("--new-window"),
                      QStringLiteral("--cursor=%1").arg(stack->editor()->textCursor().position())};
     if (!m_instanceName.isEmpty())

@@ -41,6 +41,13 @@
 #include "splitviewcontroller.h"
 #include "tableedit.h"
 #include "themecontroller.h"
+#include "singleinstance.h"
+#include "tabdrag.h"
+#include <QApplication>
+#include <QCursor>
+#include <QDrag>
+#include <QTabBar>
+#include <QTimer>
 #include <QMimeData>
 #include <QStatusBar>
 #include <QAction>
@@ -76,6 +83,13 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
         if (auto *dialog = qobject_cast<QDialog *>(watched))
             applyDialogZoom(dialog);
     }
+    // Pestaña arrastrada desde otra ventana, soltada en cualquier punto de ESTA.
+    if (auto *w = qobject_cast<QWidget *>(watched); w && w->window() == this
+                                                   && handleTabDropEvent(event))
+        return true;
+    // Barra de pestañas (el filtro está en QApplication, así que la ve).
+    if (m_tabs && watched == m_tabs->tabBar() && handleTabBarEvent(event))
+        return true;
     // El documento activo aún puede no estar fijado mientras se construye una
     // pestaña (llegan eventos de layout antes); en ese caso, procesamiento normal.
     if (!m_stack)
@@ -97,6 +111,99 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
             return true;
     }
     return QMainWindow::eventFilter(watched, event);
+}
+
+bool MainWindow::handleTabBarEvent(QEvent *event)
+{
+    QTabBar *bar = m_tabs->tabBar();
+    switch (event->type()) {
+    case QEvent::MouseButtonPress: {
+        const auto *me = static_cast<QMouseEvent *>(event);
+        m_tabPressStack = me->button() == Qt::LeftButton
+                              ? stackAt(bar->tabAt(me->position().toPoint()))
+                              : nullptr;
+        return false;
+    }
+    case QEvent::MouseButtonRelease:
+        m_tabPressStack = nullptr;
+        return false;
+    case QEvent::MouseMove: {
+        const auto *me = static_cast<QMouseEvent *>(event);
+        // Con una sola pestaña no hay a dónde llevarla que no sea otra ventana ya
+        // abierta, y sin socket propio la otra no sabría a quién avisar.
+        if (!m_tabPressStack || !(me->buttons() & Qt::LeftButton) || m_instanceName.isEmpty()
+            || m_tabs->count() < 2)
+            return false;
+        if (!mdtabdrag::leftBar(me->position().toPoint(), bar->rect(),
+                                QApplication::startDragDistance() * 4))
+            return false;
+        EditorStack *stack = m_tabPressStack;
+        m_tabPressStack = nullptr;
+        startTabDrag(stack);
+        return true;
+    }
+    default:
+        return false;
+    }
+}
+
+void MainWindow::startTabDrag(EditorStack *stack)
+{
+    const QString path = stack->documentIo()->currentFile();
+    if (path.isEmpty())
+        return;  // «Sin título»: no hay nada que abrir en la otra ventana
+    QTabBar *bar = m_tabs->tabBar();
+    const int index = m_tabs->indexOf(stack);
+    // Termina el movimiento interno de la pestaña (QTabBar cree que sigue en curso):
+    // sin esto, el QDrag y el arrastre de la barra pelean por el ratón.
+    const QPoint global = QCursor::pos();
+    QMouseEvent release(QEvent::MouseButtonRelease, QPointF(bar->mapFromGlobal(global)),
+                        QPointF(global), Qt::LeftButton, Qt::NoButton, Qt::NoModifier);
+    QApplication::sendEvent(bar, &release);
+    // La ventana destino carga lo que hay en disco: se guarda (o descarta) antes,
+    // con la pregunta de siempre; cancelar aborta el arrastre.
+    m_tabs->setCurrentWidget(stack);
+    if (!stack->file()->maybeSave())
+        return;
+    const mdtabdrag::Payload payload{path, stack->editor()->textCursor().position(),
+                                     m_instanceName};
+    auto *drag = new QDrag(bar);
+    drag->setMimeData(mdtabdrag::toMime(payload));
+    drag->setPixmap(bar->grab(bar->tabRect(index)));
+    // La pestaña no se cierra aquí: lo hace closeTabForPath cuando la ventana destino
+    // confirma (kAdopted) que la abrió. Soltar en el vacío o cancelar no pierde nada.
+    // Ojo: durante exec() llega ese mensaje y la pestaña puede desaparecer: `stack`
+    // no se toca después.
+    drag->exec(Qt::MoveAction);
+}
+
+bool MainWindow::handleTabDropEvent(QEvent *event)
+{
+    const QEvent::Type type = event->type();
+    if (type != QEvent::DragEnter && type != QEvent::DragMove && type != QEvent::Drop)
+        return false;
+    auto *drop = static_cast<QDropEvent *>(event);
+    mdtabdrag::Payload payload;
+    if (!mdtabdrag::fromMime(drop->mimeData(), payload))
+        return false;  // otro tipo de arrastre: lo trata quien corresponda
+    if (!mdtabdrag::accepts(payload, m_instanceName)) {
+        drop->ignore();  // el nuestro: reordenar es cosa de la barra
+        return true;
+    }
+    drop->setDropAction(Qt::MoveAction);
+    drop->accept();
+    if (type != QEvent::Drop)
+        return true;
+    // Se abre tras volver del evento: el origen espera dentro de QDrag::exec() y
+    // un diálogo modal (archivo que no abre) con el arrastre aún activo sería un lío.
+    QTimer::singleShot(0, this, [this, payload] {
+        openExternalPaths({payload.path});
+        if (!hasOpenFile(payload.path))
+            return;  // la carga falló: la pestaña original se conserva
+        setCursorPosition(payload.cursor);
+        SingleInstance::sendTo(payload.source, {SingleInstance::kAdopted, {payload.path}});
+    });
+    return true;
 }
 
 bool MainWindow::handleViewportEvent(QEvent *event)

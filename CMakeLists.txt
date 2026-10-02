@@ -98,6 +98,8 @@ add_library(md-editor-core STATIC
     src/app/mainwindowmenus.cpp
     src/app/mainwindowsession.cpp
     src/app/mainwindowzoom.cpp
+    src/app/tabdrag.cpp
+    src/app/tabdrag.h
     src/app/tabmenu.cpp
     src/app/tabmenu.h
     # --- editor ---
@@ -591,6 +593,7 @@ if(Qt6Test_FOUND)
         tst_csvtable
         tst_closedtabstack
         tst_tabmenu
+        tst_tabdrag
         tst_commands
         tst_extraselections
         tst_linehighlight

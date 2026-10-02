@@ -352,7 +352,19 @@ añadir lógica nueva: hay un `tst_*` por módulo.
   `--new-window` salta la entrega, así que la instancia nueva es la última; solo cuando
   ha cargado el documento (`hasOpenFile`) coloca el cursor y envía `kAdopted` al origen,
   que cierra la pestaña (`closeTabForPath`). Si la carga falla, la pestaña original se
-  conserva. El `.desktop` lleva `%F` (varios archivos). *Limitaciones:* en Wayland el
+  conserva. **Arrastrar una pestaña a otra ventana** (`mdtabdrag`, puro, + `MainWindow::
+  handleTabBarEvent`/`startTabDrag`/`handleTabDropEvent`): al salir el ratón de la barra
+  con la pestaña pulsada se termina el movimiento interno de `QTabBar` (un
+  `MouseButtonRelease` sintético, si no pelea con el `QDrag`), se guarda/pregunta y se
+  lanza un `QDrag` con un MIME propio (`path`, cursor, instancia de origen; **sin**
+  `text/uri-list`, que el manejador de archivos del editor abriría sin cerrar la
+  pestaña). El destino lo atiende el **filtro global**, no `dragEnterEvent`/`dropEvent`:
+  Qt entrega el arrastre al primer widget con `acceptDrops` bajo el ratón (el
+  `QTextEdit`) y, si lo rechaza, no sube al padre. Abre la ruta, coloca el cursor y envía
+  `kAdopted` al origen, que cierra la pestaña; soltar en el vacío o cancelar no pierde
+  nada (no hay «arrancar a ventana nueva» al soltar fuera: Qt no distingue soltar en el
+  escritorio de pulsar Esc). Solo con más de una pestaña y documento con archivo.
+  El `.desktop` lleva `%F` (varios archivos). *Limitaciones:* en Wayland el
   compositor puede negar el `activateWindow()` (haría falta *xdg-activation*); macOS
   pasaría por `QFileOpenEvent`, aún sin manejar; la sesión de pestañas
   (`AppSettings::openFiles`) la escribe la última instancia que se cierra.

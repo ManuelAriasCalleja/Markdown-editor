@@ -5,6 +5,7 @@
 /// \brief Ventana principal (shell): pestañas, menús, barra de formato, zoom y sesión del editor WYSIWYG.
 
 #include <QMainWindow>
+#include <QPointer>
 #include <QByteArray>
 #include <QHash>
 #include <QList>
@@ -73,6 +74,7 @@ class MainWindow : public QMainWindow
     friend class TestTableSortUi;
     friend class TestLineCommands;
     friend class TestInputRules;
+    friend class TestTabDrag;
 
 public:
     explicit MainWindow(QWidget *parent = nullptr);
@@ -154,6 +156,7 @@ private:
 
 protected:
     void closeEvent(QCloseEvent *event) override;
+
     /// \brief Recoloca el esquema y la columna en el modo sin distracciones al cambiar
     /// de tamaño (en pantalla completa, al entrar/salir y al redimensionar).
     void resizeEvent(QResizeEvent *event) override;
@@ -175,6 +178,16 @@ protected:
     /// \brief Sub-manejador del viewport: zoom con Ctrl+rueda, enlaces, arrastrar-soltar,
     /// tareas y notas al pie. \return true si consume el evento.
     bool handleViewportEvent(QEvent *event);
+    // Barra de pestañas: detecta que una pestaña pulsada sale de la barra y arranca
+    // el arrastre hacia otra ventana (el reordenado dentro de la barra es de Qt).
+    bool handleTabBarEvent(QEvent *event);
+    void startTabDrag(EditorStack *stack);
+    // Pestaña arrastrada desde otra ventana (ver tabdrag.h) sobre cualquier widget de
+    // ESTA ventana. Devuelve true si el evento era de ese tipo (lo consume). Va en el
+    // filtro global y no en dragEnterEvent/dropEvent de la ventana: Qt entrega el
+    // arrastre al primer widget con acceptDrops bajo el ratón (los editores) y, si
+    // este lo rechaza, no sube al padre.
+    bool handleTabDropEvent(QEvent *event);
     /// \brief Sub-manejador del teclado del editor WYSIWYG (fórmulas, shortcodes,
     /// auto-emparejado). \return true si consume la pulsación.
     bool handleEditorKeyPress(QKeyEvent *ke);
@@ -332,7 +345,9 @@ private:
     // Lanza una instancia nueva con el documento de `stack`, en la misma posición del
     // cursor; la pestaña de aquí se cierra cuando la nueva confirma que lo cargó.
     void openInNewWindow(EditorStack *stack);
+    void launchNewWindow(EditorStack *stack);
     QString m_instanceName;  // socket de esta instancia (ver setInstanceName)
+    QPointer<EditorStack> m_tabPressStack;  // pestaña sobre la que se pulsó el ratón
     // Alterna el foco de teclado entre el esquema (TOC) y el editor (F6):
     // muestra el esquema si está oculto, lo enfoca; si ya lo tiene, vuelve al editor.
     void toggleOutlineFocus();
