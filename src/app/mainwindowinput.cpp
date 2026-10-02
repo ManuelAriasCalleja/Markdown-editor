@@ -227,7 +227,9 @@ bool MainWindow::handleTabDropEvent(QEvent *event)
         if (!hasOpenFile(payload.path))
             return;  // la carga falló: la pestaña original se conserva
         setCursorPosition(payload.cursor);  // -1 (venía del modo fuente): no mueve nada
-        SingleInstance::sendTo(payload.source, {SingleInstance::kAdopted, {payload.path}});
+        // Sin bloquear: el origen está dentro de QDrag::exec(), pero si tarda no se
+        // congela esta ventana esperándolo.
+        SingleInstance::sendAsync(payload.source, {SingleInstance::kAdopted, {payload.path}});
     });
     return true;
 }

@@ -23,6 +23,8 @@ private slots:
     void detectsOtherLiveInstances();
     void registryIsPrivateToTheUser();
     void openFilesGoToTheirOwner();
+    void asyncSendDoesNotBlockAndDelivers();
+    void hungInstancesDoNotMultiplyTheWait();
     void nothingOpenGoesToTheLatest();
     void noInstancesLeavesThePathsToTheCaller();
 
@@ -234,6 +236,42 @@ void TestSingleInstance::noInstancesLeavesThePathsToTheCaller()
     QVERIFY(!SingleInstance::deliverPaths({QStringLiteral("/x.md"), QStringLiteral("/y.md")},
                                           &leftover, registry(), 200));
     QCOMPARE(leftover, (QStringList{QStringLiteral("/x.md"), QStringLiteral("/y.md")}));
+}
+
+void TestSingleInstance::asyncSendDoesNotBlockAndDelivers()
+{
+    SingleInstance server;
+    QVERIFY(server.listen(uniq("m"), registry()));
+    QSignalSpy spy(&server, &SingleInstance::messageReceived);
+    QElapsedTimer t;
+    t.start();
+    SingleInstance::sendAsync(server.name(), {SingleInstance::kAdopted, {QStringLiteral("/q.md")}});
+    QVERIFY(t.elapsed() < 100);  // vuelve ya, sin esperar al servidor (que está en ESTE hilo)
+    QVERIFY(spy.wait(5000));
+    QCOMPARE(spy.first().first().value<SingleInstance::Message>().args,
+             QStringList{QStringLiteral("/q.md")});
+}
+
+void TestSingleInstance::hungInstancesDoNotMultiplyTheWait()
+{
+    // Dos instancias que aceptan la conexión pero no contestan (su bucle no corre
+    // mientras este hilo duerme): el reparto del presupuesto acota la espera total.
+    SingleInstance a, b;
+    QVERIFY(a.listen(uniq("n"), registry()));
+    QVERIFY(b.listen(uniq("o"), registry()));
+    QElapsedTimer t;
+    t.start();
+    auto done = std::async(std::launch::async, [&] {
+        QStringList leftover;
+        const bool ok = SingleInstance::deliverPaths({QStringLiteral("/z.md")}, &leftover,
+                                                     registry(), 800);
+        return std::make_pair(ok, t.elapsed());
+    });
+    QTest::qSleep(2500);  // el hilo principal no atiende a nadie
+    const auto [ok, elapsed] = done.get();
+    Q_UNUSED(ok)
+    // Con 2 instancias a 1,5 s por paso eran >4 s; ahora ronda el presupuesto.
+    QVERIFY2(elapsed < 1800, qPrintable(QString::number(elapsed)));
 }
 
 QTEST_MAIN(TestSingleInstance)

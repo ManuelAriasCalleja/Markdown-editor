@@ -373,6 +373,14 @@ añadir lógica nueva: hay un `tst_*` por módulo.
   rutas ya tiene abiertas; esas van a ELLA (que las trae al frente, deduplicando con
   `openPathInTab`) y solo el resto a la última creada. Lo que no se pudo entregar a nadie
   lo abre el propio proceso.
+  **Mensajes y bloqueos:** los mensajes de otras instancias pasan por un buzón en
+  `main()` que solo los atiende con la sesión arrancada y **sin diálogo modal** (un
+  «¿guardar?» de `closeTab()` vive en su propio bucle: tocar las pestañas por debajo la
+  dejaría con una que ya no es suya); si no, reintenta cada 150 ms. Los `timeout` de
+  `SingleInstance` son un **presupuesto total** (conectar, escribir y cerrar comparten
+  lo que queda; cada instancia tiene un tope de 500 ms), para que una instancia colgada
+  no multiplique la espera; y lo que se hace con ventana ya abierta (soltar una pestaña,
+  avisar al origen) va por `sendAsync`, sin bloquear.
   Detalles que salieron de la revisión: el registro vive en un directorio **privado del
   usuario** (`XDG_RUNTIME_DIR`, o una carpeta 0700 propia comprobando el dueño; sin
   garantías no hay registro, nunca una ruta ajena) y el socket es `UserAccessOption`;

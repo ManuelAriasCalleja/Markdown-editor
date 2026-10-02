@@ -83,6 +83,8 @@ public:
     /// \brief Entrega a las instancias la petición de abrir `paths`, sin duplicar: lo que
     /// una instancia ya tiene abierto va a ELLA (que lo trae al frente), y el resto a la
     /// última creada. Sin rutas, solo trae al frente la última.
+    /// `timeoutMs` es el tiempo TOTAL que puede bloquear, repartido entre las instancias:
+    /// una colgada no multiplica la espera.
     /// \param leftover rutas que no se pudieron entregar a nadie (no hay instancia viva):
     /// las abre quien llama.
     /// \return verdadero si la petición entera quedó entregada.
@@ -97,7 +99,13 @@ public:
     }
 
     /// \brief Entrega `message` a la instancia `name`. Falso si no está o no lo recibió.
+    /// `timeoutMs` es el tiempo TOTAL que puede bloquear (conectar, escribir y cerrar).
     static bool sendTo(const QString &name, const Message &message, int timeoutMs = 1500);
+
+    /// \brief Como sendTo() pero sin bloquear: para quien ya tiene ventana (soltar una
+    /// pestaña, avisar al origen de un traspaso) y no debe congelarla si la otra
+    /// instancia tarda. No informa del resultado; se rinde a los `timeoutMs`.
+    static void sendAsync(const QString &name, const Message &message, int timeoutMs = 3000);
 
     /// \brief Entrega `message` a la última instancia viva del registro, y retira del
     /// registro las que ya no responden (cierres anómalos).

@@ -4,13 +4,16 @@
 #include "singleinstance.h"
 
 #include <QDataStream>
+#include <QCoreApplication>
 #include <QDir>
+#include <QElapsedTimer>
 #include <QFile>
 #include <QFileInfo>
 #include <QIODevice>
 #include <QLocalSocket>
 #include <QLockFile>
 #include <QStandardPaths>
+#include <QTimer>
 
 namespace {
 constexpr quint32 kMagic = 0x4D44454Du;  // "MDEM"
@@ -65,20 +68,29 @@ QString privateRegistryDir()
     return dir;
 }
 
+// Tope por instancia: una que no contesta (colgada, parada en un depurador) no debe
+// gastar el presupuesto entero. Una viva contesta en milisegundos.
+constexpr int kPerInstanceMs = 500;
+
 SendResult trySend(const QString &name, const QByteArray &data, int timeoutMs)
 {
+    // `timeoutMs` es el total: cada espera usa lo que queda, no el valor entero (antes
+    // conectar, escribir y cerrar podían sumar el triple).
+    QElapsedTimer clock;
+    clock.start();
+    const auto left = [&] { return qMax(1, timeoutMs - int(clock.elapsed())); };
     QLocalSocket socket;
     socket.connectToServer(name);
-    if (!socket.waitForConnected(timeoutMs))
+    if (!socket.waitForConnected(left()))
         return socket.error() == QLocalSocket::ServerNotFoundError
                        || socket.error() == QLocalSocket::ConnectionRefusedError
                    ? SendResult::NoServer
                    : SendResult::Failed;
     const bool ok = socket.write(data) == data.size()
-                    && (socket.bytesToWrite() == 0 || socket.waitForBytesWritten(timeoutMs));
+                    && (socket.bytesToWrite() == 0 || socket.waitForBytesWritten(left()));
     socket.disconnectFromServer();
     if (socket.state() != QLocalSocket::UnconnectedState)
-        socket.waitForDisconnected(timeoutMs);
+        socket.waitForDisconnected(left());
     return ok ? SendResult::Ok : SendResult::Failed;
 }
 }  // namespace
@@ -197,22 +209,39 @@ bool SingleInstance::otherInstancesAlive(const QString &self, const QString &reg
     return alive;
 }
 
+void SingleInstance::sendAsync(const QString &name, const Message &message, int timeoutMs)
+{
+    auto *socket = new QLocalSocket(QCoreApplication::instance());
+    const QByteArray data = encode(message);
+    connect(socket, &QLocalSocket::connected, socket, [socket, data] {
+        socket->write(data);
+        socket->disconnectFromServer();  // espera a escribir lo pendiente antes de cerrar
+    });
+    connect(socket, &QLocalSocket::disconnected, socket, &QObject::deleteLater);
+    connect(socket, &QLocalSocket::errorOccurred, socket, &QObject::deleteLater);
+    QTimer::singleShot(timeoutMs, socket, &QObject::deleteLater);  // por si nunca contesta
+    socket->connectToServer(name);
+}
+
 bool SingleInstance::queryOpen(const QString &name, const QStringList &paths, QStringList &open,
                                int timeoutMs)
 {
+    QElapsedTimer clock;
+    clock.start();
+    const auto left = [&] { return qMax(1, timeoutMs - int(clock.elapsed())); };
     QLocalSocket socket;
     socket.connectToServer(name);
-    if (!socket.waitForConnected(timeoutMs))
+    if (!socket.waitForConnected(left()))
         return false;
     const QByteArray data = encode({kQueryOpen, paths});
     if (socket.write(data) != data.size()
-        || (socket.bytesToWrite() != 0 && !socket.waitForBytesWritten(timeoutMs)))
+        || (socket.bytesToWrite() != 0 && !socket.waitForBytesWritten(left())))
         return false;
     // La respuesta puede llegar troceada: se acumula hasta que decodifica.
     QByteArray buffer;
     Message reply;
     while (!decode(buffer, reply)) {
-        if (!socket.waitForReadyRead(timeoutMs))
+        if (clock.elapsed() >= timeoutMs || !socket.waitForReadyRead(left()))
             return false;
         buffer.append(socket.readAll());
         if (buffer.size() > kMaxMessage)
@@ -227,14 +256,19 @@ bool SingleInstance::queryOpen(const QString &name, const QStringList &paths, QS
 bool SingleInstance::deliverPaths(const QStringList &paths, QStringList *leftover,
                                   const QString &registry, int timeoutMs)
 {
+    QElapsedTimer clock;
+    clock.start();
+    // Lo que queda del presupuesto, acotado por instancia.
+    const auto slice = [&] { return qBound(1, timeoutMs - int(clock.elapsed()), kPerInstanceMs); };
     QStringList remaining = paths;
     const QStringList names = registeredNames(registry);
-    for (auto it = names.crbegin(); it != names.crend() && !remaining.isEmpty(); ++it) {
+    for (auto it = names.crbegin();
+         it != names.crend() && !remaining.isEmpty() && clock.elapsed() < timeoutMs; ++it) {
         QStringList owned;
-        if (!queryOpen(*it, remaining, owned, timeoutMs) || owned.isEmpty())
+        if (!queryOpen(*it, remaining, owned, slice()) || owned.isEmpty())
             continue;
         owned.removeIf([&remaining](const QString &p) { return !remaining.contains(p); });
-        if (owned.isEmpty() || !sendTo(*it, {kOpen, owned}, timeoutMs))
+        if (owned.isEmpty() || !sendTo(*it, {kOpen, owned}, slice()))
             continue;
         for (const QString &p : std::as_const(owned))
             remaining.removeAll(p);
@@ -242,7 +276,7 @@ bool SingleInstance::deliverPaths(const QStringList &paths, QStringList *leftove
     // Todo lo pedido ya lo tenía alguien: esa instancia lo trajo al frente.
     if (remaining.isEmpty() && !paths.isEmpty())
         return true;
-    const bool ok = sendToLatest({kOpen, remaining}, registry, timeoutMs);
+    const bool ok = sendToLatest({kOpen, remaining}, registry, qMax(100, timeoutMs - int(clock.elapsed())));
     if (!ok && leftover)
         *leftover = remaining;
     return ok;
@@ -258,9 +292,13 @@ bool SingleInstance::sendToLatest(const Message &message, const QString &registr
     const QByteArray data = encode(message);
     QStringList dead;
     bool delivered = false;
+    QElapsedTimer clock;
+    clock.start();
     const QStringList names = registeredNames(registry);
-    for (auto it = names.crbegin(); it != names.crend() && !delivered; ++it) {
-        switch (trySend(*it, data, timeoutMs)) {
+    for (auto it = names.crbegin();
+         it != names.crend() && !delivered && clock.elapsed() < timeoutMs; ++it) {
+        const int slice = qBound(1, timeoutMs - int(clock.elapsed()), kPerInstanceMs);
+        switch (trySend(*it, data, slice)) {
         case SendResult::Ok:
             delivered = true;
             break;

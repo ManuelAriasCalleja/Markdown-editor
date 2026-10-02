@@ -17,6 +17,7 @@
 #include <QTranslator>
 
 #include <algorithm>
+#include <deque>
 #include <functional>
 #include <memory>
 
@@ -129,31 +130,49 @@ int main(int argc, char *argv[])
     std::unique_ptr<MainWindow> window;
     std::function<void(const QString &, bool)> spawn;
 
-    // Peticiones de otras ejecuciones. Hasta que la sesión de la ventana actual
-    // termina de arrancar (o mientras se recrea por un cambio de idioma) se
-    // encolan: abrir antes pisaría la lógica de arranque, o iría a una ventana
-    // que está a punto de destruirse.
+    // Buzón de los mensajes de otras instancias o ejecuciones. Se atienden SOLO cuando
+    // es seguro tocar las pestañas: con la sesión de la ventana ya arrancada (no antes:
+    // abrir pisaría la lógica de arranque; ni durante la recreación por idioma, que
+    // iría a una ventana a punto de destruirse) y sin un diálogo modal abierto. Un
+    // «¿guardar cambios?» de closeTab() está dentro de su propio bucle de eventos:
+    // cerrar o abrir pestañas por debajo la dejaría con una pestaña que ya no es la
+    // suya. Mientras no sea seguro se reintenta con un temporizador.
     bool sessionReady = false;
-    QStringList pendingPaths;
-    bool pendingRaise = false;
-    auto flushPending = [&] {
-        if (!sessionReady || !window)
+    bool draining = false;
+    std::deque<SingleInstance::Message> inbox;
+    QTimer inboxTimer;
+    inboxTimer.setSingleShot(true);
+    inboxTimer.setInterval(150);
+    auto drainInbox = [&] {
+        if (draining)
             return;
-        if (pendingPaths.isEmpty() && !pendingRaise)
-            return;
-        const QStringList paths = pendingPaths;
-        pendingPaths.clear();
-        pendingRaise = false;
-        window->openExternalPaths(paths);
+        draining = true;
+        while (!inbox.empty()) {
+            if (!sessionReady || !window || QApplication::activeModalWidget()) {
+                inboxTimer.start();
+                break;
+            }
+            const SingleInstance::Message message = inbox.front();
+            inbox.pop_front();
+            if (message.command == SingleInstance::kOpen)
+                window->openExternalPaths(message.args);
+            else if (message.command == SingleInstance::kAdopted && !message.args.isEmpty())
+                window->closeTabForPath(message.args.first());
+        }
+        draining = false;
     };
+    QObject::connect(&inboxTimer, &QTimer::timeout, &app, drainInbox);
     singleInstance.setOpenFilesProvider([&](const QStringList &paths) {
         // Cuenta también lo encolado que aún no se ha abierto (arranque en curso).
         QStringList open;
         for (const QString &path : paths) {
             const QString abs = QFileInfo(path).absoluteFilePath();
-            const bool queued = std::any_of(pendingPaths.cbegin(), pendingPaths.cend(),
-                                            [&](const QString &q) {
-                return QFileInfo(q).absoluteFilePath() == abs;
+            const bool queued = std::any_of(inbox.cbegin(), inbox.cend(),
+                                            [&](const SingleInstance::Message &m) {
+                return m.command == SingleInstance::kOpen
+                       && std::any_of(m.args.cbegin(), m.args.cend(), [&](const QString &q) {
+                    return QFileInfo(q).absoluteFilePath() == abs;
+                });
             });
             if (queued || (window && window->hasOpenFile(path)))
                 open << path;
@@ -162,14 +181,8 @@ int main(int argc, char *argv[])
     });
     QObject::connect(&singleInstance, &SingleInstance::messageReceived, &app,
                      [&](const SingleInstance::Message &message) {
-        if (message.command == SingleInstance::kOpen) {
-            pendingPaths << message.args;
-            pendingRaise = true;
-            flushPending();
-        } else if (message.command == SingleInstance::kAdopted && window
-                   && !message.args.isEmpty()) {
-            window->closeTabForPath(message.args.first());
-        }
+        inbox.push_back(message);
+        drainInbox();
     });
 
     // Si esta instancia nació de «Abrir en una nueva ventana»: deja el cursor donde
@@ -180,9 +193,9 @@ int main(int argc, char *argv[])
             return;
         if (launch.cursor >= 0)
             w->setCursorPosition(launch.cursor);
-        if (!launch.handoffFrom.isEmpty())
-            SingleInstance::sendTo(launch.handoffFrom,
-                                   {SingleInstance::kAdopted, {launch.paths.first()}});
+        if (!launch.handoffFrom.isEmpty())  // sin esperar: el origen puede tardar
+            SingleInstance::sendAsync(launch.handoffFrom,
+                                      {SingleInstance::kAdopted, {launch.paths.first()}});
     };
 
     spawn = [&](const QString &openPath, bool relaunch) {
@@ -215,14 +228,15 @@ int main(int argc, char *argv[])
             sessionReady = true;
             if (!relaunch)
                 finishHandoff(w);
-            flushPending();
+            drainInbox();
         });
     };
 
     // El primer archivo lo abre startSession (con su prioridad sobre la recuperación
     // de borrador); los demás, como cualquier petición posterior, en su pestaña.
     const QString cmdLineFile = launch.paths.value(0);
-    pendingPaths = launch.paths.mid(1);
+    if (launch.paths.size() > 1)
+        inbox.push_back({SingleInstance::kOpen, launch.paths.mid(1)});
     spawn(cmdLineFile, false);
 
     return app.exec();
