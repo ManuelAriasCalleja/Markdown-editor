@@ -295,7 +295,7 @@
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="310"/>
+        <location filename="../src/app/mainwindow.cpp" line="311"/>
         <source>Editor Markdown WYSIWYG — escribe y da formato con la barra superior</source>
         <translation>Editor Markdown WYSIWYG — scrie și formatează cu bara de sus</translation>
     </message>
@@ -1206,17 +1206,17 @@
         <translation>&amp;Despre</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="431"/>
+        <location filename="../src/app/mainwindow.cpp" line="432"/>
         <source>Acerca de</source>
         <translation>Despre</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="423"/>
+        <location filename="../src/app/mainwindow.cpp" line="424"/>
         <source>Desarrollado por Manuel Arias Calleja</source>
         <translation>Dezvoltat de Manuel Arias Calleja</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="424"/>
+        <location filename="../src/app/mainwindow.cpp" line="425"/>
         <source>Editor WYSIWYG de Markdown en Qt6 + C++17.</source>
         <translation>Editor WYSIWYG Markdown în Qt6 + C++17.</translation>
     </message>
@@ -1226,7 +1226,7 @@
         <translation>Format</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="503"/>
+        <location filename="../src/app/mainwindow.cpp" line="504"/>
         <source>Selección: </source>
         <translation>Selecție: </translation>
     </message>
@@ -1306,7 +1306,7 @@
         <translation>Inserează cuprins</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowinput.cpp" line="409"/>
+        <location filename="../src/app/mainwindowinput.cpp" line="544"/>
         <location filename="../src/editor/insertcontroller.cpp" line="333"/>
         <source>El documento no tiene encabezados.</source>
         <translation>Documentul nu conține titluri.</translation>
@@ -1583,27 +1583,27 @@ Instalează un font cu aceste scrieri — de exemplu «Noto Sans CJK» — și e
         </translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="278"/>
+        <location filename="../src/app/mainwindow.cpp" line="279"/>
         <source>Contador de palabras</source>
         <translation>Număr de cuvinte</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="284"/>
+        <location filename="../src/app/mainwindow.cpp" line="285"/>
         <source>Línea y columna</source>
         <translation>Linie și coloană</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="352"/>
+        <location filename="../src/app/mainwindow.cpp" line="353"/>
         <source>El archivo se eliminó o movió en disco.</source>
         <translation>Fișierul a fost șters sau mutat pe disc.</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="422"/>
+        <location filename="../src/app/mainwindow.cpp" line="423"/>
         <source>Versión %1</source>
         <translation>Versiunea %1</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/app/mainwindow.cpp" line="550"/>
+        <location filename="../src/app/mainwindow.cpp" line="551"/>
         <source>~%n min</source>
         <translation>
             <numerusform>~%n min</numerusform>
@@ -1612,12 +1612,12 @@ Instalează un font cu aceste scrieri — de exemplu «Noto Sans CJK» — și e
         </translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="513"/>
+        <location filename="../src/app/mainwindow.cpp" line="514"/>
         <source>Ln %1, Col %2</source>
         <translation>Lin %1, Col %2</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/app/mainwindow.cpp" line="494"/>
+        <location filename="../src/app/mainwindow.cpp" line="495"/>
         <source>%1 palabra(s)</source>
         <translation>
             <numerusform>%1 cuvânt</numerusform>
@@ -1626,7 +1626,7 @@ Instalează un font cu aceste scrieri — de exemplu «Noto Sans CJK» — și e
         </translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/app/mainwindow.cpp" line="496"/>
+        <location filename="../src/app/mainwindow.cpp" line="497"/>
         <source>%1 carácter(es)</source>
         <translation>
             <numerusform>%1 caracter</numerusform>
@@ -1635,117 +1635,127 @@ Instalează un font cu aceste scrieri — de exemplu «Noto Sans CJK» — și e
         </translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="527"/>
+        <location filename="../src/app/mainwindow.cpp" line="528"/>
         <source>Estadísticas del documento</source>
         <translation>Statisticile documentului</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="529"/>
+        <location filename="../src/app/mainwindow.cpp" line="530"/>
         <source>Palabras:</source>
         <translation>Cuvinte:</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="530"/>
+        <location filename="../src/app/mainwindow.cpp" line="531"/>
         <source>Caracteres:</source>
         <translation>Caractere:</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="531"/>
+        <location filename="../src/app/mainwindow.cpp" line="532"/>
         <source>Caracteres (sin espacios):</source>
         <translation>Caractere (fără spații):</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="533"/>
+        <location filename="../src/app/mainwindow.cpp" line="534"/>
         <source>Párrafos:</source>
         <translation>Paragrafe:</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="534"/>
+        <location filename="../src/app/mainwindow.cpp" line="535"/>
         <source>Frases:</source>
         <translation>Propoziții:</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="535"/>
+        <location filename="../src/app/mainwindow.cpp" line="536"/>
         <source>Tiempo de lectura:</source>
         <translation>Timp de citire:</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="559"/>
+        <location filename="../src/app/mainwindow.cpp" line="560"/>
         <source>~%1 h</source>
         <translation>~%1 h</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="560"/>
+        <location filename="../src/app/mainwindow.cpp" line="561"/>
         <source>~%1 h %2 min</source>
         <translation>~%1 h %2 min</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="745"/>
+        <location filename="../src/app/mainwindow.cpp" line="746"/>
         <source>Copiar nombre del archivo</source>
         <translation>Copiază numele fișierului</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="746"/>
+        <location filename="../src/app/mainwindow.cpp" line="747"/>
         <source>Copiar ruta completa</source>
         <translation>Copiază calea completă</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="791"/>
+        <location filename="../src/app/mainwindow.cpp" line="755"/>
+        <source>Abrir en una nueva ventana</source>
+        <translation>Deschide într-o fereastră nouă</translation>
+    </message>
+    <message>
+        <location filename="../src/app/mainwindow.cpp" line="798"/>
+        <source>No se pudo abrir una nueva ventana.</source>
+        <translation>Nu s-a putut deschide o fereastră nouă.</translation>
+    </message>
+    <message>
+        <location filename="../src/app/mainwindow.cpp" line="832"/>
         <source>Abrir</source>
         <translation>Deschide</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="792"/>
+        <location filename="../src/app/mainwindow.cpp" line="833"/>
         <source>Archivos Markdown (*.md *.markdown *.txt);;Todos los archivos (*)</source>
         <translation>Fișiere Markdown (*.md *.markdown *.txt);;Toate fișierele (*)</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="800"/>
+        <location filename="../src/app/mainwindow.cpp" line="841"/>
         <source>Importar HTML</source>
         <translation>Importă HTML</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="801"/>
+        <location filename="../src/app/mainwindow.cpp" line="842"/>
         <source>Páginas HTML (*.html *.htm);;Todos los archivos (*)</source>
         <translation>Pagini HTML (*.html *.htm);;Toate fișierele (*)</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="807"/>
-        <location filename="../src/app/mainwindow.cpp" line="831"/>
-        <location filename="../src/app/mainwindow.cpp" line="838"/>
-        <location filename="../src/app/mainwindow.cpp" line="898"/>
-        <location filename="../src/app/mainwindow.cpp" line="923"/>
+        <location filename="../src/app/mainwindow.cpp" line="848"/>
+        <location filename="../src/app/mainwindow.cpp" line="872"/>
+        <location filename="../src/app/mainwindow.cpp" line="879"/>
+        <location filename="../src/app/mainwindow.cpp" line="939"/>
+        <location filename="../src/app/mainwindow.cpp" line="964"/>
         <source>No se pudo importar</source>
         <translation>Importul a eșuat</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="808"/>
-        <location filename="../src/app/mainwindow.cpp" line="832"/>
+        <location filename="../src/app/mainwindow.cpp" line="849"/>
+        <location filename="../src/app/mainwindow.cpp" line="873"/>
         <source>No se pudo leer «%1».</source>
         <translation>Nu s-a putut citi „%1”.</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="839"/>
+        <location filename="../src/app/mainwindow.cpp" line="880"/>
         <source>No se pudo sacar texto de «%1».</source>
         <translation>Nu s-a putut extrage text din „%1”.</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="844"/>
+        <location filename="../src/app/mainwindow.cpp" line="885"/>
         <source>Puede que el libro esté protegido con DRM (los comprados en tiendas suelen estarlo), que esté dañado o que no sea realmente un EPUB. Prueba con una copia sin DRM o ábrelo y vuelve a exportarlo desde un programa como Calibre.</source>
         <translation>Cartea poate fi protejată cu DRM (cele cumpărate din magazine de obicei sunt), deteriorată sau să nu fie de fapt un EPUB. Încearcă o copie fără DRM sau deschide-o și export-o din nou dintr-un program precum Calibre.</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="859"/>
+        <location filename="../src/app/mainwindow.cpp" line="900"/>
         <source>Falta Pandoc</source>
         <translation>Lipsește Pandoc</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="860"/>
+        <location filename="../src/app/mainwindow.cpp" line="901"/>
         <source>Para importar DOCX, ODT, RTF, LaTeX y otros formatos hace falta Pandoc, un programa aparte que no está instalado.</source>
         <translation>Pentru a importa DOCX, ODT, RTF, LaTeX și alte formate este nevoie de Pandoc, un program separat care nu este instalat.</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="864"/>
+        <location filename="../src/app/mainwindow.cpp" line="905"/>
         <source>Instálalo con:
 
     %1
@@ -1758,12 +1768,12 @@ o descárgalo de https://pandoc.org/installing.html. No hace falta reiniciar md-
 sau descarcă-l de la https://pandoc.org/installing.html. Nu trebuie să repornești md-editor: importă din nou.</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="899"/>
+        <location filename="../src/app/mainwindow.cpp" line="940"/>
         <source>Pandoc no pudo convertir «%1».</source>
         <translation>Pandoc nu a putut converti „%1”.</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="902"/>
+        <location filename="../src/app/mainwindow.cpp" line="943"/>
         <source>La conversión tardó más de 30 segundos y se canceló. Si el documento es muy grande, conviértelo desde una terminal, sin límite de tiempo:
 
     pandoc &quot;%1&quot; -t gfm -o documento.md</source>
@@ -1772,22 +1782,22 @@ sau descarcă-l de la https://pandoc.org/installing.html. Nu trebuie să reporne
     pandoc &quot;%1&quot; -t gfm -o document.md</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="906"/>
+        <location filename="../src/app/mainwindow.cpp" line="947"/>
         <source>Puede que el archivo esté dañado, protegido con contraseña, o que su extensión no corresponda a su formato real. Prueba a abrirlo con su programa original y guardarlo de nuevo.</source>
         <translation>Fișierul poate fi deteriorat sau protejat cu parolă, ori extensia lui nu corespunde formatului real. Încearcă să-l deschizi în programul original și să-l salvezi din nou.</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="910"/>
+        <location filename="../src/app/mainwindow.cpp" line="951"/>
         <source>Motivo que da Pandoc: %1</source>
         <translation>Motivul indicat de Pandoc: %1</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="924"/>
+        <location filename="../src/app/mainwindow.cpp" line="965"/>
         <source>«%1» no contiene texto que importar.</source>
         <translation>„%1” nu conține text de importat.</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="927"/>
+        <location filename="../src/app/mainwindow.cpp" line="968"/>
         <source>Pandoc lo leyó sin errores, pero el resultado está vacío. Suele pasar con documentos que solo tienen imágenes (por ejemplo, páginas escaneadas), cuyo texto no se puede extraer.</source>
         <translation>Pandoc l-a citit fără erori, dar rezultatul este gol. Se întâmplă de obicei cu documente care conțin doar imagini (de exemplu, pagini scanate), al căror text nu poate fi extras.</translation>
     </message>
@@ -1798,12 +1808,12 @@ sau descarcă-l de la https://pandoc.org/installing.html. Nu trebuie să reporne
 %1</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="824"/>
+        <location filename="../src/app/mainwindow.cpp" line="865"/>
         <source>Importar EPUB</source>
         <translation>Importă EPUB</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="825"/>
+        <location filename="../src/app/mainwindow.cpp" line="866"/>
         <source>Libros EPUB (*.epub);;Todos los archivos (*)</source>
         <translation>Cărți EPUB (*.epub);;Toate fișierele (*)</translation>
     </message>
@@ -1824,12 +1834,12 @@ sau descarcă-l de la https://pandoc.org/installing.html. Nu trebuie să reporne
 %1</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="874"/>
+        <location filename="../src/app/mainwindow.cpp" line="915"/>
         <source>Importar con Pandoc</source>
         <translation>Importă cu Pandoc</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="875"/>
+        <location filename="../src/app/mainwindow.cpp" line="916"/>
         <source>Documentos compatibles (%1);;Todos los archivos (*)</source>
         <translation>Documente acceptate (%1);;Toate fișierele (*)</translation>
     </message>
@@ -1842,12 +1852,12 @@ sau descarcă-l de la https://pandoc.org/installing.html. Nu trebuie să reporne
         <translation type="vanished">Fișierul nu a produs niciun conținut.</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="940"/>
+        <location filename="../src/app/mainwindow.cpp" line="981"/>
         <source>Imágenes extraídas a: %1</source>
         <translation>Imagini extrase în: %1</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="1026"/>
+        <location filename="../src/app/mainwindow.cpp" line="1080"/>
         <source>No hay pestañas cerradas para reabrir.</source>
         <translation>Nu există file închise de redeschis.</translation>
     </message>
@@ -1984,37 +1994,42 @@ Cum se rezolvă:
         <translation>Ignoră „%1”</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowinput.cpp" line="145"/>
+        <location filename="../src/app/mainwindowinput.cpp" line="159"/>
+        <source>Arrastrar entre ventanas no está disponible en esta sesión.</source>
+        <translation>Tragerea între ferestre nu este disponibilă în această sesiune.</translation>
+    </message>
+    <message>
+        <location filename="../src/app/mainwindowinput.cpp" line="280"/>
         <source>Clic para marcar o desmarcar la tarea</source>
         <translation>Clic pentru a bifa sau debifa sarcina</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowinput.cpp" line="151"/>
+        <location filename="../src/app/mainwindowinput.cpp" line="286"/>
         <source>Clic para ir a la nota al pie</source>
         <translation>Clic pentru a merge la nota de subsol</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowinput.cpp" line="435"/>
+        <location filename="../src/app/mainwindowinput.cpp" line="570"/>
         <source>Ir a línea</source>
         <translation>Salt la linie</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowinput.cpp" line="435"/>
+        <location filename="../src/app/mainwindowinput.cpp" line="570"/>
         <source>Número de línea (1–%1):</source>
         <translation>Numărul liniei (1–%1):</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowinput.cpp" line="520"/>
+        <location filename="../src/app/mainwindowinput.cpp" line="655"/>
         <source>La nota [^%1] no tiene definición</source>
         <translation>Nota [^%1] nu are definiție</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowsession.cpp" line="69"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="149"/>
         <source>Recuperar documentos</source>
         <translation>Recuperează documentele</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowsession.cpp" line="70"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="150"/>
         <source>Se encontraron documentos con cambios sin guardar de una sesión anterior:
 %1
 
@@ -2025,42 +2040,42 @@ Cum se rezolvă:
 Vrei să le recuperezi?</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowsession.cpp" line="158"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="238"/>
         <source>El archivo cambió en disco: recargado.</source>
         <translation>Fișierul s-a schimbat pe disc: reîncărcat.</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowsession.cpp" line="165"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="245"/>
         <source>Archivo modificado en disco</source>
         <translation>Fișier modificat pe disc</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowsession.cpp" line="166"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="246"/>
         <source>«%1» ha cambiado en disco y tienes cambios sin guardar.</source>
         <translation>„%1” s-a schimbat pe disc și ai modificări nesalvate.</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowsession.cpp" line="169"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="249"/>
         <source>¿Recargar la versión del disco (perderás tus cambios) o conservar los tuyos?</source>
         <translation>Reîncărcați versiunea de pe disc (veți pierde modificările) sau le păstrați pe ale dvs.?</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowsession.cpp" line="170"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="250"/>
         <source>Recargar</source>
         <translation>Reîncarcă</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowsession.cpp" line="172"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="252"/>
         <source>Conservar los míos</source>
         <translation>Păstrează-le pe ale mele</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowsession.cpp" line="200"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="280"/>
         <source>No se pudo recargar</source>
         <translation>Reîncărcarea a eșuat</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowsession.cpp" line="201"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="281"/>
         <source>No se pudo recargar «%1» desde el disco.</source>
         <translation>Nu s-a putut reîncărca „%1” de pe disc.</translation>
     </message>
@@ -2075,17 +2090,17 @@ Vrei să le recuperezi?</translation>
 %2</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowsession.cpp" line="228"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="308"/>
         <source>Revertir a lo guardado</source>
         <translation>Revino la versiunea salvată</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowsession.cpp" line="229"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="309"/>
         <source>Se descartarán los cambios sin guardar de «%1» y se recargará la versión del disco. ¿Continuar?</source>
         <translation>Modificările nesalvate din „%1” vor fi eliminate și se va reîncărca versiunea de pe disc. Continuați?</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowsession.cpp" line="237"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="317"/>
         <source>Revertido a la versión guardada.</source>
         <translation>S-a revenit la versiunea salvată.</translation>
     </message>
@@ -2162,7 +2177,7 @@ Vrei să le recuperezi?</translation>
         <translation>Exportat în HTML: %1</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowinput.cpp" line="158"/>
+        <location filename="../src/app/mainwindowinput.cpp" line="293"/>
         <source>Ctrl+clic para abrir el enlace: %1</source>
         <translation>Ctrl+clic pentru a deschide legătura: %1</translation>
     </message>
@@ -2177,7 +2192,7 @@ Vrei să le recuperezi?</translation>
 %2</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="744"/>
+        <location filename="../src/app/mainwindow.cpp" line="745"/>
         <location filename="../src/io/filecontroller.cpp" line="107"/>
         <source>Abrir carpeta contenedora</source>
         <translation>Deschide folderul documentului</translation>
@@ -2250,7 +2265,7 @@ Doriți să le salvați?</translation>
         <translation>Document recuperat din sesiunea anterioară</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowsession.cpp" line="65"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="145"/>
         <source>(sin título)</source>
         <translation>(fără titlu)</translation>
     </message>
@@ -2269,26 +2284,26 @@ Doriți să le salvați?</translation>
 Dorești să îl recuperezi?</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowsession.cpp" line="73"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="153"/>
         <source>Recuperar</source>
         <translation>Recuperează</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowsession.cpp" line="74"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="154"/>
         <source>Descartar</source>
         <translation>Renunță</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="632"/>
-        <location filename="../src/app/mainwindow.cpp" line="710"/>
-        <location filename="../src/app/mainwindow.cpp" line="1040"/>
-        <location filename="../src/app/mainwindowsession.cpp" line="143"/>
+        <location filename="../src/app/mainwindow.cpp" line="633"/>
+        <location filename="../src/app/mainwindow.cpp" line="711"/>
+        <location filename="../src/app/mainwindow.cpp" line="1094"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="223"/>
         <source>Sin título</source>
         <translation>Fără titlu</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="709"/>
-        <location filename="../src/app/mainwindowsession.cpp" line="145"/>
+        <location filename="../src/app/mainwindow.cpp" line="710"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="225"/>
         <source>%1[*] — md-editor</source>
         <translation>%1[*] — md-editor</translation>
     </message>

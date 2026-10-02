@@ -291,208 +291,218 @@
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="278"/>
+        <location filename="../src/app/mainwindow.cpp" line="279"/>
         <source>Contador de palabras</source>
         <translation>字数统计</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="284"/>
+        <location filename="../src/app/mainwindow.cpp" line="285"/>
         <source>Línea y columna</source>
         <translation>行号和列号</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="310"/>
+        <location filename="../src/app/mainwindow.cpp" line="311"/>
         <source>Editor Markdown WYSIWYG — escribe y da formato con la barra superior</source>
         <translation>所见即所得的 Markdown 编辑器 — 使用顶部工具栏输入并设置格式</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="352"/>
+        <location filename="../src/app/mainwindow.cpp" line="353"/>
         <source>El archivo se eliminó o movió en disco.</source>
         <translation>该文件已在磁盘上被删除或移动。</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="422"/>
+        <location filename="../src/app/mainwindow.cpp" line="423"/>
         <source>Versión %1</source>
         <translation>版本 %1</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="423"/>
+        <location filename="../src/app/mainwindow.cpp" line="424"/>
         <source>Desarrollado por Manuel Arias Calleja</source>
         <translation>由 Manuel Arias Calleja 开发</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="424"/>
+        <location filename="../src/app/mainwindow.cpp" line="425"/>
         <source>Editor WYSIWYG de Markdown en Qt6 + C++17.</source>
         <translation>基于 Qt6 + C++17 的所见即所得 Markdown 编辑器。</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="431"/>
+        <location filename="../src/app/mainwindow.cpp" line="432"/>
         <source>Acerca de</source>
         <translation>关于</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/app/mainwindow.cpp" line="494"/>
+        <location filename="../src/app/mainwindow.cpp" line="495"/>
         <source>%1 palabra(s)</source>
         <translation>
             <numerusform>%1 个词</numerusform>
         </translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/app/mainwindow.cpp" line="496"/>
+        <location filename="../src/app/mainwindow.cpp" line="497"/>
         <source>%1 carácter(es)</source>
         <translation>
             <numerusform>%1 个字符</numerusform>
         </translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="503"/>
+        <location filename="../src/app/mainwindow.cpp" line="504"/>
         <source>Selección: </source>
         <translation>选区： </translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="513"/>
+        <location filename="../src/app/mainwindow.cpp" line="514"/>
         <source>Ln %1, Col %2</source>
         <translation>行 %1，列 %2</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="527"/>
+        <location filename="../src/app/mainwindow.cpp" line="528"/>
         <source>Estadísticas del documento</source>
         <translation>文档统计</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="529"/>
+        <location filename="../src/app/mainwindow.cpp" line="530"/>
         <source>Palabras:</source>
         <translation>词数：</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="530"/>
+        <location filename="../src/app/mainwindow.cpp" line="531"/>
         <source>Caracteres:</source>
         <translation>字符数：</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="531"/>
+        <location filename="../src/app/mainwindow.cpp" line="532"/>
         <source>Caracteres (sin espacios):</source>
         <translation>字符数（不含空格）：</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="533"/>
+        <location filename="../src/app/mainwindow.cpp" line="534"/>
         <source>Párrafos:</source>
         <translation>段落数：</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="534"/>
+        <location filename="../src/app/mainwindow.cpp" line="535"/>
         <source>Frases:</source>
         <translation>句数：</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="535"/>
+        <location filename="../src/app/mainwindow.cpp" line="536"/>
         <source>Tiempo de lectura:</source>
         <translation>阅读时间：</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/app/mainwindow.cpp" line="550"/>
+        <location filename="../src/app/mainwindow.cpp" line="551"/>
         <source>~%n min</source>
         <translation>
             <numerusform>约 %n 分钟</numerusform>
         </translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="559"/>
+        <location filename="../src/app/mainwindow.cpp" line="560"/>
         <source>~%1 h</source>
         <translation>约 %1 小时</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="560"/>
+        <location filename="../src/app/mainwindow.cpp" line="561"/>
         <source>~%1 h %2 min</source>
         <translation>约 %1 小时 %2 分钟</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="632"/>
-        <location filename="../src/app/mainwindow.cpp" line="710"/>
-        <location filename="../src/app/mainwindow.cpp" line="1040"/>
-        <location filename="../src/app/mainwindowsession.cpp" line="143"/>
+        <location filename="../src/app/mainwindow.cpp" line="633"/>
+        <location filename="../src/app/mainwindow.cpp" line="711"/>
+        <location filename="../src/app/mainwindow.cpp" line="1094"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="223"/>
         <source>Sin título</source>
         <translation>无标题</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="709"/>
-        <location filename="../src/app/mainwindowsession.cpp" line="145"/>
+        <location filename="../src/app/mainwindow.cpp" line="710"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="225"/>
         <source>%1[*] — md-editor</source>
         <translation>%1[*] — md-editor</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="744"/>
+        <location filename="../src/app/mainwindow.cpp" line="745"/>
         <location filename="../src/io/filecontroller.cpp" line="107"/>
         <source>Abrir carpeta contenedora</source>
         <translation>打开所在文件夹</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="745"/>
+        <location filename="../src/app/mainwindow.cpp" line="746"/>
         <source>Copiar nombre del archivo</source>
         <translation>复制文件名</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="746"/>
+        <location filename="../src/app/mainwindow.cpp" line="747"/>
         <source>Copiar ruta completa</source>
         <translation>复制完整路径</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="791"/>
+        <location filename="../src/app/mainwindow.cpp" line="755"/>
+        <source>Abrir en una nueva ventana</source>
+        <translation>在新窗口中打开</translation>
+    </message>
+    <message>
+        <location filename="../src/app/mainwindow.cpp" line="798"/>
+        <source>No se pudo abrir una nueva ventana.</source>
+        <translation>无法打开新窗口。</translation>
+    </message>
+    <message>
+        <location filename="../src/app/mainwindow.cpp" line="832"/>
         <source>Abrir</source>
         <translation>打开</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="792"/>
+        <location filename="../src/app/mainwindow.cpp" line="833"/>
         <source>Archivos Markdown (*.md *.markdown *.txt);;Todos los archivos (*)</source>
         <translation>Markdown 文件 (*.md *.markdown *.txt);;所有文件 (*)</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="800"/>
+        <location filename="../src/app/mainwindow.cpp" line="841"/>
         <source>Importar HTML</source>
         <translation>导入 HTML</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="801"/>
+        <location filename="../src/app/mainwindow.cpp" line="842"/>
         <source>Páginas HTML (*.html *.htm);;Todos los archivos (*)</source>
         <translation>HTML 网页 (*.html *.htm);;所有文件 (*)</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="807"/>
-        <location filename="../src/app/mainwindow.cpp" line="831"/>
-        <location filename="../src/app/mainwindow.cpp" line="838"/>
-        <location filename="../src/app/mainwindow.cpp" line="898"/>
-        <location filename="../src/app/mainwindow.cpp" line="923"/>
+        <location filename="../src/app/mainwindow.cpp" line="848"/>
+        <location filename="../src/app/mainwindow.cpp" line="872"/>
+        <location filename="../src/app/mainwindow.cpp" line="879"/>
+        <location filename="../src/app/mainwindow.cpp" line="939"/>
+        <location filename="../src/app/mainwindow.cpp" line="964"/>
         <source>No se pudo importar</source>
         <translation>导入失败</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="808"/>
-        <location filename="../src/app/mainwindow.cpp" line="832"/>
+        <location filename="../src/app/mainwindow.cpp" line="849"/>
+        <location filename="../src/app/mainwindow.cpp" line="873"/>
         <source>No se pudo leer «%1».</source>
         <translation>无法读取「%1」。</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="839"/>
+        <location filename="../src/app/mainwindow.cpp" line="880"/>
         <source>No se pudo sacar texto de «%1».</source>
         <translation>无法从「%1」中提取文本。</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="844"/>
+        <location filename="../src/app/mainwindow.cpp" line="885"/>
         <source>Puede que el libro esté protegido con DRM (los comprados en tiendas suelen estarlo), que esté dañado o que no sea realmente un EPUB. Prueba con una copia sin DRM o ábrelo y vuelve a exportarlo desde un programa como Calibre.</source>
         <translation>该书可能受 DRM 保护（从商店购买的书通常如此）、已损坏，或并非真正的 EPUB。请尝试使用无 DRM 的副本，或在 Calibre 等程序中打开并重新导出。</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="859"/>
+        <location filename="../src/app/mainwindow.cpp" line="900"/>
         <source>Falta Pandoc</source>
         <translation>缺少 Pandoc</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="860"/>
+        <location filename="../src/app/mainwindow.cpp" line="901"/>
         <source>Para importar DOCX, ODT, RTF, LaTeX y otros formatos hace falta Pandoc, un programa aparte que no está instalado.</source>
         <translation>导入 DOCX、ODT、RTF、LaTeX 等格式需要 Pandoc，这是一个未安装的独立程序。</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="864"/>
+        <location filename="../src/app/mainwindow.cpp" line="905"/>
         <source>Instálalo con:
 
     %1
@@ -505,12 +515,12 @@ o descárgalo de https://pandoc.org/installing.html. No hace falta reiniciar md-
 或从 https://pandoc.org/installing.html 下载。无需重启 md-editor，重新导入即可。</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="899"/>
+        <location filename="../src/app/mainwindow.cpp" line="940"/>
         <source>Pandoc no pudo convertir «%1».</source>
         <translation>Pandoc 无法转换「%1」。</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="902"/>
+        <location filename="../src/app/mainwindow.cpp" line="943"/>
         <source>La conversión tardó más de 30 segundos y se canceló. Si el documento es muy grande, conviértelo desde una terminal, sin límite de tiempo:
 
     pandoc &quot;%1&quot; -t gfm -o documento.md</source>
@@ -519,22 +529,22 @@ o descárgalo de https://pandoc.org/installing.html. No hace falta reiniciar md-
     pandoc &quot;%1&quot; -t gfm -o document.md</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="906"/>
+        <location filename="../src/app/mainwindow.cpp" line="947"/>
         <source>Puede que el archivo esté dañado, protegido con contraseña, o que su extensión no corresponda a su formato real. Prueba a abrirlo con su programa original y guardarlo de nuevo.</source>
         <translation>文件可能已损坏或受密码保护，或者其扩展名与实际格式不符。请尝试用原始程序打开并重新保存。</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="910"/>
+        <location filename="../src/app/mainwindow.cpp" line="951"/>
         <source>Motivo que da Pandoc: %1</source>
         <translation>Pandoc 给出的原因：%1</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="924"/>
+        <location filename="../src/app/mainwindow.cpp" line="965"/>
         <source>«%1» no contiene texto que importar.</source>
         <translation>「%1」中没有可导入的文本。</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="927"/>
+        <location filename="../src/app/mainwindow.cpp" line="968"/>
         <source>Pandoc lo leyó sin errores, pero el resultado está vacío. Suele pasar con documentos que solo tienen imágenes (por ejemplo, páginas escaneadas), cuyo texto no se puede extraer.</source>
         <translation>Pandoc 读取时没有出错，但结果为空。这通常发生在只包含图片的文档（例如扫描页面）上，其中的文字无法提取。</translation>
     </message>
@@ -549,12 +559,12 @@ o descárgalo de https://pandoc.org/installing.html. No hace falta reiniciar md-
 %1</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="824"/>
+        <location filename="../src/app/mainwindow.cpp" line="865"/>
         <source>Importar EPUB</source>
         <translation>导入 EPUB</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="825"/>
+        <location filename="../src/app/mainwindow.cpp" line="866"/>
         <source>Libros EPUB (*.epub);;Todos los archivos (*)</source>
         <translation>EPUB 电子书 (*.epub);;所有文件 (*)</translation>
     </message>
@@ -575,12 +585,12 @@ o descárgalo de https://pandoc.org/installing.html. No hace falta reiniciar md-
 %1</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="874"/>
+        <location filename="../src/app/mainwindow.cpp" line="915"/>
         <source>Importar con Pandoc</source>
         <translation>使用 Pandoc 导入</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="875"/>
+        <location filename="../src/app/mainwindow.cpp" line="916"/>
         <source>Documentos compatibles (%1);;Todos los archivos (*)</source>
         <translation>支持的文档 (%1);;所有文件 (*)</translation>
     </message>
@@ -593,48 +603,53 @@ o descárgalo de https://pandoc.org/installing.html. No hace falta reiniciar md-
         <translation type="vanished">该文件没有产生任何内容。</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="940"/>
+        <location filename="../src/app/mainwindow.cpp" line="981"/>
         <source>Imágenes extraídas a: %1</source>
         <translation>图片已提取到：%1</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindow.cpp" line="1026"/>
+        <location filename="../src/app/mainwindow.cpp" line="1080"/>
         <source>No hay pestañas cerradas para reabrir.</source>
         <translation>没有可重新打开的已关闭标签页。</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowinput.cpp" line="145"/>
+        <location filename="../src/app/mainwindowinput.cpp" line="159"/>
+        <source>Arrastrar entre ventanas no está disponible en esta sesión.</source>
+        <translation>此会话中无法在窗口之间拖动。</translation>
+    </message>
+    <message>
+        <location filename="../src/app/mainwindowinput.cpp" line="280"/>
         <source>Clic para marcar o desmarcar la tarea</source>
         <translation>单击可勾选或取消勾选任务</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowinput.cpp" line="151"/>
+        <location filename="../src/app/mainwindowinput.cpp" line="286"/>
         <source>Clic para ir a la nota al pie</source>
         <translation>单击可跳转到脚注</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowinput.cpp" line="158"/>
+        <location filename="../src/app/mainwindowinput.cpp" line="293"/>
         <source>Ctrl+clic para abrir el enlace: %1</source>
         <translation>Ctrl+单击可打开链接：%1</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowinput.cpp" line="409"/>
+        <location filename="../src/app/mainwindowinput.cpp" line="544"/>
         <location filename="../src/editor/insertcontroller.cpp" line="333"/>
         <source>El documento no tiene encabezados.</source>
         <translation>本文档没有标题。</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowinput.cpp" line="435"/>
+        <location filename="../src/app/mainwindowinput.cpp" line="570"/>
         <source>Ir a línea</source>
         <translation>跳转到行</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowinput.cpp" line="435"/>
+        <location filename="../src/app/mainwindowinput.cpp" line="570"/>
         <source>Número de línea (1–%1):</source>
         <translation>行号（1–%1）：</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowinput.cpp" line="520"/>
+        <location filename="../src/app/mainwindowinput.cpp" line="655"/>
         <source>La nota [^%1] no tiene definición</source>
         <translation>脚注 [^%1] 没有定义</translation>
     </message>
@@ -1591,17 +1606,17 @@ o descárgalo de https://pandoc.org/installing.html. No hace falta reiniciar md-
         <translation>格式</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowsession.cpp" line="65"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="145"/>
         <source>(sin título)</source>
         <translation>（无标题）</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowsession.cpp" line="69"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="149"/>
         <source>Recuperar documentos</source>
         <translation>恢复文档</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowsession.cpp" line="70"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="150"/>
         <source>Se encontraron documentos con cambios sin guardar de una sesión anterior:
 %1
 
@@ -1612,52 +1627,52 @@ o descárgalo de https://pandoc.org/installing.html. No hace falta reiniciar md-
 要恢复它们吗？</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowsession.cpp" line="73"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="153"/>
         <source>Recuperar</source>
         <translation>恢复</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowsession.cpp" line="74"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="154"/>
         <source>Descartar</source>
         <translation>放弃</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowsession.cpp" line="158"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="238"/>
         <source>El archivo cambió en disco: recargado.</source>
         <translation>文件在磁盘上已更改：已重新加载。</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowsession.cpp" line="165"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="245"/>
         <source>Archivo modificado en disco</source>
         <translation>文件在磁盘上已被修改</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowsession.cpp" line="166"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="246"/>
         <source>«%1» ha cambiado en disco y tienes cambios sin guardar.</source>
         <translation>「%1」在磁盘上已更改，而你还有未保存的更改。</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowsession.cpp" line="169"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="249"/>
         <source>¿Recargar la versión del disco (perderás tus cambios) o conservar los tuyos?</source>
         <translation>要重新加载磁盘上的版本（将丢失你的更改），还是保留自己的版本？</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowsession.cpp" line="170"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="250"/>
         <source>Recargar</source>
         <translation>重新加载</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowsession.cpp" line="172"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="252"/>
         <source>Conservar los míos</source>
         <translation>保留我的版本</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowsession.cpp" line="200"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="280"/>
         <source>No se pudo recargar</source>
         <translation>重新加载失败</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowsession.cpp" line="201"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="281"/>
         <source>No se pudo recargar «%1» desde el disco.</source>
         <translation>无法从磁盘重新加载「%1」。</translation>
     </message>
@@ -1672,17 +1687,17 @@ o descárgalo de https://pandoc.org/installing.html. No hace falta reiniciar md-
 %2</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowsession.cpp" line="228"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="308"/>
         <source>Revertir a lo guardado</source>
         <translation>还原为已保存的版本</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowsession.cpp" line="229"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="309"/>
         <source>Se descartarán los cambios sin guardar de «%1» y se recargará la versión del disco. ¿Continuar?</source>
         <translation>「%1」中未保存的更改将被放弃，并重新加载磁盘上的版本。要继续吗？</translation>
     </message>
     <message>
-        <location filename="../src/app/mainwindowsession.cpp" line="237"/>
+        <location filename="../src/app/mainwindowsession.cpp" line="317"/>
         <source>Revertido a la versión guardada.</source>
         <translation>已还原为保存过的版本。</translation>
     </message>
