@@ -1,12 +1,12 @@
 {
-    "version": "2.9.2",
+    "version": "2.10.0",
     "description": "Editor/visor WYSIWYG de Markdown en Qt6 (round-trip a Markdown puro, fórmulas TeX, 10 idiomas).",
     "homepage": "https://github.com/ManuelAriasCalleja/Markdown-editor",
     "license": "GPL-3.0-only",
     "architecture": {
         "64bit": {
-            "url": "https://github.com/ManuelAriasCalleja/Markdown-editor/releases/download/v2.9.2/md-editor-2.9.2-windows-x64.zip",
-            "hash": "b8c48bb316768614aaf8d2ba766794ddb401c8dc92d899eae50b792e64d8842d"
+            "url": "https://github.com/ManuelAriasCalleja/Markdown-editor/releases/download/v2.10.0/md-editor-2.10.0-windows-x64.zip",
+            "hash": "669bb4382dcacb432d31fc9156c13425a2984e5efe9978ef297b43a28c5c9a19"
         }
     },
     "bin": "md-editor.exe",
