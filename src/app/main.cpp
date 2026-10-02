@@ -5,8 +5,10 @@
 
 #include "appsettings.h"
 #include "langtag.h"
+#include "singleinstance.h"
 
 #include <QApplication>
+#include <QFileInfo>
 #include <QIcon>
 #include <QLibraryInfo>
 #include <QLocale>
@@ -31,6 +33,24 @@ int main(int argc, char *argv[])
     app.setOrganizationName(QStringLiteral("md-editor"));  // para QSettings (tema)
     // Asocia la ventana con su .desktop (Wayland usa este nombre para el icono).
     app.setDesktopFileName(QStringLiteral("md-editor"));
+
+    // --- Instancia única -----------------------------------------------------
+    // Si ya hay un editor en marcha (p. ej. al abrir otro .md desde el explorador),
+    // se le entregan las rutas, que las abre en pestañas, y este proceso sale sin
+    // crear ninguna ventana. Las rutas se hacen absolutas aquí: el directorio de
+    // trabajo de ESTE proceso no es el de la instancia que las recibe.
+    QStringList cmdLinePaths;
+    for (int i = 1; i < argc; ++i) {
+        const QString arg = QString::fromLocal8Bit(argv[i]);
+        if (!arg.isEmpty())
+            cmdLinePaths << QFileInfo(arg).absoluteFilePath();
+    }
+    const QString serverName = SingleInstance::serverName();
+    if (SingleInstance::sendToRunning(serverName, cmdLinePaths))
+        return 0;
+    SingleInstance singleInstance;
+    singleInstance.listen(serverName);  // si falla, simplemente no hay instancia única
+    // -------------------------------------------------------------------------
 
     // --- Internacionalización ------------------------------------------------
     // El idioma se toma del ajuste guardado (menú Ver → Idioma); vacío = el del
@@ -107,7 +127,32 @@ int main(int argc, char *argv[])
     std::unique_ptr<MainWindow> window;
     std::function<void(const QString &, bool)> spawn;
 
+    // Peticiones de otras ejecuciones. Hasta que la sesión de la ventana actual
+    // termina de arrancar (o mientras se recrea por un cambio de idioma) se
+    // encolan: abrir antes pisaría la lógica de arranque, o iría a una ventana
+    // que está a punto de destruirse.
+    bool sessionReady = false;
+    QStringList pendingPaths;
+    bool pendingRaise = false;
+    auto flushPending = [&] {
+        if (!sessionReady || !window)
+            return;
+        if (pendingPaths.isEmpty() && !pendingRaise)
+            return;
+        const QStringList paths = pendingPaths;
+        pendingPaths.clear();
+        pendingRaise = false;
+        window->openExternalPaths(paths);
+    };
+    QObject::connect(&singleInstance, &SingleInstance::pathsReceived, &app,
+                     [&](const QStringList &paths) {
+        pendingPaths << paths;
+        pendingRaise = true;
+        flushPending();
+    });
+
     spawn = [&](const QString &openPath, bool relaunch) {
+        sessionReady = false;
         window = std::make_unique<MainWindow>();
         MainWindow *w = window.get();
 
@@ -127,15 +172,20 @@ int main(int argc, char *argv[])
         // diálogo espurio. En el primer arranque decide la sesión (línea de
         // comandos > borrador > último documento); en una recreación por idioma
         // solo reabre el documento que la ventana anterior tenía abierto.
-        QTimer::singleShot(0, w, [w, openPath, relaunch] {
+        QTimer::singleShot(0, w, [&, w, openPath, relaunch] {
             if (relaunch)
                 w->relaunchSession(openPath);
             else
                 w->startSession(openPath);
+            sessionReady = true;
+            flushPending();
         });
     };
 
-    const QString cmdLineFile = (argc > 1) ? QString::fromLocal8Bit(argv[1]) : QString();
+    // El primer archivo lo abre startSession (con su prioridad sobre la recuperación
+    // de borrador); los demás, como cualquier petición posterior, en su pestaña.
+    const QString cmdLineFile = cmdLinePaths.value(0);
+    pendingPaths = cmdLinePaths.mid(1);
     spawn(cmdLineFile, false);
 
     return app.exec();

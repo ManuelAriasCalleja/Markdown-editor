@@ -127,7 +127,7 @@ fi
 #    del PATH) e iconos en el tema hicolor. Idempotente.
 echo "==> Instalando lanzador e iconos en $PREFIX/share..."
 desktop_tmp="$(mktemp)"
-sed "s|^Exec=.*|Exec=$DEST %f|" md-editor.desktop > "$desktop_tmp"
+sed "s|^Exec=.*|Exec=$DEST %F|" md-editor.desktop > "$desktop_tmp"
 $SUDO install -D -m 0644 "$desktop_tmp" "$APPS_DIR/md-editor.desktop"
 rm -f "$desktop_tmp"
 

@@ -45,6 +45,16 @@ void MainWindow::relaunchSession(const QString &reopenPath)
             s->file()->startAutosave();
 }
 
+void MainWindow::openExternalPaths(const QStringList &paths)
+{
+    for (const QString &path : paths)
+        openPathInTab(path);
+    setWindowState(windowState() & ~Qt::WindowMinimized);
+    show();
+    raise();
+    activateWindow();
+}
+
 void MainWindow::startSession(const QString &cmdLineFile)
 {
     // Si el esquema arranca visible, normaliza ya su ancho (con el layout

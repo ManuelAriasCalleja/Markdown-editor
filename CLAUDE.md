@@ -335,6 +335,17 @@ añadir lógica nueva: hay un `tst_*` por módulo.
   es como `load()` pero sin archivo y con línea base vacía (cuenta como modificado,
   para que no se pierdan sin avisar). El tamaño de fuente no es expresable en
   Markdown: lo «grande» (p. ej. `CERTIFICO`) se consigue con un encabezado.
+- **Instancia única (`SingleInstance`).** Abrir un `.md` desde el explorador con el
+  editor ya en marcha no crea otro proceso: `main()` intenta antes de nada
+  `SingleInstance::sendToRunning` (un `QLocalSocket` a `md-editor-<usuario>`) con las
+  rutas **absolutas** (el directorio de trabajo del proceso nuevo no es el de la
+  instancia que las recibe) y sale. La primera instancia escucha con `QLocalServer` y
+  `MainWindow::openExternalPaths` abre cada ruta en una pestaña y trae la ventana al
+  frente. `main()` **encola** las peticiones hasta que la sesión de la ventana actual
+  ha arrancado (y mientras se recrea por un cambio de idioma). El `.desktop` lleva
+  `%F` (varios archivos). *Limitación:* en Wayland el compositor puede negar el
+  `activateWindow()` (haría falta *xdg-activation*); macOS pasaría por `QFileOpenEvent`,
+  aún sin manejar.
 - **Arranque de sesión.** `main.cpp` difiere con `QTimer::singleShot(0, ...)` la
   llamada a `MainWindow::startSession()` (abrir en mitad del trazado inicial de
   `QTextEdit` provoca un diálogo espurio). Prioridad: archivo de línea de comandos

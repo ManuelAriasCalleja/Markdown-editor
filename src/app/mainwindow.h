@@ -92,6 +92,11 @@ public:
     /// ventana anterior.
     void relaunchSession(const QString &reopenPath);
 
+    /// \brief Atiende una petición de otra ejecución del programa (instancia única):
+    /// abre cada ruta en su pestaña y trae la ventana al frente, restaurándola si
+    /// estaba minimizada. Sin rutas, solo la trae al frente.
+    void openExternalPaths(const QStringList &paths);
+
 signals:
     /// \brief El usuario eligió otro idioma. main() intercambia los traductores y recrea
     /// la ventana (rehaciendo todos los tr()) reabriendo `reopenPath`.

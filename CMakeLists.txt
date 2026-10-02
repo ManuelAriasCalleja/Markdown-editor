@@ -80,6 +80,8 @@ add_library(md-editor-core STATIC
     # --- app ---
     src/app/appsettings.cpp
     src/app/appsettings.h
+    src/app/singleinstance.cpp
+    src/app/singleinstance.h
     src/app/closedtabs.cpp
     src/app/closedtabs.h
     src/app/chromezoom.cpp
@@ -584,6 +586,7 @@ if(Qt6Test_FOUND)
         tst_langtag
         tst_installcmd
         tst_fileerrors
+        tst_singleinstance
         tst_nav
         tst_csvtable
         tst_closedtabstack
