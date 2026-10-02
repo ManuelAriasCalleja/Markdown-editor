@@ -197,6 +197,57 @@ bool SingleInstance::otherInstancesAlive(const QString &self, const QString &reg
     return alive;
 }
 
+bool SingleInstance::queryOpen(const QString &name, const QStringList &paths, QStringList &open,
+                               int timeoutMs)
+{
+    QLocalSocket socket;
+    socket.connectToServer(name);
+    if (!socket.waitForConnected(timeoutMs))
+        return false;
+    const QByteArray data = encode({kQueryOpen, paths});
+    if (socket.write(data) != data.size()
+        || (socket.bytesToWrite() != 0 && !socket.waitForBytesWritten(timeoutMs)))
+        return false;
+    // La respuesta puede llegar troceada: se acumula hasta que decodifica.
+    QByteArray buffer;
+    Message reply;
+    while (!decode(buffer, reply)) {
+        if (!socket.waitForReadyRead(timeoutMs))
+            return false;
+        buffer.append(socket.readAll());
+        if (buffer.size() > kMaxMessage)
+            return false;
+    }
+    if (reply.command != kReply)
+        return false;
+    open = reply.args;
+    return true;
+}
+
+bool SingleInstance::deliverPaths(const QStringList &paths, QStringList *leftover,
+                                  const QString &registry, int timeoutMs)
+{
+    QStringList remaining = paths;
+    const QStringList names = registeredNames(registry);
+    for (auto it = names.crbegin(); it != names.crend() && !remaining.isEmpty(); ++it) {
+        QStringList owned;
+        if (!queryOpen(*it, remaining, owned, timeoutMs) || owned.isEmpty())
+            continue;
+        owned.removeIf([&remaining](const QString &p) { return !remaining.contains(p); });
+        if (owned.isEmpty() || !sendTo(*it, {kOpen, owned}, timeoutMs))
+            continue;
+        for (const QString &p : std::as_const(owned))
+            remaining.removeAll(p);
+    }
+    // Todo lo pedido ya lo tenía alguien: esa instancia lo trajo al frente.
+    if (remaining.isEmpty() && !paths.isEmpty())
+        return true;
+    const bool ok = sendToLatest({kOpen, remaining}, registry, timeoutMs);
+    if (!ok && leftover)
+        *leftover = remaining;
+    return ok;
+}
+
 bool SingleInstance::sendTo(const QString &name, const Message &message, int timeoutMs)
 {
     return trySend(name, encode(message), timeoutMs) == SendResult::Ok;
@@ -260,6 +311,13 @@ void SingleInstance::onNewConnection()
             Message message;
             if (decode(*buffer, message)) {
                 buffer->clear();
+                if (message.command == kQueryOpen) {
+                    // Pregunta: se contesta por este mismo socket y no sube a nadie más.
+                    const QStringList open = m_openFiles ? m_openFiles(message.args) : QStringList();
+                    socket->write(encode({kReply, open}));
+                    socket->flush();
+                    return;
+                }
                 emit messageReceived(message);
             } else if (buffer->size() > kMaxMessage) {
                 socket->abort();

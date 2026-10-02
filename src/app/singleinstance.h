@@ -8,6 +8,8 @@
 #include <QString>
 #include <QStringList>
 
+#include <functional>
+
 /// \brief Servidor local de cada instancia, cliente de las demás y registro compartido.
 ///
 /// Cada instancia escucha en un socket propio (`instanceName`) y se anota, por orden
@@ -30,6 +32,11 @@ public:
     static inline const QString kOpen = QStringLiteral("open");
     /// El documento `args[0]` ya vive en otra ventana: cerrar su pestaña aquí.
     static inline const QString kAdopted = QStringLiteral("adopted");
+    /// Pregunta: ¿cuáles de `args` tienes abiertos? Se contesta con `kReply` por el mismo
+    /// socket (ver setOpenFilesProvider); no llega a messageReceived.
+    static inline const QString kQueryOpen = QStringLiteral("query-open");
+    /// Respuesta a una pregunta: los `args` que sí tiene abiertos.
+    static inline const QString kReply = QStringLiteral("reply");
 
     /// \brief Opciones de la línea de comandos.
     struct LaunchArgs {
@@ -68,6 +75,27 @@ public:
     static bool otherInstancesAlive(const QString &self, const QString &registry = registryFile(),
                                     int timeoutMs = 300);
 
+    /// \brief Pregunta a la instancia `name` cuáles de `paths` tiene abiertos. Falso si no
+    /// contesta (no está, o no a tiempo).
+    static bool queryOpen(const QString &name, const QStringList &paths, QStringList &open,
+                          int timeoutMs = 1500);
+
+    /// \brief Entrega a las instancias la petición de abrir `paths`, sin duplicar: lo que
+    /// una instancia ya tiene abierto va a ELLA (que lo trae al frente), y el resto a la
+    /// última creada. Sin rutas, solo trae al frente la última.
+    /// \param leftover rutas que no se pudieron entregar a nadie (no hay instancia viva):
+    /// las abre quien llama.
+    /// \return verdadero si la petición entera quedó entregada.
+    static bool deliverPaths(const QStringList &paths, QStringList *leftover = nullptr,
+                             const QString &registry = registryFile(), int timeoutMs = 1500);
+
+    /// \brief Cómo contesta esta instancia a kQueryOpen: dado un conjunto de rutas,
+    /// cuáles tiene abiertas. Sin él, contesta que ninguna.
+    void setOpenFilesProvider(std::function<QStringList(const QStringList &)> provider)
+    {
+        m_openFiles = std::move(provider);
+    }
+
     /// \brief Entrega `message` a la instancia `name`. Falso si no está o no lo recibió.
     static bool sendTo(const QString &name, const Message &message, int timeoutMs = 1500);
 
@@ -91,6 +119,7 @@ private:
     QLocalServer m_server;
     QString m_name;
     QString m_registry;
+    std::function<QStringList(const QStringList &)> m_openFiles;
 };
 
 Q_DECLARE_METATYPE(SingleInstance::Message)

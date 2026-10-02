@@ -367,6 +367,12 @@ añadir lógica nueva: hay un `tst_*` por módulo.
   única pestaña: al adoptarla (`closeTabForPath`), una ventana que se queda solo con un
   documento nuevo sin tocar **se cierra sola** —diferido a que termine el `QDrag`
   (`m_closeWhenDragEnds`), que si no se destruiría bajo su propio `exec()`—.
+  **Sin duplicar archivos entre instancias:** `deliverPaths` pregunta a cada instancia
+  (`kQueryOpen`, contestado por el mismo socket con `kReply` desde
+  `setOpenFilesProvider`, que cuenta también lo encolado en arranque) cuáles de las
+  rutas ya tiene abiertas; esas van a ELLA (que las trae al frente, deduplicando con
+  `openPathInTab`) y solo el resto a la última creada. Lo que no se pudo entregar a nadie
+  lo abre el propio proceso.
   Detalles que salieron de la revisión: el registro vive en un directorio **privado del
   usuario** (`XDG_RUNTIME_DIR`, o una carpeta 0700 propia comprobando el dueño; sin
   garantías no hay registro, nunca una ruta ajena) y el socket es `UserAccessOption`;

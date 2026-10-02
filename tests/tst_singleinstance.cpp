@@ -22,6 +22,9 @@ private slots:
     void adoptedReachesTheOrigin();
     void detectsOtherLiveInstances();
     void registryIsPrivateToTheUser();
+    void openFilesGoToTheirOwner();
+    void nothingOpenGoesToTheLatest();
+    void noInstancesLeavesThePathsToTheCaller();
 
 private:
     static QString uniq(const char *tag)
@@ -183,6 +186,54 @@ void TestSingleInstance::registryIsPrivateToTheUser()
     QVERIFY(dir.isDir());
     QVERIFY(!(dir.permissions() & (QFileDevice::ReadGroup | QFileDevice::WriteGroup
                                    | QFileDevice::ReadOther | QFileDevice::WriteOther)));
+}
+
+void TestSingleInstance::openFilesGoToTheirOwner()
+{
+    // A (antigua) ya tiene /a.md abierto; B es la última. Pedir /a.md y /b.md: el
+    // primero va a A (no se duplica en B) y el segundo a la última.
+    SingleInstance a, b;
+    QVERIFY(a.listen(uniq("i"), registry()));
+    QVERIFY(b.listen(uniq("j"), registry()));
+    a.setOpenFilesProvider([](const QStringList &p) {
+        return p.contains(QStringLiteral("/a.md")) ? QStringList{QStringLiteral("/a.md")} : QStringList();
+    });
+    QSignalSpy spyA(&a, &SingleInstance::messageReceived);
+    QSignalSpy spyB(&b, &SingleInstance::messageReceived);
+    auto done = std::async(std::launch::async, [&] {
+        return SingleInstance::deliverPaths({QStringLiteral("/a.md"), QStringLiteral("/b.md")},
+                                            nullptr, registry(), 3000);
+    });
+    QVERIFY(spyA.wait(5000));
+    QVERIFY(spyB.count() > 0 || spyB.wait(5000));
+    QVERIFY(done.get());
+    QCOMPARE(spyA.first().first().value<SingleInstance::Message>().args,
+             QStringList{QStringLiteral("/a.md")});
+    QCOMPARE(spyB.first().first().value<SingleInstance::Message>().args,
+             QStringList{QStringLiteral("/b.md")});
+}
+
+void TestSingleInstance::nothingOpenGoesToTheLatest()
+{
+    SingleInstance a, b;
+    QVERIFY(a.listen(uniq("k"), registry()));
+    QVERIFY(b.listen(uniq("l"), registry()));
+    QSignalSpy spyA(&a, &SingleInstance::messageReceived);
+    QSignalSpy spyB(&b, &SingleInstance::messageReceived);
+    auto done = std::async(std::launch::async, [&] {
+        return SingleInstance::deliverPaths({QStringLiteral("/n.md")}, nullptr, registry(), 3000);
+    });
+    QVERIFY(spyB.wait(5000));
+    QVERIFY(done.get());
+    QCOMPARE(spyA.count(), 0);
+}
+
+void TestSingleInstance::noInstancesLeavesThePathsToTheCaller()
+{
+    QStringList leftover;
+    QVERIFY(!SingleInstance::deliverPaths({QStringLiteral("/x.md"), QStringLiteral("/y.md")},
+                                          &leftover, registry(), 200));
+    QCOMPARE(leftover, (QStringList{QStringLiteral("/x.md"), QStringLiteral("/y.md")}));
 }
 
 QTEST_MAIN(TestSingleInstance)

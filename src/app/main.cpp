@@ -8,6 +8,7 @@
 #include "singleinstance.h"
 
 #include <QApplication>
+#include <QFileInfo>
 #include <QIcon>
 #include <QLibraryInfo>
 #include <QLocale>
@@ -15,6 +16,7 @@
 #include <QTimer>
 #include <QTranslator>
 
+#include <algorithm>
 #include <functional>
 #include <memory>
 
@@ -38,11 +40,15 @@ int main(int argc, char *argv[])
     // las rutas se entregan a la ÚLTIMA instancia creada, que las abre en pestañas, y
     // este proceso sale sin crear ninguna ventana. `--new-window` (lo usa «Abrir en una
     // nueva ventana») salta esa entrega: la instancia nueva se anota la última.
-    const SingleInstance::LaunchArgs launch =
-        SingleInstance::parseArguments(app.arguments().mid(1));
-    if (!launch.newWindow
-        && SingleInstance::sendToLatest({SingleInstance::kOpen, launch.paths}))
-        return 0;
+    SingleInstance::LaunchArgs launch = SingleInstance::parseArguments(app.arguments().mid(1));
+    if (!launch.newWindow) {
+        // Lo que otra instancia ya tiene abierto va a ELLA (que lo trae al frente); el
+        // resto, a la última creada. Si no hay ninguna, lo abrimos nosotros.
+        QStringList leftover;
+        if (SingleInstance::deliverPaths(launch.paths, &leftover))
+            return 0;
+        launch.paths = leftover;
+    }
     SingleInstance singleInstance;
     // Si falla, simplemente no recibirá archivos de otras ejecuciones.
     singleInstance.listen(SingleInstance::instanceName(QCoreApplication::applicationPid()));
@@ -140,6 +146,20 @@ int main(int argc, char *argv[])
         pendingRaise = false;
         window->openExternalPaths(paths);
     };
+    singleInstance.setOpenFilesProvider([&](const QStringList &paths) {
+        // Cuenta también lo encolado que aún no se ha abierto (arranque en curso).
+        QStringList open;
+        for (const QString &path : paths) {
+            const QString abs = QFileInfo(path).absoluteFilePath();
+            const bool queued = std::any_of(pendingPaths.cbegin(), pendingPaths.cend(),
+                                            [&](const QString &q) {
+                return QFileInfo(q).absoluteFilePath() == abs;
+            });
+            if (queued || (window && window->hasOpenFile(path)))
+                open << path;
+        }
+        return open;
+    });
     QObject::connect(&singleInstance, &SingleInstance::messageReceived, &app,
                      [&](const SingleInstance::Message &message) {
         if (message.command == SingleInstance::kOpen) {
