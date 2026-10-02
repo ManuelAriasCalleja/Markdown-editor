@@ -8,7 +8,6 @@
 #include "singleinstance.h"
 
 #include <QApplication>
-#include <QFileInfo>
 #include <QIcon>
 #include <QLibraryInfo>
 #include <QLocale>
@@ -34,22 +33,19 @@ int main(int argc, char *argv[])
     // Asocia la ventana con su .desktop (Wayland usa este nombre para el icono).
     app.setDesktopFileName(QStringLiteral("md-editor"));
 
-    // --- Instancia única -----------------------------------------------------
+    // --- Instancias coordinadas ----------------------------------------------
     // Si ya hay un editor en marcha (p. ej. al abrir otro .md desde el explorador),
-    // se le entregan las rutas, que las abre en pestañas, y este proceso sale sin
-    // crear ninguna ventana. Las rutas se hacen absolutas aquí: el directorio de
-    // trabajo de ESTE proceso no es el de la instancia que las recibe.
-    QStringList cmdLinePaths;
-    for (int i = 1; i < argc; ++i) {
-        const QString arg = QString::fromLocal8Bit(argv[i]);
-        if (!arg.isEmpty())
-            cmdLinePaths << QFileInfo(arg).absoluteFilePath();
-    }
-    const QString serverName = SingleInstance::serverName();
-    if (SingleInstance::sendToRunning(serverName, cmdLinePaths))
+    // las rutas se entregan a la ÚLTIMA instancia creada, que las abre en pestañas, y
+    // este proceso sale sin crear ninguna ventana. `--new-window` (lo usa «Abrir en una
+    // nueva ventana») salta esa entrega: la instancia nueva se anota la última.
+    const SingleInstance::LaunchArgs launch =
+        SingleInstance::parseArguments(app.arguments().mid(1));
+    if (!launch.newWindow
+        && SingleInstance::sendToLatest({SingleInstance::kOpen, launch.paths}))
         return 0;
     SingleInstance singleInstance;
-    singleInstance.listen(serverName);  // si falla, simplemente no hay instancia única
+    // Si falla, simplemente no recibirá archivos de otras ejecuciones.
+    singleInstance.listen(SingleInstance::instanceName(QCoreApplication::applicationPid()));
     // -------------------------------------------------------------------------
 
     // --- Internacionalización ------------------------------------------------
@@ -144,17 +140,36 @@ int main(int argc, char *argv[])
         pendingRaise = false;
         window->openExternalPaths(paths);
     };
-    QObject::connect(&singleInstance, &SingleInstance::pathsReceived, &app,
-                     [&](const QStringList &paths) {
-        pendingPaths << paths;
-        pendingRaise = true;
-        flushPending();
+    QObject::connect(&singleInstance, &SingleInstance::messageReceived, &app,
+                     [&](const SingleInstance::Message &message) {
+        if (message.command == SingleInstance::kOpen) {
+            pendingPaths << message.args;
+            pendingRaise = true;
+            flushPending();
+        } else if (message.command == SingleInstance::kAdopted && window
+                   && !message.args.isEmpty()) {
+            window->closeTabForPath(message.args.first());
+        }
     });
+
+    // Si esta instancia nació de «Abrir en una nueva ventana»: deja el cursor donde
+    // estaba y, solo con el documento ya cargado, avisa a la instancia de origen para
+    // que cierre su pestaña. Si la carga falla, la pestaña original se conserva.
+    auto finishHandoff = [&](MainWindow *w) {
+        if (launch.paths.isEmpty() || !w->hasOpenFile(launch.paths.first()))
+            return;
+        if (launch.cursor >= 0)
+            w->setCursorPosition(launch.cursor);
+        if (!launch.handoffFrom.isEmpty())
+            SingleInstance::sendTo(launch.handoffFrom,
+                                   {SingleInstance::kAdopted, {launch.paths.first()}});
+    };
 
     spawn = [&](const QString &openPath, bool relaunch) {
         sessionReady = false;
         window = std::make_unique<MainWindow>();
         MainWindow *w = window.get();
+        w->setInstanceName(singleInstance.name());
 
         QObject::connect(w, &MainWindow::languageChangeRequested, &app,
                          [&](const QString &reopenPath) {
@@ -178,14 +193,16 @@ int main(int argc, char *argv[])
             else
                 w->startSession(openPath);
             sessionReady = true;
+            if (!relaunch)
+                finishHandoff(w);
             flushPending();
         });
     };
 
     // El primer archivo lo abre startSession (con su prioridad sobre la recuperación
     // de borrador); los demás, como cualquier petición posterior, en su pestaña.
-    const QString cmdLineFile = cmdLinePaths.value(0);
-    pendingPaths = cmdLinePaths.mid(1);
+    const QString cmdLineFile = launch.paths.value(0);
+    pendingPaths = launch.paths.mid(1);
     spawn(cmdLineFile, false);
 
     return app.exec();

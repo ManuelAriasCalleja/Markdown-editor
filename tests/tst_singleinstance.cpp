@@ -4,8 +4,9 @@
 
 #include <future>
 
-// Pruebas de la instancia única: el protocolo (puro) y la entrega real por socket
-// entre un servidor y un cliente del mismo proceso.
+// Pruebas de la coordinación entre instancias: el protocolo y la línea de comandos
+// (puros), el registro por orden de creación y la entrega real por socket entre
+// servidores y clientes del mismo proceso.
 class TestSingleInstance : public QObject
 {
     Q_OBJECT
@@ -13,53 +14,144 @@ class TestSingleInstance : public QObject
 private slots:
     void encodeDecodeRoundTrips();
     void decodeRejectsGarbage();
-    void noServerMeansNoDelivery();
-    void deliversPathsToTheListener();
+    void parsesCommandLine();
+    void noInstanceMeansNoDelivery();
+    void deliversToTheLatestInstance();
+    void fallsBackWhenTheLatestCloses();
+    void prunesDeadEntries();
+    void adoptedReachesTheOrigin();
+
+private:
+    static QString uniq(const char *tag)
+    {
+        return QStringLiteral("md-editor-test-%1-%2").arg(QLatin1String(tag)).arg(
+            QCoreApplication::applicationPid());
+    }
+    QString registry() const { return m_dir.filePath(QStringLiteral("reg.instances")); }
+    QTemporaryDir m_dir;
 };
 
 void TestSingleInstance::encodeDecodeRoundTrips()
 {
-    const QStringList paths{QStringLiteral("/tmp/a b.md"), QStringLiteral("/tmp/ñ\nx.md")};
-    QStringList out;
-    QVERIFY(SingleInstance::decode(SingleInstance::encode(paths), out));
-    QCOMPARE(out, paths);
-    QVERIFY(SingleInstance::decode(SingleInstance::encode({}), out));
-    QVERIFY(out.isEmpty());
+    const SingleInstance::Message in{SingleInstance::kOpen,
+                                     {QStringLiteral("/tmp/a b.md"), QStringLiteral("/tmp/ñ\nx.md")}};
+    SingleInstance::Message out;
+    QVERIFY(SingleInstance::decode(SingleInstance::encode(in), out));
+    QCOMPARE(out.command, in.command);
+    QCOMPARE(out.args, in.args);
+    QVERIFY(SingleInstance::decode(SingleInstance::encode({SingleInstance::kOpen, {}}), out));
+    QVERIFY(out.args.isEmpty());
 }
 
 void TestSingleInstance::decodeRejectsGarbage()
 {
-    QStringList out;
+    SingleInstance::Message out;
     QVERIFY(!SingleInstance::decode({}, out));
     QVERIFY(!SingleInstance::decode("basura", out));
-    QByteArray truncated = SingleInstance::encode({QStringLiteral("/x.md")});
+    QByteArray truncated = SingleInstance::encode({SingleInstance::kOpen, {QStringLiteral("/x.md")}});
     truncated.chop(2);
     QVERIFY(!SingleInstance::decode(truncated, out));
 }
 
-void TestSingleInstance::noServerMeansNoDelivery()
+void TestSingleInstance::parsesCommandLine()
 {
-    QVERIFY(!SingleInstance::sendToRunning(
-        QStringLiteral("md-editor-test-nadie-%1").arg(QCoreApplication::applicationPid()),
-        {QStringLiteral("/x.md")}, 200));
+    const QString root = QDir::rootPath();
+    auto a = SingleInstance::parseArguments(
+        {QStringLiteral("--new-window"), QStringLiteral("--cursor=42"),
+         QStringLiteral("--handoff-from=md-editor-x-1"), root + QStringLiteral("a.md"),
+         QStringLiteral("--desconocida"), root + QStringLiteral("b.md")});
+    QVERIFY(a.newWindow);
+    QCOMPARE(a.cursor, 42);
+    QCOMPARE(a.handoffFrom, QStringLiteral("md-editor-x-1"));
+    QCOMPARE(a.paths, (QStringList{root + QStringLiteral("a.md"), root + QStringLiteral("b.md")}));
+
+    // Relativa → absoluta; tras «--» todo son rutas; cursor inválido → -1.
+    a = SingleInstance::parseArguments(
+        {QStringLiteral("--cursor=zz"), QStringLiteral("--"), QStringLiteral("--raro.md")});
+    QCOMPARE(a.cursor, -1);
+    QVERIFY(!a.newWindow);
+    QCOMPARE(a.paths.size(), 1);
+    QVERIFY(QFileInfo(a.paths.first()).isAbsolute());
+    QVERIFY(a.paths.first().endsWith(QStringLiteral("--raro.md")));
 }
 
-void TestSingleInstance::deliversPathsToTheListener()
+void TestSingleInstance::noInstanceMeansNoDelivery()
 {
-    const QString name = QStringLiteral("md-editor-test-%1").arg(QCoreApplication::applicationPid());
-    SingleInstance server;
-    QVERIFY(server.listen(name));
-    QSignalSpy spy(&server, &SingleInstance::pathsReceived);
+    QVERIFY(!SingleInstance::sendToLatest({SingleInstance::kOpen, {}}, registry(), 200));
+    QVERIFY(!SingleInstance::sendTo(uniq("nadie"), {SingleInstance::kOpen, {}}, 200));
+}
+
+void TestSingleInstance::deliversToTheLatestInstance()
+{
+    SingleInstance first, second;
+    QVERIFY(first.listen(uniq("a"), registry()));
+    QVERIFY(second.listen(uniq("b"), registry()));
+    QCOMPARE(SingleInstance::registeredNames(registry()), (QStringList{uniq("a"), uniq("b")}));
+    QSignalSpy spyFirst(&first, &SingleInstance::messageReceived);
+    QSignalSpy spySecond(&second, &SingleInstance::messageReceived);
 
     // El cliente bloquea (waitFor*): va en otro hilo, como en producción (otro
-    // proceso), para que el bucle de eventos del servidor siga atendiendo.
+    // proceso), para que el bucle de eventos de los servidores siga atendiendo.
     const QStringList paths{QStringLiteral("/tmp/uno.md"), QStringLiteral("/tmp/dos.md")};
-    std::future<bool> sent = std::async(std::launch::async, [&] {
-        return SingleInstance::sendToRunning(name, paths, 3000);
+    auto sent = std::async(std::launch::async, [&] {
+        return SingleInstance::sendToLatest({SingleInstance::kOpen, paths}, registry(), 3000);
+    });
+    QVERIFY(spySecond.wait(5000));
+    QVERIFY(sent.get());
+    QCOMPARE(spySecond.first().first().value<SingleInstance::Message>().args, paths);
+    QCOMPARE(spyFirst.count(), 0);
+}
+
+void TestSingleInstance::fallsBackWhenTheLatestCloses()
+{
+    SingleInstance first;
+    QVERIFY(first.listen(uniq("c"), registry()));
+    {
+        SingleInstance second;
+        QVERIFY(second.listen(uniq("d"), registry()));
+    }  // al cerrar se da de baja
+    QCOMPARE(SingleInstance::registeredNames(registry()), (QStringList{uniq("c")}));
+    QSignalSpy spy(&first, &SingleInstance::messageReceived);
+    auto sent = std::async(std::launch::async, [&] {
+        return SingleInstance::sendToLatest({SingleInstance::kOpen, {}}, registry(), 3000);
     });
     QVERIFY(spy.wait(5000));
-    QCOMPARE(spy.first().first().toStringList(), paths);
     QVERIFY(sent.get());
+}
+
+void TestSingleInstance::prunesDeadEntries()
+{
+    // Una entrada huérfana (cierre anómalo) al final: se salta, se retira del
+    // registro y la entrega llega a la anterior.
+    SingleInstance live;
+    QVERIFY(live.listen(uniq("e"), registry()));
+    QFile f(registry());
+    QVERIFY(f.open(QIODevice::Append | QIODevice::Text));
+    f.write(("\n" + uniq("muerta")).toUtf8());
+    f.close();
+    QSignalSpy spy(&live, &SingleInstance::messageReceived);
+    auto sent = std::async(std::launch::async, [&] {
+        return SingleInstance::sendToLatest({SingleInstance::kOpen, {}}, registry(), 3000);
+    });
+    QVERIFY(spy.wait(5000));
+    QVERIFY(sent.get());
+    QCOMPARE(SingleInstance::registeredNames(registry()), (QStringList{uniq("e")}));
+}
+
+void TestSingleInstance::adoptedReachesTheOrigin()
+{
+    SingleInstance origin;
+    QVERIFY(origin.listen(uniq("f"), registry()));
+    QSignalSpy spy(&origin, &SingleInstance::messageReceived);
+    auto sent = std::async(std::launch::async, [&] {
+        return SingleInstance::sendTo(origin.name(),
+                                      {SingleInstance::kAdopted, {QStringLiteral("/x.md")}}, 3000);
+    });
+    QVERIFY(spy.wait(5000));
+    QVERIFY(sent.get());
+    const auto msg = spy.first().first().value<SingleInstance::Message>();
+    QCOMPARE(msg.command, SingleInstance::kAdopted);
+    QCOMPARE(msg.args, (QStringList{QStringLiteral("/x.md")}));
 }
 
 QTEST_MAIN(TestSingleInstance)

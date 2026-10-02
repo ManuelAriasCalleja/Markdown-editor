@@ -16,6 +16,7 @@
 #include <QPushButton>
 #include <QTextCursor>
 #include <QTextEdit>
+#include <QTimer>
 
 #include "appsettings.h"
 #include "doctemplates.h"
@@ -24,6 +25,7 @@
 #include "editorstack.h"
 #include "filecontroller.h"
 #include "fileerrors.h"
+#include "focuseditor.h"
 #include "recentfilesmanager.h"
 #include "recoverymanager.h"
 #include "splitviewcontroller.h"
@@ -53,6 +55,45 @@ void MainWindow::openExternalPaths(const QStringList &paths)
     show();
     raise();
     activateWindow();
+}
+
+bool MainWindow::hasOpenFile(const QString &path) const
+{
+    const QString wanted = QFileInfo(path).absoluteFilePath();
+    for (int i = 0; i < m_tabs->count(); ++i) {
+        const EditorStack *s = stackAt(i);
+        const QString file = s ? s->documentIo()->currentFile() : QString();
+        if (!file.isEmpty() && QFileInfo(file).absoluteFilePath() == wanted)
+            return true;
+    }
+    return false;
+}
+
+void MainWindow::closeTabForPath(const QString &path)
+{
+    const QString wanted = QFileInfo(path).absoluteFilePath();
+    for (int i = 0; i < m_tabs->count(); ++i) {
+        const EditorStack *s = stackAt(i);
+        const QString file = s ? s->documentIo()->currentFile() : QString();
+        if (!file.isEmpty() && QFileInfo(file).absoluteFilePath() == wanted) {
+            closeTab(i);
+            return;
+        }
+    }
+}
+
+void MainWindow::setCursorPosition(int position)
+{
+    QTextEdit *ed = m_stack->editor();
+    QTextCursor c = ed->textCursor();
+    c.setPosition(qBound(0, position, qMax(0, ed->document()->characterCount() - 1)));
+    ed->setTextCursor(c);
+    // Diferido: justo tras cargar, la maqueta aún no está asentada y el desplazamiento
+    // a la línea quedaría corto.
+    QTimer::singleShot(0, ed, [ed] {
+        ed->ensureCursorVisible();
+        ed->setFocus();
+    });
 }
 
 void MainWindow::startSession(const QString &cmdLineFile)

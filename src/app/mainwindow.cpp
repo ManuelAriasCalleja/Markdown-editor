@@ -747,6 +747,13 @@ void MainWindow::showTabContextMenu(const QPoint &pos)
     openFolder->setEnabled(info.hasFile);
     copyName->setEnabled(info.hasFile);
     copyPath->setEnabled(info.hasFile);
+    // Con una sola pestaña no tiene sentido (quedaría la ventana de origen vacía).
+    QAction *newWindow = nullptr;
+    if (m_tabs->count() > 1) {
+        menu.addSeparator();
+        newWindow = menu.addAction(tr("Abrir en una nueva ventana"));
+        newWindow->setEnabled(info.hasFile);
+    }
 
     const QAction *chosen = menu.exec(bar->mapToGlobal(pos));
     if (chosen == openFolder)
@@ -755,6 +762,27 @@ void MainWindow::showTabContextMenu(const QPoint &pos)
         QApplication::clipboard()->setText(info.fileName);
     else if (chosen == copyPath)
         QApplication::clipboard()->setText(info.fullPath);
+    else if (newWindow && chosen == newWindow)
+        openInNewWindow(stack);
+}
+
+void MainWindow::openInNewWindow(EditorStack *stack)
+{
+    const QString path = stack->documentIo()->currentFile();
+    if (path.isEmpty())
+        return;
+    // Lo que la ventana nueva cargue es lo que hay en disco: los cambios pendientes
+    // se guardan (o descartan) antes, con la pregunta de siempre; cancelar aborta.
+    m_tabs->setCurrentWidget(stack);
+    if (!stack->file()->maybeSave())
+        return;
+    QStringList args{QStringLiteral("--new-window"),
+                     QStringLiteral("--cursor=%1").arg(stack->editor()->textCursor().position())};
+    if (!m_instanceName.isEmpty())
+        args << QStringLiteral("--handoff-from=") + m_instanceName;
+    args << QStringLiteral("--") << path;
+    if (!QProcess::startDetached(QCoreApplication::applicationFilePath(), args))
+        showStatusMessage(tr("No se pudo abrir una nueva ventana."));
 }
 
 void MainWindow::toggleOutlineFocus()

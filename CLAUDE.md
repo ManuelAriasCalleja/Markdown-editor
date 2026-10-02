@@ -335,17 +335,27 @@ añadir lógica nueva: hay un `tst_*` por módulo.
   es como `load()` pero sin archivo y con línea base vacía (cuenta como modificado,
   para que no se pierdan sin avisar). El tamaño de fuente no es expresable en
   Markdown: lo «grande» (p. ej. `CERTIFICO`) se consigue con un encabezado.
-- **Instancia única (`SingleInstance`).** Abrir un `.md` desde el explorador con el
-  editor ya en marcha no crea otro proceso: `main()` intenta antes de nada
-  `SingleInstance::sendToRunning` (un `QLocalSocket` a `md-editor-<usuario>`) con las
-  rutas **absolutas** (el directorio de trabajo del proceso nuevo no es el de la
-  instancia que las recibe) y sale. La primera instancia escucha con `QLocalServer` y
-  `MainWindow::openExternalPaths` abre cada ruta en una pestaña y trae la ventana al
-  frente. `main()` **encola** las peticiones hasta que la sesión de la ventana actual
-  ha arrancado (y mientras se recrea por un cambio de idioma). El `.desktop` lleva
-  `%F` (varios archivos). *Limitación:* en Wayland el compositor puede negar el
-  `activateWindow()` (haría falta *xdg-activation*); macOS pasaría por `QFileOpenEvent`,
-  aún sin manejar.
+- **Varias instancias coordinadas (`SingleInstance`).** Cada proceso escucha en su
+  `QLocalServer` (`md-editor-<usuario>-<pid>`) y se anota, por orden de creación, en un
+  fichero de registro (`<tmp>/md-editor-<usuario>.instances`, con `QLockFile`). Abrir
+  un `.md` desde el explorador no crea otro proceso si hay alguna instancia: `main()`
+  entrega las rutas **absolutas** (el directorio de trabajo del proceso nuevo no es el
+  de quien las recibe) a **la última creada** (`sendToLatest`, que además retira del
+  registro las entradas que ya no responden tras un cierre anómalo) y sale; si esa se
+  cierra, la siguiente pasa a ser la última. `MainWindow::openExternalPaths` abre cada
+  ruta en una pestaña y trae la ventana al frente; `main()` **encola** las peticiones
+  hasta que la sesión de la ventana actual ha arrancado (y mientras se recrea por un
+  cambio de idioma). El protocolo es un `Message{command, args}` (`kOpen`, `kAdopted`).
+  *Pestaña → Abrir en una nueva ventana* (`MainWindow::openInNewWindow`, solo con más
+  de una pestaña y documento con archivo) guarda/descarta los cambios con la pregunta
+  de siempre y lanza `md-editor --new-window --cursor=N --handoff-from=<origen> -- ruta`.
+  `--new-window` salta la entrega, así que la instancia nueva es la última; solo cuando
+  ha cargado el documento (`hasOpenFile`) coloca el cursor y envía `kAdopted` al origen,
+  que cierra la pestaña (`closeTabForPath`). Si la carga falla, la pestaña original se
+  conserva. El `.desktop` lleva `%F` (varios archivos). *Limitaciones:* en Wayland el
+  compositor puede negar el `activateWindow()` (haría falta *xdg-activation*); macOS
+  pasaría por `QFileOpenEvent`, aún sin manejar; la sesión de pestañas
+  (`AppSettings::openFiles`) la escribe la última instancia que se cierra.
 - **Arranque de sesión.** `main.cpp` difiere con `QTimer::singleShot(0, ...)` la
   llamada a `MainWindow::startSession()` (abrir en mitad del trazado inicial de
   `QTextEdit` provoca un diálogo espurio). Prioridad: archivo de línea de comandos

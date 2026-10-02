@@ -97,6 +97,20 @@ public:
     /// estaba minimizada. Sin rutas, solo la trae al frente.
     void openExternalPaths(const QStringList &paths);
 
+    /// \brief Nombre con el que esta instancia escucha a las demás (vacío = ninguno).
+    /// Lo necesita «Abrir en una nueva ventana» para que la nueva sepa a quién avisar.
+    void setInstanceName(const QString &name) { m_instanceName = name; }
+
+    /// \brief ¿Alguna pestaña tiene abierto `path`? (comparado por ruta absoluta).
+    bool hasOpenFile(const QString &path) const;
+
+    /// \brief Cierra la pestaña de `path` porque ese documento pasó a otra ventana.
+    void closeTabForPath(const QString &path);
+
+    /// \brief Pone el cursor del editor WYSIWYG de la pestaña activa en `position`
+    /// (acotada al documento) y lo deja a la vista.
+    void setCursorPosition(int position);
+
 signals:
     /// \brief El usuario eligió otro idioma. main() intercambia los traductores y recrea
     /// la ventana (rehaciendo todos los tr()) reabriendo `reopenPath`.
@@ -315,6 +329,10 @@ private:
     // Menú contextual (clic derecho) sobre la pestaña bajo `pos` (en coordenadas de
     // la barra de pestañas): abrir carpeta contenedora, copiar nombre, copiar ruta.
     void showTabContextMenu(const QPoint &pos);
+    // Lanza una instancia nueva con el documento de `stack`, en la misma posición del
+    // cursor; la pestaña de aquí se cierra cuando la nueva confirma que lo cargó.
+    void openInNewWindow(EditorStack *stack);
+    QString m_instanceName;  // socket de esta instancia (ver setInstanceName)
     // Alterna el foco de teclado entre el esquema (TOC) y el editor (F6):
     // muestra el esquema si está oculto, lo enfoca; si ya lo tiene, vuelve al editor.
     void toggleOutlineFocus();
