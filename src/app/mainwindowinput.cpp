@@ -129,10 +129,9 @@ bool MainWindow::handleTabBarEvent(QEvent *event)
         return false;
     case QEvent::MouseMove: {
         const auto *me = static_cast<QMouseEvent *>(event);
-        // Con una sola pestaña no hay a dónde llevarla que no sea otra ventana ya
-        // abierta, y sin socket propio la otra no sabría a quién avisar.
-        if (!m_tabPressStack || !(me->buttons() & Qt::LeftButton) || m_instanceName.isEmpty()
-            || m_tabs->count() < 2)
+        // Sin socket propio la ventana destino no sabría a quién avisar. Con una sola
+        // pestaña también se puede: al adoptarla, esta ventana se cierra sola.
+        if (!m_tabPressStack || !(me->buttons() & Qt::LeftButton) || m_instanceName.isEmpty())
             return false;
         if (!mdtabdrag::leftBar(me->position().toPoint(), bar->rect(),
                                 QApplication::startDragDistance() * 4))
@@ -174,7 +173,13 @@ void MainWindow::startTabDrag(EditorStack *stack)
     // confirma (kAdopted) que la abrió. Soltar en el vacío o cancelar no pierde nada.
     // Ojo: durante exec() llega ese mensaje y la pestaña puede desaparecer: `stack`
     // no se toca después.
+    m_draggingTab = true;
     drag->exec(Qt::MoveAction);
+    m_draggingTab = false;
+    if (m_closeWhenDragEnds) {
+        m_closeWhenDragEnds = false;
+        QTimer::singleShot(0, this, &QWidget::close);
+    }
 }
 
 bool MainWindow::handleTabDropEvent(QEvent *event)

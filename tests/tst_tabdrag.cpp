@@ -24,6 +24,7 @@ private slots:
     void cleanup() { QSettings().clear(); }
     void windowAcceptsForeignTabOverTheEditor();
     void windowOpensTheDroppedTab();
+    void windowClosesWhenItsLastTabIsAdopted();
 };
 
 void TestTabDrag::mimeRoundTrips()
@@ -123,6 +124,41 @@ void TestTabDrag::windowOpensTheDroppedTab()
     QVERIFY(w.handleTabDropEvent(&drop));
     QVERIFY(drop.isAccepted());
     QTRY_VERIFY(w.hasOpenFile(path));
+}
+
+void TestTabDrag::windowClosesWhenItsLastTabIsAdopted()
+{
+    QTemporaryDir dir;
+    const QString path = dir.filePath(QStringLiteral("unica.md"));
+    QFile f(path);
+    QVERIFY(f.open(QIODevice::WriteOnly));
+    f.write("# Titulo\n");
+    f.close();
+    const QString other = dir.filePath(QStringLiteral("otra.md"));
+    QFile g(other);
+    QVERIFY(g.open(QIODevice::WriteOnly));
+    g.write("# Otra\n");
+    g.close();
+
+    // Con otra pestaña viva, la ventana sigue.
+    {
+        MainWindow w;
+        w.show();
+        w.openExternalPaths({path, other});
+        QVERIFY(w.hasOpenFile(path) && w.hasOpenFile(other));
+        w.closeTabForPath(path);
+        QTest::qWait(50);
+        QVERIFY(w.isVisible());
+        QVERIFY(!w.hasOpenFile(path));
+        QVERIFY(w.hasOpenFile(other));
+    }
+    // Con una sola, queda un documento nuevo vacío y la ventana se cierra.
+    MainWindow w;
+    w.show();
+    w.openExternalPaths({path});
+    QVERIFY(w.hasOpenFile(path));
+    w.closeTabForPath(path);
+    QTRY_VERIFY(!w.isVisible());
 }
 
 QTEST_MAIN(TestTabDrag)

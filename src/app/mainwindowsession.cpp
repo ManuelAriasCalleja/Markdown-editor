@@ -77,6 +77,22 @@ void MainWindow::closeTabForPath(const QString &path)
         const QString file = s ? s->documentIo()->currentFile() : QString();
         if (!file.isEmpty() && QFileInfo(file).absoluteFilePath() == wanted) {
             closeTab(i);
+            // closeTab deja un documento nuevo si era la última pestaña. Una ventana
+            // que solo tiene eso (y sin tocar) ya no pinta nada: se cierra. Si el
+            // cierre de la pestaña se canceló (cambios nuevos), el documento sigue
+            // abierto y la ventana también.
+            if (m_tabs->count() == 1 && !hasOpenFile(path)) {
+                const EditorStack *rest = stackAt(0);
+                if (rest && rest->documentIo()->currentFile().isEmpty()
+                    && !rest->documentIo()->isModified()) {
+                    // Durante un arrastre, destruir la ventana tumbaría el QDrag que
+                    // la espera en exec(): se cierra cuando éste termine.
+                    if (m_draggingTab)
+                        m_closeWhenDragEnds = true;
+                    else
+                        QTimer::singleShot(0, this, &QWidget::close);
+                }
+            }
             return;
         }
     }

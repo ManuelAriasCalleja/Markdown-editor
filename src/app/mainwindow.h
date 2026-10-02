@@ -106,7 +106,8 @@ public:
     /// \brief ¿Alguna pestaña tiene abierto `path`? (comparado por ruta absoluta).
     bool hasOpenFile(const QString &path) const;
 
-    /// \brief Cierra la pestaña de `path` porque ese documento pasó a otra ventana.
+    /// \brief Cierra la pestaña de `path` porque ese documento pasó a otra ventana. Si la
+    /// ventana se queda sin nada (solo un documento nuevo sin tocar), se cierra también.
     void closeTabForPath(const QString &path);
 
     /// \brief Pone el cursor del editor WYSIWYG de la pestaña activa en `position`
@@ -347,6 +348,8 @@ private:
     void openInNewWindow(EditorStack *stack);
     void launchNewWindow(EditorStack *stack);
     QString m_instanceName;  // socket de esta instancia (ver setInstanceName)
+    bool m_draggingTab = false;       // dentro de QDrag::exec() de startTabDrag
+    bool m_closeWhenDragEnds = false; // la ventana quedó vacía durante el arrastre
     QPointer<EditorStack> m_tabPressStack;  // pestaña sobre la que se pulsó el ratón
     // Alterna el foco de teclado entre el esquema (TOC) y el editor (F6):
     // muestra el esquema si está oculto, lo enfoca; si ya lo tiene, vuelve al editor.

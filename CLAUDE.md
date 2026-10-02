@@ -363,7 +363,10 @@ añadir lógica nueva: hay un `tst_*` por módulo.
   `QTextEdit`) y, si lo rechaza, no sube al padre. Abre la ruta, coloca el cursor y envía
   `kAdopted` al origen, que cierra la pestaña; soltar en el vacío o cancelar no pierde
   nada (no hay «arrancar a ventana nueva» al soltar fuera: Qt no distingue soltar en el
-  escritorio de pulsar Esc). Solo con más de una pestaña y documento con archivo.
+  escritorio de pulsar Esc). Solo con documento con archivo. Funciona también con una
+  única pestaña: al adoptarla (`closeTabForPath`), una ventana que se queda solo con un
+  documento nuevo sin tocar **se cierra sola** —diferido a que termine el `QDrag`
+  (`m_closeWhenDragEnds`), que si no se destruiría bajo su propio `exec()`—.
   El `.desktop` lleva `%F` (varios archivos). *Limitaciones:* en Wayland el
   compositor puede negar el `activateWindow()` (haría falta *xdg-activation*); macOS
   pasaría por `QFileOpenEvent`, aún sin manejar; la sesión de pestañas
