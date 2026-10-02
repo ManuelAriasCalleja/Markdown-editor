@@ -184,6 +184,10 @@ void TestSingleInstance::registryIsPrivateToTheUser()
     const QString file = SingleInstance::registryFile();
     if (file.isEmpty())
         QSKIP("sin directorio privado en este entorno (válido: no hay registro)");
+    // Los bits de grupo/otros son semántica POSIX: en Windows los permisos van por ACL y
+    // Qt informa todos los bits aunque el directorio sea del usuario.
+    if (QSysInfo::kernelType() == QLatin1String("winnt"))
+        QSKIP("permisos POSIX: no aplican en Windows");
     const QFileInfo dir(QFileInfo(file).absolutePath());
     QVERIFY(dir.isDir());
     QVERIFY(!(dir.permissions() & (QFileDevice::ReadGroup | QFileDevice::WriteGroup
