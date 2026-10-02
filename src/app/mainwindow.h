@@ -5,7 +5,6 @@
 /// \brief Ventana principal (shell): pestañas, menús, barra de formato, zoom y sesión del editor WYSIWYG.
 
 #include <QMainWindow>
-#include <QPointer>
 #include <QByteArray>
 #include <QHash>
 #include <QList>
@@ -358,7 +357,10 @@ private:
     bool m_skipSessionSave = false;   // ventana vaciada por un traspaso: no pisa la sesión
     bool m_draggingTab = false;       // dentro de QDrag::exec() de startTabDrag
     bool m_closeWhenDragEnds = false; // la ventana quedó vacía durante el arrastre
-    QPointer<EditorStack> m_tabPressStack;  // pestaña sobre la que se pulsó el ratón
+    // Pestaña sobre la que se pulsó el ratón. Puntero simple, no QPointer: puede cerrarse
+    // entre la pulsación y el movimiento, así que SOLO se usa tras comprobar que sigue
+    // en m_tabs (indexOf compara punteros, no desreferencia).
+    EditorStack *m_tabPressStack = nullptr;
     // Alterna el foco de teclado entre el esquema (TOC) y el editor (F6):
     // muestra el esquema si está oculto, lo enfoca; si ya lo tiene, vuelve al editor.
     void toggleOutlineFocus();

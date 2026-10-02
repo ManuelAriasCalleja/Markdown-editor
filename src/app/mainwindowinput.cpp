@@ -145,6 +145,10 @@ bool MainWindow::handleTabBarEvent(QEvent *event)
         const auto *me = static_cast<QMouseEvent *>(event);
         if (!m_tabPressStack || !(me->buttons() & Qt::LeftButton))
             return false;
+        if (m_tabs->indexOf(m_tabPressStack) < 0) {  // se cerró mientras tanto
+            m_tabPressStack = nullptr;
+            return false;
+        }
         if (!mdtabdrag::leftBar(me->position().toPoint(), bar->rect(),
                                 QApplication::startDragDistance() * 4))
             return false;
